@@ -1,0 +1,8 @@
+include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
+
+INCLUDEPATH += $(PROLIFEDIR)/Include
+INCLUDEPATH += $(PROLIFEDIR)/Impl
+INCLUDEPATH += $(PROLIFEDIR)/$$AUXINCLUDEDIR
+
+LIBS += -L$$PWD/../../Lib/$$COMPILER_DIR -limtzip
+

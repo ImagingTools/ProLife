@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="JoinDataProvider" X="225" Y="375" Note=""/>
+        <Element ComponentName="PageData" X="995" Y="377" Note=""/>
+        <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
+        <Element ComponentName="PageVisualStatus" X="200" Y="200" Note=""/>
+        <Element ComponentName="Pages" X="600" Y="75" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AdministrationPage" X="975" Y="376" Note=""/>
+                <Element ComponentName="CheckPermissions" X="525" Y="375" Note=""/>
+                <Element ComponentName="FeatureContainer" X="975" Y="575" Note=""/>
+                <Element ComponentName="OptionsListAdapter" X="625" Y="250" Note=""/>
+                <Element ComponentName="ProLifePermissionsProvider" X="975" Y="475" Note=""/>
+                <Element ComponentName="ProductDatabaseDelegateComp" X="200" Y="100" Note=""/>
+                <Element ComponentName="ProductInfo" X="450" Y="100" Note=""/>
+                <Element ComponentName="ProductsPage" X="150" Y="375" Note=""/>
+                <Element ComponentName="QtResourceLoaderComp" X="975" Y="675" Note=""/>
+                <Element ComponentName="Repository" X="375" Y="250" Note=""/>
+                <Element ComponentName="SeparatorValue" X="150" Y="675" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

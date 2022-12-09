@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="ApplicationInfo" X="700" Y="225" Note=""/>
+        <Element ComponentName="Context" X="1125" Y="400" Note=""/>
+        <Element ComponentName="LocalSettings" X="725" Y="775" Note=""/>
+        <Element ComponentName="MainWindow" X="325" Y="525" Note=""/>
+        <Element ComponentName="ObserverQml" X="475" Y="675" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="1050" Y="775" Note=""/>
+        <Element ComponentName="ProLifeLogFilePath" X="325" Y="275" Note=""/>
+        <Element ComponentName="ProLifeServerBase" X="500" Y="100" Note=""/>
+        <Element ComponentName="QuickApplication" X="850" Y="475" Note=""/>
+        <Element ComponentName="SplashScreen" X="875" Y="150" Note=""/>
+        <Element ComponentName="SystemLocation" X="125" Y="450" Note=""/>
+        <Element ComponentName="TextFileLog" X="75" Y="250" Note=""/>
+        <Element ComponentName="VersionInfo" X="1100" Y="100" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="Enums">
+            <PositionMap>
+                <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
+                <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
+                <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

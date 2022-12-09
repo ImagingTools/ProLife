@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="AdminPanel" X="975" Y="675" Note=""/>
+        <Element ComponentName="ApplicationController" X="550" Y="50" Note=""/>
+        <Element ComponentName="AuthorizationConcept" X="625" Y="450" Note=""/>
+        <Element ComponentName="Pages" X="1000" Y="225" Note=""/>
+        <Element ComponentName="PreferencesQml" X="175" Y="425" Note=""/>
+        <Element ComponentName="SettingsController" X="175" Y="250" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="SettingsController">
+            <PositionMap>
+                <Element ComponentName="AboutPage" X="975" Y="425" Note=""/>
+                <Element ComponentName="ApplicationInfoDataProvider" X="1025" Y="575" Note=""/>
+                <Element ComponentName="DataModel" X="250" Y="625" Note=""/>
+                <Element ComponentName="DatabaseUserSettings" X="400" Y="725" Note=""/>
+                <Element ComponentName="Demultiplexer" X="575" Y="50" Note=""/>
+                <Element ComponentName="FileAutoPersistence" X="775" Y="750" Note=""/>
+                <Element ComponentName="GeneralPage" X="375" Y="425" Note=""/>
+                <Element ComponentName="GetStyleDataController" X="200" Y="50" Note=""/>
+                <Element ComponentName="PagesDataProvider" X="575" Y="250" Note=""/>
+                <Element ComponentName="RepresentationModel" X="150" Y="525" Note=""/>
+                <Element ComponentName="ServerPage" X="700" Y="425" Note=""/>
+                <Element ComponentName="ServerPageDataModel" X="700" Y="575" Note=""/>
+                <Element ComponentName="SettingsController" X="575" Y="150" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="AuthorizationConcept">
+            <PositionMap>
+                <Element ComponentName="AuthorizationController" X="975" Y="200" Note=""/>
+                <Element ComponentName="AuthorizationOptionsController" X="225" Y="200" Note=""/>
+                <Element ComponentName="Demultiplexer" X="575" Y="75" Note=""/>
+                <Element ComponentName="HashCalculator" X="675" Y="350" Note=""/>
+                <Element ComponentName="UserMode" X="200" Y="425" Note=""/>
+                <Element ComponentName="UserModeOptions" X="200" Y="525" Note=""/>
+                <Element ComponentName="UserModeProvider" X="200" Y="300" Note=""/>
+                <Element ComponentName="UserSessionRepository" X="950" Y="350" Note=""/>
+                <Element ComponentName="UsersSessionsDatabaseDelegate" X="975" Y="525" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

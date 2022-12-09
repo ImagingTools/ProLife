@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5014" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="JoinDataProvider" X="250" Y="350" Note=""/>
+        <Element ComponentName="PageDataControllers" X="950" Y="175" Note=""/>
+        <Element ComponentName="PageVisualStatus" X="250" Y="175" Note=""/>
+        <Element ComponentName="Pages" X="600" Y="75" Note=""/>
+        <Element ComponentName="PagesData" X="950" Y="325" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="PagesData">
+            <PositionMap>
+                <Element ComponentName="RoleRepository" X="200" Y="300" Note=""/>
+                <Element ComponentName="RolesPage" X="500" Y="175" Note=""/>
+                <Element ComponentName="UserRepository" X="450" Y="475" Note=""/>
+                <Element ComponentName="UsersPage" X="500" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>
