@@ -24,6 +24,6 @@ protected:
 };
 
 
-} // namespace imtlicgql
+} // namespace prolifelicgql
 
 

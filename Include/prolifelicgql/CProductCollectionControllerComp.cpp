@@ -4,7 +4,7 @@
 // Qt includes
 #include <QtCore/QTranslator>
 
-// ImtCore includes
+// ProLife includes
 #include <prolifeauth/CProductInfo.h>
 
 
@@ -26,8 +26,8 @@ QVariant CProductCollectionControllerComp::GetObjectInformation(const QByteArray
 		}
 		else if (informationId == QByteArray("Description")){
 			return metaInfoPtr->GetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_DESCRIPTION);
-		}else if(informationId == QByteArray("Manufacturer"))
-		{
+		}
+		else if(informationId == QByteArray("Manufacturer")){
 			return metaInfoPtr->GetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_MANUFACTURER);
 		}
 	}
@@ -37,9 +37,9 @@ QVariant CProductCollectionControllerComp::GetObjectInformation(const QByteArray
 
 
 imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
-		const QList<imtgql::CGqlObject> &inputParams,
-		const imtgql::CGqlObject &gqlObject,
-		QString &errorMessage) const
+			const QList<imtgql::CGqlObject> &inputParams,
+			const imtgql::CGqlObject &gqlObject,
+			QString &errorMessage) const
 {
 	imtbase::CTreeItemModel* rootModel = new imtbase::CTreeItemModel();
 	imtbase::CTreeItemModel* dataModel = nullptr;
@@ -81,21 +81,23 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 			return nullptr;
 		}
 
-		const prolifeauth::IProductInfo* ProductInfoPtr = dynamic_cast<const prolifeauth::IProductInfo*>(dataPtr.GetPtr());
-		if (ProductInfoPtr == nullptr){
+		const prolifeauth::IProductInfo* productInfoPtr = dynamic_cast<const prolifeauth::IProductInfo*>(dataPtr.GetPtr());
+		if (productInfoPtr == nullptr){
 			if (translatorPtr != nullptr){
-				errorMessage = translatorPtr->translate("imtlicgql::CProductCollectionControllerComp", "Unable to get an account info");
+				errorMessage = translatorPtr->translate("imtlicgql::CProductCollectionControllerComp", "Unable to get the product info");
 			}
 			else{
-				errorMessage = QT_TR_NOOP("Unable to get an Product info");
+				errorMessage = QT_TR_NOOP("Unable to get the product info");
 			}
 
 			return nullptr;
 		}
-		int index = metaInfoModel->InsertNewItem();
-		children = metaInfoModel->AddTreeModel("Children", index);
-		QString description = ProductInfoPtr->GetProductDescription();
 
+		int index = metaInfoModel->InsertNewItem();
+
+		children = metaInfoModel->AddTreeModel("Children", index);
+
+		QString description = productInfoPtr->GetProductDescription();
 		children->SetData("Value", description);
 		if (translatorPtr != nullptr){
 			errorMessage = translatorPtr->translate("imtlicgql::CProductCollectionControllerComp", "Product Name");
@@ -107,7 +109,7 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 
 		children->SetData("Value", description);
 
-		QString manufacturer = ProductInfoPtr->GetProductManufacturer();
+		QString manufacturer = productInfoPtr->GetProductManufacturer();
 
 		index = metaInfoModel->InsertNewItem();
 		if (translatorPtr != nullptr){
@@ -119,7 +121,7 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 		children = metaInfoModel->AddTreeModel("Children", index);
 		children->SetData("Value", manufacturer);
 
-		QString name = ProductInfoPtr->GetProductName();
+		QString name = productInfoPtr->GetProductName();
 
 //		children->SetData("Value", name);
 
@@ -132,6 +134,6 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 }
 
 
-} // namespace imtlicgql
+} // namespace prolifelicgql
 
 

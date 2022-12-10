@@ -2,11 +2,7 @@
 
 
 // ACF includes
-#include <iauth/IRightsProvider.h>
-#include <idoc/IDocumentMetaInfo.h>
 #include <iser/IObject.h>
-
-// ImtCore includes
 
 
 namespace prolifeauth
@@ -70,11 +66,9 @@ public:
 		Set manufacturer of the Product.
 	*/
 	virtual void SetProductManufacturer(QString ProductManufacturer) = 0;
-
-
 };
 
 
-} // namespace imtauth
+} // namespace prolifeauth
 
 

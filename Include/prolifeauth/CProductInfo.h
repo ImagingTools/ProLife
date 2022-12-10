@@ -1,16 +1,8 @@
 #pragma once
 
 
-// ACF includes
-#include <iimg/CBitmap.h>
-#include <imod/TModelWrap.h>
-#include <istd/TSmartPtr.h>
-#include <imod/CModelUpdateBridge.h>
-
-// ImtCore includes
-#include <imtbase/IObjectCollection.h>
+// ProLife includes
 #include <prolifeauth/IProductInfo.h>
-
 
 
 namespace prolifeauth
@@ -33,7 +25,6 @@ public:
 	virtual QString GetProductManufacturer() const override;
 	virtual void SetProductManufacturer(QString ProductManufacturer) override;
 
-
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
 
@@ -53,6 +44,6 @@ private:
 };
 
 
-} // namespace imtauth
+} // namespace prolifeauth
 
 

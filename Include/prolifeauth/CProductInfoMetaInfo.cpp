@@ -24,6 +24,6 @@ QString CProductInfoMetaInfo::GetMetaInfoName(int metaInfoType) const
 }
 
 
-} // namespace imtauth
+} // namespace prolifeauth
 
 

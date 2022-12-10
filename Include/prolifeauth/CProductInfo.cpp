@@ -35,12 +35,11 @@ CProductInfo::~CProductInfo()
 
 // reimplemented (IProductInfo)
 
-
-
 QString CProductInfo::GetProductName() const
 {
 	return m_productName;
 }
+
 
 void CProductInfo::SetProductName(QString ProductName)
 {
@@ -51,10 +50,12 @@ void CProductInfo::SetProductName(QString ProductName)
 	}
 }
 
+
 QString CProductInfo::GetProductDescription() const
 {
 	return m_productDescription;
 }
+
 
 void CProductInfo::SetProductDescription(QString ProductDescription )
 {
@@ -68,6 +69,7 @@ QString CProductInfo::GetProductManufacturer() const
 {
 	return m_productManufacturer;
 }
+
 
 void CProductInfo::SetProductManufacturer(QString productManufacturer)
 {
@@ -126,11 +128,9 @@ bool CProductInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*
 {
 	istd::CChangeGroup changeGroup(this);
 
-
 	const CProductInfo* sourcePtr = dynamic_cast<const CProductInfo*>(&object);
 	if (sourcePtr != nullptr){
 		istd::CChangeNotifier changeNotifier(this);
-
 
 		m_productName = sourcePtr->m_productName;
 		m_productDescription = sourcePtr->m_productDescription;
@@ -169,6 +169,6 @@ bool CProductInfo::ResetData(CompatibilityMode /*mode*/)
 }
 
 
-} // namespace imtauth
+} // namespace prolifeauth
 
 

@@ -3,6 +3,8 @@
 
 // ImtCore includes
 #include <imtdb/CSqlDatabaseObjectDelegateCompBase.h>
+
+// ProLife includes
 #include <prolifeauth/IProductInfo.h>
 
 
@@ -54,6 +56,6 @@ private:
 };
 
 
-} // namespace imtlicdb
+} // namespace prolifelicdb
 
 

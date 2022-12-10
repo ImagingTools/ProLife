@@ -22,6 +22,6 @@ public:
 };
 
 
-} // namespace imtauth
+} // namespace prolifeauth
 
 

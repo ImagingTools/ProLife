@@ -1,8 +1,10 @@
 #include <prolifelicdb/CProductDatabaseDelegateComp.h>
 
+
 // ACF includes
 #include <imod/TModelWrap.h>
 
+// ProLife includes
 #include <prolifeauth/CProductInfoMetaInfo.h>
 
 
@@ -29,27 +31,27 @@ istd::IChangeable* CProductDatabaseDelegateComp::CreateObjectFromRecord(const QB
 		return nullptr;
 	}
 
-	QByteArray ProductId;
+	QByteArray productId;
 	if (record.contains("Id")){
-		ProductId = record.value("Id").toByteArray();
+		productId = record.value("Id").toByteArray();
 	}
 
 	if (record.contains("Name")){
-		QString ProductName = record.value("Name").toString();
+		QString productName = record.value("Name").toString();
 
-		productInfoPtr->SetProductName(ProductName);
+		productInfoPtr->SetProductName(productName);
 	}
 
 	if (record.contains("Description")){
-		QString ProductDescription = record.value("Description").toString();
+		QString productDescription = record.value("Description").toString();
 
-		productInfoPtr->SetProductDescription(ProductDescription);
+		productInfoPtr->SetProductDescription(productDescription);
 	}
 
 	if (record.contains("Manufacturer")){
-		QString ProductManufacturer = record.value("Manufacturer").toString();
+		QString productManufacturer = record.value("Manufacturer").toString();
 
-		productInfoPtr->SetProductManufacturer(ProductManufacturer);
+		productInfoPtr->SetProductManufacturer(productManufacturer);
 	}
 
 	return productInfoPtr.PopPtr();
@@ -68,39 +70,39 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CProductDatabaseDelegateComp::Cre
 		return NewObjectQuery();
 	}
 
-	QString ProductName = productInfoPtr->GetProductName();
-	if (ProductName.isEmpty()){
-		ProductName = objectName;
+	QString productName = productInfoPtr->GetProductName();
+	if (productName.isEmpty()){
+		productName = objectName;
 	}
 
-	if (ProductName.isEmpty()){
+	if (productName.isEmpty()){
 		return NewObjectQuery();
 	}
 
-	QByteArray ProductId = ProductName.toUtf8();
+	QByteArray productId = productName.toUtf8();
 
-	QString ProductDescription = productInfoPtr->GetProductDescription();
+	QString productDescription = productInfoPtr->GetProductDescription();
 
-	QString ProductManufacturer = productInfoPtr->GetProductManufacturer();
+	QString productManufacturer = productInfoPtr->GetProductManufacturer();
 
 	NewObjectQuery retVal;
 
 	retVal.query = QString("INSERT INTO \"Products\" (Id, Name, Description,  Manufacturer) VALUES('%1', '%2', '%3', '%4');")
-			.arg(qPrintable(ProductId))
-			.arg(ProductName)
-			.arg(ProductDescription)
-			.arg(ProductManufacturer)
+			.arg(qPrintable(productId))
+			.arg(productName)
+			.arg(productDescription)
+			.arg(productManufacturer)
 			.toLocal8Bit();
 
-	retVal.objectName = ProductName;
+	retVal.objectName = productName;
 
 	return retVal;
 }
 
 
 QByteArray CProductDatabaseDelegateComp::CreateDeleteObjectQuery(
-		const imtbase::IObjectCollection& collection,
-		const QByteArray& objectId) const
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId) const
 {
 	imtbase::IObjectCollection::DataPtr objectPtr;
 	if (collection.GetObjectData(objectId, objectPtr)){
@@ -119,34 +121,33 @@ QByteArray CProductDatabaseDelegateComp::CreateDeleteObjectQuery(
 
 
 QByteArray CProductDatabaseDelegateComp::CreateUpdateObjectQuery(
-		const imtbase::IObjectCollection& /*collection*/,
-		const QByteArray& objectId,
-		const istd::IChangeable& object) const
+			const imtbase::IObjectCollection& /*collection*/,
+			const QByteArray& objectId,
+			const istd::IChangeable& object) const
 {
 	const prolifeauth::IProductInfo* productInfoPtr = dynamic_cast<const prolifeauth::IProductInfo*>(&object);
 	if (productInfoPtr == nullptr){
 		return QByteArray();
 	}
 
-	QString ProductName = productInfoPtr->GetProductName();
-
-	if (ProductName.isEmpty()){
+	QString productName = productInfoPtr->GetProductName();
+	if (productName.isEmpty()){
 		return QByteArray();
 	}
 
-	QByteArray ProductId = ProductName.toUtf8();
+	QByteArray productId = productName.toUtf8();
 
-	QString ProductDescription = productInfoPtr->GetProductDescription();
+	QString productDescription = productInfoPtr->GetProductDescription();
 
-	QString ProductManufacturer = productInfoPtr->GetProductManufacturer();
+	QString productManufacturer = productInfoPtr->GetProductManufacturer();
 
 	QByteArray retVal = QString("UPDATE \"Products\" SET Id ='%1', Name = '%2', Description = '%3', Manufacturer = '%4' WHERE Id ='%5';")
-			.arg(qPrintable(ProductId))
-			.arg(ProductName)
-			.arg(ProductDescription)
-			.arg(ProductManufacturer)
-			.arg(qPrintable(objectId))
-			.toLocal8Bit();
+				.arg(qPrintable(productId))
+				.arg(productName)
+				.arg(productDescription)
+				.arg(productManufacturer)
+				.arg(qPrintable(objectId))
+				.toLocal8Bit();
 
 	return retVal;
 }
@@ -173,10 +174,10 @@ QByteArray CProductDatabaseDelegateComp::CreateRenameObjectQuery(
 
 	QByteArray newId = newObjectName.toUtf8();
 	QByteArray retVal = QString("UPDATE \"Products\" SET Id = '%1', Name = '%2' WHERE Id = '%3';")
-			.arg(qPrintable(newId))
-			.arg(newObjectName)
-			.arg(qPrintable(objectId))
-			.toLocal8Bit();
+				.arg(qPrintable(newId))
+				.arg(newObjectName)
+				.arg(qPrintable(objectId))
+				.toLocal8Bit();
 
 	return retVal;
 }
@@ -216,33 +217,27 @@ idoc::MetaInfoPtr CProductDatabaseDelegateComp::CreateObjectMetaInfo(const QByte
 bool CProductDatabaseDelegateComp::SetObjectMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
 {
 	if (record.contains("Name")){
-		QString ProductName = record.value("Name").toString();
+		QString productName = record.value("Name").toString();
 
-		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_NAME, ProductName);
+		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_NAME, productName);
 	}
 
 	if (record.contains("Description")){
-		QString ProductDescription = record.value("Description").toString();
+		QString productDescription = record.value("Description").toString();
 
-		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_DESCRIPTION, ProductDescription);
+		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_DESCRIPTION, productDescription);
 	}
 
 	if (record.contains("Manufacturer")){
-		QString ProductManufacturer = record.value("Manufacturer").toString();
+		QString productManufacturer = record.value("Manufacturer").toString();
 
-		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_MANUFACTURER, ProductManufacturer);
+		metaInfo.SetMetaInfo(prolifeauth::IProductInfo::MIT_PRODUCT_MANUFACTURER, productManufacturer);
 	}
-
-
 
 	return true;
 }
 
 
-}// namespace prolifelicdb
-
-
-
-
+} // namespace prolifelicdb
 
 
