@@ -7,7 +7,7 @@
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
-    <Description>Design schema for Lisa</Description>
+    <Description>Design schema for ProLife</Description>
     <Keywords></Keywords>
     <ElementsList>
         <Element Id="ImtAuthDesignSchema" PackageId="ImtAuthGuiPck" ComponentId="DesignManager">

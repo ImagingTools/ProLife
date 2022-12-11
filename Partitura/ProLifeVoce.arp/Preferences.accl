@@ -16,7 +16,7 @@
         <Element ComponentName="DesignTokenFileParser" X="150" Y="800" Note=""/>
         <Element ComponentName="General" X="450" Y="450" Note=""/>
         <Element ComponentName="Language" X="525" Y="575" Note=""/>
-        <Element ComponentName="LisaDesignSchema" X="150" Y="575" Note=""/>
+        <Element ComponentName="ProLifeDesignSchema" X="150" Y="575" Note=""/>
         <Element ComponentName="Preferences" X="725" Y="350" Note=""/>
         <Element ComponentName="PreferencesFilePath" X="725" Y="150" Note=""/>
         <Element ComponentName="SystemLocation" X="725" Y="50" Note=""/>

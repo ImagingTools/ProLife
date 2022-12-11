@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="0" Number="5032" Description="ACF"/>
             <Version Id="1" Number="2177" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -10,7 +10,6 @@
     <PositionMap>
         <Element ComponentName="AutoPersistence" X="1023.58578644" Y="613.686291501" Note=""/>
         <Element ComponentName="CompactXmlFileSerializer" X="1025" Y="525" Note=""/>
-        <Element ComponentName="FileAutoPersistence" X="500" Y="775" Note=""/>
         <Element ComponentName="GeneralPageDataModel" X="775" Y="425" Note=""/>
         <Element ComponentName="GeneralPageRepresentationModel" X="800" Y="275" Note=""/>
         <Element ComponentName="JoinDataProvider" X="525" Y="125" Note=""/>

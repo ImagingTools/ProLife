@@ -142,7 +142,7 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LisaDesignSchema</Value>
+                                <Value>ProLifeDesignSchema</Value>
                                 <Value>Language</Value>
                             </Values>
                         </Data>
@@ -173,7 +173,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaDesignSchema" PackageId="LisaVoce" ComponentId="DesignSchema">
+        <Element Id="ProLifeDesignSchema" PackageId="ProLifeVoce" ComponentId="DesignSchema">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="PaletteProvider" Type="Reference" ExportId="">

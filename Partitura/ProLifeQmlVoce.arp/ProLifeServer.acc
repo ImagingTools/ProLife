@@ -109,11 +109,11 @@
                     <AttributeInfo Id="HttpCommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Lisa/Views*</Value>
-                                <Value>Lisa/Models*</Value>
-                                <Value>Lisa/Views</Value>
+                                <Value>ProLife/Views*</Value>
+                                <Value>ProLife/Models*</Value>
+                                <Value>ProLife/Views</Value>
                                 <Value></Value>
-                                <Value>Lisa/graphql</Value>
+                                <Value>ProLife/graphql</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -215,7 +215,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PreferencesQml" PackageId="LisaVoce" ComponentId="PreferencesQml">
+        <Element Id="PreferencesQml" PackageId="ProLifeVoce" ComponentId="PreferencesQml">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
             </Data>
@@ -1311,10 +1311,10 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ParamId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaSettings"/>
+                                    <Data IsEnabled="true" Value="ProLifeSettings"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ParamName" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Lisa Settings"/>
+                                    <Data IsEnabled="true" Value="ProLife Settings"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Parameter" Type="Reference" ExportId="DBSettings">
                                     <Data IsEnabled="false"/>

@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="0" Number="5032" Description="ACF"/>
             <Version Id="1" Number="2177" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -10,51 +10,38 @@
     <PositionMap>
         <Element ComponentName="BinaryDataProvider" X="825" Y="50" Note=""/>
         <Element ComponentName="DatabaseEngine" X="950" Y="650" Note=""/>
-        <Element ComponentName="FileDataProvider" X="1075" Y="150" Note=""/>
-        <Element ComponentName="HttpFileBasedHandler" X="150" Y="250" Note=""/>
-        <Element ComponentName="HttpFileControllerServlet" X="700" Y="150" Note=""/>
+        <Element ComponentName="FileDataProvider" X="1075" Y="175" Note=""/>
+        <Element ComponentName="HttpFileBasedHandler" X="125" Y="250" Note=""/>
+        <Element ComponentName="HttpFileControllerServlet" X="800" Y="175" Note=""/>
         <Element ComponentName="HttpFileProviderBasedServlet" X="475" Y="50" Note=""/>
         <Element ComponentName="HttpRedirectHandler" X="150" Y="50" Note=""/>
         <Element ComponentName="HttpServerFramework" X="275" Y="150" Note=""/>
-        <Element ComponentName="IndexFilePath" X="400" Y="250" Note=""/>
-        <Element ComponentName="KeyDataProviders" X="1000" Y="400" Note=""/>
+        <Element ComponentName="IndexFilePath" X="125" Y="350" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="250" Y="650" Note=""/>
         <Element ComponentName="ProLifeLogFilePath" X="1075" Y="50" Note=""/>
         <Element ComponentName="RootDataController" X="525" Y="475" Note=""/>
         <Element ComponentName="RootServlet" X="525" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="KeyDataProviders">
-            <PositionMap>
-                <Element ComponentName="AesInitVector" X="175" Y="75" Note=""/>
-                <Element ComponentName="Encryption" X="925" Y="425" Note=""/>
-                <Element ComponentName="EncryptionBasePersistence" X="575" Y="425" Note=""/>
-                <Element ComponentName="KeyDataProvider" X="450" Y="200" Note=""/>
-                <Element ComponentName="XmlFileSerializer" X="675" Y="50" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Enums">
-            <PositionMap>
-                <Element ComponentName="MenuDataEnumProvider" X="225" Y="75" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="SettingsControllers">
             <PositionMap>
                 <Element ComponentName="DatabaseAccessSettings" X="975" Y="375" Note=""/>
                 <Element ComponentName="DatabasePage" X="950" Y="250" Note=""/>
                 <Element ComponentName="Design" X="100" Y="400" Note=""/>
-                <Element ComponentName="DesignParam" X="1100" Y="800" Note=""/>
                 <Element ComponentName="GeneralPage" X="325" Y="250" Note=""/>
                 <Element ComponentName="GetStyleDataController" X="125" Y="550" Note=""/>
                 <Element ComponentName="Language" X="375" Y="400" Note=""/>
-                <Element ComponentName="LanguageParam" X="1075" Y="725" Note=""/>
                 <Element ComponentName="LogFile" X="550" Y="650" Note=""/>
                 <Element ComponentName="PreferenceDataController" X="575" Y="50" Note=""/>
                 <Element ComponentName="PreferencesDataProvider" X="575" Y="150" Note=""/>
                 <Element ComponentName="ServerPage" X="550" Y="550" Note=""/>
-                <Element ComponentName="TextButton" X="350" Y="750" Note=""/>
+                <Element ComponentName="TextButton" X="550" Y="775" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Enums">
+            <PositionMap>
+                <Element ComponentName="MenuDataEnumProvider" X="625" Y="375" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
