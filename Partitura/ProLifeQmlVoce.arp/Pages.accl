@@ -2,23 +2,19 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="0" Number="5032" Description="ACF"/>
             <Version Id="1" Number="2177" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="JoinDataProvider" X="225" Y="375" Note=""/>
+        <Element ComponentName="JoinDataProvider" X="200" Y="375" Note=""/>
         <Element ComponentName="PageData" X="995" Y="377" Note=""/>
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
         <Element ComponentName="PageVisualStatus" X="200" Y="200" Note=""/>
         <Element ComponentName="Pages" X="600" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AdministrationPage" X="975" Y="376" Note=""/>
