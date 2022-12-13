@@ -103,36 +103,37 @@ CREATE TABLE "UsersSessions"(
 );
 
 CREATE TABLE "Orders"(
-  Id VARCHAR (1000) NOT NULL,
-  ClientName VARCHAR (1000) NOT NULL,
-  PRIMARY KEY (Id)
+    Id VARCHAR (1000) NOT NULL,
+    ClientName VARCHAR (1000) NOT NULL,
+    PRIMARY KEY (Id)
 );
 
 
 CREATE TABLE "Products"(
-  Id VARCHAR (1000) NOT NULL,
-  Name VARCHAR (1000) NOT NULL,
-  Description VARCHAR (1000),
-  Manufacturer VARCHAR (1000) NOT NULL,
-  PRIMARY KEY (Id)
+    Id VARCHAR (1000) NOT NULL,
+    Name VARCHAR (1000) NOT NULL,
+    Description VARCHAR (1000),
+    Manufacturer VARCHAR (1000) NOT NULL,
+    PRIMARY KEY (Id)
 );
+
 CREATE TYPE ProductionStatus AS ENUM ('Ordered', 'Confirmed', 'WaitingForProduction', 'InProduction', 'Testing', 'Aproved', 'PreparedForDelivering');
 
 CREATE TABLE "ProducedDevices"(
- ProductTypeId VARCHAR (1000) NOT NULL,
- SerialNumber VARCHAR (1000) NOT NULL,
- MacAddress VARCHAR (1000) NOT NULL,
- ProductionStatus ProductionStatus NOT NULL,
- PRIMARY KEY (SerialNumber),
- FOREIGN KEY (ProductTypeId) REFERENCES "Products" (Id) ON DELETE CASCADE ON UPDATE CASCADE
+    ProductTypeId VARCHAR (1000) NOT NULL,
+    SerialNumber VARCHAR (1000) NOT NULL,
+    MacAddress VARCHAR (1000) NOT NULL,
+    ProductionStatus ProductionStatus NOT NULL,
+    PRIMARY KEY (SerialNumber),
+    FOREIGN KEY (ProductTypeId) REFERENCES "Products" (Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE "OrderedDevices"(
- DeviceId VARCHAR (1000) NOT NULL,
- OrderId VARCHAR (1000) NOT NULL,
- FOREIGN KEY (OrderId) REFERENCES "Orders" (Id) ON DELETE CASCADE ON UPDATE CASCADE,
- FOREIGN KEY (DeviceId) REFERENCES "ProducedDevices" (SerialNumber) ON DELETE CASCADE ON UPDATE CASCADE,
- PRIMARY KEY (OrderId, DeviceId)
+    DeviceId VARCHAR (1000) NOT NULL,
+    OrderId VARCHAR (1000) NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES "Orders" (Id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (DeviceId) REFERENCES "ProducedDevices" (SerialNumber) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (OrderId, DeviceId)
 );
 
 INSERT INTO "Users" (UserId, Password, Name, Email) VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', '', '');
