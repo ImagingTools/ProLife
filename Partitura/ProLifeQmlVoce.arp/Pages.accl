@@ -2,13 +2,13 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5032" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="JoinDataProvider" X="200" Y="375" Note=""/>
+        <Element ComponentName="CompositeRepresentation" X="225" Y="400" Note=""/>
         <Element ComponentName="PageData" X="995" Y="377" Note=""/>
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
         <Element ComponentName="PageVisualStatus" X="200" Y="200" Note=""/>

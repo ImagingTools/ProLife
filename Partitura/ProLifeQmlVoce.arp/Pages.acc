@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5032" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="JoinDataProvider" PackageId="ImtQmlPck" ComponentId="JoinDataProvider">
+        <Element Id="CompositeRepresentation" PackageId="ImtQmlPck" ComponentId="CompositeRepresentation">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="RepresentationDataProvider" Type="Reference[]" ExportId="">
@@ -73,10 +73,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="MutationDataDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="JoinDataProvider"/>
+                        <Data IsEnabled="true" Value="CompositeRepresentation"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagesDataProviderCompPtr" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="JoinDataProvider"/>
+                        <Data IsEnabled="true" Value="CompositeRepresentation"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -115,26 +115,8 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ProductIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProLife</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductNames" Type="String[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProLife</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductPermissionsProviders" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProLifePermissionsProvider</Value>
-                                        </Values>
-                                    </Data>
+                                <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ProLifePermissionsProvider"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -170,7 +152,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductDatabaseDelegateComp" PackageId="ProLifeLicenseDbPck" ComponentId="ProductDatabaseDelegateComp">
+                    <Element Id="ProductDatabaseDelegateComp" PackageId="ProLifeDbPck" ComponentId="ProductDatabaseDelegateComp">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -185,7 +167,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductInfo" PackageId="ProLifeAuthPck" ComponentId="ProductInfo">
+                    <Element Id="ProductInfo" PackageId="ProLifeDataPck" ComponentId="ProductInfo">
                         <Data IsEnabled="true" Flags="2">
                             <AttributeInfoMap/>
                         </Data>

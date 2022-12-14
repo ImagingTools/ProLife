@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5032" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -113,9 +113,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Language" Type="Reference" ExportId="Language">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -305,7 +302,34 @@
         <EmbeddedRegistry Id="SettingsController">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="AboutPage" PackageId="ImtQmlPck" ComponentId="ParamsDataProvider">
+                    <Element Id="AllSettings" PackageId="ImtQmlPck" ComponentId="CompositeRepresentation">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="SettingsPages"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="MutationDataDelegate" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>GeneralPage</Value>
+                                            <Value>ServerPage</Value>
+                                            <Value>ApplicationInfo</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RepresentationDataProvider" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>GeneralPage</Value>
+                                            <Value>ServerPage</Value>
+                                            <Value>ApplicationInfo</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ApplicationInfo" PackageId="ImtQmlPck" ComponentId="CompositeObjectRepresentation">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ParamId" Type="Id" ExportId="">
@@ -373,6 +397,9 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -403,6 +430,9 @@
                     <Element Id="GetStyleDataController" PackageId="ImtGuiGqlPck" ComponentId="GetStyleDataController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ModelIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -416,32 +446,8 @@
                                 <AttributeInfo Id="Prefix" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="lisa"/>
                                 </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PagesDataProvider" PackageId="ImtQmlPck" ComponentId="JoinDataProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="SettingsPages"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="MutationDataDelegate" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>GeneralPage</Value>
-                                            <Value>ServerPage</Value>
-                                            <Value>AboutPage</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RepresentationDataProvider" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>GeneralPage</Value>
-                                            <Value>ServerPage</Value>
-                                            <Value>AboutPage</Value>
-                                        </Values>
-                                    </Data>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -449,7 +455,7 @@
                     <Element Id="RepresentationModel" PackageId="ImtCoreVoce" ComponentId="GeneralPageRepresentationModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="Design" Type="Reference" ExportId="">
+                                <AttributeInfo Id="DesignSchema" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="DataModel/Design"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Language" Type="Reference" ExportId="">
@@ -464,14 +470,8 @@
                     <Element Id="ServerPage" PackageId="ImtCoreVoce" ComponentId="ServerPageRepresentationModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseParameter" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ServerPageDataModel/DatabaseAccessSettings"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Mask" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="ServerPageDataModel/Mask"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TextButton" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ServerPageDataModel/TextButton"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -509,10 +509,10 @@
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="MutationDataProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PagesDataProvider"/>
+                                    <Data IsEnabled="true" Value="AllSettings"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SettingsDataProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PagesDataProvider"/>
+                                    <Data IsEnabled="true" Value="AllSettings"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -64,7 +64,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductCollectionController" PackageId="ProLifeLicenseGqlPck" ComponentId="ProductCollectionController">
+        <Element Id="ProductCollectionController" PackageId="ProLifeGqlPck" ComponentId="ProductCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
@@ -101,7 +101,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductController" PackageId="ProLifeLicenseGqlPck" ComponentId="ProductController">
+        <Element Id="ProductController" PackageId="ProLifeGqlPck" ComponentId="ProductController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
@@ -191,7 +191,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductInfo" PackageId="ProLifeAuthPck" ComponentId="ProductInfo">
+        <Element Id="ProductInfo" PackageId="ProLifeDataPck" ComponentId="ProductInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
             </Data>

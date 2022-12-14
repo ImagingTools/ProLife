@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5032" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -60,27 +60,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="GeneralPageDataModel" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="GeneralPageRepresentationModel" PackageId="ImtCoreVoce" ComponentId="GeneralPageRepresentationModel">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Design" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="GeneralPageDataModel/Design"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Language" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="GeneralPageDataModel/Language"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="JoinDataProvider" PackageId="ImtQmlPck" ComponentId="JoinDataProvider">
+        <Element Id="CompositeRepresentation" PackageId="ImtQmlPck" ComponentId="CompositeRepresentation">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="MutationDataDelegate" Type="Reference[]" ExportId="">
@@ -98,6 +78,26 @@
                                 <Value>GeneralPageRepresentationModel</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="GeneralPageDataModel" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="GeneralPageRepresentationModel" PackageId="ImtCoreVoce" ComponentId="GeneralPageRepresentationModel">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DesignSchema" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="GeneralPageDataModel/Design"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Language" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="GeneralPageDataModel/Language"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -176,8 +176,11 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList/>
-    <ExportedInterfaces/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imtgql::IGqlModelEditor" ComponentId="CompositeRepresentation"/>
+        <Interface InterfaceId="imtgql::IItemBasedRepresentationDataProvider" ComponentId="CompositeRepresentation"/>
+    </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="JoinDataProvider" ComponentId="JoinDataProvider"/>
+        <Component ExportedId="CompositeRepresentation" ComponentId="CompositeRepresentation"/>
     </ExportedComponents>
 </Acf>
