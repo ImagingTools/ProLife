@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="CommandPermissionsProviderJoiner" X="600" Y="400" Note=""/>
+        <Element ComponentName="CreateLicense" X="700" Y="275" Note=""/>
+        <Element ComponentName="Duplicate" X="587" Y="533" Note=""/>
+        <Element ComponentName="Edit" X="250" Y="400" Note=""/>
+        <Element ComponentName="New" X="375" Y="275" Note=""/>
+        <Element ComponentName="Remove" X="975" Y="400" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>

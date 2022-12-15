@@ -117,6 +117,15 @@ CREATE TABLE "Products"(
     PRIMARY KEY (Id)
 );
 
+CREATE TABLE "ProductLicenses"(
+  Id VARCHAR (1000) NOT NULL,
+  Name VARCHAR (1000) NOT NULL,
+  Description VARCHAR (1000),
+  ProductId VARCHAR (1000) NOT NULL,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TYPE ProductionStatus AS ENUM ('Ordered', 'Confirmed', 'WaitingForProduction', 'InProduction', 'Testing', 'Aproved', 'PreparedForDelivering');
 
 CREATE TABLE "ProducedDevices"(
@@ -136,5 +145,41 @@ CREATE TABLE "OrderedDevices"(
     PRIMARY KEY (OrderId, DeviceId)
 );
 
-INSERT INTO "Users" (UserId, Password, Name, Email) VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', '', '');
+CREATE TYPE AccountType AS ENUM ('private', 'company');
 
+CREATE TABLE "Accounts"(
+	Id VARCHAR (1000) NOT NULL,
+	Name VARCHAR (1000) NOT NULL,
+	Description VARCHAR (1000),
+	Type AccountType NOT NULL,
+	OwnerMail VARCHAR (1000) NOT NULL,
+	OwnerFirstName VARCHAR (1000) NOT NULL,
+	OwnerLastName VARCHAR (1000) NOT NULL,
+    PRIMARY KEY (Id)
+);
+
+CREATE TABLE "ProductInstances"(
+	InstanceId VARCHAR (1000) NOT NULL,
+	ProductId VARCHAR (1000) NOT NULL,
+	AccountId VARCHAR (1000) NOT NULL,
+	Name VARCHAR (1000) NOT NULL,
+	Description VARCHAR (1000),
+	Added TIMESTAMP,
+	LastModified TIMESTAMP,
+	PRIMARY KEY (InstanceId, ProductId),
+	FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "ProductInstanceLicenses"(
+    InstanceId VARCHAR (1000) NOT NULL,
+	LicenseId VARCHAR (1000) NOT NULL,
+	ProductId VARCHAR (1000) NOT NULL,
+	ExpirationDate DATE,
+	PRIMARY KEY (InstanceId, LicenseId, ProductId),
+	FOREIGN KEY (LicenseId) REFERENCES "ProductLicenses"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (InstanceId, ProductId) REFERENCES "ProductInstances"(InstanceId, ProductId) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO "Users" (UserId, Password, Name, Email) VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', '', '');

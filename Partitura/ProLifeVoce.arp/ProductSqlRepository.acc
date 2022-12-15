@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description>Acula's data repository containing all resources need for the execution of the production workflow</Description>
+    <Keywords>Inspection Application Product Workflow</Keywords>
+    <ElementsList>
+        <Element Id="ProductDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="ProductDatabaseDelegateComp">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Id"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductInfo" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="ProductInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TableName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Products"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProductInfo" PackageId="ProLifeDataPck" ComponentId="ProductInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="Products" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProductDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="ProductInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SensorInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Sensors"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imod::IModel" ComponentId="Products"/>
+        <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Products"/>
+        <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Products"/>
+        <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Products"/>
+        <Interface InterfaceId="istd::IChangeable" ComponentId="Products"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="Products"/>
+    </ExportedInterfaces>
+    <ExportedComponents>
+        <Component ExportedId="ProductsCollection" ComponentId="Products"/>
+    </ExportedComponents>
+</Acf>

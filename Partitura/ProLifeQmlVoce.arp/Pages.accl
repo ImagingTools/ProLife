@@ -13,20 +13,29 @@
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
         <Element ComponentName="PageVisualStatus" X="200" Y="200" Note=""/>
         <Element ComponentName="Pages" X="600" Y="75" Note=""/>
+        <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
+                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
+                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
+                <Element ComponentName="AccountPermissions" X="164.048773235" Y="543.058007951" Note=""/>
+                <Element ComponentName="AccountsPage" X="150" Y="475" Note=""/>
                 <Element ComponentName="AdministrationPage" X="975" Y="376" Note=""/>
                 <Element ComponentName="CheckPermissions" X="525" Y="375" Note=""/>
                 <Element ComponentName="FeatureContainer" X="975" Y="575" Note=""/>
-                <Element ComponentName="OptionsListAdapter" X="625" Y="250" Note=""/>
+                <Element ComponentName="InstancesPage" X="525" Y="500" Note=""/>
+                <Element ComponentName="InstancesPermissions" X="525" Y="575" Note=""/>
                 <Element ComponentName="ProLifePermissionsProvider" X="975" Y="475" Note=""/>
-                <Element ComponentName="ProductDatabaseDelegateComp" X="200" Y="100" Note=""/>
-                <Element ComponentName="ProductInfo" X="450" Y="100" Note=""/>
                 <Element ComponentName="ProductsPage" X="150" Y="375" Note=""/>
                 <Element ComponentName="QtResourceLoaderComp" X="975" Y="675" Note=""/>
-                <Element ComponentName="Repository" X="375" Y="250" Note=""/>
                 <Element ComponentName="SeparatorValue" X="150" Y="675" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>

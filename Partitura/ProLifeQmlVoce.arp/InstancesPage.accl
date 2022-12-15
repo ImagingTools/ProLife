@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="CheckPermissionOr" X="575" Y="575" Note=""/>
+        <Element ComponentName="Commands" X="500" Y="250" Note=""/>
+        <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
+        <Element ComponentName="InstallationCommandPermissions" X="775" Y="700" Note=""/>
+        <Element ComponentName="InstallationCommandsPermissionsProvider" X="775" Y="500" Note=""/>
+        <Element ComponentName="InstallationDataController" X="200" Y="250" Note=""/>
+        <Element ComponentName="InstallationEditCommandDataProvider" X="175" Y="625" Note=""/>
+        <Element ComponentName="InstallationEditCommandPermissions" X="375" Y="700" Note=""/>
+        <Element ComponentName="InstallationEditCommandsPermissionsProvider" X="350" Y="500" Note=""/>
+        <Element ComponentName="InstallationListController" X="875" Y="250" Note=""/>
+        <Element ComponentName="InstallationsCommandDataProvider" X="1025" Y="625" Note=""/>
+        <Element ComponentName="InstallationsHeadersDataProvider" X="1000" Y="400" Note=""/>
+        <Element ComponentName="ObjectViewDataProvider" X="1025" Y="75" Note=""/>
+        <Element ComponentName="ProductInstance" X="100" Y="425" Note=""/>
+        <Element ComponentName="ProductInstanceMetaInfoCreator" X="300" Y="350" Note=""/>
+        <Element ComponentName="VisualStatus" X="125" Y="75" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>

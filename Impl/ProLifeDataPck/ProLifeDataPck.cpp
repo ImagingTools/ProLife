@@ -10,7 +10,7 @@ namespace ProLifeDataPck
 
 
 I_EXPORT_PACKAGE(
-			"ProLifeAuthPck",
+            "ProLifeDataPck",
 			"ImagingTools license management component package",
 			IM_PROJECT("\"ImagingTools Core Framework\"") IM_COMPANY("ImagingTools"));
 

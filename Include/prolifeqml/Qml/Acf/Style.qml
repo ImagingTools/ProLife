@@ -114,7 +114,7 @@ Item {
         return themeType.GetData("ColorPalette").GetData(colorPalette);
     }
 
-    property string menuButtonDecoratorPath;
+    property string menuButtonDecoratorPath: "MenuPanelButtonDecorator.qml";
     property string subMenuButtonDecoratorPath;
     property string tabPanelDecoratorPath: "TabPanelDecorator.qml";
     property string topPanelDecoratorPath: "TopPanelDecorator.qml";

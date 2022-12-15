@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5030" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="CommandPermissionsProviderJoiner" X="550" Y="325" Note=""/>
+        <Element ComponentName="InstallationAdd" X="550" Y="200" Note=""/>
+        <Element ComponentName="InstallationItem" X="275" Y="200" Note=""/>
+        <Element ComponentName="InstallationUpdate" X="825" Y="200" Note=""/>
+        <Element ComponentName="InstallationsCreateLicenseFile" X="725" Y="600" Note=""/>
+        <Element ComponentName="InstallationsInfo" X="175" Y="325" Note=""/>
+        <Element ComponentName="InstallationsList" X="275" Y="450" Note=""/>
+        <Element ComponentName="InstallationsMetaInfo" X="334" Y="524" Note=""/>
+        <Element ComponentName="InstallationsObjectView" X="425" Y="600" Note=""/>
+        <Element ComponentName="InstallationsRemove" X="575" Y="675" Note=""/>
+        <Element ComponentName="InstallationsRename" X="850" Y="525" Note=""/>
+        <Element ComponentName="InstallationsSetDescription" X="975" Y="325" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>

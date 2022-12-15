@@ -20,6 +20,6 @@ typedef icomp::TModelCompWrap<
 						istd::IChangeable>> ProductInfo;
 
 
-} // namespace ProLifeAuthPck
+} // namespace ProLifeDataPck
 
 

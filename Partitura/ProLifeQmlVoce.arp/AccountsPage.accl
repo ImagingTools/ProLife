@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="AccountCommandPermissions" X="350" Y="575" Note=""/>
+        <Element ComponentName="AccountDataController" X="150" Y="225" Note=""/>
+        <Element ComponentName="AccountEditCommandDataProvider" X="900" Y="650" Note=""/>
+        <Element ComponentName="AccountEditCommandPermissions" X="550" Y="650" Note=""/>
+        <Element ComponentName="AccountInfo" X="175" Y="325" Note=""/>
+        <Element ComponentName="AccountListController" X="825" Y="225" Note=""/>
+        <Element ComponentName="AccountsCommandDataProvider" X="175" Y="500" Note=""/>
+        <Element ComponentName="AccountsCommandsPermissionsProvider" X="300" Y="400" Note=""/>
+        <Element ComponentName="AccountsEditCommandsPermissionsProvider" X="800" Y="550" Note=""/>
+        <Element ComponentName="AccountsHeadersDataProvider" X="1025" Y="75" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="500" Y="475" Note=""/>
+        <Element ComponentName="Commands" X="500" Y="225" Note=""/>
+        <Element ComponentName="Demultiplexer" X="500" Y="75" Note=""/>
+        <Element ComponentName="ObjectViewDataProvider" X="1000" Y="375" Note=""/>
+        <Element ComponentName="VisualStatus" X="125" Y="50" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>
