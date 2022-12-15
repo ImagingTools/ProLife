@@ -17,12 +17,19 @@
         <Element ComponentName="HttpRedirectHandler" X="150" Y="50" Note=""/>
         <Element ComponentName="HttpServerFramework" X="275" Y="150" Note=""/>
         <Element ComponentName="IndexFilePath" X="125" Y="350" Note=""/>
+        <Element ComponentName="KeyDataProviders" X="900" Y="375" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="250" Y="650" Note=""/>
         <Element ComponentName="ProLifeLogFilePath" X="1075" Y="50" Note=""/>
         <Element ComponentName="RootDataController" X="525" Y="475" Note=""/>
         <Element ComponentName="RootServlet" X="525" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Enums">
+            <PositionMap>
+                <Element ComponentName="MenuDataEnumProvider" X="625" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="SettingsControllers">
             <PositionMap>
                 <Element ComponentName="DatabaseAccessSettings" X="975" Y="375" Note=""/>
@@ -39,9 +46,14 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Enums">
+        <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
-                <Element ComponentName="MenuDataEnumProvider" X="625" Y="375" Note=""/>
+                <Element ComponentName="AesInitVector" X="125" Y="75" Note=""/>
+                <Element ComponentName="Encryption" X="925" Y="425" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="675" Y="425" Note=""/>
+                <Element ComponentName="InstallationRepository" X="125" Y="425" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="400" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="650" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

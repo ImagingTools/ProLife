@@ -16,20 +16,6 @@
         <Element ComponentName="SettingsController" X="175" Y="250" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="AuthorizationConcept">
-            <PositionMap>
-                <Element ComponentName="AuthorizationController" X="975" Y="200" Note=""/>
-                <Element ComponentName="AuthorizationOptionsController" X="225" Y="200" Note=""/>
-                <Element ComponentName="Demultiplexer" X="575" Y="75" Note=""/>
-                <Element ComponentName="HashCalculator" X="675" Y="350" Note=""/>
-                <Element ComponentName="UserMode" X="200" Y="425" Note=""/>
-                <Element ComponentName="UserModeOptions" X="200" Y="525" Note=""/>
-                <Element ComponentName="UserModeProvider" X="200" Y="300" Note=""/>
-                <Element ComponentName="UserSessionRepository" X="950" Y="350" Note=""/>
-                <Element ComponentName="UsersSessionsDatabaseDelegate" X="975" Y="525" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="SettingsController">
             <PositionMap>
                 <Element ComponentName="AllSettings" X="575" Y="275" Note=""/>
@@ -41,6 +27,20 @@
                 <Element ComponentName="ServerSettingsData" X="575" Y="525" Note=""/>
                 <Element ComponentName="SettingsController" X="575" Y="150" Note=""/>
                 <Element ComponentName="UserRelatedSettings" X="175" Y="400" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="AuthorizationConcept">
+            <PositionMap>
+                <Element ComponentName="AuthorizationController" X="975" Y="200" Note=""/>
+                <Element ComponentName="AuthorizationOptionsController" X="225" Y="200" Note=""/>
+                <Element ComponentName="Demultiplexer" X="575" Y="75" Note=""/>
+                <Element ComponentName="HashCalculator" X="675" Y="350" Note=""/>
+                <Element ComponentName="UserMode" X="200" Y="425" Note=""/>
+                <Element ComponentName="UserModeOptions" X="200" Y="525" Note=""/>
+                <Element ComponentName="UserModeProvider" X="200" Y="300" Note=""/>
+                <Element ComponentName="UserSessionRepository" X="950" Y="350" Note=""/>
+                <Element ComponentName="UsersSessionsDatabaseDelegate" X="975" Y="525" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

@@ -506,9 +506,12 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationController"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="PreferencesQml/DatabaseAccessSettings"/>
         <Component ExportedId="Design" ComponentId="PreferencesQml/Design"/>
         <Component ExportedId="Language" ComponentId="PreferencesQml/Language"/>
+        <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Pages/ProductInstanceSqlRepository"/>
+        <Component ExportedId="ProductSqlRepository" ComponentId="Pages/ProductSqlRepository"/>
         <Component ExportedId="UserSessionRepository" ComponentId="AuthorizationConcept/UserSessionRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="Pages/UserSqlRepository"/>

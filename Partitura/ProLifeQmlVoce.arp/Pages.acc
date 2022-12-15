@@ -318,6 +318,9 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Pages"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
+        <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Repositories/ProductInstanceSqlRepository"/>
+        <Component ExportedId="ProductSqlRepository" ComponentId="Repositories/ProductSqlRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="PageData/UserSqlRepository"/>
     </ExportedComponents>
 </Acf>
