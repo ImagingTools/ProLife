@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="0" Number="5040" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -17,9 +17,9 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>PageData/ProductPageVisualStatus</Value>
-                                <Value>PageData/AdministrationPageVisualStatus</Value>
                                 <Value>PageData/AccountsPageVisualStatus</Value>
                                 <Value>PageData/InstancesPageVisualStatus</Value>
+                                <Value>PageData/AdministrationPageVisualStatus</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -53,10 +53,10 @@
                     <AttributeInfo Id="GqlRepresentationDataController" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>PageData/AdministrationPages</Value>
                                 <Value>PageData/ProductsPage</Value>
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/InstancesPage</Value>
+                                <Value>PageData/AdministrationPages</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

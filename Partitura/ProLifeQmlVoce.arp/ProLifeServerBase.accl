@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="0" Number="5040" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -24,6 +24,17 @@
         <Element ComponentName="RootServlet" X="525" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="KeyDataProviders">
+            <PositionMap>
+                <Element ComponentName="AesInitVector" X="125" Y="75" Note=""/>
+                <Element ComponentName="Encryption" X="925" Y="425" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="675" Y="425" Note=""/>
+                <Element ComponentName="InstallationRepository" X="125" Y="425" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="400" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="650" Y="600" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Enums">
             <PositionMap>
                 <Element ComponentName="MenuDataEnumProvider" X="625" Y="375" Note=""/>
@@ -43,17 +54,6 @@
                 <Element ComponentName="PreferencesDataProvider" X="575" Y="150" Note=""/>
                 <Element ComponentName="ServerPage" X="550" Y="550" Note=""/>
                 <Element ComponentName="TextButton" X="550" Y="775" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="KeyDataProviders">
-            <PositionMap>
-                <Element ComponentName="AesInitVector" X="125" Y="75" Note=""/>
-                <Element ComponentName="Encryption" X="925" Y="425" Note=""/>
-                <Element ComponentName="EncryptionBasePersistence" X="675" Y="425" Note=""/>
-                <Element ComponentName="InstallationRepository" X="125" Y="425" Note=""/>
-                <Element ComponentName="KeyDataProvider" X="400" Y="250" Note=""/>
-                <Element ComponentName="XmlFileSerializer" X="650" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

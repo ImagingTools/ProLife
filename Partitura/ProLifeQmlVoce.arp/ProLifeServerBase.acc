@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5037" Description="ACF"/>
+            <Version Id="0" Number="5040" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -143,8 +143,8 @@
                     <AttributeInfo Id="ServerAddress" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="http://localhost"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerPort" Type="Integer" ExportId="ServerPort">
-                        <Data IsEnabled="true" Value="7776"/>
+                    <AttributeInfo Id="ServerPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartServerOnCreate" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>

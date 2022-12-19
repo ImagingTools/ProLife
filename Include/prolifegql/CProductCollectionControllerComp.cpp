@@ -36,12 +36,12 @@ QVariant CProductCollectionControllerComp::GetObjectInformation(const QByteArray
 }
 
 
-imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
+imtbase::CHierarchicalItemModelPtr CProductCollectionControllerComp::GetMetaInfo(
 			const QList<imtgql::CGqlObject> &inputParams,
 			const imtgql::CGqlObject &gqlObject,
 			QString &errorMessage) const
 {
-	imtbase::CTreeItemModel* rootModel = new imtbase::CTreeItemModel();
+	imtbase::CHierarchicalItemModelPtr rootModel(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModel = nullptr;
 	imtbase::CTreeItemModel* metaInfoModel = nullptr;
 	imtbase::CTreeItemModel* children = nullptr;
@@ -78,7 +78,7 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 
 		if (!m_objectCollectionCompPtr->GetObjectData(ProductId, dataPtr)){
 			errorMessage = QT_TR_NOOP("Unable to load an object data");
-			return nullptr;
+			return imtbase::CHierarchicalItemModelPtr();
 		}
 
         const prolifedata::IProductInfo* productInfoPtr = dynamic_cast<const prolifedata::IProductInfo*>(dataPtr.GetPtr());
@@ -90,7 +90,7 @@ imtbase::CTreeItemModel* CProductCollectionControllerComp::GetMetaInfo(
 				errorMessage = QT_TR_NOOP("Unable to get the product info");
 			}
 
-			return nullptr;
+			return imtbase::CHierarchicalItemModelPtr();
 		}
 
 		int index = metaInfoModel->InsertNewItem();
