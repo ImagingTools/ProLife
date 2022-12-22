@@ -9,7 +9,7 @@ Item {
 
     anchors.fill: parent;
 
-    property alias localSettings: settingsProvider.localModel;
+    property alias localSettings: settingsProviderLocal.localModel;
 
     signal settingsUpdate(string pageId);
 
@@ -23,23 +23,22 @@ Item {
     }
 
     function updateAllModels(){
-        settingsProvider.updateModel();
+        settingsProviderLocal.updateModel();
         thumbnailDecorator.updateModels();
     }
 
 
 
     SettingsProvider {
-        id: settingsProvider;
+        id: settingsProviderLocal;
 
         root: window;
     }
 
     ThumbnailDecorator {
         id: thumbnailDecorator;
-
-        root: window;
-
         anchors.fill: parent;
+        root: window;
+        settingsProvider: settingsProviderLocal;
     }
 }
