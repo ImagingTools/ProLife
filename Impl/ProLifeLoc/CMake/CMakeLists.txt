@@ -1,4 +1,4 @@
 project(ProLifeLoc LANGUAGES CXX)
 
-include($ENV{ACFCONFIGDIR}/CMake/StaticConfig.cmake)
-include($ENV{ACFCONFIGDIR}/CMake/CustomBuild.cmake)
+include($ENV{ACFDIR}/Config/CMake/StaticConfig.cmake)
+include($ENV{ACFDIR}/Config/CMake/CustomBuild.cmake)

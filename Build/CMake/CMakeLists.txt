@@ -15,15 +15,12 @@ set(AUX_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../AuxInclude/${TARGETNAME}/Ge
 include_directories("${AUX_INCLUDE_DIR}/../")
 
 # Include
-
 add_subdirectory("${INCLUDE_DIR}/prolifeqml/CMake" "${AUX_INCLUDE_DIR}/prolifeqml")
 add_subdirectory("${INCLUDE_DIR}/prolifedata/CMake" "${AUX_INCLUDE_DIR}/prolifedata")
 add_subdirectory("${INCLUDE_DIR}/prolifedb/CMake" "${AUX_INCLUDE_DIR}/prolifedb")
 add_subdirectory("${INCLUDE_DIR}/prolifegql/CMake" "${AUX_INCLUDE_DIR}/prolifegql")
 
-
 # Impl
-
 add_subdirectory("${IMPL_DIR}/ProLifeLoc/CMake" "${AUX_INCLUDE_DIR}/ProLifeLoc")
 add_subdirectory("${IMPL_DIR}/ProLifeClientServer/CMake" "${AUX_INCLUDE_DIR}/ProLifeClientServer")
 add_subdirectory("${IMPL_DIR}/ProLifeClient/CMake" "${AUX_INCLUDE_DIR}/ProLifeClient")
