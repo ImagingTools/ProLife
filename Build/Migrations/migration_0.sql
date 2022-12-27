@@ -102,12 +102,6 @@ CREATE TABLE "UsersSessions"(
     FOREIGN KEY (UserId) REFERENCES "Users" (UserId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "Orders"(
-    Id VARCHAR (1000) NOT NULL,
-    ClientName VARCHAR (1000) NOT NULL,
-    PRIMARY KEY (Id)
-);
-
 
 CREATE TABLE "Products"(
     Id VARCHAR (1000) NOT NULL,
@@ -158,6 +152,27 @@ CREATE TABLE "Accounts"(
     PRIMARY KEY (Id)
 );
 
+CREATE TABLE "Orders"(
+    Id VARCHAR (1000) NOT NULL,
+    AccountId VARCHAR (1000) NOT NULL,
+    PRIMARY KEY (Id),
+    FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "OrderedProducts"(
+    InstanceId VARCHAR (1000) NOT NULL,
+    ProductId VARCHAR (1000) NOT NULL,
+    AccountId VARCHAR (1000) NOT NULL,
+    OrderId VARCHAR (1000) NOT NULL,
+    Name VARCHAR (1000) NOT NULL,
+    Description VARCHAR (1000),
+    Added TIMESTAMP,
+    LastModified TIMESTAMP,
+    PRIMARY KEY (InstanceId, ProductId, OrderId),
+    FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TABLE "ProductInstances"(
 	InstanceId VARCHAR (1000) NOT NULL,
 	ProductId VARCHAR (1000) NOT NULL,
@@ -167,9 +182,7 @@ CREATE TABLE "ProductInstances"(
 	Added TIMESTAMP,
 	LastModified TIMESTAMP,
 	PRIMARY KEY (InstanceId, ProductId),
-	FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE "ProductInstanceLicenses"(
@@ -178,7 +191,6 @@ CREATE TABLE "ProductInstanceLicenses"(
 	ProductId VARCHAR (1000) NOT NULL,
 	ExpirationDate DATE,
 	PRIMARY KEY (InstanceId, LicenseId, ProductId),
-	FOREIGN KEY (LicenseId) REFERENCES "ProductLicenses"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (InstanceId, ProductId) REFERENCES "ProductInstances"(InstanceId, ProductId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

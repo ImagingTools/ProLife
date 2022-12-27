@@ -1,0 +1,50 @@
+#pragma once
+
+
+// ProLife includes
+#include <prolifedata/IOrderInfo.h>
+
+
+namespace prolifedata
+{
+
+
+class COrderInfo: virtual public IOrderInfo
+{
+public:
+	static QByteArray GetTypeId();
+
+	COrderInfo();
+	~COrderInfo();
+
+	// reimplemented (IOrderInfo)
+	virtual QByteArray GetOrderId() const override;
+	virtual void SetOrderId(const QByteArray& orderId) override;
+	virtual QByteArray GetCustomerId() const override;
+	virtual void SetCustomerId(const QByteArray& customerId) override;
+	virtual ProductIds GetProducts() const override;
+	virtual bool AddProduct(const QByteArray& productId) override;
+	virtual void RemoveProduct(const QByteArray& productId) override;
+
+	// reimplemented (iser::IObject)
+	virtual QByteArray GetFactoryId() const override;
+
+	// reimplemented (iser::ISerializable)
+	virtual bool Serialize(iser::IArchive& archive) override;
+
+	// reimplemented (istd::IChangeable)
+	virtual int GetSupportedOperations() const override;
+	virtual bool CopyFrom(const IChangeable& object, CompatibilityMode mode = CM_WITHOUT_REFS) override;
+	virtual IChangeable* CloneMe(CompatibilityMode mode = CM_WITHOUT_REFS) const override;
+	virtual bool ResetData(CompatibilityMode mode = CM_WITHOUT_REFS) override;
+
+private:
+	QByteArray m_orderId;
+	QByteArray m_customerId;
+	ProductIds m_orderedProducts;
+};
+
+
+} // namespace prolifedata
+
+

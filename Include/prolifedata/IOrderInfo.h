@@ -1,0 +1,73 @@
+#pragma once
+
+
+// ACF includes
+#include <iser/IObject.h>
+
+
+namespace prolifedata
+{
+
+
+/**
+	Interface for describing an Product.
+	\ingroup Authentification
+*/
+class IOrderInfo: virtual public iser::IObject
+{
+public:
+	typedef QByteArrayList ProductIds;
+
+	enum MetaInfoTypes
+	{
+
+		/**
+			Product name given as QString.
+		*/
+		MIT_ORDER_ID,
+
+		/**
+			Order customer given as QString.
+		*/
+		MIT_ORDER_CUSTOMER,
+	};
+
+	/**
+		Get id of the order.
+	*/
+	virtual QByteArray GetOrderId() const = 0;
+
+	/**
+		Set id of the order.
+	*/
+	virtual void SetOrderId(const QByteArray& orderId) = 0;
+
+	/**
+		Get customer of the order.
+	*/
+	virtual QByteArray GetCustomerId() const = 0;
+
+	/**
+		Set order customer.
+	*/
+	virtual void SetCustomerId(const QByteArray& customerId) = 0;
+
+	/**
+		Get orser products.
+	*/
+	virtual ProductIds GetProducts() const = 0;
+
+	virtual bool AddProduct(const QByteArray& productId) = 0;
+
+	/**
+		Set order products.
+	*/
+	virtual void RemoveProduct(const QByteArray& productId) = 0;
+
+
+};
+
+
+} // namespace prolifedata
+
+

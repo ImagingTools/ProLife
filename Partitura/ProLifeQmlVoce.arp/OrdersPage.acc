@@ -10,11 +10,6 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
         <Element Id="Commands" PackageId="ImtGuiGqlPck" ComponentId="CommandsDataController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -27,8 +22,8 @@
                     <AttributeInfo Id="CommandsDataProviderCompPtr" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>InstallationCommandsPermissionsProvider</Value>
-                                <Value>InstallationEditCommandsPermissionsProvider</Value>
+                                <Value>InstallationEditCommandDataProvider</Value>
+                                <Value>InstallationsCommandDataProvider</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -60,26 +55,6 @@
                                 <Value>InstallationDataController</Value>
                             </Values>
                         </Data>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="InstallationCommandPermissions" PackageId="ProLifeVoce" ComponentId="InstallationCommandPermissions">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="InstallationCommandsPermissionsProvider" PackageId="ImtQmlPck" ComponentId="CommandPermissionsFilter">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="InstallationCommandPermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandsDataProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="InstallationsCommandDataProvider"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -176,26 +151,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="InstallationEditCommandPermissions" PackageId="ProLifeVoce" ComponentId="InstallationEditCommandPermissions">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="InstallationEditCommandsPermissionsProvider" PackageId="ImtQmlPck" ComponentId="CommandPermissionsFilter">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="InstallationEditCommandPermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandsDataProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="InstallationEditCommandDataProvider"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -406,7 +361,7 @@
                         <Data IsEnabled="true" Value="Installations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Installations"/>
+                        <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageOffSelectedStatusIcon" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="../../Icons/Deployment_Off_Selected.svg"/>
@@ -440,6 +395,6 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="InstancesPageVisualStatus" ComponentId="VisualStatus"/>
+        <Component ExportedId="OrderVisualStatus" ComponentId="VisualStatus"/>
     </ExportedComponents>
 </Acf>

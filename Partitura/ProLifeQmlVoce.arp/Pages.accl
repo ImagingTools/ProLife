@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5040" Description="ACF"/>
+            <Version Id="0" Number="5042" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -25,6 +25,7 @@
                 <Element ComponentName="FeatureContainer" X="975" Y="575" Note=""/>
                 <Element ComponentName="InstancesPage" X="525" Y="500" Note=""/>
                 <Element ComponentName="InstancesPermissions" X="525" Y="575" Note=""/>
+                <Element ComponentName="OrdersPage" X="525" Y="300" Note=""/>
                 <Element ComponentName="ProLifePermissionsProvider" X="975" Y="475" Note=""/>
                 <Element ComponentName="ProductsPage" X="150" Y="375" Note=""/>
                 <Element ComponentName="QtResourceLoaderComp" X="975" Y="675" Note=""/>
