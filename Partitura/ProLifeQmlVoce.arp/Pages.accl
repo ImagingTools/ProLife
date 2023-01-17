@@ -8,34 +8,26 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="AccountsPage" X="100" Y="500" Note=""/>
         <Element ComponentName="AdministrationPage" X="275" Y="675" Note=""/>
-        <Element ComponentName="PackagesPage" X="350" Y="500" Note=""/>
+        <Element ComponentName="OrdersPage" X="350" Y="500" Note=""/>
         <Element ComponentName="PageData" X="995" Y="377" Note=""/>
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
+        <Element ComponentName="Pages" X="175" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
         <Element ComponentName="PagesPermissions" X="700" Y="500" Note=""/>
         <Element ComponentName="PagesRepresentation" X="725" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="250" Y="200" Note=""/>
-        <Element ComponentName="Pages_1" X="150" Y="375" Note=""/>
         <Element ComponentName="PermissionsChecker" X="425" Y="350" Note=""/>
-        <Element ComponentName="ProductsPage" X="90.1005050634" Y="500" Note=""/>
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PageData">
+        <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
-                <Element ComponentName="AccountPermissions" X="164.048773235" Y="543.058007951" Note=""/>
-                <Element ComponentName="AccountsPage" X="150" Y="475" Note=""/>
-                <Element ComponentName="AdministrationPage" X="975" Y="376" Note=""/>
-                <Element ComponentName="CheckPermissions" X="525" Y="375" Note=""/>
-                <Element ComponentName="FeatureContainer" X="975" Y="575" Note=""/>
-                <Element ComponentName="InstancesPage" X="525" Y="500" Note=""/>
-                <Element ComponentName="InstancesPermissions" X="525" Y="575" Note=""/>
-                <Element ComponentName="OrdersPage" X="525" Y="300" Note=""/>
-                <Element ComponentName="ProLifePermissionsProvider" X="975" Y="475" Note=""/>
-                <Element ComponentName="ProductsPage" X="150" Y="375" Note=""/>
-                <Element ComponentName="QtResourceLoaderComp" X="975" Y="675" Note=""/>
-                <Element ComponentName="SeparatorValue" X="150" Y="675" Note=""/>
+                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -44,6 +36,18 @@
                 <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
                 <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
                 <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AccountPermissions" X="950" Y="300" Note=""/>
+                <Element ComponentName="AccountsPage" X="950" Y="175" Note=""/>
+                <Element ComponentName="AdministrationPage" X="575" Y="600" Note=""/>
+                <Element ComponentName="CheckPermissions" X="575" Y="175" Note=""/>
+                <Element ComponentName="OrdersPage" X="175" Y="175" Note=""/>
+                <Element ComponentName="ProductPermissionController" X="575" Y="800" Note=""/>
+                <Element ComponentName="SingleProductPermission" X="575" Y="700" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

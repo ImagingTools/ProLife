@@ -10,6 +10,27 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="AccountsPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Id" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="AccountsPage"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ItemPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Account"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Accounts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../../imtauthgui/AccountCollectionView.qml"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="AdministrationPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -31,23 +52,23 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PackagesPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
+        <Element Id="OrdersPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Id" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Packages"/>
+                        <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ItemPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="FeaturePackage"/>
+                        <Data IsEnabled="true" Value="Order"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Packages"/>
+                        <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtlicgui/PackageCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../../ProLife/InstallationCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -76,7 +97,7 @@
         <Element Id="PageDataControllers" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="GqlRepresentationDataController" Type="Reference[]" ExportId="">
+                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>PageData/ProductsPage</Value>
@@ -91,6 +112,21 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Pages" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OrdersPage</Value>
+                                <Value>AccountsPage</Value>
+                                <Value>AdministrationPage</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -143,7 +179,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PageBasedModel"/>
+                        <Data IsEnabled="true" Value="Pages"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
                         <Data IsEnabled="false"/>
@@ -160,45 +196,9 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Pages_1" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>PackagesPage</Value>
-                                <Value>ProductsPage</Value>
-                                <Value>AdministrationPage</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="PermissionsChecker" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="ProductsPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Id" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Products"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ItemPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Product"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Products"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtlicgui/ProductCollectionView.qml"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="Repositories" PackageId="" ComponentId="Repositories">
@@ -241,9 +241,6 @@
                     <Element Id="AdministrationPage" PackageId="ImtUserAdministrationVoce" ComponentId="AdministrationPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissions"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -251,7 +248,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProLifePermissionsProvider"/>
+                                    <Data IsEnabled="true" Value="SingleProductPermission"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -260,34 +257,6 @@
                         </Data>
                     </Element>
                     <Element Id="CheckPermissions" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="FeatureContainer" PackageId="ImtLicensePck" ComponentId="FeatureContainer">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="InstancesPage" PackageId="ProLifeQmlVoce" ComponentId="InstancesPage">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="InstancesPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="InstallationRepository" Type="Reference" ExportId="InstallationRepository">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="InstancesPermissions" PackageId="ProLifeVoce" ComponentId="InstancesPermissions">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap/>
                         </Data>
@@ -307,47 +276,44 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProLifePermissionsProvider" PackageId="ImtAuthPck" ComponentId="PermissionsProvider">
+                    <Element Id="ProductPermissionController" PackageId="ImtLicenseGqlPck" ComponentId="ProductPermissionController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="FeaturePackage" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="FeatureContainer"/>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ProductPermissions</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SingleProductPermission"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductsPage" PackageId="ProLifeQmlVoce" ComponentId="ProductsPage">
+                    <Element Id="SingleProductPermission" PackageId="ImtCoreVoce" ComponentId="SingleProductPermission">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="ProductRepository">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="QtResourceLoaderComp" PackageId="ImtCorePck" ComponentId="QtResourceLoaderComp">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="PathToFile" Type="Id" ExportId="PathToPermissionsFile">
+                                <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value=":/Features/LisaFeatures"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="TargetCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="FeatureContainer"/>
+                                <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>Lisa</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SeparatorValue" PackageId="BasePck" ComponentId="TextParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="$IMTCORESEPARATOR$"/>
+                                <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>Lisa</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -360,17 +326,89 @@
                     <Component ExportedId="AccountsPageVisualStatus" ComponentId="AccountsPage/AccountsPageVisualStatus"/>
                     <Component ExportedId="AdministrationPageVisualStatus" ComponentId="AdministrationPage/AdministrationPageVisualStatus"/>
                     <Component ExportedId="AdministrationPages" ComponentId="AdministrationPage/AdministrationPages"/>
-                    <Component ExportedId="InstancesPage" ComponentId="InstancesPage"/>
                     <Component ExportedId="InstancesPageVisualStatus" ComponentId="InstancesPage/InstancesPageVisualStatus"/>
                     <Component ExportedId="OrderPageVisualStatus" ComponentId="OrdersPage/OrderPageVisualStatus"/>
                     <Component ExportedId="OrderVisualStatus" ComponentId="OrdersPage/OrderVisualStatus"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
-                    <Component ExportedId="ProductsPage" ComponentId="ProductsPage"/>
                     <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
                 </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="PagesPermissions">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="AccountsPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Accounts"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewFeatures</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="AdministrationPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Administration"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewAdministration</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OrdersPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Orders"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewOrders</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PagePermissions" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AccountsPermissions</Value>
+                                            <Value>OrdersPermissions</Value>
+                                            <Value>AdministrationPermissions</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="PagePermissions"/>
+                </ExportedInterfaces>
+                <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>
         <EmbeddedRegistry Id="Repositories">

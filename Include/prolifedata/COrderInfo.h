@@ -44,6 +44,7 @@ private:
 	QByteArray m_orderId;
 	QByteArray m_customerId;
 	QByteArray m_comment;
+    IOrderInfo::ProductIds m_orderedProducts;
 	imtlic::CProductInstanceCollection m_productInstanceCollection;
 };
 
