@@ -111,10 +111,16 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_customerId);
 	retVal = retVal && archive.EndTag(orderCustomerTag);
 
-	QByteArray orderedProductsTag = "OrderedProducts";
-	QByteArray productTag = "Product";
-	QByteArrayList orderedProduct = m_orderedProducts;
-	retVal = retVal && iser::CPrimitiveTypesSerializer::SerializeContainer<QByteArrayList>(archive, orderedProduct, orderedProductsTag, productTag);
+	static iser::CArchiveTag orderCommentTag("OrderComment", "Order Comment", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(orderCommentTag);
+	retVal = retVal && archive.Process(m_comment);
+	retVal = retVal && archive.EndTag(orderCommentTag);
+
+//	QByteArray orderedProductsTag = "OrderedProducts";
+//	QByteArray productTag = "Product";
+//	QByteArrayList orderedProduct = m_orderedProducts;
+//	retVal = retVal && iser::CPrimitiveTypesSerializer::SerializeContainer<QByteArrayList>(archive, orderedProduct, orderedProductsTag, productTag);
+	m_productInstanceCollection.Serialize(archive);
 
 	return retVal;
 }

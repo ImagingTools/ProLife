@@ -131,13 +131,6 @@ CREATE TABLE "ProducedDevices"(
     FOREIGN KEY (ProductTypeId) REFERENCES "Products" (Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "OrderedDevices"(
-    DeviceId VARCHAR (1000) NOT NULL,
-    OrderId VARCHAR (1000) NOT NULL,
-    FOREIGN KEY (OrderId) REFERENCES "Orders" (Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (DeviceId) REFERENCES "ProducedDevices" (SerialNumber) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (OrderId, DeviceId)
-);
 
 CREATE TYPE AccountType AS ENUM ('private', 'company');
 
@@ -155,6 +148,11 @@ CREATE TABLE "Accounts"(
 CREATE TABLE "Orders"(
     Id VARCHAR (1000) NOT NULL,
     AccountId VARCHAR (1000) NOT NULL,
+    Order JSONB,
+    RevisionNumber BIGINT,
+    LastModified TIMESTAMP,
+    Checksum BIGINT,
+    IsActive BOOLEAN,
     PRIMARY KEY (Id),
     FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -162,15 +160,28 @@ CREATE TABLE "Orders"(
 CREATE TABLE "OrderedProducts"(
     InstanceId VARCHAR (1000) NOT NULL,
     ProductId VARCHAR (1000) NOT NULL,
-    AccountId VARCHAR (1000) NOT NULL,
     OrderId VARCHAR (1000) NOT NULL,
     Name VARCHAR (1000) NOT NULL,
-    Description VARCHAR (1000),
+    Category VARCHAR (1000) NOT NULL,
+    Manufacturer VARCHAR (1000) NOT NULL,
+    Comment VARCHAR (1000),
+    SoftwareId VARCHAR (1000),
+    MacAddress VARCHAR (1000),
+    SerialNumber VARCHAR (1000),
+    ProductionStatus ProductionStatus,
     Added TIMESTAMP,
     LastModified TIMESTAMP,
     PRIMARY KEY (InstanceId, ProductId, OrderId),
     FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "OrderedDevices"(
+    DeviceId VARCHAR (1000) NOT NULL,
+    OrderId VARCHAR (1000) NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES "Orders" (Id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (DeviceId) REFERENCES "ProducedDevices" (SerialNumber) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (OrderId, DeviceId)
 );
 
 CREATE TABLE "ProductInstances"(
@@ -194,4 +205,25 @@ CREATE TABLE "ProductInstanceLicenses"(
 	FOREIGN KEY (InstanceId, ProductId) REFERENCES "ProductInstances"(InstanceId, ProductId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO "Users" (UserId, Password, Name, Email) VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', '', '');
+CREATE TABLE "SoftwareProducts"(
+    OrderId VARCHAR (1000) NOT NULL,
+    ProductId VARCHAR (1000) NOT NULL,
+    Name VARCHAR (1000) NOT NULL,
+    Comment VARCHAR (1000),
+    PRIMARY KEY (OrderId, ProductId),
+    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "HardwareProducts"(
+    OrderId VARCHAR (1000) NOT NULL,
+    ProductId VARCHAR (1000) NOT NULL,
+    SoftwareId VARCHAR (1000) NOT NULL,
+    Name VARCHAR (1000) NOT NULL,
+    MacAddress VARCHAR (1000) NOT NULL,
+    SerialNumber VARCHAR (1000) NOT NULL,
+    ProductionStatus VARCHAR (1000) NOT NULL,
+    Comment VARCHAR (1000),
+    PRIMARY KEY (OrderId, ProductId),
+    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+

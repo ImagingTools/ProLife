@@ -13,19 +13,15 @@ namespace prolifegql
 {
 
 
-imtbase::CHierarchicalItemModelPtr COrderControllerComp::GetObject(
-			const QList<imtgql::CGqlObject>& inputParams,
-			const imtgql::CGqlObject& gqlObject,
-			const imtgql::IGqlContext* gqlContext,
-			QString& errorMessage) const
+imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	imtbase::CHierarchicalItemModelPtr rootModel(new imtbase::CTreeItemModel());
+	imtbase::CTreeItemModel* rootModel = new imtbase::CTreeItemModel();
 	imtbase::CTreeItemModel* dataModel = new imtbase::CTreeItemModel();
 
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QObject::tr("Internal error").toUtf8();
 
-		return imtbase::CHierarchicalItemModelPtr();
+		return nullptr;
 	}
 
 	dataModel->SetData("Id", "");
@@ -35,8 +31,11 @@ imtbase::CHierarchicalItemModelPtr COrderControllerComp::GetObject(
 	imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("Products");
 	imtbase::CTreeItemModel* activeLicenses = productsModel->AddTreeModel("ActiveLicenses");
 
+	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
 
-	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
+	Q_ASSERT(inputParams == nullptr);
+
+	QByteArray objectId = GetObjectIdFromInputParams(*inputParams);
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
@@ -44,7 +43,7 @@ imtbase::CHierarchicalItemModelPtr COrderControllerComp::GetObject(
 
 		if (orderPtr == nullptr){
 			errorMessage = QT_TR_NOOP("Unable to get an product instance");
-			return imtbase::CHierarchicalItemModelPtr();
+			return nullptr;
 		}
 
 //		QByteArray instanceId = objectId;

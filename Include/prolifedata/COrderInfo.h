@@ -1,5 +1,7 @@
 #pragma once
 
+// ImtCore includes
+#include <imtlic/CProductInstanceCollection.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -41,7 +43,8 @@ public:
 private:
 	QByteArray m_orderId;
 	QByteArray m_customerId;
-	ProductIds m_orderedProducts;
+	QByteArray m_comment;
+	imtlic::CProductInstanceCollection m_productInstanceCollection;
 };
 
 

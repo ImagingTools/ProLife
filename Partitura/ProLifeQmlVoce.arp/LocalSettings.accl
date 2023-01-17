@@ -2,19 +2,19 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5042" Description="ACF"/>
+            <Version Id="0" Number="5045" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ClientPersistence" X="550" Y="775" Note=""/>
-        <Element ComponentName="CompositeRepresentation" X="550" Y="100" Note=""/>
-        <Element ComponentName="GeneralPageData" X="850" Y="425" Note=""/>
-        <Element ComponentName="GeneralPageRepresentation" X="875" Y="275" Note=""/>
-        <Element ComponentName="LocalPageData" X="275" Y="425" Note=""/>
-        <Element ComponentName="LocalPageRepresentation" X="250" Y="275" Note=""/>
-        <Element ComponentName="Preferences" X="550" Y="650" Note=""/>
+        <Element ComponentName="ClientPersistence" X="575" Y="100" Note=""/>
+        <Element ComponentName="GeneralPageData" X="900" Y="350" Note=""/>
+        <Element ComponentName="GeneralPageRepresentation" X="925" Y="450" Note=""/>
+        <Element ComponentName="LocalPageData" X="250" Y="350" Note=""/>
+        <Element ComponentName="LocalPageRepresentation" X="225" Y="448" Note=""/>
+        <Element ComponentName="Settings" X="575" Y="225" Note=""/>
+        <Element ComponentName="SettingsRepresentation" X="575" Y="600" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

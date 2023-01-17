@@ -15,9 +15,6 @@
 #include <imtbase/CTreeItemModel.h>
 #include <imtqml/CGqlModel.h>
 #include <imtqml/CQuickApplicationComp.h>
-#include <imtqml/CApplicationDataEnumProviderComp.h>
-#include <imtqml/CPageDataEnumProviderComp.h>
-#include <imtqml/CCommandDataEnumProviderComp.h>
 #include <imtqml/CRemoteFileController.h>
 
 #include <GeneratedFiles/ProLifeClient/CProLifeClient.h>

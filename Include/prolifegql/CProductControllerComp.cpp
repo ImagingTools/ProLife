@@ -9,18 +9,14 @@ namespace prolifegql
 {
 
 
-imtbase::CHierarchicalItemModelPtr CProductControllerComp::GetObject(
-			const QList<imtgql::CGqlObject>& inputParams,
-			const imtgql::CGqlObject& gqlObject,
-			const imtgql::IGqlContext* gqlContext,
-			QString& errorMessage) const
+imtbase::CTreeItemModel* CProductControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	imtbase::CHierarchicalItemModelPtr rootModel(new imtbase::CTreeItemModel());
+	imtbase::CTreeItemModel* rootModel = new imtbase::CTreeItemModel();
 	imtbase::CTreeItemModel* dataModel = new imtbase::CTreeItemModel();
 
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QObject::tr("Internal error").toUtf8();
-		return imtbase::CHierarchicalItemModelPtr();
+		return nullptr;
 	}
 
 	dataModel->SetData("Id", "");
@@ -29,7 +25,7 @@ imtbase::CHierarchicalItemModelPtr CProductControllerComp::GetObject(
 	dataModel->SetData("Manufacturer", "");
 
 
-	QByteArray ProductId = GetObjectIdFromInputParams(inputParams);
+	QByteArray ProductId = GetObjectIdFromInputParams(*gqlRequest.GetParams());
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(ProductId, dataPtr)){
@@ -37,7 +33,7 @@ imtbase::CHierarchicalItemModelPtr CProductControllerComp::GetObject(
 
 		if (productInfoPtr == nullptr){
 			errorMessage = QT_TR_NOOP("Unable to get an product info");
-			return imtbase::CHierarchicalItemModelPtr();
+			return nullptr;
 		}
 
 		QString ProductName = productInfoPtr->GetProductName();

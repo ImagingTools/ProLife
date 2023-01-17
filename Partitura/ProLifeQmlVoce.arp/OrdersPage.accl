@@ -2,23 +2,24 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5042" Description="ACF"/>
+            <Version Id="0" Number="5045" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Commands" X="600" Y="250" Note=""/>
+        <Element ComponentName="Commands" X="525" Y="250" Note=""/>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
+        <Element ComponentName="HardwareHeadersDataProvider" X="975" Y="475" Note=""/>
         <Element ComponentName="InstallationDataController" X="200" Y="250" Note=""/>
-        <Element ComponentName="InstallationEditCommandDataProvider" X="375" Y="525" Note=""/>
-        <Element ComponentName="InstallationListController" X="875" Y="250" Note=""/>
-        <Element ComponentName="InstallationsCommandDataProvider" X="750" Y="525" Note=""/>
-        <Element ComponentName="InstallationsHeadersDataProvider" X="1000" Y="400" Note=""/>
-        <Element ComponentName="ObjectViewDataProvider" X="1025" Y="75" Note=""/>
+        <Element ComponentName="InstallationEditCommandDataProvider" X="350" Y="525" Note=""/>
+        <Element ComponentName="InstallationListController" X="725" Y="650" Note=""/>
+        <Element ComponentName="InstallationsCommandDataProvider" X="425" Y="600" Note=""/>
+        <Element ComponentName="InstallationsHeadersDataProvider" X="675" Y="725" Note=""/>
+        <Element ComponentName="ObjectViewDataProvider" X="950" Y="775" Note=""/>
         <Element ComponentName="ProductInstance" X="100" Y="425" Note=""/>
         <Element ComponentName="ProductInstanceMetaInfoCreator" X="300" Y="350" Note=""/>
-        <Element ComponentName="VisualStatus" X="125" Y="75" Note=""/>
+        <Element ComponentName="SoftwareHeadersDataProvider" X="975" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

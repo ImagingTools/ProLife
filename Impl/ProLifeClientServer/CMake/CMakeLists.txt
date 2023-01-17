@@ -58,6 +58,7 @@ if(WIN32)
 endif()
 
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtqml/Qml")
+list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtauthgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtlicgui/Qml")
@@ -70,7 +71,7 @@ list(REMOVE_DUPLICATES QML_IMPORT_DIRS)
 # The variable is cached in ${BUILD_DIR}/CMakeCache.txt. We need FORCE to
 # change it there immediately. Also, add a comment to the cache file.
 set(QML_IMPORT_PATH ${QML_IMPORT_DIRS}
-	CACHE STRING "Qt Creator extra qml import paths"
+	CACHE STRING "Qt Creator extra qml import paths for ${PROJECT_NAME}"
 	FORCE
 )
 

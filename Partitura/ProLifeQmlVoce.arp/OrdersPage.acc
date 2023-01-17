@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5042" Description="ACF"/>
+            <Version Id="0" Number="5045" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -40,14 +40,7 @@
         <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="GqlContextIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value></Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="GqlRepresentationDataController" Type="Reference[]" ExportId="">
+                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Commands</Value>
@@ -55,6 +48,51 @@
                                 <Value>InstallationDataController</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="HardwareHeadersDataProvider" PackageId="ImtQmlPck" ComponentId="HeadersDataProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                                <Value>SoftwareId</Value>
+                                <Value>MacAddress</Value>
+                                <Value>SerialNumber</Value>
+                                <Value>ProductionStatus</Value>
+                                <Value>Comment</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeadersModelId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                                <Value>SoftwareId</Value>
+                                <Value>MacAddress</Value>
+                                <Value>SerialNumber</Value>
+                                <Value>ProductionStatus</Value>
+                                <Value>Comment</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                                <Value>SoftwareName</Value>
+                                <Value>Comment</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -177,7 +215,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>InstallationsInfo</Value>
-                                <Value>InstallationsList</Value>
                                 <Value>InstallationsRemove</Value>
                                 <Value>InstallationsMetaInfo</Value>
                                 <Value>InstallationsRename</Value>
@@ -272,6 +309,7 @@
                                 <Value>InstanceId</Value>
                                 <Value>ProductId</Value>
                                 <Value>AccountId</Value>
+                                <Value>Dependency</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
                             </Values>
@@ -287,6 +325,7 @@
                                 <Value>Instance-ID</Value>
                                 <Value>Product-ID</Value>
                                 <Value>Customer</Value>
+                                <Value>Dependency</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
                             </Values>
@@ -316,7 +355,7 @@
                         <Data IsEnabled="true" Value="Installation"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtlicgui/InstallationEditor.qml"/>
+                        <Data IsEnabled="true" Value="../../imtlicgui/OrderEditor.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -348,39 +387,38 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="VisualStatus" PackageId="ImtQmlPck" ComponentId="PageDataProvider">
+        <Element Id="SoftwareHeadersDataProvider" PackageId="ImtQmlPck" ComponentId="HeadersDataProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageDefaultStatusIcon" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="Deployment"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Installations"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Orders"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageOffSelectedStatusIcon" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="../../Icons/Deployment_Off_Selected.svg"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageOnSelectedStatusIcon" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="../../Icons/Deployment_On_Selected.svg"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageSourceItem" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionIds" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewInstallations</Value>
+                                <Value>Name</Value>
+                                <Value>HardwareId</Value>
+                                <Value>Comment</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="StartSourceItem" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtlicgui/InstallationCollectionView.qml"/>
+                    <AttributeInfo Id="HeadersModelId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Software"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                                <Value>Hardware-ID</Value>
+                                <Value>Comment</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                                <Value>HardwareId</Value>
+                                <Value>Comment</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -394,7 +432,5 @@
         <Interface InterfaceId="imtgql::IGqlRepresentationDataController" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
-    <ExportedComponents>
-        <Component ExportedId="OrderVisualStatus" ComponentId="VisualStatus"/>
-    </ExportedComponents>
+    <ExportedComponents/>
 </Acf>
