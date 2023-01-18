@@ -14,7 +14,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Id" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsPage"/>
+                        <Data IsEnabled="true" Value="Accounts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ItemPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Account"/>
@@ -100,7 +100,6 @@
                     <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>PageData/ProductsPage</Value>
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/OrdersPage</Value>
                                 <Value>PageData/AdministrationPages</Value>
@@ -215,22 +214,11 @@
         <EmbeddedRegistry Id="PageData">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="AccountPermissions" PackageId="ProLifeVoce" ComponentId="AccountPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
                     <Element Id="AccountsPage" PackageId="ProLifeQmlVoce" ComponentId="AccountsPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="AccountPermissions"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>

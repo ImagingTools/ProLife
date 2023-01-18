@@ -102,36 +102,6 @@ CREATE TABLE "UsersSessions"(
     FOREIGN KEY (UserId) REFERENCES "Users" (UserId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
-CREATE TABLE "Products"(
-    Id VARCHAR (1000) NOT NULL,
-    Name VARCHAR (1000) NOT NULL,
-    Description VARCHAR (1000),
-    Manufacturer VARCHAR (1000) NOT NULL,
-    PRIMARY KEY (Id)
-);
-
-CREATE TABLE "ProductLicenses"(
-  Id VARCHAR (1000) NOT NULL,
-  Name VARCHAR (1000) NOT NULL,
-  Description VARCHAR (1000),
-  ProductId VARCHAR (1000) NOT NULL,
-  PRIMARY KEY (Id),
-  FOREIGN KEY (ProductId) REFERENCES "Products"(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TYPE ProductionStatus AS ENUM ('Ordered', 'Confirmed', 'WaitingForProduction', 'InProduction', 'Testing', 'Aproved', 'PreparedForDelivering');
-
-CREATE TABLE "ProducedDevices"(
-    ProductTypeId VARCHAR (1000) NOT NULL,
-    SerialNumber VARCHAR (1000) NOT NULL,
-    MacAddress VARCHAR (1000) NOT NULL,
-    ProductionStatus ProductionStatus NOT NULL,
-    PRIMARY KEY (SerialNumber),
-    FOREIGN KEY (ProductTypeId) REFERENCES "Products" (Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
 CREATE TYPE AccountType AS ENUM ('private', 'company');
 
 CREATE TABLE "Accounts"(
@@ -146,84 +116,15 @@ CREATE TABLE "Accounts"(
 );
 
 CREATE TABLE "Orders"(
-    Id VARCHAR (1000) NOT NULL,
+    Id SERIAL,
+    OrderId VARCHAR (1000) NOT NULL,
     AccountId VARCHAR (1000) NOT NULL,
-    Order JSONB,
+    Document JSONB,
     RevisionNumber BIGINT,
     LastModified TIMESTAMP,
     Checksum BIGINT,
     IsActive BOOLEAN,
     PRIMARY KEY (Id),
     FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE "OrderedProducts"(
-    InstanceId VARCHAR (1000) NOT NULL,
-    ProductId VARCHAR (1000) NOT NULL,
-    OrderId VARCHAR (1000) NOT NULL,
-    Name VARCHAR (1000) NOT NULL,
-    Category VARCHAR (1000) NOT NULL,
-    Manufacturer VARCHAR (1000) NOT NULL,
-    Comment VARCHAR (1000),
-    SoftwareId VARCHAR (1000),
-    MacAddress VARCHAR (1000),
-    SerialNumber VARCHAR (1000),
-    ProductionStatus ProductionStatus,
-    Added TIMESTAMP,
-    LastModified TIMESTAMP,
-    PRIMARY KEY (InstanceId, ProductId, OrderId),
-    FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE "OrderedDevices"(
-    DeviceId VARCHAR (1000) NOT NULL,
-    OrderId VARCHAR (1000) NOT NULL,
-    FOREIGN KEY (OrderId) REFERENCES "Orders" (Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (DeviceId) REFERENCES "ProducedDevices" (SerialNumber) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (OrderId, DeviceId)
-);
-
-CREATE TABLE "ProductInstances"(
-	InstanceId VARCHAR (1000) NOT NULL,
-	ProductId VARCHAR (1000) NOT NULL,
-	AccountId VARCHAR (1000) NOT NULL,
-	Name VARCHAR (1000) NOT NULL,
-	Description VARCHAR (1000),
-	Added TIMESTAMP,
-	LastModified TIMESTAMP,
-	PRIMARY KEY (InstanceId, ProductId),
-	FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE "ProductInstanceLicenses"(
-    InstanceId VARCHAR (1000) NOT NULL,
-	LicenseId VARCHAR (1000) NOT NULL,
-	ProductId VARCHAR (1000) NOT NULL,
-	ExpirationDate DATE,
-	PRIMARY KEY (InstanceId, LicenseId, ProductId),
-	FOREIGN KEY (InstanceId, ProductId) REFERENCES "ProductInstances"(InstanceId, ProductId) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE "SoftwareProducts"(
-    OrderId VARCHAR (1000) NOT NULL,
-    ProductId VARCHAR (1000) NOT NULL,
-    Name VARCHAR (1000) NOT NULL,
-    Comment VARCHAR (1000),
-    PRIMARY KEY (OrderId, ProductId),
-    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE "HardwareProducts"(
-    OrderId VARCHAR (1000) NOT NULL,
-    ProductId VARCHAR (1000) NOT NULL,
-    SoftwareId VARCHAR (1000) NOT NULL,
-    Name VARCHAR (1000) NOT NULL,
-    MacAddress VARCHAR (1000) NOT NULL,
-    SerialNumber VARCHAR (1000) NOT NULL,
-    ProductionStatus VARCHAR (1000) NOT NULL,
-    Comment VARCHAR (1000),
-    PRIMARY KEY (OrderId, ProductId),
-    FOREIGN KEY (OrderId) REFERENCES "Orders"(Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

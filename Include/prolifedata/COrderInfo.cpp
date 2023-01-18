@@ -67,30 +67,11 @@ void COrderInfo::SetCustomerId(const QByteArray& customerId)
 	}
 }
 
-IOrderInfo::ProductIds COrderInfo::GetProducts() const
+imtlic::CProductInstanceCollection* COrderInfo::GetProducts()
 {
-	return m_orderedProducts;
+	return  &m_productInstanceCollection;
 }
 
-bool COrderInfo::AddProduct(const QByteArray& productId)
-{
-	if (!m_orderedProducts.contains(productId)){
-		istd::CChangeNotifier changeNotifier(this);
-
-		m_orderedProducts.push_back(productId);
-		return true;
-	}
-	return false;
-}
-
-void COrderInfo::RemoveProduct(const QByteArray& productId)
-{
-	if (m_orderedProducts.contains(productId)){
-		istd::CChangeNotifier changeNotifier(this);
-		int idx = m_orderedProducts.indexOf(productId);
-		m_orderedProducts.removeAt(idx);
-	}
-}
 
 
 // reimplemented (iser::ISerializable)
@@ -116,10 +97,6 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_comment);
 	retVal = retVal && archive.EndTag(orderCommentTag);
 
-//	QByteArray orderedProductsTag = "OrderedProducts";
-//	QByteArray productTag = "Product";
-//	QByteArrayList orderedProduct = m_orderedProducts;
-//	retVal = retVal && iser::CPrimitiveTypesSerializer::SerializeContainer<QByteArrayList>(archive, orderedProduct, orderedProductsTag, productTag);
 	m_productInstanceCollection.Serialize(archive);
 
 	return retVal;
@@ -144,7 +121,7 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 
 		m_orderId = sourcePtr->m_orderId;
 		m_customerId = sourcePtr->m_customerId;
-		m_orderedProducts = sourcePtr->m_orderedProducts;
+		m_productInstanceCollection.CopyFrom(sourcePtr->m_productInstanceCollection);
 
 		bool retVal = true;
 
@@ -173,7 +150,7 @@ bool COrderInfo::ResetData(CompatibilityMode /*mode*/)
 
 	m_orderId.clear();
 	m_customerId.clear();
-	m_orderedProducts.clear();
+	m_productInstanceCollection.ResetData();
 
 	return true;
 }

@@ -62,7 +62,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Lisa/graphql"/>
+                        <Data IsEnabled="true" Value="ProLife/graphql"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
@@ -103,7 +103,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Lisa/files*"/>
+                        <Data IsEnabled="true" Value="ProLife/files*"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
@@ -124,7 +124,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RedirectToCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Lisa/Views/html/index.html?item=Pages/StartPage.qml"/>
+                        <Data IsEnabled="true" Value="ProLife/Views/html/index.html?item=Pages/StartPage.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -135,10 +135,10 @@
                     <AttributeInfo Id="HttpCommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Lisa/Views*</Value>
-                                <Value>Lisa/Views</Value>
-                                <Value>Lisa/graphql</Value>
-                                <Value>Lisa/files*</Value>
+                                <Value>ProLife/Views*</Value>
+                                <Value>ProLife/Views</Value>
+                                <Value>ProLife/graphql</Value>
+                                <Value>ProLife/files*</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -216,7 +216,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Lisa/Views*"/>
+                        <Data IsEnabled="true" Value="ProLife/Views*"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
@@ -344,8 +344,11 @@
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
-    <ExportedInterfaces/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="HttpServerFramework"/>
+    </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="DatabaseAccessSettings" ComponentId="ApplicationController/DatabaseAccessSettings"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization"/>
     </ExportedComponents>
 </Acf>

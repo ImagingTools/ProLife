@@ -4,6 +4,9 @@
 // ACF includes
 #include <iser/IObject.h>
 
+// ImtCore includes
+#include <imtbase/IObjectCollection.h>
+
 
 namespace prolifedata
 {
@@ -22,7 +25,7 @@ public:
 	{
 
 		/**
-			Product name given as QString.
+			Order Id given as QString.
 		*/
 		MIT_ORDER_ID,
 
@@ -53,16 +56,9 @@ public:
 	virtual void SetCustomerId(const QByteArray& customerId) = 0;
 
 	/**
-		Get orser products.
+		Get order products.
 	*/
-	virtual ProductIds GetProducts() const = 0;
-
-	virtual bool AddProduct(const QByteArray& productId) = 0;
-
-	/**
-		Set order products.
-	*/
-	virtual void RemoveProduct(const QByteArray& productId) = 0;
+	virtual imtbase::IObjectCollection* GetProducts() = 0;
 
 
 };

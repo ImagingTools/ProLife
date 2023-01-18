@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="Close" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Close" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -27,7 +27,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="CommandPermissionsProviderJoiner" PackageId="ImtGqlPck" ComponentId="CommandPermissionsProviderJoiner">
+        <Element Id="CommandPermissionsProviderJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
@@ -43,7 +43,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Redo" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Redo" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -60,7 +60,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Save" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Save" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -77,7 +77,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Undo" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Undo" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">

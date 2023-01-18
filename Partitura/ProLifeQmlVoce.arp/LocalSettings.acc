@@ -17,7 +17,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="LisaClientPreferences.xml"/>
+                        <Data IsEnabled="true" Value="ProlifeClientPreferences.xml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="9"/>
@@ -105,8 +105,11 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList/>
-    <ExportedInterfaces/>
-    <ExportedComponents>
-        <Component ExportedId="Language" ComponentId="GeneralPageData/Language"/>
-    </ExportedComponents>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imtbase::IRepresentationController" ComponentId="SettingsRepresentation"/>
+        <Interface InterfaceId="iprm::IParamsSet" ComponentId="Settings"/>
+        <Interface InterfaceId="iser::ISerializable" ComponentId="Settings"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="Settings"/>
+    </ExportedInterfaces>
+    <ExportedComponents/>
 </Acf>

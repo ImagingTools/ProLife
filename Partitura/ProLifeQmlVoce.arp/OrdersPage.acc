@@ -429,7 +429,7 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtgql::IGqlRepresentationDataController" ComponentId="Demultiplexer"/>
+        <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents/>

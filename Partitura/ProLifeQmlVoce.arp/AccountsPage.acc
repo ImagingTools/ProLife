@@ -24,10 +24,7 @@
                     <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ModelIds" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>AccountItem</Value>
@@ -35,6 +32,9 @@
                                 <Value>AccountUpdate</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
@@ -118,19 +118,7 @@
         <Element Id="AccountListController" PackageId="ImtLicenseGqlPck" ComponentId="AccountCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsHeadersDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ModelIds" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>AccountsInfo</Value>
@@ -142,6 +130,15 @@
                                 <Value>AccountsObjectView</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccountsHeadersDataProvider"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
@@ -240,6 +237,13 @@
         <Element Id="AccountsHeadersDataProvider" PackageId="ImtQmlPck" ComponentId="HeadersDataProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Accounts</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -284,8 +288,12 @@
         <Element Id="Commands" PackageId="ImtGuiGqlPck" ComponentId="CommandsDataController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="CheckPermissions">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CommandsData</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
                         <Data IsEnabled="false"/>
@@ -298,20 +306,13 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="ModelIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>CommandsData</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="GqlRepresentationDataController" Type="Reference[]" ExportId="">
+                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>AccountListController</Value>
@@ -326,8 +327,15 @@
         <Element Id="ObjectViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="ObjectViewModelId" Type="Id" ExportId="">
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Account"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Account</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="../../imtauthgui/AccountEditor.qml"/>
@@ -378,7 +386,7 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtgql::IGqlRepresentationDataController" ComponentId="Demultiplexer"/>
+        <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>

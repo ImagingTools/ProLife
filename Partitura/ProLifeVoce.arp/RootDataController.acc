@@ -70,6 +70,12 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

@@ -104,7 +104,7 @@
                     <AttributeInfo Id="DefaultDatabaseHost" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="localhost"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
+                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="DefaultDatabaseName">
                         <Data IsEnabled="true" Value="lisa"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
@@ -115,6 +115,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultDatabaseUserName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="postgres"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="DefaultPath">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>

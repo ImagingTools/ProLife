@@ -28,7 +28,10 @@
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Settings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/Preferences"/>
+                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -96,6 +99,9 @@
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/RuntimeStatus"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
@@ -122,7 +128,11 @@
         </Element>
         <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="VersionIdDesc" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
     </ElementsList>

@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="CommandPermissionsProviderJoiner" PackageId="ImtGqlPck" ComponentId="CommandPermissionsProviderJoiner">
+        <Element Id="CommandPermissionsProviderJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
@@ -25,7 +25,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Edit" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Edit" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -41,7 +41,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="New" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="New" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -57,7 +57,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Remove" PackageId="ImtGqlPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="Remove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">

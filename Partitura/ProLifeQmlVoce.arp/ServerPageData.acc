@@ -37,7 +37,7 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="DefaultPath">
                         <Data IsEnabled="true" Value="LisaServerSettings.xml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">

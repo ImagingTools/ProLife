@@ -11,10 +11,18 @@ Item {
 
     property alias localSettings: settingsProviderLocal.localModel;
 
-    signal settingsUpdate(string pageId);
+    property alias settingsProvider: settingsProviderLocal;
+
+    signal settingsUpdate();
+
+    signal localSettingsUpdated();
 
     onSettingsUpdate: {
         console.log("window onSettingsUpdate");
+    }
+
+    onLocalSettingsUpdated: {
+        updateAllModels();
     }
 
     function updateModels(){
@@ -23,17 +31,37 @@ Item {
     }
 
     function updateAllModels(){
+        console.log("settingsProviderLocal.updateModel");
         settingsProviderLocal.updateModel();
+
+        console.log("thumbnailDecorator.updateModels");
         thumbnailDecorator.updateModels();
     }
-
-
 
     SettingsProvider {
         id: settingsProviderLocal;
 
         root: window;
+
+        onServerModelChanged: {
+            designProvider.applyDesignSchema();
+        }
+
+        onServerSettingsSaved: {
+            designProvider.applyDesignSchema();
+        }
+
+        onLocalSettingsSaved: {
+            designProvider.applyDesignSchema();
+        }
     }
+
+    DesignSchemaProvider {
+        id: designProvider;
+
+        settingsProvider: settingsProviderLocal;
+    }
+
 
     ThumbnailDecorator {
         id: thumbnailDecorator;
