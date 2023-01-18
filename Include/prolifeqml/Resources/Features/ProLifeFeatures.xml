@@ -5,81 +5,76 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{a27e3319-e1d2-4622-888b-bc35e2f63188}" Description="" TypeId="FeatureInfo" Name="Account Management">
-			    <Data Id="AccountManagement" Name="Account Management" Optional="false"/>
+            <Object ID="{55288d56-ffc8-4546-99ed-7a8bb62044cf}" Description="" TypeId="FeatureInfo" Name="Account Management">
+                <Data Id="AccountManagement" Name="Account Management" Optional="false">
+                    <SubFeatures>
+                        <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                        <Object Id="EditAccount" Name="Edit Account" Optional="false">
+                            <SubFeatures>
+                                <Object Id="AddAccount" Name="Add Account" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="RemoveAccount" Name="Remove Account" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeAccount" Name="Change Account" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                            </SubFeatures>
+                        </Object>
+                    </SubFeatures>
+                </Data>
             </Object>
-            <Object ID="{b8999e1c-b631-45fc-b1d1-b9b32f90fbdd}" Description="" TypeId="FeatureInfo" Name="Add Account">
-			    <Data Id="AddAccount" Name="Add Account" Optional="false"/>
+            <Object ID="{764d4281-c762-4f08-9364-cb5d2da9b9a1}" Description="" TypeId="FeatureInfo" Name="Order Management">
+                <Data Id="OrderManagement" Name="Order Management" Optional="false">
+                    <SubFeatures>
+                        <Object Id="ViewOrders" Name="View Orders" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                        <Object Id="EditOrder" Name="Edit Order" Optional="false">
+                            <SubFeatures>
+                                <Object Id="AddOrder" Name="Add Order" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="RemoveOrder" Name="Remove Order" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeOrder" Name="Change Order" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                            </SubFeatures>
+                        </Object>
+                        <Object Id="CreateLicenseFile" Name="Create License File" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
             </Object>
-            <Object ID="{a96f4e4f-6e16-4abe-bbb7-d8b50625498e}" Description="" TypeId="FeatureInfo" Name="Add Feature">
-			    <Data Id="AddFeature" Name="Add Feature" Optional="false"/>
-            </Object>
-            <Object ID="{cf5464fb-3729-43a6-ac6d-f24914ebfbdd}" Description="" TypeId="FeatureInfo" Name="Add Installation">
-			    <Data Id="AddInstallation" Name="Add Installation" Optional="false"/>
-            </Object>
-            <Object ID="{5c5814ed-e622-4bc5-935e-5b967796bdd4}" Description="" TypeId="FeatureInfo" Name="Add Product">
-			    <Data Id="AddProduct" Name="Add Product" Optional="false"/>
-            </Object>
-            <Object ID="{b67e6d3d-3a1b-4a52-8c52-9e27815e06b4}" Description="" TypeId="FeatureInfo" Name="Change Account">
-			    <Data Id="ChangeAccount" Name="Change Account" Optional="false"/>
-            </Object>
-            <Object ID="{740a94a8-4df1-43e8-9f64-0493a4fdf93b}" Description="" TypeId="FeatureInfo" Name="Change Feature">
-			    <Data Id="ChangeFeature" Name="Change Feature" Optional="false"/>
-            </Object>
-            <Object ID="{5362d4b5-434f-40e1-8435-cf305be1d87d}" Description="" TypeId="FeatureInfo" Name="Change Installation">
-			    <Data Id="ChangeInstallation" Name="Change Installation" Optional="false"/>
-            </Object>
-            <Object ID="{7dc6e2a1-9193-466d-825f-2bc079785eb8}" Description="" TypeId="FeatureInfo" Name="Change Product">
-			    <Data Id="ChangeProduct" Name="Change Product" Optional="false"/>
-            </Object>
-            <Object ID="{b098d49a-a857-43e7-9e84-49b722464b10}" Description="" TypeId="FeatureInfo" Name="Create License File">
-			    <Data Id="CreateLicenseFile" Name="Create License File" Optional="false"/>
-            </Object>
-            <Object ID="{082f2a6e-46b6-48da-8e09-b958b0951d1e}" Description="" TypeId="FeatureInfo" Name="Edit Accounts">
-			    <Data Id="EditAccounts" Name="Edit Accounts" Optional="false"/>
-            </Object>
-            <Object ID="{9fe9a7ca-6304-4f77-b643-b13494abbccd}" Description="" TypeId="FeatureInfo" Name="Edit Features">
-			    <Data Id="EditFeatures" Name="Edit Features" Optional="false"/>
-            </Object>
-            <Object ID="{ee2715c8-c971-41a4-acbb-d189cff663f6}" Description="" TypeId="FeatureInfo" Name="Edit Installations">
-			    <Data Id="EditInstallations" Name="Edit Installations" Optional="false"/>
-            </Object>
-            <Object ID="{fdb95620-5529-4f58-aa74-c2e8ce0b02a3}" Description="" TypeId="FeatureInfo" Name="Feature Management">
-			    <Data Id="FeatureManagement" Name="Feature Management" Optional="false"/>
-            </Object>
-            <Object ID="{27ba39e7-d4b9-4b11-86b1-831e0b9f3498}" Description="" TypeId="FeatureInfo" Name="Edit Products">
-			    <Data Id="FeatureName" Name="Edit Products" Optional="false"/>
-            </Object>
-            <Object ID="{aa738854-511d-4fd6-93f2-fa273240cbeb}" Description="" TypeId="FeatureInfo" Name="Installation Management">
-			    <Data Id="InstallationManagement" Name="Installation Management" Optional="false"/>
-            </Object>
-            <Object ID="{d81efcbd-6165-48a4-a247-93fb0891ff10}" Description="" TypeId="FeatureInfo" Name="Product Management">
-			    <Data Id="ProductManagement" Name="Product Management" Optional="false"/>
-            </Object>
-            <Object ID="{a81780cc-29a5-45c5-b111-a14dedf40916}" Description="" TypeId="FeatureInfo" Name="Remove Account">
-			    <Data Id="RemoveAccount" Name="Remove Account" Optional="false"/>
-            </Object>
-            <Object ID="{67c9cf88-d283-470c-829c-f80eb1bb0244}" Description="" TypeId="FeatureInfo" Name="Remove Feature">
-			    <Data Id="RemoveFeature" Name="Remove Feature" Optional="false"/>
-            </Object>
-            <Object ID="{209703f7-8505-40a3-b312-388cf41a3e7d}" Description="" TypeId="FeatureInfo" Name="Remove Installation">
-			    <Data Id="RemoveInstallation" Name="Remove Installation" Optional="false"/>
-            </Object>
-            <Object ID="{031984b2-0f0d-464b-8e47-17f8a380acca}" Description="" TypeId="FeatureInfo" Name="Remove Product">
-			    <Data Id="RemoveProduct" Name="Remove Product" Optional="false"/>
-            </Object>
-            <Object ID="{c23162bc-45d3-4837-842b-85d410fda6cb}" Description="" TypeId="FeatureInfo" Name="View Accounts">
-			    <Data Id="ViewAccounts" Name="View Accounts" Optional="false"/>
-            </Object>
-            <Object ID="{c9efc833-b1d7-4724-8b10-b096e5acf938}" Description="" TypeId="FeatureInfo" Name="View Features">
-			    <Data Id="ViewFeatures" Name="View Features" Optional="false"/>
-            </Object>
-            <Object ID="{41b283a0-1b20-4b40-aef6-64902c0cb34c}" Description="" TypeId="FeatureInfo" Name="View Installations">
-			    <Data Id="ViewInstallations" Name="View Installations" Optional="false"/>
+            <Object ID="{1d8b8d86-61f7-44ce-8be8-e6b11b7d874b}" Description="" TypeId="FeatureInfo" Name="Administration">
+                <Data Id="Administration" Name="Administration" Optional="false">
+                    <SubFeatures>
+                        <Object Id="ViewAdministration" Name="View Administration" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
             </Object>
         </ObjectsList>
     </Features>
-    <Dependencies/>
+    <Dependencies>
+        <Dependency FeatureId="EditAccount">
+            <BaseFeatures>
+                <BaseFeatureId>ViewAccounts</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+        <Dependency FeatureId="EditOrder">
+            <BaseFeatures>
+                <BaseFeatureId>ViewOrders</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+    </Dependencies>
     <Parents>
         <Items/>
     </Parents>
