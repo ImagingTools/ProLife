@@ -1,4 +1,4 @@
-project(ProLifeClient LANGUAGES CXX)
+project(ProLifeConverter LANGUAGES CXX)
 
 message("ACFDIR PROLIFE " ${ACFDIR})
 message("CMAKE_PROJECT_INCLUDE_BEFORE " ${CMAKE_PROJECT_INCLUDE_BEFORE})
@@ -14,7 +14,7 @@ if(WIN32)
 #	set(ACF_CONVERT_FILES "${PROJECT_SOURCE_DIR}/../VC/ProLifeClient.rc.xtracf")
 	set(ACF_CONVERT_REGISTRY "${PROJECT_SOURCE_DIR}/../VC/FileSubstitCopyApp.acc")
 	set(ACF_CONVERT_CONFIG  "${PROJECT_SOURCE_DIR}/../../../Config/BaseOnly.awc")
-#	set(RC_FILE "${AUX_INCLUDE_DIR}/${PROJECT_NAME}/ProLifeClient.rc")
+#	set(RC_FILE "${AUX_INCLUDE_DIR}/${PROJECT_NAME}/ProLifeConverter.rc")
 endif()
 
 if(APPLE)

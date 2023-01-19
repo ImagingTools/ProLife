@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	QApplication::setStyle(imtStylePtr);
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-	CProLifeClient instance;
+    CProLifeClient instance;
 
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
 	qmlRegisterType<imtqml::CGqlModel>("Acf", 1, 0, "GqlModel");

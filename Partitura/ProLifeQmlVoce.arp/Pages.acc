@@ -220,6 +220,12 @@
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="PermissionChecker"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -244,16 +250,11 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CheckPermissions" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
                     <Element Id="OrdersPage" PackageId="ProLifeQmlVoce" ComponentId="OrdersPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissions"/>
+                                    <Data IsEnabled="true" Value="PermissionChecker"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="InstallationRepository" Type="Reference" ExportId="InstallationRepository">
                                     <Data IsEnabled="false"/>
@@ -262,6 +263,11 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PermissionChecker" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
                         </Data>
                     </Element>
                     <Element Id="ProductPermissionController" PackageId="ImtLicenseGqlPck" ComponentId="ProductPermissionController">
@@ -287,19 +293,19 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Features/LisaFeatures"/>
+                                    <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>Lisa</Value>
+                                            <Value>ProLife</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>Lisa</Value>
+                                            <Value>ProLife</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -337,7 +343,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewFeatures</Value>
+                                            <Value>ViewAccounts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

@@ -38,7 +38,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="DefaultPath">
-                        <Data IsEnabled="true" Value="LisaServerSettings.xml"/>
+                        <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="104"/>

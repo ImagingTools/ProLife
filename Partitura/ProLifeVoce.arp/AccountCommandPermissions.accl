@@ -8,10 +8,10 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CommandPermissionsProviderJoiner" X="575" Y="325" Note=""/>
-        <Element ComponentName="Edit" X="925" Y="325" Note=""/>
-        <Element ComponentName="New" X="225" Y="325" Note=""/>
-        <Element ComponentName="Remove" X="575" Y="450" Note=""/>
+        <Element ComponentName="CommandPermissionsProviderJoiner" X="625" Y="250" Note=""/>
+        <Element ComponentName="Edit" X="575" Y="425" Note=""/>
+        <Element ComponentName="New" X="200" Y="425" Note=""/>
+        <Element ComponentName="Remove" X="925" Y="425" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

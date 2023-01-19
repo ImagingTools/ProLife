@@ -18,27 +18,27 @@
         <Element ComponentName="PagesPermissions" X="700" Y="500" Note=""/>
         <Element ComponentName="PagesRepresentation" X="725" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="250" Y="200" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="425" Y="350" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="451" Y="350" Note=""/>
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PageData">
-            <PositionMap>
-                <Element ComponentName="AccountsPage" X="950" Y="175" Note=""/>
-                <Element ComponentName="AdministrationPage" X="575" Y="600" Note=""/>
-                <Element ComponentName="CheckPermissions" X="575" Y="175" Note=""/>
-                <Element ComponentName="OrdersPage" X="175" Y="175" Note=""/>
-                <Element ComponentName="ProductPermissionController" X="575" Y="800" Note=""/>
-                <Element ComponentName="SingleProductPermission" X="575" Y="700" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
                 <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
                 <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
                 <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
                 <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AccountsPage" X="950" Y="175" Note=""/>
+                <Element ComponentName="AdministrationPage" X="575" Y="600" Note=""/>
+                <Element ComponentName="OrdersPage" X="175" Y="175" Note=""/>
+                <Element ComponentName="PermissionChecker" X="575" Y="175" Note=""/>
+                <Element ComponentName="ProductPermissionController" X="575" Y="800" Note=""/>
+                <Element ComponentName="SingleProductPermission" X="575" Y="700" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
