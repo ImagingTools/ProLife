@@ -7,7 +7,7 @@
 
 // ProLife includes
 #include <prolifedata/CProductInfo.h>
-
+#include <prolifedata/COrderInfo.h>
 
 namespace ProLifeDataPck
 {
@@ -18,6 +18,14 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> ProductInfo;
+
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::COrderInfo,
+						prolifedata::IOrderInfo,
+						iser::IObject,
+						iser::ISerializable,
+						istd::IChangeable>> OrderInfo;
 
 
 } // namespace ProLifeDataPck

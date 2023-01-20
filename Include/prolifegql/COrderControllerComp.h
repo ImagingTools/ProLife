@@ -18,7 +18,7 @@ public:
 
 	I_BEGIN_COMPONENT(COrderControllerComp)
 		I_ASSIGN(m_orderPtr, "OrderFactory", "Factory used for creation of the new order instance", true, "OrderFactory");
-		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
+//		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
 //		I_ASSIGN(m_metaInfoCreatorCompPtr, "MetaInfoCreator", "Meta information creator for the product instance", true, "MetaInfoCreator");
 	I_END_COMPONENT
 
@@ -28,7 +28,7 @@ protected:
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);
-	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+//	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 //	I_REF(imtbase::IMetaInfoCreator, m_metaInfoCreatorCompPtr);
 };
 

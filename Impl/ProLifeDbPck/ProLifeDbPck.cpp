@@ -21,6 +21,12 @@ I_EXPORT_COMPONENT(
 			"SQL Product Product Delegate");
 
 
+I_EXPORT_COMPONENT(
+			OrderDatabaseDelegateComp,
+			"Order info object for SQL table",
+			"SQL Product Order Delegate");
+
+
 } // namespace ProLifeLicenseDbPck
 
 

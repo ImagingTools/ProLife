@@ -59,7 +59,7 @@
                         <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ItemPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Order"/>
+                        <Data IsEnabled="true" Value="Deployment"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Orders"/>
@@ -68,7 +68,7 @@
                         <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/InstallationCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../../ProLife/OrderCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -84,6 +84,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="InstallationRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/ProductInstanceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/ProductSqlRepository"/>
@@ -220,12 +223,6 @@
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PermissionChecker"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -250,24 +247,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="CheckPermissions" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
                     <Element Id="OrdersPage" PackageId="ProLifeQmlVoce" ComponentId="OrdersPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CheckPermissions" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PermissionChecker"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="InstallationRepository" Type="Reference" ExportId="InstallationRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PermissionChecker" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
                         </Data>
                     </Element>
                     <Element Id="ProductPermissionController" PackageId="ImtLicenseGqlPck" ComponentId="ProductPermissionController">
@@ -293,19 +290,19 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
+                                    <Data IsEnabled="true" Value=":/Features/LisaFeatures"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ProLife</Value>
+                                            <Value>Lisa</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ProLife</Value>
+                                            <Value>Lisa</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -343,7 +340,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewAccounts</Value>
+                                            <Value>ViewFeatures</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -417,6 +414,18 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="ProductInstanceSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductInstanceSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -452,6 +461,7 @@
                 <ExportedInterfaces/>
                 <ExportedComponents>
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
+                    <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
                     <Component ExportedId="ProductInstanceSqlRepository" ComponentId="ProductInstanceSqlRepository"/>
                     <Component ExportedId="ProductSqlRepository" ComponentId="ProductSqlRepository"/>
                 </ExportedComponents>

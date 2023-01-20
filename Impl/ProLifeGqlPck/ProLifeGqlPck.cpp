@@ -13,15 +13,24 @@ I_EXPORT_PACKAGE(
 		IM_PROJECT("\"ImagingTools Core Framework\"") IM_COMPANY("ImagingTools"));
 
 I_EXPORT_COMPONENT(
+		ProductController,
+		"ProductController",
+		"Product Controller");
+
+I_EXPORT_COMPONENT(
 		ProductCollectionController,
 		"ProductCollectionController",
 		"Product Collection Controller");
 
+I_EXPORT_COMPONENT(
+		OrderController,
+		"Order controller for order document",
+		"Order Controller");
 
 I_EXPORT_COMPONENT(
-		ProductController,
-		"ProductController",
-		"Product Controller");
+		OrderCollectionController,
+		"Collection controller for order documents",
+		"Collection Controller Order Document");
 
 
 } // namespace ProLifeGqlPck

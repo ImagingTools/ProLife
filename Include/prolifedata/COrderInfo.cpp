@@ -73,6 +73,11 @@ imtlic::CProductInstanceCollection* COrderInfo::GetProducts()
 }
 
 
+QByteArray COrderInfo::GetFactoryId() const
+{
+	return QByteArray();
+}
+
 
 // reimplemented (iser::ISerializable)
 

@@ -21,6 +21,11 @@ I_EXPORT_COMPONENT(
 			"Product Information Authority");
 
 
+I_EXPORT_COMPONENT(
+			OrderInfo,
+			"Order information",
+			"Oredr Information Authority");
+
 
 } // namespace ProLifeDataPck
 
