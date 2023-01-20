@@ -18,8 +18,15 @@ public:
 
 protected:
 	// reimplemented (imtguigql::CObjectCollectionControllerCompBase)
-	virtual imtbase::CTreeItemModel* ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const;
-
+	/**
+		Setup a GraphQL item at the given position in the model based on the information about an element in the object collection.
+	*/
+	virtual bool SetupGqlItem(
+			const imtgql::CGqlRequest& gqlRequest,
+			imtbase::CTreeItemModel& model,
+			int itemIndex,
+			const QByteArray& collectionId,
+			QString& errorMessage) const;
 };
 
 
