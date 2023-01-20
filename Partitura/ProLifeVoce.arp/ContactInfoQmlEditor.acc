@@ -52,7 +52,7 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="imod::IObserver" ComponentId="ContactInfoEditorDataController"/>
-        <Interface InterfaceId="imtbase::IItemBasedRepresentationDataProvider" ComponentId="ContactInfoEditorDataController/CItemBasedRepresentationDataProvider"/>
+        <Interface InterfaceId="imtbase::IGqlRepresentationDataController" ComponentId="ContactInfoEditorDataController/CItemBasedRepresentationDataProvider"/>
         <Interface InterfaceId="iqtgui::IGuiObject" ComponentId="GuiQuickWrap"/>
     </ExportedInterfaces>
     <ExportedComponents/>

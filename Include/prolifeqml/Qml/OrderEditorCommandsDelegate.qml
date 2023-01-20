@@ -8,40 +8,14 @@ DocumentWorkspaceCommandsDelegateBase {
 
     showInputIdDialog: true;
 
-//    autoUpdate: false;
-
-    property bool instanceIdAcceptable: helperInput.acceptableInput;
-
     Component.onCompleted: {
         updateItemTimer = 400;
 
         itemsModel.updateModel("AccountsList");
-        itemsModel.updateModel("ProductsList");
-
-
-//        timer.start();
     }
 
     onEntered: {
         objectModel.SetData("Name", value);
-    }
-
-    onInstanceIdAcceptableChanged: {
-        console.log("InstallationCommands onInstanceIdAcceptableChanged", instanceIdAcceptable);
-
-        if (!instanceIdAcceptable){
-            commandsProvider.changeCommandMode("Save", "Disabled");
-        }
-    }
-
-    Timer {
-        id: timer;
-
-        interval: 200;
-
-        onTriggered: {
-            itemsModel.updateModel("ProductsList");
-        }
     }
 
     Component {
@@ -63,18 +37,6 @@ DocumentWorkspaceCommandsDelegateBase {
             }
         }
     }
-
-    function modelChanged(){
-        console.log("InstallationCommands modelChanged", instanceIdAcceptable);
-
-        if (instanceIdAcceptable){
-            commandsProvider.changeCommandMode("Save", "Normal");
-
-            let suffix = "*";
-            documentManager.setDocumentTitle({"Id": documentBase.itemId, "Title": documentBase.itemName + suffix});
-        }
-    }
-
 
     GqlModel {
         id: itemsModel;

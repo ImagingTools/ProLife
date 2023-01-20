@@ -27,6 +27,7 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 		if (m_objectCollectionCompPtr->GetObjectData(collectionId, orderDataPtr)){
 			orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
 		}
+
 		if (orderInfoPtr != nullptr){
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
@@ -45,13 +46,13 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 				}
 				else{
 				}
-			}
 
-			if (elementInformation.isNull()){
-				elementInformation = "";
-			}
+				if (elementInformation.isNull()){
+					elementInformation = "";
+				}
 
-			retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
+				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
+			}
 		}
 
 		return true;

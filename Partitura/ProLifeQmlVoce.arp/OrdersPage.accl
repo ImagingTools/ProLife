@@ -2,29 +2,29 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5047" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
-        <Element ComponentName="HardwareHeadersDataProvider" X="1025" Y="700" Note=""/>
-        <Element ComponentName="InstallationDataController" X="450" Y="350" Note=""/>
-        <Element ComponentName="InstallationListController" X="550" Y="450" Note=""/>
-        <Element ComponentName="InstallationsHeadersDataProvider" X="450" Y="550" Note=""/>
-        <Element ComponentName="ObjectViewDataProvider" X="725" Y="550" Note=""/>
-        <Element ComponentName="OrderCollectionCommands" X="325" Y="50" Note=""/>
-        <Element ComponentName="OrderCollectionController" X="775" Y="250" Note=""/>
-        <Element ComponentName="OrderCommands" X="300" Y="150" Note=""/>
-        <Element ComponentName="OrderController" X="1000" Y="250" Note=""/>
-        <Element ComponentName="OrderHeadersDataProvider" X="775" Y="325" Note=""/>
-        <Element ComponentName="OrderInfo" X="1050" Y="350" Note=""/>
-        <Element ComponentName="OrderViewDataProvider" X="825" Y="175" Note=""/>
-        <Element ComponentName="ProductInstance" X="175" Y="425" Note=""/>
-        <Element ComponentName="ProductInstanceMetaInfoCreator" X="175" Y="275" Note=""/>
+        <Element ComponentName="HardwareHeadersDataProvider" X="1000" Y="800" Note=""/>
+        <Element ComponentName="InstallationDataController" X="175" Y="700" Note=""/>
+        <Element ComponentName="InstallationListController" X="650" Y="675" Note=""/>
+        <Element ComponentName="InstallationsHeadersDataProvider" X="525" Y="725" Note=""/>
+        <Element ComponentName="ObjectViewDataProvider" X="775" Y="725" Note=""/>
+        <Element ComponentName="OrderCollectionCommands" X="725" Y="300" Note=""/>
+        <Element ComponentName="OrderCollectionController" X="175" Y="300" Note=""/>
+        <Element ComponentName="OrderCommands" X="450" Y="300" Note=""/>
+        <Element ComponentName="OrderController" X="1000" Y="300" Note=""/>
+        <Element ComponentName="OrderHeadersDataProvider" X="125" Y="450" Note=""/>
+        <Element ComponentName="OrderInfo" X="1000" Y="450" Note=""/>
+        <Element ComponentName="OrderViewDataProvider" X="375" Y="450" Note=""/>
+        <Element ComponentName="ProductInstance" X="100" Y="775" Note=""/>
+        <Element ComponentName="ProductInstanceMetaInfoCreator" X="300" Y="775" Note=""/>
         <Element ComponentName="ProductsData" X="1075" Y="75" Note=""/>
-        <Element ComponentName="SoftwareHeadersDataProvider" X="1025" Y="600" Note=""/>
+        <Element ComponentName="SoftwareHeadersDataProvider" X="775" Y="800" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="OrderCollectionCommands">

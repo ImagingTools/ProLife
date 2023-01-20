@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5047" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -11,7 +11,7 @@
         <Element ComponentName="AccountsPage" X="100" Y="500" Note=""/>
         <Element ComponentName="AdministrationPage" X="275" Y="675" Note=""/>
         <Element ComponentName="OrdersPage" X="350" Y="500" Note=""/>
-        <Element ComponentName="PageData" X="1000" Y="375" Note=""/>
+        <Element ComponentName="PageData" X="1000" Y="350" Note=""/>
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
         <Element ComponentName="Pages" X="175" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
@@ -22,15 +22,6 @@
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PagesPermissions">
-            <PositionMap>
-                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
-                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
-                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
-                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="575" Y="175" Note=""/>
@@ -48,6 +39,15 @@
                 <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
                 <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
                 <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PagesPermissions">
+            <PositionMap>
+                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

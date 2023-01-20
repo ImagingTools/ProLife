@@ -9,6 +9,9 @@
 #include <istd/CSystem.h>
 #include <istd/CCrcCalculator.h>
 
+// ProLife includes
+#include <prolifedata/IOrderInfo.h>
+
 
 namespace prolifedb
 {
@@ -25,10 +28,10 @@ static const QByteArray s_idColumn = "Id";
 QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objectId, int offset, int count, const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
-		QString baseQuery = GetBaseSelectionQuery();
-
-		return QString(
-			baseQuery + QString(" AND \"%1\".IsActive = true AND \"%1\".Id = '%2'").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(objectId))).toLocal8Bit();
+		return QString("SELECT * FROM \"%1\" WHERE IsActive = true AND \"%2\" = \"%3\"")
+				.arg(qPrintable(*m_tableNameAttrPtr))
+				.arg(qPrintable(s_documentIdColumn))
+				.arg(qPrintable(objectId)).toLocal8Bit();
 	}
 
 	return BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
@@ -57,18 +60,30 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
 		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
+
+			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(workingDocumentPtr.GetPtr());
+			Q_ASSERT(orderInfoPtr != nullptr);
+			if (orderInfoPtr == nullptr){
+				return NewObjectQuery();
+			}
+
 			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
-			QByteArray revisionUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+//			QByteArray revisionUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 			quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 
-			retVal.query = QString("UPDATE \"%1\" SET IsActive = false where OrderId = '%2'; INSERT INTO \"%1\"(OrderId, RevisionId, LastModified, Checksum, IsActive, Order) VALUES('%2', '%3', '%4', '%5', true, '%6');")
+			QByteArray accountId = orderInfoPtr->GetCustomerId();
+			QByteArray orderId = orderInfoPtr->GetOrderId();
+
+			int revisionVersion = 0;
+
+			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\"(OrderId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
-						.arg(qPrintable(objectId))
-						.arg(qPrintable(revisionUuid))
-						.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-						.arg(checksum)
+						.arg(qPrintable(orderId))
+						.arg(qPrintable(accountId))
 						.arg(qPrintable(documentContent.toBase64()))
-						.toLocal8Bit();
+						.arg(revisionVersion)
+						.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+						.arg(checksum).toLocal8Bit();
 
 			retVal.objectName = objectName;
 		}

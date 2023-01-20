@@ -119,7 +119,7 @@ CREATE TABLE "Orders"(
     Id SERIAL,
     OrderId VARCHAR (1000) NOT NULL,
     AccountId VARCHAR (1000) NOT NULL,
-    Document JSONB,
+    Document TEXT,
     RevisionNumber BIGINT,
     LastModified TIMESTAMP,
     Checksum BIGINT,

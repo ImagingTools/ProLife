@@ -645,7 +645,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtbase::IItemBasedRepresentationDataProvider" ComponentId="CommandsDataController"/>
+                    <Interface InterfaceId="imtbase::IGqlRepresentationDataController" ComponentId="CommandsDataController"/>
                     <Interface InterfaceId="imtgql::IGqlRepresentationDataController" ComponentId="CommandsDataController"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="CommandsDataController"/>
                 </ExportedInterfaces>
@@ -1297,7 +1297,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtbase::IItemBasedRepresentationDataProvider" ComponentId="PagesDataController"/>
+                    <Interface InterfaceId="imtbase::IGqlRepresentationDataController" ComponentId="PagesDataController"/>
                     <Interface InterfaceId="imtgql::IGqlRepresentationDataController" ComponentId="PagesDataController"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="PagesDataController"/>
                 </ExportedInterfaces>

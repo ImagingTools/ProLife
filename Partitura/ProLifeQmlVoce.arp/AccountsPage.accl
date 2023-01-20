@@ -2,41 +2,55 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5047" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountCommandPermissions" X="350" Y="725" Note=""/>
-        <Element ComponentName="AccountCommands" X="425" Y="225" Note=""/>
-        <Element ComponentName="AccountDataController" X="150" Y="225" Note=""/>
-        <Element ComponentName="AccountEditCommandDataProvider" X="1027" Y="700" Note=""/>
-        <Element ComponentName="AccountEditCommandPermissions" X="700" Y="725" Note=""/>
-        <Element ComponentName="AccountInfo" X="175" Y="325" Note=""/>
-        <Element ComponentName="AccountListController" X="850" Y="200" Note=""/>
-        <Element ComponentName="AccountsCommandDataProvider" X="125" Y="650" Note=""/>
-        <Element ComponentName="AccountsCommandsPermissionsProvider" X="325" Y="550" Note=""/>
-        <Element ComponentName="AccountsEditCommandsPermissionsProvider" X="1025" Y="550" Note=""/>
-        <Element ComponentName="AccountsHeadersDataProvider" X="1050" Y="50" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="600" Y="475" Note=""/>
-        <Element ComponentName="Commands" X="625" Y="350" Note=""/>
+        <Element ComponentName="AccountCollectionCommands" X="725" Y="250" Note=""/>
+        <Element ComponentName="AccountCommandPermissions" X="350" Y="775" Note=""/>
+        <Element ComponentName="AccountCommands" X="400" Y="250" Note=""/>
+        <Element ComponentName="AccountDataController" X="125" Y="250" Note=""/>
+        <Element ComponentName="AccountEditCommandDataProvider" X="1025" Y="750" Note=""/>
+        <Element ComponentName="AccountEditCommandPermissions" X="700" Y="750" Note=""/>
+        <Element ComponentName="AccountInfo" X="150" Y="400" Note=""/>
+        <Element ComponentName="AccountListController" X="1050" Y="250" Note=""/>
+        <Element ComponentName="AccountsCommandDataProvider" X="150" Y="725" Note=""/>
+        <Element ComponentName="AccountsCommandsPermissionsProvider" X="325" Y="650" Note=""/>
+        <Element ComponentName="AccountsEditCommandsPermissionsProvider" X="1000" Y="550" Note=""/>
+        <Element ComponentName="AccountsHeadersDataProvider" X="800" Y="400" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="650" Y="650" Note=""/>
+        <Element ComponentName="Commands" X="600" Y="550" Note=""/>
         <Element ComponentName="Demultiplexer" X="500" Y="75" Note=""/>
-        <Element ComponentName="ObjectViewDataProvider" X="1075" Y="125" Note=""/>
-        <Element ComponentName="VisualStatus" X="125" Y="50" Note=""/>
+        <Element ComponentName="ObjectViewDataProvider" X="1075" Y="400" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="AccountCollectionCommands">
+            <PositionMap>
+                <Element ComponentName="AccountCommandsController" X="575" Y="75" Note=""/>
+                <Element ComponentName="AccountsCommandPermissions" X="800" Y="475" Note=""/>
+                <Element ComponentName="CheckPermissionOr" X="1100" Y="475" Note=""/>
+                <Element ComponentName="Commands" X="250" Y="250" Note=""/>
+                <Element ComponentName="CommandsRepresentation" X="950" Y="250" Note=""/>
+                <Element ComponentName="Edit" X="425" Y="600" Note=""/>
+                <Element ComponentName="Empty" X="300" Y="525" Note=""/>
+                <Element ComponentName="New" X="75" Y="375" Note=""/>
+                <Element ComponentName="Remove" X="175" Y="450" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="AccountCommands">
             <PositionMap>
                 <Element ComponentName="AccountCommandsController" X="575" Y="75" Note=""/>
-                <Element ComponentName="CheckPermissionOr" X="1100" Y="450" Note=""/>
-                <Element ComponentName="Commands" X="250" Y="250" Note=""/>
-                <Element ComponentName="CommandsRepresentation" X="950" Y="250" Note=""/>
-                <Element ComponentName="Edit" X="450" Y="475" Note=""/>
-                <Element ComponentName="Empty" X="325" Y="400" Note=""/>
-                <Element ComponentName="New" X="100" Y="375" Note=""/>
-                <Element ComponentName="PackagesCommandPermissions" X="800" Y="450" Note=""/>
-                <Element ComponentName="Remove" X="175" Y="475" Note=""/>
+                <Element ComponentName="CheckPermissionOr" X="775" Y="425" Note=""/>
+                <Element ComponentName="Close" X="425" Y="600" Note=""/>
+                <Element ComponentName="Commands" X="275" Y="275" Note=""/>
+                <Element ComponentName="CommandsRepresentation" X="1050" Y="275" Note=""/>
+                <Element ComponentName="OrderCommandPermissions" X="1050" Y="425" Note=""/>
+                <Element ComponentName="Redo" X="425" Y="425" Note=""/>
+                <Element ComponentName="Save" X="125" Y="600" Note=""/>
+                <Element ComponentName="Undo" X="125" Y="425" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

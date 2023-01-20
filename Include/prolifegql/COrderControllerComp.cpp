@@ -1,12 +1,17 @@
 #include <prolifegql/COrderControllerComp.h>
 
-// ImtCore includes
-#include <imtlic/CFeaturePackageCollectionUtility.h>
+
+// ACF includes
 #include <idoc/CStandardDocumentMetaInfo.h>
-#include <imtgui/CObjectCollectionViewDelegate.h>
-#include <imtlic/CLicenseInstance.h>
-#include <prolifedata/IOrderedProductInfo.h>
+
+// ImtCore includes
 #include <imtbase/ICollectionInfo.h>
+#include <imtgui/CObjectCollectionViewDelegate.h>
+#include <imtlic/CFeaturePackageCollectionUtility.h>
+#include <imtlic/CLicenseInstance.h>
+
+// ProLife includes
+#include <prolifedata/IOrderedProductInfo.h>
 
 
 namespace prolifegql
@@ -26,14 +31,12 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 	dataModel->SetData("Id", "");
 	dataModel->SetData("AccountId", "");
-//	dataModel->SetData("ProductId", "");
 
 	imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("Products");
 	imtbase::CTreeItemModel* activeLicenses = productsModel->AddTreeModel("ActiveLicenses");
 
 	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
-
-	Q_ASSERT(inputParams == nullptr);
+//	Q_ASSERT(inputParams == nullptr);
 
 	QByteArray objectId = GetObjectIdFromInputParams(*inputParams);
 
@@ -100,7 +103,6 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 //				}
 //			}
 //		}
-
 	}
 
 	rootModel->SetExternTreeModel("data", dataModel);
@@ -132,8 +134,12 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		QByteArray orderId;
 
-		if (itemModel.ContainsKey("OrderId")){
-			orderId = itemModel.GetData("OrderId").toByteArray();
+		if (itemModel.ContainsKey("Id")){
+			orderId = itemModel.GetData("Id").toByteArray();
+		}
+
+		if (itemModel.ContainsKey("Name")){
+			name = itemModel.GetData("Name").toString();
 		}
 
 		if (orderId.isEmpty()){
@@ -141,13 +147,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			return nullptr;
 		}
 
-//		if (itemModel.ContainsKey("Name")){
-//			name = itemModel.GetData("Name").toByteArray();
-//		}
-
 		QByteArray customerId;
-		if (itemModel.ContainsKey("CustomerId")){
-			customerId = itemModel.GetData("CustomerId").toByteArray();
+		if (itemModel.ContainsKey("AccountId")){
+			customerId = itemModel.GetData("AccountId").toByteArray();
 		}
 
 		if (customerId.isEmpty()){
@@ -155,21 +157,12 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			return nullptr;
 		}
 
-//		QByteArray productId;
-//		if (itemModel.ContainsKey("ProductId")){
-//			productId = itemModel.GetData("ProductId").toByteArray();
-//		}
-
-//		if (productId.isEmpty()){
-//			errorMessage = QT_TR_NOOP("Product can not be empty!");
-//			return nullptr;
-//		}
-
 		objectId = orderId;
 
-		if (m_separatorObjectIdAttrPtr.IsValid()){
-			objectId += *m_separatorObjectIdAttrPtr + customerId;
-		}
+//		if (m_separatorObjectIdAttrPtr.IsValid()){
+//			objectId += *m_separatorObjectIdAttrPtr + customerId;
+//		}
+
 		orderPtr->SetOrderId(orderId);
 		orderPtr->SetCustomerId(customerId);
 

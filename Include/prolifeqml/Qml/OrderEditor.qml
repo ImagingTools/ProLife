@@ -7,7 +7,7 @@ import Acf 1.0
 DocumentBase {
     id: installationEditorContainer;
 
-    commandsDelegateSourceComp: installationEditorCommandsDelegate;
+    commandsDelegateSourceComp: orderEditorCommandsDelegate;
 
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
@@ -70,7 +70,13 @@ DocumentBase {
         console.log("Begin updateGui");
         blockUpdatingModel = true;
 
-        instanceIdInput.text = documentModel.GetData("Id");
+        if (documentModel.ContainsKey("Id")){
+            instanceIdInput.text = documentModel.GetData("Id");
+        }
+
+        if (documentModel.ContainsKey("Comment")){
+            commentInput.text = documentModel.GetData("Comment");
+        }
 
         let accountId = documentModel.GetData("AccountId");
         let productId = documentModel.GetData("ProductId");
@@ -85,62 +91,6 @@ DocumentBase {
             }
         }
 
-        //        productCB.currentText = "";
-        let productModel = productCB.model;
-        for (let i = 0; i < productModel.GetItemsCount(); i++){
-            let id = productModel.GetData("Id", i);
-            if (id === productId){
-                productCB.currentIndex = i;
-                break;
-            }
-        }
-
-        licensesTable.rowModel.clear();
-
-        let activeLicensesModel = documentModel.GetData("ActiveLicenses");
-        if (!activeLicensesModel){
-            activeLicensesModel = documentModel.AddTreeModel("ActiveLicenses");
-        }
-
-        let licensesModel;
-        for (let i = 0; i < licensesProvider.model.GetItemsCount(); i++){
-            let id = licensesProvider.model.GetData("Id", i);
-            if (id === productId){
-                let productLicensesModel = licensesProvider.model.GetData("Licenses", i);
-                licensesModel = productLicensesModel;
-            }
-        }
-
-        if (licensesModel){
-            console.log("licensesModel", licensesModel.toJSON());
-            console.log("activeLicensesModel", activeLicensesModel.toJSON());
-            for (let i = 0; i < licensesModel.GetItemsCount(); i++){
-                let licenseId = licensesModel.GetData("Id", i);
-                let licenseName = licensesModel.GetData("Name", i);
-
-                let row = {"Id": licenseId, "Name": licenseName, "LicenseState": Qt.Unchecked, "ExpirationState": Qt.Unchecked, "Expiration": ""}
-
-                for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
-                    let activeLicenseId = activeLicensesModel.GetData("Id", j);
-                    let expiration = activeLicensesModel.GetData("Expiration", j);
-                    if (licenseId == activeLicenseId){
-                        row["LicenseState"] = Qt.Checked;
-
-                        if (expiration == ""){
-                            row["ExpirationState"] = Qt.Unchecked;
-                        }
-                        else{
-                            row["ExpirationState"] = Qt.Checked;
-                            row["Expiration"] = expiration;
-                        }
-                    }
-                }
-
-                console.log("row addRow", JSON.stringify(row));
-                licensesTable.addRow(row);
-            }
-        }
-
         blockUpdatingModel = false;
         console.log("End updateGui");
     }
@@ -151,81 +101,22 @@ DocumentBase {
 
         documentModel.SetData("Id", instanceIdInput.text)
 
-        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-        documentModel.SetData("ProductId", selectedProductId);
+//        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
+//        documentModel.SetData("ProductId", selectedProductId);
 
         let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
         documentModel.SetData("AccountId", selectedAccountId);
 
-        let activeLicenses = documentModel.AddTreeModel("ActiveLicenses");
-
-        for (let i = 0; i < licensesTable.rowModel.count; i++){
-            let rowObj = licensesTable.rowModel.get(i);
-
-            let licenseId = rowObj["Id"];
-            let licenseName = rowObj["Name"];
-            let expirationState  = rowObj["ExpirationState"];
-            let expiration  = rowObj["Expiration"];
-            let state = rowObj["LicenseState"];
-
-            console.log("rowObj", JSON.stringify(rowObj));
-
-            if (state == Qt.Checked){
-
-                let index = activeLicenses.InsertNewItem();
-
-                activeLicenses.SetData("Id", licenseId, index);
-                activeLicenses.SetData("Name", licenseName, index);
-
-                if (expirationState == Qt.Checked){
-                    activeLicenses.SetData("Expiration", expiration, index);
-                }
-                else{
-                    activeLicenses.SetData("Expiration", "", index);
-                }
-            }
-        }
+        documentModel.SetData("Comment", commentInput.text);
 
         undoRedoManager.endChanges();
-        console.log("End updateModel");
     }
-
-    function addDocument(document){
-        let itemId = document["Id"];
-        console.log("OrderEditor addDocument", itemId)
-
-        let pageIndex = -1; //this.getDocumentIndexById(itemId);
-        if (pageIndex < 0){
-            var index = ordersData.InsertNewItem();
-            console.log("OrderEditor addDocument index:", index)
-
-            //TODO -> Uuid
-            ordersData.SetData("Id", itemId, index);
-            ordersData.SetData("Title", document["Name"], index);
-            pageIndex = index;
-        }
-
-        tabPanel.selectedIndex = pageIndex;
-    }
-
-    function closeDocument(itemId){
-         let index = this.getDocumentIndexById(itemId);;
-         if (index >= 0){
-             ordersData.RemoveItem(index);
-
-             if (tabPanel.selectedIndex >= index && index > 0){
-                 tabPanel.selectedIndex--;
-             }
-         }
-     }
-
 
     Rectangle {
         anchors.fill: parent;
 
         color: Style.backgroundColor;
     }
-
 
     Column {
         id: bodyColumn;
@@ -257,7 +148,6 @@ DocumentBase {
                 }
             }
         }
-
 
         CustomTextField {
             id: instanceIdInput;
@@ -311,7 +201,6 @@ DocumentBase {
             font.pixelSize: Style.fontSize_common;
         }
 
-
         CustomTextField {
             id: commentInput;
 
@@ -325,71 +214,11 @@ DocumentBase {
             maximumLength: 255;
 
             onEditingFinished: {
+                if (!blockUpdatingModel){
+                    updateModel();
+                }
             }
         }
-
-//        Text {
-//            id: titleProduct;
-
-//            text: qsTr("Product");
-//            color: Style.textColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-//        }
-
-//        ComboBox {
-//            id: productCB;
-
-//            width: parent.width;
-//            height: 23;
-
-//            radius: 3;
-
-//            onCurrentIndexChanged: {
-//                console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex);
-
-//                if (!blockUpdatingModel){
-//                    let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-
-//                    //                        commandsDelegate.updateLicenses(selectedProductId);
-
-//                    updateModel();
-
-//                    updateGui();
-//                }
-//            }
-//        }
-
-//        Text {
-//            id: titleDependency;
-
-//            text: qsTr("Dependency");
-//            color: Style.textColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-//        }
-
-//        ComboBox {
-//            id: dependencyComboBox;
-
-//            width: parent.width;
-//            height: 23;
-
-//            radius: 3;
-
-//            currentText: "RTVision.3d Sensor";
-
-//            model: ListModel {
-//                id: modelCategogy;
-//                ListElement {
-//                    Name: "RTVision.3d Sensor"
-//                }
-//            }
-
-//            onCurrentIndexChanged: {
-
-//            }
-//        }
 
         Item{
             height: 35;
@@ -436,62 +265,6 @@ DocumentBase {
             }
         }
     }//Column bodyColumn
-
-//    MultiDocWorkspaceView {
-//        id: productManager;
-//        anchors.top: bodyColumn.bottom;
-//        anchors.topMargin: bodyColumn.height + 5;
-//        anchors.bottom: parent.bottom;
-//        anchors.left: parent.left;
-//        anchors.right: parent.right;
-//        isCloseEnable: false;
-
-//        Component.onCompleted: {
-//            productManager.addDocument({"Id": "Sofware", "ProductId": "Sofware", "Name": "Sofware", "Source": "../../imtlicgui/SoftwareCollectionView.qml", "CommandsId": "Software"});
-//            productManager.addDocument({"Id": "Hardware", "ProductId": "Hardware", "Name": "Hardware", "Source": "../../imtlicgui/HardwareCollectionView.qml", "CommandsId": "Hardware"});
-
-//        }
-//    }
-
-//    TreeItemModel {
-//        id: ordersData;
-//    }
-
-//    TabPanel {
-//        id: tabPanel;
-
-//        anchors.top: bodyColumn.bottom;
-//        anchors.topMargin: 10
-//        anchors.left: parent.left;
-//        anchors.right: parent.right;
-
-//        visible: true;
-//        model: ordersData;
-
-//        Component.onCompleted: {
-//            addDocument({"Id":"Software", "Name":"Software"})
-//            addDocument({"Id":"Hardware", "Name":"Hardware"})
-//        }
-
-//        onCloseItem: {
-//            let item = ordersData.GetData("Item", index);
-//            item.commandsDelegate.commandHandle("Close");
-//        }
-
-//        onRightClicked: {
-//            if (tabPanel.selectedIndex < ordersData.GetItemsCount() - 1) {
-//                tabPanel.selectedIndex++;
-//                tabPanel.viewTabInListView(tabPanel.selectedIndex);
-//            }
-//        }
-
-//        onLeftClicked: {
-//            if (tabPanel.selectedIndex > 0) {
-//                tabPanel.selectedIndex--;
-//                tabPanel.viewTabInListView(tabPanel.selectedIndex);
-//            }
-//        }
-//    }
 
     ListView {
         id: productsView;
