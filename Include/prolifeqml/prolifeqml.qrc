@@ -13,6 +13,7 @@
 		<file alias="ProLifeMain.qml">Resources/qml/ProLifeMain.qml</file>
 		<file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
 		<file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
+		<file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
 		<file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
 	</qresource>
     <qresource prefix="/Style">

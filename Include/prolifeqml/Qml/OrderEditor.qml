@@ -241,17 +241,8 @@ DocumentBase {
                     GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
                 }
                 onClicked: {
-//                     modalDialogManager.openDialog(producteditor, {"productId": ""});
-//                    modalDialogManager.openDialog(producteditor);
-                    documentManager.addDocument({"Id": "newProduct", "Name": qsTr("New product"), "Source": "../../imtlicgui/InstallationEditor.qml", "CommandsId": "Installation"});
-
+                     modalDialogManager.openDialog(productEditorDialog, {});
                 }
-
-//                Component{
-//                    id: producteditor;
-//                    InstallationEditor{
-//                    }
-//                }
             }
 
             Text {
@@ -265,6 +256,14 @@ DocumentBase {
             }
         }
     }//Column bodyColumn
+
+    Component {
+        id: productEditorDialog;
+
+        ProductEditorDialog {
+
+        }
+    }
 
     ListView {
         id: productsView;
