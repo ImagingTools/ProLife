@@ -106,6 +106,7 @@
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/OrdersPage</Value>
                                 <Value>PageData/AdministrationPages</Value>
+                                <Value>PageData/ProductPermissionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -290,19 +291,19 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Features/LisaFeatures"/>
+                                    <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>Lisa</Value>
+                                            <Value>ProLife</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>Lisa</Value>
+                                            <Value>ProLife</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -322,6 +323,7 @@
                     <Component ExportedId="OrderVisualStatus" ComponentId="OrdersPage/OrderVisualStatus"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
+                    <Component ExportedId="ProductPermissionController" ComponentId="ProductPermissionController"/>
                     <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
@@ -340,7 +342,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewFeatures</Value>
+                                            <Value>ViewAccounts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

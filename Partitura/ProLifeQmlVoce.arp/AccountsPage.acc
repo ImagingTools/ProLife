@@ -583,6 +583,51 @@
         <EmbeddedRegistry Id="AccountCommands">
             <Data Description="" Keywords="">
                 <ElementsList>
+                    <Element Id="AccountCommandPermissions" PackageId="ImtCoreVoce" ComponentId="DocumentCommandPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CloseCommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>RemoveAccount</Value>
+                                            <Value>ChangeAccount</Value>
+                                            <Value>ViewAccounts</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RedoCommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AddAccount</Value>
+                                            <Value>RemoveAccount</Value>
+                                            <Value>ChangeAccount</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SaveCommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AddAccount</Value>
+                                            <Value>RemoveAccount</Value>
+                                            <Value>ChangeAccount</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UndoCommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AddAccount</Value>
+                                            <Value>RemoveAccount</Value>
+                                            <Value>ChangeAccount</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="AccountCommandsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -654,58 +699,13 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="OrderCommandPermissions"/>
+                                    <Data IsEnabled="true" Value="AccountCommandPermissions"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Account"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrderCommandPermissions" PackageId="ImtCoreVoce" ComponentId="DocumentCommandPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CloseCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                            <Value>ViewOrders</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RedoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SaveCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UndoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                        </Values>
-                                    </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
