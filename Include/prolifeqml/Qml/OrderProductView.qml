@@ -5,8 +5,6 @@ import Acf 1.0
 Rectangle {
     id: productInfo;
 
-    anchors.top: commandsItem.bottom;
-
     height: 85;
     width: 500;
 
@@ -58,7 +56,6 @@ Rectangle {
 
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.top: parent.top;
-//        anchors.topMargin: 5;
 
         width: 60;
 
