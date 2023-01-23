@@ -62,7 +62,6 @@ Item {
         settingsProvider: settingsProviderLocal;
     }
 
-
     ThumbnailDecorator {
         id: thumbnailDecorator;
         anchors.fill: parent;

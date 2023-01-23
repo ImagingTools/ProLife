@@ -3,9 +3,13 @@ import imtgui 1.0
 import Acf 1.0
 
 Rectangle {
-    id: container
+    id: productInfo;
+
+    anchors.top: commandsItem.bottom;
+
     height: 85;
     width: 500;
+
     radius: 10;
     property string productName;
     property string productCategory;
@@ -16,13 +20,71 @@ Rectangle {
     property string serialNumber;
     property string productionStatus;
 
+    signal removed();
+    signal edited();
+    signal createLicenseFile();
+
+    TreeItemModel {
+        id: commandsModel;
+
+        Component.onCompleted: {
+            let index = commandsModel.InsertNewItem();
+
+            commandsModel.SetData("Id", "Edit", index);
+            commandsModel.SetData("Name", "Edit", index);
+            commandsModel.SetData("Icon", "Edit", index);
+            commandsModel.SetData("IsEnabled", true, index);
+
+            index = commandsModel.InsertNewItem();
+
+            commandsModel.SetData("Id", "Remove", index);
+            commandsModel.SetData("Name", "Remove", index);
+            commandsModel.SetData("Icon", "Delete", index);
+            commandsModel.SetData("IsEnabled", true, index);
+
+            index = commandsModel.InsertNewItem();
+
+            commandsModel.SetData("Id", "CreateLicenseFile", index);
+            commandsModel.SetData("Name", "Create License File", index);
+            commandsModel.SetData("Icon", "Key", index);
+            commandsModel.SetData("IsEnabled", true, index);
+
+            commands.commandModel = commandsModel;
+        }
+    }
+
+    SimpleCommandsDecorator {
+        id: commands;
+
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.top: parent.top;
+//        anchors.topMargin: 5;
+
+        width: 60;
+
+        radius: 10;
+        color: productInfo.color;
+
+        onCommandActivated: {
+            if (commandId == "Remove"){
+                productInfo.removed();
+            }
+            else if (commandId == "Edit"){
+                productInfo.edited();
+            }
+            else if (commandId == "CreateLicenseFile"){
+                productInfo.createLicenseFile();
+            }
+        }
+    }
+
     Text {
         id: productName;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
         anchors.top: parent.top;
         anchors.topMargin: 5;
-        text: container.productName;
+        text: productInfo.productName;
         color: Style.textColor;
         font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;
@@ -34,7 +96,7 @@ Rectangle {
         anchors.topMargin: 5;
         anchors.left: productName.right;
         anchors.leftMargin: 5;
-        text: "(" + container.productCategory + ")";
+        text: "(" + productInfo.productCategory + ")";
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -46,7 +108,7 @@ Rectangle {
         anchors.rightMargin: 5;
         anchors.top: parent.top;
         anchors.topMargin: 5;
-        text: container.ProductionStatus;
+        text: productInfo.ProductionStatus;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -65,7 +127,7 @@ Rectangle {
         anchors.leftMargin: 5;
         anchors.top: productName.bottom;
         anchors.topMargin: 10;
-        text: qsTr("License: ") + container.licenseName + " " + container.licenseExpiration;
+        text: qsTr("License: ") + productInfo.licenseName + " " + productInfo.licenseExpiration;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -90,7 +152,7 @@ Rectangle {
         anchors.topMargin: 5;
         anchors.left: linkedName.right;
         anchors.leftMargin: 5;
-        text:  container.pairName;
+        text:  productInfo.pairName;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -103,7 +165,7 @@ Rectangle {
         anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
-        text: qsTr("Mac address: ") + container.macAddress;
+        text: qsTr("Mac address: ") + productInfo.macAddress;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -115,7 +177,7 @@ Rectangle {
         anchors.top: macAddress.top;
         anchors.right: parent.right;
         anchors.rightMargin: 5;
-        text: qsTr("Serial number: ") + container.serialNumber;
+        text: qsTr("Serial number: ") + productInfo.serialNumber;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
