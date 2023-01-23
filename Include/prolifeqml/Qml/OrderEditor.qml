@@ -24,11 +24,6 @@ DocumentBase {
     }
 
     onDocumentModelChanged: {
-        let activeLicensesModel = documentModel.GetData("ActiveLicenses");
-        if (!activeLicensesModel){
-            activeLicensesModel = documentModel.AddTreeModel("ActiveLicenses");
-        }
-
         updateGui();
 
         undoRedoManager.registerModel(documentModel)
@@ -323,8 +318,42 @@ DocumentBase {
         Component.onCompleted: {
         }
 
-        delegate: OrderProductView {
+        function getProductName(productId){
+            let retVal = "";
+            for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                let id = productsModel.GetData("Id", i);
+                if (id === productId){
+                    retVal = productsModel.GetData("Name", i);
+                    break;
+                }
+            }
+            return retVal;
+        }
 
+        function getProductCategory(productId){
+            let retVal = "";
+            for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                let id = productsModel.GetData("Id", i);
+                if (id === productId){
+                    retVal = productsModel.GetData("CategoryId", i);
+                    break;
+                }
+            }
+            return retVal;
+        }
+
+        function getLicenseName(licenseId){
+            return licenseId;
+        }
+
+        delegate: OrderProductView {
+            productName: productsView.getProductName(model.ProductId);
+            productCategory: productsView.getProductCategory(model.ProductId);
+            pairName: productsView.getProductName(model.PairId);
+            macAddress: model.MacAddress;
+            serialNumber: model.SerialNumber;
+            licenseExpiration: model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
+            licenseName: productsView.getLicenseName(model.LicenseId);
         }
 
 

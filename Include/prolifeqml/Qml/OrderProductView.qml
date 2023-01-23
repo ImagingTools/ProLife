@@ -11,6 +11,7 @@ Rectangle {
     radius: 10;
     property string productName;
     property string productCategory;
+    property string productStatus: "Status";
     property string pairName;
     property string licenseName;
     property string licenseExpiration;
@@ -54,7 +55,8 @@ Rectangle {
     SimpleCommandsDecorator {
         id: commands;
 
-        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.right: parent.right;
+        anchors.rightMargin: 7;
         anchors.top: parent.top;
 
         width: 60;
@@ -99,17 +101,7 @@ Rectangle {
         font.pixelSize: Style.fontSize_common;
         font.bold: true;
     }
-    Text {
-        id: productionStatus;
-        anchors.right: parent.right;
-        anchors.rightMargin: 5;
-        anchors.top: parent.top;
-        anchors.topMargin: 5;
-        text: productInfo.ProductionStatus;
-        color: Style.textColor;
-        font.family: Style.fontFamily;
-        font.pixelSize: Style.fontSize_common;
-    }
+
     Rectangle {
         anchors.top: productName.bottom;
         anchors.topMargin: 5;
@@ -119,22 +111,34 @@ Rectangle {
     }
 
     Text {
+        id: productionStatus;
+        anchors.right: parent.right;
+        anchors.rightMargin: 5;
+        anchors.top: productName.bottom;
+        anchors.topMargin: 10;
+        text: productInfo.productStatus;
+        color: Style.textColor;
+        font.family: Style.fontFamily;
+        font.pixelSize: Style.fontSize_common;
+    }
+
+    Text {
         id: licenseName;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
-        anchors.top: productName.bottom;
-        anchors.topMargin: 10;
+        anchors.top: productionStatus.bottom;
+        anchors.topMargin: 5;
         text: qsTr("License: ") + productInfo.licenseName + " " + productInfo.licenseExpiration;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
-        visible: model.Category === "Software";
+        visible: productInfo.productCategory === "Software";
     }
 
     Text {
         id: linkedName;
-        anchors.top: licenseName.bottom;
-        anchors.topMargin: 5;
+        anchors.top: productName.bottom;
+        anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
         text: qsTr("Pair:");
@@ -145,8 +149,8 @@ Rectangle {
     }
     Text {
         id: linked;
-        anchors.top: licenseName.bottom;
-        anchors.topMargin: 5;
+        anchors.top: productName.bottom;
+        anchors.topMargin: 10;
         anchors.left: linkedName.right;
         anchors.leftMargin: 5;
         text:  productInfo.pairName;
@@ -158,15 +162,15 @@ Rectangle {
 
     Text {
         id: macAddress;
-        anchors.top: productName.bottom;
-        anchors.topMargin: 10;
+        anchors.top: linkedName.bottom;
+        anchors.topMargin: 5;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
         text: qsTr("Mac address: ") + productInfo.macAddress;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
-        visible: model.Category === "Hardware";
+        visible: productInfo.productCategory === "Hardware";
     }
 
     Text {

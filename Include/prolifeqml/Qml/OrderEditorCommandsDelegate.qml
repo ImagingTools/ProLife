@@ -12,6 +12,7 @@ DocumentWorkspaceCommandsDelegateBase {
         updateItemTimer = 400;
 
         itemsModel.updateModel("AccountsList");
+        itemsModel.updateModel("ProductsList");
     }
 
     onEntered: {
