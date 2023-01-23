@@ -2,30 +2,21 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5047" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationInfo" X="800" Y="250" Note=""/>
-        <Element ComponentName="Context" X="500" Y="100" Note=""/>
-        <Element ComponentName="LisaProducts" X="175" Y="650" Note=""/>
-        <Element ComponentName="LocalSettings" X="575" Y="500" Note=""/>
-        <Element ComponentName="Localization" X="200" Y="100" Note=""/>
-        <Element ComponentName="ProlifeOrders" X="375" Y="650" Note=""/>
-        <Element ComponentName="QuickApplication" X="500" Y="250" Note=""/>
+        <Element ComponentName="ConsoleApplication" X="525" Y="250" Note=""/>
+        <Element ComponentName="DatabaseConverterComp" X="325" Y="375" Note=""/>
+        <Element ComponentName="LisaProducts" X="150" Y="525" Note=""/>
+        <Element ComponentName="LocalSettings" X="750" Y="500" Note=""/>
+        <Element ComponentName="ProlifeOrders" X="425" Y="525" Note=""/>
         <Element ComponentName="VersionInfo" X="1050" Y="250" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Enums">
-            <PositionMap>
-                <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
-                <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
-                <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="LisaProducts">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="200" Y="425" Note=""/>
@@ -34,6 +25,14 @@
                 <Element ComponentName="ProductSqlRepository" X="200" Y="325" Note=""/>
                 <Element ComponentName="RelativeFileNameParam" X="875" Y="425" Note=""/>
                 <Element ComponentName="SystemLocation" X="875" Y="525" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Enums">
+            <PositionMap>
+                <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
+                <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
+                <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
