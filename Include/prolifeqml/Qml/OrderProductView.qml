@@ -7,13 +7,14 @@ Rectangle {
     height: 85;
     width: 500;
     radius: 10;
-    property text productName;
-    property text productCategory;
-    property text pairName;
-    property text licenseName;
-    property text licenseExpiration;
-    property text macAddress;
-    property text serialNumber;
+    property string productName;
+    property string productCategory;
+    property string pairName;
+    property string licenseName;
+    property string licenseExpiration;
+    property string macAddress;
+    property string serialNumber;
+    property string productionStatus;
 
     Text {
         id: productName;
@@ -21,7 +22,7 @@ Rectangle {
         anchors.leftMargin: 5;
         anchors.top: parent.top;
         anchors.topMargin: 5;
-        text: model.ProductId;
+        text: container.productName;
         color: Style.textColor;
         font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;
@@ -33,7 +34,7 @@ Rectangle {
         anchors.topMargin: 5;
         anchors.left: productName.right;
         anchors.leftMargin: 5;
-        text: "(" + model.Category + ")";
+        text: "(" + container.productCategory + ")";
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -45,7 +46,7 @@ Rectangle {
         anchors.rightMargin: 5;
         anchors.top: parent.top;
         anchors.topMargin: 5;
-        text: model.ProductionStatus;
+        text: container.ProductionStatus;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -64,7 +65,7 @@ Rectangle {
         anchors.leftMargin: 5;
         anchors.top: productName.bottom;
         anchors.topMargin: 10;
-        text: qsTr("License: ") + model.LicenseName + qsTr("Data expired: 01.01.2024");
+        text: qsTr("License: ") + container.licenseName + " " + container.licenseExpiration;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -77,7 +78,7 @@ Rectangle {
         anchors.topMargin: 5;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
-        text: qsTr("Associated:");
+        text: qsTr("Pair:");
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -89,7 +90,7 @@ Rectangle {
         anchors.topMargin: 5;
         anchors.left: linkedName.right;
         anchors.leftMargin: 5;
-        text:  model.LinkId;
+        text:  container.pairName;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -102,7 +103,7 @@ Rectangle {
         anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.leftMargin: 5;
-        text: qsTr("Mac address: ") + model.MacAddress;
+        text: qsTr("Mac address: ") + container.macAddress;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
@@ -114,7 +115,7 @@ Rectangle {
         anchors.top: macAddress.top;
         anchors.right: parent.right;
         anchors.rightMargin: 5;
-        text: qsTr("Serial number: ") + model.SerialNumber;
+        text: qsTr("Serial number: ") + container.serialNumber;
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;

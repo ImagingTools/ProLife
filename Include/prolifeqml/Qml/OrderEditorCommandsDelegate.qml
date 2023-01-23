@@ -51,6 +51,9 @@ DocumentWorkspaceCommandsDelegateBase {
             var queryFields = Gql.GqlObject("items");
             queryFields.InsertField("Id");
             queryFields.InsertField("Name");
+            if(modelInfo == "ProductsList"){
+                queryFields.InsertField("CategoryId");
+            }
             query.AddField(queryFields)
 
             var gqlData = query.GetQuery();
