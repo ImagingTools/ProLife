@@ -39,19 +39,27 @@ QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objec
 }
 
 
-istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(
-			const QByteArray& /*typeId*/,
-			const QSqlRecord& record) const
+istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSqlRecord& record) const
 {
 	if (!m_databaseEngineCompPtr.IsValid()){
 		return nullptr;
 	}
 
-	if (!m_documentFactCompPtr.IsValid()){
+	if (!m_documentFactoriesCompPtr.IsValid()){
 		return nullptr;
 	}
 
-	istd::TDelPtr<istd::IChangeable> documentPtr = m_documentFactCompPtr.CreateInstance();
+	istd::TDelPtr<istd::IChangeable> documentPtr;
+
+	if (record.contains("TypeId")){
+		QByteArray typeId = record.value("TypeId").toByteArray();
+
+		int index = m_documentFactoriesCompPtr.FindValue(typeId);
+		if (index >= 0){
+			documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(index));
+		}
+	}
+
 	if (!documentPtr.IsValid()){
 		return nullptr;
 	}
@@ -82,9 +90,9 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 		workingDocumentPtr.SetPtr(valuePtr, false);
 	}
 	else{
-		if (m_documentFactCompPtr.IsValid()){
-			workingDocumentPtr.SetPtr(m_documentFactCompPtr.CreateInstance());
-		}
+//		if (m_documentFactCompPtr.IsValid()){
+//			workingDocumentPtr.SetPtr(m_documentFactCompPtr.CreateInstance());
+//		}
 	}
 
 	if (workingDocumentPtr.IsValid()){

@@ -27,9 +27,7 @@ public:
 				int offset = 0,
 				int count = -1,
 				const iprm::IParamsSet* paramsPtr = nullptr) const override;
-	virtual istd::IChangeable* CreateObjectFromRecord(
-				const QByteArray& typeId,
-				const QSqlRecord& record) const override;
+	virtual istd::IChangeable* CreateObjectFromRecord(const QSqlRecord& record) const override;
 	virtual NewObjectQuery CreateNewObjectQuery(
 				const QByteArray& typeId,
 				const QByteArray& proposedObjectId,
@@ -43,8 +41,6 @@ public:
 				const imtbase::IObjectCollection& collection,
 				const QByteArray& objectId,
 				const istd::IChangeable& object) const override;
-
-
 };
 
 
