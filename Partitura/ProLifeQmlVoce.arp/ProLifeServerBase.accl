@@ -2,19 +2,20 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationController" X="200" Y="550" Note=""/>
-        <Element ComponentName="DatabaseEngine" X="400" Y="650" Note=""/>
-        <Element ComponentName="FileDataProvider" X="1025" Y="600" Note=""/>
+        <Element ComponentName="DatabaseEngine" X="250" Y="750" Note=""/>
+        <Element ComponentName="FileDataProvider" X="1100" Y="750" Note=""/>
         <Element ComponentName="GraphQlRoot" X="100" Y="425" Note=""/>
-        <Element ComponentName="HttpFileAccess" X="1025" Y="425" Note=""/>
+        <Element ComponentName="HttpFileAccess" X="900" Y="425" Note=""/>
         <Element ComponentName="HttpRedirect" X="550" Y="425" Note=""/>
         <Element ComponentName="HttpServerFramework" X="550" Y="275" Note=""/>
+        <Element ComponentName="KeyDataProviders" X="650" Y="750" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="525" Y="550" Note=""/>
         <Element ComponentName="ResourcesPath" X="1075" Y="125" Note=""/>
         <Element ComponentName="RessourcesProvider" X="825" Y="125" Note=""/>
@@ -23,12 +24,12 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
-                <Element ComponentName="AesInitVector" X="125" Y="75" Note=""/>
-                <Element ComponentName="Encryption" X="925" Y="425" Note=""/>
-                <Element ComponentName="EncryptionBasePersistence" X="675" Y="425" Note=""/>
-                <Element ComponentName="InstallationRepository" X="125" Y="425" Note=""/>
-                <Element ComponentName="KeyDataProvider" X="400" Y="250" Note=""/>
-                <Element ComponentName="XmlFileSerializer" X="650" Y="600" Note=""/>
+                <Element ComponentName="AesInitVector" X="300" Y="125" Note=""/>
+                <Element ComponentName="Encryption" X="850" Y="575" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="575" Y="450" Note=""/>
+                <Element ComponentName="InstallationRepository" X="850" Y="125" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="325" Y="575" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

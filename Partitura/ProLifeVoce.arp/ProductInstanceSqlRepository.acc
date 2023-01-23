@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5026" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -138,15 +138,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProductInstanceDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="ProductInstance"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProductInstanceInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TypeName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Product Instance"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

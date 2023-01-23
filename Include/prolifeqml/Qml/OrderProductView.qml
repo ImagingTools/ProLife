@@ -36,16 +36,16 @@ Rectangle {
 
             index = commandsModel.InsertNewItem();
 
-            commandsModel.SetData("Id", "Remove", index);
-            commandsModel.SetData("Name", "Remove", index);
-            commandsModel.SetData("Icon", "Delete", index);
+            commandsModel.SetData("Id", "CreateLicenseFile", index);
+            commandsModel.SetData("Name", "Create License File", index);
+            commandsModel.SetData("Icon", "Key", index);
             commandsModel.SetData("IsEnabled", true, index);
 
             index = commandsModel.InsertNewItem();
 
-            commandsModel.SetData("Id", "CreateLicenseFile", index);
-            commandsModel.SetData("Name", "Create License File", index);
-            commandsModel.SetData("Icon", "Key", index);
+            commandsModel.SetData("Id", "Remove", index);
+            commandsModel.SetData("Name", "Remove", index);
+            commandsModel.SetData("Icon", "Close", index);
             commandsModel.SetData("IsEnabled", true, index);
 
             commands.commandModel = commandsModel;

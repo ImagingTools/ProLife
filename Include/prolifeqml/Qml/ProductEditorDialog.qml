@@ -9,6 +9,12 @@ Dialog {
 
     width: 500;
 
+    property TreeItemModel documentModel: TreeItemModel{}
+
+    onDocumentModelChanged: {
+        root.contentItem.documentModel = root.documentModel;
+    }
+
     Component.onCompleted: {
         root.buttons.addButton({"Id": "Save", "Name": "Save", "Enabled": true});
         root.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});

@@ -266,7 +266,6 @@ DocumentBase {
                 }
             }
         }
-
     }
 
     Component {
@@ -354,11 +353,45 @@ DocumentBase {
             serialNumber: model.SerialNumber;
             licenseExpiration: model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
             licenseName: productsView.getLicenseName(model.LicenseId);
+
+            onEdited: {
+                productsView.activeProductIndex = model.index;
+
+                var productsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                if (productsModel){
+                    let productModel = productsModel.GetModelFromItem(model.index);
+
+                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
+                }
+            }
+
+            onRemoved: {
+                productsView.activeProductIndex = model.index;
+
+                modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
+            }
+
+            onCreateLicenseFile: {
+                licenseFileController.createLicenseFile(model.MacAddress);
+            }
         }
-
-
     }
 
+    LicenseFileController {
+        id: licenseFileController;
+    }
+
+    Component {
+        id: removeDialog;
+
+        MessageDialog {
+            onFinished: {
+                if (buttonId == "Yes"){
+                    productsView.model.RemoveItem(productsView.activeProductIndex);
+                }
+            }
+        }
+    }
 
 }//Container
 
