@@ -10,7 +10,7 @@
     <Description>Acula's data repository containing all resources need for the execution of the production workflow</Description>
     <Keywords>Inspection Application Product Workflow</Keywords>
     <ElementsList>
-        <Element Id="CompactXmlFileSerializer" PackageId="FilePck" ComponentId="CompactXmlFileSerializer">
+        <Element Id="CompactXmlFileSerializer" PackageId="FilePck" ComponentId="JsonFileSerializer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
             </Data>
@@ -36,7 +36,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Id"/>
+                        <Data IsEnabled="true" Value="OrderId"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Orders"/>

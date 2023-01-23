@@ -15,6 +15,7 @@
 		<file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
 		<file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
 		<file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
+		<file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
 	</qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>

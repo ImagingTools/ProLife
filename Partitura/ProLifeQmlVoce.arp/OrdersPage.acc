@@ -274,7 +274,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>OrderId</Value>
-                                <Value>Comment</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -285,7 +285,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>OrderId</Value>
-                                <Value>Comment</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -293,7 +293,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>OrderId</Value>
-                                <Value>Comment</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

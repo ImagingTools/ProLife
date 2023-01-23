@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5047" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -53,8 +53,6 @@
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProductAdd</Value>
-                                <Value>ProductUpdate</Value>
                                 <Value>LicenseFeatures</Value>
                                 <Value>ProductItem</Value>
                                 <Value>ProductList</Value>
@@ -62,10 +60,7 @@
                                 <Value>CommandsData</Value>
                                 <Value>ProductsInfo</Value>
                                 <Value>ProductsList</Value>
-                                <Value>ProductsRemove</Value>
                                 <Value>ProductsMetaInfo</Value>
-                                <Value>ProductsRename</Value>
-                                <Value>ProductsSetDescription</Value>
                                 <Value>ProductsObjectView</Value>
                             </Values>
                         </Data>

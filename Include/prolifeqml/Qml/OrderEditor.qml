@@ -70,25 +70,31 @@ DocumentBase {
         console.log("Begin updateGui");
         blockUpdatingModel = true;
 
-        if (documentModel.ContainsKey("Id")){
-            instanceIdInput.text = documentModel.GetData("Id");
+        if (documentModel.ContainsKey("OrderId")){
+            instanceIdInput.text = documentModel.GetData("OrderId");
         }
 
-        if (documentModel.ContainsKey("Comment")){
-            commentInput.text = documentModel.GetData("Comment");
+        if (documentModel.ContainsKey("Description")){
+            descriptionInput.text = documentModel.GetData("Description");
         }
 
-        let accountId = documentModel.GetData("AccountId");
-        let productId = documentModel.GetData("ProductId");
+        let customerId = documentModel.GetData("OrderCustomer");
 
         //        customerCB.currentText = "";
         let customerModel = customerCB.model;
         for (let i = 0; i < customerModel.GetItemsCount(); i++){
             let id = customerModel.GetData("Id", i);
-            if (id === accountId){
+            if (id === customerId){
                 customerCB.currentIndex = i;
                 break;
             }
+        }
+        if (documentModel.ContainsKey("OrderProducts")){
+            productsView.model = documentModel.GetData("OrderProducts");
+            console.log("productsView.model",  productsView.model.toJSON())
+        }
+        else{
+            productsView.model = 0;
         }
 
         blockUpdatingModel = false;
@@ -107,7 +113,7 @@ DocumentBase {
         let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
         documentModel.SetData("AccountId", selectedAccountId);
 
-        documentModel.SetData("Comment", commentInput.text);
+        documentModel.SetData("Comment", descriptionInput.text);
 
         undoRedoManager.endChanges();
     }
@@ -215,7 +221,8 @@ DocumentBase {
                     GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
                 }
                 onClicked: {
-                     modalDialogManager.openDialog(productEditorDialog, {});
+                    productsView.activeProductIndex = -1;
+                    modalDialogManager.openDialog(productEditorDialog, {});
                 }
             }
 
@@ -249,7 +256,7 @@ DocumentBase {
         }
 
         CustomTextEdit {
-            id: commentInput;
+            id: descriptionInput;
 
             width: parent.width;
             height: 60;
@@ -271,7 +278,30 @@ DocumentBase {
         id: productEditorDialog;
 
         ProductEditorDialog {
+            id: productsDialog;
+            onFinished: {
+                if (buttonId == "Save"){
+                    undoRedoManager.beginChanges();
+                    console.log("orderDocumentModel", installationEditorContainer.documentModel.toJSON());
+                    if (!installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                        installationEditorContainer.documentModel.AddTreeModel("OrderProducts");
+                        console.log("newProductsModel", installationEditorContainer.documentModel.toJSON());
+                    }
+                    var productsModel =  installationEditorContainer.documentModel.GetData("OrderProducts");
+                    console.log("productsModel", productsModel.toJSON());
 
+                    if (productsView.activeProductIndex == -1){
+                        productsView.activeProductIndex = productsModel.InsertNewItem();
+                    }
+
+                    var newProductModel = this.contentItem.documentModel;
+                    console.log("newProductModel", newProductModel.toJSON());
+                    productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel);
+                    console.log("newProductsModel", productsModel.toJSON());
+                    undoRedoManager.endChanges();
+                    updateGui();
+                }
+            }
         }
     }
 
@@ -281,216 +311,25 @@ DocumentBase {
         anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.right: parent.right;
-        model: productsInfoModel;
-//        anchors.top: tabPanel.bottom;
-       // anchors.topMargin: 20;//thumbnailDecoratorContainer.mainMargin;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 
         clip: true;
         boundsBehavior: Flickable.StopAtBounds;
         spacing: 10;
-//        orientation: ListView.Horizontal;
+
+        property int activeProductIndex: -1;
 
         Component.onCompleted: {
-            productsInfoModel.InsertNewItem();
-            productsInfoModel.SetData("Name", "RTVision.3d")
-            productsInfoModel.SetData("LinkId", "RTVision.3dSensor")
-            productsInfoModel.SetData("Comment", "")
-            productsInfoModel.SetData("Category", "Software")
-            productsInfoModel.SetData("LicenseName", "Standard")
-            productsInfoModel.SetData("ProductionStatus", "Ordered")
-            productsInfoModel.InsertNewItem();
-            productsInfoModel.SetData("Name", "RTVision.3d Sensor",1)
-            productsInfoModel.SetData("LinkId", "RTVision.3d",1)
-            productsInfoModel.SetData("Comment", "",1)
-            productsInfoModel.SetData("Category", "Hardware",1)
-            productsInfoModel.SetData("ProductionStatus", "Ordered",1)
-            productsInfoModel.SetData("Manufacturer", "QUISS",1)
-            productsInfoModel.SetData("MacAddress", "12:23:23:12:34",1)
-            productsInfoModel.SetData("SerialNumber", "2345671",1)
         }
 
-        delegate: Rectangle {
-            height: 85;
-            width: 500;
-            radius: 10;
-            Text {
-                id: productName;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-                anchors.top: parent.top;
-                anchors.topMargin: 5;
-                text: model.Name;
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-                font.bold: true;
-            }
-            Text {
-                id: productCategory;
-                anchors.top: parent.top;
-                anchors.topMargin: 5;
-                anchors.left: productName.right;
-                anchors.leftMargin: 5;
-                text: "(" + model.Category + ")";
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-                font.bold: true;
-            }
-            Text {
-                id: productionStatus;
-                anchors.right: parent.right;
-                anchors.rightMargin: 5;
-                anchors.top: parent.top;
-                anchors.topMargin: 5;
-                text: model.ProductionStatus;
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-            Rectangle {
-                anchors.top: productName.bottom;
-                anchors.topMargin: 5;
-                height: 1;
-                width: parent.width;
-                color: Style.textColor;
-            }
+        delegate: OrderProductView {
 
-            Text {
-                id: licenseName;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-                anchors.top: productName.bottom;
-                anchors.topMargin: 10;
-                text: qsTr("License: ") + model.LicenseName + qsTr("Data expired: 01.01.2024");
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-                visible: model.Category === "Software";
-            }
-
-            Text {
-                id: linkedName;
-                anchors.top: licenseName.bottom;
-                anchors.topMargin: 5;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-                text: qsTr("Associated:");
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-//                font.underline: true;
-            }
-            Text {
-                id: linked;
-                anchors.top: licenseName.bottom;
-                anchors.topMargin: 5;
-                anchors.left: linkedName.right;
-                anchors.leftMargin: 5;
-                text:  model.LinkId;
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-                font.underline: true;
-            }
-
-            Text {
-                id: macAddress;
-                anchors.top: productName.bottom;
-                anchors.topMargin: 10;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-                text: qsTr("Mac address: ") + model.MacAddress;
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-                visible: model.Category === "Hardware";
-            }
-
-            Text {
-                id: serialNumber;
-                anchors.top: macAddress.top;
-                anchors.right: parent.right;
-                anchors.rightMargin: 5;
-                text: qsTr("Serial number: ") + model.SerialNumber;
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-                visible: macAddress.visible;
-            }
         }
 
 
     }
 
-    GqlModel {
-        id: productsInfoModel;
-
-        function updateModel() {
-            //console.log( "gqlModelBaseContainer updateModel", gqlModelBaseContainer.gqlModelItemsInfo, gqlModelBaseContainer.itemId);
-            var query = Gql.GqlRequest("query", "OrderedProductsInfo");
-
-            var viewParams = Gql.GqlObject("viewParams");
-            viewParams.InsertField("Offset", offset);
-            viewParams.InsertField("Count", count);
-            viewParams.InsertField("FilterModel");
-            var jsonString = modelFilter.toJSON();
-            jsonString = jsonString.replace(/\"/g,"\\\\\\\"")
-            viewParams.InsertField("FilterModel", jsonString);
-
-            var inputParams = Gql.GqlObject("input");
-            inputParams.InsertFieldObject(viewParams);
-
-//            if (itemId){
-//                inputParams.InsertField("Id", itemId);
-//            }
-
-            query.AddParam(inputParams);
-
-            var queryFields = Gql.GqlObject("items");
-            queryFields.InsertField("Id");
-            queryFields.InsertField("");
-
-
-            query.AddField(queryFields);
-
-            var gqlData = query.GetQuery();
-            console.log("gqlModelBaseContainer query ", gqlData);
-            this.SetGqlQuery(gqlData);
-        }
-
-        onStateChanged: {
-            console.log("State:", this.state, itemsInfoModel);
-            if (this.state === "Ready"){
-                var dataModelLocal;
-                if (itemsInfoModel.ContainsKey("errors")){
-                    return;
-                }
-
-                if (itemsInfoModel.ContainsKey("data")){
-                    dataModelLocal = itemsInfoModel.GetData("data");
-                    if (dataModelLocal.ContainsKey(gqlModelBaseContainer.gqlModelItemsInfo)){
-                        dataModelLocal = dataModelLocal.GetData(gqlModelBaseContainer.gqlModelItemsInfo);
-                        if (dataModelLocal.ContainsKey("items")){
-                            gqlModelBaseContainer.items = dataModelLocal.GetData("items");
-                            gqlModelBaseContainer.table.selectedIndex = -1;
-                        }
-
-                        if (dataModelLocal.ContainsKey("notification")){
-                            dataModelLocal = dataModelLocal.GetData("notification");
-                            if (dataModelLocal.ContainsKey("PagesCount")){
-                                dataModelLocal = dataModelLocal.GetData("PagesCount");
-
-                                pagination.pagesSize = dataModelLocal;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 }//Container
 

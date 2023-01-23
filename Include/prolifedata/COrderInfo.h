@@ -24,6 +24,9 @@ public:
 	virtual void SetOrderId(const QByteArray& orderId) override;
 	virtual QByteArray GetCustomerId() const override;
 	virtual void SetCustomerId(const QByteArray& customerId) override;
+	virtual QByteArray GetDescription() const override;
+	virtual void SetDescription(const QByteArray& description) override;
+
 	imtlic::CProductInstanceCollection* GetProducts() override;
 
 	// reimplemented (iser::IObject)
@@ -41,7 +44,7 @@ public:
 private:
 	QByteArray m_orderId;
 	QByteArray m_customerId;
-	QByteArray m_comment;
+	QByteArray m_description;
     IOrderInfo::ProductIds m_orderedProducts;
 	imtlic::CProductInstanceCollection m_productInstanceCollection;
 };

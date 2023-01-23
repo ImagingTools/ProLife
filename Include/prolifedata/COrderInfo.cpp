@@ -67,6 +67,23 @@ void COrderInfo::SetCustomerId(const QByteArray& customerId)
 	}
 }
 
+
+QByteArray COrderInfo::GetDescription() const
+{
+	return m_description;
+}
+
+
+void COrderInfo::SetDescription(const QByteArray &description)
+{
+	if (m_description != description){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_description = description;
+	}
+}
+
+
 imtlic::CProductInstanceCollection* COrderInfo::GetProducts()
 {
 	return  &m_productInstanceCollection;
@@ -97,10 +114,10 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_customerId);
 	retVal = retVal && archive.EndTag(orderCustomerTag);
 
-	static iser::CArchiveTag orderCommentTag("OrderComment", "Order Comment", iser::CArchiveTag::TT_LEAF);
-	retVal = retVal && archive.BeginTag(orderCommentTag);
-	retVal = retVal && archive.Process(m_comment);
-	retVal = retVal && archive.EndTag(orderCommentTag);
+	static iser::CArchiveTag orderDescriptionTag("Description", "Order Description", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(orderDescriptionTag);
+	retVal = retVal && archive.Process(m_description);
+	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
 	m_productInstanceCollection.Serialize(archive);
 

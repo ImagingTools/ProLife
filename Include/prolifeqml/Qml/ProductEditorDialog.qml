@@ -20,10 +20,11 @@ Dialog {
     }
 
     contentComp: InstallationEditor {
+
 //        anchors.horizontalCenter: parent.horizontalCenter;
         width: root.width - 100;
 
-        height: 500;
+        height: 250;
     }
 }//Container
 

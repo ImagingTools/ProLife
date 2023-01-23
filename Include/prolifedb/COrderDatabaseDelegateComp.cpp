@@ -28,13 +28,43 @@ static const QByteArray s_idColumn = "Id";
 QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objectId, int offset, int count, const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
-		return QString("SELECT * FROM \"%1\" WHERE IsActive = true AND \"%2\" = \"%3\"")
+		return QString("SELECT * FROM \"%1\" WHERE IsActive = true AND %2 = '%3'")
 				.arg(qPrintable(*m_tableNameAttrPtr))
 				.arg(qPrintable(s_documentIdColumn))
 				.arg(qPrintable(objectId)).toLocal8Bit();
 	}
 
-	return BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+	return  QString("SELECT * FROM \"%1\" WHERE IsActive = true")
+			.arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();
+}
+
+
+istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(
+			const QByteArray& /*typeId*/,
+			const QSqlRecord& record) const
+{
+	if (!m_databaseEngineCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	if (!m_documentFactCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	istd::TDelPtr<istd::IChangeable> documentPtr = m_documentFactCompPtr.CreateInstance();
+	if (!documentPtr.IsValid()){
+		return nullptr;
+	}
+
+	if (record.contains(*m_documentContentColumnIdAttrPtr)){
+		QByteArray documentContent = record.value(qPrintable(*m_documentContentColumnIdAttrPtr)).toByteArray();
+
+		if (ReadDataFromMemory(documentContent, *documentPtr)){
+			return documentPtr.PopPtr();
+		}
+	}
+
+	return nullptr;
 }
 
 
@@ -80,7 +110,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(orderId))
 						.arg(qPrintable(accountId))
-						.arg(qPrintable(documentContent.toBase64()))
+						.arg(qPrintable(documentContent))
 						.arg(revisionVersion)
 						.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 						.arg(checksum).toLocal8Bit();

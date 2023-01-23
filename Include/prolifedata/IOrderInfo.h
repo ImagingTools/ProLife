@@ -56,6 +56,15 @@ public:
 	virtual void SetCustomerId(const QByteArray& customerId) = 0;
 
 	/**
+		Get description of the order.
+	*/
+	virtual QByteArray GetDescription() const = 0;
+	/**
+		Set order description.
+	*/
+	virtual void SetDescription(const QByteArray& description) = 0;
+
+	/**
 		Get order products.
 	*/
 	virtual imtbase::IObjectCollection* GetProducts() = 0;
