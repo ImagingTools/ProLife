@@ -10,6 +10,8 @@ Dialog {
     width: 500;
 
     property TreeItemModel documentModel: TreeItemModel{}
+    property TreeItemModel licensesModel: TreeItemModel{}
+    property TreeItemModel productsModel: TreeItemModel{}
 
     onDocumentModelChanged: {
         root.contentItem.documentModel = root.documentModel;
@@ -26,11 +28,11 @@ Dialog {
     }
 
     contentComp: InstallationEditor {
-
-//        anchors.horizontalCenter: parent.horizontalCenter;
+        id: installationEditor;
+        licensesModel: root.licensesModel;
+        productsModel: root.productsModel;
         width: root.width - 100;
-
-        height: 250;
+        height: 350;
     }
 }//Container
 

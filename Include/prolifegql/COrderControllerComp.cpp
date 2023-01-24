@@ -34,13 +34,13 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 	dataModel->SetData("Id", "");
 	dataModel->SetData("AccountId", "");
 
-	imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("OrderProducts");
-	imtbase::CTreeItemModel* activeLicenses = productsModel->AddTreeModel("ActiveLicenses");
+	QByteArray objectId;
 
 	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
-//	Q_ASSERT(inputParams == nullptr);
 
-	QByteArray objectId = GetObjectIdFromInputParams(*inputParams);
+	if (inputParams != nullptr){
+		objectId = GetObjectIdFromInputParams(*inputParams);
+	}
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
@@ -51,19 +51,13 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 			return nullptr;
 		}
 
-//		QByteArray instanceId = objectId;
-//		if (m_separatorObjectIdAttrPtr.IsValid()){
-//			QString objectIdStr = objectId;
-//			QStringList splitData = objectIdStr.split(*m_separatorObjectIdAttrPtr);
-//			instanceId = splitData[0].toUtf8();
-//		}
+		imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("OrderProducts");
+		imtbase::CTreeItemModel* activeLicenses = productsModel->AddTreeModel("ActiveLicenses");
 
 		QByteArray orderId = orderPtr->GetOrderId();
 		QByteArray customerId = orderPtr->GetCustomerId();
 		QByteArray description = orderPtr->GetDescription();
 		QByteArray orderStatus = orderPtr->GetStatus();
-
-//		dataModel->SetData("Id", instanceId);
 
 		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, imtbase::ICollectionInfo::EIT_NAME).toString();
 		dataModel->SetData("Name", name);
@@ -71,7 +65,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
 		dataModel->SetData("OrderStatus", orderStatus);
-		dataModel->SetData("Description", orderStatus);
+		dataModel->SetData("Description", description);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr) {

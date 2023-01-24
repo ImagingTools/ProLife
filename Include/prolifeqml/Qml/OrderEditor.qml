@@ -36,7 +36,6 @@ DocumentBase {
 
     onProductsModelChanged: {
         console.log("onProductsModelChanged", productsModel);
-        productCB.model = productsModel;
     }
 
     UndoRedoManager {
@@ -273,6 +272,8 @@ DocumentBase {
 
         ProductEditorDialog {
             id: productsDialog;
+            licensesModel: licensesProvider.model;
+            productsModel: installationEditorContainer.productsModel;
             onFinished: {
                 if (buttonId == "Save"){
                     undoRedoManager.beginChanges();
