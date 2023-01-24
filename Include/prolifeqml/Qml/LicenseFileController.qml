@@ -21,6 +21,7 @@ Item {
         id: remoteFileController;
 
         prefix: "/files";
+
     }
 
     FileDialog {

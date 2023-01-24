@@ -27,6 +27,12 @@ I_EXPORT_COMPONENT(
 			"Oredr Information Authority");
 
 
+I_EXPORT_COMPONENT(
+			KeyDataProvider,
+			"Key data provider",
+			"License Key Provider Order Product");
+
+
 } // namespace ProLifeDataPck
 
 

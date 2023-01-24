@@ -99,7 +99,7 @@ DocumentBase {
         console.log("Begin updateModel");
         undoRedoManager.beginChanges();
 
-        documentModel.SetData("Id", instanceIdInput.text)
+        documentModel.SetData("OrderId", instanceIdInput.text)
 
 //        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
 //        documentModel.SetData("ProductId", selectedProductId);
@@ -375,7 +375,9 @@ DocumentBase {
             }
 
             onCreateLicenseFile: {
-                licenseFileController.createLicenseFile(model.MacAddress);
+                let orderId = documentModel.GetData("OrderId");
+                let productId = model.Id;
+                licenseFileController.createLicenseFile(orderId + "/" + productId);
             }
         }
     }

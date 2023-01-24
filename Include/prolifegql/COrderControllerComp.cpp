@@ -67,23 +67,22 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		dataModel->SetData("Description", description);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
-		if (productCollectionPtr == nullptr) {
+		if (productCollectionPtr == nullptr){
 			return nullptr;
 		}
 		imtbase::ICollectionInfo::Ids orderedProductsIds = productCollectionPtr->GetElementIds();
 
-		for(const QByteArray& productId : orderedProductsIds)
-		{
+		for(const QByteArray& objectId : orderedProductsIds){
 			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (productCollectionPtr->GetObjectData(productId, dataPtr)){
+			if (productCollectionPtr->GetObjectData(objectId, dataPtr)){
 				const imtlic::IProductInstanceInfo* productPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-				if(productPtr != nullptr)
-				{
+				if(productPtr != nullptr){
 					int productIndex = productsModel->InsertNewItem();
 					QByteArray productId = productPtr->GetProductId();
 					QByteArray categoryId = productPtr->GetFactoryId();
 					QByteArray productInstance = productPtr->GetProductInstanceId();
 
+					productsModel->SetData("Id", objectId, productIndex);
 					productsModel->SetData("ProductId", productId, productIndex);
 					productsModel->SetData("CategoryId", categoryId, productIndex);
 					productsModel->SetData("MacAddress", productInstance, productIndex);
@@ -96,16 +95,16 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 						for (const QByteArray& activeLicenseId : activeLicenseIds){
 							const imtlic::ILicenseInstance* licenseInstancePtr = productPtr->GetLicenseInstance(activeLicenseId);
 
-							int index = activeLicenses->InsertNewItem();
+							int productIndex = activeLicenses->InsertNewItem();
 
 							QString licenseName = licenseInstancePtr->GetLicenseName();
 
-							activeLicenses->SetData("Id", activeLicenseId, index);
-							activeLicenses->SetData("Name", name, index);
+							activeLicenses->SetData("Id", activeLicenseId, productIndex);
+							activeLicenses->SetData("Name", name, productIndex);
 
 							QDate date = licenseInstancePtr->GetExpiration().date();
 							QString licenseExpiration = date.toString("yyyy-MM-dd");
-							activeLicenses->SetData("Expiration", licenseExpiration, index);
+							activeLicenses->SetData("Expiration", licenseExpiration, productIndex);
 						}
 					}
 					else{
@@ -137,7 +136,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		QString& description,
 		QString &errorMessage) const
 {
-	if (inputParams.isEmpty()) {
+	if (inputParams.isEmpty()){
 		return nullptr;
 	}
 
@@ -153,8 +152,8 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		QByteArray orderId;
 
-		if (itemModel.ContainsKey("Id")){
-			orderId = itemModel.GetData("Id").toByteArray();
+		if (itemModel.ContainsKey("OrderId")){
+			orderId = itemModel.GetData("OrderId").toByteArray();
 		}
 
 		if (itemModel.ContainsKey("Name")){
@@ -183,58 +182,46 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		objectId = orderId;
 
-//		if (m_separatorObjectIdAttrPtr.IsValid()){
-//			objectId += *m_separatorObjectIdAttrPtr + customerId;
-//		}
-
 		orderPtr->SetOrderId(orderId);
 		orderPtr->SetCustomerId(customerId);
 		orderPtr->SetDescription(description);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
-		if (productCollectionPtr == nullptr) {
+		if (productCollectionPtr == nullptr){
 			return nullptr;
 		}
 
 		imtbase::CTreeItemModel* orderedProducts = itemModel.GetTreeItemModel("OrderProducts");
-		if(orderedProducts != nullptr)
-		{
-			for(int productIdx = 0; productIdx < orderedProducts->GetItemsCount(); productIdx++)
-			{
+		if(orderedProducts != nullptr){
+			for(int productIndex = 0; productIndex < orderedProducts->GetItemsCount(); productIndex++){
 				QByteArray productCategory = "Software";
-				if(orderedProducts->ContainsKey("CategoryId"))
-				{
-					productCategory = orderedProducts->GetData("CategoryId", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("CategoryId")){
+					productCategory = orderedProducts->GetData("CategoryId", productIndex).toByteArray();
 				}
 
 				QByteArray productId;
-				if(orderedProducts->ContainsKey("ProductId"))
-				{
-					productId = orderedProducts->GetData("ProductId", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("ProductId")){
+					productId = orderedProducts->GetData("ProductId", productIndex).toByteArray();
 				}
 
 				QByteArray productStatus;
-				if(orderedProducts->ContainsKey("ProductStatus"))
-				{
-					productStatus = orderedProducts->GetData("ProductStatus", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("ProductStatus")){
+					productStatus = orderedProducts->GetData("ProductStatus", productIndex).toByteArray();
 				}
 
 				QByteArray macAddress;
-				if(orderedProducts->ContainsKey("MacAddress"))
-				{
-					macAddress = orderedProducts->GetData("MacAddress", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("MacAddress")){
+					macAddress = orderedProducts->GetData("MacAddress", productIndex).toByteArray();
 				}
 
 				QByteArray serialNumber;
-				if(orderedProducts->ContainsKey("SerialNumber"))
-				{
-					serialNumber = orderedProducts->GetData("SerialNumber", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("SerialNumber")){
+					serialNumber = orderedProducts->GetData("SerialNumber", productIndex).toByteArray();
 				}
 
 				QByteArray pairId;
-				if(orderedProducts->ContainsKey("PairId"))
-				{
-					pairId = orderedProducts->GetData("PairId", productIdx).toByteArray();
+				if(orderedProducts->ContainsKey("PairId")){
+					pairId = orderedProducts->GetData("PairId", productIndex).toByteArray();
 				}
 
 				if (productCategory == "Software"){
