@@ -12,6 +12,7 @@ Dialog {
     property TreeItemModel documentModel: TreeItemModel{}
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
+    property TreeItemModel orderProductsModel: TreeItemModel{}
 
     onDocumentModelChanged: {
         root.contentItem.documentModel = root.documentModel;
@@ -27,10 +28,15 @@ Dialog {
     onFinished: {
     }
 
+    onStarted: {
+        installationEditor.started();
+    }
+
     contentComp: InstallationEditor {
         id: installationEditor;
         licensesModel: root.licensesModel;
         productsModel: root.productsModel;
+        orderProductsModel: root.orderProductsModel;
         width: root.width - 100;
         height: 350;
     }

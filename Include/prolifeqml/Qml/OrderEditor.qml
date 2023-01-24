@@ -275,6 +275,11 @@ DocumentBase {
             id: productsDialog;
             licensesModel: licensesProvider.model;
             productsModel: installationEditorContainer.productsModel;
+            onStarted: {
+                orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                console.log("ProductEditorDialog onStarted", orderProductsModel.toJSON())
+            }
+
             onFinished: {
                 if (buttonId == "Save"){
                     undoRedoManager.beginChanges();
@@ -294,6 +299,16 @@ DocumentBase {
                     console.log("newProductModel", newProductModel.toJSON());
                     productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel);
                     console.log("newProductsModel", productsModel.toJSON());
+                    let pairId = newProductModel.GetData("PairId");
+                    let productId = newProductModel.GetData("ProductId");
+                    if (pairId != ""){
+                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                            if (pairId == productModel.GetData("ProductId", i)){
+                                resultModel.SetData("PairId", productId);
+                            }
+                        }
+                    }
+
                     undoRedoManager.endChanges();
                     updateGui();
                 }
