@@ -399,6 +399,8 @@ DocumentBase {
                     productId = model.PairId;
                 }
 
+                console.log("onCreateLicenseFile", orderId + "/" + productId);
+
                 licenseFileController.createLicenseFile(orderId + "/" + productId);
             }
         }
