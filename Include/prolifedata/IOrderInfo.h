@@ -33,6 +33,11 @@ public:
 			Order customer given as QString.
 		*/
 		MIT_ORDER_CUSTOMER,
+
+		/**
+			Order status given as QString.
+		*/
+		MIT_ORDER_STATUS
 	};
 
 	/**
@@ -63,6 +68,16 @@ public:
 		Set order description.
 	*/
 	virtual void SetDescription(const QByteArray& description) = 0;
+
+	/**
+		Get the status of this order.
+	*/
+	virtual QByteArray GetStatus() const = 0;
+
+	/**
+		Set the status of this order.
+	*/
+	virtual void SetStatus(const QByteArray& status) = 0;
 
 	/**
 		Get order products.

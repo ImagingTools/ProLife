@@ -51,14 +51,19 @@ istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSql
 
 	istd::TDelPtr<istd::IChangeable> documentPtr;
 
-	if (record.contains("TypeId")){
-		QByteArray typeId = record.value("TypeId").toByteArray();
+//	if (record.contains("TypeId")){
+//		QByteArray typeId = record.value("TypeId").toByteArray();
 
-		int index = m_documentFactoriesCompPtr.FindValue(typeId);
-		if (index >= 0){
-			documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(index));
-		}
+//		int index = m_documentFactoriesCompPtr.FindValue(typeId);
+//		if (index >= 0){
+//			documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(index));
+//		}
+//	}
+
+	if (m_documentFactoriesCompPtr.GetCount() > 0){
+		documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(0));
 	}
+
 
 	if (!documentPtr.IsValid()){
 		return nullptr;

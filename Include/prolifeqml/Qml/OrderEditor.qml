@@ -73,7 +73,7 @@ DocumentBase {
             descriptionInput.text = documentModel.GetData("Description");
         }
 
-        let customerId = documentModel.GetData("OrderCustomer");
+        let customerId = documentModel.GetData("CustomerId");
 
         //        customerCB.currentText = "";
         let customerModel = customerCB.model;
@@ -106,9 +106,9 @@ DocumentBase {
 //        documentModel.SetData("ProductId", selectedProductId);
 
         let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
-        documentModel.SetData("AccountId", selectedAccountId);
+        documentModel.SetData("CustomerId", selectedAccountId);
 
-        documentModel.SetData("Comment", descriptionInput.text);
+        documentModel.SetData("Description", descriptionInput.text);
 
         undoRedoManager.endChanges();
     }
@@ -341,8 +341,10 @@ DocumentBase {
             return retVal;
         }
 
-        function getLicenseName(licenseId){
-            return licenseId;
+        function getLicenseName(){
+            console.log("productsView", productsView.model.toJSON())
+            let retVal = "";
+            return retVal;
         }
 
         delegate: OrderProductView {
@@ -352,7 +354,7 @@ DocumentBase {
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
             licenseExpiration: model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
-            licenseName: productsView.getLicenseName(model.LicenseId);
+            licenseName: productsView.getLicenseName();
 
             onEdited: {
                 productsView.activeProductIndex = model.index;

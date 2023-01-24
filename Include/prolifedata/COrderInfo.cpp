@@ -12,6 +12,9 @@
 #include <iser/CArchiveTag.h>
 #include <iser/CPrimitiveTypesSerializer.h>
 
+// ImtCore includes
+#include <imtlic/CLicensedHardwareInstanceInfo.h>
+
 
 
 namespace prolifedata
@@ -30,6 +33,11 @@ QByteArray COrderInfo::GetTypeId()
 
 COrderInfo::COrderInfo()
 {
+	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CProductInstanceInfo> FactorySoftwareImpl;
+	m_productInstanceCollection.RegisterFactory<FactorySoftwareImpl>("Software");
+
+	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CLicensedHardwareInstanceInfo> FactoryHardwareImpl;
+	m_productInstanceCollection.RegisterFactory<FactoryHardwareImpl>("Hardware");
 }
 
 
@@ -84,7 +92,23 @@ void COrderInfo::SetDescription(const QByteArray &description)
 }
 
 
-imtlic::CProductInstanceCollection* COrderInfo::GetProducts()
+QByteArray COrderInfo::GetStatus() const
+{
+	return m_status;
+}
+
+
+void COrderInfo::SetStatus(const QByteArray &status)
+{
+	if (m_status != status){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_status = status;
+	}
+}
+
+
+imtbase::CObjectCollection* COrderInfo::GetProducts()
 {
 	return  &m_productInstanceCollection;
 }
@@ -119,6 +143,11 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
+	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(orderStatusTag);
+	retVal = retVal && archive.Process(m_status);
+	retVal = retVal && archive.EndTag(orderStatusTag);
+
 	m_productInstanceCollection.Serialize(archive);
 
 	return retVal;
@@ -143,6 +172,8 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 
 		m_orderId = sourcePtr->m_orderId;
 		m_customerId = sourcePtr->m_customerId;
+		m_description = sourcePtr->m_description;
+		m_status = sourcePtr->m_status;
 		m_productInstanceCollection.CopyFrom(sourcePtr->m_productInstanceCollection);
 
 		bool retVal = true;
