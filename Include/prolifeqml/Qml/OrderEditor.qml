@@ -375,8 +375,13 @@ DocumentBase {
             }
 
             onCreateLicenseFile: {
+
                 let orderId = documentModel.GetData("OrderId");
                 let productId = model.Id;
+                if (model.CategoryId == "Hardware"){
+                    productId = model.PairId;
+                }
+
                 licenseFileController.createLicenseFile(orderId + "/" + productId);
             }
         }

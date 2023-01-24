@@ -113,9 +113,10 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 							QByteArray partStatus = hardwareInstance->GetStatus();
 							QByteArray pairId = hardwareInstance->GetSoftwareId();
 							QByteArray serialNumber = hardwareInstance->GetSerialNumber();
+
 							productsModel->SetData("Status", partStatus, productIndex);
-							productsModel->SetData("PairId", partStatus, productIndex);
-							productsModel->SetData("SerialNumber", partStatus, productIndex);
+							productsModel->SetData("PairId", pairId, productIndex);
+							productsModel->SetData("SerialNumber", serialNumber, productIndex);
 						}
 					}
 				}
