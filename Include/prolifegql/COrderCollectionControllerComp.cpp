@@ -35,7 +35,7 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 				if(informationId == "TypeId"){
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
 				}
-				else if(informationId == "Id"){
+				else if(informationId == "Id" || informationId == "Name"){
 					elementInformation = QString(collectionId);
 				}
 				else if(informationId == "OrderId"){

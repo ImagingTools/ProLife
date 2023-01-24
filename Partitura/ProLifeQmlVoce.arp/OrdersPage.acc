@@ -408,22 +408,22 @@
                                 <AttributeInfo Id="EditCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeOrder</Value>
-                                            <Value>RemoveOrder</Value>
+                                            <Value>ViewOrders</Value>
+                                            <Value>EditOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="NewCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>AddOrder</Value>
+                                            <Value>EditOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RemoveCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>RemoveOrder</Value>
+                                            <Value>EditOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -601,7 +601,7 @@
                                     <Data IsEnabled="true" Value="OrderCommandPermissions"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="User"/>
+                                    <Data IsEnabled="true" Value="Order"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="CheckPermissionOr"/>
@@ -615,8 +615,7 @@
                                 <AttributeInfo Id="CloseCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
+                                            <Value>EditOrder</Value>
                                             <Value>ViewOrders</Value>
                                         </Values>
                                     </Data>
@@ -624,30 +623,10 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="RedoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="SaveCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UndoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeOrder</Value>
+                                            <Value>EditOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

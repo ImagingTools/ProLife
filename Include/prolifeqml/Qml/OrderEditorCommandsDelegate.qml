@@ -6,8 +6,6 @@ import imtqml 1.0
 DocumentWorkspaceCommandsDelegateBase {
     id: container;
 
-    showInputIdDialog: true;
-
     Component.onCompleted: {
         updateItemTimer = 400;
 

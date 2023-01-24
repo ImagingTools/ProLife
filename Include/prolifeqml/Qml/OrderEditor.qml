@@ -100,6 +100,7 @@ DocumentBase {
         undoRedoManager.beginChanges();
 
         documentModel.SetData("OrderId", instanceIdInput.text)
+        documentModel.SetData("Name", instanceIdInput.text);
 
 //        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
 //        documentModel.SetData("ProductId", selectedProductId);
