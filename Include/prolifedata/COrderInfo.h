@@ -49,6 +49,12 @@ private:
 	QByteArray m_status;
     IOrderInfo::ProductIds m_orderedProducts;
 
+	class CLicensedSoftwareInstanceInfo : public imtlic::CProductInstanceInfo
+	{
+		// reimplemented (istd::IChangeable)
+		virtual QByteArray GetFactoryId() const override { return "Software"; }
+	};
+
 	imtbase::CObjectCollection m_productInstanceCollection;
 
 //	imtlic::CProductInstanceCollection m_productInstanceCollection;

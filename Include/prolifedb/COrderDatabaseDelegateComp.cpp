@@ -171,15 +171,6 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 					.arg(qPrintable(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 					.arg(checksum).toLocal8Bit();
-//		retVal = QString("UPDATE \"%1\" SET IsActive = false where OrderId = '%2'; INSERT INTO \"%1\"(OrderId, RevisionId, LastModified, Checksum, IsActive, Order) VALUES('%2', '%3', '%4', '%5', true, '%6');")
-//					.arg(qPrintable(*m_tableNameAttrPtr))
-//					.arg(qPrintable(objectId))
-//					.arg(qPrintable(revisionUuid))
-//					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-//					.arg(checksum)
-//					.arg(qPrintable(documentContent))
-//					.toLocal8Bit();
-
 	}
 
 	return retVal;

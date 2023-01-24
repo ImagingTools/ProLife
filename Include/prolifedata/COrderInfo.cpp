@@ -33,7 +33,7 @@ QByteArray COrderInfo::GetTypeId()
 
 COrderInfo::COrderInfo()
 {
-	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CProductInstanceInfo> FactorySoftwareImpl;
+	typedef istd::TSingleFactory<istd::IChangeable, CLicensedSoftwareInstanceInfo> FactorySoftwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactorySoftwareImpl>("Software");
 
 	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CLicensedHardwareInstanceInfo> FactoryHardwareImpl;
