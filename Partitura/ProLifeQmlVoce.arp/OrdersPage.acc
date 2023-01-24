@@ -226,6 +226,7 @@
                                 <Value>OrdersInfo</Value>
                                 <Value>OrdersList</Value>
                                 <Value>OrdersObjectView</Value>
+                                <Value>OrdersRemove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

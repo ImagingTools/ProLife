@@ -117,7 +117,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 			QByteArray accountId = orderInfoPtr->GetCustomerId();
 			QByteArray orderId = orderInfoPtr->GetOrderId();
 
-			int revisionVersion = 0;
+			int revisionVersion = 1;
 
 			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\"(OrderId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
@@ -156,16 +156,29 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	QByteArray documentContent;
 	if (WriteDataToMemory(object, documentContent)){
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
-		QByteArray revisionUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+		const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(&object);
+		Q_ASSERT(orderInfoPtr != nullptr);
+		if (orderInfoPtr == nullptr){
+			return QByteArray();
+		}
+		QByteArray accountId = orderInfoPtr->GetCustomerId();
+		QByteArray orderId = orderInfoPtr->GetOrderId();
 
-		retVal = QString("UPDATE \"%1\" SET IsActive = false where OrderId = '%2'; INSERT INTO \"%1\"(OrderId, RevisionId, LastModified, Checksum, IsActive, Order) VALUES('%2', '%3', '%4', '%5', true, '%6');")
+		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where OrderId = '%2') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
-					.arg(qPrintable(objectId))
-					.arg(qPrintable(revisionUuid))
+					.arg(qPrintable(orderId))
+					.arg(qPrintable(accountId))
+					.arg(qPrintable(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-					.arg(checksum)
-					.arg(qPrintable(documentContent.toBase64()))
-					.toLocal8Bit();
+					.arg(checksum).toLocal8Bit();
+//		retVal = QString("UPDATE \"%1\" SET IsActive = false where OrderId = '%2'; INSERT INTO \"%1\"(OrderId, RevisionId, LastModified, Checksum, IsActive, Order) VALUES('%2', '%3', '%4', '%5', true, '%6');")
+//					.arg(qPrintable(*m_tableNameAttrPtr))
+//					.arg(qPrintable(objectId))
+//					.arg(qPrintable(revisionUuid))
+//					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+//					.arg(checksum)
+//					.arg(qPrintable(documentContent))
+//					.toLocal8Bit();
 
 	}
 
