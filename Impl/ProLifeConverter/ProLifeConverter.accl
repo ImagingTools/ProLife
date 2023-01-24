@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5047" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -10,13 +10,23 @@
     <PositionMap>
         <Element ComponentName="ApplicationInfo" X="800" Y="250" Note=""/>
         <Element ComponentName="ConsoleApplication" X="525" Y="250" Note=""/>
-        <Element ComponentName="DatabaseConverterComp" X="325" Y="375" Note=""/>
+        <Element ComponentName="DatabaseConverterComp" X="328" Y="350" Note=""/>
         <Element ComponentName="LisaProducts" X="150" Y="525" Note=""/>
         <Element ComponentName="LocalSettings" X="750" Y="500" Note=""/>
-        <Element ComponentName="ProlifeOrders" X="425" Y="525" Note=""/>
+        <Element ComponentName="OrderInfo" X="450" Y="500" Note=""/>
+        <Element ComponentName="ProLifeOrders" X="300" Y="700" Note=""/>
         <Element ComponentName="VersionInfo" X="1050" Y="250" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="ProlifeOrders">
+            <PositionMap>
+                <Element ComponentName="OrderSqlRepository" X="275" Y="425" Note=""/>
+                <Element ComponentName="PgSqlDatabaseEngine" X="600" Y="425" Note=""/>
+                <Element ComponentName="RelativeFileNameParam" X="875" Y="425" Note=""/>
+                <Element ComponentName="SystemLocation" X="875" Y="525" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="LisaProducts">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="200" Y="425" Note=""/>
@@ -33,14 +43,6 @@
                 <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
                 <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
                 <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="ProlifeOrders">
-            <PositionMap>
-                <Element ComponentName="PgSqlDatabaseEngine" X="600" Y="425" Note=""/>
-                <Element ComponentName="RelativeFileNameParam" X="875" Y="425" Note=""/>
-                <Element ComponentName="SystemLocation" X="875" Y="525" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

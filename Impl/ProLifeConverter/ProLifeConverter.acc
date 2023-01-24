@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5047" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -56,6 +56,15 @@
                     <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaProducts/AccountSqlRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeOrders/OrderSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="OrderInfo"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaProducts/ProductSqlRepository"/>
                     </AttributeInfo>
@@ -67,7 +76,14 @@
         </Element>
         <Element Id="LisaProducts" PackageId="" ComponentId="LisaProducts">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Password" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="qwerty"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="LocalSettings" PackageId="ProLifeQmlVoce" ComponentId="LocalSettings">
@@ -85,9 +101,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProlifeOrders" PackageId="" ComponentId="ProlifeOrders">
-            <Data IsEnabled="true" Flags="0">
+        <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
+            <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="ProLifeOrders" PackageId="" ComponentId="ProlifeOrders">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Password" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="qwerty"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
@@ -170,8 +198,8 @@
                                 <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="RelativeFileNameParam"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="roma1111"/>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="Password">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Port" Type="Integer" ExportId="PgPort">
                                     <Data IsEnabled="true" Value="5432"/>
@@ -237,6 +265,18 @@
         <EmbeddedRegistry Id="ProlifeOrders">
             <Data Description="" Keywords="">
                 <ElementsList>
+                    <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="PgSqlDatabaseEngine"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="PgSqlDatabaseEngine" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseEngine">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -258,8 +298,8 @@
                                 <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="RelativeFileNameParam"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="roma1111"/>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="Password">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Port" Type="Integer" ExportId="PgPort">
                                     <Data IsEnabled="true" Value="5432"/>
@@ -297,7 +337,9 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
-                <ExportedComponents/>
+                <ExportedComponents>
+                    <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
+                </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
