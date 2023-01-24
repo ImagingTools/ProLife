@@ -48,13 +48,15 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 			return false;
 		}
 
-		m_productInstanceId = orderId;
-
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (productCollectionPtr->GetObjectData(productObjectId, productDataPtr)){
 			imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 			if (productInstancePtr != nullptr){
 				if (m_licensePersistenceCompPtr.IsValid()){
+					QByteArray instanceId = productInstancePtr->GetProductInstanceId();
+
+					m_productInstanceId = instanceId;
+
 					QTemporaryDir tempDir;
 					QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
 
@@ -81,43 +83,6 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 				}
 			}
 		}
-
-//		for (const imtbase::IObjectCollection::Id& objectId : productsIds){
-//			imtbase::IObjectCollection::DataPtr productDataPtr;
-//			if (productCollectionPtr->GetObjectData(objectId, productDataPtr)){
-//				imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-//				if (productInstancePtr != nullptr){
-//					QByteArray id = productInstancePtr->GetProductId();
-//					if (id == productId){
-//						if (m_licensePersistenceCompPtr.IsValid()){
-//							QTemporaryDir tempDir;
-//							QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
-
-//							int state = m_licensePersistenceCompPtr->SaveToFile(*productInstancePtr, filePathTmp);
-//							if (state != ifile::IFilePersistence::OS_OK){
-//								SendErrorMessage(0, "License file could not be saved", "Server data provider");
-
-//								return false;
-//							}
-
-//							QFile file(filePathTmp);
-
-//							if (!file.open(QIODevice::ReadOnly )){
-//								SendErrorMessage(0, "License file could not be opened", "Server data provider");
-
-//								return false;
-//							}
-
-//							data = file.readAll();
-
-//							file.close();
-
-//							return true;
-//						}
-//					}
-//				}
-//			}
-//		}
 	}
 
 	return false;
@@ -128,20 +93,14 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 QByteArray CKeyDataProviderComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		return QByteArray();
+	}
+
 	QByteArray retVal;
 
 	if (type == KT_PASSWORD){
-		QByteArray id = m_productInstanceId;
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		m_objectCollectionCompPtr->GetObjectData(id, dataPtr);
-		if (dataPtr.IsValid()){
-			imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-			Q_ASSERT(productInstanceInfoPtr != nullptr);
-
-			if (productInstanceInfoPtr != nullptr){
-				retVal = productInstanceInfoPtr->GetProductInstanceId();
-			}
-		}
+		return m_productInstanceId;
 	}
 	else if (type == KT_INIT_VECTOR){
 		if (m_vectorKeyCompPtr.IsValid()){
