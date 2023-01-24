@@ -303,8 +303,8 @@ DocumentBase {
                     let productId = newProductModel.GetData("ProductId");
                     if (pairId != ""){
                         for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                            if (pairId == productModel.GetData("ProductId", i)){
-                                resultModel.SetData("PairId", productId);
+                            if (pairId == productsModel.GetData("ProductId", i)){
+                                productsModel.SetData("PairId", productId);
                             }
                         }
                     }
@@ -367,7 +367,8 @@ DocumentBase {
         delegate: OrderProductView {
             productName: productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
-            pairName: productsView.getProductName(model.PairId);
+//            pairName: productsView.getProductName(model.PairId);
+            pairName: model.PairId;
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
             licenseExpiration: model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;

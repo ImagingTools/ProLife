@@ -120,6 +120,7 @@ Rectangle {
         color: Style.textColor;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
+        visible: false;
     }
 
     Text {
