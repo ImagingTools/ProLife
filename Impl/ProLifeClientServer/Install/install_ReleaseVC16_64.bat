@@ -1,0 +1,4 @@
+@echo on
+set PROLIFE_BUILD_DIR=..\..\..\Bin\Release_Qt5_VC16_x64
+iscc ProLifeClientServer.iss
+pause
