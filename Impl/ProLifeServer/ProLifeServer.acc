@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5032" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -52,9 +52,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="LogPath" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/LogFilePath"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7776"/>

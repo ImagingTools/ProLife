@@ -2,29 +2,19 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5042" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ApplicationInfo" X="800" Y="250" Note=""/>
-        <Element ComponentName="Context" X="500" Y="100" Note=""/>
-        <Element ComponentName="LocalSettings" X="575" Y="500" Note=""/>
-        <Element ComponentName="Localization" X="200" Y="100" Note=""/>
-        <Element ComponentName="MainWindow" X="100" Y="500" Note=""/>
-        <Element ComponentName="ObserverQml" X="325" Y="500" Note=""/>
-        <Element ComponentName="QuickApplication" X="500" Y="250" Note=""/>
-        <Element ComponentName="VersionInfo" X="1050" Y="250" Note=""/>
+        <Element ComponentName="ClientApplication" X="625" Y="600" Note=""/>
+        <Element ComponentName="LocalSettings" X="625" Y="75" Note=""/>
+        <Element ComponentName="LogFilePath" X="250" Y="425" Note=""/>
+        <Element ComponentName="LogSystemLocation" X="250" Y="600" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="625" Y="325" Note=""/>
+        <Element ComponentName="TextFileLog" X="250" Y="275" Note=""/>
+        <Element ComponentName="VersionInfo" X="1025" Y="375" Note=""/>
     </PositionMap>
-    <EmbeddedRegistries>
-        <EmbededRegistry Id="Enums">
-            <PositionMap>
-                <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
-                <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
-                <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-    </EmbeddedRegistries>
+    <EmbeddedRegistries/>
 </Acf>

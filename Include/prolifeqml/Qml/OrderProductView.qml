@@ -19,38 +19,17 @@ Rectangle {
     property string serialNumber;
     property string productionStatus;
 
+    property TreeItemModel commandsModel: null;
+
+    onCommandsModelChanged: {
+        if (productInfo.commandsModel != null){
+            commands.commandModel = productInfo.commandsModel;
+        }
+    }
+
     signal removed();
     signal edited();
     signal createLicenseFile();
-
-    TreeItemModel {
-        id: commandsModel;
-
-        Component.onCompleted: {
-            let index = commandsModel.InsertNewItem();
-
-            commandsModel.SetData("Id", "Edit", index);
-            commandsModel.SetData("Name", "Edit", index);
-            commandsModel.SetData("Icon", "Edit", index);
-            commandsModel.SetData("IsEnabled", true, index);
-
-            index = commandsModel.InsertNewItem();
-
-            commandsModel.SetData("Id", "CreateLicenseFile", index);
-            commandsModel.SetData("Name", "Create License File", index);
-            commandsModel.SetData("Icon", "Key", index);
-            commandsModel.SetData("IsEnabled", true, index);
-
-            index = commandsModel.InsertNewItem();
-
-            commandsModel.SetData("Id", "Remove", index);
-            commandsModel.SetData("Name", "Remove", index);
-            commandsModel.SetData("Icon", "Close", index);
-            commandsModel.SetData("IsEnabled", true, index);
-
-            commands.commandModel = commandsModel;
-        }
-    }
 
     SimpleCommandsDecorator {
         id: commands;

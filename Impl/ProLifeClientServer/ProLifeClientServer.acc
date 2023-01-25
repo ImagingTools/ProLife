@@ -139,48 +139,7 @@
             </Data>
         </Element>
     </ElementsList>
-    <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="Enums">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="ApplicationDataEnumProvider" PackageId="ImtQmlPck" ComponentId="ApplicationDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/AppEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandDataEnumProvider" PackageId="ImtQmlPck" ComponentId="CommandDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/CommandEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PageDataEnumProvider" PackageId="ImtQmlPck" ComponentId="PageDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/PageEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="ApplicationDataEnumProvider" ComponentId="ApplicationDataEnumProvider"/>
-                    <Component ExportedId="CommandDataEnumProvider" ComponentId="CommandDataEnumProvider"/>
-                    <Component ExportedId="PageDataEnumProvider" ComponentId="PageDataEnumProvider"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-    </EmbeddedRegistriesList>
+    <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="ibase::IApplication" ComponentId="ClientApplication"/>
     </ExportedInterfaces>

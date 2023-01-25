@@ -92,43 +92,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="GeneralSettingsFactory" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ServerSettings" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
+        <Element Id="ServerSettingsController" PackageId="" ComponentId="ServerSettingsController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseHost" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="DefaultDatabaseName">
-                        <Data IsEnabled="true" Value="prolife"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="root"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabasePort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="5432"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseUserName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="postgres"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -137,93 +110,20 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ServerSettingsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ServerSettings</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettingsRepresentation"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ServerSettingsRepresentation" PackageId="ProLifeQmlVoce" ComponentId="ServerPageRepresentation">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="UserSettings" PackageId="ImtAuthPck" ComponentId="UserSettings">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="SettingsFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="GeneralSettingsFactory"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="UserSettingsController" PackageId="ImtGqlPck" ComponentId="UserSettingsController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>UserSettings</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="UserSettingsDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="UserSettings"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsRepresentationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="UserSettingsRepresentation"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="UserSettingsDatabaseDelegate" PackageId="ImtCoreVoce" ComponentId="DatabaseUserSettings">
+        <Element Id="UserSettingsController" PackageId="" ComponentId="UserSettingsController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                    <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="UserSettings"/>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -231,20 +131,218 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="UserSettingsRepresentation" PackageId="ImtCoreVoce" ComponentId="GeneralPageRepresentationModel">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
     </ElementsList>
-    <EmbeddedRegistriesList/>
+    <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="ServerSettingsController">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="Permission" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Server"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewServerPage</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PermissionsChecker" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerSettings" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabaseHost" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="DefaultDatabaseName">
+                                    <Data IsEnabled="true" Value="prolife"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="root"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabasePort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="5432"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabaseUserName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="postgres"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerSettingsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ServerSettings</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="Permission"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ServerSettings"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="PermissionsChecker"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ServerSettingsRepresentation"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerSettingsRepresentation" PackageId="ProLifeQmlVoce" ComponentId="ServerPageRepresentation">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="ServerSettingsController"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ServerSettingsController"/>
+                </ExportedInterfaces>
+                <ExportedComponents>
+                    <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
+                    <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettings/LisaUrlConnection"/>
+                    <Component ExportedId="Preferences" ComponentId="ServerSettings/Preferences"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="UserSettingsController">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="GeneralSettingsFactory" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="UserSettings" PackageId="ImtAuthPck" ComponentId="UserSettings">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="SettingsFactory" Type="Factory" ExportId="">
+                                    <Data IsEnabled="true" Value="GeneralSettingsFactory"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="UserSettingsController" PackageId="ImtGqlPck" ComponentId="UserSettingsController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>UserSettings</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="UserSettingsDatabaseDelegate"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserSettingsFactory" Type="Factory" ExportId="">
+                                    <Data IsEnabled="true" Value="UserSettings"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserSettingsRepresentationController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="UserSettingsRepresentation"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="UserSettingsDatabaseDelegate" PackageId="ImtCoreVoce" ComponentId="DatabaseUserSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserSettingsFactory" Type="Factory" ExportId="">
+                                    <Data IsEnabled="true" Value="UserSettings"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="UserSettingsRepresentation" PackageId="ImtCoreVoce" ComponentId="GeneralPageRepresentationModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="UserSettingsController"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="UserSettingsController"/>
+                </ExportedInterfaces>
+                <ExportedComponents>
+                    <Component ExportedId="UserSettingsRepository" ComponentId="UserSettingsDatabaseDelegate/UserSettingsRepository"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
+    </EmbeddedRegistriesList>
     <ExportedInterfaces>
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ApplicationSettings"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationSettings"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
-        <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettings/LisaUrlConnection"/>
-        <Component ExportedId="UserSettingsRepository" ComponentId="UserSettingsDatabaseDelegate/UserSettingsRepository"/>
+        <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettingsController/DatabaseAccessSettings"/>
+        <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettingsController/LisaUrlConnection"/>
+        <Component ExportedId="Preferences" ComponentId="ServerSettingsController/Preferences"/>
+        <Component ExportedId="UserSettingsRepository" ComponentId="UserSettingsController/UserSettingsRepository"/>
     </ExportedComponents>
 </Acf>

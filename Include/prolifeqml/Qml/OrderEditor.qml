@@ -276,7 +276,13 @@ DocumentBase {
             licensesModel: licensesProvider.model;
             productsModel: installationEditorContainer.productsModel;
             onStarted: {
-                productsDialog.orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                if (installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                    productsDialog.orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                }
+                else{
+                    productsDialog.orderProductsModel.Clear();
+                }
+
                 console.log("ProductEditorDialog onStarted", orderProductsModel.toJSON())
                 productsDialog.bodyItem.started();
             }
@@ -389,6 +395,39 @@ DocumentBase {
             return retVal;
         }
 
+        OrderCommandsModelObserver {
+            productCommandsModel: commandsModelLocal;
+            orderCommandsProvider: installationEditorContainer.commandsProvider;
+            addProductButton: addProduct;
+        }
+
+        TreeItemModel {
+            id: commandsModelLocal;
+
+            Component.onCompleted: {
+                let index = commandsModelLocal.InsertNewItem();
+
+                commandsModelLocal.SetData("Id", "Edit", index);
+                commandsModelLocal.SetData("Name", "Edit", index);
+                commandsModelLocal.SetData("Icon", "Edit", index);
+                commandsModelLocal.SetData("IsEnabled", false, index);
+
+                index = commandsModelLocal.InsertNewItem();
+
+                commandsModelLocal.SetData("Id", "CreateLicenseFile", index);
+                commandsModelLocal.SetData("Name", "Create License File", index);
+                commandsModelLocal.SetData("Icon", "Key", index);
+                commandsModelLocal.SetData("IsEnabled", false, index);
+
+                index = commandsModelLocal.InsertNewItem();
+
+                commandsModelLocal.SetData("Id", "Remove", index);
+                commandsModelLocal.SetData("Name", "Remove", index);
+                commandsModelLocal.SetData("Icon", "Close", index);
+                commandsModelLocal.SetData("IsEnabled", false, index);
+            }
+        }
+
         delegate: OrderProductView {
             productName: productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
@@ -398,6 +437,8 @@ DocumentBase {
             serialNumber: model.SerialNumber;
 //            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
             licenseName: productsView.getLicenseName(model.Id);
+
+            commandsModel: commandsModelLocal;
 
             onEdited: {
                 productsView.activeProductIndex = model.index;

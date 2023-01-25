@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5048" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description></Description>
+    <Keywords></Keywords>
+    <ElementsList>
+        <Element Id="Close" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Close"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>EditOrder</Value>
+                                <Value>ViewOrders</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="CommandPermissionsProviderJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Save</Value>
+                                <Value>Close</Value>
+                                <Value>CreateLicenseFile</Value>
+                                <Value>Undo</Value>
+                                <Value>Redo</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="CreateLicenseFile" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="CreateLicenseFile"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CreateLicenseFile</Value>
+                                <Value>ViewOrders</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Redo" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Redo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>EditOrder</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Save" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Save"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>EditOrder</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Undo" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Undo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>EditOrder</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="CommandPermissionsProviderJoiner"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="CommandPermissionsProviderJoiner"/>
+    </ExportedInterfaces>
+    <ExportedComponents/>
+</Acf>

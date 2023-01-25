@@ -13,17 +13,8 @@
         <Element ComponentName="LogFilePath" X="250" Y="425" Note=""/>
         <Element ComponentName="LogSystemLocation" X="250" Y="600" Note=""/>
         <Element ComponentName="ProLifeServerBase" X="825" Y="275" Note=""/>
-        <Element ComponentName="TextFileLog" X="225" Y="225" Note=""/>
+        <Element ComponentName="TextFileLog" X="250" Y="275" Note=""/>
         <Element ComponentName="VersionInfo" X="1100" Y="425" Note=""/>
     </PositionMap>
-    <EmbeddedRegistries>
-        <EmbededRegistry Id="Enums">
-            <PositionMap>
-                <Element ComponentName="ApplicationDataEnumProvider" X="500" Y="100" Note=""/>
-                <Element ComponentName="CommandDataEnumProvider" X="500" Y="200" Note=""/>
-                <Element ComponentName="PageDataEnumProvider" X="500" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-    </EmbeddedRegistries>
+    <EmbeddedRegistries/>
 </Acf>

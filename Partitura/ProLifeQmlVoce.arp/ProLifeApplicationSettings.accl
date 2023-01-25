@@ -8,17 +8,32 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ApplicationInfoController" X="725" Y="300" Note=""/>
-        <Element ComponentName="ApplicationInfoDataProvider" X="725" Y="475" Note=""/>
+        <Element ComponentName="ApplicationInfoController" X="625" Y="300" Note=""/>
+        <Element ComponentName="ApplicationInfoDataProvider" X="625" Y="475" Note=""/>
         <Element ComponentName="ApplicationSettings" X="625" Y="75" Note=""/>
-        <Element ComponentName="GeneralSettingsFactory" X="125" Y="675" Note=""/>
-        <Element ComponentName="ServerSettings" X="975" Y="475" Note=""/>
-        <Element ComponentName="ServerSettingsController" X="1075" Y="300" Note=""/>
-        <Element ComponentName="ServerSettingsRepresentation" X="1050" Y="675" Note=""/>
-        <Element ComponentName="UserSettings" X="100" Y="475" Note=""/>
-        <Element ComponentName="UserSettingsController" X="200" Y="300" Note=""/>
-        <Element ComponentName="UserSettingsDatabaseDelegate" X="575" Y="675" Note=""/>
-        <Element ComponentName="UserSettingsRepresentation" X="350" Y="475" Note=""/>
+        <Element ComponentName="ServerSettingsController" X="1030" Y="297" Note=""/>
+        <Element ComponentName="UserSettingsController" X="225" Y="300" Note=""/>
     </PositionMap>
-    <EmbeddedRegistries/>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="ServerSettingsController">
+            <PositionMap>
+                <Element ComponentName="Permission" X="250" Y="500" Note=""/>
+                <Element ComponentName="PermissionsChecker" X="250" Y="200" Note=""/>
+                <Element ComponentName="ServerSettings" X="975" Y="200" Note=""/>
+                <Element ComponentName="ServerSettingsController" X="600" Y="350" Note=""/>
+                <Element ComponentName="ServerSettingsRepresentation" X="975" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="UserSettingsController">
+            <PositionMap>
+                <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
+                <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
+                <Element ComponentName="UserSettingsController" X="625" Y="75" Note=""/>
+                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
+                <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
 </Acf>

@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5042" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -10,32 +10,36 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="ApplicationInfo" PackageId="BasePck" ComponentId="ApplicationInfo">
+        <Element Id="ClientApplication" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
+                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ClientApplication/ObserverQml</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Client"/>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CompanyName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ImagingTools GmbH"/>
+                    <AttributeInfo Id="MainQmlPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value=":/qml/ProLifeMain.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2022"/>
+                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="/ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Settings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="Context" PackageId="ImtQmlPck" ComponentId="ClientUserContext">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Localization"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -44,10 +48,16 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationInfo"/>
+                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Languages" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="QuickApplication/RuntimeStatus"/>
+                        <Data IsEnabled="true" Value="ClientApplication/RuntimeStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -55,13 +65,37 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Localization" PackageId="ProLifeVoce" ComponentId="ProLifeLocalization">
+        <Element Id="LogFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="InstallTranslate" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="LogPath">
+                        <Data IsEnabled="true" Value="LisaServerLog.txt"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="LanguageIds">
+                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="1"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LogSystemLocation"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LogSystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LogLocationType">
+                        <Data IsEnabled="true" Value="104"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProLifeLocalization" PackageId="ProLifeVoce" ComponentId="ProLifeLocalization">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>en_US</Value>
@@ -71,136 +105,38 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageNames" Type="Text[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>English</Value>
-                                <Value>German</Value>
-                                <Value>Russian</Value>
-                                <Value>Polish</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LanguageSelection" Type="Reference" ExportId="LanguageSelection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationFilePath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value=":/Translations"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationFilePrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ImtCore"/>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="MainWindow" PackageId="ImtQmlPck" ComponentId="QuickObject">
+        <Element Id="TextFileLog" PackageId="FilePck" ComponentId="TextFileLog">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="BaseUrl" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="http://85.214.249.16:7776"/>
+                    <AttributeInfo Id="LogFile" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LogFilePath"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="QmlFilePath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value=":/qml/ProLifeMain.qml"/>
+                    <AttributeInfo Id="UseCategory" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ObserverQml" PackageId="ImtQmlPck" ComponentId="ObserverQml">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="MutationDataDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/CompositeRepresentation"/>
+                    <AttributeInfo Id="UseCode" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PagesDataProviderCompPtr" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/CompositeRepresentation"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="QuickObject" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="MainWindow"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="/ProLife"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="QuickApplication" PackageId="ImtQmlPck" ComponentId="QuickApplication">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ObserverQml</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Context" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Context"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="MainQuickWindow" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="MainWindow"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TitleFormat" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
+                    <AttributeInfo Id="UseTimeStamp" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="VersionIdDesc" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
     </ElementsList>
-    <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="Enums">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="ApplicationDataEnumProvider" PackageId="ImtQmlPck" ComponentId="ApplicationDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/AppEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandDataEnumProvider" PackageId="ImtQmlPck" ComponentId="CommandDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/CommandEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PageDataEnumProvider" PackageId="ImtQmlPck" ComponentId="PageDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/PageEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="ApplicationDataEnumProvider" ComponentId="ApplicationDataEnumProvider"/>
-                    <Component ExportedId="CommandDataEnumProvider" ComponentId="CommandDataEnumProvider"/>
-                    <Component ExportedId="PageDataEnumProvider" ComponentId="PageDataEnumProvider"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-    </EmbeddedRegistriesList>
-    <ExportedInterfaces>
-        <Interface InterfaceId="ibase::IApplication" ComponentId="QuickApplication"/>
-    </ExportedInterfaces>
+    <EmbeddedRegistriesList/>
+    <ExportedInterfaces/>
     <ExportedComponents/>
 </Acf>
