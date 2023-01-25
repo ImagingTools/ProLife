@@ -276,8 +276,9 @@ DocumentBase {
             licensesModel: licensesProvider.model;
             productsModel: installationEditorContainer.productsModel;
             onStarted: {
-                orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                productsDialog.orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
                 console.log("ProductEditorDialog onStarted", orderProductsModel.toJSON())
+                productsDialog.bodyItem.started();
             }
 
             onFinished: {
@@ -358,9 +359,33 @@ DocumentBase {
             return retVal;
         }
 
-        function getLicenseName(){
-            console.log("productsView", productsView.model.toJSON())
+        function getLicenseName(uuidId){
+            let productsModel = productsView.model;
+            console.log("getLicenseName", productsModel.toJSON())
+            console.log("getLicenseName uuidId", uuidId)
             let retVal = "";
+            for (let productIndex = 0; productIndex <productsModel.GetItemsCount(); productIndex++){
+                let id = productsModel.GetData("Id", productIndex);
+                if (id === uuidId){
+                    let activeLicenses = productsModel.GetData("ActiveLicenses");
+//                    console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+
+                    for (let licenseIndex = 0; licenseIndex < activeLicenses.GetItemsCount(); licenseIndex++){
+                        if (licenseIndex > 0){
+                            retVal += ", ";
+                        }
+                        retVal += activeLicenses.GetData("Name", licenseIndex);
+                        retVal += " ";
+                        let expiration = activeLicenses.GetData("Expiration", licenseIndex);
+                        if (expiration == 0){
+                            expiration = qsTr("Unlimited");
+                        }
+                        retVal += " " + expiration;
+
+                    };
+                    break;
+                }
+            }
             return retVal;
         }
 
@@ -371,8 +396,8 @@ DocumentBase {
             pairName: model.PairId;
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
-            licenseExpiration: model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
-            licenseName: productsView.getLicenseName();
+//            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
+            licenseName: productsView.getLicenseName(model.Id);
 
             onEdited: {
                 productsView.activeProductIndex = model.index;

@@ -29,7 +29,8 @@ Dialog {
     }
 
     onStarted: {
-        installationEditor.started();
+//        root.started("root.started", root.orderProductsModel)
+
     }
 
     contentComp: InstallationEditor {
