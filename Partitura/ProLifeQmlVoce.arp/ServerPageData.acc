@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -58,6 +58,15 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LisaUrlConnection" PackageId="BasePck" ComponentId="TextParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="http://localhost:7776/Lisa/graphql"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Mask" PackageId="BasePck" ComponentId="TextParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -74,6 +83,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Mask</Value>
+                                <Value>LisaUrlConnection</Value>
                                 <Value>DatabaseAccessSettings</Value>
                             </Values>
                         </Data>
@@ -82,6 +92,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>InstanceMask</Value>
+                                <Value>LisaUrl</Value>
                                 <Value>Database</Value>
                             </Values>
                         </Data>
@@ -101,6 +112,7 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
+        <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrlConnection"/>
         <Component ExportedId="Preferences" ComponentId="Preferences"/>
     </ExportedComponents>
 </Acf>

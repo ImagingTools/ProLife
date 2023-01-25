@@ -2,16 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ApplicationController" X="550" Y="50" Note=""/>
-        <Element ComponentName="AuthorizationConcept" X="550" Y="475" Note=""/>
-        <Element ComponentName="Pages" X="1000" Y="225" Note=""/>
-        <Element ComponentName="SettingsController" X="200" Y="275" Note=""/>
+        <Element ComponentName="ApplicationController" X="575" Y="50" Note=""/>
+        <Element ComponentName="AuthorizationConcept" X="750" Y="350" Note=""/>
+        <Element ComponentName="GraphQLClientEngine" X="450" Y="350" Note=""/>
+        <Element ComponentName="Pages" X="1050" Y="350" Note=""/>
+        <Element ComponentName="SettingsController" X="150" Y="350" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

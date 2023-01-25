@@ -2,15 +2,16 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="950" Y="450" Note=""/>
-        <Element ComponentName="InstanceMaskRepresentation" X="200" Y="450" Note=""/>
-        <Element ComponentName="ServerSettingsRepresentation" X="575" Y="225" Note=""/>
+        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="1000" Y="375" Note=""/>
+        <Element ComponentName="InstanceMaskRepresentation" X="175" Y="375" Note=""/>
+        <Element ComponentName="LisaUrlRepresentation" X="566" Y="375" Note=""/>
+        <Element ComponentName="ServerSettingsRepresentation" X="575" Y="100" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

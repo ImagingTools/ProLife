@@ -19,7 +19,6 @@
                                 <Value>OrderCollectionCommands</Value>
                                 <Value>OrderCommands</Value>
                                 <Value>OrderCollectionController</Value>
-                                <Value>ProductsData</Value>
                                 <Value>OrderController</Value>
                             </Values>
                         </Data>
