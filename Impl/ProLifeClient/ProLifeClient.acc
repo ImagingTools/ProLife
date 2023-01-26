@@ -13,6 +13,13 @@
         <Element Id="Application" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Application/ObserverQml</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="TextFileLog"/>
                     </AttributeInfo>
@@ -129,6 +136,8 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList/>
-    <ExportedInterfaces/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="ibase::IApplication" ComponentId="Application"/>
+    </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>

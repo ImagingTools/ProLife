@@ -27,7 +27,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="LogPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLog.log"/>
+                        <Data IsEnabled="true" Value="ProLifeLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SeriviceDescription" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife server"/>
@@ -54,7 +54,10 @@
                         <Data IsEnabled="true" Value="Application/LogFilePath"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="7776"/>
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

@@ -6,7 +6,7 @@
 #define MyAppPublisher "ImagingTools GmbH"
 #define MyAppURL "http://www.imagingtools.de"
 #define MyAppExeName "ProLifeClient.exe"
-#define BasePath GetEnv('ProLife_BUILD_DIR')
+#define BasePath GetEnv('PROLIFE_BUILD_DIR')
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -37,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BasePath}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
