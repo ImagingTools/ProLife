@@ -99,7 +99,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 								QString licenseName = licenseInstancePtr->GetLicenseName();
 
-								activeLicenses->SetData("LicenseId", activeLicenseId, productIndex);
+								activeLicenses->SetData("Id", activeLicenseId, productIndex);
 								activeLicenses->SetData("Name", name, productIndex);
 
 								QDate date = licenseInstancePtr->GetExpiration().date();
@@ -243,8 +243,8 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					if (activeLicenses != nullptr){
 						for (int i = 0; i < activeLicenses->GetItemsCount(); i++){
 							QByteArray licenseId;
-							if (activeLicenses->ContainsKey("LicenseId", i)){
-								licenseId = activeLicenses->GetData("LicenseId", i).toByteArray();
+							if (activeLicenses->ContainsKey("Id", i)){
+								licenseId = activeLicenses->GetData("Id", i).toByteArray();
 							}
 
 							QDateTime expirationDate;

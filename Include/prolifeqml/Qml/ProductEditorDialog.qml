@@ -15,7 +15,7 @@ Dialog {
     property TreeItemModel orderProductsModel: TreeItemModel{}
 
     onDocumentModelChanged: {
-        root.contentItem.documentModel = root.documentModel;
+//        root.contentItem.documentModel = root.documentModel;
     }
 
     Component.onCompleted: {

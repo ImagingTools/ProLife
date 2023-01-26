@@ -280,8 +280,10 @@ DocumentBase {
                 else{
                     productsDialog.orderProductsModel.Clear();
                 }
-
-                console.log("ProductEditorDialog onStarted", orderProductsModel.toJSON())
+                if (productsDialog.orderProductsModel){
+                     productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                     console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
+                }
                 productsDialog.bodyItem.started();
             }
 
@@ -294,16 +296,16 @@ DocumentBase {
                         console.log("newProductsModel", installationEditorContainer.documentModel.toJSON());
                     }
                     var productsModel =  installationEditorContainer.documentModel.GetData("OrderProducts");
-                    console.log("productsModel", productsModel.toJSON());
+//                    console.log("productsModel", productsModel.toJSON());
 
                     if (productsView.activeProductIndex == -1){
                         productsView.activeProductIndex = productsModel.InsertNewItem();
                     }
 
-                    var newProductModel = this.contentItem.documentModel;
+                    const newProductModel = this.contentItem.documentModel;
                     console.log("newProductModel", newProductModel.toJSON());
-                    productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel);
-                    console.log("newProductsModel", productsModel.toJSON());
+                    productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel, 0);
+                    console.log("ProductsModel", productsModel.toJSON());
                     let pairId = newProductModel.GetData("PairId");
                     let id = newProductModel.GetData("Id");
                     if (pairId != ""){
@@ -370,7 +372,7 @@ DocumentBase {
             console.log("getLicenseName", productsModel.toJSON())
             let retVal = "";
             let activeLicenses = productsModel.GetData("ActiveLicenses", index);
-            console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+            //console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
 
             for (let licenseIndex = 0; licenseIndex < activeLicenses.GetItemsCount(); licenseIndex++){
                 if (licenseIndex > 0){
@@ -439,9 +441,11 @@ DocumentBase {
 
                 var productsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
                 if (productsModel){
-                    let productModel = productsModel.GetModelFromItem(model.index);
+//                    let productModel = productsModel.GetModelFromItem(model.index);
 
-                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
+//                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
+//                    console.log("OrderProductView onEdited", productModel.toJSON())
+                    modalDialogManager.openDialog(productEditorDialog, {});
                 }
             }
 
