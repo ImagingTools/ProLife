@@ -10,16 +10,9 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="ClientApplication" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
+        <Element Id="Application" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ClientApplication/ObserverQml</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="TextFileLog"/>
                     </AttributeInfo>
@@ -48,7 +41,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Languages" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -57,7 +50,7 @@
                         <Data IsEnabled="true" Value="TextFileLog"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/RuntimeStatus"/>
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -69,7 +62,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="LogPath">
-                        <Data IsEnabled="true" Value="LisaServerLog.txt"/>
+                        <Data IsEnabled="true" Value="ProLifeClientLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="1"/>
@@ -84,10 +77,10 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="LogLocationType">
-                        <Data IsEnabled="true" Value="104"/>
+                        <Data IsEnabled="true" Value="9"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -104,6 +97,9 @@
                                 <Value>pl_PL</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -128,11 +124,7 @@
         </Element>
         <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="VersionIdDesc" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
+                <AttributeInfoMap/>
             </Data>
         </Element>
     </ElementsList>

@@ -38,26 +38,62 @@ Item {
         thumbnailDecorator.updateModels();
     }
 
+    function updateServerSettings(){
+        settingsProviderLocal.updateModel();
+    }
+
     SettingsProvider {
         id: settingsProviderLocal;
 
         root: window;
 
         onServerModelChanged: {
-            designProvider.applyDesignSchema();
+            settingsObserver.registerModel(settingsProviderLocal.serverModel);
+            designSchemaProvider.applyDesignSchema();
         }
 
-        onServerSettingsSaved: {
-            designProvider.applyDesignSchema();
-        }
+        onLocalModelChanged: {
+            console.log("onLocalModelChanged");
 
-        onLocalSettingsSaved: {
-            designProvider.applyDesignSchema();
+            localSettingsModelObserver.registerModel(settingsProviderLocal.localModel);
+            timer.start();
         }
     }
 
+    // Timer for updating design schema when start application, without this timer request does not come
+    Timer {
+        id: timer;
+
+        interval: 100;
+
+        onTriggered: {
+            designSchemaProvider.applyDesignSchema();
+        }
+    }
+
+    ServerSettingsModelObserver {
+        id: settingsObserver;
+
+        designProvider: designSchemaProvider;
+
+        root: window;
+    }
+
+    LocalSettingsModelObserver {
+        id: localSettingsModelObserver;
+
+        designProvider: designSchemaProvider;
+        languageProvider: langProvider;
+    }
+
     DesignSchemaProvider {
-        id: designProvider;
+        id: designSchemaProvider;
+
+        settingsProvider: settingsProviderLocal;
+    }
+
+    LanguageProvider {
+        id: langProvider;
 
         settingsProvider: settingsProviderLocal;
     }

@@ -8,13 +8,13 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ClientApplication" X="625" Y="600" Note=""/>
-        <Element ComponentName="LocalSettings" X="625" Y="75" Note=""/>
-        <Element ComponentName="LogFilePath" X="250" Y="425" Note=""/>
-        <Element ComponentName="LogSystemLocation" X="250" Y="600" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="625" Y="325" Note=""/>
-        <Element ComponentName="TextFileLog" X="250" Y="275" Note=""/>
-        <Element ComponentName="VersionInfo" X="1025" Y="375" Note=""/>
+        <Element ComponentName="Application" X="650" Y="400" Note=""/>
+        <Element ComponentName="LocalSettings" X="875" Y="175" Note=""/>
+        <Element ComponentName="LogFilePath" X="150" Y="400" Note=""/>
+        <Element ComponentName="LogSystemLocation" X="150" Y="575" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="850" Y="575" Note=""/>
+        <Element ComponentName="TextFileLog" X="150" Y="175" Note=""/>
+        <Element ComponentName="VersionInfo" X="475" Y="175" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
