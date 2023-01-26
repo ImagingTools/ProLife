@@ -9,7 +9,6 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CompactXmlFileSerializer" X="275" Y="200" Note=""/>
-        <Element ComponentName="JsonFileSerializer" X="800" Y="75" Note=""/>
         <Element ComponentName="OrderDatabaseDelegate" X="625" Y="200" Note=""/>
         <Element ComponentName="OrderInfo" X="875" Y="425" Note=""/>
         <Element ComponentName="Orders" X="525" Y="425" Note=""/>

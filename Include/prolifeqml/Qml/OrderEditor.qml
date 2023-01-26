@@ -102,9 +102,6 @@ DocumentBase {
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("Name", instanceIdInput.text);
 
-//        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-//        documentModel.SetData("ProductId", selectedProductId);
-
         let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
         documentModel.SetData("CustomerId", selectedAccountId);
 
@@ -135,20 +132,20 @@ DocumentBase {
             font.pixelSize: Style.fontSize_common;
         }
 
-        RegExpValidator {
-            id: regexValid;
+//        RegExpValidator {
+//            id: regexValid;
 
-            Component.onCompleted: {
-                console.log("RegExpValidator onCompleted");
-                let regex = settingsProvider.getInstanceMask();
-                console.log("regex", regex);
+//            Component.onCompleted: {
+//                console.log("RegExpValidator onCompleted");
+//                let regex = settingsProvider.getInstanceMask();
+//                console.log("regex", regex);
 
-                let re = new RegExp(regex)
-                if (re){
-                    regexValid.regExp = re;
-                }
-            }
-        }
+//                let re = new RegExp(regex)
+//                if (re){
+//                    regexValid.regExp = re;
+//                }
+//            }
+//        }
 
         CustomTextField {
             id: instanceIdInput;
@@ -458,7 +455,6 @@ DocumentBase {
             }
 
             onCreateLicenseFile: {
-
                 let orderId = documentModel.GetData("OrderId");
                 let productId = model.Id;
                 if (model.CategoryId == "Hardware"){

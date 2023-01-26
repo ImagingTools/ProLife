@@ -60,7 +60,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>CreateLicenseFile</Value>
-                                <Value>ViewOrders</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

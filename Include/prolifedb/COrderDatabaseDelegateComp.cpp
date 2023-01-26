@@ -34,8 +34,16 @@ QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objec
 				.arg(qPrintable(objectId)).toLocal8Bit();
 	}
 
-	return  QString("SELECT * FROM \"%1\" WHERE IsActive = true")
-			.arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();
+	QString paginationQuery;
+	if (offset >= 0 && count > 0){
+		paginationQuery = QString("OFFSET %1 ROWS FETCH NEXT %2 ROWS ONLY").arg(offset).arg(count).toLocal8Bit();
+	}
+
+	QByteArray selectQuery = QString("SELECT * FROM \"%1\" WHERE IsActive = true %2")
+			.arg(qPrintable(*m_tableNameAttrPtr))
+			.arg(paginationQuery).toLocal8Bit();
+
+	return selectQuery;
 }
 
 

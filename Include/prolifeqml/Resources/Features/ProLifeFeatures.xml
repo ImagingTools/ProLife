@@ -5,7 +5,7 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{55288d56-ffc8-4546-99ed-7a8bb62044cf}" Description="" TypeId="FeatureInfo" Name="Account Management">
+            <Object ID="{7d46ddd1-1655-484b-99e8-034ab626d07e}" Description="" TypeId="FeatureInfo" Name="Account Management">
                 <Data Id="AccountManagement" Name="Account Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
@@ -27,7 +27,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{764d4281-c762-4f08-9364-cb5d2da9b9a1}" Description="" TypeId="FeatureInfo" Name="Order Management">
+            <Object ID="{ee4d9ba8-1e90-4174-9482-4f2ef2506cd9}" Description="" TypeId="FeatureInfo" Name="Order Management">
                 <Data Id="OrderManagement" Name="Order Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewOrders" Name="View Orders" Optional="false">
@@ -52,7 +52,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{1d8b8d86-61f7-44ce-8be8-e6b11b7d874b}" Description="" TypeId="FeatureInfo" Name="Administration">
+            <Object ID="{3b2d1d71-261e-4b4d-a63b-bfd98b044e6f}" Description="" TypeId="FeatureInfo" Name="Administration">
                 <Data Id="Administration" Name="Administration" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAdministration" Name="View Administration" Optional="false">
@@ -61,9 +61,26 @@
                     </SubFeatures>
                 </Data>
             </Object>
+            <Object ID="{85454a9e-f2f9-4aca-8d95-bad0a60dff4d}" Description="" TypeId="FeatureInfo" Name="Settings Management">
+                <Data Id="SettingsManagement" Name="Settings Management" Optional="false">
+                    <SubFeatures>
+                        <Object Id="ViewServerSettings" Name="View Server Settings" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                        <Object Id="ViewClientSettings" Name="View Client Settings" Optional="false">
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
+            </Object>
         </ObjectsList>
     </Features>
     <Dependencies>
+        <Dependency FeatureId="CreateLicenseFile">
+            <BaseFeatures>
+                <BaseFeatureId>ViewOrders</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
         <Dependency FeatureId="EditAccount">
             <BaseFeatures>
                 <BaseFeatureId>ViewAccounts</BaseFeatureId>

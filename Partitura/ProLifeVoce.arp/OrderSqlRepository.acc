@@ -15,11 +15,6 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="JsonFileSerializer" PackageId="FilePck" ComponentId="JsonFileSerializer">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
         <Element Id="OrderDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="OrderDatabaseDelegateComp">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
