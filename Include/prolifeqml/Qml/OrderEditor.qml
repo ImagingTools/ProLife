@@ -84,6 +84,7 @@ DocumentBase {
             }
         }
         if (documentModel.ContainsKey("OrderProducts")){
+            productsView.model = 0
             productsView.model = documentModel.GetData("OrderProducts");
             console.log("productsView.model",  productsView.model.toJSON())
         }
@@ -304,11 +305,13 @@ DocumentBase {
                     productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel);
                     console.log("newProductsModel", productsModel.toJSON());
                     let pairId = newProductModel.GetData("PairId");
-                    let productId = newProductModel.GetData("ProductId");
+                    let id = newProductModel.GetData("Id");
                     if (pairId != ""){
                         for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                            if (pairId == productsModel.GetData("ProductId", i)){
-                                productsModel.SetData("PairId", productId);
+                            if (pairId == productsModel.GetData("Id", i)){
+                                productsModel.SetData("PairId", id, i);
+                                let macAddress = productsModel.GetData("MacAddress", i);
+                                productsModel.SetData("MacAddress", macAddress, i);
                             }
                         }
                     }
@@ -362,33 +365,27 @@ DocumentBase {
             return retVal;
         }
 
-        function getLicenseName(uuidId){
+        function getLicenseName(index){
             let productsModel = productsView.model;
             console.log("getLicenseName", productsModel.toJSON())
-            console.log("getLicenseName uuidId", uuidId)
             let retVal = "";
-            for (let productIndex = 0; productIndex <productsModel.GetItemsCount(); productIndex++){
-                let id = productsModel.GetData("Id", productIndex);
-                if (id === uuidId){
-                    let activeLicenses = productsModel.GetData("ActiveLicenses");
-//                    console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+            let activeLicenses = productsModel.GetData("ActiveLicenses", index);
+            console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
 
-                    for (let licenseIndex = 0; licenseIndex < activeLicenses.GetItemsCount(); licenseIndex++){
-                        if (licenseIndex > 0){
-                            retVal += ", ";
-                        }
-                        retVal += activeLicenses.GetData("Name", licenseIndex);
-                        retVal += " ";
-                        let expiration = activeLicenses.GetData("Expiration", licenseIndex);
-                        if (expiration == 0){
-                            expiration = qsTr("Unlimited");
-                        }
-                        retVal += " " + expiration;
-
-                    };
-                    break;
+            for (let licenseIndex = 0; licenseIndex < activeLicenses.GetItemsCount(); licenseIndex++){
+                if (licenseIndex > 0){
+                    retVal += ", ";
                 }
-            }
+                retVal += activeLicenses.GetData("Name", licenseIndex);
+                retVal += " ";
+                let expiration = activeLicenses.GetData("Expiration", licenseIndex);
+                if (expiration == 0){
+                    expiration = qsTr("Unlimited");
+                }
+                retVal += " " + expiration;
+
+            };
+
             return retVal;
         }
 
@@ -433,7 +430,7 @@ DocumentBase {
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
 //            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
-            licenseName: productsView.getLicenseName(model.Id);
+            licenseName: productsView.getLicenseName(model.index);
 
             commandsModel: commandsModelLocal;
 

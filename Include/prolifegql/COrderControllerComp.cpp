@@ -82,7 +82,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 					QByteArray categoryId = productPtr->GetFactoryId();
 					QByteArray productInstance = productPtr->GetProductInstanceId();
 
-					productsModel->SetData("ID", objectId, productIndex);
+					productsModel->SetData("Id", objectId, productIndex);
 					productsModel->SetData("ProductId", productId, productIndex);
 					productsModel->SetData("CategoryId", categoryId, productIndex);
 					productsModel->SetData("MacAddress", productInstance, productIndex);
@@ -94,17 +94,21 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 						imtbase::ICollectionInfo::Ids activeLicenseIds = licenseInstances.GetElementIds();
 						for (const QByteArray& activeLicenseId : activeLicenseIds){
 							const imtlic::ILicenseInstance* licenseInstancePtr = productPtr->GetLicenseInstance(activeLicenseId);
+							if (licenseInstancePtr != nullptr){
+								int productIndex = activeLicenses->InsertNewItem();
 
-							int productIndex = activeLicenses->InsertNewItem();
+								QString licenseName = licenseInstancePtr->GetLicenseName();
 
-							QString licenseName = licenseInstancePtr->GetLicenseName();
+								activeLicenses->SetData("LicenseId", activeLicenseId, productIndex);
+								activeLicenses->SetData("Name", name, productIndex);
 
-							activeLicenses->SetData("LicenseId", activeLicenseId, productIndex);
-							activeLicenses->SetData("Name", name, productIndex);
-
-							QDate date = licenseInstancePtr->GetExpiration().date();
-							QString licenseExpiration = date.toString("yyyy-MM-dd");
-							activeLicenses->SetData("Expiration", licenseExpiration, productIndex);
+								QDate date = licenseInstancePtr->GetExpiration().date();
+								QString licenseExpiration = date.toString("yyyy-MM-dd");
+								activeLicenses->SetData("Expiration", licenseExpiration, productIndex);
+							}
+							else{
+//								Q_ASSERT(false);
+							}
 						}
 					}
 					else{
@@ -196,37 +200,37 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			for(int productIndex = 0; productIndex < orderedProducts->GetItemsCount(); productIndex++){
 				QByteArray uuidId;
 
-				if (itemModel.ContainsKey("ID")){
-					uuidId = orderedProducts->GetData("ID").toByteArray();
+				if (itemModel.ContainsKey("Id", productIndex)){
+					uuidId = orderedProducts->GetData("Id").toByteArray();
 				}
 
 				QByteArray productCategory = "Software";
-				if(orderedProducts->ContainsKey("CategoryId"), productIndex){
+				if(orderedProducts->ContainsKey("CategoryId", productIndex)){
 					productCategory = orderedProducts->GetData("CategoryId", productIndex).toByteArray();
 				}
 
 				QByteArray productId;
-				if(orderedProducts->ContainsKey("ProductId"), productIndex){
+				if(orderedProducts->ContainsKey("ProductId", productIndex)){
 					productId = orderedProducts->GetData("ProductId", productIndex).toByteArray();
 				}
 
 				QByteArray productStatus;
-				if(orderedProducts->ContainsKey("ProductStatus"), productIndex){
+				if(orderedProducts->ContainsKey("ProductStatus", productIndex)){
 					productStatus = orderedProducts->GetData("ProductStatus", productIndex).toByteArray();
 				}
 
 				QByteArray macAddress;
-				if(orderedProducts->ContainsKey("MacAddress"), productIndex){
+				if(orderedProducts->ContainsKey("MacAddress", productIndex)){
 					macAddress = orderedProducts->GetData("MacAddress", productIndex).toByteArray();
 				}
 
 				QByteArray serialNumber;
-				if(orderedProducts->ContainsKey("SerialNumber"), productIndex){
+				if(orderedProducts->ContainsKey("SerialNumber", productIndex)){
 					serialNumber = orderedProducts->GetData("SerialNumber", productIndex).toByteArray();
 				}
 
 				QByteArray pairId;
-				if(orderedProducts->ContainsKey("PairId"), productIndex){
+				if(orderedProducts->ContainsKey("PairId", productIndex)){
 					pairId = orderedProducts->GetData("PairId", productIndex).toByteArray();
 				}
 
@@ -239,12 +243,12 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					if (activeLicenses != nullptr){
 						for (int i = 0; i < activeLicenses->GetItemsCount(); i++){
 							QByteArray licenseId;
-							if (activeLicenses->ContainsKey("LicenseId"), i){
+							if (activeLicenses->ContainsKey("LicenseId", i)){
 								licenseId = activeLicenses->GetData("LicenseId", i).toByteArray();
 							}
 
 							QDateTime expirationDate;
-							if (activeLicenses->ContainsKey("Expiration"), i){
+							if (activeLicenses->ContainsKey("Expiration", i)){
 								QString dateExpirationStr = activeLicenses->GetData("Expiration", i).toString();
 								expirationDate = QDateTime::fromString(dateExpirationStr, "yyyy-MM-dd");
 							}
