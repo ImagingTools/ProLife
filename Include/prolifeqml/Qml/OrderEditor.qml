@@ -308,12 +308,20 @@ DocumentBase {
                     console.log("ProductsModel", productsModel.toJSON());
                     let pairId = newProductModel.GetData("PairId");
                     let id = newProductModel.GetData("Id");
+                    let macAddress = newProductModel.GetData("MacAddress");
+                    let categoryId = newProductModel.GetData("CategoryId");
                     if (pairId != ""){
                         for (let i = 0; i < productsModel.GetItemsCount(); i++){
                             if (pairId == productsModel.GetData("Id", i)){
                                 productsModel.SetData("PairId", id, i);
-                                let macAddress = productsModel.GetData("MacAddress", i);
-                                productsModel.SetData("MacAddress", macAddress, i);
+                                if (categoryId == "Software"){
+                                    let macAddress = productsModel.GetData("MacAddress", i);
+                                    productsModel.SetData("MacAddress", macAddress, productsView.activeProductIndex);
+                                }
+                                else{
+                                    productsModel.SetData("MacAddress", macAddress,i);
+                                }
+
                             }
                         }
                     }
@@ -367,18 +375,49 @@ DocumentBase {
             return retVal;
         }
 
+        function getPairName(productId, macAddress){
+            let retVal = "";
+            let categoryId = getProductCategory(productId);
+
+            let productsModel = productsView.model;
+            for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                let productMacAddress = productsModel.GetData("MacAddress", i);
+                if (categoryId == "Software" && productMacAddress == macAddress
+                        && productsModel.GetData("CategoryId", i) == "Hardware"){
+                    let modelProductId = productsModel.GetData("ProductId", i)
+                    retVal = getProductName(modelProductId);
+
+                    break;
+                }
+                if (categoryId == "Hardware" && productMacAddress == macAddress
+                        && productsModel.GetData("CategoryId", i) == "Software"){
+                    let modelProductId = productsModel.GetData("ProductId", i)
+                    retVal = getProductName(modelProductId);
+
+                    break;
+                }
+            }
+            return retVal;
+        }
+
         function getLicenseName(index){
             let productsModel = productsView.model;
-            console.log("getLicenseName", productsModel.toJSON())
-            let retVal = "";
+//            console.log("getLicenseName", productsModel.toJSON())
+            console.log("getLicenseName", index)
+              let retVal = "";
             let activeLicenses = productsModel.GetData("ActiveLicenses", index);
-            //console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+            let productId  = productsModel.GetData("ProductId", index);
+//            console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+            if (!activeLicenses){
+                return;
+            }
 
             for (let licenseIndex = 0; licenseIndex < activeLicenses.GetItemsCount(); licenseIndex++){
                 if (licenseIndex > 0){
                     retVal += ", ";
                 }
-                retVal += activeLicenses.GetData("Name", licenseIndex);
+//                retVal += activeLicenses.GetData("Name", licenseIndex);
+                retVal += licensesProvider.getLicenseName(productId, activeLicenses.GetData("Id", licenseIndex))
                 retVal += " ";
                 let expiration = activeLicenses.GetData("Expiration", licenseIndex);
                 if (expiration == 0){
@@ -427,8 +466,8 @@ DocumentBase {
         delegate: OrderProductView {
             productName: productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
-//            pairName: productsView.getProductName(model.PairId);
-            pairName: model.PairId;
+            pairName: productsView.getPairName(model.ProductId, model.MacAddress);
+//            pairName: model.MacAddress;
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
 //            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
