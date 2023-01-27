@@ -281,8 +281,28 @@ DocumentBase {
                     productsDialog.orderProductsModel.Clear();
                 }
                 if (productsDialog.orderProductsModel){
-                     productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-                     console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
+                    let productsModel = productsDialog.orderProductsModel
+                    for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                        if (productsModel.GetData("CategoryId", i) == "Hardware"){
+                            let pairId = productsModel.GetData("PairId", i);
+                            let id = productsModel.GetData("Id", i);
+                            if (pairId && pairId != ""){
+                                for (let index = 0; index < productsModel.GetItemsCount(); index++){
+                                    if (pairId == productsModel.GetData("Id", index)){
+                                        productsModel.SetData("PairId", id, index);
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            let pairId = productsModel.GetData("PairId", i)
+                            if (!pairId){
+                                 productsModel.SetData("PairId", "", i);
+                            }
+                        }
+                    }
+                    productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                    console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
                 }
                 productsDialog.bodyItem.started();
             }
@@ -310,15 +330,11 @@ DocumentBase {
                     let id = newProductModel.GetData("Id");
                     let macAddress = newProductModel.GetData("MacAddress");
                     let categoryId = newProductModel.GetData("CategoryId");
-                    if (pairId != ""){
+                    if (pairId && pairId != ""){
                         for (let i = 0; i < productsModel.GetItemsCount(); i++){
                             if (pairId == productsModel.GetData("Id", i)){
                                 productsModel.SetData("PairId", id, i);
-                                if (categoryId == "Software"){
-                                    let macAddress = productsModel.GetData("MacAddress", i);
-                                    productsModel.SetData("MacAddress", macAddress, productsView.activeProductIndex);
-                                }
-                                else{
+                                if (categoryId == "Hardware"){
                                     productsModel.SetData("MacAddress", macAddress,i);
                                 }
 
@@ -376,6 +392,10 @@ DocumentBase {
         }
 
         function getPairName(productId, macAddress){
+            if (!macAddress || macAddress == ""){
+                return ""
+            }
+
             let retVal = "";
             let categoryId = getProductCategory(productId);
 
