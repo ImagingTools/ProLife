@@ -446,6 +446,7 @@ DocumentBase {
                 commandsModelLocal.SetData("Name", "Edit", index);
                 commandsModelLocal.SetData("Icon", "Edit", index);
                 commandsModelLocal.SetData("IsEnabled", false, index);
+                commandsModelLocal.SetData("Visible", true, index);
 
                 index = commandsModelLocal.InsertNewItem();
 
@@ -453,6 +454,7 @@ DocumentBase {
                 commandsModelLocal.SetData("Name", "Create License File", index);
                 commandsModelLocal.SetData("Icon", "Key", index);
                 commandsModelLocal.SetData("IsEnabled", false, index);
+                commandsModelLocal.SetData("Visible", true, index);
 
                 index = commandsModelLocal.InsertNewItem();
 
@@ -460,6 +462,7 @@ DocumentBase {
                 commandsModelLocal.SetData("Name", "Remove", index);
                 commandsModelLocal.SetData("Icon", "Close", index);
                 commandsModelLocal.SetData("IsEnabled", false, index);
+                commandsModelLocal.SetData("Visible", true, index);
             }
         }
 
@@ -497,13 +500,30 @@ DocumentBase {
             onCreateLicenseFile: {
                 let orderId = documentModel.GetData("OrderId");
                 let productId = model.Id;
-                if (model.CategoryId == "Hardware"){
-                    productId = model.PairId;
+
+                if (model.CategoryId === "Hardware"){
+                    productId = installationEditorContainer.getSoftwareIdByMacAddress(model.MacAddress);
                 }
 
                 console.log("onCreateLicenseFile", orderId + "/" + productId);
 
                 licenseFileController.createLicenseFile(orderId + "/" + productId);
+            }
+        }
+    }
+
+    function getSoftwareIdByMacAddress(macAddress){
+        let dataModel = documentModel.GetData("OrderProducts");
+
+        for (let i = 0; i < dataModel.GetItemsCount(); i++){
+            let category = dataModel.GetData("CategoryId", i);
+            if (category === "Software"){
+                let address = dataModel.GetData("MacAddress", i);
+                if (address === macAddress){
+                    let id = dataModel.GetData("Id", i);
+
+                    return id;
+                }
             }
         }
     }
