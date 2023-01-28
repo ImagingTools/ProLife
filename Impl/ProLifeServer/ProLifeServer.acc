@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5010" Description="ACF"/>
+            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="330758" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -27,7 +27,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="LogPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLog.txt"/>
+                        <Data IsEnabled="true" Value="ProLifeServerLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SeriviceDescription" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife server"/>
