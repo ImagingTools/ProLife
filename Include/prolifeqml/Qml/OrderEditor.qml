@@ -281,34 +281,47 @@ DocumentBase {
                     productsDialog.orderProductsModel.Clear();
                 }
                 if (productsDialog.orderProductsModel){
-                    let productsModel = productsDialog.orderProductsModel
-                    for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                        if (productsModel.GetData("CategoryId", i) == "Hardware"){
-                            let pairId = productsModel.GetData("PairId", i);
-                            let id = productsModel.GetData("Id", i);
-                            if (pairId && pairId != ""){
-                                for (let index = 0; index < productsModel.GetItemsCount(); index++){
-                                    if (pairId == productsModel.GetData("Id", index)){
-                                        productsModel.SetData("PairId", id, index);
-                                    }
-                                }
-                            }
-                        }
-                        else{
-                            let pairId = productsModel.GetData("PairId", i)
-                            if (!pairId){
-                                 productsModel.SetData("PairId", "", i);
-                            }
-                        }
-                    }
+//                    let productsModel = productsDialog.orderProductsModel
+//                    for (let i = 0; i < productsModel.GetItemsCount(); i++){
+//                        if (productsModel.GetData("CategoryId", i) == "Hardware"){
+//                            let pairId = productsModel.GetData("PairId", i);
+//                            let id = productsModel.GetData("Id", i);
+//                            if (pairId && pairId != ""){
+//                                for (let index = 0; index < productsModel.GetItemsCount(); index++){
+//                                    if (pairId == productsModel.GetData("Id", index)){
+//                                        productsModel.SetData("PairId", id, index);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        else{
+//                            let pairId = productsModel.GetData("PairId", i)
+//                            if (!pairId){
+//                                 productsModel.SetData("PairId", "", i);
+//                            }
+//                        }
+//                    }
                     productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
                     console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
                 }
                 productsDialog.bodyItem.started();
             }
 
+            function clearSoftwareMacAddress(productsModel, id){
+                setSoftwareMacAddress(productsModel, id, "")
+            }
+
+            function setSoftwareMacAddress(productsModel, id, macAddress){
+                for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                    if (productsModel.GetData("Id", i) == "Software" && id == productsModel.GetData("Id", i)){
+                        productsModel.SetData("MacAddress", macAddress,i);
+                    }
+                }
+            }
+
             onFinished: {
                 if (buttonId == "Save"){
+                    productsDialog.bodyItem.updateModel()
                     undoRedoManager.beginChanges();
                     console.log("orderDocumentModel", installationEditorContainer.documentModel.toJSON());
                     if (!installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
@@ -316,7 +329,6 @@ DocumentBase {
                         console.log("newProductsModel", installationEditorContainer.documentModel.toJSON());
                     }
                     var productsModel =  installationEditorContainer.documentModel.GetData("OrderProducts");
-//                    console.log("productsModel", productsModel.toJSON());
 
                     if (productsView.activeProductIndex == -1){
                         productsView.activeProductIndex = productsModel.InsertNewItem();
@@ -330,14 +342,44 @@ DocumentBase {
                     let id = newProductModel.GetData("Id");
                     let macAddress = newProductModel.GetData("MacAddress");
                     let categoryId = newProductModel.GetData("CategoryId");
+
+                    // clear parents data
+                    if(categoryId == "Hardware"){
+                        if (pairId){
+                            clearSoftwareMacAddress(productsModel, pairId)
+                            productsModel.SetData("MacAddress", "", productsView.activeProductIndex);
+                            productsModel.SetData("PairId", "", productsView.activeProductIndex);
+                        }
+                    }
+                    else{
+                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                            if (productsModel.GetData("Id", i) == "Hardware" && id == productsModel.GetData("PairId", i)){
+                                productsModel.SetData("MacAddress", "",i);
+                                productsModel.SetData("PairId", "",i);
+                            }
+                        }
+                    }
+
+                    // set parents data
+                    pairId = this.contentItem.selectedPairId;
+
                     if (pairId && pairId != ""){
                         for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                            if (pairId == productsModel.GetData("Id", i)){
-                                productsModel.SetData("PairId", id, i);
-                                if (categoryId == "Hardware"){
-                                    productsModel.SetData("MacAddress", macAddress,i);
+                            if(categoryId == "Software"){
+                                if (pairId == productsModel.GetData("Id", i)){
+                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
+                                        productsModel.SetData("PairId", id, i);
+                                        setSoftwareMacAddress(productsModel, id, productsModel.GetData("MacAddress", i))
+                                    }
                                 }
-
+                            }
+                            else{
+                                if (id == productsModel.GetData("Id", i)){
+                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
+                                        productsModel.SetData("PairId", pairId, i);
+                                        setSoftwareMacAddress(productsModel, pairId, macAddress)
+                                    }
+                                }
                             }
                         }
                     }
@@ -391,26 +433,54 @@ DocumentBase {
             return retVal;
         }
 
-        function getPairName(productId, macAddress){
-            if (!macAddress || macAddress == ""){
-                return ""
-            }
+//        function getPairName(productId, macAddress){
 
-            let retVal = "";
+//            if (!macAddress || macAddress == ""){
+//                return ""
+//            }
+
+//            let retVal = "";
+//            let categoryId = getProductCategory(productId);
+
+//            let productsModel = productsView.model;
+//            for (let i = 0; i < productsModel.GetItemsCount(); i++){
+//                let productMacAddress = productsModel.GetData("MacAddress", i);
+//                if (categoryId == "Software" && productMacAddress == macAddress
+//                        && productsModel.GetData("CategoryId", i) == "Hardware"){
+//                    let modelProductId = productsModel.GetData("ProductId", i)
+//                    retVal = getProductName(modelProductId);
+
+//                    break;
+//                }
+//                if (categoryId == "Hardware" && productMacAddress == macAddress
+//                        && productsModel.GetData("CategoryId", i) == "Software"){
+//                    let modelProductId = productsModel.GetData("ProductId", i)
+//                    retVal = getProductName(modelProductId);
+
+//                    break;
+//                }
+//            }
+//            return retVal;
+//        }
+
+        function getPairName(index){
+            let productsModel = productsView.model;
+            let productId  = productsModel.GetData("ProductId", index);
+            let id  = productsModel.GetData("Id", index);
+            let pairId  = productsModel.GetData("PairId", index);
             let categoryId = getProductCategory(productId);
 
-            let productsModel = productsView.model;
+            let retVal = "";
+
             for (let i = 0; i < productsModel.GetItemsCount(); i++){
                 let productMacAddress = productsModel.GetData("MacAddress", i);
-                if (categoryId == "Software" && productMacAddress == macAddress
-                        && productsModel.GetData("CategoryId", i) == "Hardware"){
+                if (categoryId == "Software" &&  productsModel.GetData("PairId", i) == id){
                     let modelProductId = productsModel.GetData("ProductId", i)
                     retVal = getProductName(modelProductId);
 
                     break;
                 }
-                if (categoryId == "Hardware" && productMacAddress == macAddress
-                        && productsModel.GetData("CategoryId", i) == "Software"){
+                if (categoryId == "Hardware" && productsModel.GetData("Id", i) == pairId){
                     let modelProductId = productsModel.GetData("ProductId", i)
                     retVal = getProductName(modelProductId);
 
@@ -448,6 +518,22 @@ DocumentBase {
             };
 
             return retVal;
+        }
+
+        function getSoftwareIdByMacAddress(macAddress){
+            let dataModel = documentModel.GetData("OrderProducts");
+
+            for (let i = 0; i < dataModel.GetItemsCount(); i++){
+                let category = dataModel.GetData("CategoryId", i);
+                if (category === "Software"){
+                    let address = dataModel.GetData("MacAddress", i);
+                    if (address === macAddress){
+                        let id = dataModel.GetData("Id", i);
+
+                        return id;
+                    }
+                }
+            }
         }
 
         OrderCommandsModelObserver {
@@ -489,8 +575,9 @@ DocumentBase {
         delegate: OrderProductView {
             productName: productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
-            pairName: productsView.getPairName(model.ProductId, model.MacAddress);
+//            pairName: productsView.getPairName(model.ProductId, model.MacAddress);
 //            pairName: model.MacAddress;
+            pairName: productsView.getPairName(model.index)
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
 //            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
@@ -532,21 +619,7 @@ DocumentBase {
         }
     }
 
-    function getSoftwareIdByMacAddress(macAddress){
-        let dataModel = documentModel.GetData("OrderProducts");
 
-        for (let i = 0; i < dataModel.GetItemsCount(); i++){
-            let category = dataModel.GetData("CategoryId", i);
-            if (category === "Software"){
-                let address = dataModel.GetData("MacAddress", i);
-                if (address === macAddress){
-                    let id = dataModel.GetData("Id", i);
-
-                    return id;
-                }
-            }
-        }
-    }
 
     LicenseFileController {
         id: licenseFileController;
