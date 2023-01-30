@@ -284,7 +284,7 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>OrderId</Value>
+                                <Value>Order-ID</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>

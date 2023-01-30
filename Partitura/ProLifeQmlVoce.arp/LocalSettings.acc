@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5045" Description="ACF"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
             <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -53,7 +53,11 @@
         </Element>
         <Element Id="LocalPageData" PackageId="ImtCoreVoce" ComponentId="LocalPageDataModel">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="http://localhost:7778"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="LocalPageRepresentation" PackageId="ImtCoreVoce" ComponentId="LocalPageRepresentationModel">
