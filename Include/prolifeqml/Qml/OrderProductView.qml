@@ -8,6 +8,8 @@ Rectangle {
     height: 85;
     width: 500;
 
+    color: Style.baseColor;
+
     radius: 10;
     property string productName;
     property string productCategory;

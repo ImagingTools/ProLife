@@ -416,6 +416,8 @@ DocumentBase {
         anchors.top: productsView.top;
         anchors.bottom: productsView.bottom;
 
+        backgroundColor: Style.baseColor;
+
         secondSize: 10;
         targetItem: productsView;
     }
@@ -640,7 +642,7 @@ DocumentBase {
                 let productId = model.Id;
 
                 if (model.CategoryId === "Hardware"){
-                    productId = productsView.getSoftwareIdByMacAddress(model.MacAddress);
+                    productId = model.PairId;
                 }
 
                 console.log("onCreateLicenseFile", orderId + "/" + productId);

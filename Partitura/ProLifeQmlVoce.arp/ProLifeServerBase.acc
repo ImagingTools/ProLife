@@ -165,6 +165,9 @@
                     <AttributeInfo Id="ServerPort" Type="Integer" ExportId="ServerPort">
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerPortParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/ServerPort"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="StartServerOnCreate" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
@@ -173,6 +176,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerPort" Type="Integer" ExportId="WebSocketServerPort">
                         <Data IsEnabled="true" Value="8888"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketServerPortParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/WebSocketServerPort"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

@@ -131,8 +131,10 @@
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Pages/ProductInstanceSqlRepository"/>
         <Component ExportedId="ProductSqlRepository" ComponentId="Pages/ProductSqlRepository"/>
+        <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
         <Component ExportedId="UserSessionRepository" ComponentId="AuthorizationConcept/UserSessionRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="Pages/UserSqlRepository"/>
+        <Component ExportedId="WebSocketServerPort" ComponentId="SettingsController/WebSocketServerPort"/>
     </ExportedComponents>
 </Acf>

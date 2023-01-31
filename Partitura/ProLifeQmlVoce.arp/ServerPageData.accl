@@ -8,11 +8,13 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DatabaseAccessSettings" X="950" Y="525" Note=""/>
+        <Element ComponentName="DatabaseAccessSettings" X="575" Y="525" Note=""/>
         <Element ComponentName="FileAutoPersistence" X="600" Y="125" Note=""/>
-        <Element ComponentName="LisaUrlConnection" X="600" Y="525" Note=""/>
-        <Element ComponentName="Mask" X="250" Y="525" Note=""/>
+        <Element ComponentName="LisaUrlConnection" X="325" Y="525" Note=""/>
+        <Element ComponentName="Mask" X="125" Y="525" Note=""/>
         <Element ComponentName="Preferences" X="600" Y="300" Note=""/>
+        <Element ComponentName="ServerPort" X="800" Y="525" Note=""/>
+        <Element ComponentName="WebSocketServerPort" X="1025" Y="525" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
