@@ -5,7 +5,7 @@ import imtlicgui 1.0
 import Acf 1.0
 
 DocumentBase {
-    id: installationEditorContainer;
+    id: orderEditorContainer;
 
     commandsDelegateSourceComp: orderEditorCommandsDelegate;
 
@@ -41,7 +41,7 @@ DocumentBase {
     UndoRedoManager {
         id: undoRedoManager;
 
-        commandsId: installationEditorContainer.commandsId;
+        commandsId: orderEditorContainer.commandsId;
 
         onModelStateChanged: {
             updateGui();
@@ -56,7 +56,7 @@ DocumentBase {
         anchors.fill: parent;
 
         onClicked: {
-            installationEditorContainer.forceActiveFocus();
+            orderEditorContainer.forceActiveFocus();
         }
     }
 
@@ -272,15 +272,15 @@ DocumentBase {
         ProductEditorDialog {
             id: productsDialog;
             licensesModel: licensesProvider.model;
-            productsModel: installationEditorContainer.productsModel;
+            productsModel: orderEditorContainer.productsModel;
             onStarted: {
-                if (installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                    productsDialog.orderProductsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
-                }
-                else{
-                    productsDialog.orderProductsModel.Clear();
-                }
-                if (productsDialog.orderProductsModel){
+//                if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+//                    productsDialog.orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+//                }
+//                else{
+//                    productsDialog.orderProductsModel.Clear();
+//                }
+//                if (productsDialog.orderProductsModel){
 //                    let productsModel = productsDialog.orderProductsModel
 //                    for (let i = 0; i < productsModel.GetItemsCount(); i++){
 //                        if (productsModel.GetData("CategoryId", i) == "Hardware"){
@@ -301,87 +301,103 @@ DocumentBase {
 //                            }
 //                        }
 //                    }
-                    productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-                    console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
+//                    productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+//                    console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
+//                }
+                productsDialog.orderProductsModel.Clear();
+                if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                    productsDialog.activeProductIndex = productsView.activeProductIndex;
+                   let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                    productsDialog.orderProductsModel.Copy(orderProductsModel);
                 }
+//                productsDialog.bodyItem.documentModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                //console.log("ProductEditorDialog onStarted",  productsDialog.bodyItem.documentModel.toJSON())
                 productsDialog.bodyItem.started();
             }
 
-            function clearSoftwareMacAddress(productsModel, id){
-                setSoftwareMacAddress(productsModel, id, "")
-            }
+//            function clearSoftwareMacAddress(productsModel, id){
+//                setSoftwareMacAddress(productsModel, id, "")
+//            }
 
-            function setSoftwareMacAddress(productsModel, id, macAddress){
-                for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                    if (productsModel.GetData("Id", i) == "Software" && id == productsModel.GetData("Id", i)){
-                        productsModel.SetData("MacAddress", macAddress,i);
-                    }
-                }
-            }
+//            function setSoftwareMacAddress(productsModel, id, macAddress){
+//                for (let i = 0; i < productsModel.GetItemsCount(); i++){
+//                    if (productsModel.GetData("CategoryId", i) == "Software" && id == productsModel.GetData("Id", i)){
+//                        productsModel.SetData("MacAddress", macAddress,i);
+//                    }
+//                }
+//            }
 
             onFinished: {
                 if (buttonId == "Save"){
                     productsDialog.bodyItem.updateModel()
                     undoRedoManager.beginChanges();
-                    console.log("orderDocumentModel", installationEditorContainer.documentModel.toJSON());
-                    if (!installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                        installationEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                        console.log("newProductsModel", installationEditorContainer.documentModel.toJSON());
-                    }
-                    var productsModel =  installationEditorContainer.documentModel.GetData("OrderProducts");
+//                    console.log("orderDocumentModel", orderEditorContainer.documentModel.toJSON());
+//                    if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+//                        orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
+//                        console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
+//                    }
+//                    var productsModel =  orderEditorContainer.documentModel.GetData("OrderProducts");
 
-                    if (productsView.activeProductIndex == -1){
-                        productsView.activeProductIndex = productsModel.InsertNewItem();
-                    }
+//                    if (productsView.activeProductIndex == -1){
+//                        productsView.activeProductIndex = productsModel.InsertNewItem();
+//                    }
 
-                    const newProductModel = this.contentItem.documentModel;
-                    console.log("newProductModel", newProductModel.toJSON());
-                    productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel, 0);
-                    console.log("ProductsModel", productsModel.toJSON());
-                    let pairId = newProductModel.GetData("PairId");
-                    let id = newProductModel.GetData("Id");
-                    let macAddress = newProductModel.GetData("MacAddress");
-                    let categoryId = newProductModel.GetData("CategoryId");
+//                    const newProductModel = this.contentItem.documentModel;
+//                    console.log("newProductModel", newProductModel.toJSON());
+//                    productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel, 0);
+//                    console.log("ProductsModel", productsModel.toJSON());
+//                    let pairId = newProductModel.GetData("PairId");
+//                    let id = newProductModel.GetData("Id");
+//                    let macAddress = newProductModel.GetData("MacAddress");
+//                    let categoryId = newProductModel.GetData("CategoryId");
 
-                    // clear parents data
-                    if(categoryId == "Hardware"){
-                        if (pairId){
-                            clearSoftwareMacAddress(productsModel, pairId)
-                            productsModel.SetData("MacAddress", "", productsView.activeProductIndex);
-                            productsModel.SetData("PairId", "", productsView.activeProductIndex);
+//                    // clear parents data
+//                    if(categoryId == "Hardware"){
+//                        if (pairId){
+//                            clearSoftwareMacAddress(productsModel, pairId)
+////                            productsModel.SetData("MacAddress", "", productsView.activeProductIndex);
+//                            productsModel.SetData("PairId", "", productsView.activeProductIndex);
+//                        }
+//                    }
+//                    else{
+//                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
+//                            if (productsModel.GetData("CategoryId", i) == "Hardware" && id == productsModel.GetData("PairId", i)){
+//                                productsModel.SetData("MacAddress", "", productsView.activeProductIndex);
+//                                productsModel.SetData("PairId", "",i);
+//                            }
+//                        }
+//                    }
+
+//                    // set parents data
+//                    pairId = this.contentItem.selectedPairId;
+
+//                    if (pairId && pairId != ""){
+//                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
+//                            if(categoryId == "Software"){
+//                                if (pairId == productsModel.GetData("Id", i)){
+//                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
+//                                        productsModel.SetData("PairId", id, i);
+//                                        setSoftwareMacAddress(productsModel, id, productsModel.GetData("MacAddress", i))
+//                                    }
+//                                }
+//                            }
+//                            else{
+//                                if (id == productsModel.GetData("Id", i)){
+//                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
+//                                        productsModel.SetData("PairId", pairId, i);
+//                                        setSoftwareMacAddress(productsModel, pairId, macAddress)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+                    if (productsDialog.activeProductIndex > -1){
+                        if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                            orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
+                            //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
                         }
-                    }
-                    else{
-                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                            if (productsModel.GetData("Id", i) == "Hardware" && id == productsModel.GetData("PairId", i)){
-                                productsModel.SetData("MacAddress", "",i);
-                                productsModel.SetData("PairId", "",i);
-                            }
-                        }
-                    }
-
-                    // set parents data
-                    pairId = this.contentItem.selectedPairId;
-
-                    if (pairId && pairId != ""){
-                        for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                            if(categoryId == "Software"){
-                                if (pairId == productsModel.GetData("Id", i)){
-                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
-                                        productsModel.SetData("PairId", id, i);
-                                        setSoftwareMacAddress(productsModel, id, productsModel.GetData("MacAddress", i))
-                                    }
-                                }
-                            }
-                            else{
-                                if (id == productsModel.GetData("Id", i)){
-                                    if(productsModel.GetData("CategoryId", i) == "Hardware"){
-                                        productsModel.SetData("PairId", pairId, i);
-                                        setSoftwareMacAddress(productsModel, pairId, macAddress)
-                                    }
-                                }
-                            }
-                        }
+                        let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                        orderProductsModel.Copy(productsDialog.orderProductsModel);
                     }
 
                     undoRedoManager.endChanges();
@@ -538,7 +554,7 @@ DocumentBase {
 
         OrderCommandsModelObserver {
             productCommandsModel: commandsModelLocal;
-            orderCommandsProvider: installationEditorContainer.commandsProvider;
+            orderCommandsProvider: orderEditorContainer.commandsProvider;
             addProductButton: addProduct;
         }
 
@@ -588,7 +604,7 @@ DocumentBase {
             onEdited: {
                 productsView.activeProductIndex = model.index;
 
-                var productsModel = installationEditorContainer.documentModel.GetData("OrderProducts");
+                var productsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                 if (productsModel){
 //                    let productModel = productsModel.GetModelFromItem(model.index);
 
@@ -609,7 +625,7 @@ DocumentBase {
                 let productId = model.Id;
 
                 if (model.CategoryId === "Hardware"){
-                    productId = installationEditorContainer.getSoftwareIdByMacAddress(model.MacAddress);
+                    productId = productsView.getSoftwareIdByMacAddress(model.MacAddress);
                 }
 
                 console.log("onCreateLicenseFile", orderId + "/" + productId);

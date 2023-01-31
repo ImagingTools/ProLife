@@ -82,7 +82,7 @@ DocumentWorkspaceCommandsDelegateBase {
 
 //                        customerCB.model = dataModelLocal;
 
-                        installationEditorContainer.accountsModel = dataModelLocal;
+                        orderEditorContainer.accountsModel = dataModelLocal;
 
 //                        itemsModel.updateModel("ProductsList");
 
@@ -96,7 +96,7 @@ DocumentWorkspaceCommandsDelegateBase {
                         dataModelLocal = dataModelLocal.GetData("items");
                         console.log("items");
 
-                        installationEditorContainer.productsModel = dataModelLocal;
+                        orderEditorContainer.productsModel = dataModelLocal;
 
 //                        container.updateModel();
                     }

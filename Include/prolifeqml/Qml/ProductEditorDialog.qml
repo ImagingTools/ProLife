@@ -13,6 +13,7 @@ Dialog {
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
     property TreeItemModel orderProductsModel: TreeItemModel{}
+    property int activeProductIndex: -1;
 
     onDocumentModelChanged: {
 //        root.contentItem.documentModel = root.documentModel;
@@ -33,13 +34,20 @@ Dialog {
 
     }
 
-    contentComp: InstallationEditor {
+    contentComp: Component {
         id: installationEditor;
-        licensesModel: root.licensesModel;
-        productsModel: root.productsModel;
-        orderProductsModel: root.orderProductsModel;
-        width: root.width - 100;
-        height: 350;
+        InstallationEditor {
+
+            licensesModel: root.licensesModel;
+            productsModel: root.productsModel;
+            orderProductsModel: root.orderProductsModel;
+            activeProductIndex: root.activeProductIndex;
+            width: root.width - 100;
+            height: 350;
+            onActiveProductIndexChanged: {
+                root.activeProductIndex = activeProductIndex;
+            }
+        }
     }
 }//Container
 
