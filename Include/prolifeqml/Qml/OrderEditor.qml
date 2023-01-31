@@ -417,7 +417,7 @@ DocumentBase {
         anchors.bottom: productsView.bottom;
 
         secondSize: 10;
-        targetItem: flickable;
+        targetItem: productsView;
     }
 
     ListView {
