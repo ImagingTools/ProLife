@@ -407,14 +407,29 @@ DocumentBase {
         }
     }
 
+    CustomScrollbar {
+        id: scrollbar;
+        z: 100;
+
+        anchors.left: productsView.right;
+        anchors.leftMargin: 5;
+        anchors.top: productsView.top;
+        anchors.bottom: productsView.bottom;
+
+        secondSize: 10;
+        targetItem: flickable;
+    }
+
     ListView {
         id: productsView;
         anchors.top: bodyColumn.bottom;
         anchors.topMargin: 10;
         anchors.left: parent.left;
-        anchors.right: parent.right;
+//        anchors.right: parent.right;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
+
+        width: 500;
 
         clip: true;
         boundsBehavior: Flickable.StopAtBounds;

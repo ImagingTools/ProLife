@@ -200,8 +200,8 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			for(int productIndex = 0; productIndex < orderedProducts->GetItemsCount(); productIndex++){
 				QByteArray uuidId;
 
-				if (itemModel.ContainsKey("Id", productIndex)){
-					uuidId = orderedProducts->GetData("Id").toByteArray();
+				if (orderedProducts->ContainsKey("Id", productIndex)){
+					uuidId = orderedProducts->GetData("Id", productIndex).toByteArray();
 				}
 
 				QByteArray productCategory = "Software";
@@ -237,9 +237,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 				if (productCategory == "Software"){
 					istd::TDelPtr<imtlic::CProductInstanceInfo> softwareInstance = new imtlic::CProductInstanceInfo();
 
-					softwareInstance->SetupProductInstance(productId, macAddress, "");
+					softwareInstance->SetupProductInstance(productId, "", "");
 
-					imtbase::CTreeItemModel* activeLicenses = orderedProducts->GetTreeItemModel("ActiveLicenses");
+					imtbase::CTreeItemModel* activeLicenses = orderedProducts->GetTreeItemModel("ActiveLicenses", productIndex);
 					if (activeLicenses != nullptr){
 						for (int i = 0; i < activeLicenses->GetItemsCount(); i++){
 							QByteArray licenseId;
