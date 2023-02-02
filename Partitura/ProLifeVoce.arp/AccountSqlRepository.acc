@@ -2,19 +2,28 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5050" Description="ACF"/>
+            <Version Id="1" Number="2180" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountDatabaseDelegate" PackageId="ImtLicenseDbPck" ComponentId="AccountDatabaseDelegate">
+        <Element Id="AccountInfoMetaInfoCreator" PackageId="ImtAuthPck" ComponentId="AccountInfoMetaInfoCreator">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountInfo" Type="Factory" ExportId="">
+                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="AccountInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="CompanyDatabaseDelegate" PackageId="ImtLicenseDbPck" ComponentId="CompanyDatabaseDelegate">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CompanyInfo" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="CompanyInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
@@ -28,18 +37,9 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountInfo" PackageId="ImtAuthPck" ComponentId="AccountInfo">
+        <Element Id="CompanyInfo" PackageId="ImtAuthPck" ComponentId="CompanyInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="AccountInfoMetaInfoCreator" PackageId="ImtAuthPck" ComponentId="AccountInfoMetaInfoCreator">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountInfo"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="OptionsListAdapter" PackageId="ImtCorePck" ComponentId="OptionsListAdapter">
@@ -67,10 +67,10 @@
                         <Data IsEnabled="true" Value="AccountInfoMetaInfoCreator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AccountDatabaseDelegate"/>
+                        <Data IsEnabled="true" Value="CompanyDatabaseDelegate"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="AccountInfo"/>
+                        <Data IsEnabled="true" Value="CompanyInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="AccountInfo"/>

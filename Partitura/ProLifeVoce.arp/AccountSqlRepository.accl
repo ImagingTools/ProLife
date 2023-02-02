@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5030" Description="ACF"/>
-            <Version Id="1" Number="2177" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5050" Description="ACF"/>
+            <Version Id="1" Number="2180" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountDatabaseDelegate" X="225" Y="150" Note=""/>
-        <Element ComponentName="AccountInfo" X="600" Y="150" Note=""/>
         <Element ComponentName="AccountInfoMetaInfoCreator" X="225" Y="500" Note=""/>
+        <Element ComponentName="CompanyDatabaseDelegate" X="225" Y="150" Note=""/>
+        <Element ComponentName="CompanyInfo" X="600" Y="150" Note=""/>
         <Element ComponentName="OptionsListAdapter" X="600" Y="500" Note=""/>
         <Element ComponentName="Repository" X="600" Y="300" Note=""/>
     </PositionMap>
