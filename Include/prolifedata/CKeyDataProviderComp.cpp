@@ -68,6 +68,14 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
                         QByteArray customerId = orderPtr->GetCustomerId();
                         productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
 
+                        if (m_gqlLicenseRequestCompPtr.IsValid()){
+                            imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "Licenses");
+                            imtgql::CGqlObject queryFields("LicensesItems");
+                            queryFields.InsertField("Id");
+                            gqlRequest.AddField(queryFields);
+                            QString errorMessage;
+                            //imtbase::CTreeItemModel* licenseModel = m_gqlLicenseRequestCompPtr->CreateResponse()
+                        }
                         m_productInstanceId = instanceId;
 
                         QTemporaryDir tempDir;

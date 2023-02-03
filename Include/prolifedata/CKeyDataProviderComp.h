@@ -10,6 +10,7 @@
 #include <imtbase/IBinaryDataProvider.h>
 #include <imtbase/IObjectCollection.h>
 #include <imtcrypt/IEncryptionKeysProvider.h>
+#include <imtgql/IGqlRequestHandler.h>
 
 
 namespace prolifedata
@@ -33,7 +34,8 @@ public:
 		I_ASSIGN(m_licensePersistenceCompPtr, "LicensePersistence", "Persistence used for license export", false, "LicensePersistence");
 		I_ASSIGN(m_objectCollectionCompPtr, "ObjectCollection", "Object collection", true, "ObjectCollection");
 		I_ASSIGN(m_vectorKeyCompPtr, "VectorKey", "Additional key for AES encryption", false, "VectorKey");
-	I_END_COMPONENT;
+        I_ASSIGN(m_gqlLicenseRequestCompPtr, "GqlLicenseRequest", "License GraphQL request", true, "GqlLicenseRequest");
+    I_END_COMPONENT;
 
 	enum CommandGroup
 	{
@@ -52,6 +54,7 @@ private:
 	I_REF(ifile::IFilePersistence, m_licensePersistenceCompPtr);
 	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);
+    I_REF(imtgql::IGqlRequestHandler, m_gqlLicenseRequestCompPtr);
 };
 
 
