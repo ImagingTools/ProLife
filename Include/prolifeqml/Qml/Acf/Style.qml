@@ -77,11 +77,7 @@ Item {
     property string textSelected: "#0078d7";
     property color inactive_textColor: "#dedede";
 
-    property string camera: "/Icons/Light/Camera.svg";
-
     property string disabledInActiveTextColor: "#c0c0c0";
-
-    property var iconNames: ["Camera", "CameraFlash", "CameraLens2"];
 
     Component.onCompleted: {
         console.log("Style onCompleted");

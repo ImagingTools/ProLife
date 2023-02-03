@@ -158,8 +158,6 @@ DocumentBase {
 
             borderColor: Style.iconColorOnSelected;
 
-            maximumLength: 17;
-
             onEditingFinished: {
                 let currentId = documentModel.GetData("Id");
                 if (currentId != instanceIdInput.text){

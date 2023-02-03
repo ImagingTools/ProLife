@@ -24,90 +24,104 @@ namespace prolifedata
 
 bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) const
 {
-    if (!m_objectCollectionCompPtr.IsValid()){
-        return false;
-    }
+	if (!m_objectCollectionCompPtr.IsValid()){
+		return false;
+	}
 
-    QByteArrayList ids = dataId.split('/');
+	QByteArrayList ids = dataId.split('/');
 
-    if (ids.size() != 2){
-        return false;
-    }
+	if (ids.size() != 2){
+		return false;
+	}
 
-    QByteArray orderId = ids[0];
-    QByteArray productObjectId = ids[1];
+	QByteArray orderId = ids[0];
+	QByteArray productObjectId = ids[1];
 
-    imtbase::IObjectCollection::DataPtr dataPtr;
-    if (m_objectCollectionCompPtr->GetObjectData(orderId, dataPtr)){
-        prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-        if (orderPtr == nullptr){
-            return false;
-        }
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(orderId, dataPtr)){
+		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+		if (orderPtr == nullptr){
+			return false;
+		}
 
-        imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
-        if (productCollectionPtr == nullptr){
-            return false;
-        }
+		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
+		if (productCollectionPtr == nullptr){
+			return false;
+		}
 
-        imtbase::IObjectCollection::DataPtr hardwareDataPtr;
-        if (productCollectionPtr->GetObjectData(productObjectId, hardwareDataPtr)){
-            imtlic::CLicensedHardwareInstanceInfo* hardwareInstancePtr = dynamic_cast<imtlic::CLicensedHardwareInstanceInfo*>(hardwareDataPtr.GetPtr());
+		imtbase::IObjectCollection::DataPtr hardwareDataPtr;
+		if (productCollectionPtr->GetObjectData(productObjectId, hardwareDataPtr)){
+			imtlic::CLicensedHardwareInstanceInfo* hardwareInstancePtr = dynamic_cast<imtlic::CLicensedHardwareInstanceInfo*>(hardwareDataPtr.GetPtr());
 
 
-            if (hardwareInstancePtr != nullptr){
-                if (m_licensePersistenceCompPtr.IsValid()){
-                    QByteArray softwareInstanceId = hardwareInstancePtr->GetSoftwareId();
-                    imtbase::IObjectCollection::DataPtr softwareDataPtr;
-                    if (productCollectionPtr->GetObjectData(softwareInstanceId, softwareDataPtr)){
-                        imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
-                        if (productInstancePtr == nullptr){
-                            return false;
-                        }
-                        QByteArray instanceId = hardwareInstancePtr->GetProductInstanceId();
-                        QByteArray productId = productInstancePtr->GetProductId();
-                        QByteArray customerId = orderPtr->GetCustomerId();
-                        productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
+			if (hardwareInstancePtr != nullptr){
+				if (m_licensePersistenceCompPtr.IsValid()){
+					QByteArray softwareInstanceId = hardwareInstancePtr->GetSoftwareId();
+					imtbase::IObjectCollection::DataPtr softwareDataPtr;
+					if (productCollectionPtr->GetObjectData(softwareInstanceId, softwareDataPtr)){
+						imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+						if (productInstancePtr == nullptr){
+							return false;
+						}
+						QByteArray instanceId = hardwareInstancePtr->GetProductInstanceId();
+						QByteArray productId = productInstancePtr->GetProductId();
+						QByteArray customerId = orderPtr->GetCustomerId();
+						productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
 
-                        if (m_gqlLicenseRequestCompPtr.IsValid()){
-                            imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "Licenses");
-                            imtgql::CGqlObject queryFields("LicensesItems");
-                            queryFields.InsertField("Id");
-                            gqlRequest.AddField(queryFields);
-                            QString errorMessage;
-                            //imtbase::CTreeItemModel* licenseModel = m_gqlLicenseRequestCompPtr->CreateResponse()
-                        }
-                        m_productInstanceId = instanceId;
+						if (m_gqlLicenseRequestCompPtr.IsValid()){
+							imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "ProductItem");
+							imtgql::CGqlObject queryFields("item");
+							queryFields.InsertField("Id");
+							gqlRequest.AddField(queryFields);
 
-                        QTemporaryDir tempDir;
-                        QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
+							imtgql::CGqlObject inputParams("input");
+							inputParams.InsertField(QByteArray("Id"), QVariant(productId));
+							gqlRequest.AddParam(inputParams);
 
-                        int state = m_licensePersistenceCompPtr->SaveToFile(*productInstancePtr, filePathTmp);
-                        if (state != ifile::IFilePersistence::OS_OK){
-                            SendErrorMessage(0, "License file could not be saved", "Server data provider");
+							QString errorMessage;
+							imtbase::CTreeItemModel* productModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlRequest, errorMessage);
+							if (productModelPtr != nullptr){
+								imtbase::CTreeItemModel* dataModelPtr = productModelPtr->GetTreeItemModel("data");
+								if (dataModelPtr != nullptr){
+									imtbase::CTreeItemModel* featuresModelPtr = dataModelPtr->GetTreeItemModel("Features");
+									if (featuresModelPtr != nullptr){
 
-                            return false;
-                        }
+									}
+								}
+							}
+						}
+						m_productInstanceId = instanceId;
 
-                        QFile file(filePathTmp);
+						QTemporaryDir tempDir;
+						QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
 
-                        if (!file.open(QIODevice::ReadOnly )){
-                            SendErrorMessage(0, "License file could not be opened", "Server data provider");
+						int state = m_licensePersistenceCompPtr->SaveToFile(*productInstancePtr, filePathTmp);
+						if (state != ifile::IFilePersistence::OS_OK){
+							SendErrorMessage(0, "License file could not be saved", "Server data provider");
 
-                            return false;
-                        }
+							return false;
+						}
 
-                        data = file.readAll();
+						QFile file(filePathTmp);
 
-                        file.close();
+						if (!file.open(QIODevice::ReadOnly )){
+							SendErrorMessage(0, "License file could not be opened", "Server data provider");
 
-                        return true;
-                    }
-                }
-            }
-        }
-    }
+							return false;
+						}
 
-    return false;
+						data = file.readAll();
+
+						file.close();
+
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 
@@ -115,22 +129,22 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 QByteArray CKeyDataProviderComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const
 {
-    if (!m_objectCollectionCompPtr.IsValid()){
-        return QByteArray();
-    }
+	if (!m_objectCollectionCompPtr.IsValid()){
+		return QByteArray();
+	}
 
-    QByteArray retVal;
+	QByteArray retVal;
 
-    if (type == KT_PASSWORD){
-        return m_productInstanceId;
-    }
-    else if (type == KT_INIT_VECTOR){
-        if (m_vectorKeyCompPtr.IsValid()){
-            retVal = m_vectorKeyCompPtr->GetId();
-        }
-    }
+	if (type == KT_PASSWORD){
+		return m_productInstanceId;
+	}
+	else if (type == KT_INIT_VECTOR){
+		if (m_vectorKeyCompPtr.IsValid()){
+			retVal = m_vectorKeyCompPtr->GetId();
+		}
+	}
 
-    return retVal;
+	return retVal;
 }
 
 
