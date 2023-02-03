@@ -8,6 +8,7 @@
 
 // ImtCore includes
 #include <imtlic/CProductInstanceInfo.h>
+#include <imtlic/CLicensedHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -23,69 +24,82 @@ namespace prolifedata
 
 bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
-		return false;
-	}
+    if (!m_objectCollectionCompPtr.IsValid()){
+        return false;
+    }
 
-	QByteArrayList ids = dataId.split('/');
+    QByteArrayList ids = dataId.split('/');
 
-	if (ids.size() != 2){
-		return false;
-	}
+    if (ids.size() != 2){
+        return false;
+    }
 
-	QByteArray orderId = ids[0];
-	QByteArray productObjectId = ids[1];
+    QByteArray orderId = ids[0];
+    QByteArray productObjectId = ids[1];
 
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(orderId, dataPtr)){
-		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-		if (orderPtr == nullptr){
-			return false;
-		}
+    imtbase::IObjectCollection::DataPtr dataPtr;
+    if (m_objectCollectionCompPtr->GetObjectData(orderId, dataPtr)){
+        prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+        if (orderPtr == nullptr){
+            return false;
+        }
 
-		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
-		if (productCollectionPtr == nullptr){
-			return false;
-		}
+        imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
+        if (productCollectionPtr == nullptr){
+            return false;
+        }
 
-		imtbase::IObjectCollection::DataPtr productDataPtr;
-		if (productCollectionPtr->GetObjectData(productObjectId, productDataPtr)){
-			imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-			if (productInstancePtr != nullptr){
-				if (m_licensePersistenceCompPtr.IsValid()){
-					QByteArray instanceId = productInstancePtr->GetProductInstanceId();
+        imtbase::IObjectCollection::DataPtr hardwareDataPtr;
+        if (productCollectionPtr->GetObjectData(productObjectId, hardwareDataPtr)){
+            imtlic::CLicensedHardwareInstanceInfo* hardwareInstancePtr = dynamic_cast<imtlic::CLicensedHardwareInstanceInfo*>(hardwareDataPtr.GetPtr());
 
-					m_productInstanceId = instanceId;
 
-					QTemporaryDir tempDir;
-					QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
+            if (hardwareInstancePtr != nullptr){
+                if (m_licensePersistenceCompPtr.IsValid()){
+                    QByteArray softwareInstanceId = hardwareInstancePtr->GetSoftwareId();
+                    imtbase::IObjectCollection::DataPtr softwareDataPtr;
+                    if (productCollectionPtr->GetObjectData(softwareInstanceId, softwareDataPtr)){
+                        imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+                        if (productInstancePtr == nullptr){
+                            return false;
+                        }
+                        QByteArray instanceId = hardwareInstancePtr->GetProductInstanceId();
+                        QByteArray productId = productInstancePtr->GetProductId();
+                        QByteArray customerId = orderPtr->GetCustomerId();
+                        productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
 
-					int state = m_licensePersistenceCompPtr->SaveToFile(*productInstancePtr, filePathTmp);
-					if (state != ifile::IFilePersistence::OS_OK){
-						SendErrorMessage(0, "License file could not be saved", "Server data provider");
+                        m_productInstanceId = instanceId;
 
-						return false;
-					}
+                        QTemporaryDir tempDir;
+                        QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
 
-					QFile file(filePathTmp);
+                        int state = m_licensePersistenceCompPtr->SaveToFile(*productInstancePtr, filePathTmp);
+                        if (state != ifile::IFilePersistence::OS_OK){
+                            SendErrorMessage(0, "License file could not be saved", "Server data provider");
 
-					if (!file.open(QIODevice::ReadOnly )){
-						SendErrorMessage(0, "License file could not be opened", "Server data provider");
+                            return false;
+                        }
 
-						return false;
-					}
+                        QFile file(filePathTmp);
 
-					data = file.readAll();
+                        if (!file.open(QIODevice::ReadOnly )){
+                            SendErrorMessage(0, "License file could not be opened", "Server data provider");
 
-					file.close();
+                            return false;
+                        }
 
-					return true;
-				}
-			}
-		}
-	}
+                        data = file.readAll();
 
-	return false;
+                        file.close();
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 
@@ -93,22 +107,22 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 QByteArray CKeyDataProviderComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
-		return QByteArray();
-	}
+    if (!m_objectCollectionCompPtr.IsValid()){
+        return QByteArray();
+    }
 
-	QByteArray retVal;
+    QByteArray retVal;
 
-	if (type == KT_PASSWORD){
-		return m_productInstanceId;
-	}
-	else if (type == KT_INIT_VECTOR){
-		if (m_vectorKeyCompPtr.IsValid()){
-			retVal = m_vectorKeyCompPtr->GetId();
-		}
-	}
+    if (type == KT_PASSWORD){
+        return m_productInstanceId;
+    }
+    else if (type == KT_INIT_VECTOR){
+        if (m_vectorKeyCompPtr.IsValid()){
+            retVal = m_vectorKeyCompPtr->GetId();
+        }
+    }
 
-	return retVal;
+    return retVal;
 }
 
 
