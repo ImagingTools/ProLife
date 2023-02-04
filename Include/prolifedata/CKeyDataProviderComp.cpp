@@ -9,6 +9,7 @@
 // ImtCore includes
 #include <imtlic/CProductInstanceInfo.h>
 #include <imtlic/CLicensedHardwareInstanceInfo.h>
+#include <imtlic/ILicenseInstance.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -83,9 +84,46 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 							if (productModelPtr != nullptr){
 								imtbase::CTreeItemModel* dataModelPtr = productModelPtr->GetTreeItemModel("data");
 								if (dataModelPtr != nullptr){
-									imtbase::CTreeItemModel* featuresModelPtr = dataModelPtr->GetTreeItemModel("Features");
-									if (featuresModelPtr != nullptr){
+									imtbase::CTreeItemModel* licensesModelPtr = dataModelPtr->GetTreeItemModel("Features");
+									if (licensesModelPtr != nullptr){
+										qDebug() << productModelPtr->toJSON();
+										productInstancePtr->GetLicenseInstances();
+										const imtbase::ICollectionInfo& licenseList = productInstancePtr->GetLicenseInstances();
 
+										imtbase::ICollectionInfo::Ids licenseIds = licenseList.GetElementIds();
+										for (const QByteArray& licenseId : licenseIds){
+											imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>( const_cast<imtlic::ILicenseInstance*>( productInstancePtr->GetLicenseInstance(licenseId)));
+											if (licenseInstancePtr != nullptr){
+												if (!licensesModelPtr->ContainsKey(licenseId)){
+													SendCriticalMessage(0, "The product does not contain a license " + licenseId);
+
+													return false;
+												}
+												imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
+												if (featuresModelPtr != nullptr){
+													imtlic::ILicenseInfo::FeatureInfos featureInfos;
+													for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
+														imtlic::ILicenseInfo::FeatureInfo featureInfo;
+														featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
+														featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
+														featureInfos.append(featureInfo);
+													}
+													licenseInstancePtr->SetFeatureInfos(featureInfos);
+												}
+
+												imtbase::CTreeItemModel* licensesItemsModelPtr = dataModelPtr->GetTreeItemModel("Items");
+												if (licensesItemsModelPtr != nullptr){
+													for (int itemIndex = 0; itemIndex < licensesItemsModelPtr->GetItemsCount(); itemIndex++){
+														if (licensesItemsModelPtr->GetData("Id", itemIndex).toByteArray() == licenseId){
+															licenseInstancePtr->SetLicenseName(licensesItemsModelPtr->GetData("Name", itemIndex).toByteArray());
+														}
+													}
+												}
+											}
+										}
+									}
+									else{
+										qDebug() << "no features";
 									}
 								}
 							}
