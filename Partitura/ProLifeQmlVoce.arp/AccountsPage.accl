@@ -2,26 +2,18 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5050" Description="ACF"/>
-            <Version Id="1" Number="2180" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5048" Description="ACF"/>
+            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="AccountCollectionCommands" X="725" Y="250" Note=""/>
-        <Element ComponentName="AccountCommandPermissions" X="350" Y="775" Note=""/>
         <Element ComponentName="AccountCommands" X="400" Y="250" Note=""/>
         <Element ComponentName="AccountDataController" X="125" Y="250" Note=""/>
-        <Element ComponentName="AccountEditCommandDataProvider" X="1025" Y="750" Note=""/>
-        <Element ComponentName="AccountEditCommandPermissions" X="700" Y="750" Note=""/>
         <Element ComponentName="AccountInfo" X="150" Y="400" Note=""/>
         <Element ComponentName="AccountListController" X="1050" Y="250" Note=""/>
-        <Element ComponentName="AccountsCommandDataProvider" X="150" Y="725" Note=""/>
-        <Element ComponentName="AccountsCommandsPermissionsProvider" X="325" Y="650" Note=""/>
-        <Element ComponentName="AccountsEditCommandsPermissionsProvider" X="1000" Y="550" Note=""/>
         <Element ComponentName="AccountsHeadersDataProvider" X="800" Y="400" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="650" Y="650" Note=""/>
-        <Element ComponentName="Commands" X="600" Y="550" Note=""/>
         <Element ComponentName="Demultiplexer" X="500" Y="75" Note=""/>
         <Element ComponentName="ObjectViewDataProvider" X="1075" Y="400" Note=""/>
     </PositionMap>

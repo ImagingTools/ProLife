@@ -22,15 +22,6 @@
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
-                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
-                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="575" Y="175" Note=""/>
@@ -39,6 +30,15 @@
                 <Element ComponentName="OrdersPage" X="325" Y="175" Note=""/>
                 <Element ComponentName="ProductPermissionController" X="900" Y="375" Note=""/>
                 <Element ComponentName="SingleProductPermission" X="900" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
+                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
+                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

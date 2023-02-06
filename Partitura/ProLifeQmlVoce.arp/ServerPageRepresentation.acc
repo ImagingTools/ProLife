@@ -62,7 +62,7 @@
                         <Data IsEnabled="true" Value="LisaUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Lisa Url"/>
+                        <Data IsEnabled="true" Value="Lisa URL"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>

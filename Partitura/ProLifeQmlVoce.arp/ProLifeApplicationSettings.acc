@@ -232,7 +232,11 @@
                     </Element>
                     <Element Id="ServerSettingsRepresentation" PackageId="ProLifeQmlVoce" ComponentId="ServerPageRepresentation">
                         <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
                         </Data>
                     </Element>
                 </ElementsList>

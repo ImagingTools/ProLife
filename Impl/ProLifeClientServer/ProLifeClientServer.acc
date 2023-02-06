@@ -64,7 +64,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="LogPath">
-                        <Data IsEnabled="true" Value="LisaServerLog.txt"/>
+                        <Data IsEnabled="true" Value="ProLifeClientServerLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="1"/>
