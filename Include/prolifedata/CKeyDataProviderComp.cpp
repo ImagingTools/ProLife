@@ -62,6 +62,8 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 					if (productCollectionPtr->GetObjectData(softwareInstanceId, softwareDataPtr)){
 						imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 						if (productInstancePtr == nullptr){
+							SendCriticalMessage(0, "Software instance error: " + softwareInstanceId, "Server data provider");
+
 							return false;
 						}
 						QByteArray instanceId = hardwareInstancePtr->GetProductInstanceId();
@@ -95,7 +97,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 											imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>( const_cast<imtlic::ILicenseInstance*>( productInstancePtr->GetLicenseInstance(licenseId)));
 											if (licenseInstancePtr != nullptr){
 												if (!licensesModelPtr->ContainsKey(licenseId)){
-													SendCriticalMessage(0, "The product does not contain a license " + licenseId);
+													SendCriticalMessage(0, "The product does not contain a license " + licenseId, "Server data provider");
 
 													return false;
 												}
@@ -123,7 +125,9 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 										}
 									}
 									else{
-										qDebug() << "no features";
+										SendCriticalMessage(0, "No features in product: " + productId, "Server data provider");
+
+										return false;
 									}
 								}
 							}
@@ -151,6 +155,9 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 						data = file.readAll();
 
 						file.close();
+
+						SendInfoMessage(0, QString("License file for product %1 successfully created").arg(QString(productId)), "Server data provider");
+
 
 						return true;
 					}
