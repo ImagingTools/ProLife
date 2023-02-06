@@ -136,10 +136,10 @@ Rectangle {
         anchors.left: linkedName.right;
         anchors.leftMargin: 5;
         text:  productInfo.pairName;
-        color: Style.textColor;
+        color: Style.textSelected;
         font.family: Style.fontFamily;
         font.pixelSize: Style.fontSize_common;
-        font.underline: true;
+        font.bold: true;
     }
 
     Text {

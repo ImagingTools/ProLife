@@ -74,6 +74,7 @@ Item {
     property string hover: "#e6e6e8";
 
     property string textColor: "#335777";
+    property string textLinked: "#0081d1";
     property string textSelected: "#0078d7";
     property color inactive_textColor: "#dedede";
 
@@ -143,6 +144,8 @@ Item {
 
         Style.textColor = styleContainer.getThemeColor("ActiveColors", "Text", dataSource);
         Style.textSelected = styleContainer.getThemeColor("ActiveColors", "TextSelectedBackground", dataSource);
+        Style.textLinked = styleContainer.getThemeColor("ActiveColors", "TextLinked", dataSource);
+
 //        Style.inactive_textColor = styleContainer.getThemeColor("InactiveColors", "Text", dataSource);
 
         Style.inactive_textColor = styleContainer.getThemeColor("ActiveColors", "ButtonBorder", dataSource);

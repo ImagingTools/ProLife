@@ -371,16 +371,18 @@ DocumentBase {
             let retVal = "";
 
             for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                let productMacAddress = productsModel.GetData("MacAddress", i);
+                ;
                 if (categoryId == "Software" &&  productsModel.GetData("PairId", i) == id){
                     let modelProductId = productsModel.GetData("ProductId", i)
-                    retVal = getProductName(modelProductId);
+                    retVal = "#" + (i + 1) + " " + getProductName(modelProductId);
+                    let productMacAddress = productsModel.GetData("MacAddress", i)
+                    retVal += " (" + productMacAddress + ")";
 
                     break;
                 }
                 if (categoryId == "Hardware" && productsModel.GetData("Id", i) == pairId){
                     let modelProductId = productsModel.GetData("ProductId", i)
-                    retVal = getProductName(modelProductId);
+                    retVal = "#" + (i + 1) + " " + getProductName(modelProductId);
 
                     break;
                 }
@@ -493,14 +495,11 @@ DocumentBase {
         }
 
         delegate: OrderProductView {
-            productName: productsView.getProductName(model.ProductId);
+            productName: "#" + (model.index + 1) + " " + productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
-//            pairName: productsView.getPairName(model.ProductId, model.MacAddress);
-//            pairName: model.MacAddress;
             pairName: productsView.getPairName(model.index)
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
-//            licenseExpiration: !model.LicenseExpiration ? "Unlimited" : model.LicenseExpiration == "" ? "Unlimited" : model.LicenseExpiration;
             licenseName: productsView.getLicenseName(model.index);
 
             commandsModel: commandsModelLocal;

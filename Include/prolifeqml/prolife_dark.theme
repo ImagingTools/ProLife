@@ -76,6 +76,7 @@
 			"TabSelected": "VividBlue",
 			"BackgroundSelected": "DarkGray",
 			"TextSelected": "VividBlue",
+			"TextLinked": "VividBlue",
 			"TextSelectedBackground": "VividBlue",
 			"Shadow": "Black",
 			"BorderColor": "DarkGray 2"
