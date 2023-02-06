@@ -44,6 +44,9 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "CustomerId"){
 					elementInformation = orderInfoPtr->GetCustomerId();
 				}
+                else if(informationId == "Description"){
+                    elementInformation = orderInfoPtr->GetDescription();
+                }
 				else{
 				}
 
