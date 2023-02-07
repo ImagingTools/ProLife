@@ -42,6 +42,7 @@ DocumentBase {
         id: undoRedoManager;
 
         commandsId: orderEditorContainer.commandsId;
+        documentBase: orderEditorContainer;
 
         onModelStateChanged: {
             updateGui();
@@ -538,8 +539,6 @@ DocumentBase {
         }
     }
 
-
-
     LicenseFileController {
         id: licenseFileController;
     }
@@ -551,6 +550,8 @@ DocumentBase {
             onFinished: {
                 if (buttonId == "Yes"){
                     productsView.model.RemoveItem(productsView.activeProductIndex);
+
+                    orderEditorContainer.updateModel();
                 }
             }
         }

@@ -34,16 +34,18 @@ QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objec
 				.arg(qPrintable(objectId)).toLocal8Bit();
 	}
 
-	QString paginationQuery;
-	if (offset >= 0 && count > 0){
-		paginationQuery = QString("OFFSET %1 ROWS FETCH NEXT %2 ROWS ONLY").arg(offset).arg(count).toLocal8Bit();
-	}
+	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
 
-	QByteArray selectQuery = QString("SELECT * FROM \"%1\" WHERE IsActive = true %2")
-			.arg(qPrintable(*m_tableNameAttrPtr))
-			.arg(paginationQuery).toLocal8Bit();
+//	QString paginationQuery;
+//	if (offset >= 0 && count > 0){
+//		paginationQuery = QString("OFFSET %1 ROWS FETCH NEXT %2 ROWS ONLY").arg(offset).arg(count).toLocal8Bit();
+//	}
 
-	return selectQuery;
+//	QByteArray selectQuery = QString("SELECT * FROM \"%1\" WHERE IsActive = true %2")
+//			.arg(qPrintable(*m_tableNameAttrPtr))
+//			.arg(paginationQuery).toLocal8Bit();
+
+	return selectionQuery;
 }
 
 
@@ -184,6 +186,39 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	return retVal;
 }
 
+
+// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
+
+QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
+{
+	return QString("SELECT * FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr));
+}
+
+
+bool COrderDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilter& collectionFilter, QString& sortQuery) const
+{
+	QByteArray columnId;
+	QByteArray sortOrder;
+
+	if (!collectionFilter.GetSortingInfoIds().isEmpty()){
+		columnId = collectionFilter.GetSortingInfoIds().first();
+	}
+
+	switch (collectionFilter.GetSortingOrder()){
+	case imtbase::ICollectionFilter::SO_ASC:
+		sortOrder = "ASC";
+		break;
+	case imtbase::ICollectionFilter::SO_DESC:
+		sortOrder = "DESC";
+		break;
+	}
+
+	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
+		sortQuery = QString("ORDER BY document->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+	}
+
+	return true;
+}
 
 
 } // namespace imtdb

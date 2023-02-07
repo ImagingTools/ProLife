@@ -41,6 +41,11 @@ public:
 				const imtbase::IObjectCollection& collection,
 				const QByteArray& objectId,
 				const istd::IChangeable& object) const override;
+
+	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
+	virtual QString GetBaseSelectionQuery() const override;
+	virtual bool CreateSortQuery(const imtbase::ICollectionFilter& collectionFilter, QString& sortQuery) const override;
+
 };
 
 
