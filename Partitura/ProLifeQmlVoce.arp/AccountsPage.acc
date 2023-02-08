@@ -255,6 +255,7 @@
                                         <Values>
                                             <Value>ChangeAccount</Value>
                                             <Value>RemoveAccount</Value>
+                                            <Value>ViewAccounts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

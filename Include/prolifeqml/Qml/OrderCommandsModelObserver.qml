@@ -38,6 +38,7 @@ Item {
 
             if (root.addProductButton != null){
                 root.addProductButton.enabled = saveExists;
+                root.addProductButton.visible = saveExists;
             }
 
             let createLicenseExists = root.orderCommandsProvider.commandExists("CreateLicenseFile");

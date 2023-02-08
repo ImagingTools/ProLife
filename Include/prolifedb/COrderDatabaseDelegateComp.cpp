@@ -5,6 +5,7 @@
 #include <QtCore/QFile>
 
 // ACF includes
+#include <iprm/TParamsPtr.h>
 #include <istd/TOptDelPtr.h>
 #include <istd/CSystem.h>
 #include <istd/CCrcCalculator.h>
@@ -35,15 +36,6 @@ QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objec
 	}
 
 	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
-
-//	QString paginationQuery;
-//	if (offset >= 0 && count > 0){
-//		paginationQuery = QString("OFFSET %1 ROWS FETCH NEXT %2 ROWS ONLY").arg(offset).arg(count).toLocal8Bit();
-//	}
-
-//	QByteArray selectQuery = QString("SELECT * FROM \"%1\" WHERE IsActive = true %2")
-//			.arg(qPrintable(*m_tableNameAttrPtr))
-//			.arg(paginationQuery).toLocal8Bit();
 
 	return selectionQuery;
 }
@@ -221,6 +213,51 @@ bool COrderDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilte
 }
 
 
-} // namespace imtdb
+bool COrderDatabaseDelegateComp::CreateFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const
+{
+	bool retVal = true;
+
+	QString textFilterQuery;
+	iprm::TParamsPtr<imtbase::ICollectionFilter> collectionFilterParamPtr(&filterParams, "Filter");
+	if (collectionFilterParamPtr.IsValid()){
+		retVal = CreateTextFilterQuery(*collectionFilterParamPtr, textFilterQuery);
+		if (!retVal){
+			return false;
+		}
+	}
+
+	if (!textFilterQuery.isEmpty()){
+		filterQuery += "AND (" + textFilterQuery + ")";
+	}
+
+	return true;
+}
+
+
+bool COrderDatabaseDelegateComp::CreateTextFilterQuery(
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
+{
+	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
+	if (filteringColumnIds.isEmpty()){
+		return true;
+	}
+
+	QString textFilter = collectionFilter.GetTextFilter();
+	if (!textFilter.isEmpty()){
+		textFilterQuery = QString("document->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds.first())).arg(textFilter);
+
+		for (int i = 1; i < filteringColumnIds.count(); ++i){
+			textFilterQuery += " OR ";
+
+			textFilterQuery += QString("document->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
+		}
+	}
+
+	return true;
+}
+
+
+} // namespace prolifedb
 
 
