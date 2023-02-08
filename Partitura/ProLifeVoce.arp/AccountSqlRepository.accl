@@ -8,9 +8,10 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountInfoMetaInfoCreator" X="225" Y="500" Note=""/>
+        <Element ComponentName="AccountInfoMetaInfoCreator" X="175" Y="600" Note=""/>
         <Element ComponentName="CompanyDatabaseDelegate" X="225" Y="150" Note=""/>
         <Element ComponentName="CompanyInfo" X="600" Y="150" Note=""/>
+        <Element ComponentName="CompanyInfoMetaInfoCreator" X="225" Y="500" Note=""/>
         <Element ComponentName="OptionsListAdapter" X="600" Y="500" Note=""/>
         <Element ComponentName="Repository" X="600" Y="300" Note=""/>
     </PositionMap>

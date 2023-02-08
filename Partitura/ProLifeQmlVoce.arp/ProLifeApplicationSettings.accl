@@ -8,8 +8,6 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ApplicationInfoController" X="625" Y="300" Note=""/>
-        <Element ComponentName="ApplicationInfoDataProvider" X="625" Y="475" Note=""/>
         <Element ComponentName="ApplicationSettings" X="625" Y="75" Note=""/>
         <Element ComponentName="ServerSettingsController" X="1030" Y="297" Note=""/>
         <Element ComponentName="UserSettingsController" X="225" Y="300" Note=""/>

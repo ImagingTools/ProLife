@@ -11,6 +11,8 @@ Item {
 
     property alias localSettings: settingsProviderLocal.localModel;
 
+    property alias applicationInfo: applicationInfoProviderLocal.clientApplicationInfo;
+
     property alias settingsProvider: settingsProviderLocal;
 
     signal settingsUpdate();
@@ -36,6 +38,8 @@ Item {
 
         console.log("thumbnailDecorator.updateModels");
         thumbnailDecorator.updateModels();
+
+        applicationInfoProviderLocal.updateModel();
     }
 
     function updateServerSettings(){
@@ -71,6 +75,10 @@ Item {
         }
     }
 
+    ApplicationInfoProvider {
+        id: applicationInfoProviderLocal;
+    }
+
     ServerSettingsModelObserver {
         id: settingsObserver;
 
@@ -103,5 +111,7 @@ Item {
         anchors.fill: parent;
         root: window;
         settingsProvider: settingsProviderLocal;
+
+        applicationInfoProvider: applicationInfoProviderLocal;
     }
 }

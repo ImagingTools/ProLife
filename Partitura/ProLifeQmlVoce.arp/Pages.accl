@@ -22,12 +22,12 @@
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
+        <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
-                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
-                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
+                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -42,12 +42,12 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="PagesPermissions">
+        <EmbededRegistry Id="Repositories">
             <PositionMap>
-                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
-                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
-                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
-                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
+                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
+                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
+                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

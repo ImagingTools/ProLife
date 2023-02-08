@@ -9,12 +9,12 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ClientPersistence" X="575" Y="100" Note=""/>
-        <Element ComponentName="GeneralPageData" X="900" Y="350" Note=""/>
+        <Element ComponentName="GeneralPageData" X="925" Y="350" Note=""/>
         <Element ComponentName="GeneralPageRepresentation" X="925" Y="450" Note=""/>
-        <Element ComponentName="LocalPageData" X="250" Y="350" Note=""/>
-        <Element ComponentName="LocalPageRepresentation" X="225" Y="448" Note=""/>
+        <Element ComponentName="LocalPageData" X="225" Y="350" Note=""/>
+        <Element ComponentName="LocalPageRepresentation" X="225" Y="450" Note=""/>
         <Element ComponentName="Settings" X="575" Y="225" Note=""/>
-        <Element ComponentName="SettingsRepresentation" X="575" Y="600" Note=""/>
+        <Element ComponentName="SettingsRepresentation" X="600" Y="575" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
