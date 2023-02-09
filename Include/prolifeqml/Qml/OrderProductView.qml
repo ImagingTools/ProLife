@@ -10,7 +10,7 @@ Item {
 
     property string productName;
     property string productCategory;
-    property string productStatus: "Status";
+    property string productStatus: "None";
     property string pairName;
     property string licenseName;
     property string licenseExpiration;
@@ -110,11 +110,14 @@ Item {
         Text {
             id: productionStatus;
 
-            text: productInfo.productStatus;
+            anchors.left: parent.left;
+            anchors.leftMargin: 5;
+
+            text: qsTr("Status: ") + productInfo.productStatus;
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
-            visible: false;
+            visible:  productInfo.productCategory === "Hardware";
         }
 
         Text {
