@@ -168,6 +168,31 @@ DocumentBase {
         }
 
         Text {
+            id: titleComment;
+            text: qsTr("Description");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        CustomTextEdit {
+            id: descriptionInput;
+
+            width: parent.width;
+            height: 60;
+
+            placeHolderText: qsTr("Enter the comment");
+
+            borderColor: Style.iconColorOnSelected;
+
+            onEditingFinished: {
+                if (!blockUpdatingModel){
+                    updateModel();
+                }
+            }
+        }
+
+        Text {
             id: titleCustomer;
 
             text: qsTr("Customer");
@@ -229,41 +254,6 @@ DocumentBase {
             }
         }
     }//Column bodyColumn
-
-    Column {
-        id: bodyDescription;
-        anchors.left: bodyColumn.right;
-        anchors.leftMargin: 10;
-
-        width: 250;
-        height: childrenRect.height;
-        spacing: 7;
-
-        Text {
-            id: titleComment;
-            text: qsTr("Description");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        CustomTextEdit {
-            id: descriptionInput;
-
-            width: parent.width;
-            height: 60;
-
-            placeHolderText: qsTr("Enter the comment");
-
-            borderColor: Style.iconColorOnSelected;
-
-            onEditingFinished: {
-                if (!blockUpdatingModel){
-                    updateModel();
-                }
-            }
-        }
-    }
 
     Component {
         id: productEditorDialog;
