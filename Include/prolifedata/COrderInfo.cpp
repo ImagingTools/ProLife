@@ -1,8 +1,8 @@
 #include <prolifedata/COrderInfo.h>
 
+
 //Qt include
 #include <QtCore/QByteArrayList>
-
 
 // ACF includes
 #include <istd/TDelPtr.h>
@@ -14,7 +14,6 @@
 
 // ImtCore includes
 #include <imtlic/CLicensedHardwareInstanceInfo.h>
-
 
 
 namespace prolifedata
@@ -45,12 +44,14 @@ COrderInfo::~COrderInfo()
 {
 }
 
+
 // reimplemented (IOrderInfo)
 
 QByteArray COrderInfo::GetOrderId() const
 {
 	return m_orderId;
 }
+
 
 void COrderInfo::SetOrderId(const QByteArray& orderId)
 {
@@ -61,10 +62,12 @@ void COrderInfo::SetOrderId(const QByteArray& orderId)
 	}
 }
 
+
 QByteArray COrderInfo::GetCustomerId() const
 {
 	return m_customerId;
 }
+
 
 void COrderInfo::SetCustomerId(const QByteArray& customerId)
 {

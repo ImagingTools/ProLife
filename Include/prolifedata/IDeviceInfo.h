@@ -30,7 +30,7 @@ public:
 	/**
 		Set the mac address of this device instance.
 	*/
-	virtual void SetMacAddress(const QByteArray& serialNumber) = 0;
+	virtual void SetMacAddress(const QByteArray& macAddress) = 0;
 };
 
 

@@ -7,6 +7,8 @@
 
 namespace ProLifeGqlPck
 {
+
+
 I_EXPORT_PACKAGE(
 		"ProLifeLicenseGqlPck",
 		"ImagingTools license management Gql-component package",
@@ -31,6 +33,16 @@ I_EXPORT_COMPONENT(
 		OrderCollectionController,
 		"Collection controller for order documents",
 		"Collection Controller Order Document");
+
+I_EXPORT_COMPONENT(
+		DeviceController,
+		"Controller for device document",
+		"Device Controller");
+
+I_EXPORT_COMPONENT(
+		DeviceCollectionController,
+		"Collection controller for device documents",
+		"Collection Controller Device Document");
 
 
 } // namespace ProLifeGqlPck
