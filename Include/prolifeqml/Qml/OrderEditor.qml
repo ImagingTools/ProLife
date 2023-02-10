@@ -449,6 +449,17 @@ DocumentBase {
             return retVal
         }
 
+        function getIndexByPairId(pairId){
+            let productsModel = productsView.model;
+            for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                if (productsModel.GetData("Id", i) === pairId){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         OrderCommandsModelObserver {
             productCommandsModel: commandsModelLocal;
             orderCommandsProvider: orderEditorContainer.commandsProvider;
@@ -524,6 +535,18 @@ DocumentBase {
                 if (productId){
                     console.log("onCreateLicenseFile", orderId + "/" + productId);
                     licenseFileController.createLicenseFile(orderId + "/" + productId);
+                }
+            }
+
+            onPairClicked: {
+                let id = model.PairId;
+                if (model.CategoryId === "Software"){
+                    id = productsView.findHardwarePair(model.Id);
+                }
+
+                let index = productsView.getIndexByPairId(id);
+                if (index >= 0){
+                    productsView.positionViewAtIndex(index, ListView.Center);
                 }
             }
         }

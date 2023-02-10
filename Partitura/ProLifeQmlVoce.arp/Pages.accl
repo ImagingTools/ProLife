@@ -8,18 +8,19 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountsPage" X="100" Y="500" Note=""/>
+        <Element ComponentName="AccountsPage" X="350" Y="475" Note=""/>
         <Element ComponentName="AdministrationPage" X="275" Y="675" Note=""/>
-        <Element ComponentName="OrdersPage" X="350" Y="500" Note=""/>
+        <Element ComponentName="OrdersPage" X="100" Y="450" Note=""/>
         <Element ComponentName="PageData" X="1000" Y="350" Note=""/>
         <Element ComponentName="PageDataControllers" X="1000" Y="200" Note=""/>
         <Element ComponentName="Pages" X="175" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
-        <Element ComponentName="PagesPermissions" X="700" Y="500" Note=""/>
-        <Element ComponentName="PagesRepresentation" X="725" Y="350" Note=""/>
+        <Element ComponentName="PagesPermissions" X="725" Y="500" Note=""/>
+        <Element ComponentName="PagesRepresentation" X="750" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="250" Y="200" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="425" Y="350" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="475" Y="350" Note=""/>
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
+        <Element ComponentName="SensorsPage" X="125" Y="550" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PagesPermissions">

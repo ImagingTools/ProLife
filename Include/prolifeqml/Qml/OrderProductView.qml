@@ -29,6 +29,7 @@ Item {
     signal removed();
     signal edited();
     signal createLicenseFile();
+    signal pairClicked();
 
     Rectangle {
         id: background;
@@ -54,7 +55,7 @@ Item {
             width: 60;
 
             radius: 10;
-            color: productInfo.color;
+            color: background.color;
 
             onCommandActivated: {
                 if (commandId == "Remove"){
@@ -165,6 +166,15 @@ Item {
                 font.family: Style.fontFamily;
                 font.pixelSize: Style.fontSize_common;
                 font.bold: true;
+
+                MouseArea {
+                    id: ma;
+                    anchors.fill: parent;
+                    cursorShape: Qt.PointingHandCursor;
+                    onClicked: {
+                        productInfo.pairClicked()
+                    }
+                }
             }
         }
 
