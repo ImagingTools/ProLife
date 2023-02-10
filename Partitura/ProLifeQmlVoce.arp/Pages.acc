@@ -126,6 +126,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>OrdersPage</Value>
+                                <Value>SensorsPage</Value>
                                 <Value>AccountsPage</Value>
                                 <Value>AdministrationPage</Value>
                             </Values>
@@ -232,7 +233,7 @@
                         <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/OrderCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../../ProLife/DeviceCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

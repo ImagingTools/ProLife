@@ -2,24 +2,23 @@
 
 
 // ImtCore includes
-#include <imtbase/IMetaInfoCreator.h>
 #include <imtguigql/CObjectCollectionControllerCompBase.h>
 
 // ProLife includes
-#include <prolifedata/IOrderInfo.h>
+#include <prolifedata/IDeviceInfo.h>
 
 
 namespace prolifegql
 {
 
 
-class COrderControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class CDeviceControllerComp: public imtguigql::CObjectCollectionControllerCompBase
 {
 public:
 	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
 
-	I_BEGIN_COMPONENT(COrderControllerComp)
-		I_ASSIGN(m_orderPtr, "OrderFactory", "Factory used for creation of the new order instance", true, "OrderFactory");
+	I_BEGIN_COMPONENT(CDeviceControllerComp)
+		I_ASSIGN(m_deviceCompPtr, "DeviceFactory", "Factory used for creation of the new device instance", true, "DeviceFactory");
 	I_END_COMPONENT
 
 protected:
@@ -27,7 +26,7 @@ protected:
 	virtual istd::IChangeable* CreateObject(const QList<imtgql::CGqlObject>& inputParams, QByteArray &objectId, QString &name, QString &description, QString& errorMessage) const override;
 
 private:
-	I_FACT(prolifedata::IOrderInfo, m_orderPtr);
+	I_FACT(prolifedata::IDeviceInfo, m_deviceCompPtr);
 };
 
 

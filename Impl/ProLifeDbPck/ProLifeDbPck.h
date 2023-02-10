@@ -8,6 +8,7 @@
 // ImtCore includes
 #include <prolifedb/CProductDatabaseDelegateComp.h>
 #include <prolifedb/COrderDatabaseDelegateComp.h>
+#include <prolifedb/CDeviceDatabaseDelegateComp.h>
 #include <prolifedb/CDatabaseConverterComp.h>
 
 
@@ -19,6 +20,7 @@ namespace ProLifeDbPck
 
 typedef prolifedb::CProductDatabaseDelegateComp ProductDatabaseDelegateComp;
 typedef prolifedb::COrderDatabaseDelegateComp OrderDatabaseDelegateComp;
+typedef prolifedb::CDeviceDatabaseDelegateComp DeviceDatabaseDelegate;
 typedef prolifedb::CDatabaseConverterComp DatabaseConverterComp;
 
 

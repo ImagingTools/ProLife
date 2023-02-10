@@ -6,7 +6,6 @@ CollectionView {
 
     Component.onCompleted: {
         container.commandUpdateGui = "OrderCollectionUpdateGui";
-       // container.commandsDelegatePath = "../../imtauthgui/OrderCollectionViewCommandsDelegate.qml";
         console.log("Order collection view complete");
     }
 }

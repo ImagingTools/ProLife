@@ -20,16 +20,20 @@ I_EXPORT_COMPONENT(
 			"Product info object for SQL table",
 			"SQL Product Product Delegate");
 
-
 I_EXPORT_COMPONENT(
 			OrderDatabaseDelegateComp,
 			"Order info object for SQL table",
 			"SQL Product Order Delegate");
 
 I_EXPORT_COMPONENT(
-            DatabaseConverterComp,
-            "Component used for conversion of database entries to JSON objects",
-            "Database Converter");
+			DeviceDatabaseDelegate,
+			"Device info object for SQL table",
+			"SQL Product Device Delegate");
+
+I_EXPORT_COMPONENT(
+			DatabaseConverterComp,
+			"Component used for conversion of database entries to JSON objects",
+			"Database Converter");
 
 
 } // namespace ProLifeLicenseDbPck

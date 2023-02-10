@@ -8,7 +8,7 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountsPage" X="350" Y="475" Note=""/>
+        <Element ComponentName="AccountsPage" X="425" Y="450" Note=""/>
         <Element ComponentName="AdministrationPage" X="275" Y="675" Note=""/>
         <Element ComponentName="OrdersPage" X="100" Y="450" Note=""/>
         <Element ComponentName="PageData" X="1000" Y="350" Note=""/>
@@ -20,7 +20,7 @@
         <Element ComponentName="PagesVisualStatusController" X="250" Y="200" Note=""/>
         <Element ComponentName="PermissionsChecker" X="475" Y="350" Note=""/>
         <Element ComponentName="Repositories" X="1000" Y="500" Note=""/>
-        <Element ComponentName="SensorsPage" X="125" Y="550" Note=""/>
+        <Element ComponentName="SensorsPage" X="325" Y="550" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PagesPermissions">
@@ -32,6 +32,15 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
+                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
+                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="575" Y="175" Note=""/>
@@ -40,15 +49,6 @@
                 <Element ComponentName="OrdersPage" X="325" Y="175" Note=""/>
                 <Element ComponentName="ProductPermissionController" X="900" Y="375" Note=""/>
                 <Element ComponentName="SingleProductPermission" X="900" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="575" Y="525" Note=""/>
-                <Element ComponentName="ProductInstanceSqlRepository" X="595.383909759" Y="403.050865276" Note=""/>
-                <Element ComponentName="ProductSqlRepository" X="825" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
