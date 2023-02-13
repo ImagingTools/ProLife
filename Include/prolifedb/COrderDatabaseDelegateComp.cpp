@@ -157,6 +157,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 	QByteArray documentContent;
 	if (WriteDataToMemory(object, documentContent)){
+		documentContent = documentContent.replace("'", "''");
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(&object);
 		Q_ASSERT(orderInfoPtr != nullptr);

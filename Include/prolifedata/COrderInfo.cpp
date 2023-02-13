@@ -131,6 +131,9 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
+	static iser::CArchiveTag orderTag("Order", "Order item", iser::CArchiveTag::TT_GROUP);
+	retVal = archive.BeginTag(orderTag);
+
 	static iser::CArchiveTag orderIdTag("OrderId", "Order id", iser::CArchiveTag::TT_LEAF);
 	retVal = archive.BeginTag(orderIdTag);
 	retVal = retVal && archive.Process(m_orderId);
@@ -151,7 +154,10 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_status);
 	retVal = retVal && archive.EndTag(orderStatusTag);
 
-	m_productInstanceCollection.Serialize(archive);
+	retVal = retVal && m_productInstanceCollection.Serialize(archive);
+
+	retVal = retVal && archive.EndTag(orderTag);
+
 
 	return retVal;
 }
