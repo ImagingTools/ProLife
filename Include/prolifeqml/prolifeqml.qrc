@@ -10,16 +10,17 @@
     <qresource prefix="/qml">
         <file alias="Acf/Style.qml">Qml/Acf/Style.qml</file>
         <file alias="prolife.qml">Resources/qml/prolife.qml</file>
-		<file alias="ProLifeMain.qml">Resources/qml/ProLifeMain.qml</file>
-		<file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
-		<file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
-		<file alias="ProLife/DeviceEditor.qml">Qml/DeviceEditor.qml</file>
-		<file alias="ProLife/LicenseFileController.qml">Qml/LicenseFileController.qml</file>
-		<file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
-		<file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
-		<file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
-		<file alias="ProLife/OrderCommandsModelObserver.qml">Qml/OrderCommandsModelObserver.qml</file>
-	</qresource>
+        <file alias="ProLifeMain.qml">Resources/qml/ProLifeMain.qml</file>
+        <file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
+        <file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
+        <file alias="ProLife/DeviceEditor.qml">Qml/DeviceEditor.qml</file>
+        <file alias="ProLife/LicenseFileController.qml">Qml/LicenseFileController.qml</file>
+        <file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
+        <file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
+        <file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
+        <file alias="ProLife/OrderCommandsModelObserver.qml">Qml/OrderCommandsModelObserver.qml</file>
+        <file alias="ProLife/DeviceCollectionView.qml">Qml/DeviceCollectionView.qml</file>
+    </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>
         <file alias="prolife_light.theme">prolife_light.theme</file>
@@ -34,6 +35,5 @@
         <file alias="ProductEditor.qml">Qml/ProductEditor.qml</file>
         <file alias="ProductEditorCommandsDelegate.qml">Qml/ProductEditorCommandsDelegate.qml</file>
         <file alias="ProductCollectionView.qml">Qml/ProductCollectionView.qml</file>
-
     </qresource>
 </RCC>
