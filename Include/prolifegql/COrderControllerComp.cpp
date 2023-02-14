@@ -185,8 +185,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			description = itemModel.GetData("Description").toByteArray();
 		}
 
-//		objectId = orderId;
-
 		orderPtr->SetOrderId(orderId);
 		orderPtr->SetCustomerId(customerId);
 		orderPtr->SetDescription(description);

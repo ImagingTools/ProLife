@@ -1,19 +1,8 @@
 #include <prolifegql/CDeviceControllerComp.h>
 
 
-// ACF includes
-#include <idoc/CStandardDocumentMetaInfo.h>
-
-// ImtCore includes
-#include <imtbase/ICollectionInfo.h>
-#include <imtgui/CObjectCollectionViewDelegate.h>
-#include <imtlic/CFeaturePackageCollectionUtility.h>
-#include <imtlic/CLicenseInstance.h>
-#include <imtlic/CProductInstanceCollection.h>
-#include <imtlic/CLicensedHardwareInstanceInfo.h>
-
 // ProLife includes
-#include <prolifedata/IOrderedProductInfo.h>
+#include <prolifedata/TOrderedWrap.h>
 
 
 namespace prolifegql
@@ -22,8 +11,7 @@ namespace prolifegql
 
 imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	imtbase::CTreeItemModel* rootModel = new imtbase::CTreeItemModel();
-	imtbase::CTreeItemModel* dataModel = new imtbase::CTreeItemModel();
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QObject::tr("Internal error").toUtf8();
@@ -37,21 +25,24 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 		objectId = GetObjectIdFromInputParams(*inputParams);
 	}
 
+	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
+
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 			QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+			QString description = deviceInfoPtr->GetDescription();
 
-			dataModel->SetData("MacAddress", macAddress);
-			dataModel->SetData("SerialNumber", serialNumber);
+			dataModelPtr->SetData("Name", serialNumber);
+			dataModelPtr->SetData("MacAddress", macAddress);
+			dataModelPtr->SetData("SerialNumber", serialNumber);
+			dataModelPtr->SetData("Description", description);
 		}
 	}
 
-	rootModel->SetExternTreeModel("data", dataModel);
-
-	return rootModel;
+	return rootModelPtr.PopPtr();
 }
 
 
@@ -72,8 +63,8 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
-		istd::TDelPtr<prolifedata::IDeviceInfo> deviceInfoPtr = m_deviceCompPtr.CreateInstance();
-		if (!deviceInfoPtr.IsValid()) {
+		istd::TDelPtr<prolifedata::IDeviceInfo> devicePtr = m_deviceCompPtr.CreateInstance();
+		if (!devicePtr.IsValid()) {
 			return nullptr;
 		}
 
@@ -82,25 +73,51 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			return nullptr;
 		}
 
+//		if (itemModel.ContainsKey("OrderId")){
+//			QByteArray orderId = itemModel.GetData("OrderId").toByteArray();
+
+//			devicePtr->SetOrderId(orderId);
+//		}
+
 		if (itemModel.ContainsKey("MacAddress")){
 			QByteArray macAddress = itemModel.GetData("MacAddress").toByteArray();
 
-			deviceInfoPtr->SetMacAddress(macAddress);
+			devicePtr->SetMacAddress(macAddress);
 		}
 
 		if (itemModel.ContainsKey("SerialNumber")){
 			QByteArray serialNumber = itemModel.GetData("SerialNumber").toByteArray();
 
-			deviceInfoPtr->SetSerialNumber(serialNumber);
+			devicePtr->SetSerialNumber(serialNumber);
+
+			name = serialNumber;
+			objectId = serialNumber;
 		}
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();
 
-			deviceInfoPtr->SetDescription(description);
+			devicePtr->SetDescription(description);
 		}
 
-		return deviceInfoPtr.PopPtr();
+		if (itemModel.ContainsKey("Status")){
+			QByteArray status = itemModel.GetData("Status").toByteArray();
+
+			if (status == QByteArray("InProgress")){
+				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_IN_PROGRESS);
+			}
+			else if (status == QByteArray("Created")){
+				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_CREATED);
+			}
+			else if (status == QByteArray("OnFinished")){
+				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_FINISHED);
+			}
+			else{
+				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_NONE);
+			}
+		}
+
+		return devicePtr.PopPtr();
 	}
 
 	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));

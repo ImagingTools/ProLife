@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import imtgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
@@ -7,21 +7,10 @@ import Acf 1.0
 DocumentBase {
     id: deviceEditorContainer;
 
-    commandsDelegateSourceComp: orderEditorCommandsDelegate;
-
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
 
     property bool blockUpdatingModel: false;
-
-    Component.onCompleted: {
-        licensesProvider.updateModel();
-    }
-
-    Component {
-        id: deviceEditorCommandsDelegate;
-        OrderEditorCommandsDelegate {}
-    }
 
     onDocumentModelChanged: {
         updateGui();
@@ -29,13 +18,79 @@ DocumentBase {
         undoRedoManager.registerModel(documentModel)
     }
 
-//    onAccountsModelChanged: {
-//        console.log("onAccountsModelChanged", accountsModel);
-//        customerCB.model = accountsModel;
-//    }
+    //    onAccountsModelChanged: {
+    //        console.log("onAccountsModelChanged", accountsModel);
+    //        customerCB.model = accountsModel;
+    //    }
 
-//    onProductsModelChanged: {
-//        console.log("onProductsModelChanged", productsModel);
+    //    onProductsModelChanged: {
+    //        console.log("onProductsModelChanged", productsModel);
+    //    }
+    TreeItemModel {
+        id: statusModel;
+
+        Component.onCompleted: {
+            let index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "None", index);
+            statusModel.SetData("Name", "NONE", index);
+
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "Created", index);
+            statusModel.SetData("Name", "CREATED", index);
+
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "InProgress", index);
+            statusModel.SetData("Name", "IN_PROGRESS", index);
+
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "Finished", index);
+            statusModel.SetData("Name", "FINISHED", index);
+
+            statusCB.model = statusModel;
+        }
+    }
+
+//    ListModel {
+//        id: statusModel;
+
+//        ListElement {
+//            Id: "NONE";
+//            Name: qsTr("NONE");
+//        }
+
+//        ListElement {
+//            Id: "CREATED";
+//            Name: qsTr("CREATED");
+//        }
+
+//        ListElement {
+//            Id: "IN_PROGRESS";
+//            Name: qsTr("IN_PROGRESS");
+//        }
+
+//        ListElement {
+//            Id: "CANCELED";
+//            Name: qsTr("CANCELED");
+//        }
+
+//        ListElement {
+//            Id: "ON_HOLD";
+//            Name: qsTr("ON_HOLD");
+//        }
+
+//        ListElement {
+//            Id: "ON_FINISHED";
+//            Name: qsTr("ON_FINISHED");
+//        }
+
+//        ListElement {
+//            Id: "ON_CLOSED";
+//            Name: qsTr("ON_CLOSED");
+//        }
 //    }
 
     UndoRedoManager {
@@ -49,10 +104,6 @@ DocumentBase {
         }
     }
 
-    LicensesProvider {
-        id: licensesProvider;
-    }
-
     MouseArea {
         anchors.fill: parent;
 
@@ -63,7 +114,7 @@ DocumentBase {
 
     function updateGui(){
         console.log("DeviceEditor begin updateGui");
-        blockUpdatingModel = true;
+        deviceEditorContainer.blockUpdatingModel = true;
 
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
             serialNumberInput.text = deviceEditorContainer.documentModel.GetData("Description");
@@ -81,6 +132,17 @@ DocumentBase {
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
 
+        if (deviceEditorContainer.documentModel.ContainsKey("Status")){
+            let status = deviceEditorContainer.documentModel.GetData("Status");
+            for (let i = 0; i < statusModel.GetItemsCount(); i++){
+                let id = statusModel.GetData("Id", i);
+                if (id === status){
+                    statusCB.currentIndex = i;
+                    break;
+                }
+            }
+        }
+
         let productId = documentModel.GetData("ProductId");
 
         let productModel = productCB.model;
@@ -92,12 +154,16 @@ DocumentBase {
             }
         }
 
-        blockUpdatingModel = false;
+        deviceEditorContainer.blockUpdatingModel = false;
         console.log("DeviceEditor end updateGui");
     }
 
     function updateModel(){
         console.log("DeviceEditor begin updateModel");
+        if (deviceEditorContainer.blockUpdatingModel){
+            return;
+        }
+
         undoRedoManager.beginChanges();
 
         let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
@@ -111,6 +177,13 @@ DocumentBase {
 
         let macAddress = macAddressInput.text;
         deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
+        deviceEditorContainer.documentModel.SetData("Id", macAddress);
+        deviceEditorContainer.documentModel.SetData("Name", macAddress);
+
+        let index = statusCB.currentIndex;
+        if (index >= 0){
+            documentModel.SetData("Status", statusModel.GetData("Id", index));
+        }
 
         undoRedoManager.endChanges();
     }
@@ -156,18 +229,18 @@ DocumentBase {
                     orderProductsModel.SetData("CategoryId",  bodyColumn.productCategory, activeProductIndex);
                 }
 
-//                updatePairModel();
-//                if (bodyColumn.productCategory == "Software"){
-//                    updateHardwareCategoryProducts()
-//                }
-//                else{
-//                    updateSoftwareCategoryProducts()
-//                }
+                //                updatePairModel();
+                //                if (bodyColumn.productCategory == "Software"){
+                //                    updateHardwareCategoryProducts()
+                //                }
+                //                else{
+                //                    updateSoftwareCategoryProducts()
+                //                }
 
                 console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
 
-                if (!blockUpdatingModel){
-                 //   installationEditorContainer.updateModel();
+                if (!deviceEditorContainer.blockUpdatingModel){
+                    //   installationEditorContainer.updateModel();
                     deviceEditorContainer.updateGui();
                 }
             }
@@ -236,10 +309,9 @@ DocumentBase {
 
             radius: 3;
 
-            model: deviceEditorContainer.productsModel;
-
             onCurrentIndexChanged: {
-                }
+                deviceEditorContainer.updateModel();
+            }
         }
 
         Text {

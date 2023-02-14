@@ -138,6 +138,7 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 
 		m_serialNumber = sourcePtr->m_serialNumber;
 		m_macAddress = sourcePtr->m_macAddress;
+		m_status = sourcePtr->m_status;
 
 		return true;
 	}

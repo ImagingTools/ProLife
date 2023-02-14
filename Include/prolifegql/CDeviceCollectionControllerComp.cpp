@@ -54,6 +54,21 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "Description"){
 					elementInformation = deviceInfoPtr->GetDescription();
 				}
+				else if(informationId == "Status"){
+					int status = deviceInfoPtr->GetDeviceStatus();
+					if (status == prolifedata::IDeviceInfo::OS_CREATED){
+						elementInformation = "Created";
+					}
+					else if (status == prolifedata::IDeviceInfo::OS_IN_PROGRESS){
+						elementInformation = "InProgress";
+					}
+					else if (status == prolifedata::IDeviceInfo::OS_FINISHED){
+						elementInformation = "Finished";
+					}
+					else{
+						elementInformation = "None";
+					}
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";
