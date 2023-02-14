@@ -16,29 +16,57 @@ namespace prolifegql
 
 // reimplemented (imtguigql::CObjectCollectionControllerCompBase)
 
-QVariant CDeviceCollectionControllerComp::GetObjectInformation(const QByteArray &informationId, const QByteArray &objectId) const
+bool CDeviceCollectionControllerComp::SetupGqlItem(
+		const imtgql::CGqlRequest& gqlRequest,
+		imtbase::CTreeItemModel& model,
+		int itemIndex,
+		const QByteArray& collectionId,
+		QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
-		return QVariant();
+	bool retVal = true;
+
+	gqlRequest.GetFields();
+	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
+
+	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
+		prolifedata::IDeviceInfo* deviceInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+			deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+		}
+
+		if (deviceInfoPtr != nullptr){
+			for (QByteArray informationId : informationIds){
+				QVariant elementInformation;
+
+				if(informationId == "TypeId"){
+					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
+				}
+				else if(informationId == "Id" || informationId == "Name"){
+					elementInformation = deviceInfoPtr->GetSerialNumber();
+				}
+				else if(informationId == "MacAddress"){
+					elementInformation = deviceInfoPtr->GetMacAddress();
+				}
+				else if(informationId == "SerialNumber"){
+					elementInformation = deviceInfoPtr->GetSerialNumber();
+				}
+				else if(informationId == "Description"){
+					elementInformation = deviceInfoPtr->GetDescription();
+				}
+
+				if (elementInformation.isNull()){
+					elementInformation = "";
+				}
+
+				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
+			}
+
+			return true;
+		}
 	}
 
-	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
-	if (metaInfoPtr.IsValid()){
-		if (informationId == QByteArray("MacAddress")){
-			return metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS);
-		}
-		else if (informationId == QByteArray("SerialNumber")){
-			return metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER);
-		}
-		else if (informationId == QByteArray("Status")){
-			return metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_STATUS);
-		}
-		else if (informationId == QByteArray("Description")){
-			return metaInfoPtr->GetMetaInfo(idoc::IDocumentMetaInfo::MIT_DESCRIPTION);
-		}
-	}
-
-	return QVariant();
+	return false;
 }
 
 

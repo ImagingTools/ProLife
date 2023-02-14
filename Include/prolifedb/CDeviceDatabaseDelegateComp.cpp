@@ -18,7 +18,7 @@ namespace prolifedb
 {
 
 
-static const QByteArray s_documentIdColumn = "DeviceId";
+static const QByteArray s_documentIdColumn = "DocumentId";
 static const QByteArray s_idColumn = "Id";
 
 
@@ -242,59 +242,6 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 
 			textFilterQuery += QString("document->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 		}
-	}
-
-	return true;
-}
-
-
-bool CDeviceDatabaseDelegateComp::CreateObjectInfoFromRecord(
-		const QSqlRecord& record,
-		idoc::MetaInfoPtr& objectMetaInfoPtr,
-		idoc::MetaInfoPtr& collectionItemMetaInfoPtr) const
-{
-	objectMetaInfoPtr = CreateObjectMetaInfo("DeviceInfo");
-	if (objectMetaInfoPtr.IsValid()){
-		if (!SetObjectMetaInfoFromRecord(record, *objectMetaInfoPtr)){
-			objectMetaInfoPtr.Reset();
-
-			return false;
-		}
-	}
-
-	collectionItemMetaInfoPtr.SetPtr(CreateCollectionItemMetaInfo("DeviceInfo"));
-	if (collectionItemMetaInfoPtr.IsValid()){
-		if (!SetCollectionItemMetaInfoFromRecord(record, *collectionItemMetaInfoPtr)){
-			collectionItemMetaInfoPtr.Reset();
-
-			return false;
-		}
-	}
-
-	return true;
-}
-
-
-bool CDeviceDatabaseDelegateComp::SetObjectMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
-{
-	if (record.contains("Document")){
-		QByteArray document = record.value("Document").toByteArray();
-
-		QJsonDocument jsonDocument;
-		jsonDocument.fromJson(document);
-
-		QJsonObject jsonObject = jsonDocument.object();
-
-		if (jsonObject.contains("MacAddress")){
-			QByteArray macAddress = jsonObject["MacAddress"].toString().toUtf8();
-			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS, macAddress);
-		}
-
-		if (jsonObject.contains("SerialNumber")){
-			QByteArray serialNumber = jsonObject["SerialNumber"].toString().toUtf8();
-			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, serialNumber);
-		}
-
 	}
 
 	return true;
