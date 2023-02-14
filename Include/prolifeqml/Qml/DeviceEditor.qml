@@ -54,44 +54,44 @@ DocumentBase {
         }
     }
 
-//    ListModel {
-//        id: statusModel;
+    //    ListModel {
+    //        id: statusModel;
 
-//        ListElement {
-//            Id: "NONE";
-//            Name: qsTr("NONE");
-//        }
+    //        ListElement {
+    //            Id: "NONE";
+    //            Name: qsTr("NONE");
+    //        }
 
-//        ListElement {
-//            Id: "CREATED";
-//            Name: qsTr("CREATED");
-//        }
+    //        ListElement {
+    //            Id: "CREATED";
+    //            Name: qsTr("CREATED");
+    //        }
 
-//        ListElement {
-//            Id: "IN_PROGRESS";
-//            Name: qsTr("IN_PROGRESS");
-//        }
+    //        ListElement {
+    //            Id: "IN_PROGRESS";
+    //            Name: qsTr("IN_PROGRESS");
+    //        }
 
-//        ListElement {
-//            Id: "CANCELED";
-//            Name: qsTr("CANCELED");
-//        }
+    //        ListElement {
+    //            Id: "CANCELED";
+    //            Name: qsTr("CANCELED");
+    //        }
 
-//        ListElement {
-//            Id: "ON_HOLD";
-//            Name: qsTr("ON_HOLD");
-//        }
+    //        ListElement {
+    //            Id: "ON_HOLD";
+    //            Name: qsTr("ON_HOLD");
+    //        }
 
-//        ListElement {
-//            Id: "ON_FINISHED";
-//            Name: qsTr("ON_FINISHED");
-//        }
+    //        ListElement {
+    //            Id: "ON_FINISHED";
+    //            Name: qsTr("ON_FINISHED");
+    //        }
 
-//        ListElement {
-//            Id: "ON_CLOSED";
-//            Name: qsTr("ON_CLOSED");
-//        }
-//    }
+    //        ListElement {
+    //            Id: "ON_CLOSED";
+    //            Name: qsTr("ON_CLOSED");
+    //        }
+    //    }
 
     UndoRedoManager {
         id: undoRedoManager;
@@ -204,173 +204,238 @@ DocumentBase {
         spacing: 7;
 
         Text {
-            id: titleDeviceName;
-            text: qsTr("Device type");
+            id: titleDeviceInformationBlock;
+            text: qsTr("Device information");
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
         }
 
-        ComboBox {
-            id: productCB;
+        Rectangle { ////////////////////
+            id: deviceInformationBlockBorders;
 
             width: parent.width;
-            height: 23;
+            height: deviceInformationBlock.height + 25;
 
-            radius: 3;
+            color: "transparent";
 
-            model: deviceEditorContainer.productsModel;
+            border.width: 1;
+            border.color: Style.borderColor;
 
-            onCurrentIndexChanged: {
-                let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-                if (selectedProductId){
-                    orderProductsModel.SetData("ProductId", selectedProductId, activeProductIndex);
-                    bodyColumn.productCategory = productCB.model.GetData("CategoryId", productCB.currentIndex);
-                    orderProductsModel.SetData("CategoryId",  bodyColumn.productCategory, activeProductIndex);
+            Column {
+                id: deviceInformationBlock;
+
+                anchors.horizontalCenter: deviceInformationBlockBorders.horizontalCenter;
+                anchors.verticalCenter: deviceInformationBlockBorders.verticalCenter;
+
+                width: parent.width - 20;
+
+                spacing: 7;
+
+                Text {
+                    id: titleDeviceName;
+                    text: qsTr("Device type");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
                 }
 
-                //                updatePairModel();
-                //                if (bodyColumn.productCategory == "Software"){
-                //                    updateHardwareCategoryProducts()
-                //                }
-                //                else{
-                //                    updateSoftwareCategoryProducts()
-                //                }
+                ComboBox {
+                    id: productCB;
 
-                console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
+                    width: parent.width;
+                    height: 23;
 
-                if (!deviceEditorContainer.blockUpdatingModel){
-                    //   installationEditorContainer.updateModel();
-                    deviceEditorContainer.updateGui();
+                    radius: 3;
+
+                    model: deviceEditorContainer.productsModel;
+
+                    onCurrentIndexChanged: {
+                        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
+                        if (selectedProductId){
+                            orderProductsModel.SetData("ProductId", selectedProductId, activeProductIndex);
+                            bodyColumn.productCategory = productCB.model.GetData("CategoryId", productCB.currentIndex);
+                            orderProductsModel.SetData("CategoryId",  bodyColumn.productCategory, activeProductIndex);
+                        }
+
+                        //                updatePairModel();
+                        //                if (bodyColumn.productCategory == "Software"){
+                        //                    updateHardwareCategoryProducts()
+                        //                }
+                        //                else{
+                        //                    updateSoftwareCategoryProducts()
+                        //                }
+
+                        console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
+
+                        if (!deviceEditorContainer.blockUpdatingModel){
+                            //   installationEditorContainer.updateModel();
+                            deviceEditorContainer.updateGui();
+                        }
+                    }
+                }
+
+                Text {
+                    id: titleDescriptionId;
+                    text: qsTr("Description");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+
+                CustomTextField {
+                    id: descriptionInput;
+
+                    width: parent.width;
+                    height: 60;
+
+                    placeHolderText: qsTr("Enter description");
+
+                    borderColor: Style.iconColorOnSelected;
+
+                    onEditingFinished: {
+                        let oldText = deviceEditorContainer.documentModel.GetData("Description");
+                        if (oldText != descriptionInput.text){
+                            updateModel();
+                        }
+                    }
+
+                    KeyNavigation.tab: serialNumberInput;
+                }
+
+
+
+                Text {
+                    id: titleSerialNumberId;
+                    text: qsTr("Serial number");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+
+                CustomTextField {
+                    id: serialNumberInput;
+
+                    width: parent.width;
+                    height: 30;
+
+                    placeHolderText: qsTr("Enter serial number");
+
+                    borderColor: Style.iconColorOnSelected;
+
+                    onEditingFinished: {
+                        let oldText = deviceEditorContainer.documentModel.GetData("SerialNumber");
+                        if (oldText != serialNumberInput.text){
+                            updateModel();
+                        }
+                    }
+
+                    KeyNavigation.tab: macAddressInput;
+                }
+
+                Text {
+                    id: titleMacAddressId;
+                    text: qsTr("MAC-address");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+
+                CustomTextField {
+                    id: macAddressInput;
+
+                    width: parent.width;
+                    height: 30;
+
+                    placeHolderText: qsTr("Enter MAC-address");
+
+                    borderColor: Style.iconColorOnSelected;
+
+                    onEditingFinished: {
+                        let oldText = documentModel.GetData("MacAddress");
+                        if (oldText != macAddressInput.text){
+                            updateModel();
+                        }
+                    }
+
+                    KeyNavigation.tab: deviceNameInput;
                 }
             }
         }
 
         Text {
-            id: titleDescriptionId;
-            text: qsTr("Description");
+            id: titleAdditonalInfoId;
+            text: qsTr("Additional information");
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
         }
 
-        CustomTextField {
-            id: descriptionInput;
+        Rectangle {
+            id: additionalInfoBorders;
 
             width: parent.width;
-            height: 60;
+            height: additionalInfoBlock.height + 25;
 
-            placeHolderText: qsTr("Enter description");
+            color: "transparent";
 
-            borderColor: Style.iconColorOnSelected;
+            border.width: 1;
+            border.color: Style.borderColor;
 
-            onEditingFinished: {
-                let oldText = deviceEditorContainer.documentModel.GetData("Description");
-                if (oldText != descriptionInput.text){
-                    updateModel();
+            Column {
+                id: additionalInfoBlock;
+
+                anchors.horizontalCenter: additionalInfoBorders.horizontalCenter;
+                anchors.verticalCenter: additionalInfoBorders.verticalCenter;
+
+                width: parent.width - 20;
+
+                spacing: 7;
+
+                Text {
+                    id: titleStatusId;
+                    text: qsTr("Status");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+
+                ComboBox {
+                    id: statusCB;
+
+                    width: parent.width;
+                    height: 23;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        deviceEditorContainer.updateModel();
+                    }
+                }
+
+                Text {
+                    id: titleOrderId;
+                    text: qsTr("Order ID");
+                    color: Style.textColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+
+                ComboBox {
+                    id: orderIdCB;
+
+                    width: parent.width;
+                    height: 23;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        deviceEditorContainer.updateModel();
+                    }
                 }
             }
-
-            KeyNavigation.tab: serialNumberInput;
-        }
-
-        Text {
-            id: titleOrderId;
-            text: qsTr("Order ID");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        CustomTextField {
-            id: orderIdInput;
-
-            width: parent.width;
-            height: 30;
-
-            readOnly: true;
-
-            borderColor: Style.iconColorOnSelected;
-        }
-
-        Text {
-            id: titleStatusId;
-            text: qsTr("Status");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        ComboBox {
-            id: statusCB;
-
-            width: parent.width;
-            height: 23;
-
-            radius: 3;
-
-            onCurrentIndexChanged: {
-                deviceEditorContainer.updateModel();
-            }
-        }
-
-        Text {
-            id: titleSerialNumberId;
-            text: qsTr("Serial number");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        CustomTextField {
-            id: serialNumberInput;
-
-            width: parent.width;
-            height: 30;
-
-            placeHolderText: qsTr("Enter serial number");
-
-            borderColor: Style.iconColorOnSelected;
-
-            onEditingFinished: {
-                let oldText = deviceEditorContainer.documentModel.GetData("SerialNumber");
-                if (oldText != serialNumberInput.text){
-                    updateModel();
-                }
-            }
-
-            KeyNavigation.tab: macAddressInput;
-        }
-
-        Text {
-            id: titleMacAddressId;
-            text: qsTr("MAC-address");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        CustomTextField {
-            id: macAddressInput;
-
-            width: parent.width;
-            height: 30;
-
-            placeHolderText: qsTr("Enter MAC-address");
-
-            borderColor: Style.iconColorOnSelected;
-
-            onEditingFinished: {
-                let oldText = documentModel.GetData("MacAddress");
-                if (oldText != macAddressInput.text){
-                    updateModel();
-                }
-            }
-
-            KeyNavigation.tab: deviceNameInput;
         }
     }
-
-} //Container
+}
 
 
