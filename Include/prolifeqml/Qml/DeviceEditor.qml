@@ -7,7 +7,7 @@ import Acf 1.0
 DocumentBase {
     id: deviceEditorContainer;
 
-    commandsDelegateSourceComp: deviceEditorCommandsDelegate;
+    commandsDelegateSourceComp: orderEditorCommandsDelegate;
 
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
@@ -18,10 +18,10 @@ DocumentBase {
         licensesProvider.updateModel();
     }
 
-//    Component {
-//        id: deviceEditorCommandsDelegate;
-//        DeviceEditorCommandsDelegate {}
-//    }
+    Component {
+        id: deviceEditorCommandsDelegate;
+        OrderEditorCommandsDelegate {}
+    }
 
     onDocumentModelChanged: {
         updateGui();
@@ -65,7 +65,13 @@ DocumentBase {
         console.log("DeviceEditor begin updateGui");
         blockUpdatingModel = true;
 
-        deviceNameInput.text = deviceEditorContainer.documentModel.GetData("DeviceName");
+        if (deviceEditorContainer.documentModel.ContainsKey("Description")){
+            serialNumberInput.text = deviceEditorContainer.documentModel.GetData("Description");
+        }
+
+        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
+            serialNumberInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
+        }
 
         if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
             serialNumberInput.text = deviceEditorContainer.documentModel.GetData("SerialNumber");
@@ -73,6 +79,17 @@ DocumentBase {
 
         if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
+        }
+
+        let productId = documentModel.GetData("ProductId");
+
+        let productModel = productCB.model;
+        for (let i = 0; i < productModel.GetItemsCount(); i++){
+            let id = productModel.GetData("Id", i);
+            if (id === productId){
+                productCB.currentIndex = i;
+                break;
+            }
         }
 
         blockUpdatingModel = false;
@@ -83,8 +100,11 @@ DocumentBase {
         console.log("DeviceEditor begin updateModel");
         undoRedoManager.beginChanges();
 
-        let deviceName = deviceNameInput.text;
-        deviceEditorContainer.documentModel.SetData("DeviceName", deviceName);
+        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
+        deviceEditorContainer.documentModel.SetData("ProductId", selectedProductId);
+
+        let description = descriptionInput.text;
+        deviceEditorContainer.documentModel.SetData("Description", description);
 
         let serialNumber = serialNumberInput.text;
         deviceEditorContainer.documentModel.SetData("SerialNumber", serialNumber);
@@ -112,30 +132,114 @@ DocumentBase {
 
         Text {
             id: titleDeviceName;
-            text: qsTr("Device name");
+            text: qsTr("Device type");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        ComboBox {
+            id: productCB;
+
+            width: parent.width;
+            height: 23;
+
+            radius: 3;
+
+            model: deviceEditorContainer.productsModel;
+
+            onCurrentIndexChanged: {
+                let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
+                if (selectedProductId){
+                    orderProductsModel.SetData("ProductId", selectedProductId, activeProductIndex);
+                    bodyColumn.productCategory = productCB.model.GetData("CategoryId", productCB.currentIndex);
+                    orderProductsModel.SetData("CategoryId",  bodyColumn.productCategory, activeProductIndex);
+                }
+
+//                updatePairModel();
+//                if (bodyColumn.productCategory == "Software"){
+//                    updateHardwareCategoryProducts()
+//                }
+//                else{
+//                    updateSoftwareCategoryProducts()
+//                }
+
+                console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
+
+                if (!blockUpdatingModel){
+                 //   installationEditorContainer.updateModel();
+                    deviceEditorContainer.updateGui();
+                }
+            }
+        }
+
+        Text {
+            id: titleDescriptionId;
+            text: qsTr("Description");
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
         }
 
         CustomTextField {
-            id: deviceNameInput;
+            id: descriptionInput;
 
             width: parent.width;
-            height: 30;
+            height: 60;
 
-            placeHolderText: qsTr("Enter device name");
+            placeHolderText: qsTr("Enter description");
 
             borderColor: Style.iconColorOnSelected;
 
             onEditingFinished: {
-                let oldText = deviceEditorContainer.documentModel.GetData("DeviceName");
-                if (currentId != deviceNameInput.text){
+                let oldText = deviceEditorContainer.documentModel.GetData("Description");
+                if (oldText != descriptionInput.text){
                     updateModel();
                 }
             }
 
             KeyNavigation.tab: serialNumberInput;
+        }
+
+        Text {
+            id: titleOrderId;
+            text: qsTr("Order ID");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        CustomTextField {
+            id: orderIdInput;
+
+            width: parent.width;
+            height: 30;
+
+            readOnly: true;
+
+            borderColor: Style.iconColorOnSelected;
+        }
+
+        Text {
+            id: titleStatusId;
+            text: qsTr("Status");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        ComboBox {
+            id: statusCB;
+
+            width: parent.width;
+            height: 23;
+
+            radius: 3;
+
+            model: deviceEditorContainer.productsModel;
+
+            onCurrentIndexChanged: {
+                }
         }
 
         Text {
@@ -168,7 +272,7 @@ DocumentBase {
 
         Text {
             id: titleMacAddressId;
-            text: qsTr("MAC address");
+            text: qsTr("MAC-address");
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
@@ -180,7 +284,7 @@ DocumentBase {
             width: parent.width;
             height: 30;
 
-            placeHolderText: qsTr("Enter MAC adress");
+            placeHolderText: qsTr("Enter MAC-address");
 
             borderColor: Style.iconColorOnSelected;
 
