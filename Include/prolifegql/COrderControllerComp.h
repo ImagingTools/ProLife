@@ -9,6 +9,9 @@
 #include <prolifedata/IOrderInfo.h>
 
 
+#undef GetObject
+
+
 namespace prolifegql
 {
 

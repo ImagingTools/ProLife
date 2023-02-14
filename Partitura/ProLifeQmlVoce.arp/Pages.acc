@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5053" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -56,7 +56,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Deployment"/>
+                        <Data IsEnabled="true" Value="Magic"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Id" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Devices"/>
@@ -507,21 +507,6 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductSqlRepository"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -533,7 +518,6 @@
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
                     <Component ExportedId="ProductInstanceSqlRepository" ComponentId="ProductInstanceSqlRepository"/>
-                    <Component ExportedId="ProductSqlRepository" ComponentId="ProductSqlRepository"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>

@@ -11,6 +11,9 @@
 // ImtCore includes
 #include <imtlic/ILicenseInstanceProvider.h>
 
+// ProLife includes
+#include <prolifedata/IOrdered.h>
+
 
 namespace imtbase
 {
@@ -31,7 +34,7 @@ class IProductInfo;
 	There is no license validation logic yet at this level. It is only an overview of the registered licenses in the specified product installation.
 	\ingroup LicenseManagement
 */
-class IOrderedProductInfo: virtual public imtlic::ILicenseInstanceProvider, virtual public iser::IObject
+class IOrderedProductInfo: virtual public imtlic::ILicenseInstanceProvider, virtual public prolifedata::IOrdered, virtual public iser::IObject
 {
 public:
 	enum MetaInfoTypes
@@ -111,11 +114,6 @@ public:
 		\sa GetCustomerDatabase
 	*/
 	virtual QByteArray GetCustomerId() const = 0;
-
-
-	virtual QByteArray GetOrderId() const = 0;
-
-//	virtual QByteArray GetProductType() const = 0;
 };
 
 

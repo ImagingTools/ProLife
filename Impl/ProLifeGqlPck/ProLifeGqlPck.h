@@ -5,9 +5,7 @@
 #include <icomp/TMakeComponentWrap.h>
 #include <icomp/TModelCompWrap.h>
 
-// ImtCore includes
-#include <prolifegql/CProductControllerComp.h>
-#include <prolifegql/CProductCollectionControllerComp.h>
+// ProLife includes
 #include <prolifegql/COrderControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
 #include <prolifegql/COrderCollectionControllerComp.h>
@@ -21,8 +19,6 @@ namespace ProLifeGqlPck
 {
 
 
-typedef prolifegql::CProductControllerComp ProductController;
-typedef prolifegql::CProductCollectionControllerComp ProductCollectionController;
 typedef prolifegql::COrderControllerComp OrderController;
 typedef prolifegql::COrderCollectionControllerComp OrderCollectionController;
 typedef prolifegql::CDeviceControllerComp DeviceController;

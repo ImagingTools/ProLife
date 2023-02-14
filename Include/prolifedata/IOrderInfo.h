@@ -3,31 +3,28 @@
 
 // ACF includes
 #include <iser/IObject.h>
+#include <idoc/IDocumentMetaInfo.h>
 
 // ImtCore includes
 #include <imtbase/IObjectCollection.h>
+
+// ProLife includes
+#include <prolifedata/IOrdered.h>
 
 
 namespace prolifedata
 {
 
 
-/**
-	Interface for describing an Product.
-	\ingroup Authentification
-*/
-class IOrderInfo: virtual public iser::IObject
+class IOrderInfo: virtual public iser::IObject, virtual public prolifedata::IOrdered
 {
 public:
-	typedef QByteArrayList ProductIds;
-
 	enum MetaInfoTypes
 	{
-
 		/**
 			Order Id given as QString.
 		*/
-		MIT_ORDER_ID,
+		MIT_ORDER_ID = idoc::IDocumentMetaInfo::MIT_USER,
 
 		/**
 			Order customer given as QString.
@@ -35,20 +32,23 @@ public:
 		MIT_ORDER_CUSTOMER,
 
 		/**
-			Order status given as QString.
+			Order status given as OrderStatus.
 		*/
 		MIT_ORDER_STATUS
 	};
 
-	/**
-		Get id of the order.
-	*/
-	virtual QByteArray GetOrderId() const = 0;
+	enum OrderStatus
+	{
+		OS_NONE,
+		OS_CREATED,
+		OS_IN_PROGRESS,
+		OS_CANCELED,
+		OS_ON_HOLD,
+		OS_FINISHED,
+		OS_CLOSED
+	};
 
-	/**
-		Set id of the order.
-	*/
-	virtual void SetOrderId(const QByteArray& orderId) = 0;
+	I_DECLARE_ENUM(OrderStatus, OS_NONE, OS_CREATED, OS_IN_PROGRESS, OS_CANCELED, OS_ON_HOLD, OS_FINISHED, OS_CLOSED);
 
 	/**
 		Get customer of the order.
@@ -63,28 +63,26 @@ public:
 	/**
 		Get description of the order.
 	*/
-	virtual QByteArray GetDescription() const = 0;
+	virtual QString GetDescription() const = 0;
 	/**
 		Set order description.
 	*/
-	virtual void SetDescription(const QByteArray& description) = 0;
+	virtual void SetDescription(const QString& description) = 0;
 
 	/**
 		Get the status of this order.
 	*/
-	virtual QByteArray GetStatus() const = 0;
+	virtual OrderStatus GetOrderStatus() const = 0;
 
 	/**
 		Set the status of this order.
 	*/
-	virtual void SetStatus(const QByteArray& status) = 0;
+	virtual void SetOrderStatus(OrderStatus status) = 0;
 
 	/**
 		Get order products.
 	*/
 	virtual imtbase::IObjectCollection* GetProducts() = 0;
-
-
 };
 
 

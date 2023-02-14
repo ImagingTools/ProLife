@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5053" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -122,14 +122,20 @@
                             <Values>
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
+                                <Value>OrderId</Value>
+                                <Value>ProductType</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>MAC Address</Value>
+                                <Value>MAC-Address</Value>
                                 <Value>Serial Number</Value>
+                                <Value>Order-ID</Value>
+                                <Value>Product Type</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -159,7 +165,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Order"/>
+                        <Data IsEnabled="true" Value="Device"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -315,7 +321,7 @@
                                     <Data IsEnabled="true" Value="true"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="New order"/>
+                                    <Data IsEnabled="true" Value="New sensor"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

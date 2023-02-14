@@ -94,6 +94,12 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			deviceInfoPtr->SetSerialNumber(serialNumber);
 		}
 
+		if (itemModel.ContainsKey("Description")){
+			QString description = itemModel.GetData("Description").toString();
+
+			deviceInfoPtr->SetDescription(description);
+		}
+
 		return deviceInfoPtr.PopPtr();
 	}
 

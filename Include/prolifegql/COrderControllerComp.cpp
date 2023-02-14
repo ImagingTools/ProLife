@@ -14,6 +14,7 @@
 
 // ProLife includes
 #include <prolifedata/IOrderedProductInfo.h>
+#include <prolifedata/TOrderedWrap.h>
 
 
 namespace prolifegql
@@ -55,15 +56,15 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 		QByteArray orderId = orderPtr->GetOrderId();
 		QByteArray customerId = orderPtr->GetCustomerId();
-		QByteArray description = orderPtr->GetDescription();
-		QByteArray orderStatus = orderPtr->GetStatus();
+		QString description = orderPtr->GetDescription();
+//		QByteArray orderStatus = orderPtr->GetStatus();
 
 		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, imtbase::ICollectionInfo::EIT_NAME).toString();
 		dataModel->SetData("Name", name);
 		dataModel->SetData("Id", objectId);
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
-		dataModel->SetData("OrderStatus", orderStatus);
+//		dataModel->SetData("OrderStatus", orderStatus);
 		dataModel->SetData("Description", description);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
@@ -148,7 +149,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
 		istd::TDelPtr<prolifedata::IOrderInfo> orderPtr = m_orderPtr.CreateInstance();
-		if (!orderPtr.IsValid()) {
+		if (!orderPtr.IsValid()){
 			return nullptr;
 		}
 

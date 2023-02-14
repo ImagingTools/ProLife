@@ -21,7 +21,7 @@ class COrderedProductInfo: virtual public prolifedata::IOrderedProductInfo
 public:
 	COrderedProductInfo();
 
-	// reimplemented (imtlic::IProductInstanceInfo)
+	// reimplemented (imtlic::IOrderedProductInfo)
 	virtual const imtbase::IObjectCollection* GetProductDatabase() const override;
 	virtual const imtbase::IObjectCollection* GetCustomerDatabase() const override;
 	virtual void SetupProductInstance(
@@ -35,7 +35,10 @@ public:
 	virtual QByteArray GetProductId() const override;
 	virtual QByteArray GetProductInstanceId() const override;
 	virtual QByteArray GetCustomerId() const override;
+
+	// reimplemented (prolifedata::IOrdered)
 	virtual QByteArray GetOrderId() const override;
+	virtual void SetOrderId(const QByteArray& orderId) override;
 
 	// reimplemented (imtlic::ILicenseInfoProvider)
 	virtual const imtbase::ICollectionInfo& GetLicenseInstances() const override;

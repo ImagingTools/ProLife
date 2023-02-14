@@ -45,7 +45,7 @@ COrderInfo::~COrderInfo()
 }
 
 
-// reimplemented (IOrderInfo)
+// reimplemented (IOrdered)
 
 QByteArray COrderInfo::GetOrderId() const
 {
@@ -63,6 +63,8 @@ void COrderInfo::SetOrderId(const QByteArray& orderId)
 }
 
 
+// reimplemented (IOrderInfo)
+
 QByteArray COrderInfo::GetCustomerId() const
 {
 	return m_customerId;
@@ -79,13 +81,13 @@ void COrderInfo::SetCustomerId(const QByteArray& customerId)
 }
 
 
-QByteArray COrderInfo::GetDescription() const
+QString COrderInfo::GetDescription() const
 {
 	return m_description;
 }
 
 
-void COrderInfo::SetDescription(const QByteArray &description)
+void COrderInfo::SetDescription(const QString& description)
 {
 	if (m_description != description){
 		istd::CChangeNotifier changeNotifier(this);
@@ -95,13 +97,13 @@ void COrderInfo::SetDescription(const QByteArray &description)
 }
 
 
-QByteArray COrderInfo::GetStatus() const
+COrderInfo::OrderStatus COrderInfo::GetOrderStatus() const
 {
 	return m_status;
 }
 
 
-void COrderInfo::SetStatus(const QByteArray &status)
+void COrderInfo::SetOrderStatus(OrderStatus status)
 {
 	if (m_status != status){
 		istd::CChangeNotifier changeNotifier(this);
@@ -149,10 +151,10 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
-	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
-	retVal = retVal && archive.BeginTag(orderStatusTag);
-	retVal = retVal && archive.Process(m_status);
-	retVal = retVal && archive.EndTag(orderStatusTag);
+//	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
+//	retVal = retVal && archive.BeginTag(orderStatusTag);
+//	retVal = retVal && archive.Process(m_status);
+//	retVal = retVal && archive.EndTag(orderStatusTag);
 
 	retVal = retVal && m_productInstanceCollection.Serialize(archive);
 

@@ -104,9 +104,20 @@ QByteArray COrderedProductInfo::GetCustomerId() const
 	return m_customerId;
 }
 
+
 QByteArray COrderedProductInfo::GetOrderId() const
 {
 	return m_orderId;
+}
+
+
+void COrderedProductInfo::SetOrderId(const QByteArray& orderId)
+{
+	if (m_orderId != orderId){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_orderId = orderId;
+	}
 }
 
 

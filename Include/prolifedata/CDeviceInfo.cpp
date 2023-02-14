@@ -53,6 +53,38 @@ void CDeviceInfo::SetMacAddress(const QByteArray& macAddress)
 }
 
 
+QString CDeviceInfo::GetDescription() const
+{
+	return m_description;
+}
+
+
+void CDeviceInfo::SetDescription(const QString& description)
+{
+	if (m_description != description){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_description = description;
+	}
+}
+
+
+IDeviceInfo::DeviceStatus CDeviceInfo::GetDeviceStatus() const
+{
+	return m_status;
+}
+
+
+void CDeviceInfo::SetDeviceStatus(DeviceStatus status)
+{
+	if (m_status != status){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_status = status;
+	}
+}
+
+
 // reimplemented (iser::IObject)
 
 QByteArray CDeviceInfo::GetFactoryId() const
@@ -69,6 +101,9 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
+	static iser::CArchiveTag deviceTag("Device", "Device item", iser::CArchiveTag::TT_GROUP);
+	retVal = archive.BeginTag(deviceTag);
+
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
 	retVal = archive.BeginTag(serialNumberTag);
 	retVal = retVal && archive.Process(m_serialNumber);
@@ -78,6 +113,8 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = archive.BeginTag(macAddressTag);
 	retVal = retVal && archive.Process(m_macAddress);
 	retVal = retVal && archive.EndTag(macAddressTag);
+
+	retVal = retVal && archive.EndTag(deviceTag);
 
 	return retVal;
 }

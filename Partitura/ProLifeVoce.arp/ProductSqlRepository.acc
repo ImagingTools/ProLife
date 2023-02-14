@@ -2,40 +2,14 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5053" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description>Acula's data repository containing all resources need for the execution of the production workflow</Description>
     <Keywords>Inspection Application Product Workflow</Keywords>
     <ElementsList>
-        <Element Id="ProductDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="ProductDatabaseDelegateComp">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Id"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductInfo" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="ProductInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TableName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Products"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ProductInfo" PackageId="ProLifeDataPck" ComponentId="ProductInfo">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
         <Element Id="Products" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>

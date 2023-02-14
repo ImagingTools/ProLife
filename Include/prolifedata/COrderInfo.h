@@ -14,6 +14,8 @@ namespace prolifedata
 class COrderInfo: virtual public IOrderInfo
 {
 public:
+	typedef QByteArrayList ProductIds;
+
 	static QByteArray GetTypeId();
 
 	COrderInfo();
@@ -24,10 +26,10 @@ public:
 	virtual void SetOrderId(const QByteArray& orderId) override;
 	virtual QByteArray GetCustomerId() const override;
 	virtual void SetCustomerId(const QByteArray& customerId) override;
-	virtual QByteArray GetDescription() const override;
-	virtual void SetDescription(const QByteArray& description) override;
-	virtual QByteArray GetStatus() const override;
-	virtual void SetStatus(const QByteArray& status) override;
+	virtual QString GetDescription() const override;
+	virtual void SetDescription(const QString& description) override;
+	virtual OrderStatus GetOrderStatus() const override;
+	virtual void SetOrderStatus(OrderStatus status) override;
 	imtbase::CObjectCollection* GetProducts() override;
 
 	// reimplemented (iser::IObject)
@@ -45,9 +47,9 @@ public:
 private:
 	QByteArray m_orderId;
 	QByteArray m_customerId;
-	QByteArray m_description;
-	QByteArray m_status;
-    IOrderInfo::ProductIds m_orderedProducts;
+	QString m_description;
+	OrderStatus m_status;
+	ProductIds m_orderedProducts;
 
 	class CLicensedSoftwareInstanceInfo : public imtlic::CProductInstanceInfo
 	{
@@ -56,8 +58,6 @@ private:
 	};
 
 	imtbase::CObjectCollection m_productInstanceCollection;
-
-//	imtlic::CProductInstanceCollection m_productInstanceCollection;
 };
 
 
