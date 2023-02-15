@@ -9,15 +9,19 @@
 #include <iser/CArchiveTag.h>
 #include <iser/CPrimitiveTypesSerializer.h>
 
-// ImtCore includes
-#include <imtlic/CLicensedHardwareInstanceInfo.h>
-
 
 namespace prolifedata
 {
 
 
 // public methods
+
+CDeviceInfo::CDeviceInfo() :
+	m_status(DPS_NONE)
+{
+
+}
+
 
 // reimplemented (IDeviceInfo)
 
@@ -116,7 +120,7 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
-	static iser::CArchiveTag deviceTag("Device", "Device item", iser::CArchiveTag::TT_GROUP);
+	static iser::CArchiveTag deviceTag("DeviceItem", "Device item", iser::CArchiveTag::TT_GROUP);
 	retVal = retVal && archive.BeginTag(deviceTag);
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
@@ -139,10 +143,10 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(descriptionTag);
 
-//	static iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
-//	retVal = retVal && archive.BeginTag(statusTag);
-//	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
-//	retVal = retVal && archive.EndTag(statusTag);
+	static iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(statusTag);
+	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
+	retVal = retVal && archive.EndTag(statusTag);
 
 	retVal = retVal && archive.EndTag(deviceTag);
 
@@ -198,6 +202,7 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 	m_macAddress.clear();
 	m_deviceType.clear();
 	m_description.clear();
+	m_status = DPS_NONE;
 
 	return true;
 }

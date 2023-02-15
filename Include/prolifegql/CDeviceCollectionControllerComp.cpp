@@ -54,8 +54,8 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "Description"){
 					elementInformation = deviceInfoPtr->GetDescription();
 				}
-				else if(informationId == "OrderId"){
-//					elementInformation = deviceInfoPtr->GetOr
+				else if(informationId == "DeviceType"){
+					elementInformation = deviceInfoPtr->GetDeviceType();
 				}
 				else if(informationId == "ProductionStatus"){
 					int status = deviceInfoPtr->GetDeviceProductionStatus();

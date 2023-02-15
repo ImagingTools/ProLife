@@ -27,6 +27,9 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 
+	dataModelPtr->SetData("Id", "");
+	dataModelPtr->SetData("Name", "");
+
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
@@ -93,6 +96,11 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			QByteArray serialNumber = itemModel.GetData("SerialNumber").toByteArray();
 
 			devicePtr->SetSerialNumber(serialNumber);
+
+			if (serialNumber.isEmpty()){
+				errorMessage = QT_TR_NOOP("Serial Number cannot be empty!");
+				return nullptr;
+			}
 
 			name = serialNumber;
 			objectId = serialNumber;

@@ -15,6 +15,8 @@ namespace prolifedata
 class CDeviceInfo: virtual public IDeviceInfo
 {
 public:
+	CDeviceInfo();
+
 	// reimplemented (IDeviceInfo)
 	virtual QByteArray GetSerialNumber() const override;
 	virtual void SetSerialNumber(const QByteArray& serialNumber) override;

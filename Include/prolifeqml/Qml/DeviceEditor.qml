@@ -111,18 +111,21 @@ DocumentBase {
         console.log("DeviceEditor begin updateGui");
         deviceEditorContainer.blockUpdatingModel = true;
 
+        descriptionInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
             descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
         }
 
-        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
-            orderInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
-        }
+//        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
+//            orderInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
+//        }
 
+        serialNumberInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
             serialNumberInput.text = deviceEditorContainer.documentModel.GetData("SerialNumber");
         }
 
+        macAddressInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
