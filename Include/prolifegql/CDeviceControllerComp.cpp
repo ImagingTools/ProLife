@@ -33,12 +33,16 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 		if (deviceInfoPtr != nullptr){
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 			QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 			QString description = deviceInfoPtr->GetDescription();
+			prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 
 			dataModelPtr->SetData("Name", serialNumber);
 			dataModelPtr->SetData("MacAddress", macAddress);
 			dataModelPtr->SetData("SerialNumber", serialNumber);
 			dataModelPtr->SetData("Description", description);
+			dataModelPtr->SetData("ProductionStatus", status);
+			dataModelPtr->SetData("DeviceType", deviceType);
 		}
 	}
 
@@ -100,21 +104,17 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			devicePtr->SetDescription(description);
 		}
 
-		if (itemModel.ContainsKey("Status")){
-			QByteArray status = itemModel.GetData("Status").toByteArray();
+		if (itemModel.ContainsKey("ProductionStatus")){
+			int status = itemModel.GetData("ProductionStatus").toInt();
+			if (status >= 0){
+				devicePtr->SetDeviceProductionStatus((prolifedata::IDeviceInfo::DeviceProductionStatus) status);
+			}
+		}
 
-			if (status == QByteArray("InProgress")){
-				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_IN_PROGRESS);
-			}
-			else if (status == QByteArray("Created")){
-				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_CREATED);
-			}
-			else if (status == QByteArray("OnFinished")){
-				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_FINISHED);
-			}
-			else{
-				devicePtr->SetDeviceStatus(prolifedata::IDeviceInfo::OS_NONE);
-			}
+		if (itemModel.ContainsKey("DeviceType")){
+			QByteArray deviceType = itemModel.GetData("DeviceType").toByteArray();
+
+			devicePtr->SetDeviceType(deviceType);
 		}
 
 		return devicePtr.PopPtr();

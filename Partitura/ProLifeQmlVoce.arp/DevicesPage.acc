@@ -120,10 +120,11 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>DeviceType</Value>
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>OrderId</Value>
-                                <Value>ProductType</Value>
+                                <Value>ProductionStatus</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>
@@ -131,10 +132,11 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Device Type</Value>
                                 <Value>MAC-Address</Value>
                                 <Value>Serial Number</Value>
                                 <Value>Order-ID</Value>
-                                <Value>Product Type</Value>
+                                <Value>Production Status</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>

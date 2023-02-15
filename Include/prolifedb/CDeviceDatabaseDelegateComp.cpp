@@ -122,8 +122,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 		}
 	}
 
-	qDebug() << "retVal " << retVal.query;
-
 	return retVal;
 }
 

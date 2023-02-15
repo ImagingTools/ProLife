@@ -36,23 +36,23 @@ public:
 		MIT_DEVICE_SERIAL_NUMBER,
 
 		/**
-			Device status given as DeviceStatus.
+			Device status given as DeviceProductionStatus.
 		*/
 		MIT_DEVICE_STATUS
 	};
 
-	enum DeviceStatus
+	enum DeviceProductionStatus
 	{
-		OS_NONE,
-		OS_CREATED,
-		OS_IN_PROGRESS,
-		OS_CANCELED,
-		OS_ON_HOLD,
-		OS_FINISHED,
-		OS_CLOSED
+		DPS_NONE,
+		DPS_ACCEPTED,
+		DPS_IN_PROGRESS,
+		DPS_CANCELED,
+		DPS_ON_HOLD,
+		DPS_FINISHED,
+		DPS_CLOSED
 	};
 
-	I_DECLARE_ENUM(DeviceStatus, OS_NONE, OS_CREATED, OS_IN_PROGRESS, OS_CANCELED, OS_ON_HOLD, OS_FINISHED, OS_CLOSED);
+	I_DECLARE_ENUM(DeviceProductionStatus, DPS_NONE, DPS_ACCEPTED, DPS_IN_PROGRESS, DPS_CANCELED, DPS_ON_HOLD, DPS_FINISHED, DPS_CLOSED);
 
 	/**
 		Get the serial number of this device instance.
@@ -75,6 +75,16 @@ public:
 	virtual void SetMacAddress(const QByteArray& macAddress) = 0;
 
 	/**
+		Get the type of this device instance.
+	*/
+	virtual QByteArray GetDeviceType() const = 0;
+
+	/**
+		Set the type of this device instance.
+	*/
+	virtual void SetDeviceType(const QByteArray& deviceType) = 0;
+
+	/**
 		Get the description of this device instance.
 	*/
 	virtual QString GetDescription() const = 0;
@@ -87,12 +97,12 @@ public:
 	/**
 		Get the status of this order.
 	*/
-	virtual DeviceStatus GetDeviceStatus() const = 0;
+	virtual DeviceProductionStatus GetDeviceProductionStatus() const = 0;
 
 	/**
 		Set the status of this order.
 	*/
-	virtual void SetDeviceStatus(DeviceStatus status) = 0;
+	virtual void SetDeviceProductionStatus(DeviceProductionStatus status) = 0;
 };
 
 

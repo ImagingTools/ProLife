@@ -52,6 +52,21 @@ void CDeviceInfo::SetMacAddress(const QByteArray& macAddress)
 	}
 }
 
+QByteArray CDeviceInfo::GetDeviceType() const
+{
+	return m_deviceType;
+}
+
+
+void CDeviceInfo::SetDeviceType(const QByteArray& deviceType)
+{
+	if (m_deviceType != deviceType){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_deviceType = deviceType;
+	}
+}
+
 
 QString CDeviceInfo::GetDescription() const
 {
@@ -69,13 +84,13 @@ void CDeviceInfo::SetDescription(const QString& description)
 }
 
 
-IDeviceInfo::DeviceStatus CDeviceInfo::GetDeviceStatus() const
+IDeviceInfo::DeviceProductionStatus CDeviceInfo::GetDeviceProductionStatus() const
 {
 	return m_status;
 }
 
 
-void CDeviceInfo::SetDeviceStatus(DeviceStatus status)
+void CDeviceInfo::SetDeviceProductionStatus(DeviceProductionStatus status)
 {
 	if (m_status != status){
 		istd::CChangeNotifier changeNotifier(this);
@@ -102,17 +117,32 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	bool retVal = true;
 
 	static iser::CArchiveTag deviceTag("Device", "Device item", iser::CArchiveTag::TT_GROUP);
-	retVal = archive.BeginTag(deviceTag);
+	retVal = retVal && archive.BeginTag(deviceTag);
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
-	retVal = archive.BeginTag(serialNumberTag);
+	retVal = retVal && archive.BeginTag(serialNumberTag);
 	retVal = retVal && archive.Process(m_serialNumber);
 	retVal = retVal && archive.EndTag(serialNumberTag);
 
 	static iser::CArchiveTag macAddressTag("MacAddress", "Mac address", iser::CArchiveTag::TT_LEAF);
-	retVal = archive.BeginTag(macAddressTag);
+	retVal = retVal && archive.BeginTag(macAddressTag);
 	retVal = retVal && archive.Process(m_macAddress);
 	retVal = retVal && archive.EndTag(macAddressTag);
+
+	static iser::CArchiveTag deviceTypeTag("DeviceType", "Device type", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(deviceTypeTag);
+	retVal = retVal && archive.Process(m_deviceType);
+	retVal = retVal && archive.EndTag(deviceTypeTag);
+
+	static iser::CArchiveTag descriptionTag("Description", "Description of the device", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(descriptionTag);
+	retVal = retVal && archive.Process(m_description);
+	retVal = retVal && archive.EndTag(descriptionTag);
+
+//	static iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
+//	retVal = retVal && archive.BeginTag(statusTag);
+//	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
+//	retVal = retVal && archive.EndTag(statusTag);
 
 	retVal = retVal && archive.EndTag(deviceTag);
 
@@ -138,6 +168,8 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 
 		m_serialNumber = sourcePtr->m_serialNumber;
 		m_macAddress = sourcePtr->m_macAddress;
+		m_deviceType = sourcePtr->m_deviceType;
+		m_description = sourcePtr->m_description;
 		m_status = sourcePtr->m_status;
 
 		return true;
@@ -164,6 +196,8 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 
 	m_serialNumber.clear();
 	m_macAddress.clear();
+	m_deviceType.clear();
+	m_description.clear();
 
 	return true;
 }

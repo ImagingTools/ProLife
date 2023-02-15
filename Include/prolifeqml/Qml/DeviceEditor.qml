@@ -13,19 +13,38 @@ DocumentBase {
     property bool blockUpdatingModel: false;
 
     onDocumentModelChanged: {
-        updateGui();
-
-        undoRedoManager.registerModel(documentModel)
+        productsList.updateModel({}, ["Id", "Name", "Description"]);
     }
 
-    //    onAccountsModelChanged: {
-    //        console.log("onAccountsModelChanged", accountsModel);
-    //        customerCB.model = accountsModel;
-    //    }
+    CollectionDataProvider {
+        id: productsList;
 
-    //    onProductsModelChanged: {
-    //        console.log("onProductsModelChanged", productsModel);
-    //    }
+        commandId: "Products";
+
+        onCollectionModelChanged: {
+            if (productsList.collectionModel != null){
+                productCB.model = productsList.collectionModel;
+                ordersList.updateModel({}, ["OrderId", "Description"]);
+            }
+        }
+    }
+
+    CollectionDataProvider {
+        id: ordersList;
+
+        commandId: "Orders";
+
+        onCollectionModelChanged: {
+            if (ordersList.collectionModel != null){
+                orderCB.model = ordersList.collectionModel;
+
+                deviceEditorContainer.updateGui();
+
+                undoRedoManager.registerModel(documentModel)
+            }
+        }
+    }
+
     TreeItemModel {
         id: statusModel;
 
@@ -33,65 +52,41 @@ DocumentBase {
             let index = statusModel.InsertNewItem();
 
             statusModel.SetData("Id", "None", index);
-            statusModel.SetData("Name", "NONE", index);
+            statusModel.SetData("Name", qsTr("None"), index);
 
             index = statusModel.InsertNewItem();
 
-            statusModel.SetData("Id", "Created", index);
-            statusModel.SetData("Name", "CREATED", index);
+            statusModel.SetData("Id", "Accepted", index);
+            statusModel.SetData("Name", qsTr("Accepted"), index);
 
             index = statusModel.InsertNewItem();
 
             statusModel.SetData("Id", "InProgress", index);
-            statusModel.SetData("Name", "IN_PROGRESS", index);
+            statusModel.SetData("Name", qsTr("In Progress"), index);
+
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "Canceled", index);
+            statusModel.SetData("Name", qsTr("Canceled"), index);
+
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "OnHold", index);
+            statusModel.SetData("Name", qsTr("On Hold"), index);
+
 
             index = statusModel.InsertNewItem();
 
             statusModel.SetData("Id", "Finished", index);
-            statusModel.SetData("Name", "FINISHED", index);
+            statusModel.SetData("Name", qsTr("Finished"), index);
 
+            index = statusModel.InsertNewItem();
+
+            statusModel.SetData("Id", "Closed", index);
+            statusModel.SetData("Name", qsTr("Closed"), index);
             statusCB.model = statusModel;
         }
     }
-
-    //    ListModel {
-    //        id: statusModel;
-
-    //        ListElement {
-    //            Id: "NONE";
-    //            Name: qsTr("NONE");
-    //        }
-
-    //        ListElement {
-    //            Id: "CREATED";
-    //            Name: qsTr("CREATED");
-    //        }
-
-    //        ListElement {
-    //            Id: "IN_PROGRESS";
-    //            Name: qsTr("IN_PROGRESS");
-    //        }
-
-    //        ListElement {
-    //            Id: "CANCELED";
-    //            Name: qsTr("CANCELED");
-    //        }
-
-    //        ListElement {
-    //            Id: "ON_HOLD";
-    //            Name: qsTr("ON_HOLD");
-    //        }
-
-    //        ListElement {
-    //            Id: "ON_FINISHED";
-    //            Name: qsTr("ON_FINISHED");
-    //        }
-
-    //        ListElement {
-    //            Id: "ON_CLOSED";
-    //            Name: qsTr("ON_CLOSED");
-    //        }
-    //    }
 
     UndoRedoManager {
         id: undoRedoManager;
@@ -117,11 +112,11 @@ DocumentBase {
         deviceEditorContainer.blockUpdatingModel = true;
 
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
-            serialNumberInput.text = deviceEditorContainer.documentModel.GetData("Description");
+            descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
         }
 
         if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
-            serialNumberInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
+            orderInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
         }
 
         if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
@@ -132,25 +127,35 @@ DocumentBase {
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
 
-        if (deviceEditorContainer.documentModel.ContainsKey("Status")){
-            let status = deviceEditorContainer.documentModel.GetData("Status");
-            for (let i = 0; i < statusModel.GetItemsCount(); i++){
-                let id = statusModel.GetData("Id", i);
-                if (id === status){
-                    statusCB.currentIndex = i;
+        statusCB.currentIndex = -1;
+        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+            statusCB.currentIndex = status;
+        }
+
+        productCB.currentIndex = -1;
+        if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
+            let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
+            let productModel = productCB.model;
+            for (let i = 0; i < productModel.GetItemsCount(); i++){
+                let id = productModel.GetData("Id", i);
+                if (id === productId){
+                    productCB.currentIndex = i;
                     break;
                 }
             }
         }
 
-        let productId = documentModel.GetData("ProductId");
-
-        let productModel = productCB.model;
-        for (let i = 0; i < productModel.GetItemsCount(); i++){
-            let id = productModel.GetData("Id", i);
-            if (id === productId){
-                productCB.currentIndex = i;
-                break;
+        orderCB.currentIndex = -1;
+        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
+            let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
+            let ordersModel = orderCB.model;
+            for (let i = 0; i < ordersModel.GetItemsCount(); i++){
+                let id = ordersModel.GetData("Id", i);
+                if (id === orderId){
+                    orderCB.currentIndex = i;
+                    break;
+                }
             }
         }
 
@@ -166,8 +171,21 @@ DocumentBase {
 
         undoRedoManager.beginChanges();
 
-        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-        deviceEditorContainer.documentModel.SetData("ProductId", selectedProductId);
+        if (productCB.currentIndex >= 0){
+            let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
+            deviceEditorContainer.documentModel.SetData("DeviceType", selectedProductId);
+        }
+        else{
+            deviceEditorContainer.documentModel.SetData("DeviceType", "");
+        }
+
+        if (orderCB.currentIndex >= 0){
+            let selectedOrderId = orderCB.model.GetData("OrderId", orderCB.currentIndex);
+            deviceEditorContainer.documentModel.SetData("OrderId", selectedOrderId);
+        }
+        else{
+            deviceEditorContainer.documentModel.SetData("OrderId", "");
+        }
 
         let description = descriptionInput.text;
         deviceEditorContainer.documentModel.SetData("Description", description);
@@ -180,10 +198,7 @@ DocumentBase {
         deviceEditorContainer.documentModel.SetData("Id", macAddress);
         deviceEditorContainer.documentModel.SetData("Name", macAddress);
 
-        let index = statusCB.currentIndex;
-        if (index >= 0){
-            documentModel.SetData("Status", statusModel.GetData("Id", index));
-        }
+        documentModel.SetData("ProductionStatus", statusCB.currentIndex);
 
         undoRedoManager.endChanges();
     }
@@ -193,7 +208,6 @@ DocumentBase {
 
         color: Style.backgroundColor;
     }
-
 
     Column {
         id: bodyColumn;
@@ -234,7 +248,7 @@ DocumentBase {
 
                 Text {
                     id: titleDeviceName;
-                    text: qsTr("Device type");
+                    text: qsTr("Device Type");
                     color: Style.textColor;
                     font.family: Style.fontFamily;
                     font.pixelSize: Style.fontSize_common;
@@ -251,27 +265,7 @@ DocumentBase {
                     model: deviceEditorContainer.productsModel;
 
                     onCurrentIndexChanged: {
-                        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-                        if (selectedProductId){
-                            orderProductsModel.SetData("ProductId", selectedProductId, activeProductIndex);
-                            bodyColumn.productCategory = productCB.model.GetData("CategoryId", productCB.currentIndex);
-                            orderProductsModel.SetData("CategoryId",  bodyColumn.productCategory, activeProductIndex);
-                        }
-
-                        //                updatePairModel();
-                        //                if (bodyColumn.productCategory == "Software"){
-                        //                    updateHardwareCategoryProducts()
-                        //                }
-                        //                else{
-                        //                    updateSoftwareCategoryProducts()
-                        //                }
-
-                        console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
-
-                        if (!deviceEditorContainer.blockUpdatingModel){
-                            //   installationEditorContainer.updateModel();
-                            deviceEditorContainer.updateGui();
-                        }
+                        deviceEditorContainer.updateModel();
                     }
                 }
 
@@ -303,8 +297,6 @@ DocumentBase {
                     KeyNavigation.tab: serialNumberInput;
                 }
 
-
-
                 Text {
                     id: titleSerialNumberId;
                     text: qsTr("Serial number");
@@ -335,7 +327,7 @@ DocumentBase {
 
                 Text {
                     id: titleMacAddressId;
-                    text: qsTr("MAC-address");
+                    text: qsTr("MAC-Address");
                     color: Style.textColor;
                     font.family: Style.fontFamily;
                     font.pixelSize: Style.fontSize_common;
@@ -347,7 +339,7 @@ DocumentBase {
                     width: parent.width;
                     height: 30;
 
-                    placeHolderText: qsTr("Enter MAC-address");
+                    placeHolderText: qsTr("Enter MAC-Address");
 
                     borderColor: Style.iconColorOnSelected;
 
@@ -394,7 +386,7 @@ DocumentBase {
 
                 Text {
                     id: titleStatusId;
-                    text: qsTr("Status");
+                    text: qsTr("Production Status");
                     color: Style.textColor;
                     font.family: Style.fontFamily;
                     font.pixelSize: Style.fontSize_common;
@@ -422,12 +414,14 @@ DocumentBase {
                 }
 
                 ComboBox {
-                    id: orderIdCB;
+                    id: orderCB;
 
                     width: parent.width;
                     height: 23;
 
                     radius: 3;
+
+                    nameId: "OrderId";
 
                     onCurrentIndexChanged: {
                         deviceEditorContainer.updateModel();

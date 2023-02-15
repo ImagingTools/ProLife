@@ -54,19 +54,33 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "Description"){
 					elementInformation = deviceInfoPtr->GetDescription();
 				}
-				else if(informationId == "Status"){
-					int status = deviceInfoPtr->GetDeviceStatus();
-					if (status == prolifedata::IDeviceInfo::OS_CREATED){
-						elementInformation = "Created";
-					}
-					else if (status == prolifedata::IDeviceInfo::OS_IN_PROGRESS){
-						elementInformation = "InProgress";
-					}
-					else if (status == prolifedata::IDeviceInfo::OS_FINISHED){
-						elementInformation = "Finished";
-					}
-					else{
+				else if(informationId == "OrderId"){
+//					elementInformation = deviceInfoPtr->GetOr
+				}
+				else if(informationId == "ProductionStatus"){
+					int status = deviceInfoPtr->GetDeviceProductionStatus();
+					switch (status){
+					case prolifedata::IDeviceInfo::DPS_NONE:
 						elementInformation = "None";
+						break;
+					case prolifedata::IDeviceInfo::DPS_ACCEPTED:
+						elementInformation = "Accepted";
+						break;
+					case prolifedata::IDeviceInfo::DPS_IN_PROGRESS:
+						elementInformation = "In Progress";
+						break;
+					case prolifedata::IDeviceInfo::DPS_CANCELED:
+						elementInformation = "Canceled";
+						break;
+					case prolifedata::IDeviceInfo::DPS_ON_HOLD:
+						elementInformation = "Hold";
+						break;
+					case prolifedata::IDeviceInfo::DPS_FINISHED:
+						elementInformation = "Finished";
+						break;
+					case prolifedata::IDeviceInfo::DPS_CLOSED:
+						elementInformation = "Closed";
+						break;
 					}
 				}
 
