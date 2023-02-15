@@ -93,6 +93,7 @@ DocumentBase {
 
         commandsId: deviceEditorContainer.commandsId;
         documentBase: deviceEditorContainer;
+        commandsDelegate: deviceEditorContainer.commandsDelegate;
 
         onModelStateChanged: {
             deviceEditorContainer.updateGui();
@@ -115,10 +116,6 @@ DocumentBase {
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
             descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
         }
-
-//        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
-//            orderInput.text = deviceEditorContainer.documentModel.GetData("OrderId");
-//        }
 
         serialNumberInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
@@ -292,8 +289,8 @@ DocumentBase {
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("Description");
-                        if (oldText != descriptionInput.text){
-                            updateModel();
+                        if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
+                            deviceEditorContainer.updateModel();
                         }
                     }
 
@@ -320,8 +317,8 @@ DocumentBase {
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("SerialNumber");
-                        if (oldText != serialNumberInput.text){
-                            updateModel();
+                        if (oldText !== serialNumberInput.text && serialNumberInput.text !== ""){
+                            deviceEditorContainer.updateModel();
                         }
                     }
 
@@ -347,13 +344,13 @@ DocumentBase {
                     borderColor: Style.iconColorOnSelected;
 
                     onEditingFinished: {
-                        let oldText = documentModel.GetData("MacAddress");
-                        if (oldText != macAddressInput.text){
-                            updateModel();
+                        let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
+                        if (oldText !== macAddressInput.text && macAddressInput.text !== ""){
+                            deviceEditorContainer.updateModel();
                         }
                     }
 
-                    KeyNavigation.tab: deviceNameInput;
+//                    KeyNavigation.tab: deviceNameInput;
                 }
             }
         }
