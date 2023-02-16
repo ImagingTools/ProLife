@@ -128,15 +128,3 @@ CREATE TABLE "Orders"(
     FOREIGN KEY (AccountId) REFERENCES "Accounts"(Id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "Sensors"(
-    Id SERIAL,
-    SensorId VARCHAR (1000) NOT NULL,
-    OrderId VARCHAR (1000) NOT NULL,
-    Document JSONB,
-    RevisionNumber BIGINT,
-    LastModified TIMESTAMP,
-    Checksum BIGINT,
-    IsActive BOOLEAN,
-    PRIMARY KEY (Id)
-);
-
