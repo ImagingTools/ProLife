@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5053" Description="ACF"/>
+            <Version Id="0" Number="5054" Description="ACF"/>
             <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -147,8 +147,12 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>DeviceType</Value>
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
+                                <Value>OrderId</Value>
+                                <Value>ProductionStatus</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

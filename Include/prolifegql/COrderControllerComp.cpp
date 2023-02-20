@@ -43,6 +43,9 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		objectId = GetObjectIdFromInputParams(*inputParams);
 	}
 
+	dataModel->SetData("Name", "");
+	dataModel->SetData("Id", objectId);
+
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());

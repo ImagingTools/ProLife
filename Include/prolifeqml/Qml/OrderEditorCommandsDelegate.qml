@@ -6,16 +6,16 @@ import imtqml 1.0
 DocumentWorkspaceCommandsDelegateBase {
     id: container;
 
-    Component.onCompleted: {
-        updateItemTimer = 400;
+//    Component.onCompleted: {
+//        updateItemTimer = 400;
 
-        itemsModel.updateModel("AccountsList");
-        itemsModel.updateModel("ProductsList");
-    }
+//        itemsModel.updateModel("AccountsList");
+//        itemsModel.updateModel("ProductsList");
+//    }
 
-    onEntered: {
-        objectModel.SetData("Name", value);
-    }
+//    onEntered: {
+//        objectModel.SetData("Name", value);
+//    }
 
     Component {
         id: inputDialog;

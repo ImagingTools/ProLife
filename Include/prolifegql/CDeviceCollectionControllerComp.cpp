@@ -5,7 +5,8 @@
 #include <idoc/IDocumentMetaInfo.h>
 
 // ProLife includes
-#include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/TOrderedWrap.h>
 
 
 namespace prolifegql
@@ -29,10 +30,10 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::IDeviceInfo* deviceInfoPtr = nullptr;
+		prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>* deviceInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-			deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+			deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>*>(dataPtr.GetPtr());
 		}
 
 		if (deviceInfoPtr != nullptr){
@@ -42,8 +43,19 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				if(informationId == "TypeId"){
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
 				}
-				else if(informationId == "Id" || informationId == "Name"){
-					elementInformation = deviceInfoPtr->GetSerialNumber();
+				else if(informationId == "Id"){
+					elementInformation = deviceInfoPtr->GetDeviceId();
+				}
+				else if(informationId == "Name"){
+					QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+					QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+
+					if (serialNumber.isEmpty()){
+						elementInformation = deviceType + " (New)";
+					}
+					else{
+						elementInformation = deviceType + " (" + serialNumber + ")";
+					}
 				}
 				else if(informationId == "MacAddress"){
 					elementInformation = deviceInfoPtr->GetMacAddress();
@@ -56,6 +68,9 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				}
 				else if(informationId == "DeviceType"){
 					elementInformation = deviceInfoPtr->GetDeviceType();
+				}
+				else if(informationId == "OrderId"){
+					elementInformation = deviceInfoPtr->GetOrderId();
 				}
 				else if(informationId == "ProductionStatus"){
 					int status = deviceInfoPtr->GetDeviceProductionStatus();

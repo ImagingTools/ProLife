@@ -12,8 +12,11 @@ DocumentBase {
 
     property bool blockUpdatingModel: false;
 
+    property alias orderComboBoxEnabled: orderCB.enabled;
+    property alias deviceTypeComboBoxEnabled: productCB.enabled;
+
     onDocumentModelChanged: {
-        productsList.updateModel({}, ["Id", "Name", "Description"]);
+        productsList.updateModel({});
     }
 
     CollectionDataProvider {
@@ -21,11 +24,31 @@ DocumentBase {
 
         commandId: "Products";
 
+        fields: ["Id", "Name", "Description", "CategoryId"];
+
         onCollectionModelChanged: {
             if (productsList.collectionModel != null){
-                productCB.model = productsList.collectionModel;
-                ordersList.updateModel({}, ["OrderId", "Description"]);
+                productsList.filteringProductCollection();
+                productCB.model = filteringModel;
+                ordersList.updateModel({});
             }
+        }
+
+        function filteringProductCollection(){
+            let productsModel = productsList.collectionModel;
+            if (productsModel){
+                for (let i = 0; i < productsModel.GetItemsCount(); i++){
+                    let categoryId = productsModel.GetData("CategoryId", i);
+                    if (categoryId === "Hardware"){
+                        let index = filteringModel.InsertNewItem();
+                        filteringModel.CopyItemDataFromModel(index, productsList.collectionModel, i);
+                    }
+                }
+            }
+        }
+
+        TreeItemModel {
+            id: filteringModel;
         }
     }
 
@@ -33,6 +56,8 @@ DocumentBase {
         id: ordersList;
 
         commandId: "Orders";
+
+        fields: ["OrderId", "Description"];
 
         onCollectionModelChanged: {
             if (ordersList.collectionModel != null){
@@ -88,6 +113,10 @@ DocumentBase {
         }
     }
 
+    onCommandsIdChanged: {
+        console.log("DeviceEditor onCommandsIdChanged", commandsId);
+    }
+
     UndoRedoManager {
         id: undoRedoManager;
 
@@ -127,7 +156,7 @@ DocumentBase {
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
 
-        statusCB.currentIndex = -1;
+        statusCB.currentIndex = 0;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             statusCB.currentIndex = status;
@@ -151,7 +180,7 @@ DocumentBase {
             let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
             let ordersModel = orderCB.model;
             for (let i = 0; i < ordersModel.GetItemsCount(); i++){
-                let id = ordersModel.GetData("Id", i);
+                let id = ordersModel.GetData("OrderId", i);
                 if (id === orderId){
                     orderCB.currentIndex = i;
                     break;
@@ -195,8 +224,6 @@ DocumentBase {
 
         let macAddress = macAddressInput.text;
         deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
-        deviceEditorContainer.documentModel.SetData("Id", macAddress);
-        deviceEditorContainer.documentModel.SetData("Name", macAddress);
 
         documentModel.SetData("ProductionStatus", statusCB.currentIndex);
 
@@ -281,7 +308,7 @@ DocumentBase {
                     id: descriptionInput;
 
                     width: parent.width;
-                    height: 60;
+                    height: 30;
 
                     placeHolderText: qsTr("Enter description");
 
@@ -380,7 +407,7 @@ DocumentBase {
                 anchors.horizontalCenter: additionalInfoBorders.horizontalCenter;
                 anchors.verticalCenter: additionalInfoBorders.verticalCenter;
 
-                width: parent.width - 20;
+                width: parent.width - 15;
 
                 spacing: 7;
 
@@ -392,16 +419,50 @@ DocumentBase {
                     font.pixelSize: Style.fontSize_common;
                 }
 
-                ComboBox {
-                    id: statusCB;
-
+                Item {
                     width: parent.width;
                     height: 23;
 
-                    radius: 3;
+                    ComboBox {
+                        id: statusCB;
 
-                    onCurrentIndexChanged: {
-                        deviceEditorContainer.updateModel();
+                        anchors.left: parent.left;
+
+                        width: parent.width - colorStatus.width - 10;
+                        height: 23;
+
+                        radius: 3;
+
+                        onCurrentIndexChanged: {
+                            deviceEditorContainer.updateModel();
+
+                            if (statusCB.currentIndex == 0 ||
+                                statusCB.currentIndex == 3 ||
+                                statusCB.currentIndex == 6){
+                                colorStatus.color = 'red';
+                            }
+                            else if (statusCB.currentIndex == 1 ||
+                                     statusCB.currentIndex == 2 ||
+                                     statusCB.currentIndex == 4){
+                                colorStatus.color = 'yellow';
+                            }
+                            else{
+                                colorStatus.color = 'green';
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        id: colorStatus;
+
+                        anchors.verticalCenter: parent.verticalCenter;
+                        anchors.left: statusCB.right;
+                        anchors.leftMargin: 10;
+
+                        width: 12;
+                        height: width;
+
+                        radius: width;
                     }
                 }
 

@@ -11,7 +11,8 @@
 #include <istd/CCrcCalculator.h>
 
 // ProLife includes
-#include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/TOrderedWrap.h>
+#include <prolifedata/CDeviceInfo.h>
 
 
 namespace prolifedb
@@ -53,9 +54,7 @@ istd::IChangeable* CDeviceDatabaseDelegateComp::CreateObjectFromRecord(const QSq
 
 	istd::TDelPtr<istd::IChangeable> documentPtr;
 
-	if (m_documentFactoriesCompPtr.GetCount() > 0){
-		documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(0));
-	}
+	documentPtr.SetPtr(new prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>());
 
 	if (!documentPtr.IsValid()){
 		return nullptr;
@@ -86,11 +85,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 	if (valuePtr != nullptr){
 		workingDocumentPtr.SetPtr(valuePtr, false);
 	}
-	else{
-//		if (m_documentFactCompPtr.IsValid()){
-//			workingDocumentPtr.SetPtr(m_documentFactCompPtr.CreateInstance());
-//		}
-	}
 
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
@@ -101,7 +95,8 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 				return NewObjectQuery();
 			}
 
-			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
+//			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
+			QByteArray objectId = deviceInfoPtr->GetDeviceId();
 			quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
@@ -111,7 +106,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 
 			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE DocumentId = '%2'; INSERT INTO \"%1\"(DocumentId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
-						.arg(qPrintable(serialNumber))
+						.arg(qPrintable(objectId))
 						.arg(qPrintable(""))
 						.arg(qPrintable(documentContent))
 						.arg(revisionVersion)
@@ -153,10 +148,11 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 		}
 
 		QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+		QByteArray deviceId = deviceInfoPtr->GetDeviceId();
 
 		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE DocumentId = '%2'; INSERT INTO \"%1\" (DocumentId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where DocumentId = '%2') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
-					.arg(qPrintable(serialNumber))
+					.arg(qPrintable(deviceId))
 					.arg(qPrintable(""))
 					.arg(qPrintable(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))

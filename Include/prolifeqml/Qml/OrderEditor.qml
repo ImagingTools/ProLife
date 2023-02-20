@@ -7,6 +7,8 @@ import Acf 1.0
 DocumentBase {
     id: orderEditorContainer;
 
+    // Загрузка моделей: Licenses -> Accounts -> Products -> DocumentModel
+
     commandsDelegateSourceComp: orderEditorCommandsDelegate;
 
     property TreeItemModel accountsModel: TreeItemModel {}
@@ -16,6 +18,8 @@ DocumentBase {
 
     Component.onCompleted: {
         licensesProvider.updateModel();
+
+        accountsList.updateModel({});
     }
 
     Component {
@@ -29,13 +33,42 @@ DocumentBase {
         undoRedoManager.registerModel(documentModel)
     }
 
-    onAccountsModelChanged: {
-        console.log("onAccountsModelChanged", accountsModel);
-        customerCB.model = accountsModel;
-    }
+//    onAccountsModelChanged: {
+//        console.log("onAccountsModelChanged", accountsModel);
+//        customerCB.model = accountsModel;
+//    }
 
     onProductsModelChanged: {
         console.log("onProductsModelChanged", productsModel);
+    }
+
+    CollectionDataProvider {
+        id: accountsList;
+        fields: ["Id", "Name"];
+        commandId: "Accounts";
+
+        onCollectionModelChanged: {
+            if (accountsList.collectionModel != null){
+                customerCB.model = accountsList.collectionModel;
+
+                productsList.updateModel({});
+            }
+        }
+    }
+
+    CollectionDataProvider {
+        id: productsList;
+        fields: ["Id", "Name", "CategoryId"];
+        commandId: "Products";
+
+        onCollectionModelChanged: {
+            if (productsList.collectionModel != null){
+                orderEditorContainer.productsModel = productsList.collectionModel;
+
+                orderEditorContainer.updateGui();
+                undoRedoManager.registerModel(documentModel)
+            }
+        }
     }
 
     UndoRedoManager {
@@ -68,14 +101,19 @@ DocumentBase {
         if (documentModel.ContainsKey("OrderId")){
             instanceIdInput.text = documentModel.GetData("OrderId");
         }
+        else{
+            instanceIdInput.text = "";
+        }
 
         if (documentModel.ContainsKey("Description")){
             descriptionInput.text = documentModel.GetData("Description");
         }
+        else{
+            descriptionInput.text = "";
+        }
 
+        customerCB.currentIndex = -1;
         let customerId = documentModel.GetData("CustomerId");
-
-        //        customerCB.currentText = "";
         let customerModel = customerCB.model;
         for (let i = 0; i < customerModel.GetItemsCount(); i++){
             let id = customerModel.GetData("Id", i);
@@ -98,7 +136,7 @@ DocumentBase {
     }
 
     function updateModel(){
-        console.log("Begin updateModel");
+        console.log("Begin updateModel1", documentModel.toJSON());
         undoRedoManager.beginChanges();
 
         documentModel.SetData("OrderId", instanceIdInput.text)
@@ -110,6 +148,8 @@ DocumentBase {
         documentModel.SetData("Description", descriptionInput.text);
 
         undoRedoManager.endChanges();
+
+        console.log("Begin updateModel2", documentModel.toJSON());
     }
 
     Rectangle {
@@ -269,6 +309,11 @@ DocumentBase {
                    let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                     productsDialog.orderProductsModel.Copy(orderProductsModel);
                 }
+
+                if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
+                    productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
+                }
+
                 productsDialog.bodyItem.started();
             }
 
@@ -435,7 +480,7 @@ DocumentBase {
                 if (productsModel.GetData("CategoryId", i) === "Hardware"){
                     let pairId = productsModel.GetData("PairId", i)
                     if (!pairId){
-                        productsModel.SetData("PairId", "", i)
+                        //productsModel.SetData("PairId", "", i)
                         pairId = ""
                     }
                     if (pairId === id){
@@ -503,6 +548,8 @@ DocumentBase {
             macAddress: model.MacAddress;
             serialNumber: model.SerialNumber;
             licenseName: productsView.getLicenseName(model.index);
+
+            deviceId: model.DeviceId;
 
             commandsModel: commandsModelLocal;
 

@@ -14,8 +14,10 @@
         <file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
         <file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
         <file alias="ProLife/DeviceEditor.qml">Qml/DeviceEditor.qml</file>
+	<file alias="ProLife/InstallationEditor.qml">Qml/InstallationEditor.qml</file>
         <file alias="ProLife/LicenseFileController.qml">Qml/LicenseFileController.qml</file>
         <file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
+	<file alias="ProLife/DeviceEditorDialog.qml">Qml/DeviceEditorDialog.qml</file>
         <file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
         <file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
         <file alias="ProLife/OrderCommandsModelObserver.qml">Qml/OrderCommandsModelObserver.qml</file>

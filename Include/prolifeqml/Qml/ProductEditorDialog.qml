@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import imtgui 1.0
 import imtqml 1.0
-import imtlicgui 1.0
 import Acf 1.0
 
 Dialog {
@@ -15,6 +14,8 @@ Dialog {
     property TreeItemModel orderProductsModel: TreeItemModel{}
     property int activeProductIndex: -1;
 
+    property string orderId;
+
     onDocumentModelChanged: {
 //        root.contentItem.documentModel = root.documentModel;
     }
@@ -26,14 +27,6 @@ Dialog {
         root.title = qsTr("Product editor");
     }
 
-    onFinished: {
-    }
-
-    onStarted: {
-//        root.started("root.started", root.orderProductsModel)
-
-    }
-
     contentComp: Component {
         id: installationEditor;
         InstallationEditor {
@@ -42,6 +35,7 @@ Dialog {
             productsModel: root.productsModel;
             orderProductsModel: root.orderProductsModel;
             activeProductIndex: root.activeProductIndex;
+            orderId: root.orderId;
             width: root.width - 100;
             height: 350;
             onActiveProductIndexChanged: {

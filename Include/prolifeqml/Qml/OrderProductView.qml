@@ -18,6 +18,8 @@ Item {
     property string serialNumber;
     property string productionStatus;
 
+    property string deviceId;
+
     property TreeItemModel commandsModel: null;
 
     onCommandsModelChanged: {
@@ -178,34 +180,67 @@ Item {
             }
         }
 
-        Text {
-            id: macAddress;
+        Item {
+            width: parent.width;
+            height: 35;
 
-            anchors.left: parent.left;
-            anchors.leftMargin: 5;
-            text: qsTr("Mac address: ") + productInfo.macAddress;
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            visible: productInfo.productCategory === "Hardware";
+            visible:  productInfo.productCategory === "Hardware";
+
+            Text {
+                id: deviceIdTitle;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 5;
+                text: qsTr("Device-ID:");
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+
+                font.bold: true;
+            }
+
+            Text {
+                id: deviceId;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: deviceIdTitle.right;
+                anchors.leftMargin: 5;
+                text: productInfo.deviceId;
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
 
-        Text {
-            id: serialNumber;
+//        Text {
+//            id: macAddress;
 
-            anchors.left: parent.left;
-            anchors.leftMargin: 5;
+//            anchors.left: parent.left;
+//            anchors.leftMargin: 5;
+//            text: qsTr("Mac address: ") + productInfo.macAddress;
+//            color: Style.textColor;
+//            font.family: Style.fontFamily;
+//            font.pixelSize: Style.fontSize_common;
+//            visible: productInfo.productCategory === "Hardware";
+//        }
 
-            width: parent.width - 10;
+//        Text {
+//            id: serialNumber;
 
-            text: qsTr("Serial number: ") + productInfo.serialNumber;
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            visible: macAddress.visible;
+//            anchors.left: parent.left;
+//            anchors.leftMargin: 5;
 
-            wrapMode: Text.WrapAnywhere;
-        }
+//            width: parent.width - 10;
+
+//            text: qsTr("Serial number: ") + productInfo.serialNumber;
+//            color: Style.textColor;
+//            font.family: Style.fontFamily;
+//            font.pixelSize: Style.fontSize_common;
+//            visible: macAddress.visible;
+
+//            wrapMode: Text.WrapAnywhere;
+//        }
     }
 }
 

@@ -3,6 +3,7 @@
 
 // ProLife includes
 #include <prolifedata/TOrderedWrap.h>
+#include <prolifedata/CDeviceInfo.h>
 
 
 namespace prolifegql
@@ -32,20 +33,24 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+		prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 			QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+			QByteArray orderId = deviceInfoPtr->GetOrderId();
 			QString description = deviceInfoPtr->GetDescription();
+			QByteArray deviceId = deviceInfoPtr->GetDeviceId();
 			prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 
-			dataModelPtr->SetData("Name", serialNumber);
+			dataModelPtr->SetData("Id", deviceId);
+			dataModelPtr->SetData("Name", deviceId);
 			dataModelPtr->SetData("MacAddress", macAddress);
 			dataModelPtr->SetData("SerialNumber", serialNumber);
 			dataModelPtr->SetData("Description", description);
 			dataModelPtr->SetData("ProductionStatus", status);
 			dataModelPtr->SetData("DeviceType", deviceType);
+			dataModelPtr->SetData("OrderId", orderId);
 		}
 	}
 
@@ -70,8 +75,8 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
-		istd::TDelPtr<prolifedata::IDeviceInfo> devicePtr = m_deviceCompPtr.CreateInstance();
-		if (!devicePtr.IsValid()) {
+		istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>();
+		if (!devicePtr.IsValid()){
 			return nullptr;
 		}
 
@@ -80,11 +85,11 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			return nullptr;
 		}
 
-//		if (itemModel.ContainsKey("OrderId")){
-//			QByteArray orderId = itemModel.GetData("OrderId").toByteArray();
+		if (itemModel.ContainsKey("OrderId")){
+			QByteArray orderId = itemModel.GetData("OrderId").toByteArray();
 
-//			devicePtr->SetOrderId(orderId);
-//		}
+			devicePtr->SetOrderId(orderId);
+		}
 
 		if (itemModel.ContainsKey("MacAddress")){
 			QByteArray macAddress = itemModel.GetData("MacAddress").toByteArray();
@@ -92,19 +97,25 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			devicePtr->SetMacAddress(macAddress);
 		}
 
+		QByteArray serialNumber;
 		if (itemModel.ContainsKey("SerialNumber")){
-			QByteArray serialNumber = itemModel.GetData("SerialNumber").toByteArray();
+			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
 
 			devicePtr->SetSerialNumber(serialNumber);
-
-			if (serialNumber.isEmpty()){
-				errorMessage = QT_TR_NOOP("Serial Number cannot be empty!");
-				return nullptr;
-			}
-
-			name = serialNumber;
-			objectId = serialNumber;
 		}
+
+		if (itemModel.ContainsKey("Id")){
+			QByteArray id = itemModel.GetData("Id").toByteArray();
+			if (!id.isEmpty()){
+				objectId = id;
+			}
+		}
+
+		if (objectId.isEmpty()){
+			objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+		}
+
+		devicePtr->SetDeviceId(objectId);
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();
@@ -119,10 +130,23 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			}
 		}
 
+		QByteArray deviceType;
 		if (itemModel.ContainsKey("DeviceType")){
-			QByteArray deviceType = itemModel.GetData("DeviceType").toByteArray();
+			deviceType = itemModel.GetData("DeviceType").toByteArray();
 
 			devicePtr->SetDeviceType(deviceType);
+		}
+
+		if (deviceType.isEmpty()){
+			errorMessage = QObject::tr("Device type cannot be empty");
+			return nullptr;
+		}
+
+		if (serialNumber.isEmpty()){
+			name = deviceType + " (New)";
+		}
+		else{
+			name = deviceType + " (" + serialNumber + ")";
 		}
 
 		return devicePtr.PopPtr();

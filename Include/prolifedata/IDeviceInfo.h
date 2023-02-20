@@ -55,6 +55,16 @@ public:
 	I_DECLARE_ENUM(DeviceProductionStatus, DPS_NONE, DPS_ACCEPTED, DPS_IN_PROGRESS, DPS_CANCELED, DPS_ON_HOLD, DPS_FINISHED, DPS_CLOSED);
 
 	/**
+		Get the device ID of this device instance.
+	*/
+	virtual QByteArray GetDeviceId() const = 0;
+
+	/**
+		Set the device ID of this device instance.
+	*/
+	virtual void SetDeviceId(const QByteArray& deviceId) = 0;
+
+	/**
 		Get the serial number of this device instance.
 	*/
 	virtual QByteArray GetSerialNumber() const = 0;

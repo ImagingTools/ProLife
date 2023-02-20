@@ -18,6 +18,8 @@ public:
 	CDeviceInfo();
 
 	// reimplemented (IDeviceInfo)
+	virtual QByteArray GetDeviceId() const override;
+	virtual void SetDeviceId(const QByteArray& deviceId) override;
 	virtual QByteArray GetSerialNumber() const override;
 	virtual void SetSerialNumber(const QByteArray& serialNumber) override;
 	virtual QByteArray GetMacAddress() const override;
@@ -42,6 +44,7 @@ public:
 	virtual bool ResetData(CompatibilityMode mode = CM_WITHOUT_REFS) override;
 
 private:
+	QByteArray m_deviceId;
 	QByteArray m_serialNumber;
 	QByteArray m_macAddress;
 	QByteArray m_deviceType;
