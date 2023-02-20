@@ -10,7 +10,7 @@
 #include <imtlic/CFeaturePackageCollectionUtility.h>
 #include <imtlic/CLicenseInstance.h>
 #include <imtlic/CProductInstanceCollection.h>
-#include <imtlic/CLicensedHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/IOrderedProductInfo.h>
@@ -113,15 +113,13 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 						}
 					}
 					else{
-						const imtlic::CLicensedHardwareInstanceInfo* hardwareInstance = dynamic_cast<const imtlic::CLicensedHardwareInstanceInfo*>(productPtr);
+						const imtlic::CHardwareInstanceInfo* hardwareInstance = dynamic_cast<const imtlic::CHardwareInstanceInfo*>(productPtr);
 						if (hardwareInstance != nullptr){
-							QByteArray partStatus = hardwareInstance->GetStatus();
-							QByteArray pairId = hardwareInstance->GetSoftwareId();
-							QByteArray serialNumber = hardwareInstance->GetSerialNumber();
+							QByteArray softwareId = hardwareInstance->GetSoftwareId();
+							QByteArray deviceId = hardwareInstance->GetDeviceId();
 
-							productsModel->SetData("Status", partStatus, productIndex);
-							productsModel->SetData("PairId", pairId, productIndex);
-							productsModel->SetData("SerialNumber", serialNumber, productIndex);
+							productsModel->SetData("PairId", softwareId, productIndex);
+							productsModel->SetData("DeviceId", deviceId, productIndex);
 						}
 					}
 				}
@@ -233,6 +231,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					pairId = orderedProducts->GetData("PairId", productIndex).toByteArray();
 				}
 
+				QByteArray deviceId;
+				if(orderedProducts->ContainsKey("DeviceId", productIndex)){
+					deviceId = orderedProducts->GetData("DeviceId", productIndex).toByteArray();
+				}
+
 				if (productCategory == "Software"){
 					istd::TDelPtr<imtlic::CProductInstanceInfo> softwareInstance = new imtlic::CProductInstanceInfo();
 
@@ -259,12 +262,10 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					productCollectionPtr->InsertNewObject(productCategory,"","", softwareInstance.PopPtr(), uuidId);
 				}
 				else{
-					istd::TDelPtr<imtlic::CLicensedHardwareInstanceInfo> hardwareInstance = new imtlic::CLicensedHardwareInstanceInfo();
+					istd::TDelPtr<imtlic::CHardwareInstanceInfo> hardwareInstance = new imtlic::CHardwareInstanceInfo();
 
-					hardwareInstance->SetupProductInstance(productId, macAddress, "");
 					hardwareInstance->SetSoftwareId(pairId);
-					hardwareInstance->SetSerialNumber(serialNumber);
-					hardwareInstance->SetStatus(productStatus);
+					hardwareInstance->SetDeviceId(deviceId);
 					productCollectionPtr->InsertNewObject(productCategory,"","", hardwareInstance.PopPtr(), uuidId);
 				}
 

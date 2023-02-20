@@ -120,8 +120,6 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
-	static iser::CArchiveTag deviceTag("DeviceItem", "Device item", iser::CArchiveTag::TT_GROUP);
-	retVal = retVal && archive.BeginTag(deviceTag);
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(serialNumberTag);
@@ -148,7 +146,6 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
 	retVal = retVal && archive.EndTag(statusTag);
 
-	retVal = retVal && archive.EndTag(deviceTag);
 
 	return retVal;
 }

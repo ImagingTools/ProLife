@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5054" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -12,7 +12,11 @@
     <ElementsList>
         <Element Id="CompactXmlFileSerializer" PackageId="FilePck" ComponentId="JsonFileSerializer">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="OrderDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="OrderDatabaseDelegateComp">

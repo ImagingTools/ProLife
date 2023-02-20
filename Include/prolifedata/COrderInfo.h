@@ -1,7 +1,9 @@
 #pragma once
 
+
 // ImtCore includes
 #include <imtlic/CProductInstanceCollection.h>
+#include <imtbase/TIdentifiableWrap.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -24,6 +26,7 @@ public:
 	// reimplemented (IOrderInfo)
 	virtual QByteArray GetOrderId() const override;
 	virtual void SetOrderId(const QByteArray& orderId) override;
+
 	virtual QByteArray GetCustomerId() const override;
 	virtual void SetCustomerId(const QByteArray& customerId) override;
 	virtual QString GetDescription() const override;
@@ -60,6 +63,7 @@ private:
 	imtbase::CObjectCollection m_productInstanceCollection;
 };
 
+typedef imtbase::TIdentifiableWrap<COrderInfo> CIdentifiableOrderInfo;
 
 } // namespace prolifedata
 

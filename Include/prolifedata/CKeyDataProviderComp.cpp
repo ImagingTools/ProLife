@@ -8,11 +8,12 @@
 
 // ImtCore includes
 #include <imtlic/CProductInstanceInfo.h>
-#include <imtlic/CLicensedHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 #include <imtlic/ILicenseInstance.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
+#include <prolifedata/IDeviceInfo.h>
 
 
 namespace prolifedata
@@ -29,6 +30,10 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		SendCriticalMessage(0, "objectCollectionCompPtr is not valid", "Server data provider");
 
 		return false;
+	}
+
+	if (!m_deviceCollectionCompPtr.IsValid()){
+		SendCriticalMessage(0, "deviceCollectionCompPtr is not valid", "Server data provider");
 	}
 
 	QByteArrayList ids = dataId.split('/');
@@ -70,7 +75,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		return false;
 	}
 
-	imtlic::CLicensedHardwareInstanceInfo* hardwareInstancePtr = dynamic_cast<imtlic::CLicensedHardwareInstanceInfo*>(hardwareDataPtr.GetPtr());
+	imtlic::CHardwareInstanceInfo* hardwareInstancePtr = dynamic_cast<imtlic::CHardwareInstanceInfo*>(hardwareDataPtr.GetPtr());
 	if (hardwareInstancePtr == nullptr){
 		SendCriticalMessage(0, "Hardware instance error", "Server data provider");
 
@@ -92,7 +97,22 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		return false;
 	}
 
-	QByteArray instanceId = hardwareInstancePtr->GetProductInstanceId();
+	QByteArray deviceId = hardwareInstancePtr->GetDeviceId();
+	imtbase::IObjectCollection::DataPtr deviceDataPtr;
+	if (!m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
+		SendCriticalMessage(0, "Don't get data object pointer for id: " + deviceId, "Server data provider");
+
+		return false;
+	}
+
+	prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>( deviceDataPtr.GetPtr());
+	if (deviceInfoPtr == nullptr){
+		SendCriticalMessage(0, "Device instance error: " + deviceId, "Server data provider");
+
+		return false;
+	}
+
+	QByteArray instanceId = deviceInfoPtr->GetMacAddress();
 	QByteArray productId = productInstancePtr->GetProductId();
 	QByteArray customerId = orderPtr->GetCustomerId();
 	productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
@@ -181,7 +201,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		}
 	}
 
-	m_productInstanceId = instanceId;
+	m_productInstanceId = deviceId;
 
 	QTemporaryDir tempDir;
 	QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";

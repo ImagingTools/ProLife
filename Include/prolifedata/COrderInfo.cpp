@@ -13,7 +13,7 @@
 #include <iser/CPrimitiveTypesSerializer.h>
 
 // ImtCore includes
-#include <imtlic/CLicensedHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 
 
 namespace prolifedata
@@ -35,7 +35,7 @@ COrderInfo::COrderInfo()
 	typedef istd::TSingleFactory<istd::IChangeable, CLicensedSoftwareInstanceInfo> FactorySoftwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactorySoftwareImpl>("Software");
 
-	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CLicensedHardwareInstanceInfo> FactoryHardwareImpl;
+	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CHardwareInstanceInfo> FactoryHardwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactoryHardwareImpl>("Hardware");
 }
 
@@ -131,10 +131,16 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 {
 	istd::CChangeNotifier notifier(archive.IsStoring() ? nullptr : this);
 
+	const iser::IVersionInfo& versionInfo = archive.GetVersionInfo();
+	quint32 prolifeVersion;
+	if (!versionInfo.GetVersionNumber(2022, prolifeVersion)){
+		prolifeVersion = 0;
+	}
+
 	bool retVal = true;
 
-	static iser::CArchiveTag orderTag("OrderItem", "Order item", iser::CArchiveTag::TT_GROUP);
-	retVal = retVal && archive.BeginTag(orderTag);
+//	static iser::CArchiveTag orderTag("OrderItem", "Order item", iser::CArchiveTag::TT_GROUP);
+//	retVal = retVal && archive.BeginTag(orderTag);
 
 	static iser::CArchiveTag orderIdTag("OrderId", "Order id", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderIdTag);
@@ -151,12 +157,21 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
-	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
-	retVal = retVal && archive.BeginTag(productsTag);
-	retVal = retVal && m_productInstanceCollection.Serialize(archive);
-	retVal = retVal && archive.EndTag(productsTag);
+	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(orderStatusTag);
+	QString status;
+	retVal = retVal && archive.Process(status);
+	retVal = retVal && archive.EndTag(orderStatusTag);
 
-	retVal = retVal && archive.EndTag(orderTag);
+	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
+	if (prolifeVersion >= 5902){
+		retVal = retVal && archive.BeginTag(productsTag);
+	}
+	retVal = retVal && m_productInstanceCollection.Serialize(archive);
+	if (prolifeVersion >= 5902){
+		retVal = retVal && archive.EndTag(productsTag);
+	}
+//	retVal = retVal && archive.EndTag(orderTag);
 
 	return retVal;
 }
@@ -196,7 +211,7 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 
 istd::IChangeable* COrderInfo::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<COrderInfo> clonePtr(new COrderInfo);
+	istd::TDelPtr<COrderInfo> clonePtr(new COrderInfo());
 	if (clonePtr->CopyFrom(*this, mode)){
 		return clonePtr.PopPtr();
 	}

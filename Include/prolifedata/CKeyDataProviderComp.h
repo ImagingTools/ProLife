@@ -35,6 +35,7 @@ public:
 		I_ASSIGN(m_objectCollectionCompPtr, "ObjectCollection", "Object collection", true, "ObjectCollection");
 		I_ASSIGN(m_vectorKeyCompPtr, "VectorKey", "Additional key for AES encryption", false, "VectorKey");
 		I_ASSIGN(m_gqlLicenseRequestCompPtr, "GqlLicenseRequest", "License GraphQL request", true, "GqlLicenseRequest");
+		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 	I_END_COMPONENT;
 
 	enum CommandGroup
@@ -55,6 +56,7 @@ private:
 	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);
 	I_REF(imtgql::IGqlRequestHandler, m_gqlLicenseRequestCompPtr);
+	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 };
 
 
