@@ -25,6 +25,22 @@ CDeviceInfo::CDeviceInfo() :
 
 // reimplemented (IDeviceInfo)
 
+QByteArray CDeviceInfo::GetDeviceId() const
+{
+	return m_deviceId;
+}
+
+
+void CDeviceInfo::SetDeviceId(const QByteArray& deviceId)
+{
+	if (m_deviceId != deviceId){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_deviceId = deviceId;
+	}
+}
+
+
 QByteArray CDeviceInfo::GetSerialNumber() const
 {
 	return m_serialNumber;
@@ -120,6 +136,10 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
+	static iser::CArchiveTag deviceIdTag("DeviceId", "Device-ID", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(deviceIdTag);
+	retVal = retVal && archive.Process(m_deviceId);
+	retVal = retVal && archive.EndTag(deviceIdTag);
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(serialNumberTag);
@@ -146,7 +166,6 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
 	retVal = retVal && archive.EndTag(statusTag);
 
-
 	return retVal;
 }
 
@@ -168,6 +187,7 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		istd::CChangeNotifier changeNotifier(this);
 
 		m_serialNumber = sourcePtr->m_serialNumber;
+		m_deviceId = sourcePtr->m_deviceId;
 		m_macAddress = sourcePtr->m_macAddress;
 		m_deviceType = sourcePtr->m_deviceType;
 		m_description = sourcePtr->m_description;
@@ -200,6 +220,7 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 	m_deviceType.clear();
 	m_description.clear();
 	m_status = DPS_NONE;
+	m_deviceId.clear();
 
 	return true;
 }
