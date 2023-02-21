@@ -41,7 +41,6 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 			QByteArray orderId = deviceInfoPtr->GetOrderId();
 			QString description = deviceInfoPtr->GetDescription();
-//			QByteArray deviceId = deviceInfoPtr->GetDeviceId();
 			QByteArray deviceId = deviceInfoPtr->GetObjectUuid();
 			prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 
@@ -119,7 +118,6 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		}
 
 		devicePtr->SetObjectUuid(objectId);
-	//	devicePtr->SetDeviceId(objectId);
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();

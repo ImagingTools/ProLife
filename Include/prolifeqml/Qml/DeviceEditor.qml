@@ -57,7 +57,7 @@ DocumentBase {
 
         commandId: "Orders";
 
-        fields: ["OrderId", "Description"];
+        fields: ["Id", "OrderId", "Description"];
 
         onCollectionModelChanged: {
             if (ordersList.collectionModel != null){
@@ -156,7 +156,7 @@ DocumentBase {
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
 
-        statusCB.currentIndex = 0;
+        statusCB.currentIndex = -1;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             statusCB.currentIndex = status;
@@ -180,7 +180,7 @@ DocumentBase {
             let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
             let ordersModel = orderCB.model;
             for (let i = 0; i < ordersModel.GetItemsCount(); i++){
-                let id = ordersModel.GetData("OrderId", i);
+                let id = ordersModel.GetData("Id", i);
                 if (id === orderId){
                     orderCB.currentIndex = i;
                     break;
@@ -209,7 +209,7 @@ DocumentBase {
         }
 
         if (orderCB.currentIndex >= 0){
-            let selectedOrderId = orderCB.model.GetData("OrderId", orderCB.currentIndex);
+            let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
             deviceEditorContainer.documentModel.SetData("OrderId", selectedOrderId);
         }
         else{

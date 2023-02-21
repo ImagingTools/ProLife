@@ -451,7 +451,7 @@ Item {
                         let deviceType = devicesList.collectionModel.GetData("DeviceType", i);
                         let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
 
-                        if (selectedProductId === deviceType && orderId === "" && (status === "Finished" || status === "None")){
+                        if (selectedProductId === deviceType && (orderId === "" || installationEditorContainer.orderId) && (status === "Finished" || status === "None")){
                             let index = filteringModel.InsertNewItem();
                             filteringModel.CopyItemDataFromModel(index, devicesList.collectionModel, i);
                         }

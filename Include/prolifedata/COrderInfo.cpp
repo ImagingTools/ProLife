@@ -14,6 +14,7 @@
 
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
+#include <imtlic/CProductInstanceInfo.h>
 
 
 namespace prolifedata
@@ -30,12 +31,13 @@ QByteArray COrderInfo::GetTypeId()
 
 // public methods
 
-COrderInfo::COrderInfo()
+COrderInfo::COrderInfo():
+	m_status(OS_NONE)
 {
-	typedef istd::TSingleFactory<istd::IChangeable, CIdentifiableSoftwareInstanceInfo> FactorySoftwareImpl;
+	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableSoftwareInstanceInfo> FactorySoftwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactorySoftwareImpl>("Software");
 
-	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableWHardwareInstanceInfo> FactoryHardwareImpl;
+	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableHardwareInstanceInfo> FactoryHardwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactoryHardwareImpl>("Hardware");
 }
 
@@ -157,11 +159,18 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
-	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
-	retVal = retVal && archive.BeginTag(orderStatusTag);
-	QString status;
-	retVal = retVal && archive.Process(status);
-	retVal = retVal && archive.EndTag(orderStatusTag);
+//	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
+//	retVal = retVal && archive.BeginTag(orderStatusTag);
+//	QString status;
+//	retVal = retVal && archive.Process(status);
+//	retVal = retVal && archive.EndTag(orderStatusTag);
+
+//	if (prolifeVersion >= 6020){
+		static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(statusTag);
+		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
+		retVal = retVal && archive.EndTag(statusTag);
+//	}
 
 	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
 	if (prolifeVersion >= 5902){
@@ -227,6 +236,7 @@ bool COrderInfo::ResetData(CompatibilityMode /*mode*/)
 	m_orderId.clear();
 	m_customerId.clear();
 	m_productInstanceCollection.ResetData();
+	m_status = OS_NONE;
 
 	return true;
 }

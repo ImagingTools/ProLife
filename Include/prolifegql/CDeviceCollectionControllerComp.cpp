@@ -30,10 +30,10 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>* deviceInfoPtr = nullptr;
+		prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-			deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>*>(dataPtr.GetPtr());
+			deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 		}
 
 		if (deviceInfoPtr != nullptr){
@@ -44,7 +44,7 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
 				}
 				else if(informationId == "Id"){
-					elementInformation = deviceInfoPtr->GetDeviceId();
+					elementInformation = deviceInfoPtr->GetObjectUuid();
 				}
 				else if(informationId == "Name"){
 					QByteArray deviceType = deviceInfoPtr->GetDeviceType();

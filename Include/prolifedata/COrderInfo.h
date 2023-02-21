@@ -54,18 +54,12 @@ private:
 	OrderStatus m_status;
 	ProductIds m_orderedProducts;
 
-	class CLicensedSoftwareInstanceInfo : public imtlic::CProductInstanceInfo
-	{
-		// reimplemented (istd::IChangeable)
-		virtual QByteArray GetFactoryId() const override { return "Software"; }
-	};
-	typedef imtbase::TIdentifiableWrap<CLicensedSoftwareInstanceInfo> CIdentifiableSoftwareInstanceInfo;
-
-
 	imtbase::CObjectCollection m_productInstanceCollection;
 };
 
+
 typedef imtbase::TIdentifiableWrap<COrderInfo> CIdentifiableOrderInfo;
+
 
 } // namespace prolifedata
 

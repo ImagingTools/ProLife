@@ -23,6 +23,7 @@ public:
 
 	I_BEGIN_COMPONENT(COrderControllerComp)
 		I_ASSIGN(m_orderPtr, "OrderFactory", "Factory used for creation of the new order instance", true, "OrderFactory");
+		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 	I_END_COMPONENT
 
 protected:
@@ -31,6 +32,7 @@ protected:
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);
+	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 };
 
 

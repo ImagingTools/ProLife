@@ -16,6 +16,7 @@
 #include <prolifedata/IOrderedProductInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/COrderInfo.h>
+#include <prolifedata/CDeviceInfo.h>
 
 
 namespace prolifegql
@@ -33,9 +34,6 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		return nullptr;
 	}
 
-//	dataModel->SetData("Id", "");
-//	dataModel->SetData("AccountId", "");
-
 	QByteArray objectId;
 
 	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
@@ -49,8 +47,8 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-
+//		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+		prolifedata::CIdentifiableOrderInfo* orderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
 		if (orderPtr == nullptr){
 			errorMessage = QT_TR_NOOP("Unable to get an product instance");
 			return nullptr;
@@ -58,17 +56,17 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 		imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("OrderProducts");
 
+		QByteArray objectUuid = orderPtr->GetObjectUuid();
 		QByteArray orderId = orderPtr->GetOrderId();
 		QByteArray customerId = orderPtr->GetCustomerId();
 		QString description = orderPtr->GetDescription();
-//		QByteArray orderStatus = orderPtr->GetStatus();
 
 		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, imtbase::ICollectionInfo::EIT_NAME).toString();
+
+		dataModel->SetData("Id", objectUuid);
 		dataModel->SetData("Name", name);
-		dataModel->SetData("Id", objectId);
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
-//		dataModel->SetData("OrderStatus", orderStatus);
 		dataModel->SetData("Description", description);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
@@ -80,31 +78,30 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		for(const QByteArray& objectId : orderedProductsIds){
 			imtbase::IObjectCollection::DataPtr dataPtr;
 			if (productCollectionPtr->GetObjectData(objectId, dataPtr)){
-				const imtlic::IProductInstanceInfo* productPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-				if(productPtr != nullptr){
-					QByteArray objectUuid;
-					const imtbase::IIdentifiable* identifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(dataPtr.GetPtr());
-					if (identifiablePtr != nullptr){
-						objectUuid = identifiablePtr->GetObjectUuid();
-					}
+				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(dataPtr.GetPtr());
+				if (productIdentifiablePtr != nullptr){
+					QByteArray objectUuid = productIdentifiablePtr->GetObjectUuid();
 
 					int productIndex = productsModel->InsertNewItem();
-					QByteArray productId = productPtr->GetProductId();
-					QByteArray categoryId = productPtr->GetFactoryId();
-					QByteArray productInstance = productPtr->GetProductInstanceId();
 
 					productsModel->SetData("Id", objectUuid, productIndex);
-					productsModel->SetData("ProductId", productId, productIndex);
-					productsModel->SetData("CategoryId", categoryId, productIndex);
-					productsModel->SetData("MacAddress", productInstance, productIndex);
 
-					if (productPtr->GetFactoryId() == "Software"){
+					const imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+					if (softwareProductPtr != nullptr){
+						QByteArray productId = softwareProductPtr->GetProductId();
+						QByteArray categoryId = softwareProductPtr->GetFactoryId();
+						QByteArray productInstance = softwareProductPtr->GetProductInstanceId();
+
+						productsModel->SetData("ProductId", productId, productIndex);
+						productsModel->SetData("CategoryId", categoryId, productIndex);
+						productsModel->SetData("MacAddress", productInstance, productIndex);
+
 						imtbase::CTreeItemModel* activeLicenses = productsModel->AddTreeModel("ActiveLicenses", productIndex);
-						const imtbase::ICollectionInfo& licenseInstances = productPtr->GetLicenseInstances();
+						const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();
 
 						imtbase::ICollectionInfo::Ids activeLicenseIds = licenseInstances.GetElementIds();
 						for (const QByteArray& activeLicenseId : activeLicenseIds){
-							const imtlic::ILicenseInstance* licenseInstancePtr = productPtr->GetLicenseInstance(activeLicenseId);
+							const imtlic::ILicenseInstance* licenseInstancePtr = softwareProductPtr->GetLicenseInstance(activeLicenseId);
 							if (licenseInstancePtr != nullptr){
 								int productIndex = activeLicenses->InsertNewItem();
 
@@ -117,20 +114,20 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 								QString licenseExpiration = date.toString("yyyy-MM-dd");
 								activeLicenses->SetData("Expiration", licenseExpiration, productIndex);
 							}
-							else{
-//								Q_ASSERT(false);
-							}
 						}
 					}
-					else{
-						const imtlic::CHardwareInstanceInfo* hardwareInstance = dynamic_cast<const imtlic::CHardwareInstanceInfo*>(productPtr);
-						if (hardwareInstance != nullptr){
-							QByteArray softwareId = hardwareInstance->GetSoftwareId();
-							QByteArray deviceId = hardwareInstance->GetDeviceId();
 
-							productsModel->SetData("PairId", softwareId, productIndex);
-							productsModel->SetData("DeviceId", deviceId, productIndex);
-						}
+					const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(dataPtr.GetPtr());
+					if (hardwareProductPtr != nullptr){
+						QByteArray categoryId = hardwareProductPtr->GetFactoryId();
+						QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
+						QByteArray deviceId = hardwareProductPtr->GetDeviceId();
+						QByteArray productId = hardwareProductPtr->GetProductId();
+
+						productsModel->SetData("PairId", softwareId, productIndex);
+						productsModel->SetData("DeviceId", deviceId, productIndex);
+						productsModel->SetData("CategoryId", categoryId, productIndex);
+						productsModel->SetData("ProductId", productId, productIndex);
 					}
 				}
 			}
@@ -150,13 +147,19 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		QString& description,
 		QString &errorMessage) const
 {
+	if (!m_deviceCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
 	if (inputParams.isEmpty()){
 		return nullptr;
 	}
 
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
-		istd::TDelPtr<prolifedata::IOrderInfo> orderPtr = m_orderPtr.CreateInstance();
+//		istd::TDelPtr<prolifedata::IOrderInfo> orderPtr = m_orderPtr.CreateInstance();
+		istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderPtr = new prolifedata::CIdentifiableOrderInfo();
+
 		if (!orderPtr.IsValid()){
 			return nullptr;
 		}
@@ -164,10 +167,23 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		imtbase::CTreeItemModel itemModel;
 		itemModel.CreateFromJson(itemData);
 
-		QByteArray orderUuid;
+//		QByteArray orderUuid;
+//		if (itemModel.ContainsKey("Id")){
+//			orderUuid = itemModel.GetData("Id").toByteArray();
+//		}
+
 		if (itemModel.ContainsKey("Id")){
-			orderUuid = itemModel.GetData("Id").toByteArray();
+			QByteArray id = itemModel.GetData("Id").toByteArray();
+			if (!id.isEmpty()){
+				objectId = id;
+			}
 		}
+
+		if (objectId.isEmpty()){
+			objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+		}
+
+		orderPtr->SetObjectUuid(objectId);
 
 		QByteArray orderId;
 		if (itemModel.ContainsKey("OrderId")){
@@ -202,10 +218,10 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		orderPtr->SetCustomerId(customerId);
 		orderPtr->SetDescription(description);
 
-		prolifedata::CIdentifiableOrderInfo* identifiableOrderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderPtr.GetPtr());
-		if (identifiableOrderPtr != nullptr){
-			identifiableOrderPtr->SetObjectUuid(orderUuid);
-		}
+//		prolifedata::CIdentifiableOrderInfo* identifiableOrderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderPtr.GetPtr());
+//		if (identifiableOrderPtr != nullptr){
+//			identifiableOrderPtr->SetObjectUuid(orderUuid);
+//		}
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
@@ -251,15 +267,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					pairId = orderedProducts->GetData("PairId", productIndex).toByteArray();
 				}
 
-				QByteArray deviceId;
-				if(orderedProducts->ContainsKey("DeviceId", productIndex)){
-					deviceId = orderedProducts->GetData("DeviceId", productIndex).toByteArray();
-				}
-
 				if (productCategory == "Software"){
-					istd::TDelPtr<imtlic::CProductInstanceInfo> softwareInstance = new imtlic::CProductInstanceInfo();
+					istd::TDelPtr<imtlic::CIdentifiableSoftwareInstanceInfo> softwareInstancePtr = new imtlic::CIdentifiableSoftwareInstanceInfo();
 
-					softwareInstance->SetupProductInstance(productId, "", "");
+					softwareInstancePtr->SetObjectUuid(uuidId);
+					softwareInstancePtr->SetupProductInstance(productId, "", "");
 
 					imtbase::CTreeItemModel* activeLicenses = orderedProducts->GetTreeItemModel("ActiveLicenses", productIndex);
 					if (activeLicenses != nullptr){
@@ -275,23 +287,43 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 								expirationDate = QDateTime::fromString(dateExpirationStr, "yyyy-MM-dd");
 							}
 
-							softwareInstance->AddLicense(licenseId, expirationDate);
+							softwareInstancePtr->AddLicense(licenseId, expirationDate);
 						}
 					}
 
-					productCollectionPtr->InsertNewObject(productCategory,"","", softwareInstance.PopPtr(), uuidId);
+					productCollectionPtr->InsertNewObject(productCategory,"","", softwareInstancePtr.PopPtr(), uuidId);
 				}
 				else{
-					istd::TDelPtr<imtlic::CHardwareInstanceInfo> hardwareInstance = new imtlic::CHardwareInstanceInfo();
+					QByteArray deviceId;
+					if(orderedProducts->ContainsKey("DeviceId", productIndex)){
+						deviceId = orderedProducts->GetData("DeviceId", productIndex).toByteArray();
+					}
 
-					hardwareInstance->SetSoftwareId(pairId);
-					hardwareInstance->SetDeviceId(deviceId);
-					productCollectionPtr->InsertNewObject(productCategory,"","", hardwareInstance.PopPtr(), uuidId);
+					if (deviceId.isEmpty()){
+						istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>();
+
+						devicePtr->SetOrderId(objectId);
+						devicePtr->SetDeviceType(productId);
+
+						QByteArray deviceUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+						devicePtr->SetObjectUuid(deviceUuid);
+
+						m_deviceCollectionCompPtr->InsertNewObject("DeviceInfo", "", "", devicePtr.GetPtr(), deviceUuid);
+
+						deviceId = deviceUuid;
+					}
+
+					istd::TDelPtr<imtlic::CIdentifiableHardwareInstanceInfo> hardwareInstancePtr = new imtlic::CIdentifiableHardwareInstanceInfo();
+
+					hardwareInstancePtr->SetObjectUuid(uuidId);
+					hardwareInstancePtr->SetProductId(productId);
+					hardwareInstancePtr->SetSoftwareId(pairId);
+					hardwareInstancePtr->SetDeviceId(deviceId);
+
+					productCollectionPtr->InsertNewObject(productCategory, "", "", hardwareInstancePtr.PopPtr(), uuidId);
 				}
-
 			}
 		}
-
 
 		return orderPtr.PopPtr();
 	}

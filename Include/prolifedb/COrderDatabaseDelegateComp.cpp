@@ -11,7 +11,7 @@
 #include <istd/CCrcCalculator.h>
 
 // ProLife includes
-#include <prolifedata/IOrderInfo.h>
+#include <prolifedata/COrderInfo.h>
 
 
 namespace prolifedb
@@ -63,9 +63,10 @@ istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSql
 //	}
 
 	if (m_documentFactoriesCompPtr.GetCount() > 0){
-		documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(0));
+//		documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(0));
 	}
 
+	documentPtr.SetPtr(new prolifedata::CIdentifiableOrderInfo());
 
 	if (!documentPtr.IsValid()){
 		return nullptr;
@@ -177,6 +178,19 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	}
 
 	return retVal;
+}
+
+
+QByteArray COrderDatabaseDelegateComp::GetCountQuery(const iprm::IParamsSet* paramsPtr) const
+{
+//	QString filterQuery;
+//	if (paramsPtr != nullptr){
+//		if (!CreateFilterQuery(*paramsPtr, filterQuery)){
+//			return QByteArray();
+//		}
+//	}
+
+	return QString("SELECT COUNT(*) FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();
 }
 
 

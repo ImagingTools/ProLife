@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5058" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -87,6 +87,9 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -107,6 +110,9 @@
                             <Values>
                                 <Value>OrderId</Value>
                                 <Value>Description</Value>
+                                <Value>Status</Value>
+                                <Value>OrderCustomer</Value>
+                                <Value>LastModified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -118,6 +124,9 @@
                             <Values>
                                 <Value>Order-ID</Value>
                                 <Value>Description</Value>
+                                <Value>Status</Value>
+                                <Value>Customer</Value>
+                                <Value>Last Modified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -129,6 +138,8 @@
                             <Values>
                                 <Value>OrderId</Value>
                                 <Value>Description</Value>
+                                <Value>Status</Value>
+                                <Value>OrderCustomer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

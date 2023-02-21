@@ -8,10 +8,4 @@ CollectionView {
         container.commandUpdateGui = "DeviceCollectionUpdateGui";
         console.log("Device collection view complete");
     }
-
-    onVisibleChanged: {
-        if (container.visible){
-            container.updateGui();
-        }
-    }
 }

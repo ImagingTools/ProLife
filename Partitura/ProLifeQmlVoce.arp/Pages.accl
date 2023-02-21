@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5054" Description="ACF"/>
+            <Version Id="0" Number="5058" Description="ACF"/>
             <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -23,15 +23,6 @@
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="800" Y="525" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="375" Y="525" Note=""/>
-                <Element ComponentName="ProductInstanceSqlRepository" X="600" Y="400" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="450" Y="75" Note=""/>
@@ -49,6 +40,15 @@
                 <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
                 <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
                 <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="375" Y="225" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="800" Y="525" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="375" Y="525" Note=""/>
+                <Element ComponentName="ProductInstanceSqlRepository" X="600" Y="400" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

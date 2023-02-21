@@ -7,6 +7,8 @@
 #include <istd/CChangeGroup.h>
 #include <iser/IArchive.h>
 #include <iser/CArchiveTag.h>
+#include <istd/TDelPtr.h>
+#include <istd/IChangeable.h>
 
 
 namespace prolifedata
@@ -22,6 +24,13 @@ public:
 
 	// reimplemented (iser::ISerializable)
 	virtual bool Serialize(iser::IArchive& archive) override;
+
+	// reimplemented (istd::IChangeable)
+	virtual int GetSupportedOperations() const override;
+	virtual bool CopyFrom(const istd::IChangeable& object, istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) override;
+	virtual bool IsEqual(const istd::IChangeable& object) const override;
+	virtual istd::IChangeable* CloneMe(istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) const override;
+	virtual bool ResetData(istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) override;
 
 private:
 	QByteArray m_orderId;
@@ -65,6 +74,71 @@ bool TOrderedWrap<Base>::Serialize(iser::IArchive& archive)
 	retVal = retVal && Base::Serialize(archive);
 
 	return retVal;
+}
+
+
+// reimplemented (IChangeable)
+
+template<class Base>
+int TOrderedWrap<Base>::GetSupportedOperations() const
+{
+	return istd::IChangeable::SO_CLONE | istd::IChangeable::SO_COPY | istd::IChangeable::SO_RESET;
+}
+
+
+template<class Base>
+bool TOrderedWrap<Base>::CopyFrom(const istd::IChangeable& object,  istd::IChangeable::CompatibilityMode /*mode*/)
+{
+	istd::CChangeGroup changeGroup(this);
+
+	const TOrderedWrap<Base>* sourcePtr = dynamic_cast<const TOrderedWrap<Base>*>(&object);
+	if (sourcePtr != nullptr){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_orderId = sourcePtr->m_orderId;
+
+		bool retVal = Base::CopyFrom(object);
+
+		return retVal;
+	}
+
+	return false;
+}
+
+
+template<class Base>
+bool TOrderedWrap<Base>::IsEqual(const istd::IChangeable& object) const
+{
+	const TOrderedWrap<Base>* sourcePtr = dynamic_cast<const TOrderedWrap<Base>*>(&object);
+	if (sourcePtr != nullptr){
+		return (m_orderId == sourcePtr->m_orderId);
+	}
+
+	return false;
+}
+
+
+template<class Base>
+istd::IChangeable* TOrderedWrap<Base>::CloneMe(istd::IChangeable::CompatibilityMode mode) const
+{
+	istd::TDelPtr<TOrderedWrap<Base>> clonePtr(new TOrderedWrap<Base>());
+	if (clonePtr->CopyFrom(*this, mode)){
+		return clonePtr.PopPtr();
+	}
+
+	return nullptr;
+}
+
+
+template<class Base>
+bool TOrderedWrap<Base>::ResetData(istd::IChangeable::CompatibilityMode /*mode*/)
+{
+	istd::CChangeNotifier changeNotifier(this);
+
+	m_orderId.clear();
+	Base::ResetData();
+
+	return true;
 }
 
 

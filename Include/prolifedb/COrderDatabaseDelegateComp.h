@@ -41,6 +41,7 @@ public:
 				const imtbase::IObjectCollection& collection,
 				const QByteArray& objectId,
 				const istd::IChangeable& object) const override;
+	virtual QByteArray GetCountQuery(const iprm::IParamsSet* paramsPtr = nullptr) const override;
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual QString GetBaseSelectionQuery() const override;
