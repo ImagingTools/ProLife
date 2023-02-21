@@ -33,16 +33,19 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>*>(dataPtr.GetPtr());
+		prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
+			QByteArray objectUuid = deviceInfoPtr->GetObjectUuid();
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 			QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 			QByteArray orderId = deviceInfoPtr->GetOrderId();
 			QString description = deviceInfoPtr->GetDescription();
-			QByteArray deviceId = deviceInfoPtr->GetDeviceId();
+//			QByteArray deviceId = deviceInfoPtr->GetDeviceId();
+			QByteArray deviceId = deviceInfoPtr->GetObjectUuid();
 			prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 
+			dataModelPtr->SetData("Uuid", objectUuid);
 			dataModelPtr->SetData("Id", deviceId);
 			dataModelPtr->SetData("Name", deviceId);
 			dataModelPtr->SetData("MacAddress", macAddress);
@@ -75,7 +78,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
-		istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>();
+		istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>();
 		if (!devicePtr.IsValid()){
 			return nullptr;
 		}
@@ -115,7 +118,8 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 		}
 
-		devicePtr->SetDeviceId(objectId);
+		devicePtr->SetObjectUuid(objectId);
+	//	devicePtr->SetDeviceId(objectId);
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();

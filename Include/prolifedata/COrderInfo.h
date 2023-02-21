@@ -59,6 +59,8 @@ private:
 		// reimplemented (istd::IChangeable)
 		virtual QByteArray GetFactoryId() const override { return "Software"; }
 	};
+	typedef imtbase::TIdentifiableWrap<CLicensedSoftwareInstanceInfo> CIdentifiableSoftwareInstanceInfo;
+
 
 	imtbase::CObjectCollection m_productInstanceCollection;
 };

@@ -3,6 +3,7 @@
 
 // ImtCore includes
 #include <imtlic/CProductInstanceCollection.h>
+#include <imtbase/TIdentifiableWrap.h>
 
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
@@ -51,6 +52,8 @@ private:
 	QString m_description;
 	DeviceProductionStatus m_status;
 };
+
+typedef imtbase::TIdentifiableWrap<CDeviceInfo> CIdentifiableDeviceInfo;
 
 
 } // namespace prolifedata

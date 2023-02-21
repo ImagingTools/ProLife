@@ -17,15 +17,17 @@ namespace ProLifeDataPck
 
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap <
-						prolifedata::COrderInfo,
+						prolifedata::CIdentifiableOrderInfo,
 						prolifedata::IOrderInfo,
+						imtbase::IIdentifiable,
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> OrderInfo;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap <
-						prolifedata::CDeviceInfo,
+						prolifedata::CIdentifiableDeviceInfo,
 						prolifedata::IDeviceInfo,
+						imtbase::IIdentifiable,
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> DeviceInfo;

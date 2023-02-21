@@ -136,10 +136,10 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
-	static iser::CArchiveTag deviceIdTag("DeviceId", "Device-ID", iser::CArchiveTag::TT_LEAF);
-	retVal = retVal && archive.BeginTag(deviceIdTag);
-	retVal = retVal && archive.Process(m_deviceId);
-	retVal = retVal && archive.EndTag(deviceIdTag);
+//	static iser::CArchiveTag deviceIdTag("DeviceId", "Device-ID", iser::CArchiveTag::TT_LEAF);
+//	retVal = retVal && archive.BeginTag(deviceIdTag);
+//	retVal = retVal && archive.Process(m_deviceId);
+//	retVal = retVal && archive.EndTag(deviceIdTag);
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(serialNumberTag);

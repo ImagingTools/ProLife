@@ -123,7 +123,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 
 			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\"(OrderId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
-						.arg(qPrintable(orderId))
+						.arg(qPrintable(objectId))
 						.arg(qPrintable(accountId))
 						.arg(qPrintable(documentContent))
 						.arg(revisionVersion)
@@ -169,7 +169,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where OrderId = '%2') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
-					.arg(qPrintable(orderId))
+					.arg(qPrintable(objectId))
 					.arg(qPrintable(accountId))
 					.arg(qPrintable(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))

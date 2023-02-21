@@ -15,6 +15,7 @@
 // ProLife includes
 #include <prolifedata/IOrderedProductInfo.h>
 #include <prolifedata/TOrderedWrap.h>
+#include <prolifedata/COrderInfo.h>
 
 
 namespace prolifegql
@@ -81,12 +82,18 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 			if (productCollectionPtr->GetObjectData(objectId, dataPtr)){
 				const imtlic::IProductInstanceInfo* productPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
 				if(productPtr != nullptr){
+					QByteArray objectUuid;
+					const imtbase::IIdentifiable* identifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(dataPtr.GetPtr());
+					if (identifiablePtr != nullptr){
+						objectUuid = identifiablePtr->GetObjectUuid();
+					}
+
 					int productIndex = productsModel->InsertNewItem();
 					QByteArray productId = productPtr->GetProductId();
 					QByteArray categoryId = productPtr->GetFactoryId();
 					QByteArray productInstance = productPtr->GetProductInstanceId();
 
-					productsModel->SetData("Id", objectId, productIndex);
+					productsModel->SetData("Id", objectUuid, productIndex);
 					productsModel->SetData("ProductId", productId, productIndex);
 					productsModel->SetData("CategoryId", categoryId, productIndex);
 					productsModel->SetData("MacAddress", productInstance, productIndex);
@@ -157,6 +164,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		imtbase::CTreeItemModel itemModel;
 		itemModel.CreateFromJson(itemData);
 
+		QByteArray orderUuid;
+		if (itemModel.ContainsKey("Id")){
+			orderUuid = itemModel.GetData("Id").toByteArray();
+		}
+
 		QByteArray orderId;
 		if (itemModel.ContainsKey("OrderId")){
 			orderId = itemModel.GetData("OrderId").toByteArray();
@@ -189,6 +201,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		orderPtr->SetOrderId(orderId);
 		orderPtr->SetCustomerId(customerId);
 		orderPtr->SetDescription(description);
+
+		prolifedata::CIdentifiableOrderInfo* identifiableOrderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderPtr.GetPtr());
+		if (identifiableOrderPtr != nullptr){
+			identifiableOrderPtr->SetObjectUuid(orderUuid);
+		}
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
