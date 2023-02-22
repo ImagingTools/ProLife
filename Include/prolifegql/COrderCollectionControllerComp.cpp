@@ -39,7 +39,13 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
 				}
 				else if(informationId == "Id"){
-					elementInformation = orderInfoPtr->GetObjectUuid();
+					QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
+					if (objectUuid.isEmpty()){
+						elementInformation = orderInfoPtr->GetOrderId();
+					}
+					else{
+						elementInformation = objectUuid;
+					}
 				}
 				else if(informationId == "Name"){
 					elementInformation = orderInfoPtr->GetOrderId();

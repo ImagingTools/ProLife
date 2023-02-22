@@ -160,16 +160,18 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	if (WriteDataToMemory(object, documentContent)){
 		documentContent = documentContent.replace("'", "''");
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
-		const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(&object);
+		const prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::CIdentifiableOrderInfo*>(&object);
 		Q_ASSERT(orderInfoPtr != nullptr);
 		if (orderInfoPtr == nullptr){
 			return QByteArray();
 		}
 		QByteArray accountId = orderInfoPtr->GetCustomerId();
 		QByteArray orderId = orderInfoPtr->GetOrderId();
+		QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
 
-		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where OrderId = '%2') + 1 );")
+		retVal = QString("UPDATE \"%1\" SET IsActive = false, OrderId = '%2' WHERE OrderId = '%3'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%4', '%5', '%6', '%7', true, (Select count(Id) from \"%1\" where OrderId = '%3') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
+					.arg(qPrintable(objectUuid))
 					.arg(qPrintable(objectId))
 					.arg(qPrintable(accountId))
 					.arg(qPrintable(documentContent))

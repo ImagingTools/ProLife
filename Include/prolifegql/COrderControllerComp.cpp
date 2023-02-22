@@ -235,6 +235,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 				if (orderedProducts->ContainsKey("Id", productIndex)){
 					uuidId = orderedProducts->GetData("Id", productIndex).toByteArray();
+					if (uuidId.isEmpty()){
+						uuidId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+					}
 				}
 
 				QByteArray productCategory = "Software";

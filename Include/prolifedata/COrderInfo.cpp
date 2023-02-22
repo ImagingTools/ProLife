@@ -165,12 +165,12 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 //	retVal = retVal && archive.Process(status);
 //	retVal = retVal && archive.EndTag(orderStatusTag);
 
-//	if (prolifeVersion >= 6020){
-		static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
-		retVal = retVal && archive.BeginTag(statusTag);
+	static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(statusTag);
+	if (prolifeVersion >= 5902){
 		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
-		retVal = retVal && archive.EndTag(statusTag);
-//	}
+	}
+	retVal = retVal && archive.EndTag(statusTag);
 
 	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
 	if (prolifeVersion >= 5902){
