@@ -93,8 +93,9 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			devicePtr->SetOrderId(orderId);
 		}
 
+		QByteArray macAddress;
 		if (itemModel.ContainsKey("MacAddress")){
-			QByteArray macAddress = itemModel.GetData("MacAddress").toByteArray();
+			macAddress = itemModel.GetData("MacAddress").toByteArray();
 
 			devicePtr->SetMacAddress(macAddress);
 		}
@@ -144,11 +145,9 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			return nullptr;
 		}
 
-		if (serialNumber.isEmpty()){
-			name = deviceType + " (New)";
-		}
-		else{
-			name = deviceType + " (" + serialNumber + ")";
+		name = deviceType;
+		if (!macAddress.isEmpty()){
+			name += " (" + macAddress + ")";
 		}
 
 		return devicePtr.PopPtr();

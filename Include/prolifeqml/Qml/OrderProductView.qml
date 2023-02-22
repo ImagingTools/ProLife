@@ -5,7 +5,7 @@ import Acf 1.0
 Item {
     id: productInfo;
 
-    height: column.height;
+    height: column.height + 10;
     width: 500;
 
     property string productName;
@@ -20,6 +20,8 @@ Item {
 
     property string deviceId;
 
+    property bool selected: false;
+
     property TreeItemModel commandsModel: null;
 
     onCommandsModelChanged: {
@@ -31,19 +33,35 @@ Item {
     signal removed();
     signal edited();
     signal createLicenseFile();
+
+    signal clicked();
     signal pairClicked();
+
+    MouseArea {
+        anchors.fill: parent;
+
+        onClicked: {
+            console.log("onClicked");
+            productInfo.clicked();
+        }
+    }
 
     Rectangle {
         id: background;
 
-        anchors.fill: column;
+        anchors.fill: parent;
 
         color: Style.baseColor;
         radius: 10;
+
+        border.color: productInfo.selected ? Style.textSelected : "transparent";
+        border.width: 2;
     }
 
     Column {
         id: column;
+
+        spacing: 4;
 
         width: parent.width;
 
@@ -57,7 +75,7 @@ Item {
             width: 60;
 
             radius: 10;
-            color: background.color;
+//            color: background.color;
 
             onCommandActivated: {
                 if (commandId == "Remove"){
@@ -74,7 +92,7 @@ Item {
 
         Item {
             width: parent.width;
-            height: 30;
+            height: 25;
 
             Text {
                 id: productName;
@@ -110,18 +128,18 @@ Item {
             color: Style.textColor;
         }
 
-        Text {
-            id: productionStatus;
+//        Text {
+//            id: productionStatus;
 
-            anchors.left: parent.left;
-            anchors.leftMargin: 5;
+//            anchors.left: parent.left;
+//            anchors.leftMargin: 5;
 
-            text: qsTr("Status: ") + productInfo.productStatus;
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            visible:  productInfo.productCategory === "Hardware";
-        }
+//            text: qsTr("Status: ") + productInfo.productStatus;
+//            color: Style.textColor;
+//            font.family: Style.fontFamily;
+//            font.pixelSize: Style.fontSize_common;
+//            visible:  productInfo.productCategory === "Hardware";
+//        }
 
         Text {
             id: licenseName;
@@ -144,7 +162,7 @@ Item {
 
         Item {
             width: parent.width;
-            height: 35;
+            height: linkedName.height;
 
             Text {
                 id: linkedName;
@@ -182,65 +200,71 @@ Item {
 
         Item {
             width: parent.width;
-            height: 35;
+            height: macAddressTitle.height;
 
             visible:  productInfo.productCategory === "Hardware";
 
             Text {
-                id: deviceIdTitle;
+                id: macAddressTitle;
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: parent.left;
                 anchors.leftMargin: 5;
-                text: qsTr("Device-ID:");
+
+                text: qsTr("Mac address:")
                 color: Style.textColor;
                 font.family: Style.fontFamily;
                 font.pixelSize: Style.fontSize_common;
-
+                visible: productInfo.productCategory === "Hardware";
                 font.bold: true;
             }
 
             Text {
-                id: deviceId;
+                id: macAddress;
 
                 anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: deviceIdTitle.right;
+                anchors.left: macAddressTitle.right;
                 anchors.leftMargin: 5;
-                text: productInfo.deviceId;
+                text: productInfo.macAddress;
                 color: Style.textColor;
                 font.family: Style.fontFamily;
                 font.pixelSize: Style.fontSize_common;
             }
         }
 
-//        Text {
-//            id: macAddress;
+        Item {
+            width: parent.width;
+            height: serialNumberTitle.height;
 
-//            anchors.left: parent.left;
-//            anchors.leftMargin: 5;
-//            text: qsTr("Mac address: ") + productInfo.macAddress;
-//            color: Style.textColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-//            visible: productInfo.productCategory === "Hardware";
-//        }
+            visible:  productInfo.productCategory === "Hardware";
 
-//        Text {
-//            id: serialNumber;
+            Text {
+                id: serialNumberTitle;
 
-//            anchors.left: parent.left;
-//            anchors.leftMargin: 5;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 5;
 
-//            width: parent.width - 10;
+                text: qsTr("Serial Number:")
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+                visible: productInfo.productCategory === "Hardware";
+                font.bold: true;
+            }
 
-//            text: qsTr("Serial number: ") + productInfo.serialNumber;
-//            color: Style.textColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-//            visible: macAddress.visible;
+            Text {
+                id: serialNumber;
 
-//            wrapMode: Text.WrapAnywhere;
-//        }
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: serialNumberTitle.right;
+                anchors.leftMargin: 5;
+                text: productInfo.serialNumber;
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+        }
     }
 }
 

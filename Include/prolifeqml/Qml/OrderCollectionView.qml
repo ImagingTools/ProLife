@@ -4,6 +4,8 @@ import imtgui 1.0
 CollectionView {
     id: container;
 
+    visibleMetaInfo: false;
+
     Component.onCompleted: {
         container.commandUpdateGui = "OrderCollectionUpdateGui";
         console.log("Order collection view complete");

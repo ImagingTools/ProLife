@@ -19,21 +19,19 @@ Item {
     property int activeProductIndex: -1;
 
     property string orderId;
+    property string orderUuid;
 
     // property string selectedPairId: "";
+
+    onOrderUuidChanged: {
+        console.log("onOrderUuidChanged", orderUuid);
+    }
 
     width: 550;
     height: 800;
 
     UuidGenerator {
         id: uuidGenerator;
-    }
-
-    onOrderIdChanged: {
-//        defaultDeviceModel.SetData("OrderId", installationEditorContainer.orderId);
-//        defaultDeviceModel.SetData("Description", "Ordered device for " + installationEditorContainer.orderId);
-
-//        defaultDeviceModel.setDefaultData();
     }
 
     function started(){
@@ -51,7 +49,6 @@ Item {
         }
 
         devicesList.updateModel({});
-
         console.log("started orderProductsModel", orderProductsModel.toJSON());
 
        // updateGui();
@@ -382,17 +379,12 @@ Item {
                 else{
                     updateSoftwareCategoryProducts()
 
-//                    defaultDeviceModel.SetData("DeviceType", selectedProductId);
-
-//                    defaultDeviceModel.setDefaultData();
-
                     devicesList.updateModel({});
                 }
 
                 console.log("InstallationEditor onCurrentIndexChanged",productCB.currentIndex, pairCB.model.toJSON());
 
                 if (!blockUpdatingModel){
-                    //   installationEditorContainer.updateModel();
                     installationEditorContainer.updateGui();
                 }
             }
@@ -429,12 +421,16 @@ Item {
 
                         let newIndex = filteringModel.InsertNewItem(0);
 
+//                        let newIndex = devicesList.collectionModel.InsertNewItem(0);
+
+//                        devicesList.collectionModel.SetData("Id", "", newIndex);
+//                        devicesList.collectionModel.SetData("Name", "New Device", newIndex);
+
                         filteringModel.SetData("Id", "", newIndex);
                         filteringModel.SetData("Name", "New Device", newIndex);
-//                        filteringModel.SetData("DeviceType", "New Device", newIndex);
-//                        filteringModel.SetData("OrderId", "New Device", newIndex);
 
                         deviceCB.model = filteringModel;
+//                        deviceCB.model = devicesList.collectionModel;
                     }
 
                     installationEditorContainer.updateGui();
@@ -451,7 +447,8 @@ Item {
                         let deviceType = devicesList.collectionModel.GetData("DeviceType", i);
                         let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
 
-                        if (selectedProductId === deviceType && (orderId === "" || installationEditorContainer.orderId) && (status === "Finished" || status === "None")){
+                        if (selectedProductId === deviceType && (installationEditorContainer.orderId === "" || installationEditorContainer.orderUuid === orderId) && (status === "Finished" || status === "None")||
+                                selectedProductId === deviceType && installationEditorContainer.orderId === orderId){
                             let index = filteringModel.InsertNewItem();
                             filteringModel.CopyItemDataFromModel(index, devicesList.collectionModel, i);
                         }
@@ -462,10 +459,6 @@ Item {
             ComboBox {
                 id: deviceCB;
 
-//                anchors.left: parent.left;
-//                anchors.right: newDevice.left;
-//                anchors.rightMargin: 10;
-
                 height: parent.height;
                 width: parent.width;
 
@@ -473,75 +466,6 @@ Item {
 
                 onCurrentIndexChanged: {
                     installationEditorContainer.updateModel();
-                }
-            }
-
-//            BaseButton{
-//                id: newDevice;
-
-//                anchors.right: parent.right;
-
-//                height: parent.height;
-//                width: 100;
-
-//                text: qsTr("New device");
-
-//                onClicked: {
-//                    if (installationEditorContainer.orderId === ""){
-
-//                        return;
-//                    }
-
-//                    defaultDeviceModel.Clear();
-//                    defaultDeviceModel.setDefaultData();
-
-//                    modalDialogManager.openDialog(deviceEditorDialog, {"documentModel": defaultDeviceModel});
-//                }
-//            }//delegate
-
-//            TreeItemModel {
-//                id: defaultDeviceModel;
-
-//                Component.onCompleted: {
-//                    defaultDeviceModel.SetData("Id", "");
-//                    defaultDeviceModel.SetData("Description", "Ordered device for " + installationEditorContainer.orderId);
-//                }
-
-//                function setDefaultData(){
-//                    defaultDeviceModel.SetData("Id", "");
-//                    defaultDeviceModel.SetData("Description", "Ordered device for " + installationEditorContainer.orderId);
-
-//                    let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-//                    if (selectedProductId){
-//                        defaultDeviceModel.SetData("DeviceType", selectedProductId);
-//                    }
-
-//                    defaultDeviceModel.SetData("OrderId", installationEditorContainer.orderId);
-//                    defaultDeviceModel.SetData("Description", "Ordered device for " + installationEditorContainer.orderId);
-//                }
-//            }
-
-//            Component {
-//                id: deviceEditorDialog;
-
-//                DeviceEditorDialog {
-//                    onFinished: {
-//                        if (buttonId === "Save"){
-//                            documentController.setData("", defaultDeviceModel);
-//                        }
-//                    }
-//                }
-//            }
-
-            GqlDocumentDataController {
-                id: documentController;
-
-                prefixCommandId: "Device";
-
-                onDocumentModelSaved: {
-                   // modalDialogManager.openDialog(saveDialog, {"message": qsTr("The new device has been successfully created")});
-
-                    devicesList.updateModel({});
                 }
             }
 
@@ -651,7 +575,7 @@ Item {
                 height: parent.height;
                 width: 100;
                 enabled: pairCB.currentIndex > -1;
-                text: qsTr("Clear");
+                text: qsTr("Unlink");
 
                 onClicked: {
                     clearPairLink();
@@ -667,66 +591,6 @@ Item {
                 }
             }//delegate
         }
-
-
-
-        //        Text {
-        //            id: titleMacAddress;
-
-        //            text: qsTr("MAC address");
-        //            color: Style.textColor;
-        //            font.family: Style.fontFamily;
-        //            font.pixelSize: Style.fontSize_common;
-        //            visible: bodyColumn.productCategory == "Hardware"
-        //        }
-
-        //        RegExpValidator {
-        //            id: macAddressRegExp;
-
-        //            regExp: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
-        //        }
-
-        //        CustomTextField {
-        //            id: macAddressInput;
-
-        //            width: parent.width;
-        //            height: 30;
-        //            placeHolderText: qsTr("Enter the MAC address");
-        //            borderColor: Style.iconColorOnSelected;
-        //            maximumLength: 17;
-        //            visible: bodyColumn.productCategory == "Hardware"
-
-        //            textInputValidator: macAddressRegExp;
-
-        //            onEditingFinished: {
-        //                updateModel();
-        //            }
-        //        }
-
-        //        Text {
-        //            id: titleSerialNumber;
-
-        //            text: qsTr("Serial number");
-        //            color: Style.textColor;
-        //            font.family: Style.fontFamily;
-        //            font.pixelSize: Style.fontSize_common;
-        //            visible: bodyColumn.productCategory == "Hardware"
-        //        }
-
-        //        CustomTextField {
-        //            id: serialNumberInput;
-
-        //            width: parent.width;
-        //            height: 30;
-        //            placeHolderText: qsTr("Enter the serial number");
-        //            borderColor: Style.iconColorOnSelected;
-        //            visible: bodyColumn.productCategory == "Hardware";
-
-        //            onEditingFinished: {
-        //                updateModel();
-        //            }
-        //        }
-
     }//Column bodyColumn
 
     Text {

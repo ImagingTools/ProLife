@@ -7,14 +7,17 @@ import Acf 1.0
 DocumentBase {
     id: orderEditorContainer;
 
-    // Загрузка моделей: Licenses -> Accounts -> Products -> DocumentModel
+    // Загрузка моделей: Licenses -> Accounts -> Products -> Devices -> DocumentModel
 
     commandsDelegateSourceComp: orderEditorCommandsDelegate;
 
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
+    property TreeItemModel devicesModel: TreeItemModel {}
 
     property bool blockUpdatingModel: false;
+
+    property string orderUuid: "";
 
     Component.onCompleted: {
         licensesProvider.updateModel();
@@ -27,8 +30,19 @@ DocumentBase {
         OrderEditorCommandsDelegate {}
     }
 
+    onOrderUuidChanged: {
+
+    }
+
     onDocumentModelChanged: {
         updateGui();
+
+        console.log("onDocumentModelChanged");
+        if (documentModel.ContainsKey("Id")){
+
+            orderEditorContainer.orderUuid = documentModel.GetData("Id");
+            console.log("onDocumentModelChanged", orderEditorContainer.orderUuid);
+        }
 
         undoRedoManager.registerModel(documentModel)
     }
@@ -65,9 +79,57 @@ DocumentBase {
             if (productsList.collectionModel != null){
                 orderEditorContainer.productsModel = productsList.collectionModel;
 
-                orderEditorContainer.updateGui();
-                undoRedoManager.registerModel(documentModel)
+                devicesList.updateModel({});
             }
+        }
+    }
+
+    CollectionDataProvider {
+        id: devicesList;
+
+        commandId: "Devices";
+
+        fields: ["Id", "Name", "DeviceType", "OrderId", "ProductionStatus", "MacAddress", "SerialNumber"];
+
+        onModelUpdated: {
+            if (devicesList.collectionModel != null){
+
+                let newIndex = devicesList.collectionModel.InsertNewItem(0);
+
+                devicesList.collectionModel.SetData("Id", "", newIndex);
+                devicesList.collectionModel.SetData("Name", "New Device", newIndex);
+
+                orderEditorContainer.devicesModel = devicesList.collectionModel;
+
+                orderEditorContainer.updateGui();
+                undoRedoManager.registerModel(documentModel);
+            }
+        }
+
+        function getMacAddress(deviceId){
+            for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+                let id = devicesList.collectionModel.GetData("Id", i);
+                if (id === deviceId){
+                    let macAddress = devicesList.collectionModel.GetData("MacAddress", i);
+
+                    return macAddress;
+                }
+            }
+
+            return null;
+        }
+
+        function getSerialNumber(deviceId){
+            for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+                let id = devicesList.collectionModel.GetData("Id", i);
+                if (id === deviceId){
+                    let serialNumber = devicesList.collectionModel.GetData("SerialNumber", i);
+
+                    return serialNumber;
+                }
+            }
+
+            return null;
         }
     }
 
@@ -96,7 +158,7 @@ DocumentBase {
 
     function updateGui(){
         console.log("Begin updateGui");
-        blockUpdatingModel = true;
+        orderEditorContainer.blockUpdatingModel = true;
 
         if (documentModel.ContainsKey("OrderId")){
             instanceIdInput.text = documentModel.GetData("OrderId");
@@ -131,12 +193,17 @@ DocumentBase {
             productsView.model = 0;
         }
 
-        blockUpdatingModel = false;
+        orderEditorContainer.blockUpdatingModel = false;
         console.log("End updateGui");
     }
 
     function updateModel(){
+        if (orderEditorContainer.blockUpdatingModel){
+            return;
+        }
+
         console.log("Begin updateModel1", documentModel.toJSON());
+
         undoRedoManager.beginChanges();
 
         documentModel.SetData("OrderId", instanceIdInput.text)
@@ -200,9 +267,9 @@ DocumentBase {
             borderColor: Style.iconColorOnSelected;
 
             onEditingFinished: {
-                let currentId = documentModel.GetData("Id");
-                if (currentId != instanceIdInput.text){
-                    updateModel();
+                let currentId = documentModel.GetData("OrderId");
+                if (currentId !== instanceIdInput.text && instanceIdInput.text !== ""){
+                    orderEditorContainer.updateModel();
                 }
             }
         }
@@ -226,8 +293,9 @@ DocumentBase {
             borderColor: Style.iconColorOnSelected;
 
             onEditingFinished: {
-                if (!blockUpdatingModel){
-                    updateModel();
+                let oldText = orderEditorContainer.documentModel.GetData("Description");
+                if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
+                    orderEditorContainer.updateModel();
                 }
             }
         }
@@ -255,7 +323,6 @@ DocumentBase {
                 }
             }
         }
-
 
         Item{
             height: 35;
@@ -302,6 +369,8 @@ DocumentBase {
             id: productsDialog;
             licensesModel: licensesProvider.model;
             productsModel: orderEditorContainer.productsModel;
+
+            orderUuid: orderEditorContainer.orderUuid;
             onStarted: {
                 productsDialog.orderProductsModel.Clear();
                 if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
@@ -370,6 +439,8 @@ DocumentBase {
 
         property int activeProductIndex: -1;
 
+        property int selectedIndex: -1;
+
         Component.onCompleted: {
         }
 
@@ -411,8 +482,8 @@ DocumentBase {
                 if (categoryId == "Software" &&  productsModel.GetData("PairId", i) == id){
                     let modelProductId = productsModel.GetData("ProductId", i)
                     retVal = "#" + (i + 1) + " " + getProductName(modelProductId);
-                    let productMacAddress = productsModel.GetData("MacAddress", i)
-                    retVal += " (" + productMacAddress + ")";
+//                    let productMacAddress = productsModel.GetData("MacAddress", i)
+//                    retVal += " (" + productMacAddress + ")";
 
                     break;
                 }
@@ -545,13 +616,15 @@ DocumentBase {
             productName: "#" + (model.index + 1) + " " + productsView.getProductName(model.ProductId);
             productCategory: productsView.getProductCategory(model.ProductId);
             pairName: productsView.getPairName(model.index)
-            macAddress: model.MacAddress;
-            serialNumber: model.SerialNumber;
+            macAddress: devicesList.getMacAddress(model.DeviceId);
+            serialNumber: devicesList.getSerialNumber(model.DeviceId);
             licenseName: productsView.getLicenseName(model.index);
 
             deviceId: model.DeviceId;
 
             commandsModel: commandsModelLocal;
+
+            selected: productsView.selectedIndex === model.index;
 
             onEdited: {
                 productsView.activeProductIndex = model.index;
@@ -572,8 +645,12 @@ DocumentBase {
                 modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
             }
 
+            onClicked: {
+                productsView.selectedIndex = model.index;
+            }
+
             onCreateLicenseFile: {
-                let orderId = documentModel.GetData("OrderId");
+                let orderId = documentModel.GetData("Id");
                 let productId = model.Id;
 
                 if (model.CategoryId === "Software"){
@@ -593,6 +670,7 @@ DocumentBase {
 
                 let index = productsView.getIndexByPairId(id);
                 if (index >= 0){
+                    productsView.selectedIndex = index;
                     productsView.positionViewAtIndex(index, ListView.Center);
                 }
             }

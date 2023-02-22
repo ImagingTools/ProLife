@@ -15,6 +15,7 @@ Dialog {
     property int activeProductIndex: -1;
 
     property string orderId;
+    property string orderUuid;
 
     onDocumentModelChanged: {
 //        root.contentItem.documentModel = root.documentModel;
@@ -36,6 +37,7 @@ Dialog {
             orderProductsModel: root.orderProductsModel;
             activeProductIndex: root.activeProductIndex;
             orderId: root.orderId;
+            orderUuid: root.orderUuid;
             width: root.width - 100;
             height: 350;
             onActiveProductIndexChanged: {

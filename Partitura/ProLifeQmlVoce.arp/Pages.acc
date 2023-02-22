@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5058" Description="ACF"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
             <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -52,11 +52,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="DevicesPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Magic"/>
+                        <Data IsEnabled="true" Value="Sensor"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Id" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Devices"/>
@@ -111,6 +116,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
@@ -179,7 +187,11 @@
         </Element>
         <Element Id="PagesPermissions" PackageId="" ComponentId="PagesPermissions">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="PagesRepresentation" PackageId="ImtCorePck" ComponentId="PageBasedGuiRepresentationController">
@@ -192,7 +204,7 @@
                         <Data IsEnabled="true" Value="Pages"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PermissionsChecker"/>
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -293,6 +305,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -398,8 +413,15 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewAccounts</Value>
+                                            <Value>EditAccount</Value>
+                                            <Value>AddAccount</Value>
+                                            <Value>RemoveAccount</Value>
+                                            <Value>ChangeAccount</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -414,8 +436,35 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewAdministration</Value>
+                                            <Value>EditAdministration</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DevicesPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensors</Value>
+                                            <Value>EditSensor</Value>
+                                            <Value>AddSensor</Value>
+                                            <Value>RemoveSensor</Value>
+                                            <Value>ChangeSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -430,8 +479,15 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
+                                            <Value>EditOrder</Value>
+                                            <Value>AddOrder</Value>
+                                            <Value>ChangeOrder</Value>
+                                            <Value>RemoveOrder</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -445,6 +501,7 @@
                                             <Value>AccountsPermissions</Value>
                                             <Value>OrdersPermissions</Value>
                                             <Value>AdministrationPermissions</Value>
+                                            <Value>DevicesPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -541,6 +598,7 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
+        <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
         <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Repositories/ProductInstanceSqlRepository"/>
         <Component ExportedId="ProductSqlRepository" ComponentId="Repositories/ProductSqlRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="PageData/UserSqlRepository"/>

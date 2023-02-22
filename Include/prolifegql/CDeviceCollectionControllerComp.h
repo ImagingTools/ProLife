@@ -14,6 +14,7 @@ public:
 	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
+		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 	I_END_COMPONENT;
 
 protected:
@@ -25,6 +26,9 @@ protected:
 			const QByteArray& collectionId,
 			QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+
+private:
+	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 };
 
 

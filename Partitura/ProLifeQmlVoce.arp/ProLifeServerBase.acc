@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5054" Description="ACF"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
             <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -192,6 +192,9 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/DeviceSqlRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/GraphQLClientEngine"/>
                     </AttributeInfo>
@@ -343,6 +346,9 @@
                     <Element Id="KeyDataProvider" PackageId="ProLifeDataPck" ComponentId="KeyDataProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="GqlLicenseRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>

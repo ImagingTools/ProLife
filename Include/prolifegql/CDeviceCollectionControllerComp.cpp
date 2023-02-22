@@ -5,6 +5,7 @@
 #include <idoc/IDocumentMetaInfo.h>
 
 // ProLife includes
+#include <prolifedata/IOrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 
@@ -26,7 +27,6 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 {
 	bool retVal = true;
 
-	gqlRequest.GetFields();
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
@@ -48,13 +48,11 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				}
 				else if(informationId == "Name"){
 					QByteArray deviceType = deviceInfoPtr->GetDeviceType();
-					QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 
-					if (serialNumber.isEmpty()){
-						elementInformation = deviceType + " (New)";
-					}
-					else{
-						elementInformation = deviceType + " (" + serialNumber + ")";
+					elementInformation = deviceType;
+					if (!macAddress.isEmpty()){
+						elementInformation = deviceType + " (" + macAddress + ")";
 					}
 				}
 				else if(informationId == "MacAddress"){
@@ -70,7 +68,18 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = deviceInfoPtr->GetDeviceType();
 				}
 				else if(informationId == "OrderId"){
-					elementInformation = deviceInfoPtr->GetOrderId();
+					if (m_orderCollectionCompPtr.IsValid()){
+						QByteArray orderUuid = deviceInfoPtr->GetOrderId();
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
+							prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+							if (orderPtr != nullptr){
+								QByteArray orderId = orderPtr->GetOrderId();
+
+								elementInformation = orderId;
+							}
+						}
+					}
 				}
 				else if(informationId == "ProductionStatus"){
 					int status = deviceInfoPtr->GetDeviceProductionStatus();
@@ -92,9 +101,6 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 						break;
 					case prolifedata::IDeviceInfo::DPS_FINISHED:
 						elementInformation = "Finished";
-						break;
-					case prolifedata::IDeviceInfo::DPS_CLOSED:
-						elementInformation = "Closed";
 						break;
 					}
 				}

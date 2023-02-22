@@ -97,11 +97,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 	if (valuePtr != nullptr){
 		workingDocumentPtr.SetPtr(valuePtr, false);
 	}
-	else{
-//		if (m_documentFactCompPtr.IsValid()){
-//			workingDocumentPtr.SetPtr(m_documentFactCompPtr.CreateInstance());
-//		}
-	}
 
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
@@ -114,7 +109,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 			}
 
 			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
-//			QByteArray revisionUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 			quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 
 			QByteArray accountId = orderInfoPtr->GetCustomerId();
@@ -185,13 +179,6 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 QByteArray COrderDatabaseDelegateComp::GetCountQuery(const iprm::IParamsSet* paramsPtr) const
 {
-//	QString filterQuery;
-//	if (paramsPtr != nullptr){
-//		if (!CreateFilterQuery(*paramsPtr, filterQuery)){
-//			return QByteArray();
-//		}
-//	}
-
 	return QString("SELECT COUNT(*) FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();
 }
 

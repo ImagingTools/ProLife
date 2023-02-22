@@ -76,39 +76,40 @@ DocumentBase {
         Component.onCompleted: {
             let index = statusModel.InsertNewItem();
 
+            // 0
             statusModel.SetData("Id", "None", index);
             statusModel.SetData("Name", qsTr("None"), index);
 
             index = statusModel.InsertNewItem();
 
+            // 1
             statusModel.SetData("Id", "Accepted", index);
             statusModel.SetData("Name", qsTr("Accepted"), index);
 
             index = statusModel.InsertNewItem();
 
+            // 2
             statusModel.SetData("Id", "InProgress", index);
             statusModel.SetData("Name", qsTr("In Progress"), index);
 
             index = statusModel.InsertNewItem();
 
+            // 3
             statusModel.SetData("Id", "Canceled", index);
             statusModel.SetData("Name", qsTr("Canceled"), index);
 
             index = statusModel.InsertNewItem();
 
+            // 4
             statusModel.SetData("Id", "OnHold", index);
             statusModel.SetData("Name", qsTr("On Hold"), index);
 
-
             index = statusModel.InsertNewItem();
 
+            // 5
             statusModel.SetData("Id", "Finished", index);
             statusModel.SetData("Name", qsTr("Finished"), index);
 
-            index = statusModel.InsertNewItem();
-
-            statusModel.SetData("Id", "Closed", index);
-            statusModel.SetData("Name", qsTr("Closed"), index);
             statusCB.model = statusModel;
         }
     }
@@ -222,8 +223,10 @@ DocumentBase {
         let serialNumber = serialNumberInput.text;
         deviceEditorContainer.documentModel.SetData("SerialNumber", serialNumber);
 
-        let macAddress = macAddressInput.text;
-        deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
+        if (macAddressInput.acceptableInput){
+            let macAddress = macAddressInput.text;
+            deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
+        }
 
         documentModel.SetData("ProductionStatus", statusCB.currentIndex);
 
@@ -360,6 +363,21 @@ DocumentBase {
                     font.pixelSize: Style.fontSize_common;
                 }
 
+                RegExpValidator {
+                    id: macAddressRegExp;
+
+                    Component.onCompleted: {
+                        let mask = instanceMaskProvider.getInstanceMask();
+                        if (mask){
+                            const re = new RegExp(mask);
+                            if (re){
+                                macAddressRegExp.regExp = re;
+                                macAddressInput.textInputValidator = macAddressRegExp;
+                            }
+                        }
+                    }
+                }
+
                 CustomTextField {
                     id: macAddressInput;
 
@@ -376,8 +394,6 @@ DocumentBase {
                             deviceEditorContainer.updateModel();
                         }
                     }
-
-//                    KeyNavigation.tab: deviceNameInput;
                 }
             }
         }
@@ -436,9 +452,10 @@ DocumentBase {
                         onCurrentIndexChanged: {
                             deviceEditorContainer.updateModel();
 
-                            if (statusCB.currentIndex == 0 ||
-                                statusCB.currentIndex == 3 ||
-                                statusCB.currentIndex == 6){
+                            if (statusCB.currentIndex == 0){
+                                colorStatus.color = 'gray';
+                            }
+                            else if (statusCB.currentIndex == 3){
                                 colorStatus.color = 'red';
                             }
                             else if (statusCB.currentIndex == 1 ||

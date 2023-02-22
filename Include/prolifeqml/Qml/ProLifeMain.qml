@@ -106,6 +106,12 @@ Item {
         settingsProvider: settingsProviderLocal;
     }
 
+    InstanceMaskProvider {
+        id: instanceMaskProvider;
+
+        settingsProvider: settingsProviderLocal;
+    }
+
     ThumbnailDecorator {
         id: thumbnailDecorator;
         anchors.fill: parent;

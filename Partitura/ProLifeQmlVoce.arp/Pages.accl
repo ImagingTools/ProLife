@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5058" Description="ACF"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
             <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -10,6 +10,7 @@
     <PositionMap>
         <Element ComponentName="AccountsPage" X="175" Y="625" Note=""/>
         <Element ComponentName="AdministrationPage" X="175" Y="700" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="675" Y="575" Note=""/>
         <Element ComponentName="DevicesPage" X="175" Y="475" Note=""/>
         <Element ComponentName="OrdersPage" X="175" Y="550" Note=""/>
         <Element ComponentName="PageData" X="1025" Y="350" Note=""/>
@@ -19,7 +20,7 @@
         <Element ComponentName="PagesPermissions" X="675" Y="475" Note=""/>
         <Element ComponentName="PagesRepresentation" X="700" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="425" Y="225" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="675" Y="575" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="675" Y="725" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
@@ -36,10 +37,11 @@
         </EmbededRegistry>
         <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
-                <Element ComponentName="AccountsPermissions" X="250" Y="400" Note=""/>
-                <Element ComponentName="AdministrationPermissions" X="900" Y="400" Note=""/>
-                <Element ComponentName="OrdersPermissions" X="575" Y="400" Note=""/>
-                <Element ComponentName="PagePermissions" X="600" Y="150" Note=""/>
+                <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="1050" Y="400" Note=""/>
+                <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

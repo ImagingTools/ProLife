@@ -218,11 +218,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		orderPtr->SetCustomerId(customerId);
 		orderPtr->SetDescription(description);
 
-//		prolifedata::CIdentifiableOrderInfo* identifiableOrderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderPtr.GetPtr());
-//		if (identifiableOrderPtr != nullptr){
-//			identifiableOrderPtr->SetObjectUuid(orderUuid);
-//		}
-
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
 			return nullptr;
@@ -314,6 +309,17 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 						m_deviceCollectionCompPtr->InsertNewObject("DeviceInfo", "", "", devicePtr.GetPtr(), deviceUuid);
 
 						deviceId = deviceUuid;
+					}
+					else{
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+							prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+							if (deviceInfoPtr != nullptr){
+								deviceInfoPtr->SetOrderId(objectId);
+								deviceInfoPtr->SetDeviceType(productId);
+								m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr);
+							}
+						}
 					}
 
 					istd::TDelPtr<imtlic::CIdentifiableHardwareInstanceInfo> hardwareInstancePtr = new imtlic::CIdentifiableHardwareInstanceInfo();
