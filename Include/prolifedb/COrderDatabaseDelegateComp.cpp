@@ -101,7 +101,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
 		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
-
+			documentContent = documentContent.replace("'", "''");
 			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(orderInfoPtr != nullptr);
 			if (orderInfoPtr == nullptr){
