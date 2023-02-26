@@ -7,7 +7,7 @@ namespace prolife
 
 enum VersionId
 {
-	VI_PROLIFE = 1
+	VI_PROLIFE = 2022
 };
 
 

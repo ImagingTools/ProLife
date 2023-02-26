@@ -16,6 +16,9 @@
 #include <imtlic/CHardwareInstanceInfo.h>
 #include <imtlic/CProductInstanceInfo.h>
 
+// ProLife include
+#include <prolife/Version.h>
+
 
 namespace prolifedata
 {
@@ -133,18 +136,29 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 {
 	istd::CChangeNotifier notifier(archive.IsStoring() ? nullptr : this);
 
+	// Get version of ProLife:
 	const iser::IVersionInfo& versionInfo = archive.GetVersionInfo();
 	quint32 prolifeVersion;
-	if (!versionInfo.GetVersionNumber(2022, prolifeVersion)){
+	if (!versionInfo.GetVersionNumber(prolife::VI_PROLIFE, prolifeVersion)){
 		prolifeVersion = 0;
 	}
 
 	bool retVal = true;
 
-//	static iser::CArchiveTag orderTag("OrderItem", "Order item", iser::CArchiveTag::TT_GROUP);
-//	retVal = retVal && archive.BeginTag(orderTag);
+	// Serialize order with the new format:
+	static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(statusTag);
+	if (prolifeVersion >= 5902) {
+		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
+	}
+	// Serialize order with the old format:
+	else{
+		QString status;
+		retVal = retVal && archive.Process(status);
+	}
+	retVal = retVal && archive.EndTag(statusTag);
 
-	static iser::CArchiveTag orderIdTag("OrderId", "Order id", iser::CArchiveTag::TT_LEAF);
+	static iser::CArchiveTag orderIdTag("OrderId", "User-defined order-ID", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderIdTag);
 	retVal = retVal && archive.Process(m_orderId);
 	retVal = retVal && archive.EndTag(orderIdTag);
@@ -159,28 +173,12 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
-//	static iser::CArchiveTag orderStatusTag("Status", "Order Status", iser::CArchiveTag::TT_LEAF);
-//	retVal = retVal && archive.BeginTag(orderStatusTag);
-//	QString status;
-//	retVal = retVal && archive.Process(status);
-//	retVal = retVal && archive.EndTag(orderStatusTag);
-
-	static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
-	retVal = retVal && archive.BeginTag(statusTag);
-	if (prolifeVersion >= 5902){
-		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
-	}
-	retVal = retVal && archive.EndTag(statusTag);
-
 	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
 	if (prolifeVersion >= 5902){
 		retVal = retVal && archive.BeginTag(productsTag);
-	}
-	retVal = retVal && m_productInstanceCollection.Serialize(archive);
-	if (prolifeVersion >= 5902){
+		retVal = retVal && m_productInstanceCollection.Serialize(archive);
 		retVal = retVal && archive.EndTag(productsTag);
 	}
-//	retVal = retVal && archive.EndTag(orderTag);
 
 	return retVal;
 }
