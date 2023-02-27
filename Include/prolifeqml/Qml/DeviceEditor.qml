@@ -444,7 +444,7 @@ DocumentBase {
 
                         anchors.left: parent.left;
 
-                        width: parent.width - colorStatus.width - 10;
+                        width: parent.width - iconStatus.width - 10;
                         height: 23;
 
                         radius: 3;
@@ -453,33 +453,34 @@ DocumentBase {
                             deviceEditorContainer.updateModel();
 
                             if (statusCB.currentIndex == 0){
-                                colorStatus.color = 'gray';
+                                iconStatus.source = "qrc:/Icons/Light/StateUnknown_On_Active";
                             }
                             else if (statusCB.currentIndex == 3){
-                                colorStatus.color = 'red';
+                                iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
                             }
                             else if (statusCB.currentIndex == 1 ||
                                      statusCB.currentIndex == 2 ||
                                      statusCB.currentIndex == 4){
-                                colorStatus.color = 'yellow';
+                                iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
                             }
                             else{
-                                colorStatus.color = 'green';
+                                iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
                             }
                         }
                     }
 
-                    Rectangle {
-                        id: colorStatus;
+                    Image {
+                        id: iconStatus;
 
                         anchors.verticalCenter: parent.verticalCenter;
                         anchors.left: statusCB.right;
                         anchors.leftMargin: 10;
 
-                        width: 12;
+                        width: 20;
                         height: width;
 
-                        radius: width;
+                        sourceSize.height: height;
+                        sourceSize.width: width;
                     }
                 }
 

@@ -620,7 +620,7 @@ DocumentBase {
             serialNumber: devicesList.getSerialNumber(model.DeviceId);
             licenseName: productsView.getLicenseName(model.index);
 
-            deviceId: model.DeviceId;
+            //deviceId: model.DeviceId;
 
             commandsModel: commandsModelLocal;
 

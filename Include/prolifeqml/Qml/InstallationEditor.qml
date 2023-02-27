@@ -21,6 +21,9 @@ Item {
     property string orderId;
     property string orderUuid;
 
+    // ProductEditorDialog reference
+    property Item rootItem: null;
+
     // property string selectedPairId: "";
 
     onOrderUuidChanged: {
@@ -32,6 +35,10 @@ Item {
 
     UuidGenerator {
         id: uuidGenerator;
+    }
+
+    function onModelChanged(){
+        installationEditorContainer.rootItem.buttons.setButtonState("Save", true);
     }
 
     function started(){
@@ -49,6 +56,8 @@ Item {
         }
 
         devicesList.updateModel({});
+
+        orderProductsModel.modelChanged.connect(installationEditorContainer.onModelChanged);
         console.log("started orderProductsModel", orderProductsModel.toJSON());
 
        // updateGui();
@@ -205,10 +214,10 @@ Item {
 
         licensesTable.rowModel.clear();
 
-        let activeLicensesModel = orderProductsModel.GetData("ActiveLicenses", activeProductIndex);
-        if (!activeLicensesModel){
-            activeLicensesModel = orderProductsModel.AddTreeModel("ActiveLicenses", activeProductIndex);
-        }
+//        let activeLicensesModel = orderProductsModel.GetData("ActiveLicenses", activeProductIndex);
+//        if (!activeLicensesModel){
+//            activeLicensesModel = orderProductsModel.AddTreeModel("ActiveLicenses", activeProductIndex);
+//        }
 
         let licensesModel;
         if (installationEditorContainer.licensesModel){
@@ -228,18 +237,21 @@ Item {
 
                 let row = {"Id": licenseId, "Name": licenseName, "LicenseState": Qt.Unchecked, "ExpirationState": Qt.Unchecked, "Expiration": ""}
 
-                for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
-                    let activeLicenseId = activeLicensesModel.GetData("Id", j);
-                    let expiration = activeLicensesModel.GetData("Expiration", j);
-                    if (licenseId == activeLicenseId){
-                        row["LicenseState"] = Qt.Checked;
+                if (orderProductsModel.ContainsKey("ActiveLicenses", activeProductIndex)){
+                    let activeLicensesModel = orderProductsModel.GetData("ActiveLicenses", activeProductIndex);
+                    for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
+                        let activeLicenseId = activeLicensesModel.GetData("Id", j);
+                        let expiration = activeLicensesModel.GetData("Expiration", j);
+                        if (licenseId == activeLicenseId){
+                            row["LicenseState"] = Qt.Checked;
 
-                        if (expiration == ""){
-                            row["ExpirationState"] = Qt.Unchecked;
-                        }
-                        else{
-                            row["ExpirationState"] = Qt.Checked;
-                            row["Expiration"] = expiration;
+                            if (expiration == ""){
+                                row["ExpirationState"] = Qt.Unchecked;
+                            }
+                            else{
+                                row["ExpirationState"] = Qt.Checked;
+                                row["Expiration"] = expiration;
+                            }
                         }
                     }
                 }
@@ -511,23 +523,9 @@ Item {
                 radius: 3;
 
                 onCurrentIndexChanged: {
-                    //                    selectedPairId = "";
                     let pairId = pairCB.model.GetData("Id", pairCB.currentIndex);
                     if (pairId){
-                        //                        selectedPairId = pairId;
-                        //                        if (!installationEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                        //                            installationEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                        //                            console.log("newProductsModel", installationEditorContainer.documentModel.toJSON());
-                        //                        }
-                        //                        var productsModel =  installationEditorContainer.documentModel.GetData("OrderProducts");
-
-
-
-                        //                        const newProductModel = this.contentItem.documentModel;
-                        //                        console.log("newProductModel", newProductModel.toJSON());
-                        //                        productsModel.CopyItemDataFromModel(productsView.activeProductIndex, newProductModel, 0);
-                        //                        console.log("ProductsModel", productsModel.toJSON());
-                        let productsModel =  installationEditorContainer.orderProductsModel;
+                        let productsModel = installationEditorContainer.orderProductsModel;
 
                         clearPairLink();
 

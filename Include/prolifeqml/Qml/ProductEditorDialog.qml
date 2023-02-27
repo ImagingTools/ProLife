@@ -22,7 +22,7 @@ Dialog {
     }
 
     Component.onCompleted: {
-        root.buttons.addButton({"Id": "Save", "Name": "Save", "Enabled": true});
+        root.buttons.addButton({"Id": "Save", "Name": "Save", "Enabled": false});
         root.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
 
         root.title = qsTr("Product editor");
@@ -40,6 +40,9 @@ Dialog {
             orderUuid: root.orderUuid;
             width: root.width - 100;
             height: 350;
+
+            rootItem: root;
+
             onActiveProductIndexChanged: {
                 root.activeProductIndex = activeProductIndex;
             }

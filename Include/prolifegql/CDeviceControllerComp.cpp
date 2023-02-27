@@ -67,6 +67,10 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		QString& description,
 		QString &errorMessage) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
 	if (!m_deviceCompPtr.IsValid()){
 		return nullptr;
 	}
@@ -119,6 +123,31 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		}
 
 		devicePtr->SetObjectUuid(objectId);
+
+		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
+
+		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+				if (deviceInfoPtr != nullptr){
+					QByteArray currentObjectUuid = deviceInfoPtr->GetObjectUuid();
+					if (currentObjectUuid != objectId){
+						QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress();
+						if (currentMacAddress == macAddress){
+							errorMessage = QT_TR_NOOP("MAC-Address already exists!");
+							return nullptr;
+						}
+
+						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber();
+						if (currentSerialNumber == serialNumber){
+							errorMessage = QT_TR_NOOP("Serial Number already exists!");
+							return nullptr;
+						}
+					}
+				}
+			}
+		}
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();

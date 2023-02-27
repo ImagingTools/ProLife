@@ -147,6 +147,10 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		QString& description,
 		QString &errorMessage) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
 	if (!m_deviceCollectionCompPtr.IsValid()){
 		return nullptr;
 	}
@@ -166,11 +170,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		imtbase::CTreeItemModel itemModel;
 		itemModel.CreateFromJson(itemData);
-
-//		QByteArray orderUuid;
-//		if (itemModel.ContainsKey("Id")){
-//			orderUuid = itemModel.GetData("Id").toByteArray();
-//		}
 
 		if (itemModel.ContainsKey("Id")){
 			QByteArray id = itemModel.GetData("Id").toByteArray();
@@ -197,6 +196,24 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		if (orderId.isEmpty()){
 			errorMessage = QT_TR_NOOP("Order-ID can not be empty!");
 			return nullptr;
+		}
+
+		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
+		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+				prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+				if (orderInfoPtr != nullptr){
+					QByteArray currentObjectUuid = orderInfoPtr->GetObjectUuid();
+					if (currentObjectUuid != objectId){
+						QByteArray currentOrderId = orderInfoPtr->GetOrderId();
+						if (currentOrderId == orderId){
+							errorMessage = QT_TR_NOOP("Order-ID already exists!");
+							return nullptr;
+						}
+					}
+				}
+			}
 		}
 
 		QByteArray customerId;
