@@ -80,7 +80,7 @@ public:
 	virtual void SetOrderStatus(OrderStatus status) = 0;
 
 	/**
-		Get order products.
+		Get ordered products.
 	*/
 	virtual imtbase::IObjectCollection* GetProducts() = 0;
 };
