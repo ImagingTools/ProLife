@@ -180,6 +180,50 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 }
 
 
+bool CDeviceDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
+{
+	QByteArray objectId;
+	if (record.contains("DocumentId")){
+		objectId = record.value("DocumentId").toByteArray();
+	}
+
+	if (!objectId.isEmpty()){
+		QByteArray query = QString("SELECT * from \"Devices\" WHERE DocumentId = '%1' AND RevisionNumber = '%2';")
+				.arg(qPrintable(objectId))
+				.arg(1).toUtf8();
+
+		QSqlError error;
+		QSqlQuery sqlQuery = m_databaseEngineCompPtr->ExecSqlQuery(query, &error);
+
+		if (sqlQuery.next()){
+			QSqlRecord orderRecord = sqlQuery.record();
+
+			if (orderRecord.contains("LastModified")){
+				QDateTime insertionTime = orderRecord.value("LastModified").toDateTime();
+
+				metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME, insertionTime);
+				metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME, insertionTime);
+			}
+		}
+	}
+
+	if (record.contains("LastModified")){
+		QDateTime lastModificationTime = record.value("LastModified").toDateTime();
+
+		metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_MODIFICATION_TIME, lastModificationTime);
+		metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME, lastModificationTime);
+	}
+
+	if (record.contains("RevisionNumber")){
+		qlonglong revisionNumber = record.value("RevisionNumber").toLongLong();
+
+		metaInfo.SetMetaInfo(imtbase::ICollectionInfo::MIT_REVISION, revisionNumber);
+	}
+
+	return true;
+}
+
+
 bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilter& collectionFilter, QString& sortQuery) const
 {
 	QByteArray columnId;

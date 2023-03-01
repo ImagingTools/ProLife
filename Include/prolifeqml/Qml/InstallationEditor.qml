@@ -44,7 +44,7 @@ Item {
     function started(){
         productCB.model = installationEditorContainer.productsModel;
         if (activeProductIndex > -1){
-            productCB.enabled = false;
+           // productCB.enabled = false;
         }
 
         if (installationEditorContainer.activeProductIndex == -1){
@@ -331,7 +331,7 @@ Item {
         // clear parents data
         if(categoryId == "Hardware"){
             if (pairId){
-                productsModel.SetData("PairId", "", productsView.activeProductIndex);
+                productsModel.SetData("PairId", "", installationEditorContainer.activeProductIndex);
             }
         }
         else{
@@ -364,7 +364,7 @@ Item {
 
             text: qsTr("Product");
             color: Style.textColor;
-            font.family: Style.fontFamily;
+            font.family: Style.fontFamilyBold;
             font.pixelSize: Style.fontSize_common;
         }
 
@@ -400,12 +400,52 @@ Item {
                     installationEditorContainer.updateGui();
                 }
             }
+
+            MouseArea {
+                id: disabledMA;
+
+                z: 100;
+
+                anchors.fill: productCB;
+
+                visible: !productCB.changeable;
+
+                onClicked: {
+                    console.log("disabledMA onClicked");
+
+                    disabledComboBoxText.visible = true;
+                }
+            }
+        }
+
+        Text {
+            id: disabledComboBoxText;
+            text: qsTr("Please make a unlink first");
+            color: Style.errorTextColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+
+            visible: false;
+
+            onVisibleChanged: {
+                if (disabledComboBoxText.visible){
+                    timer.start();
+                }
+            }
+        }
+
+        Timer {
+            id: timer;
+            interval: 3000;
+            onTriggered: {
+                disabledComboBoxText.visible = false;
+            }
         }
 
         Text {
             text: qsTr("Device");
             color: Style.textColor;
-            font.family: Style.fontFamily;
+            font.family: Style.fontFamilyBold;
             font.pixelSize: Style.fontSize_common;
 
             visible: bodyColumn.productCategory == "Hardware";
@@ -504,7 +544,7 @@ Item {
 
             text: qsTr("Pair link");
             color: Style.textColor;
-            font.family: Style.fontFamily;
+            font.family: Style.fontFamilyBold;
             font.pixelSize: Style.fontSize_common;
         }
 
@@ -523,6 +563,13 @@ Item {
                 radius: 3;
 
                 onCurrentIndexChanged: {
+//                    if (pairCB.currentIndex < 0){
+
+//                    }
+                    console.log("pairCB onCurrentIndexChanged", pairCB.currentIndex);
+
+                    productCB.changeable = pairCB.currentIndex < 0;
+
                     let pairId = pairCB.model.GetData("Id", pairCB.currentIndex);
                     if (pairId){
                         let productsModel = installationEditorContainer.orderProductsModel;
@@ -599,7 +646,7 @@ Item {
 
         text: qsTr("Licenses");
         color: Style.textColor;
-        font.family: Style.fontFamily;
+        font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;
         visible: bodyColumn.productCategory == "Software";
     }

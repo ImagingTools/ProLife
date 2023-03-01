@@ -99,7 +99,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 		QByteArray macAddress;
 		if (itemModel.ContainsKey("MacAddress")){
-			macAddress = itemModel.GetData("MacAddress").toByteArray();
+			macAddress = itemModel.GetData("MacAddress").toByteArray().toLower();
 
 			devicePtr->SetMacAddress(macAddress);
 		}
@@ -133,14 +133,14 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 				if (deviceInfoPtr != nullptr){
 					QByteArray currentObjectUuid = deviceInfoPtr->GetObjectUuid();
 					if (currentObjectUuid != objectId){
-						QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress();
-						if (currentMacAddress == macAddress){
+						QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
+						if (!macAddress.isEmpty() && currentMacAddress == macAddress){
 							errorMessage = QT_TR_NOOP("MAC-Address already exists!");
 							return nullptr;
 						}
 
 						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber();
-						if (currentSerialNumber == serialNumber){
+						if (!serialNumber.isEmpty() && currentSerialNumber == serialNumber){
 							errorMessage = QT_TR_NOOP("Serial Number already exists!");
 							return nullptr;
 						}

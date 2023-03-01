@@ -299,6 +299,9 @@
                                 <AttributeInfo Id="Encryption" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="Encryption"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="EncryptionKeysProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="KeyDataProvider"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="FileExtensions" Type="String[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -350,7 +353,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicensePersistence" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="XmlFileSerializer"/>
+                                    <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>

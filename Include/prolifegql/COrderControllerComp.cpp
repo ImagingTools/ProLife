@@ -60,6 +60,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		QByteArray orderId = orderPtr->GetOrderId();
 		QByteArray customerId = orderPtr->GetCustomerId();
 		QString description = orderPtr->GetDescription();
+		prolifedata::IOrderInfo::OrderStatus status = orderPtr->GetOrderStatus();
 
 		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, imtbase::ICollectionInfo::EIT_NAME).toString();
 
@@ -68,6 +69,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
 		dataModel->SetData("Description", description);
+		dataModel->SetData("OrderStatus", status);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
@@ -229,6 +231,13 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		QByteArray description;
 		if (itemModel.ContainsKey("Description")){
 			description = itemModel.GetData("Description").toByteArray();
+		}
+
+		if (itemModel.ContainsKey("OrderStatus")){
+			int status = itemModel.GetData("OrderStatus").toInt();
+			if (status >= 0){
+				orderPtr->SetOrderStatus((prolifedata::IOrderInfo::OrderStatus) status);
+			}
 		}
 
 		orderPtr->SetOrderId(orderId);

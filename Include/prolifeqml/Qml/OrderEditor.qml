@@ -47,11 +47,6 @@ DocumentBase {
         undoRedoManager.registerModel(documentModel)
     }
 
-//    onAccountsModelChanged: {
-//        console.log("onAccountsModelChanged", accountsModel);
-//        customerCB.model = accountsModel;
-//    }
-
     onProductsModelChanged: {
         console.log("onProductsModelChanged", productsModel);
     }
@@ -107,12 +102,14 @@ DocumentBase {
         }
 
         function getMacAddress(deviceId){
-            for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
-                let id = devicesList.collectionModel.GetData("Id", i);
-                if (id === deviceId){
-                    let macAddress = devicesList.collectionModel.GetData("MacAddress", i);
+            if (devicesList.collectionModel != null){
+                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+                    let id = devicesList.collectionModel.GetData("Id", i);
+                    if (id === deviceId){
+                        let macAddress = devicesList.collectionModel.GetData("MacAddress", i);
 
-                    return macAddress;
+                        return macAddress;
+                    }
                 }
             }
 
@@ -120,12 +117,14 @@ DocumentBase {
         }
 
         function getSerialNumber(deviceId){
-            for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
-                let id = devicesList.collectionModel.GetData("Id", i);
-                if (id === deviceId){
-                    let serialNumber = devicesList.collectionModel.GetData("SerialNumber", i);
+            if (devicesList.collectionModel != null){
+                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+                    let id = devicesList.collectionModel.GetData("Id", i);
+                    if (id === deviceId){
+                        let serialNumber = devicesList.collectionModel.GetData("SerialNumber", i);
 
-                    return serialNumber;
+                        return serialNumber;
+                    }
                 }
             }
 
@@ -184,6 +183,14 @@ DocumentBase {
                 break;
             }
         }
+
+        orderStatusCB.currentIndex = -1;
+        if (documentModel.ContainsKey("OrderStatus")){
+            let orderStatus = documentModel.GetData("OrderStatus");
+
+            orderStatusCB.currentIndex = orderStatus;
+        }
+
         if (documentModel.ContainsKey("OrderProducts")){
             productsView.model = 0
             productsView.model = documentModel.GetData("OrderProducts");
@@ -202,8 +209,6 @@ DocumentBase {
             return;
         }
 
-        console.log("Begin updateModel1", documentModel.toJSON());
-
         undoRedoManager.beginChanges();
 
         documentModel.SetData("OrderId", instanceIdInput.text)
@@ -212,11 +217,13 @@ DocumentBase {
         let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
         documentModel.SetData("CustomerId", selectedAccountId);
 
+        if (orderStatusCB.currentIndex > -1){
+            documentModel.SetData("OrderStatus", orderStatusCB.currentIndex);
+        }
+
         documentModel.SetData("Description", descriptionInput.text);
 
         undoRedoManager.endChanges();
-
-        console.log("Begin updateModel2", documentModel.toJSON());
     }
 
     Rectangle {
@@ -241,20 +248,20 @@ DocumentBase {
             font.pixelSize: Style.fontSize_common;
         }
 
-//        RegExpValidator {
-//            id: regexValid;
+        //        RegExpValidator {
+        //            id: regexValid;
 
-//            Component.onCompleted: {
-//                console.log("RegExpValidator onCompleted");
-//                let regex = settingsProvider.getInstanceMask();
-//                console.log("regex", regex);
+        //            Component.onCompleted: {
+        //                console.log("RegExpValidator onCompleted");
+        //                let regex = settingsProvider.getInstanceMask();
+        //                console.log("regex", regex);
 
-//                let re = new RegExp(regex)
-//                if (re){
-//                    regexValid.regExp = re;
-//                }
-//            }
-//        }
+        //                let re = new RegExp(regex)
+        //                if (re){
+        //                    regexValid.regExp = re;
+        //                }
+        //            }
+        //        }
 
         CustomTextField {
             id: instanceIdInput;
@@ -318,9 +325,79 @@ DocumentBase {
             radius: 3;
 
             onCurrentIndexChanged: {
-                if (!blockUpdatingModel){
-                    updateModel();
-                }
+                updateModel();
+            }
+        }
+
+        TreeItemModel {
+            id: orderStatusModel;
+
+            Component.onCompleted: {
+                let index = orderStatusModel.InsertNewItem();
+
+                // 0
+                orderStatusModel.SetData("Id", "None", index);
+                orderStatusModel.SetData("Name", qsTr("None"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 1
+                orderStatusModel.SetData("Id", "Created", index);
+                orderStatusModel.SetData("Name", qsTr("Created"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 2
+                orderStatusModel.SetData("Id", "InProgress", index);
+                orderStatusModel.SetData("Name", qsTr("In Progress"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 3
+                orderStatusModel.SetData("Id", "Canceled", index);
+                orderStatusModel.SetData("Name", qsTr("Canceled"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 4
+                orderStatusModel.SetData("Id", "OnHold", index);
+                orderStatusModel.SetData("Name", qsTr("On Hold"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 5
+                orderStatusModel.SetData("Id", "Finished", index);
+                orderStatusModel.SetData("Name", qsTr("Finished"), index);
+
+                index = orderStatusModel.InsertNewItem();
+
+                // 6
+                orderStatusModel.SetData("Id", "Closed", index);
+                orderStatusModel.SetData("Name", qsTr("Closed"), index);
+
+                orderStatusCB.model = orderStatusModel;
+            }
+        }
+
+        Text {
+            id: titleOrderStatus;
+
+            text: qsTr("Order Status");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        ComboBox {
+            id: orderStatusCB;
+
+            width: parent.width;
+            height: 23;
+
+            radius: 3;
+
+            onCurrentIndexChanged: {
+                updateModel();
             }
         }
 
@@ -375,7 +452,7 @@ DocumentBase {
                 productsDialog.orderProductsModel.Clear();
                 if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
                     productsDialog.activeProductIndex = productsView.activeProductIndex;
-                   let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                    let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                     productsDialog.orderProductsModel.Copy(orderProductsModel);
                 }
 
@@ -427,7 +504,7 @@ DocumentBase {
         anchors.top: bodyColumn.bottom;
         anchors.topMargin: 10;
         anchors.left: parent.left;
-//        anchors.right: parent.right;
+        //        anchors.right: parent.right;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 
@@ -482,8 +559,8 @@ DocumentBase {
                 if (categoryId == "Software" &&  productsModel.GetData("PairId", i) == id){
                     let modelProductId = productsModel.GetData("ProductId", i)
                     retVal = "#" + (i + 1) + " " + getProductName(modelProductId);
-//                    let productMacAddress = productsModel.GetData("MacAddress", i)
-//                    retVal += " (" + productMacAddress + ")";
+                    //                    let productMacAddress = productsModel.GetData("MacAddress", i)
+                    //                    retVal += " (" + productMacAddress + ")";
 
                     break;
                 }
@@ -499,12 +576,12 @@ DocumentBase {
 
         function getLicenseName(index){
             let productsModel = productsView.model;
-//            console.log("getLicenseName", productsModel.toJSON())
+            //            console.log("getLicenseName", productsModel.toJSON())
             console.log("getLicenseName", index)
-              let retVal = "";
+            let retVal = "";
             let activeLicenses = productsModel.GetData("ActiveLicenses", index);
             let productId  = productsModel.GetData("ProductId", index);
-//            console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
+            //            console.log("getLicenseName activeLicenses", activeLicenses.toJSON())
             if (!activeLicenses){
                 return;
             }
@@ -513,7 +590,7 @@ DocumentBase {
                 if (licenseIndex > 0){
                     retVal += ", ";
                 }
-//                retVal += activeLicenses.GetData("Name", licenseIndex);
+                //                retVal += activeLicenses.GetData("Name", licenseIndex);
                 retVal += licensesProvider.getLicenseName(productId, activeLicenses.GetData("Id", licenseIndex))
                 retVal += " ";
                 let expiration = activeLicenses.GetData("Expiration", licenseIndex);
@@ -620,8 +697,6 @@ DocumentBase {
             serialNumber: devicesList.getSerialNumber(model.DeviceId);
             licenseName: productsView.getLicenseName(model.index);
 
-            //deviceId: model.DeviceId;
-
             commandsModel: commandsModelLocal;
 
             selected: productsView.selectedIndex === model.index;
@@ -631,10 +706,10 @@ DocumentBase {
 
                 var productsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                 if (productsModel){
-//                    let productModel = productsModel.GetModelFromItem(model.index);
+                    //                    let productModel = productsModel.GetModelFromItem(model.index);
 
-//                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
-//                    console.log("OrderProductView onEdited", productModel.toJSON())
+                    //                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
+                    //                    console.log("OrderProductView onEdited", productModel.toJSON())
                     modalDialogManager.openDialog(productEditorDialog, {});
                 }
             }

@@ -104,6 +104,13 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 						break;
 					}
 				}
+				else if(informationId == "Added"){
+					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
+					if (metaInfoPtr.IsValid()){
+						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME)
+								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
+					}
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";

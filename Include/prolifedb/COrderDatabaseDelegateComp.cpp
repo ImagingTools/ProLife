@@ -108,6 +108,8 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 				return NewObjectQuery();
 			}
 
+			qDebug() << "documentContent " << documentContent;
+
 			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
 			quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 
@@ -188,6 +190,50 @@ QByteArray COrderDatabaseDelegateComp::GetCountQuery(const iprm::IParamsSet* par
 QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	return QString("SELECT * FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr));
+}
+
+
+bool COrderDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
+{
+	QByteArray objectId;
+	if (record.contains("OrderId")){
+		objectId = record.value("OrderId").toByteArray();
+	}
+
+	if (!objectId.isEmpty()){
+		QByteArray query = QString("SELECT * from \"Orders\" WHERE OrderId = '%1' AND RevisionNumber = '%2';")
+				.arg(qPrintable(objectId))
+				.arg(1).toUtf8();
+
+		QSqlError error;
+		QSqlQuery sqlQuery = m_databaseEngineCompPtr->ExecSqlQuery(query, &error);
+
+		if (sqlQuery.next()){
+			QSqlRecord orderRecord = sqlQuery.record();
+
+			if (orderRecord.contains("LastModified")){
+				QDateTime insertionTime = orderRecord.value("LastModified").toDateTime();
+
+				metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME, insertionTime);
+				metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME, insertionTime);
+			}
+		}
+	}
+
+	if (record.contains("LastModified")){
+		QDateTime lastModificationTime = record.value("LastModified").toDateTime();
+
+		metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_MODIFICATION_TIME, lastModificationTime);
+		metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME, lastModificationTime);
+	}
+
+	if (record.contains("RevisionNumber")){
+		qlonglong revisionNumber = record.value("RevisionNumber").toLongLong();
+
+		metaInfo.SetMetaInfo(imtbase::ICollectionInfo::MIT_REVISION, revisionNumber);
+	}
+
+	return true;
 }
 
 

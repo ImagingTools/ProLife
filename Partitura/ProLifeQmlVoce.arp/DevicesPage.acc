@@ -129,6 +129,7 @@
                                 <Value>OrderId</Value>
                                 <Value>ProductionStatus</Value>
                                 <Value>Description</Value>
+                                <Value>Added</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -141,6 +142,7 @@
                                 <Value>Order-ID</Value>
                                 <Value>Production Status</Value>
                                 <Value>Description</Value>
+                                <Value>Added</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
