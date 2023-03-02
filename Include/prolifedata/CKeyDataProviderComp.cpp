@@ -201,7 +201,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		}
 	}
 
-	m_productInstanceId = deviceId;
+	m_productInstanceId = instanceId;
 
 	QTemporaryDir tempDir;
 	QString filePathTmp = tempDir.path() + "/" + QUuid::createUuid().toString() + ".xml";
