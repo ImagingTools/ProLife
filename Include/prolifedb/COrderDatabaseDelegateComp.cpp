@@ -101,7 +101,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
 		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
-			documentContent = documentContent.replace("'", "''");
 			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(orderInfoPtr != nullptr);
 			if (orderInfoPtr == nullptr){
@@ -122,7 +121,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(objectId))
 						.arg(qPrintable(accountId))
-						.arg(qPrintable(documentContent))
+						.arg(SqlEncode(documentContent))
 						.arg(revisionVersion)
 						.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 						.arg(checksum).toLocal8Bit();
@@ -154,7 +153,6 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 	QByteArray documentContent;
 	if (WriteDataToMemory(object, documentContent)){
-		documentContent = documentContent.replace("'", "''");
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::CIdentifiableOrderInfo*>(&object);
 		Q_ASSERT(orderInfoPtr != nullptr);
@@ -170,7 +168,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 					.arg(qPrintable(objectUuid))
 					.arg(qPrintable(objectId))
 					.arg(qPrintable(accountId))
-					.arg(qPrintable(documentContent))
+					.arg(SqlEncode(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 					.arg(checksum).toLocal8Bit();
 	}

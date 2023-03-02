@@ -89,19 +89,14 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
 		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
-			documentContent = documentContent.replace("'", "''");
 			const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(deviceInfoPtr != nullptr);
 			if (deviceInfoPtr == nullptr){
 				return NewObjectQuery();
 			}
 
-//			QByteArray objectId = proposedObjectId.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8() : proposedObjectId;
 			QByteArray objectId = deviceInfoPtr->GetObjectUuid();
 			quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
-
-			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-			QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
 
 			int revisionVersion = 1;
 
@@ -109,7 +104,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(objectId))
 						.arg(qPrintable(""))
-						.arg(qPrintable(documentContent))
+						.arg(SqlEncode(documentContent))
 						.arg(revisionVersion)
 						.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 						.arg(checksum).toLocal8Bit();
@@ -141,23 +136,18 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 	QByteArray documentContent;
 	if (WriteDataToMemory(object, documentContent)){
-		documentContent = documentContent.replace("'", "''");
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(&object);
-//		const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(&object);
 		Q_ASSERT(deviceInfoPtr != nullptr);
 		if (deviceInfoPtr == nullptr){
 			return QByteArray();
 		}
 
-		QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
-		//QByteArray deviceId = deviceInfoPtr->GetDeviceId();
-
 		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE DocumentId = '%2'; INSERT INTO \"%1\" (DocumentId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where DocumentId = '%2') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
 					.arg(qPrintable(objectId))
 					.arg(qPrintable(""))
-					.arg(qPrintable(documentContent))
+					.arg(SqlEncode(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 					.arg(checksum).toLocal8Bit();
 	}
