@@ -8,8 +8,8 @@ CollectionView {
     visibleMetaInfo: false;
 
     Component.onCompleted: {
-        container.commandUpdateGui = "DeviceCollectionUpdateGui";
-        console.log("Device collection view complete");
+//        container.commandUpdateGui = "DeviceCollectionUpdateGui";
+//        console.log("Device collection view complete");
 
         Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
     }
@@ -21,5 +21,6 @@ CollectionView {
     function fillContextMenuModel(){
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
         contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../Icons/Light/Remove_On_Normal.svg"});
+        contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
     }
 }

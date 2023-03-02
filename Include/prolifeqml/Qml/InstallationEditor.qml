@@ -43,9 +43,6 @@ Item {
 
     function started(){
         productCB.model = installationEditorContainer.productsModel;
-        if (activeProductIndex > -1){
-           // productCB.enabled = false;
-        }
 
         if (installationEditorContainer.activeProductIndex == -1){
             installationEditorContainer.activeProductIndex = orderProductsModel.InsertNewItem();
@@ -58,9 +55,6 @@ Item {
         devicesList.updateModel({});
 
         orderProductsModel.modelChanged.connect(installationEditorContainer.onModelChanged);
-        console.log("started orderProductsModel", orderProductsModel.toJSON());
-
-       // updateGui();
     }
 
     function getProductName(productId){
@@ -113,18 +107,19 @@ Item {
         let productModel = installationEditorContainer.orderProductsModel;
         let resultModel = pairCB.model;
         for (let i = 0; i < productModel.GetItemsCount(); i++){
-            let pairId = productModel.GetData("PairId", i);
-            if (!pairId){
-                productModel.SetData("PairId", "", i)
-                pairId = ""
+            let productCategory = productModel.GetData("CategoryId", i);
+
+            if (productCategory === "Hardware"){
+                let pairId = productModel.GetData("PairId", i);
+                if (productModel.GetData("CategoryId", i) === "Hardware" && pairId === ""){
+                    let resultIndex = resultModel.InsertNewItem();
+                    let productId = productModel.GetData("ProductId", i);
+                    resultModel.SetData("ProductId", productId, resultIndex);
+                    resultModel.SetData("Id", productModel.GetData("Id", i), resultIndex);
+                    resultModel.SetData("Name", "#" + (i + 1) + " " + getProductName(productId), resultIndex);
+                }
             }
-            if (productModel.GetData("CategoryId", i) === "Hardware" && pairId === ""){
-                let resultIndex = resultModel.InsertNewItem();
-                let productId = productModel.GetData("ProductId", i);
-                resultModel.SetData("ProductId", productId, resultIndex);
-                resultModel.SetData("Id", productModel.GetData("Id", i), resultIndex);
-                resultModel.SetData("Name", "#" + (i + 1) + " " + getProductName(productId), resultIndex);
-            }
+
         }
         console.log("updateHardwareCategoryProducts", resultModel.toJSON())
     }
@@ -204,20 +199,7 @@ Item {
             }
         }
 
-        //        if (orderProductsModel.ContainsKey("SerialNumber", activeProductIndex)){
-        //            serialNumberInput.text = orderProductsModel.GetData("SerialNumber", activeProductIndex);
-        //        }
-
-        //        if (orderProductsModel.ContainsKey("MacAddress", activeProductIndex)){
-        //            macAddressInput.text = orderProductsModel.GetData("MacAddress", activeProductIndex);
-        //        }
-
         licensesTable.rowModel.clear();
-
-//        let activeLicensesModel = orderProductsModel.GetData("ActiveLicenses", activeProductIndex);
-//        if (!activeLicensesModel){
-//            activeLicensesModel = orderProductsModel.AddTreeModel("ActiveLicenses", activeProductIndex);
-//        }
 
         let licensesModel;
         if (installationEditorContainer.licensesModel){
@@ -473,16 +455,10 @@ Item {
 
                         let newIndex = filteringModel.InsertNewItem(0);
 
-//                        let newIndex = devicesList.collectionModel.InsertNewItem(0);
-
-//                        devicesList.collectionModel.SetData("Id", "", newIndex);
-//                        devicesList.collectionModel.SetData("Name", "New Device", newIndex);
-
                         filteringModel.SetData("Id", "", newIndex);
                         filteringModel.SetData("Name", "New Device", newIndex);
 
                         deviceCB.model = filteringModel;
-//                        deviceCB.model = devicesList.collectionModel;
                     }
 
                     installationEditorContainer.updateGui();
@@ -604,7 +580,6 @@ Item {
                                 }
                             }
                         }
-
                     }
 
                     if (!blockUpdatingModel){
@@ -628,7 +603,7 @@ Item {
                     pairCB.model.Clear();
                     //updatePairModel();
                     if (bodyColumn.productCategory == "Software"){
-                        updateHardwareCategoryProducts()
+//                        updateHardwareCategoryProducts()
                     }
                     else{
                         updateSoftwareCategoryProducts()

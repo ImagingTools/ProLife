@@ -22,7 +22,7 @@ Dialog {
     }
 
     Component.onCompleted: {
-        root.buttons.addButton({"Id": "Save", "Name": "Save", "Enabled": false});
+        root.buttons.addButton({"Id": "Save", "Name": "Ok", "Enabled": false});
         root.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
 
         root.title = qsTr("Product editor");

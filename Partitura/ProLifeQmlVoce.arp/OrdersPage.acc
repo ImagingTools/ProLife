@@ -48,6 +48,7 @@
                                 <Value>OrdersList</Value>
                                 <Value>OrdersObjectView</Value>
                                 <Value>OrdersRemove</Value>
+                                <Value>OrdersSetDescription</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

@@ -5,7 +5,7 @@ import Acf 1.0
 Item {
     id: productInfo;
 
-    height: column.height + 10;
+    height: column.height + 5;
     width: 500;
 
     property string productName;
@@ -61,7 +61,13 @@ Item {
     Column {
         id: column;
 
-        spacing: 4;
+        anchors.left: parent.left;
+        anchors.leftMargin: 8;
+        anchors.right: parent.right;
+        anchors.rightMargin: anchors.leftMargin;
+        anchors.verticalCenter: parent.verticalCenter;
+
+        spacing: 5;
 
         width: parent.width;
 
@@ -99,7 +105,7 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: parent.left;
-                anchors.leftMargin: 5;
+//                anchors.leftMargin: 5;
 
                 text: productInfo.productName;
                 color: Style.textColor;
@@ -145,7 +151,7 @@ Item {
             id: licenseName;
 
             anchors.left: parent.left;
-            anchors.leftMargin: 5;
+//            anchors.leftMargin: 5;
 
             width: parent.width - 10;
 
@@ -169,7 +175,7 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: parent.left;
-                anchors.leftMargin: 5;
+//                anchors.leftMargin: 5;
                 text: qsTr("Pair:");
                 color: Style.textColor;
                 font.family: Style.fontFamily;
@@ -209,7 +215,7 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: parent.left;
-                anchors.leftMargin: 5;
+//                anchors.leftMargin: 5;
 
                 text: qsTr("Mac address:")
                 color: Style.textColor;
@@ -243,7 +249,7 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: parent.left;
-                anchors.leftMargin: 5;
+//                anchors.leftMargin: 5;
 
                 text: qsTr("Serial Number:")
                 color: Style.textColor;

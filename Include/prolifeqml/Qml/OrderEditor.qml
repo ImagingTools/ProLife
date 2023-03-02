@@ -174,13 +174,15 @@ DocumentBase {
         }
 
         customerCB.currentIndex = -1;
-        let customerId = documentModel.GetData("CustomerId");
-        let customerModel = customerCB.model;
-        for (let i = 0; i < customerModel.GetItemsCount(); i++){
-            let id = customerModel.GetData("Id", i);
-            if (id === customerId){
-                customerCB.currentIndex = i;
-                break;
+        if (documentModel.ContainsKey("CustomerId")){
+            let customerId = documentModel.GetData("CustomerId");
+            let customerModel = customerCB.model;
+            for (let i = 0; i < customerModel.GetItemsCount(); i++){
+                let id = customerModel.GetData("Id", i);
+                if (id === customerId){
+                    customerCB.currentIndex = i;
+                    break;
+                }
             }
         }
 
@@ -205,6 +207,8 @@ DocumentBase {
     }
 
     function updateModel(){
+        console.log("updateModel");
+
         if (orderEditorContainer.blockUpdatingModel){
             return;
         }
@@ -214,7 +218,15 @@ DocumentBase {
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("Name", instanceIdInput.text);
 
-        let selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
+        console.log("customerCB.currentIndex", customerCB.currentIndex);
+        let selectedAccountId = "";
+        if (customerCB.currentIndex >= 0){
+            selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
+
+            console.log("customerCB.model", customerCB.model.toJSON());
+
+            console.log("selectedAccountId", selectedAccountId);
+        }
         documentModel.SetData("CustomerId", selectedAccountId);
 
         if (orderStatusCB.currentIndex > -1){
@@ -238,183 +250,220 @@ DocumentBase {
         width: 500;
         height: childrenRect.height;
 
-        spacing: 7;
+        spacing: 15;
 
-        Text {
-            id: titleInstanceId;
-            text: qsTr("Order-ID");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        //        RegExpValidator {
-        //            id: regexValid;
-
-        //            Component.onCompleted: {
-        //                console.log("RegExpValidator onCompleted");
-        //                let regex = settingsProvider.getInstanceMask();
-        //                console.log("regex", regex);
-
-        //                let re = new RegExp(regex)
-        //                if (re){
-        //                    regexValid.regExp = re;
-        //                }
-        //            }
-        //        }
-
-        CustomTextField {
-            id: instanceIdInput;
-
+        Item {
             width: parent.width;
-            height: 30;
+            height: titleInstanceId.height + instanceIdInput.height;
 
-            placeHolderText: qsTr("Enter the order-ID");
+            //        RegExpValidator {
+            //            id: regexValid;
 
-            borderColor: Style.iconColorOnSelected;
+            //            Component.onCompleted: {
+            //                console.log("RegExpValidator onCompleted");
+            //                let regex = settingsProvider.getInstanceMask();
+            //                console.log("regex", regex);
 
-            onEditingFinished: {
-                let currentId = documentModel.GetData("OrderId");
-                if (currentId !== instanceIdInput.text && instanceIdInput.text !== ""){
-                    orderEditorContainer.updateModel();
+            //                let re = new RegExp(regex)
+            //                if (re){
+            //                    regexValid.regExp = re;
+            //                }
+            //            }
+            //        }
+
+            Text {
+                id: titleInstanceId;
+                text: qsTr("Order-ID");
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+
+            CustomTextField {
+                id: instanceIdInput;
+
+                anchors.top: titleInstanceId.bottom;
+                anchors.topMargin: 5;
+
+                width: parent.width;
+                height: 30;
+
+                placeHolderText: qsTr("Enter the order-ID");
+
+                borderColor: Style.iconColorOnSelected;
+
+                onEditingFinished: {
+                    let currentId = documentModel.GetData("OrderId");
+                    if (currentId !== instanceIdInput.text && instanceIdInput.text !== ""){
+                        orderEditorContainer.updateModel();
+                    }
                 }
             }
         }
 
-        Text {
-            id: titleComment;
-            text: qsTr("Description");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        CustomTextEdit {
-            id: descriptionInput;
-
+        Item {
             width: parent.width;
-            height: 60;
+            height: titleComment.height + descriptionInput.height;
 
-            placeHolderText: qsTr("Enter the comment");
+            Text {
+                id: titleComment;
+                text: qsTr("Description");
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
 
-            borderColor: Style.iconColorOnSelected;
+            CustomTextEdit {
+                id: descriptionInput;
 
-            onEditingFinished: {
-                let oldText = orderEditorContainer.documentModel.GetData("Description");
-                if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
-                    orderEditorContainer.updateModel();
+                anchors.top: titleComment.bottom;
+                anchors.topMargin: 5;
+
+                width: parent.width;
+                height: 60;
+
+                placeHolderText: qsTr("Enter the comment");
+
+                borderColor: Style.iconColorOnSelected;
+
+                onEditingFinished: {
+                    let oldText = orderEditorContainer.documentModel.GetData("Description");
+                    if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
+                        orderEditorContainer.updateModel();
+                    }
                 }
             }
         }
 
-        Text {
-            id: titleCustomer;
-
-            text: qsTr("Customer");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        ComboBox {
-            id: customerCB;
-
+        Item {
             width: parent.width;
-            height: 23;
+            height: titleCustomer.height + customerCB.height;
 
-            radius: 3;
+            Text {
+                id: titleCustomer;
 
-            onCurrentIndexChanged: {
-                updateModel();
+                text: qsTr("Customer");
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+
+            ComboBox {
+                id: customerCB;
+
+                anchors.top: titleCustomer.bottom;
+                anchors.topMargin: 5;
+
+                width: parent.width;
+                height: 23;
+
+                radius: 3;
+
+                onCurrentIndexChanged: {
+                    updateModel();
+                }
             }
         }
 
-        TreeItemModel {
-            id: orderStatusModel;
-
-            Component.onCompleted: {
-                let index = orderStatusModel.InsertNewItem();
-
-                // 0
-                orderStatusModel.SetData("Id", "None", index);
-                orderStatusModel.SetData("Name", qsTr("None"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 1
-                orderStatusModel.SetData("Id", "Created", index);
-                orderStatusModel.SetData("Name", qsTr("Created"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 2
-                orderStatusModel.SetData("Id", "InProgress", index);
-                orderStatusModel.SetData("Name", qsTr("In Progress"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 3
-                orderStatusModel.SetData("Id", "Canceled", index);
-                orderStatusModel.SetData("Name", qsTr("Canceled"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 4
-                orderStatusModel.SetData("Id", "OnHold", index);
-                orderStatusModel.SetData("Name", qsTr("On Hold"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 5
-                orderStatusModel.SetData("Id", "Finished", index);
-                orderStatusModel.SetData("Name", qsTr("Finished"), index);
-
-                index = orderStatusModel.InsertNewItem();
-
-                // 6
-                orderStatusModel.SetData("Id", "Closed", index);
-                orderStatusModel.SetData("Name", qsTr("Closed"), index);
-
-                orderStatusCB.model = orderStatusModel;
-            }
-        }
-
-        Text {
-            id: titleOrderStatus;
-
-            text: qsTr("Order Status");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        ComboBox {
-            id: orderStatusCB;
-
+        Item {
             width: parent.width;
-            height: 23;
+            height: titleOrderStatus.height + orderStatusCB.height;
 
-            radius: 3;
+            TreeItemModel {
+                id: orderStatusModel;
 
-            onCurrentIndexChanged: {
-                updateModel();
+                Component.onCompleted: {
+                    let index = orderStatusModel.InsertNewItem();
+
+                    // 0
+                    orderStatusModel.SetData("Id", "None", index);
+                    orderStatusModel.SetData("Name", qsTr("None"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 1
+                    orderStatusModel.SetData("Id", "Created", index);
+                    orderStatusModel.SetData("Name", qsTr("Created"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 2
+                    orderStatusModel.SetData("Id", "InProgress", index);
+                    orderStatusModel.SetData("Name", qsTr("In Progress"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 3
+                    orderStatusModel.SetData("Id", "Canceled", index);
+                    orderStatusModel.SetData("Name", qsTr("Canceled"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 4
+                    orderStatusModel.SetData("Id", "OnHold", index);
+                    orderStatusModel.SetData("Name", qsTr("On Hold"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 5
+                    orderStatusModel.SetData("Id", "Finished", index);
+                    orderStatusModel.SetData("Name", qsTr("Finished"), index);
+
+                    index = orderStatusModel.InsertNewItem();
+
+                    // 6
+                    orderStatusModel.SetData("Id", "Closed", index);
+                    orderStatusModel.SetData("Name", qsTr("Closed"), index);
+
+                    orderStatusCB.model = orderStatusModel;
+                }
+            }
+
+            Text {
+                id: titleOrderStatus;
+
+                text: qsTr("Order Status");
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+
+            ComboBox {
+                id: orderStatusCB;
+
+                anchors.top: titleOrderStatus.bottom;
+                anchors.topMargin: 5;
+
+                width: parent.width;
+                height: 23;
+
+                radius: 3;
+
+                onCurrentIndexChanged: {
+                    updateModel();
+                }
             }
         }
 
         Item{
-            height: 35;
             anchors.left: parent.left;
             anchors.right: parent.right;
 
+            height: 25;
+
             AuxButton {
                 id: addProduct;
-                height: 25;
-                width: 100;
+
+                anchors.verticalCenter: parent.verticalCenter;
                 anchors.right: parent.right;
-                anchors.bottom: parent.bottom;
-                textButton: qsTr("Add product");
-                hasText: true;
-                backgroundColor: Style.baseColor;
+
+                height: 22;
+                width: height;
+
+                tooltipText: qsTr("Add product to this order");
+
+                iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
+
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
                     GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
@@ -429,11 +478,13 @@ DocumentBase {
 
             Text {
                 id: titleLicenses;
+
                 anchors.left: parent.left;
-                anchors.bottom: parent.bottom;
+                anchors.verticalCenter: parent.verticalCenter;
+
                 text: qsTr("Products");
                 color: Style.textColor;
-                font.family: Style.fontFamily;
+                font.family: Style.fontFamilyBold;
                 font.pixelSize: Style.fontSize_common;
             }
         }
@@ -466,19 +517,32 @@ DocumentBase {
             onFinished: {
                 if (buttonId == "Save"){
                     productsDialog.bodyItem.updateModel()
-                    undoRedoManager.beginChanges();
 
-                    if (productsDialog.activeProductIndex > -1){
-                        if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                            orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                            //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
-                        }
+                    let equals = false;
+                    if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
                         let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                        orderProductsModel.Copy(productsDialog.orderProductsModel);
+                        let firstModel = JSON.stringify(orderProductsModel)
+                        let secondModel = JSON.stringify(productsDialog.orderProductsModel);
+                        equals = _.isEqual(firstModel, secondModel);
                     }
 
-                    undoRedoManager.endChanges();
-                    updateGui();
+                    if (!equals){
+                        undoRedoManager.beginChanges();
+
+                        if (productsDialog.activeProductIndex > -1){
+                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
+                                //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
+                            }
+                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                            orderProductsModel.Copy(productsDialog.orderProductsModel);
+                        }
+
+                        undoRedoManager.endChanges();
+
+                        updateGui();
+                    }
+
                 }
             }
         }
@@ -504,7 +568,6 @@ DocumentBase {
         anchors.top: bodyColumn.bottom;
         anchors.topMargin: 10;
         anchors.left: parent.left;
-        //        anchors.right: parent.right;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 

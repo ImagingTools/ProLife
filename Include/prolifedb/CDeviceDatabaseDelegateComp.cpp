@@ -156,6 +156,20 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 }
 
 
+QByteArray CDeviceDatabaseDelegateComp::CreateDescriptionObjectQuery(
+		const imtbase::IObjectCollection& collection,
+		const QByteArray& objectId,
+		const QString& description) const
+{
+	QByteArray retVal = QString("UPDATE \"Devices\" SET document = jsonb_set(document, '{Description}', '\"%1\"', true), LastModified = '%2' WHERE DocumentId ='%3' AND IsActive = true;")
+			.arg(description)
+			.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+			.arg(qPrintable(objectId)).toLocal8Bit();
+
+	return retVal;
+}
+
+
 QByteArray CDeviceDatabaseDelegateComp::GetCountQuery(const iprm::IParamsSet* paramsPtr) const
 {
 	return QString("SELECT COUNT(*) FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();

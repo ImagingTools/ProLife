@@ -54,6 +54,7 @@
                                 <Value>DevicesList</Value>
                                 <Value>DevicesObjectView</Value>
                                 <Value>DevicesRemove</Value>
+                                <Value>DevicesSetDescription</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
