@@ -10,8 +10,6 @@ DocumentBase {
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
 
-    property bool blockUpdatingModel: false;
-
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
@@ -70,47 +68,12 @@ DocumentBase {
         }
     }
 
-    TreeItemModel {
-        id: statusModel;
+    DeviceProductionStatus {
+        id: productionStatus;
 
         Component.onCompleted: {
-            let index = statusModel.InsertNewItem();
-
-            // 0
-            statusModel.SetData("Id", "None", index);
-            statusModel.SetData("Name", qsTr("None"), index);
-
-            index = statusModel.InsertNewItem();
-
-            // 1
-            statusModel.SetData("Id", "Accepted", index);
-            statusModel.SetData("Name", qsTr("Accepted"), index);
-
-            index = statusModel.InsertNewItem();
-
-            // 2
-            statusModel.SetData("Id", "InProgress", index);
-            statusModel.SetData("Name", qsTr("In Progress"), index);
-
-            index = statusModel.InsertNewItem();
-
-            // 3
-            statusModel.SetData("Id", "Canceled", index);
-            statusModel.SetData("Name", qsTr("Canceled"), index);
-
-            index = statusModel.InsertNewItem();
-
-            // 4
-            statusModel.SetData("Id", "OnHold", index);
-            statusModel.SetData("Name", qsTr("On Hold"), index);
-
-            index = statusModel.InsertNewItem();
-
-            // 5
-            statusModel.SetData("Id", "Finished", index);
-            statusModel.SetData("Name", qsTr("Finished"), index);
-
-            statusCB.model = statusModel;
+            statusCB.model = productionStatus.statusModel;
+//            statusCB.model = productionStatus.getAvailableModel(0);
         }
     }
 

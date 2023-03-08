@@ -27,21 +27,6 @@ static const QByteArray s_idColumn = "Id";
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
-QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(const QByteArray& objectId, int offset, int count, const iprm::IParamsSet* paramsPtr) const
-{
-	if (!objectId.isEmpty()){
-		return QString("SELECT * FROM \"%1\" WHERE IsActive = true AND %2 = '%3'")
-				.arg(qPrintable(*m_tableNameAttrPtr))
-				.arg(qPrintable(s_documentIdColumn))
-				.arg(qPrintable(objectId)).toLocal8Bit();
-	}
-
-	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
-
-	return selectionQuery;
-}
-
-
 istd::IChangeable* CDeviceDatabaseDelegateComp::CreateObjectFromRecord(const QSqlRecord& record) const
 {
 	if (!m_databaseEngineCompPtr.IsValid()){
@@ -117,16 +102,6 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 }
 
 
-QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-			const imtbase::IObjectCollection& /*collection*/,
-			const QByteArray& objectId) const
-{
-	QByteArray retVal = QString("DELETE FROM \"%1\" WHERE %2 = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(s_documentIdColumn)).arg(qPrintable(objectId)).toLocal8Bit();
-
-	return retVal;
-}
-
-
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
@@ -153,149 +128,6 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 	}
 
 	return retVal;
-}
-
-
-QByteArray CDeviceDatabaseDelegateComp::CreateDescriptionObjectQuery(
-		const imtbase::IObjectCollection& collection,
-		const QByteArray& objectId,
-		const QString& description) const
-{
-	QByteArray retVal = QString("UPDATE \"Devices\" SET document = jsonb_set(document, '{Description}', '\"%1\"', true), LastModified = '%2' WHERE DocumentId ='%3' AND IsActive = true;")
-			.arg(description)
-			.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-			.arg(qPrintable(objectId)).toLocal8Bit();
-
-	return retVal;
-}
-
-
-QByteArray CDeviceDatabaseDelegateComp::GetCountQuery(const iprm::IParamsSet* paramsPtr) const
-{
-	return QString("SELECT COUNT(*) FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr)).toLocal8Bit();
-}
-
-
-// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
-
-QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
-{
-	return QString("SELECT * FROM \"%1\" WHERE IsActive = true").arg(qPrintable(*m_tableNameAttrPtr));
-}
-
-
-bool CDeviceDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
-{
-	QByteArray objectId;
-	if (record.contains("DocumentId")){
-		objectId = record.value("DocumentId").toByteArray();
-	}
-
-	if (!objectId.isEmpty()){
-		QByteArray query = QString("SELECT * from \"Devices\" WHERE DocumentId = '%1' AND RevisionNumber = '%2';")
-				.arg(qPrintable(objectId))
-				.arg(1).toUtf8();
-
-		QSqlError error;
-		QSqlQuery sqlQuery = m_databaseEngineCompPtr->ExecSqlQuery(query, &error);
-
-		if (sqlQuery.next()){
-			QSqlRecord orderRecord = sqlQuery.record();
-
-			if (orderRecord.contains("LastModified")){
-				QDateTime insertionTime = orderRecord.value("LastModified").toDateTime();
-
-				metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME, insertionTime);
-				metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME, insertionTime);
-			}
-		}
-	}
-
-	if (record.contains("LastModified")){
-		QDateTime lastModificationTime = record.value("LastModified").toDateTime();
-
-		metaInfo.SetMetaInfo(idoc::IDocumentMetaInfo::MIT_MODIFICATION_TIME, lastModificationTime);
-		metaInfo.SetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME, lastModificationTime);
-	}
-
-	if (record.contains("RevisionNumber")){
-		qlonglong revisionNumber = record.value("RevisionNumber").toLongLong();
-
-		metaInfo.SetMetaInfo(imtbase::ICollectionInfo::MIT_REVISION, revisionNumber);
-	}
-
-	return true;
-}
-
-
-bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilter& collectionFilter, QString& sortQuery) const
-{
-	QByteArray columnId;
-	QByteArray sortOrder;
-
-	if (!collectionFilter.GetSortingInfoIds().isEmpty()){
-		columnId = collectionFilter.GetSortingInfoIds().first();
-	}
-
-	switch (collectionFilter.GetSortingOrder()){
-	case imtbase::ICollectionFilter::SO_ASC:
-		sortOrder = "ASC";
-		break;
-	case imtbase::ICollectionFilter::SO_DESC:
-		sortOrder = "DESC";
-		break;
-	}
-
-	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
-		sortQuery = QString("ORDER BY document->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
-	}
-
-	return true;
-}
-
-
-bool CDeviceDatabaseDelegateComp::CreateFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const
-{
-	bool retVal = true;
-
-	QString textFilterQuery;
-	iprm::TParamsPtr<imtbase::ICollectionFilter> collectionFilterParamPtr(&filterParams, "Filter");
-	if (collectionFilterParamPtr.IsValid()){
-		retVal = CreateTextFilterQuery(*collectionFilterParamPtr, textFilterQuery);
-		if (!retVal){
-			return false;
-		}
-	}
-
-	if (!textFilterQuery.isEmpty()){
-		filterQuery += "AND (" + textFilterQuery + ")";
-	}
-
-	return true;
-}
-
-
-bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
-			const imtbase::ICollectionFilter& collectionFilter,
-			QString& textFilterQuery) const
-{
-	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
-	if (filteringColumnIds.isEmpty()){
-		return true;
-	}
-
-	QString textFilter = collectionFilter.GetTextFilter();
-	if (!textFilter.isEmpty()){
-		textFilterQuery = QString("document->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds.first())).arg(textFilter);
-
-		for (int i = 1; i < filteringColumnIds.count(); ++i){
-			textFilterQuery += " OR ";
-
-			textFilterQuery += QString("document->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
-		}
-	}
-
-	return true;
 }
 
 

@@ -124,26 +124,28 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Status</Value>
                                 <Value>DeviceType</Value>
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>OrderId</Value>
-                                <Value>ProductionStatus</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
+                                <Value>LastModified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Production Status</Value>
                                 <Value>Device Type</Value>
                                 <Value>MAC-Address</Value>
                                 <Value>Serial Number</Value>
                                 <Value>Order-ID</Value>
-                                <Value>Production Status</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
+                                <Value>Last Modified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -201,43 +203,6 @@
                             <AttributeInfoMap/>
                         </Data>
                     </Element>
-                    <Element Id="CollectionCommandPermissions" PackageId="ImtCoreVoce" ComponentId="CollectionCommandPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="EditCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewSensors</Value>
-                                            <Value>EditSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="NewCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>EditSensor</Value>
-                                            <Value>AddSensor</Value>
-                                            <Value>RemoveSensor</Value>
-                                            <Value>ChangeSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RemoveCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>EditSensor</Value>
-                                            <Value>AddSensor</Value>
-                                            <Value>RemoveSensor</Value>
-                                            <Value>ChangeSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="Commands" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -246,7 +211,26 @@
                                         <Values>
                                             <Value>New</Value>
                                             <Value>Remove</Value>
+                                            <Value>Empty</Value>
                                             <Value>Edit</Value>
+                                            <Value>Empty</Value>
+                                            <Value>OpenOrder</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CommandsJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>NewPermissions</Value>
+                                            <Value>EditPermissions</Value>
+                                            <Value>RemovePermissions</Value>
+                                            <Value>OpenOrderPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -257,7 +241,7 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CollectionCommandPermissions"/>
+                                    <Data IsEnabled="true" Value="CommandsJoiner"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Devices"/>
@@ -317,6 +301,38 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="EditPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Edit"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensors</Value>
+                                            <Value>EditSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="New" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -338,6 +354,73 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="NewPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="New"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>EditSensor</Value>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OpenOrder" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Deployment"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="OpenOrder"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Open Order"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OpenOrderPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="OpenOrder"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewOrders</Value>
+                                            <Value>EditOrder</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="Remove" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -355,6 +438,29 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="Remove"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="RemovePermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Remove"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>EditSensor</Value>
+                                            <Value>RemoveSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -406,7 +512,9 @@
                                         <Values>
                                             <Value>Undo</Value>
                                             <Value>Redo</Value>
+                                            <Value>Empty</Value>
                                             <Value>Save</Value>
+                                            <Value>Empty</Value>
                                             <Value>Close</Value>
                                         </Values>
                                     </Data>
@@ -506,6 +614,15 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="Redo" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -576,6 +693,14 @@
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="DeviceCommandsController"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="DeviceCommandsController"/>
                 </ExportedInterfaces>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="Permissions">
+            <Data Description="" Keywords="">
+                <ElementsList/>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces/>
                 <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>

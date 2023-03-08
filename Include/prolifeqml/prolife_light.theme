@@ -6,6 +6,8 @@
 		"LightGray 2": "#CCCCCC",
 		"LightGray 3": "#dfdfdf",
 		"LightGray 4": "#d0d0d2",
+                "LightGray 5": "#D3D3D3",
+                "LightGray 6": "#efefef",
 		"VeryLightGray": "#f5f5f5",
 		"White": "#ffffff",
 		"VividBlue": "#0078d7",
@@ -76,7 +78,10 @@
 			"TextSelectedBackground": "VividBlue",
 			"BlueLabel2": "LightBlue 2",
 			"Shadow": "LightGray 1",
-			"BorderColor": "LightGray 4"
+			"BorderColor": "LightGray 4",
+                        "ScrollIndicator": "GrayBlue",
+                        "ScrollHighlight": "LightGray 5",
+                        "ScrollBackground": "LightGray 6"
 		},
 		"InactiveColors": {
 			"Background": "GrayBlue",

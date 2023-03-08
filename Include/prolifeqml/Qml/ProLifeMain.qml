@@ -83,6 +83,7 @@ Item {
         id: settingsObserver;
 
         designProvider: designSchemaProvider;
+        languageProvider: langProvider;
 
         root: window;
     }

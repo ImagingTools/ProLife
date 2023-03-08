@@ -15,8 +15,6 @@ DocumentBase {
     property TreeItemModel productsModel: TreeItemModel {}
     property TreeItemModel devicesModel: TreeItemModel {}
 
-    property bool blockUpdatingModel: false;
-
     property string orderUuid: "";
 
     Component.onCompleted: {
@@ -298,6 +296,8 @@ DocumentBase {
                         orderEditorContainer.updateModel();
                     }
                 }
+
+                KeyNavigation.tab: descriptionInput;
             }
         }
 
@@ -332,6 +332,8 @@ DocumentBase {
                         orderEditorContainer.updateModel();
                     }
                 }
+
+                KeyNavigation.tab: instanceIdInput;
             }
         }
 

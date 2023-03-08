@@ -81,7 +81,16 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 						}
 					}
 				}
-				else if(informationId == "ProductionStatus"){
+				else if(informationId == "OrderUuid"){
+					if (m_orderCollectionCompPtr.IsValid()){
+						QByteArray orderId = deviceInfoPtr->GetOrderId();
+						imtbase::IObjectCollection::Ids orderIds = m_orderCollectionCompPtr->GetElementIds();
+						if (orderIds.contains(orderId)){
+							elementInformation = orderId;
+						}
+					}
+				}
+				else if(informationId == "Status"){
 					int status = deviceInfoPtr->GetDeviceProductionStatus();
 					switch (status){
 					case prolifedata::IDeviceInfo::DPS_NONE:
@@ -108,6 +117,13 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
 					if (metaInfoPtr.IsValid()){
 						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME)
+								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
+					}
+				}
+				else if(informationId == "LastModified"){
+					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
+					if (metaInfoPtr.IsValid()){
+						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME)
 								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
 					}
 				}

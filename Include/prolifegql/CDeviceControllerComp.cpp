@@ -46,13 +46,18 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 			dataModelPtr->SetData("Uuid", objectUuid);
 			dataModelPtr->SetData("Id", deviceId);
-			dataModelPtr->SetData("Name", deviceId);
 			dataModelPtr->SetData("MacAddress", macAddress);
 			dataModelPtr->SetData("SerialNumber", serialNumber);
 			dataModelPtr->SetData("Description", description);
 			dataModelPtr->SetData("ProductionStatus", status);
 			dataModelPtr->SetData("DeviceType", deviceType);
 			dataModelPtr->SetData("OrderId", orderId);
+
+			QString name = deviceType;
+			if (!macAddress.isEmpty()){
+				name = deviceType + " (" + macAddress + ")";
+			}
+			dataModelPtr->SetData("Name", name);
 		}
 	}
 

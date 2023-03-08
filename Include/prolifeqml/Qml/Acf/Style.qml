@@ -36,6 +36,10 @@ Item {
     property string linkColor: "#0078D7";
     property string selectedColor: "#e3eefa";
 
+    property string color_scrollBackground: styleContainer.baseColor;
+    property string color_scrollIndicator: "#333333";
+    property string color_scrollHighlight: "#333333";
+
     property string lightBlueColor: "#69b8e3";
 
     property string tabSelectedColor: "#FF4500";
@@ -149,6 +153,10 @@ Item {
         Style.disabledInActiveTextColor = styleContainer.getThemeColor("DisabledInActiveColors", "Text", dataSource);
 
         Style.hover = styleContainer.getThemeColor("ActiveColors", "Hover", dataSource);
+
+//        Style.color_scrollBackground = styleContainer.getThemeColor("ActiveColors", "ScrollBackground", dataSource);
+//        Style.color_scrollIndicator = styleContainer.getThemeColor("ActiveColors", "ScrollIndicator", dataSource);
+//        Style.color_scrollHighlight = styleContainer.getThemeColor("ActiveColors", "ScrollHighlight", dataSource);
 
         Style.imagingToolsGradient0 = dataSource.GetData("ColorPalette").GetData("ImagingToolsGradient0");
         Style.imagingToolsGradient1 = dataSource.GetData("ColorPalette").GetData("ImagingToolsGradient1");

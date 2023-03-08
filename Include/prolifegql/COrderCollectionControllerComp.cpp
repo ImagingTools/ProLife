@@ -92,6 +92,13 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
 					}
 				}
+				else if(informationId == "LastModified"){
+					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
+					if (metaInfoPtr.IsValid()){
+						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME)
+								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
+					}
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";

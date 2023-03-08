@@ -8,10 +8,10 @@ CollectionView {
     visibleMetaInfo: false;
 
     Component.onCompleted: {
-//        container.commandUpdateGui = "DeviceCollectionUpdateGui";
-//        console.log("Device collection view complete");
-
         Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
+        container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
+
+        baseCollectionView.commands.fieldsData.push("OrderUuid");
     }
 
     Component.onDestruction: {

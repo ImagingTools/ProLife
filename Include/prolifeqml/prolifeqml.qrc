@@ -22,6 +22,8 @@
         <file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
         <file alias="ProLife/OrderCommandsModelObserver.qml">Qml/OrderCommandsModelObserver.qml</file>
         <file alias="ProLife/DeviceCollectionView.qml">Qml/DeviceCollectionView.qml</file>
+	<file alias="ProLife/DeviceCollectionViewCommandsDelegate.qml">Qml/DeviceCollectionViewCommandsDelegate.qml</file>
+	<file alias="ProLife/DeviceProductionStatus.qml">Qml/DeviceProductionStatus.qml</file>
 	<file alias="ProLife/InstanceMaskProvider.qml">Qml/InstanceMaskProvider.qml</file>
     </qresource>
     <qresource prefix="/Style">

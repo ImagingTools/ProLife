@@ -36,6 +36,9 @@
                     <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerBase/ProLifeLocalization"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>

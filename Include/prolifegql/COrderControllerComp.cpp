@@ -62,7 +62,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		QString description = orderPtr->GetDescription();
 		prolifedata::IOrderInfo::OrderStatus status = orderPtr->GetOrderStatus();
 
-		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, imtbase::ICollectionInfo::EIT_NAME).toString();
+		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, idoc::IDocumentMetaInfo::MIT_TITLE).toString();
 
 		dataModel->SetData("Id", objectUuid);
 		dataModel->SetData("Name", name);

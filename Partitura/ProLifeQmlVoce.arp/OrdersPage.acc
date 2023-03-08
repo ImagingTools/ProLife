@@ -114,6 +114,7 @@
                                 <Value>Status</Value>
                                 <Value>OrderCustomer</Value>
                                 <Value>Added</Value>
+                                <Value>LastModified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -128,6 +129,7 @@
                                 <Value>Status</Value>
                                 <Value>Customer</Value>
                                 <Value>Added</Value>
+                                <Value>Last Modified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -337,6 +339,7 @@
                                         <Values>
                                             <Value>New</Value>
                                             <Value>Remove</Value>
+                                            <Value>Empty</Value>
                                             <Value>Edit</Value>
                                         </Values>
                                     </Data>
@@ -376,6 +379,15 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="Edit"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -497,7 +509,9 @@
                                         <Values>
                                             <Value>Undo</Value>
                                             <Value>Redo</Value>
+                                            <Value>Empty</Value>
                                             <Value>Save</Value>
+                                            <Value>Empty</Value>
                                             <Value>Close</Value>
                                             <Value>CreateLicenseFile</Value>
                                         </Values>
@@ -538,6 +552,15 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="CreateLicenseFile"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
