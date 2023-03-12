@@ -25,6 +25,10 @@
 	<file alias="ProLife/DeviceCollectionViewCommandsDelegate.qml">Qml/DeviceCollectionViewCommandsDelegate.qml</file>
 	<file alias="ProLife/DeviceProductionStatus.qml">Qml/DeviceProductionStatus.qml</file>
 	<file alias="ProLife/InstanceMaskProvider.qml">Qml/InstanceMaskProvider.qml</file>
+	<file alias="ProLife/ProductPairCard.qml">Qml/ProductPairCard.qml</file>
+	<file alias="ProLife/SoftwareProductCard.qml">Qml/SoftwareProductCard.qml</file>
+	<file alias="ProLife/HardwareProductCard.qml">Qml/HardwareProductCard.qml</file>
+	<file alias="ProLife/OrderProductCard.qml">Qml/OrderProductCard.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>

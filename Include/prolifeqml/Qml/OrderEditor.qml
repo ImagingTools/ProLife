@@ -17,6 +17,8 @@ DocumentBase {
 
     property string orderUuid: "";
 
+    property alias licensesProviderLocal: licensesProvider;
+
     Component.onCompleted: {
         licensesProvider.updateModel();
 
@@ -28,9 +30,13 @@ DocumentBase {
         OrderEditorCommandsDelegate {}
     }
 
-    onOrderUuidChanged: {
-
-    }
+//    onItemIdChanged: {
+//        if (orderEditorContainer.itemId !== ""){
+//            if (orderEditorContainer.documentManager != null){
+//                orderEditorContainer.documentManager.updateDocumentModel(orderEditorContainer.itemId, {});
+//            }
+//        }
+//    }
 
     onDocumentModelChanged: {
         updateGui();
@@ -82,7 +88,7 @@ DocumentBase {
 
         commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "ProductionStatus", "MacAddress", "SerialNumber"];
+        fields: ["Id", "Name", "DeviceType", "OrderId", "Status", "MacAddress", "SerialNumber"];
 
         onModelUpdated: {
             if (devicesList.collectionModel != null){
@@ -100,6 +106,10 @@ DocumentBase {
         }
 
         function getMacAddress(deviceId){
+            if (!deviceId){
+                return null;
+            }
+
             if (devicesList.collectionModel != null){
                 for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
                     let id = devicesList.collectionModel.GetData("Id", i);
@@ -462,7 +472,7 @@ DocumentBase {
                 height: 22;
                 width: height;
 
-                tooltipText: qsTr("Add product to this order");
+//                tooltipText: qsTr("Add product to this order");
 
                 iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
 
@@ -475,6 +485,15 @@ DocumentBase {
                 onClicked: {
                     productsView.activeProductIndex = -1;
                     modalDialogManager.openDialog(productEditorDialog, {});
+
+                    //                    let productsModel = documentModel.GetData("OrderProducts");
+                    //                    if (!productsModel){
+                    //                        productsModel = documentModel.AddTreeModel("OrderProducts")
+                    //                    }
+
+                    //                    productsModel.InsertNewItem();
+
+                    //                    productsView.model = productsModel;
                 }
             }
 
@@ -491,6 +510,52 @@ DocumentBase {
             }
         }
     }//Column bodyColumn
+
+    function unlinkProducts(linkId){
+        console.log("unlinkProducts", linkId);
+        if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+
+            console.log("orderProductsModel1", orderProductsModel.toJSON());
+
+            let linkIndex = -1;
+            for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+                let id = orderProductsModel.GetData("Id", i);
+                if (id === linkId){
+                    linkIndex = i;
+                    break;
+                }
+            }
+
+            if (linkIndex >= 0){
+                let categoryId = orderProductsModel.GetData("CategoryId", linkIndex);
+                if (categoryId === "Pair"){
+                    let softwareProductModel = orderProductsModel.GetData("SoftwareProduct", linkIndex);
+                    let index = orderProductsModel.InsertNewItem();
+                    orderProductsModel.CopyItemDataFromModel(index, softwareProductModel);
+
+                    let hardwareProductModel = orderProductsModel.GetData("HardwareProduct", linkIndex);
+                    hardwareProductModel.SetData("PairId", "");
+                    index = orderProductsModel.InsertNewItem();
+                    orderProductsModel.CopyItemDataFromModel(index, hardwareProductModel);
+
+                    orderProductsModel.RemoveItem(linkIndex);
+
+                    console.log("orderProductsModel2", orderProductsModel.toJSON());
+
+                    return true;
+                }
+            }
+
+
+        }
+
+        return false;
+    }
+
+    UuidGenerator {
+        id: uuidGenerator;
+    }
 
     Component {
         id: productEditorDialog;
@@ -516,6 +581,59 @@ DocumentBase {
                 productsDialog.bodyItem.started();
             }
 
+            function createProductsPair(softwareId, hardwareId){
+                let softwareIndex = -1;
+                let softwareModel = null;
+
+                for (let i = 0; i < productsDialog.orderProductsModel.GetItemsCount(); i++){
+                    let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", i);
+                    if (categoryId && categoryId !== "Pair"){
+                        let productId = productsDialog.orderProductsModel.GetData("Id", i);
+                        if (productId === softwareId){
+                            softwareIndex = i;
+                            softwareModel = productsDialog.orderProductsModel.GetModelFromItem(i);
+                            break;
+                        }
+                    }
+                }
+
+                if (softwareIndex > -1){
+                    productsDialog.orderProductsModel.RemoveItem(softwareIndex);
+                }
+
+                let hardwareIndex = -1;
+                let hardwareModel = null;
+
+                for (let i = 0; i < productsDialog.orderProductsModel.GetItemsCount(); i++){
+                    let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", i);
+                    if (categoryId && categoryId !== "Pair"){
+                        let productId = productsDialog.orderProductsModel.GetData("Id", i);
+                        if (productId === hardwareId){
+                            hardwareIndex = i;
+                            hardwareModel = productsDialog.orderProductsModel.GetModelFromItem(i);
+                            break;
+                        }
+                    }
+                }
+
+                if (hardwareIndex > -1){
+                    productsDialog.orderProductsModel.RemoveItem(hardwareIndex);
+                }
+
+                if (softwareModel != null && hardwareModel != null){
+                    let index = productsDialog.orderProductsModel.InsertNewItem();
+
+                    productsDialog.orderProductsModel.SetData("Id", uuidGenerator.generateUUID(), index);
+                    productsDialog.orderProductsModel.SetData("CategoryId", "Pair", index);
+
+                    let emptySoftwareModel = productsDialog.orderProductsModel.AddTreeModel("SoftwareProduct", index);
+                    emptySoftwareModel.Copy(softwareModel);
+
+                    let emptyHardwareModel = productsDialog.orderProductsModel.AddTreeModel("HardwareProduct", index);
+                    emptyHardwareModel.Copy(hardwareModel);
+                }
+            }
+
             onFinished: {
                 if (buttonId == "Save"){
                     productsDialog.bodyItem.updateModel()
@@ -532,19 +650,53 @@ DocumentBase {
                         undoRedoManager.beginChanges();
 
                         if (productsDialog.activeProductIndex > -1){
+
+                            console.log("SAVE");
                             if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
                                 orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                                //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
                             }
+
+                            let softwareId = "";
+                            let hardwareId = "";
+                            let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", productsDialog.activeProductIndex);
+                            if (categoryId === "Software"){
+                                softwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
+                                hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
+                            }
+                            else if (categoryId === "Hardware"){
+                                hardwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
+                                softwareId = productsDialog.orderProductsModel.GetData("PairId", productsDialog.activeProductIndex);
+                            }
+
+                            console.log("softwareId", softwareId);
+                            console.log("hardwareId", hardwareId);
+
+                            if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
+                                productsDialog.createProductsPair(softwareId, hardwareId);
+                            }
+
                             let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                             orderProductsModel.Copy(productsDialog.orderProductsModel);
                         }
 
                         undoRedoManager.endChanges();
-
                         updateGui();
-                    }
 
+                        //                        undoRedoManager.beginChanges();
+
+                        //                        if (productsDialog.activeProductIndex > -1){
+                        //                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                        //                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
+                        //                                //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
+                        //                            }
+                        //                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                        //                            orderProductsModel.Copy(productsDialog.orderProductsModel);
+                        //                        }
+
+                        //                        undoRedoManager.endChanges();
+
+                        //                        updateGui();
+                    }
                 }
             }
         }
@@ -585,6 +737,9 @@ DocumentBase {
 
         Component.onCompleted: {
         }
+
+        property bool readOnly: false;
+        property bool createLicenseOnly: false;
 
         function getProductName(productId){
             let retVal = "";
@@ -722,6 +877,8 @@ DocumentBase {
             productCommandsModel: commandsModelLocal;
             orderCommandsProvider: orderEditorContainer.commandsProvider;
             addProductButton: addProduct;
+
+            listView: productsView;
         }
 
         TreeItemModel {
@@ -753,28 +910,22 @@ DocumentBase {
                 commandsModelLocal.SetData("Visible", true, index);
             }
         }
+        delegate: OrderProductCard {
+            id: orderProductDelegate;
 
-        delegate: OrderProductView {
-            productName: "#" + (model.index + 1) + " " + productsView.getProductName(model.ProductId);
-            productCategory: productsView.getProductCategory(model.ProductId);
-            pairName: productsView.getPairName(model.index)
-            macAddress: devicesList.getMacAddress(model.DeviceId);
-            serialNumber: devicesList.getSerialNumber(model.DeviceId);
-            licenseName: productsView.getLicenseName(model.index);
+            productIndex: model.index;
+            devicesModel: orderEditorContainer.devicesModel;
 
-            commandsModel: commandsModelLocal;
+            readOnly: productsView.readOnly;
+            createLicenseOnly: productsView.createLicenseOnly;
 
-            selected: productsView.selectedIndex === model.index;
+            licensesProvider: orderEditorContainer.licensesProviderLocal;
 
             onEdited: {
                 productsView.activeProductIndex = model.index;
 
                 var productsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                 if (productsModel){
-                    //                    let productModel = productsModel.GetModelFromItem(model.index);
-
-                    //                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
-                    //                    console.log("OrderProductView onEdited", productModel.toJSON())
                     modalDialogManager.openDialog(productEditorDialog, {});
                 }
             }
@@ -785,36 +936,102 @@ DocumentBase {
                 modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
             }
 
-            onClicked: {
-                productsView.selectedIndex = model.index;
+            onUnlinked: {
+                let linkId = model.Id;
+                undoRedoManager.beginChanges();
+                orderEditorContainer.unlinkProducts(linkId);
+                undoRedoManager.endChanges();
+
+                updateGui();
             }
 
             onCreateLicenseFile: {
-                let orderId = documentModel.GetData("Id");
-                let productId = model.Id;
+                if (model.CategoryId === "Pair"){
+                    let productId = "";
+                    if (model.HardwareProduct){
+                        let hardwareProductModel = model.HardwareProduct;
+                        productId = hardwareProductModel.GetData("Id");
+                    }
 
-                if (model.CategoryId === "Software"){
-                    productId = productsView.findHardwarePair(productId);
-                }
-                if (productId){
-                    console.log("onCreateLicenseFile", orderId + "/" + productId);
-                    licenseFileController.createLicenseFile(orderId + "/" + productId);
+                    if (productId !== ""){
+                        let orderId = documentModel.GetData("Id");
+                        console.log("onCreateLicenseFile", orderId + "/" + productId);
+                        licenseFileController.createLicenseFile(orderId + "/" + productId);
+                    }
                 }
             }
 
-            onPairClicked: {
-                let id = model.PairId;
-                if (model.CategoryId === "Software"){
-                    id = productsView.findHardwarePair(model.Id);
+            onPairEdited: {
+                let productModel = model.SoftwareProduct;
+                if (categoryId === "Hardware"){
+                    productModel = model.HardwareProduct;
                 }
 
-                let index = productsView.getIndexByPairId(id);
-                if (index >= 0){
-                    productsView.selectedIndex = index;
-                    productsView.positionViewAtIndex(index, ListView.Center);
-                }
+
             }
         }
+
+        //        delegate: OrderProductView {
+        //            productName: "#" + (model.index + 1) + " " + productsView.getProductName(model.ProductId);
+        //            productCategory: productsView.getProductCategory(model.ProductId);
+        //            pairName: productsView.getPairName(model.index)
+        //            macAddress: devicesList.getMacAddress(model.DeviceId);
+        //            serialNumber: devicesList.getSerialNumber(model.DeviceId);
+        //            licenseName: productsView.getLicenseName(model.index);
+
+        //            commandsModel: commandsModelLocal;
+
+        //            selected: productsView.selectedIndex === model.index;
+
+        //            onEdited: {
+        //                productsView.activeProductIndex = model.index;
+
+        //                var productsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+        //                if (productsModel){
+        //                    //                    let productModel = productsModel.GetModelFromItem(model.index);
+
+        //                    //                    modalDialogManager.openDialog(productEditorDialog, {"documentModel": productModel});
+        //                    //                    console.log("OrderProductView onEdited", productModel.toJSON())
+        //                    modalDialogManager.openDialog(productEditorDialog, {});
+        //                }
+        //            }
+
+        //            onRemoved: {
+        //                productsView.activeProductIndex = model.index;
+
+        //                modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
+        //            }
+
+        //            onClicked: {
+        //                productsView.selectedIndex = model.index;
+        //            }
+
+        //            onCreateLicenseFile: {
+        //                let orderId = documentModel.GetData("Id");
+        //                let productId = model.Id;
+
+        //                if (model.CategoryId === "Software"){
+        //                    productId = productsView.findHardwarePair(productId);
+        //                }
+        //                if (productId){
+        //                    console.log("onCreateLicenseFile", orderId + "/" + productId);
+        //                    licenseFileController.createLicenseFile(orderId + "/" + productId);
+        //                }
+        //            }
+
+        //            onPairClicked: {
+        //                let id = model.PairId;
+        //                if (model.CategoryId === "Software"){
+        //                    id = productsView.findHardwarePair(model.Id);
+        //                }
+
+        //                let index = productsView.getIndexByPairId(id);
+        //                if (index >= 0){
+        //                    productsView.selectedIndex = index;
+        //                    productsView.positionViewAtIndex(index, ListView.Center);
+        //                }
+        //            }
+        //        }
     }
 
     LicenseFileController {

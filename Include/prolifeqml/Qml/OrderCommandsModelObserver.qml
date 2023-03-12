@@ -9,6 +9,7 @@ Item {
     property TreeItemModel productCommandsModel: null;
 
     property Item addProductButton: null;
+    property Item listView: null;
 
     Component.onDestruction: {
         if (root.orderCommandsProvider != null){
@@ -23,30 +24,17 @@ Item {
     }
 
     function orderCommandsModelLoaded(){
-        if (root.productCommandsModel != null){
-            let saveExists = root.orderCommandsProvider.commandExists("Save");
+        let saveExists = root.orderCommandsProvider.commandExists("Save");
+        let createLicenseExists = root.orderCommandsProvider.commandExists("CreateLicenseFile");
 
-            let editIndex = root.getProductCommandIndex("Edit");
-            if (editIndex >= 0){
-                root.productCommandsModel.SetData("IsEnabled", saveExists, editIndex);
-            }
+        if (root.listView != null){
+            root.listView.readOnly = !saveExists;
+            root.listView.createLicenseOnly = !createLicenseExists;
+        }
 
-            let removeIndex = root.getProductCommandIndex("Remove");
-            if (removeIndex >= 0){
-                root.productCommandsModel.SetData("IsEnabled", saveExists, removeIndex);
-            }
-
-            if (root.addProductButton != null){
-                root.addProductButton.enabled = saveExists;
-                root.addProductButton.visible = saveExists;
-            }
-
-            let createLicenseExists = root.orderCommandsProvider.commandExists("CreateLicenseFile");
-
-            let createLicenseIndex = root.getProductCommandIndex("CreateLicenseFile");
-            if (createLicenseIndex >= 0){
-                root.productCommandsModel.SetData("IsEnabled", createLicenseExists, createLicenseIndex);
-            }
+        if (root.addProductButton != null){
+            root.addProductButton.enabled = saveExists;
+            root.addProductButton.visible = saveExists;
         }
     }
 

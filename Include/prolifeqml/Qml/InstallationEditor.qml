@@ -26,8 +26,12 @@ Item {
 
     // property string selectedPairId: "";
 
-    onOrderUuidChanged: {
-        console.log("onOrderUuidChanged", orderUuid);
+    Component.onCompleted: {
+        loading.visible = true;
+    }
+
+    onBlockUpdatingModelChanged: {
+        loading.visible = installationEditorContainer.blockUpdatingModel;
     }
 
     width: 550;
@@ -444,7 +448,7 @@ Item {
 
                 commandId: "Devices";
 
-                fields: ["Id", "Name", "DeviceType", "OrderId", "ProductionStatus"];
+                fields: ["Id", "Name", "DeviceType", "OrderId", "Status"];
 
                 onModelUpdated: {
                     filteringModel.Clear();
@@ -653,6 +657,13 @@ Item {
                 installationEditorContainer.updateModel();
             }
         }
+    }
+
+    Loading {
+        id: loading;
+
+        anchors.fill: parent;
+        visible: false;
     }
 
 }//Container
