@@ -72,8 +72,8 @@ list(APPEND webdirs ${IMTCOREDIR}/Bin/web/build.web)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
-	add_compile_definitions(WEB_COMPILE)
+if(DEFINED PRO_LIFE_WEB_COMPILE AND  PRO_LIFE_WEB_COMPILE)
+	add_compile_definitions(PRO_LIFE_WEB_COMPILE)
 	jqml_compile_web("${webdirs}", "${buildwebdir}")
 endif()
 
