@@ -5,13 +5,27 @@ import Acf 1.0
 CollectionViewCommandsDelegateBase {
     id: container;
 
-    onSelectedIndexChanged: {
-        console.log("DeviceCollectionViewCommands onSelectedIndexChanged", container.selectedIndex);
+//    onSelectedIndexChanged: {
+//        console.log("DeviceCollectionViewCommands onSelectedIndexChanged", container.selectedIndex);
 
-        let isEnabled = container.selectedIndex > -1;
+//        let isEnabled = container.selectedIndex > -1;
+//        if (isEnabled){
+//            let elementsModel = container.tableData.elements;
+//            let orderId = elementsModel.GetData("OrderId", container.selectedIndex);
+//            isEnabled = isEnabled && orderId !== "";
+//        }
+
+//        if (container.commandsProvider){
+//            commandsProvider.setCommandIsEnabled("OpenOrder", isEnabled);
+//        }
+//    }
+
+    onSelectionChanged: {
+        let indexes = container.tableData.getSelectedIndexes();
+        let isEnabled = indexes.length === 1;
         if (isEnabled){
             let elementsModel = container.tableData.elements;
-            let orderId = elementsModel.GetData("OrderId", container.selectedIndex);
+            let orderId = elementsModel.GetData("OrderId", indexes[0]);
             isEnabled = isEnabled && orderId !== "";
         }
 
@@ -22,8 +36,9 @@ CollectionViewCommandsDelegateBase {
 
     onCommandActivated: {
         if (commandId === "OpenOrder"){
+            let indexes = container.tableData.getSelectedIndexes();
             let elementsModel = container.tableData.elements;
-            let orderId = elementsModel.GetData("OrderUuid", container.selectedIndex);
+            let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
             if (orderId !== ""){
                 mainDocumentManager.openDocument("Orders", orderId);
             }

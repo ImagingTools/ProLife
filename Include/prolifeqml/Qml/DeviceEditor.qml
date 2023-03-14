@@ -61,6 +61,18 @@ DocumentBase {
             if (ordersList.collectionModel != null){
                 orderCB.model = ordersList.collectionModel;
 
+                if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                    let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                    let statusModel = productionStatus.getAvailableModel(status);
+
+                    console.log("statusModel", statusModel.toJSON());
+
+                    statusCB.model = statusModel;
+                }
+                else{
+                    statusCB.model = productionStatus.statusModel;
+                }
+
                 deviceEditorContainer.updateGui();
 
                 undoRedoManager.registerModel(documentModel)
@@ -70,11 +82,6 @@ DocumentBase {
 
     DeviceProductionStatus {
         id: productionStatus;
-
-        Component.onCompleted: {
-            statusCB.model = productionStatus.statusModel;
-//            statusCB.model = productionStatus.getAvailableModel(0);
-        }
     }
 
     onCommandsIdChanged: {
@@ -123,7 +130,20 @@ DocumentBase {
         statusCB.currentIndex = -1;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-            statusCB.currentIndex = status;
+            console.log("status", status);
+            let statusModel = productionStatus.getAvailableModel(status);
+            if (statusModel){
+                console.log("statusModel", statusModel.toJSON());
+                for (let i = 0; i < statusModel.GetItemsCount(); i++){
+                    let id = statusModel.GetData("Id", i);
+                    if (id === status){
+                        console.log("statusCB.currentIndex", i);
+                        statusCB.updateIcon(status);
+                        statusCB.currentIndex = i;
+                        break;
+                    }
+                }
+            }
         }
 
         productCB.currentIndex = -1;
@@ -191,7 +211,15 @@ DocumentBase {
             deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
         }
 
-        documentModel.SetData("ProductionStatus", statusCB.currentIndex);
+        console.log("statusCB.currentIndex", statusCB.currentIndex);
+        if (statusCB.currentIndex >= 0){
+            let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
+            console.log("selectedStatus", selectedStatus);
+            deviceEditorContainer.documentModel.SetData("ProductionStatus", selectedStatus);
+        }
+        else{
+            deviceEditorContainer.documentModel.SetData("ProductionStatus", "");
+        }
 
         undoRedoManager.endChanges();
     }
@@ -412,22 +440,48 @@ DocumentBase {
 
                         radius: 3;
 
-                        onCurrentIndexChanged: {
-                            deviceEditorContainer.updateModel();
-
-                            if (statusCB.currentIndex == 0){
+                        function updateIcon(statusId){
+                            if (statusId === "None"){
                                 iconStatus.source = "qrc:/Icons/Light/StateUnknown_On_Active";
                             }
-                            else if (statusCB.currentIndex == 3){
+                            else if (statusId === "Canceled"){
                                 iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
                             }
-                            else if (statusCB.currentIndex == 1 ||
-                                     statusCB.currentIndex == 2 ||
-                                     statusCB.currentIndex == 4){
+                            else if (statusId === "Accepted" || statusId === "InProgress"){
                                 iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
+                            }
+                            else if (statusId === "OnHold"){
+                                iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
                             }
                             else{
                                 iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
+                            }
+                        }
+
+                        property bool blockingIndexChanged: false;
+
+                        onCurrentIndexChanged: {
+                            console.log("statusCB onCurrentIndexChanged", statusCB.currentIndex);
+
+                            if (statusCB.blockingIndexChanged){
+                                return;
+                            }
+
+                            if (statusCB.currentIndex >= 0){
+                                deviceEditorContainer.updateModel();
+
+                                let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                let statusModel = productionStatus.getAvailableModel(status);
+
+                                statusCB.model = statusModel;
+                                statusCB.updateIcon(status);
+
+                                statusCB.blockingIndexChanged = true;
+                                statusCB.currentIndex = 0;
+                                statusCB.blockingIndexChanged = false;
+                            }
+                            else{
+                                statusCB.model = productionStatus.statusModel;
                             }
                         }
                     }

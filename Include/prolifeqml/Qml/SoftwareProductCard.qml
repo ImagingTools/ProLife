@@ -152,6 +152,25 @@ Rectangle {
         targetItem: licensesView;
     }
 
+    Text {
+        id: licenceText;
+
+        anchors.top: header.bottom;
+        anchors.topMargin: 10;
+        anchors.left: parent.left;
+        anchors.leftMargin: 10;
+
+        text: qsTr("No Licenses");
+        color: Style.textColor;
+        font.family: Style.fontFamily;
+        font.pixelSize: Style.fontSize_common;
+
+        elide: Text.ElideRight;
+        wrapMode: Text.NoWrap;
+
+        visible: licensesView.count === 0;
+    }
+
     ListView {
         id: licensesView;
 
@@ -177,18 +196,16 @@ Rectangle {
             Text {
                 id: licenceText;
 
+                anchors.left: parent.left;
+                anchors.right: parent.right;
+
                 text: softwareCard.licensesProvider ? model.Expiration === "" ? softwareCard.licensesProvider.getLicenseName(softwareCard.productId, model.Id) + " (Unlimited)" : softwareCard.licensesProvider.getLicenseName(softwareCard.productId, model.Id) + " (" + model.Expiration+ ")" : "";
-//                text: model.Expiration === "" ? softwareCard.licensesProvider.getLicenseName(softwareCard.productId, model.Id) + " (Unlimited)" : licensesProvider.getLicenseName(softwareCard.productId, model.Id) + " (" + model.Expiration+ ")"
                 color: Style.textColor;
                 font.family: Style.fontFamily;
                 font.pixelSize: Style.fontSize_common;
 
                 elide: Text.ElideRight;
                 wrapMode: Text.NoWrap;
-
-                Component.onCompleted: {
-                    console.log("licenceText onCompleted", softwareCard.licensesProvider);
-                }
             }
         }
     }

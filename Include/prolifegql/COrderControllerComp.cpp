@@ -237,7 +237,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		QByteArray orderId;
 		if (itemModel.ContainsKey("OrderId")){
-			orderId = itemModel.GetData("OrderId").toByteArray();
+			orderId = itemModel.GetData("OrderId").toByteArray().toLower();
 		}
 
 		if (itemModel.ContainsKey("Name")){

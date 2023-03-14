@@ -38,7 +38,7 @@ Item {
 
     property string color_scrollBackground: styleContainer.baseColor;
     property string color_scrollIndicator: Style.imagingToolsGradient3;
-    property string color_scrollHighlight: "#333333";
+    property string color_scrollHighlight: styleContainer.baseColor;
 
     property string lightBlueColor: "#69b8e3";
 

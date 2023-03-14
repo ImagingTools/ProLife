@@ -49,9 +49,29 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			dataModelPtr->SetData("MacAddress", macAddress);
 			dataModelPtr->SetData("SerialNumber", serialNumber);
 			dataModelPtr->SetData("Description", description);
-			dataModelPtr->SetData("ProductionStatus", status);
 			dataModelPtr->SetData("DeviceType", deviceType);
 			dataModelPtr->SetData("OrderId", orderId);
+
+			switch (status){
+			case prolifedata::IDeviceInfo::DPS_NONE:
+				dataModelPtr->SetData("ProductionStatus", "None");
+				break;
+			case prolifedata::IDeviceInfo::DPS_ACCEPTED:
+				dataModelPtr->SetData("ProductionStatus", "Accepted");
+				break;
+			case prolifedata::IDeviceInfo::DPS_IN_PROGRESS:
+				dataModelPtr->SetData("ProductionStatus", "InProgress");
+				break;
+			case prolifedata::IDeviceInfo::DPS_CANCELED:
+				dataModelPtr->SetData("ProductionStatus", "Canceled");
+				break;
+			case prolifedata::IDeviceInfo::DPS_ON_HOLD:
+				dataModelPtr->SetData("ProductionStatus", "OnHold");
+				break;
+			case prolifedata::IDeviceInfo::DPS_FINISHED:
+				dataModelPtr->SetData("ProductionStatus", "Finished");
+				break;
+			}
 
 			QString name = deviceType;
 			if (!macAddress.isEmpty()){
@@ -161,9 +181,24 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		}
 
 		if (itemModel.ContainsKey("ProductionStatus")){
-			int status = itemModel.GetData("ProductionStatus").toInt();
-			if (status >= 0){
-				devicePtr->SetDeviceProductionStatus((prolifedata::IDeviceInfo::DeviceProductionStatus) status);
+			QString status = itemModel.GetData("ProductionStatus").toString();
+			if (status == "None"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_NONE);
+			}
+			else if (status == "Accepted"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_ACCEPTED);
+			}
+			else if (status == "InProgress"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_IN_PROGRESS);
+			}
+			else if (status == "Canceled"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_CANCELED);
+			}
+			else if (status == "OnHold"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_ON_HOLD);
+			}
+			else if (status == "Finished"){
+				devicePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_FINISHED);
 			}
 		}
 

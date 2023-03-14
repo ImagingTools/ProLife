@@ -264,20 +264,20 @@ DocumentBase {
             width: parent.width;
             height: titleInstanceId.height + instanceIdInput.height;
 
-            //        RegExpValidator {
-            //            id: regexValid;
+            RegExpValidator {
+                id: regexValid;
 
-            //            Component.onCompleted: {
-            //                console.log("RegExpValidator onCompleted");
-            //                let regex = settingsProvider.getInstanceMask();
-            //                console.log("regex", regex);
+                Component.onCompleted: {
+                    console.log("RegExpValidator onCompleted");
+                    let regex = instanceMaskProvider.getInstanceMask();
+                    console.log("regex", regex);
 
-            //                let re = new RegExp(regex)
-            //                if (re){
-            //                    regexValid.regExp = re;
-            //                }
-            //            }
-            //        }
+                    let re = new RegExp(regex)
+                    if (re){
+                        regexValid.regExp = re;
+                    }
+                }
+            }
 
             Text {
                 id: titleInstanceId;
@@ -299,6 +299,8 @@ DocumentBase {
                 placeHolderText: qsTr("Enter the order-ID");
 
                 borderColor: Style.iconColorOnSelected;
+
+                textInputValidator: regexValid;
 
                 onEditingFinished: {
                     let currentId = documentModel.GetData("OrderId");
@@ -553,10 +555,6 @@ DocumentBase {
         return false;
     }
 
-    UuidGenerator {
-        id: uuidGenerator;
-    }
-
     Component {
         id: productEditorDialog;
 
@@ -579,59 +577,6 @@ DocumentBase {
                 }
 
                 productsDialog.bodyItem.started();
-            }
-
-            function createProductsPair(softwareId, hardwareId){
-                let softwareIndex = -1;
-                let softwareModel = null;
-
-                for (let i = 0; i < productsDialog.orderProductsModel.GetItemsCount(); i++){
-                    let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", i);
-                    if (categoryId && categoryId !== "Pair"){
-                        let productId = productsDialog.orderProductsModel.GetData("Id", i);
-                        if (productId === softwareId){
-                            softwareIndex = i;
-                            softwareModel = productsDialog.orderProductsModel.GetModelFromItem(i);
-                            break;
-                        }
-                    }
-                }
-
-                if (softwareIndex > -1){
-                    productsDialog.orderProductsModel.RemoveItem(softwareIndex);
-                }
-
-                let hardwareIndex = -1;
-                let hardwareModel = null;
-
-                for (let i = 0; i < productsDialog.orderProductsModel.GetItemsCount(); i++){
-                    let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", i);
-                    if (categoryId && categoryId !== "Pair"){
-                        let productId = productsDialog.orderProductsModel.GetData("Id", i);
-                        if (productId === hardwareId){
-                            hardwareIndex = i;
-                            hardwareModel = productsDialog.orderProductsModel.GetModelFromItem(i);
-                            break;
-                        }
-                    }
-                }
-
-                if (hardwareIndex > -1){
-                    productsDialog.orderProductsModel.RemoveItem(hardwareIndex);
-                }
-
-                if (softwareModel != null && hardwareModel != null){
-                    let index = productsDialog.orderProductsModel.InsertNewItem();
-
-                    productsDialog.orderProductsModel.SetData("Id", uuidGenerator.generateUUID(), index);
-                    productsDialog.orderProductsModel.SetData("CategoryId", "Pair", index);
-
-                    let emptySoftwareModel = productsDialog.orderProductsModel.AddTreeModel("SoftwareProduct", index);
-                    emptySoftwareModel.Copy(softwareModel);
-
-                    let emptyHardwareModel = productsDialog.orderProductsModel.AddTreeModel("HardwareProduct", index);
-                    emptyHardwareModel.Copy(hardwareModel);
-                }
             }
 
             onFinished: {
@@ -681,21 +626,98 @@ DocumentBase {
 
                         undoRedoManager.endChanges();
                         updateGui();
+                    }
+                }
+            }
+        }
+    }
 
-                        //                        undoRedoManager.beginChanges();
+    Component {
+        id: productPairEditorDialog;
 
-                        //                        if (productsDialog.activeProductIndex > -1){
-                        //                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                        //                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                        //                                //                            console.log("newProductsModel", orderEditorContainer.documentModel.toJSON());
-                        //                            }
-                        //                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                        //                            orderProductsModel.Copy(productsDialog.orderProductsModel);
-                        //                        }
+        ProductEditorDialog {
+            id: productsDialog;
+            licensesModel: licensesProvider.model;
+            productsModel: orderEditorContainer.productsModel;
 
-                        //                        undoRedoManager.endChanges();
+            orderUuid: orderEditorContainer.orderUuid;
+            onStarted: {
+                productsDialog.orderProductsModel.Clear();
+                if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                    console.log("A");
+                    productsDialog.activeProductIndex = productsView.activeProductIndex;
+                    let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                    productsDialog.orderProductsModel.Copy(orderProductsModel);
 
-                        //                        updateGui();
+                    let pairModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                    productsDialog.orderProductsModel.RemoveItem(productsView.activeProductIndex);
+
+                    let softwareModel = pairModel.GetData("SoftwareProduct");
+                    let hardwareModel = pairModel.GetData("HardwareProduct");
+
+                    let hardwareIndex = productsDialog.orderProductsModel.InsertNewItem();
+                    let softwareIndex = productsDialog.orderProductsModel.InsertNewItem();
+
+                    productsDialog.orderProductsModel.CopyItemDataFromModel(softwareIndex, softwareModel);
+                    productsDialog.orderProductsModel.CopyItemDataFromModel(hardwareIndex, hardwareModel);
+
+                    if (productsView.softwareEditing){
+                        productsDialog.activeProductIndex = softwareIndex;
+                    }
+                    else{
+                        productsDialog.activeProductIndex = hardwareIndex;
+                    }
+                }
+
+                if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
+                    productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
+                }
+
+                productsDialog.bodyItem.started();
+            }
+
+            onFinished: {
+                if (buttonId == "Save"){
+                    productsDialog.bodyItem.updateModel()
+
+                    let equals = false;
+                    if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                        let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                        let firstModel = JSON.stringify(orderProductsModel)
+                        let secondModel = JSON.stringify(productsDialog.orderProductsModel);
+                        equals = _.isEqual(firstModel, secondModel);
+                    }
+
+                    if (!equals){
+                        undoRedoManager.beginChanges();
+
+                        if (productsDialog.activeProductIndex > -1){
+                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
+                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
+                            }
+
+                            let softwareId = "";
+                            let hardwareId = "";
+                            let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", productsDialog.activeProductIndex);
+                            if (categoryId === "Software"){
+                                softwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
+                                hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
+                            }
+                            else if (categoryId === "Hardware"){
+                                hardwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
+                                softwareId = productsDialog.orderProductsModel.GetData("PairId", productsDialog.activeProductIndex);
+                            }
+
+                            if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
+                                productsDialog.createProductsPair(softwareId, hardwareId);
+                            }
+
+                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                            orderProductsModel.Copy(productsDialog.orderProductsModel);
+                        }
+
+                        undoRedoManager.endChanges();
+                        updateGui();
                     }
                 }
             }
@@ -910,6 +932,9 @@ DocumentBase {
                 commandsModelLocal.SetData("Visible", true, index);
             }
         }
+
+        property bool softwareEditing: true;
+
         delegate: OrderProductCard {
             id: orderProductDelegate;
 
@@ -962,12 +987,16 @@ DocumentBase {
             }
 
             onPairEdited: {
-                let productModel = model.SoftwareProduct;
-                if (categoryId === "Hardware"){
-                    productModel = model.HardwareProduct;
+                productsView.activeProductIndex = model.index;
+
+                if (categoryId === "Software"){
+                    productsView.softwareEditing = true;
+                }
+                else{
+                    productsView.softwareEditing = false;
                 }
 
-
+                modalDialogManager.openDialog(productPairEditorDialog, {});
             }
         }
 
