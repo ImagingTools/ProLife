@@ -46,23 +46,22 @@ list(APPEND webdirs ${IMTCOREDIR}/Include/imtlicgui/Qml/imtlicgui)
 list(APPEND webdirs ${buildwebdir}/src/imtlicgui)
 
 # copy prolife qml from to
-list(APPEND webdirs ${RROLIFEDIR}/Include/prolifeqml/Resources/qml)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src)
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Qml)
 list(APPEND webdirs ${buildwebdir}/src)
 
-list(APPEND webdirs ${PROLIFEDIR}/Include/prolifeqml/Resources/qml/Translations)
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/Translations)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src)
 list(APPEND webdirs ${buildwebdir}/src)
 
 #list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
-list(APPEND webdirs ${PROLIFEDIR}/Include/prolifeqml/Resources/html)
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
 message("PROLIFEDIR ${PROLIFEDIR}")
 
 # copy dist from to
-list(APPEND webdirs ${PROLIFEDIR}/Include/prolifeqml/Resources/dist)
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/dist)
 #list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/dist)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/dist)
 list(APPEND webdirs ${buildwebdir}/Resources)
@@ -72,8 +71,8 @@ list(APPEND webdirs ${IMTCOREDIR}/Bin/web/build.web)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-if(DEFINED PRO_LIFE_WEB_COMPILE AND  PRO_LIFE_WEB_COMPILE)
-	add_compile_definitions(PRO_LIFE_WEB_COMPILE)
+if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
+	add_compile_definitions(WEB_COMPILE)
 	jqml_compile_web("${webdirs}", "${buildwebdir}")
 endif()
 

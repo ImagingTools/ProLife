@@ -29,6 +29,10 @@ include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
 include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
+if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
+	add_compile_definitions(WEB_COMPILE)
+endif()
+
 target_link_libraries(${PROJECT_NAME} iauth iservice)
 target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui ImtCoreLoc imtwidgets imtzip imtrest imtcrypt imt3dgui imtrepo imtstyle imtqml imtdb imtfile)
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtgql imtauthgql imtauthdb imtcom)

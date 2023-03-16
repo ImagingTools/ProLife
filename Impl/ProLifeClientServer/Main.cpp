@@ -22,7 +22,7 @@
 
 int main(int argc, char *argv[])
 {
-#ifdef PRO_LIFE_WEB_COMPILE
+#ifdef WEB_COMPILE
 	Q_INIT_RESOURCE(prolifeqmlWeb);
 #endif
 

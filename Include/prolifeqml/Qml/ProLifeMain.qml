@@ -120,5 +120,8 @@ Item {
         settingsProvider: settingsProviderLocal;
 
         applicationInfoProvider: applicationInfoProviderLocal;
+        Component.onCompleted: {
+            thumbnailDecorator.userManagementProvider.updateModel();
+        }
     }
 }
