@@ -47,68 +47,68 @@ QtObject {
         root.statusModel.SetData("Id", "Finished", index);
         root.statusModel.SetData("Name", qsTr("Finished"), index);
 
-        root.availableStates["None"] = ["None", "Accepted"]
-        root.availableStates["Accepted"] = ["Accepted", "InProgress", "Canceled", "OnHold"]
-        root.availableStates["InProgress"] = ["InProgress", "Finished"]
-        root.availableStates["Canceled"] = ["Canceled", "None"]
-        root.availableStates["OnHold"] = ["OnHold", "Accepted", "InProgress"]
-        root.availableStates["Finished"] = ["Finished"]
+//        root.availableStates["None"] = ["None", "Accepted"]
+//        root.availableStates["Accepted"] = ["Accepted", "InProgress", "Canceled", "OnHold"]
+//        root.availableStates["InProgress"] = ["InProgress", "Finished"]
+//        root.availableStates["Canceled"] = ["Canceled", "None"]
+//        root.availableStates["OnHold"] = ["OnHold", "Accepted", "InProgress"]
+//        root.availableStates["Finished"] = ["Finished"]
     }
 
-    function getStatusIndex(statusId){
-        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-            let id = root.statusModel.GetData("Id", i);
-            if (id === statusId){
-                return i;
-            }
-        }
+//    function getStatusIndex(statusId){
+//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
+//            let id = root.statusModel.GetData("Id", i);
+//            if (id === statusId){
+//                return i;
+//            }
+//        }
 
-        return -1;
-    }
+//        return -1;
+//    }
 
-    function getStatusName(statusId){
-        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-            let id = root.statusModel.GetData("Id", i);
-            if (id === statusId){
-                let name = root.statusModel.GetData("Name", i);
-                return name;
-            }
-        }
+//    function getStatusName(statusId){
+//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
+//            let id = root.statusModel.GetData("Id", i);
+//            if (id === statusId){
+//                let name = root.statusModel.GetData("Name", i);
+//                return name;
+//            }
+//        }
 
-        return "";
-    }
+//        return "";
+//    }
 
-    function getAvailableModel(statusId){
-        console.log("getAvailableModel", statusId);
-        let index = -1;
-        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-            let id = root.statusModel.GetData("Id", i);
-            if (id === statusId){
-                index = i;
-                break;
-            }
-        }
+//    function getAvailableModel(statusId){
+//        console.log("getAvailableModel", statusId);
+//        let index = -1;
+//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
+//            let id = root.statusModel.GetData("Id", i);
+//            if (id === statusId){
+//                index = i;
+//                break;
+//            }
+//        }
 
-        console.log("index", index);
+//        console.log("index", index);
 
-        if (index >= 0){
-            root.availableModel.Clear();
+//        if (index >= 0){
+//            root.availableModel.Clear();
 
-            let data = root.availableStates[statusId];
+//            let data = root.availableStates[statusId];
 
-            for (let i = 0; i < data.length; i++){
-                let id = data[i];
-                let name = root.getStatusName(id);
+//            for (let i = 0; i < data.length; i++){
+//                let id = data[i];
+//                let name = root.getStatusName(id);
 
-                let j = root.availableModel.InsertNewItem();
+//                let j = root.availableModel.InsertNewItem();
 
-                root.availableModel.SetData("Id", id, j);
-                root.availableModel.SetData("Name", name, j);
-            }
+//                root.availableModel.SetData("Id", id, j);
+//                root.availableModel.SetData("Name", name, j);
+//            }
 
-            return root.availableModel;
-        }
+//            return root.availableModel;
+//        }
 
-        return null;
-    }
+//        return null;
+//    }
 }

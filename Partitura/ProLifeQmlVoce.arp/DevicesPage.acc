@@ -159,7 +159,7 @@
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>OrderId</Value>
-                                <Value>ProductionStatus</Value>
+                                <Value>Status</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>
@@ -215,6 +215,8 @@
                                             <Value>Edit</Value>
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
+                                            <Value>Empty</Value>
+                                            <Value>ShowNew</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -231,6 +233,7 @@
                                             <Value>EditPermissions</Value>
                                             <Value>RemovePermissions</Value>
                                             <Value>OpenOrderPermissions</Value>
+                                            <Value>ShowNewPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -453,6 +456,50 @@
                                         <Values>
                                             <Value>EditSensor</Value>
                                             <Value>RemoveSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ShowNew" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="ShownPassword"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="ShowNew"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Show New"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ShowNewPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="ShowNew"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensors</Value>
+                                            <Value>EditSensor</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

@@ -9,7 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
-        <Element ComponentName="DeviceCollectionCommands" X="480" Y="299" Note=""/>
+        <Element ComponentName="DeviceCollectionCommands" X="475" Y="300" Note=""/>
         <Element ComponentName="DeviceCollectionController" X="150" Y="300" Note=""/>
         <Element ComponentName="DeviceCommands" X="800" Y="300" Note=""/>
         <Element ComponentName="DeviceController" X="1050" Y="300" Note=""/>
@@ -18,25 +18,6 @@
         <Element ComponentName="DeviceViewDataProvider" X="375" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DeviceCollectionCommands">
-            <PositionMap>
-                <Element ComponentName="CheckPermissionOr" X="625" Y="400" Note=""/>
-                <Element ComponentName="Commands" X="275" Y="225" Note=""/>
-                <Element ComponentName="CommandsJoiner" X="1025" Y="400" Note=""/>
-                <Element ComponentName="CommandsRepresentation" X="1050" Y="225" Note=""/>
-                <Element ComponentName="DeviceCollectionCommandsController" X="625" Y="75" Note=""/>
-                <Element ComponentName="Edit" X="450" Y="650" Note=""/>
-                <Element ComponentName="EditPermissions" X="975" Y="700" Note=""/>
-                <Element ComponentName="Empty" X="300" Y="600" Note=""/>
-                <Element ComponentName="New" X="125" Y="475" Note=""/>
-                <Element ComponentName="NewPermissions" X="775" Y="550" Note=""/>
-                <Element ComponentName="OpenOrder" X="200" Y="550" Note=""/>
-                <Element ComponentName="OpenOrderPermissions" X="850" Y="625" Note=""/>
-                <Element ComponentName="Remove" X="75" Y="400" Note=""/>
-                <Element ComponentName="RemovePermissions" X="725" Y="475" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="775" Y="425" Note=""/>
@@ -54,6 +35,27 @@
         </EmbededRegistry>
         <EmbededRegistry Id="Permissions">
             <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DeviceCollectionCommands">
+            <PositionMap>
+                <Element ComponentName="CheckPermissionOr" X="625" Y="400" Note=""/>
+                <Element ComponentName="Commands" X="275" Y="225" Note=""/>
+                <Element ComponentName="CommandsJoiner" X="1025" Y="400" Note=""/>
+                <Element ComponentName="CommandsRepresentation" X="1050" Y="225" Note=""/>
+                <Element ComponentName="DeviceCollectionCommandsController" X="625" Y="75" Note=""/>
+                <Element ComponentName="Edit" X="450" Y="650" Note=""/>
+                <Element ComponentName="EditPermissions" X="975" Y="700" Note=""/>
+                <Element ComponentName="Empty" X="300" Y="600" Note=""/>
+                <Element ComponentName="New" X="125" Y="475" Note=""/>
+                <Element ComponentName="NewPermissions" X="775" Y="550" Note=""/>
+                <Element ComponentName="OpenOrder" X="200" Y="550" Note=""/>
+                <Element ComponentName="OpenOrderPermissions" X="850" Y="625" Note=""/>
+                <Element ComponentName="Remove" X="75" Y="400" Note=""/>
+                <Element ComponentName="RemovePermissions" X="725" Y="475" Note=""/>
+                <Element ComponentName="ShowNew" X="550" Y="725" Note=""/>
+                <Element ComponentName="ShowNewPermissions" X="1075" Y="775" Note=""/>
+            </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

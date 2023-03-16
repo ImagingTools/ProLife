@@ -69,7 +69,30 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
 		dataModel->SetData("Description", description);
-		dataModel->SetData("OrderStatus", status);
+
+		switch (status){
+		case prolifedata::IOrderInfo::OrderStatus::OS_NONE:
+			dataModel->SetData("OrderStatus", "None");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_CREATED:
+			dataModel->SetData("OrderStatus", "Created");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_IN_PROGRESS:
+			dataModel->SetData("OrderStatus", "InProgress");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_CANCELED:
+			dataModel->SetData("OrderStatus", "Canceled");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD:
+			dataModel->SetData("OrderStatus", "OnHold");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_FINISHED:
+			dataModel->SetData("OrderStatus", "Finished");
+			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_CLOSED:
+			dataModel->SetData("OrderStatus", "Closed");
+			break;
+		}
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
@@ -237,7 +260,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		QByteArray orderId;
 		if (itemModel.ContainsKey("OrderId")){
-			orderId = itemModel.GetData("OrderId").toByteArray().toLower();
+			orderId = itemModel.GetData("OrderId").toByteArray().trimmed();
 		}
 
 		if (itemModel.ContainsKey("Name")){
@@ -283,9 +306,27 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		}
 
 		if (itemModel.ContainsKey("OrderStatus")){
-			int status = itemModel.GetData("OrderStatus").toInt();
-			if (status >= 0){
-				orderPtr->SetOrderStatus((prolifedata::IOrderInfo::OrderStatus) status);
+			QString status = itemModel.GetData("OrderStatus").toString();
+			if (status == "None"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_NONE);
+			}
+			else if (status == "Created"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CREATED);
+			}
+			else if (status == "InProgress"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_IN_PROGRESS);
+			}
+			else if (status == "Canceled"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CANCELED);
+			}
+			else if (status == "OnHold"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD);
+			}
+			else if (status == "Finished"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_FINISHED);
+			}
+			else if (status == "Closed"){
+				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CLOSED);
 			}
 		}
 

@@ -93,12 +93,21 @@ DocumentBase {
         onModelUpdated: {
             if (devicesList.collectionModel != null){
 
-                let newIndex = devicesList.collectionModel.InsertNewItem(0);
+//                let newIndex = devicesList.collectionModel.InsertNewItem(0);
 
-                devicesList.collectionModel.SetData("Id", "", newIndex);
-                devicesList.collectionModel.SetData("Name", "New Device", newIndex);
+//                devicesList.collectionModel.SetData("Id", "", newIndex);
+//                devicesList.collectionModel.SetData("Name", "New Device", newIndex);
 
                 orderEditorContainer.devicesModel = devicesList.collectionModel;
+
+                if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+                    let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+                    let statusModel = stateMachine.getAvailableModel(status);
+                    orderStatusCB.model = statusModel;
+                }
+                else{
+                    orderStatusCB.model = orderStatus.statusModel;
+                }
 
                 orderEditorContainer.updateGui();
                 undoRedoManager.registerModel(documentModel);
@@ -143,7 +152,7 @@ DocumentBase {
     UndoRedoManager {
         id: undoRedoManager;
 
-        commandsId: orderEditorContainer.commandsId;
+        commandsId: orderEditorContainer.documentUuid;
         documentBase: orderEditorContainer;
 
         onModelStateChanged: {
@@ -195,10 +204,20 @@ DocumentBase {
         }
 
         orderStatusCB.currentIndex = -1;
-        if (documentModel.ContainsKey("OrderStatus")){
-            let orderStatus = documentModel.GetData("OrderStatus");
-
-            orderStatusCB.currentIndex = orderStatus;
+        if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+            let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+            console.log("status",  status)
+            let statusModel = stateMachine.getAvailableModel(status);
+            console.log("statusModel",  statusModel.toJSON())
+            if (statusModel){
+                for (let i = 0; i < statusModel.GetItemsCount(); i++){
+                    let id = statusModel.GetData("Id", i);
+                    if (id === status){
+                        orderStatusCB.currentIndex = i;
+                        break;
+                    }
+                }
+            }
         }
 
         if (documentModel.ContainsKey("OrderProducts")){
@@ -226,24 +245,43 @@ DocumentBase {
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("Name", instanceIdInput.text);
 
-        console.log("customerCB.currentIndex", customerCB.currentIndex);
         let selectedAccountId = "";
         if (customerCB.currentIndex >= 0){
             selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
-
-            console.log("customerCB.model", customerCB.model.toJSON());
-
-            console.log("selectedAccountId", selectedAccountId);
         }
         documentModel.SetData("CustomerId", selectedAccountId);
 
-        if (orderStatusCB.currentIndex > -1){
-            documentModel.SetData("OrderStatus", orderStatusCB.currentIndex);
+        if (orderStatusCB.currentIndex >= 0){
+            let selectedStatus = orderStatusCB.model.GetData("Id", orderStatusCB.currentIndex);
+            orderEditorContainer.documentModel.SetData("OrderStatus", selectedStatus);
+        }
+        else{
+            orderEditorContainer.documentModel.SetData("OrderStatus", "");
         }
 
         documentModel.SetData("Description", descriptionInput.text);
 
         undoRedoManager.endChanges();
+    }
+
+    OrderStatus {
+        id: orderStatus;
+    }
+
+    StateMachine {
+        id: stateMachine;
+
+        Component.onCompleted: {
+            stateMachine.registerModel(orderStatus.statusModel);
+
+            stateMachine.addState("None", ["None", "Created"]);
+            stateMachine.addState("Created", ["Created", "InProgress", "Canceled", "OnHold"]);
+            stateMachine.addState("InProgress", ["InProgress", "OnHold", "Finished"]);
+            stateMachine.addState("Canceled", ["Canceled", "None", "Closed"]);
+            stateMachine.addState("OnHold", ["OnHold", "Created", "InProgress"]);
+            stateMachine.addState("Finished", ["Finished", "Closed"]);
+            stateMachine.addState("Closed", ["Closed"]);
+        }
     }
 
     Rectangle {
@@ -300,7 +338,7 @@ DocumentBase {
 
                 borderColor: Style.iconColorOnSelected;
 
-                textInputValidator: regexValid;
+//                textInputValidator: regexValid;
 
                 onEditingFinished: {
                     let currentId = documentModel.GetData("OrderId");
@@ -379,59 +417,61 @@ DocumentBase {
             }
         }
 
+
+
         Item {
             width: parent.width;
             height: titleOrderStatus.height + orderStatusCB.height;
 
-            TreeItemModel {
-                id: orderStatusModel;
+//            TreeItemModel {
+//                id: orderStatusModel;
 
-                Component.onCompleted: {
-                    let index = orderStatusModel.InsertNewItem();
+//                Component.onCompleted: {
+//                    let index = orderStatusModel.InsertNewItem();
 
-                    // 0
-                    orderStatusModel.SetData("Id", "None", index);
-                    orderStatusModel.SetData("Name", qsTr("None"), index);
+//                    // 0
+//                    orderStatusModel.SetData("Id", "None", index);
+//                    orderStatusModel.SetData("Name", qsTr("None"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 1
-                    orderStatusModel.SetData("Id", "Created", index);
-                    orderStatusModel.SetData("Name", qsTr("Created"), index);
+//                    // 1
+//                    orderStatusModel.SetData("Id", "Created", index);
+//                    orderStatusModel.SetData("Name", qsTr("Created"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 2
-                    orderStatusModel.SetData("Id", "InProgress", index);
-                    orderStatusModel.SetData("Name", qsTr("In Progress"), index);
+//                    // 2
+//                    orderStatusModel.SetData("Id", "InProgress", index);
+//                    orderStatusModel.SetData("Name", qsTr("In Progress"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 3
-                    orderStatusModel.SetData("Id", "Canceled", index);
-                    orderStatusModel.SetData("Name", qsTr("Canceled"), index);
+//                    // 3
+//                    orderStatusModel.SetData("Id", "Canceled", index);
+//                    orderStatusModel.SetData("Name", qsTr("Canceled"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 4
-                    orderStatusModel.SetData("Id", "OnHold", index);
-                    orderStatusModel.SetData("Name", qsTr("On Hold"), index);
+//                    // 4
+//                    orderStatusModel.SetData("Id", "OnHold", index);
+//                    orderStatusModel.SetData("Name", qsTr("On Hold"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 5
-                    orderStatusModel.SetData("Id", "Finished", index);
-                    orderStatusModel.SetData("Name", qsTr("Finished"), index);
+//                    // 5
+//                    orderStatusModel.SetData("Id", "Finished", index);
+//                    orderStatusModel.SetData("Name", qsTr("Finished"), index);
 
-                    index = orderStatusModel.InsertNewItem();
+//                    index = orderStatusModel.InsertNewItem();
 
-                    // 6
-                    orderStatusModel.SetData("Id", "Closed", index);
-                    orderStatusModel.SetData("Name", qsTr("Closed"), index);
+//                    // 6
+//                    orderStatusModel.SetData("Id", "Closed", index);
+//                    orderStatusModel.SetData("Name", qsTr("Closed"), index);
 
-                    orderStatusCB.model = orderStatusModel;
-                }
-            }
+//                    orderStatusCB.model = orderStatusModel;
+//                }
+//            }
 
             Text {
                 id: titleOrderStatus;
@@ -453,8 +493,28 @@ DocumentBase {
 
                 radius: 3;
 
+                property bool blockingIndexChanged: false;
+
                 onCurrentIndexChanged: {
-                    updateModel();
+                    if (orderStatusCB.blockingIndexChanged){
+                        return;
+                    }
+
+                    if (orderStatusCB.currentIndex >= 0){
+                        orderEditorContainer.updateModel();
+
+                        let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+                        let statusModel = stateMachine.getAvailableModel(status);
+
+                        orderStatusCB.model = statusModel;
+
+                        orderStatusCB.blockingIndexChanged = true;
+                        orderStatusCB.currentIndex = 0;
+                        orderStatusCB.blockingIndexChanged = false;
+                    }
+                    else{
+                        orderStatusCB.model = orderStatus.statusModel;
+                    }
                 }
             }
         }

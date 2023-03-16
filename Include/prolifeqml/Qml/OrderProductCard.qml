@@ -68,7 +68,7 @@ Rectangle {
         anchors.top: parent.top;
         anchors.topMargin: 10;
 
-        height: 20;
+        height: 13;
 
         color: "transparent";
 
@@ -96,7 +96,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter;
             anchors.right: parent.right;
 
-            height: 30;
+            height: headerBlock.height;
 
             onCommandActivated: {
                 if (commandId == "Remove"){

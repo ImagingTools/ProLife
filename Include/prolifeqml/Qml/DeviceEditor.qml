@@ -63,10 +63,7 @@ DocumentBase {
 
                 if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
                     let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                    let statusModel = productionStatus.getAvailableModel(status);
-
-                    console.log("statusModel", statusModel.toJSON());
-
+                    let statusModel = stateMachine.getAvailableModel(status);
                     statusCB.model = statusModel;
                 }
                 else{
@@ -84,6 +81,21 @@ DocumentBase {
         id: productionStatus;
     }
 
+    StateMachine {
+        id: stateMachine;
+
+        Component.onCompleted: {
+            stateMachine.registerModel(productionStatus.statusModel);
+
+            stateMachine.addState("None", ["None", "Accepted"]);
+            stateMachine.addState("Accepted", ["Accepted", "InProgress", "Canceled", "OnHold"]);
+            stateMachine.addState("InProgress", ["InProgress", "Finished"]);
+            stateMachine.addState("Canceled", ["Canceled", "None"]);
+            stateMachine.addState("OnHold", ["OnHold", "Accepted", "InProgress"]);
+            stateMachine.addState("Finished", ["Finished"]);
+        }
+    }
+
     onCommandsIdChanged: {
         console.log("DeviceEditor onCommandsIdChanged", commandsId);
     }
@@ -91,7 +103,7 @@ DocumentBase {
     UndoRedoManager {
         id: undoRedoManager;
 
-        commandsId: deviceEditorContainer.commandsId;
+        commandsId: deviceEditorContainer.documentUuid;
         documentBase: deviceEditorContainer;
         commandsDelegate: deviceEditorContainer.commandsDelegate;
 
@@ -131,7 +143,8 @@ DocumentBase {
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             console.log("status", status);
-            let statusModel = productionStatus.getAvailableModel(status);
+//            let statusModel = productionStatus.getAvailableModel(status);
+            let statusModel = stateMachine.getAvailableModel(status);
             if (statusModel){
                 console.log("statusModel", statusModel.toJSON());
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -471,7 +484,9 @@ DocumentBase {
                                 deviceEditorContainer.updateModel();
 
                                 let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                let statusModel = productionStatus.getAvailableModel(status);
+//                                let statusModel = productionStatus.getAvailableModel(status);
+
+                                let statusModel = stateMachine.getAvailableModel(status);
 
                                 statusCB.model = statusModel;
                                 statusCB.updateIcon(status);

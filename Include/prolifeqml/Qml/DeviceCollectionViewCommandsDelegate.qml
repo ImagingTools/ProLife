@@ -20,6 +20,8 @@ CollectionViewCommandsDelegateBase {
 //        }
 //    }
 
+    property bool filterByNewActive: false;
+
     onSelectionChanged: {
         let indexes = container.tableData.getSelectedIndexes();
         let isEnabled = indexes.length === 1;
@@ -42,6 +44,33 @@ CollectionViewCommandsDelegateBase {
             if (orderId !== ""){
                 mainDocumentManager.openDocument("Orders", orderId);
             }
+        }
+        else if (commandId === "ShowNew"){
+            let showNewStr = qsTr("Show New");
+            let showAllStr = qsTr("Show All");
+
+            let filterModel = container.collectionViewBase.modelFilter;
+            if (!container.filterByNewActive){
+                filterModel.SetData("TextFilter", "None");
+
+                container.commandsProvider.setCommandName("ShowNew", showAllStr);
+                container.commandsProvider.setCommandIcon("ShowNew", "HiddenPassword");
+            }
+            else{
+                filterModel.SetData("TextFilter", "");
+
+                container.commandsProvider.setCommandName("ShowNew", showNewStr);
+                container.commandsProvider.setCommandIcon("ShowNew", "ShownPassword");
+            }
+
+            container.filterByNewActive = !container.filterByNewActive;
+
+            container.collectionViewBase.updateGui();
+
+//            console.log("container.collectionViewBase" ,container.collectionViewBase);
+//            console.log("commands" ,container.collectionViewBase.commands);
+
+//            container.collectionViewBase.commands.updateItemsModel();
         }
     }
 }
