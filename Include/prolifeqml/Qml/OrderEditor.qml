@@ -293,8 +293,11 @@ DocumentBase {
     Column {
         id: bodyColumn;
 
+        anchors.top: parent.top;
+//        anchors.bottom: productsView.top;
+
         width: 500;
-        height: childrenRect.height;
+//        height: childrenRect.height;
 
         spacing: 15;
 
@@ -422,56 +425,6 @@ DocumentBase {
         Item {
             width: parent.width;
             height: titleOrderStatus.height + orderStatusCB.height;
-
-//            TreeItemModel {
-//                id: orderStatusModel;
-
-//                Component.onCompleted: {
-//                    let index = orderStatusModel.InsertNewItem();
-
-//                    // 0
-//                    orderStatusModel.SetData("Id", "None", index);
-//                    orderStatusModel.SetData("Name", qsTr("None"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 1
-//                    orderStatusModel.SetData("Id", "Created", index);
-//                    orderStatusModel.SetData("Name", qsTr("Created"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 2
-//                    orderStatusModel.SetData("Id", "InProgress", index);
-//                    orderStatusModel.SetData("Name", qsTr("In Progress"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 3
-//                    orderStatusModel.SetData("Id", "Canceled", index);
-//                    orderStatusModel.SetData("Name", qsTr("Canceled"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 4
-//                    orderStatusModel.SetData("Id", "OnHold", index);
-//                    orderStatusModel.SetData("Name", qsTr("On Hold"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 5
-//                    orderStatusModel.SetData("Id", "Finished", index);
-//                    orderStatusModel.SetData("Name", qsTr("Finished"), index);
-
-//                    index = orderStatusModel.InsertNewItem();
-
-//                    // 6
-//                    orderStatusModel.SetData("Id", "Closed", index);
-//                    orderStatusModel.SetData("Name", qsTr("Closed"), index);
-
-//                    orderStatusCB.model = orderStatusModel;
-//                }
-//            }
 
             Text {
                 id: titleOrderStatus;

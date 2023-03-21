@@ -27,22 +27,15 @@ CollectionView {
     }
 
     function collectionUpdated(){
-        let counter = 0;
-        let elementsModel = container.baseCollectionView.table.elements;
-        for (let i = 0; i < elementsModel.GetItemsCount(); i++){
-            let status = elementsModel.GetData("Status", i);
-            if (status === "None"){
-                counter++;
+        let notificationModel = container.baseCollectionView.commands.notificationModel;
+        if (notificationModel){
+            let counter = notificationModel.GetData("NewCount");
+            if (counter > 0){
+                container.commandsProvider.setCommandNotification("ShowNew", counter);
             }
-        }
-
-        if (counter > 0){
-            container.commandsProvider.setCommandNotification("ShowNew", counter);
-        }
-        else{
-            container.commandsProvider.setCommandNotification("ShowNew", "");
-
-//            Events.sendEvent("DevicesCommandActivated", "ShowNew");
+            else{
+                container.commandsProvider.setCommandNotification("ShowNew", "");
+            }
         }
     }
 }

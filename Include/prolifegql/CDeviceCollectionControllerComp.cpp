@@ -3,6 +3,7 @@
 
 // ACF includes
 #include <idoc/IDocumentMetaInfo.h>
+#include <iprm/CTextParam.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -17,6 +18,42 @@ namespace prolifegql
 // protected methods
 
 // reimplemented (imtguigql::CObjectCollectionControllerCompBase)
+
+imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	imtbase::CTreeItemModel* resultModelPtr = BaseClass::ListObjects(gqlRequest, errorMessage);
+	if (resultModelPtr == nullptr){
+		return nullptr;
+	}
+
+	iprm::CTextParam textParam;
+	textParam.SetText("none");
+
+	iprm::CParamsSet objectFilter;
+	objectFilter.SetEditableParameter("Status", &textParam);
+
+	iprm::CParamsSet filterParams;
+	filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
+
+	imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParams);
+
+	if (resultModelPtr->ContainsKey("data")){
+		imtbase::CTreeItemModel* dataModelPtr = resultModelPtr->GetTreeItemModel("data");
+		if (dataModelPtr != nullptr){
+			if (dataModelPtr->ContainsKey("notification")){
+				imtbase::CTreeItemModel* notificationModelPtr = dataModelPtr->GetTreeItemModel("notification");
+				if (notificationModelPtr != nullptr){
+					notificationModelPtr->SetData("NewCount", collectionIds.count());
+				}
+			}
+		}
+	}
+
+	return resultModelPtr;
+}
+
 
 bool CDeviceCollectionControllerComp::SetupGqlItem(
 		const imtgql::CGqlRequest& gqlRequest,

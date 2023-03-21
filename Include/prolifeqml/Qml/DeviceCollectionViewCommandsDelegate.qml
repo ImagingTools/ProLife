@@ -51,13 +51,21 @@ CollectionViewCommandsDelegateBase {
 
             let filterModel = container.collectionViewBase.modelFilter;
             if (!container.filterByNewActive){
-                filterModel.SetData("TextFilter", "None");
+                let objectFilter = filterModel.GetData("ObjectFilter");
+                if (!objectFilter){
+                    objectFilter = filterModel.AddTreeModel("ObjectFilter")
+                }
+
+                objectFilter.SetData("Key", "Status");
+                objectFilter.SetData("Value", "none");
 
                 container.commandsProvider.setCommandName("ShowNew", showAllStr);
                 container.commandsProvider.setCommandIcon("ShowNew", "HiddenPassword");
             }
             else{
-                filterModel.SetData("TextFilter", "");
+                if (filterModel.ContainsKey("ObjectFilter")){
+                    filterModel.RemoveData("ObjectFilter");
+                }
 
                 container.commandsProvider.setCommandName("ShowNew", showNewStr);
                 container.commandsProvider.setCommandIcon("ShowNew", "ShownPassword");
@@ -67,10 +75,6 @@ CollectionViewCommandsDelegateBase {
 
             container.collectionViewBase.updateGui();
 
-//            console.log("container.collectionViewBase" ,container.collectionViewBase);
-//            console.log("commands" ,container.collectionViewBase.commands);
-
-//            container.collectionViewBase.commands.updateItemsModel();
         }
     }
 }

@@ -33,7 +33,12 @@ Item {
     }
 
     function updateAllModels(){
-        console.log("settingsProviderLocal.updateModel");
+        if (thumbnailDecorator.documentManager.dirtyDocumentsExists()){
+            console.log("dirtyDocumentsExists");
+
+            return;
+        }
+
         settingsProviderLocal.updateModel();
 
         console.log("thumbnailDecorator.updateModels");
