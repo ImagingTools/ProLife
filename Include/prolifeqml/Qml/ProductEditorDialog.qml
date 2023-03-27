@@ -8,6 +8,8 @@ Dialog {
 
     width: 500;
 
+    property TreeItemModel productModel: TreeItemModel{}
+
     property TreeItemModel documentModel: TreeItemModel{}
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
@@ -83,23 +85,43 @@ Dialog {
 
     contentComp: Component {
         id: installationEditor;
-        InstallationEditor {
 
+        HardwareProductEditor {
             licensesModel: root.licensesModel;
             productsModel: root.productsModel;
             orderProductsModel: root.orderProductsModel;
-            activeProductIndex: root.activeProductIndex;
+//            activeProductIndex: root.activeProductIndex;
             orderId: root.orderId;
             orderUuid: root.orderUuid;
             width: root.width - 100;
             height: 350;
 
-            rootItem: root;
+            productModel: root.productModel;
 
-            onActiveProductIndexChanged: {
-                root.activeProductIndex = activeProductIndex;
-            }
+//            rootItem: root;
+
+//            onActiveProductIndexChanged: {
+//                root.activeProductIndex = activeProductIndex;
+//            }
         }
+
+//        InstallationEditor {
+
+//            licensesModel: root.licensesModel;
+//            productsModel: root.productsModel;
+//            orderProductsModel: root.orderProductsModel;
+//            activeProductIndex: root.activeProductIndex;
+//            orderId: root.orderId;
+//            orderUuid: root.orderUuid;
+//            width: root.width - 100;
+//            height: 350;
+
+//            rootItem: root;
+
+//            onActiveProductIndexChanged: {
+//                root.activeProductIndex = activeProductIndex;
+//            }
+//        }
     }
 }//Container
 

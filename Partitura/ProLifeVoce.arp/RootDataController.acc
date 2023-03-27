@@ -137,6 +137,7 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
+        <Component ExportedId="BackupSettings" ComponentId="SettingsController/BackupSettings"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
         <Component ExportedId="GraphQLClientEngine" ComponentId="GraphQLClientEngine"/>

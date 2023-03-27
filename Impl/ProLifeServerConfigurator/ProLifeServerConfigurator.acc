@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description></Description>
+    <Keywords></Keywords>
+    <ElementsList>
+        <Element Id="Application" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife Server Configurator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Application/ObserverQml</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MainQmlPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value=":/qml/ProLife/ProLifeServerConfigurator.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2022"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Settings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Settings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Settings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LogFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="LogPath">
+                        <Data IsEnabled="true" Value="ProLifeClientLog.txt"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="1"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LogSystemLocation"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LogSystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LogLocationType">
+                        <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProLifeLocalization" PackageId="ProLifeVoce" ComponentId="ProLifeLocalization">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>en_US</Value>
+                                <Value>de_DE</Value>
+                                <Value>ru_RU</Value>
+                                <Value>pl_PL</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Settings" PackageId="" ComponentId="Settings">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TextFileLog" PackageId="FilePck" ComponentId="TextFileLog">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LogFile" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LogFilePath"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseCategory" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseCode" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseTimeStamp" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="Representation">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="BackupSettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Backup"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Backup"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>BackupSettingsRepresentationController</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="BackupSettingsRepresentationController" PackageId="ImtAppPck" ComponentId="BackupSettingsRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Backup"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DatabaseAccessSettingsRepresentation" PackageId="ImtCorePck" ComponentId="DatabaseAccessSettingsRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseNameSource" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HostSource" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Database"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Database"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PasswordSource" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/DatabaseInput.qml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PortSource" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsIntegerInput.qml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UsernameSource" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DatabaseSettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Database"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Database"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DatabaseAccessSettingsRepresentation</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="InstanceMaskRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="InstanceMask"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Instance Mask"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="LisaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="LisaUrl"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Lisa URL"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PermissionsChecker" PackageId="ImtAuthPck" ComponentId="CheckPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerPortRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="ServerPort"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Server Port"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerSettingsPermission" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Server"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewServerSettings</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerSettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ServerSettingsPermission"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Server"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Server"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>InstanceMaskRepresentation</Value>
+                                            <Value>LisaUrlRepresentation</Value>
+                                            <Value>ServerPortRepresentation</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="PermissionsChecker"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces/>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="Settings">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="ServerPageData" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="prolife"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerPageRepresentation" PackageId="ProLifeQmlVoce" ComponentId="ServerPageRepresentation">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imod::IModel" ComponentId="ServerPageData"/>
+                    <Interface InterfaceId="imtbase::IRepresentationController" ComponentId="ServerPageRepresentation"/>
+                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="ServerPageData"/>
+                    <Interface InterfaceId="iser::ISerializable" ComponentId="ServerPageData"/>
+                    <Interface InterfaceId="istd::IChangeable" ComponentId="ServerPageData"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="ServerPageRepresentation"/>
+                </ExportedInterfaces>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
+    </EmbeddedRegistriesList>
+    <ExportedInterfaces>
+        <Interface InterfaceId="ibase::IApplication" ComponentId="Application"/>
+    </ExportedInterfaces>
+    <ExportedComponents/>
+</Acf>

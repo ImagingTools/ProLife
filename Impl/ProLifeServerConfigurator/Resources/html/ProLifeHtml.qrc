@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/html">
+        <file alias="index.html">html/index.html</file>
+        <file alias="Enums.js">html/Enums.js</file>
+        <file alias="GraphQLRequest.js">html/GraphQLRequest.js</file>
+        <file alias="modernizr-custom.js">html/modernizr-custom.js</file>
+        <file alias="qml.prolife.js">html/qml.prolife.js</file>
+    </qresource>
+</RCC>

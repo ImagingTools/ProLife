@@ -10,6 +10,7 @@
     <qresource prefix="/qml">
         <file alias="Acf/Style.qml">Qml/Acf/Style.qml</file>
         <file alias="ProLife/ProLifeMain.qml">Qml/ProLifeMain.qml</file>
+	<file alias="ProLife/ProLifeServerConfigurator.qml">Qml/ProLifeServerConfigurator.qml</file>
         <file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
         <file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
         <file alias="ProLife/DeviceEditor.qml">Qml/DeviceEditor.qml</file>
@@ -29,6 +30,8 @@
 	<file alias="ProLife/SoftwareProductCard.qml">Qml/SoftwareProductCard.qml</file>
 	<file alias="ProLife/HardwareProductCard.qml">Qml/HardwareProductCard.qml</file>
 	<file alias="ProLife/OrderProductCard.qml">Qml/OrderProductCard.qml</file>
+	<file alias="ProLife/HardwareProductEditor.qml">Qml/HardwareProductEditor.qml</file>
+	<file alias="ProLife/SoftwareProductEditor.qml">Qml/SoftwareProductEditor.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>
@@ -41,7 +44,6 @@
         <file alias="ProLifeFeatures">Resources/Features/ProLifeFeatures.xml</file>
     </qresource>
     <qresource prefix="/ProLife">
-        <file alias="ProductEditor.qml">Qml/ProductEditor.qml</file>
         <file alias="ProductEditorCommandsDelegate.qml">Qml/ProductEditorCommandsDelegate.qml</file>
         <file alias="ProductCollectionView.qml">Qml/ProductCollectionView.qml</file>
     </qresource>

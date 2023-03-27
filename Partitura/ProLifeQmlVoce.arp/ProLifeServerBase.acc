@@ -43,11 +43,11 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/BackupSettings"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DatabaseAccessSettings"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="StartTime" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="14:00"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -266,6 +266,11 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TimeStampFileNameParam" PackageId="FilePck" ComponentId="TimeStampFileNameParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="WebResourcesServlet" PackageId="ImtRestPck" ComponentId="HttpFileProviderBasedServlet">

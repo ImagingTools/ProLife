@@ -2,19 +2,25 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DatabaseAccessSettings" X="575" Y="525" Note=""/>
-        <Element ComponentName="FileAutoPersistence" X="600" Y="125" Note=""/>
-        <Element ComponentName="LisaUrlConnection" X="325" Y="525" Note=""/>
-        <Element ComponentName="Mask" X="125" Y="525" Note=""/>
-        <Element ComponentName="Preferences" X="600" Y="300" Note=""/>
-        <Element ComponentName="ServerPort" X="800" Y="525" Note=""/>
-        <Element ComponentName="WebSocketServerPort" X="1025" Y="525" Note=""/>
+        <Element ComponentName="Backup" X="1075" Y="350" Note=""/>
+        <Element ComponentName="BackupFilePath" X="1075" Y="650" Note=""/>
+        <Element ComponentName="BackupSettings" X="1075" Y="525" Note=""/>
+        <Element ComponentName="Database" X="150" Y="350" Note=""/>
+        <Element ComponentName="DatabaseAccessSettings" X="125" Y="525" Note=""/>
+        <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
+        <Element ComponentName="LisaUrlConnection" X="500" Y="525" Note=""/>
+        <Element ComponentName="Mask" X="325" Y="525" Note=""/>
+        <Element ComponentName="Preferences" X="575" Y="200" Note=""/>
+        <Element ComponentName="Server" X="575" Y="350" Note=""/>
+        <Element ComponentName="ServerPort" X="675" Y="525" Note=""/>
+        <Element ComponentName="SystemLocation" X="1075" Y="775" Note=""/>
+        <Element ComponentName="WebSocketServerPort" X="850" Y="525" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

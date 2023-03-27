@@ -8,11 +8,8 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CompactXmlFileSerializer" X="225" Y="200" Note=""/>
-        <Element ComponentName="DeviceDatabaseDelegate" X="600" Y="200" Note=""/>
-        <Element ComponentName="DeviceInfo" X="950" Y="200" Note=""/>
-        <Element ComponentName="Devices" X="600" Y="450" Note=""/>
-        <Element ComponentName="SelectionConstraints" X="250" Y="400" Note=""/>
+        <Element ComponentName="CopyApp" X="625" Y="325" Note=""/>
+        <Element ComponentName="VersionInfo" X="625" Y="175" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

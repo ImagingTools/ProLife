@@ -60,7 +60,7 @@ istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSql
 	if (record.contains(*m_documentContentColumnIdAttrPtr)){
 		QByteArray documentContent = record.value(qPrintable(*m_documentContentColumnIdAttrPtr)).toByteArray();
 
-		if (ReadDataFromMemory(documentContent, *documentPtr)){
+		if (ReadDataFromMemory("", documentContent, *documentPtr)){
 			return documentPtr.PopPtr();
 		}
 	}
@@ -85,7 +85,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
-		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
+		if (WriteDataToMemory("", *workingDocumentPtr, documentContent)){
 			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(orderInfoPtr != nullptr);
 			if (orderInfoPtr == nullptr){
@@ -125,7 +125,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	QByteArray retVal;
 
 	QByteArray documentContent;
-	if (WriteDataToMemory(object, documentContent)){
+	if (WriteDataToMemory("", object, documentContent)){
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::CIdentifiableOrderInfo*>(&object);
 		Q_ASSERT(orderInfoPtr != nullptr);

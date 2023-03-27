@@ -2,18 +2,23 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="975" Y="625" Note=""/>
-        <Element ComponentName="InstanceMaskRepresentation" X="175" Y="625" Note=""/>
-        <Element ComponentName="LisaUrlRepresentation" X="550" Y="625" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="250" Y="200" Note=""/>
-        <Element ComponentName="ServerSettingsPermission" X="900" Y="200" Note=""/>
-        <Element ComponentName="ServerSettingsRepresentation" X="575" Y="400" Note=""/>
+        <Element ComponentName="BackupSettingsRepresentation" X="1025" Y="275" Note=""/>
+        <Element ComponentName="BackupSettingsRepresentationController" X="1000" Y="425" Note=""/>
+        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="600" Y="425" Note=""/>
+        <Element ComponentName="DatabaseSettingsRepresentation" X="700" Y="275" Note=""/>
+        <Element ComponentName="InstanceMaskRepresentation" X="175" Y="375" Note=""/>
+        <Element ComponentName="LisaUrlRepresentation" X="175" Y="475" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="100" Y="150" Note=""/>
+        <Element ComponentName="ServerPortRepresentation" X="175" Y="575" Note=""/>
+        <Element ComponentName="ServerSettingsPermission" X="325" Y="150" Note=""/>
+        <Element ComponentName="ServerSettingsRepresentation" X="400" Y="275" Note=""/>
+        <Element ComponentName="SettingsRepresentation" X="600" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -190,6 +190,7 @@
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ServerSettingsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
+                    <Component ExportedId="BackupSettings" ComponentId="ServerSettings/BackupSettings"/>
                     <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
                     <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettings/LisaUrlConnection"/>
                     <Component ExportedId="Preferences" ComponentId="ServerSettings/Preferences"/>
@@ -300,6 +301,7 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationSettings"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="BackupSettings" ComponentId="ServerSettingsController/BackupSettings"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettingsController/LisaUrlConnection"/>
         <Component ExportedId="Preferences" ComponentId="ServerSettingsController/Preferences"/>

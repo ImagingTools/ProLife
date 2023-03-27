@@ -48,7 +48,7 @@ istd::IChangeable* CDeviceDatabaseDelegateComp::CreateObjectFromRecord(const QSq
 	if (record.contains(*m_documentContentColumnIdAttrPtr)){
 		QByteArray documentContent = record.value(qPrintable(*m_documentContentColumnIdAttrPtr)).toByteArray();
 
-		if (ReadDataFromMemory(documentContent, *documentPtr)){
+		if (ReadDataFromMemory("", documentContent, *documentPtr)){
 			return documentPtr.PopPtr();
 		}
 	}
@@ -73,7 +73,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
-		if (WriteDataToMemory(*workingDocumentPtr, documentContent)){
+		if (WriteDataToMemory("", *workingDocumentPtr, documentContent)){
 			const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(deviceInfoPtr != nullptr);
 			if (deviceInfoPtr == nullptr){
@@ -110,7 +110,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 	QByteArray retVal;
 
 	QByteArray documentContent;
-	if (WriteDataToMemory(object, documentContent)){
+	if (WriteDataToMemory("", object, documentContent)){
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(&object);
 		Q_ASSERT(deviceInfoPtr != nullptr);

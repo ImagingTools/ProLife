@@ -75,7 +75,7 @@ Rectangle {
         width: card.width / 2 - 15;
 
         licensesProvider: card.licensesProvider;
-//        commandsVisible: true;
+        commandsVisible: true;
 
         onEdited: {
             card.softwareEdited();
@@ -93,7 +93,7 @@ Rectangle {
 
         devicesModel: card.devicesModel;
 
-//        commandsVisible: true;
+        commandsVisible: true;
 
         onEdited: {
             card.hardwareEdited();

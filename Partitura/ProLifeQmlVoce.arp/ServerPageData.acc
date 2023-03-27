@@ -2,19 +2,95 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="Backup" PackageId="BasePck" ComponentId="ComposedParamsSet">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>BackupSettings</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Backup</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="BackupFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Backups"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SystemLocation"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="BackupSettings" PackageId="ImtAppPck" ComponentId="BackupSettings">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="BackupFolderPath" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="BackupFilePath"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BackupInterval" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="1"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StartTime" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="00:00"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Database" PackageId="BasePck" ComponentId="ComposedParamsSet">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DatabaseAccessSettings</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Database</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DbName" Type="Id" ExportId="DefaultDatabaseName">
-                        <Data IsEnabled="true" Value=""/>
+                        <Data IsEnabled="true" Value="prolife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HostName" Type="Id" ExportId="DefaultDatabaseHost">
                         <Data IsEnabled="false"/>
@@ -82,9 +158,35 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Database</Value>
+                                <Value>Server</Value>
+                                <Value>Backup</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Database</Value>
+                                <Value>Server</Value>
+                                <Value>Backup</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Server" PackageId="BasePck" ComponentId="ComposedParamsSet">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
                                 <Value>Mask</Value>
                                 <Value>LisaUrlConnection</Value>
-                                <Value>DatabaseAccessSettings</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                             </Values>
@@ -95,7 +197,6 @@
                             <Values>
                                 <Value>InstanceMask</Value>
                                 <Value>LisaUrl</Value>
-                                <Value>Database</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                             </Values>
@@ -116,6 +217,18 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LocationType">
+                        <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="WebSocketServerPort" PackageId="BasePck" ComponentId="TextParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -128,14 +241,15 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
+        <Interface InterfaceId="imod::IModel" ComponentId="Preferences"/>
         <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
         <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Preferences"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="BackupSettings" ComponentId="BackupSettings"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrlConnection"/>
-        <Component ExportedId="Preferences" ComponentId="Preferences"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="WebSocketServerPort"/>
     </ExportedComponents>
