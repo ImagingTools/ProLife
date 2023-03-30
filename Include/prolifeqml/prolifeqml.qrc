@@ -30,8 +30,7 @@
 	<file alias="ProLife/SoftwareProductCard.qml">Qml/SoftwareProductCard.qml</file>
 	<file alias="ProLife/HardwareProductCard.qml">Qml/HardwareProductCard.qml</file>
 	<file alias="ProLife/OrderProductCard.qml">Qml/OrderProductCard.qml</file>
-	<file alias="ProLife/HardwareProductEditor.qml">Qml/HardwareProductEditor.qml</file>
-	<file alias="ProLife/SoftwareProductEditor.qml">Qml/SoftwareProductEditor.qml</file>
+	<file alias="ProLife/ProductEditor.qml">Qml/ProductEditor.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>

@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import Acf 1.0
-import QtQuick.Dialogs 1.3
+import Qt.labs.platform 1.1
 
 Item {
     id: controller;
@@ -13,6 +13,8 @@ Item {
 
     function createLicenseFile(dataId){
         _private.dataId = dataId;
+
+        fileDialogSave.currentFile = 'file:///License.lic'
 
         fileDialogSave.open();
     }
@@ -27,15 +29,16 @@ Item {
         id: fileDialogSave;
 
         title: qsTr("Save file");
-        selectExisting: false;
         folder: shortcuts.home;
 
         nameFilters: ["License files (*.lic)", "All files (*)"];
 
+        fileMode: FileDialog.SaveFile;
+
         onAccepted: {
             var pathDir = fileDialogSave.folder.toString();
             remoteFileController.downloadedFileLocation = pathDir.replace('file:///', '');
-            var fileName = fileDialogSave.fileUrl.toString().replace(pathDir + "/", '');
+            var fileName = fileDialogSave.file.toString().replace(pathDir + "/", '');
 
             let id = _private.dataId;
 

@@ -160,7 +160,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 						softwareProductModelPtr->SetData("Id", objectUuid, productIndex);
 						softwareProductModelPtr->SetData("ProductId", productId, productIndex);
 						softwareProductModelPtr->SetData("CategoryId", categoryId, productIndex);
-						softwareProductModelPtr->SetData("MacAddress", productInstance, productIndex);
+//						softwareProductModelPtr->SetData("MacAddress", productInstance, productIndex);
 
 						imtbase::CTreeItemModel* activeLicenses = softwareProductModelPtr->AddTreeModel("ActiveLicenses", productIndex);
 						const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();

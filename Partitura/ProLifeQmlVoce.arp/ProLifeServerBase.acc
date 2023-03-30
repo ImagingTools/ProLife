@@ -40,11 +40,8 @@
         <Element Id="DatabaseAutomaticBackup" PackageId="ImtCoreVoce" ComponentId="DatabaseAutomaticBackup">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/BackupSettings"/>
+                        <Data IsEnabled="true" Value="ApplicationController/BackupParamsSet"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DatabaseAccessSettings"/>

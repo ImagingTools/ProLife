@@ -16,14 +16,16 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>BackupSettings</Value>
+                                <Value>SchedulerParams</Value>
+                                <Value>FileNameParam</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Backup</Value>
+                                <Value>SchedulerParams</Value>
+                                <Value>BackupFolder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -44,21 +46,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SystemLocation"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="BackupSettings" PackageId="ImtAppPck" ComponentId="BackupSettings">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="BackupFolderPath" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="BackupFilePath"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="BackupInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="1"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="StartTime" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="00:00"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -134,6 +121,18 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="FileNameParam" PackageId="FilePck" ComponentId="FileNameParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="C:/Users/Public/ImagingTools GmbH/Backups"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="LisaUrlConnection" PackageId="BasePck" ComponentId="TextParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -175,6 +174,15 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SchedulerParams" PackageId="ImtAppPck" ComponentId="SchedulerParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Interval" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="86400"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -241,13 +249,14 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
+        <Interface InterfaceId="ifile::IFileNameParam" ComponentId="BackupFilePath"/>
         <Interface InterfaceId="imod::IModel" ComponentId="Preferences"/>
         <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
         <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Preferences"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="BackupSettings" ComponentId="BackupSettings"/>
+        <Component ExportedId="BackupParamsSet" ComponentId="Backup"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrlConnection"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>

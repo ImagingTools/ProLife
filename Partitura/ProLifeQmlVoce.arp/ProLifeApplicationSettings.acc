@@ -26,7 +26,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>UserSettingsController</Value>
-                                <Value>ServerSettingsController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -190,6 +189,7 @@
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ServerSettingsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
+                    <Component ExportedId="BackupParamsSet" ComponentId="ServerSettings/BackupParamsSet"/>
                     <Component ExportedId="BackupSettings" ComponentId="ServerSettings/BackupSettings"/>
                     <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
                     <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettings/LisaUrlConnection"/>
@@ -301,6 +301,7 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationSettings"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="BackupParamsSet" ComponentId="ServerSettingsController/BackupParamsSet"/>
         <Component ExportedId="BackupSettings" ComponentId="ServerSettingsController/BackupSettings"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettingsController/LisaUrlConnection"/>

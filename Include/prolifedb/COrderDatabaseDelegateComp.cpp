@@ -37,22 +37,7 @@ istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSql
 	}
 
 	istd::TDelPtr<istd::IChangeable> documentPtr;
-
-//	if (record.contains("TypeId")){
-//		QByteArray typeId = record.value("TypeId").toByteArray();
-
-//		int index = m_documentFactoriesCompPtr.FindValue(typeId);
-//		if (index >= 0){
-//			documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(index));
-//		}
-//	}
-
-	if (m_documentFactoriesCompPtr.GetCount() > 0){
-//		documentPtr.SetPtr(m_documentFactoriesCompPtr.CreateInstance(0));
-	}
-
 	documentPtr.SetPtr(new prolifedata::CIdentifiableOrderInfo());
-
 	if (!documentPtr.IsValid()){
 		return nullptr;
 	}
@@ -60,7 +45,7 @@ istd::IChangeable* COrderDatabaseDelegateComp::CreateObjectFromRecord(const QSql
 	if (record.contains(*m_documentContentColumnIdAttrPtr)){
 		QByteArray documentContent = record.value(qPrintable(*m_documentContentColumnIdAttrPtr)).toByteArray();
 
-		if (ReadDataFromMemory("", documentContent, *documentPtr)){
+		if (ReadDataFromMemory("Software", documentContent, *documentPtr)){
 			return documentPtr.PopPtr();
 		}
 	}
@@ -85,7 +70,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 
 	if (workingDocumentPtr.IsValid()){
 		QByteArray documentContent;
-		if (WriteDataToMemory("", *workingDocumentPtr, documentContent)){
+		if (WriteDataToMemory("Software", *workingDocumentPtr, documentContent)){
 			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(workingDocumentPtr.GetPtr());
 			Q_ASSERT(orderInfoPtr != nullptr);
 			if (orderInfoPtr == nullptr){
@@ -125,7 +110,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	QByteArray retVal;
 
 	QByteArray documentContent;
-	if (WriteDataToMemory("", object, documentContent)){
+	if (WriteDataToMemory("Software", object, documentContent)){
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::CIdentifiableOrderInfo*>(&object);
 		Q_ASSERT(orderInfoPtr != nullptr);
@@ -136,7 +121,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 		QByteArray orderId = orderInfoPtr->GetOrderId();
 		QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
 
-		retVal = QString("UPDATE \"%1\" SET IsActive = false, OrderId = '%2' WHERE OrderId = '%3'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%4', '%5', '%6', '%7', true, (Select count(Id) from \"%1\" where OrderId = '%3') + 1 );")
+		retVal = QString("UPDATE \"%1\" SET IsActive = false, OrderId = '%2' WHERE OrderId = '%3'; INSERT INTO \"%1\" (OrderId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%4', '%5', '%6', '%7', true, (SELECT COUNT(Id) FROM \"%1\" WHERE OrderId = '%3') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
 					.arg(qPrintable(objectUuid))
 					.arg(qPrintable(objectId))

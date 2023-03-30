@@ -9,20 +9,10 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationSettings" X="625" Y="75" Note=""/>
-        <Element ComponentName="ServerSettingsController" X="1030" Y="297" Note=""/>
+        <Element ComponentName="ServerSettingsController" X="1025" Y="300" Note=""/>
         <Element ComponentName="UserSettingsController" X="225" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="UserSettingsController">
-            <PositionMap>
-                <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
-                <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
-                <Element ComponentName="UserSettingsController" X="625" Y="75" Note=""/>
-                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
-                <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="ServerSettingsController">
             <PositionMap>
                 <Element ComponentName="Permission" X="250" Y="500" Note=""/>
@@ -30,6 +20,16 @@
                 <Element ComponentName="ServerSettings" X="975" Y="200" Note=""/>
                 <Element ComponentName="ServerSettingsController" X="600" Y="350" Note=""/>
                 <Element ComponentName="ServerSettingsRepresentation" X="975" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="UserSettingsController">
+            <PositionMap>
+                <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
+                <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
+                <Element ComponentName="UserSettingsController" X="625" Y="75" Note=""/>
+                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
+                <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

@@ -19,6 +19,8 @@ Dialog {
     property string orderId;
     property string orderUuid;
 
+    property bool isPairEditing: false;
+
     UuidGenerator {
         id: uuidGenerator;
     }
@@ -30,7 +32,83 @@ Dialog {
         root.title = qsTr("Product editor");
     }
 
+    function unpairProducts(pairId){
+        console.log("\nunpairProducts");
+            let orderProductsModel = root.orderProductsModel;
+
+            let linkIndex = -1;
+            for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+                let id = orderProductsModel.GetData("Id", i);
+                if (id === pairId){
+                    linkIndex = i;
+                    break;
+                }
+            }
+
+            if (linkIndex >= 0){
+                let categoryId = orderProductsModel.GetData("CategoryId", linkIndex);
+                if (categoryId === "Pair"){
+                    let softwareProductModel = orderProductsModel.GetData("SoftwareProduct", linkIndex);
+                    console.log("\nsoftwareProductModel", softwareProductModel.toJSON());
+                    let index = orderProductsModel.InsertNewItem();
+//                    orderProductsModel.CopyItemDataFromModel(index, softwareProductModel);
+
+                    let softwareKeys = softwareProductModel.GetKeys();
+                    for (let i = 0; i < softwareKeys.length; i++){
+                        orderProductsModel.SetData(softwareKeys[i], softwareProductModel.GetData(softwareKeys[i]), index);
+                    }
+
+                    console.log("\norderProductsModel insert softwareProductModel", orderProductsModel.toJSON());
+
+                    let hardwareProductModel = orderProductsModel.GetData("HardwareProduct", linkIndex);
+                    console.log("\nhardwareProductModel", hardwareProductModel.toJSON());
+                    hardwareProductModel.SetData("PairId", "");
+                    index = orderProductsModel.InsertNewItem();
+
+                    let hardwareKeys = hardwareProductModel.GetKeys();
+                    for (let i = 0; i < hardwareKeys.length; i++){
+                        orderProductsModel.SetData(hardwareKeys[i], hardwareProductModel.GetData(hardwareKeys[i]), index);
+                    }
+
+//                    orderProductsModel.CopyItemDataFromModel(index, hardwareProductModel);
+
+                    console.log("\norderProductsModel insert hardwareProductModel", orderProductsModel.toJSON());
+
+                    orderProductsModel.RemoveItem(linkIndex);
+
+                    console.log("\norderProductsModel RemoveItem", orderProductsModel.toJSON());
+
+                    return true;
+                }
+            }
+
+        return false;
+    }
+
+    function pairIsValid(pairId){
+        console.log("pairIsValid", pairId);
+        for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
+            let id = root.orderProductsModel.GetData("Id", i);
+            if (id === pairId){
+                let hardwareProductModel = root.orderProductsModel.GetData("HardwareProduct", i);
+                let softwareProductModel = root.orderProductsModel.GetData("SoftwareProduct", i);
+
+                let hardwarePairId = hardwareProductModel.GetData("PairId");
+                let softwareId = softwareProductModel.GetData("Id");
+                console.log("hardwarePairId", hardwarePairId);
+                console.log("softwareId", softwareId);
+                if (hardwarePairId === softwareId){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function createProductsPair(softwareId, hardwareId){
+         console.log("createProductsPair", softwareId, hardwareId);
+        console.log("start root.orderProductsModel", root.orderProductsModel.toJSON());
         let softwareIndex = -1;
         let softwareModel = null;
 
@@ -41,6 +119,9 @@ Dialog {
                 if (productId === softwareId){
                     softwareIndex = i;
                     softwareModel = root.orderProductsModel.GetModelFromItem(i);
+
+                    console.log("softwareModel 1 ", softwareModel.toJSON());
+
                     break;
                 }
             }
@@ -49,6 +130,8 @@ Dialog {
         if (softwareIndex > -1){
             root.orderProductsModel.RemoveItem(softwareIndex);
         }
+
+        console.log("softwareModel 2", softwareModel.toJSON());
 
         let hardwareIndex = -1;
         let hardwareModel = null;
@@ -59,6 +142,7 @@ Dialog {
                 let productId = root.orderProductsModel.GetData("Id", i);
                 if (productId === hardwareId){
                     hardwareIndex = i;
+                    root.orderProductsModel.SetData("PairId", softwareId, i);
                     hardwareModel = root.orderProductsModel.GetModelFromItem(i);
                     break;
                 }
@@ -70,58 +154,52 @@ Dialog {
         }
 
         if (softwareModel != null && hardwareModel != null){
+            console.log("softwareModel", softwareModel.toJSON());
+            console.log("hardwareModel", hardwareModel.toJSON());
+
+            console.log("root.orderProductsModel 1 ", root.orderProductsModel.toJSON());
+
             let index = root.orderProductsModel.InsertNewItem();
 
             root.orderProductsModel.SetData("Id", uuidGenerator.generateUUID(), index);
             root.orderProductsModel.SetData("CategoryId", "Pair", index);
 
             let emptySoftwareModel = root.orderProductsModel.AddTreeModel("SoftwareProduct", index);
-            emptySoftwareModel.Copy(softwareModel);
+            let softwareKeys = softwareModel.GetKeys();
+            for (let i = 0; i < softwareKeys.length; i++){
+                emptySoftwareModel.SetData(softwareKeys[i], softwareModel.GetData(softwareKeys[i]));
+            }
+
+            console.log("root.orderProductsModel 2", root.orderProductsModel.toJSON());
 
             let emptyHardwareModel = root.orderProductsModel.AddTreeModel("HardwareProduct", index);
-            emptyHardwareModel.Copy(hardwareModel);
+
+            let hardwareKeys = hardwareModel.GetKeys();
+            for (let i = 0; i < hardwareKeys.length; i++){
+                emptyHardwareModel.SetData(hardwareKeys[i], hardwareModel.GetData(hardwareKeys[i]));
+            }
+            //emptyHardwareModel.Copy(hardwareModel);
+
+            console.log("root.orderProductsModel END ", root.orderProductsModel.toJSON());
         }
     }
 
     contentComp: Component {
         id: installationEditor;
 
-        HardwareProductEditor {
+        ProductEditor {
             licensesModel: root.licensesModel;
             productsModel: root.productsModel;
             orderProductsModel: root.orderProductsModel;
-//            activeProductIndex: root.activeProductIndex;
             orderId: root.orderId;
             orderUuid: root.orderUuid;
             width: root.width - 100;
             height: 350;
 
+            rootItem: root;
+
             productModel: root.productModel;
-
-//            rootItem: root;
-
-//            onActiveProductIndexChanged: {
-//                root.activeProductIndex = activeProductIndex;
-//            }
         }
-
-//        InstallationEditor {
-
-//            licensesModel: root.licensesModel;
-//            productsModel: root.productsModel;
-//            orderProductsModel: root.orderProductsModel;
-//            activeProductIndex: root.activeProductIndex;
-//            orderId: root.orderId;
-//            orderUuid: root.orderUuid;
-//            width: root.width - 100;
-//            height: 350;
-
-//            rootItem: root;
-
-//            onActiveProductIndexChanged: {
-//                root.activeProductIndex = activeProductIndex;
-//            }
-//        }
     }
 }//Container
 

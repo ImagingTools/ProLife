@@ -18,6 +18,10 @@ Rectangle {
         }
     }
 
+    onSettingsUpdate: {
+        console.log("window onSettingsUpdate", window.localSettings.toJSON());
+    }
+
     MouseArea{
         anchors.fill: parent;
 

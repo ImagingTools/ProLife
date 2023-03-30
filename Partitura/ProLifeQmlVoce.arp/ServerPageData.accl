@@ -9,18 +9,19 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Backup" X="1075" Y="350" Note=""/>
-        <Element ComponentName="BackupFilePath" X="1075" Y="650" Note=""/>
-        <Element ComponentName="BackupSettings" X="1075" Y="525" Note=""/>
+        <Element ComponentName="BackupFilePath" X="1100" Y="675" Note=""/>
         <Element ComponentName="Database" X="150" Y="350" Note=""/>
         <Element ComponentName="DatabaseAccessSettings" X="125" Y="525" Note=""/>
         <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
-        <Element ComponentName="LisaUrlConnection" X="500" Y="525" Note=""/>
-        <Element ComponentName="Mask" X="325" Y="525" Note=""/>
+        <Element ComponentName="FileNameParam" X="1100" Y="525" Note=""/>
+        <Element ComponentName="LisaUrlConnection" X="450" Y="525" Note=""/>
+        <Element ComponentName="Mask" X="300" Y="525" Note=""/>
         <Element ComponentName="Preferences" X="575" Y="200" Note=""/>
+        <Element ComponentName="SchedulerParams" X="950" Y="525" Note=""/>
         <Element ComponentName="Server" X="575" Y="350" Note=""/>
-        <Element ComponentName="ServerPort" X="675" Y="525" Note=""/>
-        <Element ComponentName="SystemLocation" X="1075" Y="775" Note=""/>
-        <Element ComponentName="WebSocketServerPort" X="850" Y="525" Note=""/>
+        <Element ComponentName="ServerPort" X="600" Y="525" Note=""/>
+        <Element ComponentName="SystemLocation" X="1100" Y="725" Note=""/>
+        <Element ComponentName="WebSocketServerPort" X="775" Y="525" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

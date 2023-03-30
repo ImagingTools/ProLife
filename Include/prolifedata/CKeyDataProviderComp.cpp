@@ -150,45 +150,42 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 	}
 
 	imtbase::CTreeItemModel* licensesModelPtr = dataModelPtr->GetTreeItemModel("Features");
-	if (licensesModelPtr == nullptr){
-		SendCriticalMessage(0, "No features in product: " + productId, "Server data provider");
-
-		return false;
-	}
 
 	const imtbase::ICollectionInfo& licenseList = productInstancePtr->GetLicenseInstances();
 
 	imtbase::ICollectionInfo::Ids licenseIds = licenseList.GetElementIds();
 	for (const QByteArray& licenseId : licenseIds){
-		imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>( const_cast<imtlic::ILicenseInstance*>( productInstancePtr->GetLicenseInstance(licenseId)));
+		imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>( const_cast<imtlic::ILicenseInstance*>(productInstancePtr->GetLicenseInstance(licenseId)));
 		if (licenseInstancePtr == nullptr){
 			SendCriticalMessage(0, "License instance error: " + licenseId, "Server data provider");
 
 			return false;
 		}
 
-		if (!licensesModelPtr->ContainsKey(licenseId)){
-			SendCriticalMessage(0, "The product does not contain a license " + licenseId, "Server data provider");
+//		if (!licensesModelPtr->ContainsKey(licenseId)){
+//			SendCriticalMessage(0, "The product does not contain a license " + licenseId, "Server data provider");
 
-			return false;
+//			return false;
+//		}
+
+		if (licensesModelPtr != nullptr){
+			imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
+			if (featuresModelPtr == nullptr){
+				SendCriticalMessage(0, "Future model pointer is null " + licenseId, "Server data provider");
+
+				return false;
+			}
+
+			imtlic::ILicenseInfo::FeatureInfos featureInfos;
+			for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
+				imtlic::ILicenseInfo::FeatureInfo featureInfo;
+				featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
+				featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
+				featureInfos.append(featureInfo);
+			}
+			licenseInstancePtr->SetFeatureInfos(featureInfos);
 		}
 
-		imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
-		if (featuresModelPtr == nullptr){
-			SendCriticalMessage(0, "Future model pointer is null " + licenseId, "Server data provider");
-
-			return false;
-		}
-
-		imtlic::ILicenseInfo::FeatureInfos featureInfos;
-		for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
-			imtlic::ILicenseInfo::FeatureInfo featureInfo;
-			featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
-			featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
-			featureInfos.append(featureInfo);
-		}
-
-		licenseInstancePtr->SetFeatureInfos(featureInfos);
 		imtbase::CTreeItemModel* licensesItemsModelPtr = dataModelPtr->GetTreeItemModel("Items");
 		if (licensesItemsModelPtr == nullptr){
 			SendCriticalMessage(0, "Items model pointer is null ", "Server data provider");

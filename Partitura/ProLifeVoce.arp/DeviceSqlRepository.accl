@@ -12,7 +12,7 @@
         <Element ComponentName="DeviceDatabaseDelegate" X="600" Y="200" Note=""/>
         <Element ComponentName="DeviceInfo" X="950" Y="200" Note=""/>
         <Element ComponentName="Devices" X="600" Y="450" Note=""/>
-        <Element ComponentName="SelectionConstraints" X="250" Y="400" Note=""/>
+        <Element ComponentName="Types" X="600" Y="50" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

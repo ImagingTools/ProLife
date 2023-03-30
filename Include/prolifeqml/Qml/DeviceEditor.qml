@@ -197,6 +197,8 @@ DocumentBase {
 
         undoRedoManager.beginChanges();
 
+        documentModel.SetData("Id", deviceEditorContainer.itemId);
+
         if (productCB.currentIndex >= 0){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
             deviceEditorContainer.documentModel.SetData("DeviceType", selectedProductId);
@@ -370,16 +372,7 @@ DocumentBase {
                 RegExpValidator {
                     id: macAddressRegExp;
 
-                    Component.onCompleted: {
-                        let mask = instanceMaskProvider.getInstanceMask();
-                        if (mask){
-                            const re = new RegExp(mask);
-                            if (re){
-                                macAddressRegExp.regExp = re;
-                                macAddressInput.textInputValidator = macAddressRegExp;
-                            }
-                        }
-                    }
+                    regExp: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
                 }
 
                 CustomTextField {
@@ -391,6 +384,8 @@ DocumentBase {
                     placeHolderText: qsTr("Enter MAC-Address");
 
                     borderColor: Style.iconColorOnSelected;
+
+                    textInputValidator: macAddressRegExp;
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");

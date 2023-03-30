@@ -208,7 +208,6 @@ DocumentBase {
             let status = orderEditorContainer.documentModel.GetData("OrderStatus");
             console.log("status",  status)
             let statusModel = stateMachine.getAvailableModel(status);
-            console.log("statusModel",  statusModel.toJSON())
             if (statusModel){
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
@@ -242,6 +241,7 @@ DocumentBase {
 
         undoRedoManager.beginChanges();
 
+        documentModel.SetData("Id", orderEditorContainer.itemId);
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("Name", instanceIdInput.text);
 
@@ -578,12 +578,9 @@ DocumentBase {
 
             orderUuid: orderEditorContainer.orderUuid;
             onStarted: {
-                //                productsDialog.orderProductsModel.Clear();
-                //                if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                //                    productsDialog.activeProductIndex = productsView.activeProductIndex;
-                //                    let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                //                    productsDialog.orderProductsModel.Copy(orderProductsModel);
-                //                }
+                console.log("productsDialog.productModel", productsDialog.productModel.toJSON())
+                productsDialog.isPairEditing = false;
+                productsDialog.activeProductIndex = productsView.activeProductIndex;
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
                     productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
@@ -595,10 +592,10 @@ DocumentBase {
 
                     if (productsView.activeProductIndex >= 0){
                         let productModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-
                         if (productModel){
                             let category = productModel.GetData("CategoryId");
                             if (category === "Pair"){
+                                productsDialog.isPairEditing = true;
                                 if (productsView.softwareEditing){
                                     productModel = productModel.GetData("SoftwareProduct")
                                 }
@@ -608,94 +605,88 @@ DocumentBase {
                             }
                         }
 
-                        productsDialog.productModel = productModel;
+                        productsDialog.productModel.Copy(productModel);
                     }
                 }
 
                 productsDialog.bodyItem.started();
             }
 
-            function resetPair(pairId){
-                orderEditorContainer.unlinkProducts(linkId);
-            }
-
             onFinished: {
                 if (buttonId == "Save"){
-                    console.log("productsDialog.productModel", productsDialog.productModel.toJSON());
+                    console.log("productsDialog.productModel", productsDialog.productModel);
 
                     productsDialog.bodyItem.updateModel()
 
-                    let categoryId = "";
-                    let notPair = false;
                     let index = productsView.activeProductIndex;
-                    if (index >= 0){
-                        categoryId = productsDialog.orderProductsModel.GetData("CategoryId", index);
-                        if (categoryId === "Pair"){
-
-                            let categoryInPair = productsDialog.productModel.GetData("CategoryId");
-                            if (categoryInPair === "Software"){
-                                let productIdInPair = productsDialog.productModel.GetData("Id");
-                                let hardwareProductModel = productsDialog.orderProductsModel.GetData("HardwareProduct", index);
-                                let hardwarePairId = hardwareProductModel.GetData("PairId");
-                                if (hardwarePairId !== productIdInPair){
-                                    orderEditorContainer.unlinkProducts(productsDialog.orderProductsModel.GetData("Id", index));
-                                }
-
+                    if (productsDialog.isPairEditing){
+                        console.log("productsDialog.productModel", productsDialog.productModel.toJSON());
+                        if (index >= 0){
+                            let pairUuid = productsDialog.orderProductsModel.GetData("Id", index);
+                            let editingProductCategory = productsDialog.productModel.GetData("CategoryId");
+                            let softwareProductUuid = "";
+                            let hardwareProductUuid = "";
+                            if (editingProductCategory === "Software"){
                                 productsDialog.orderProductsModel.SetData("SoftwareProduct", productsDialog.productModel, index);
+                                softwareProductUuid = productsDialog.productModel.GetData("Id");
+                                hardwareProductUuid = productsDialog.bodyItem.findHardwarePair(softwareProductUuid);
                             }
-                            else if (categoryInPair === "Hardware"){
-                                let softwareProductModel = productsDialog.orderProductsModel.GetData("SoftwareProduct", index);
-                                let softwareId = softwareProductModel.GetData("Id");
-                                let pairId = productsDialog.productModel.GetData("PairId");
-                                if (softwareId !== pairId){
-                                    orderEditorContainer.unlinkProducts(productsDialog.orderProductsModel.GetData("Id", index));
-                                }
-
+                            else if (editingProductCategory === "Hardware"){
                                 productsDialog.orderProductsModel.SetData("HardwareProduct", productsDialog.productModel, index);
+                                hardwareProductUuid = productsDialog.productModel.GetData("Id");
+                                softwareProductUuid = productsDialog.productModel.GetData("PairId");
                             }
 
-                            categoryId = productsDialog.productModel.GetData("CategoryId")
-                        }
-                        else{
-                            notPair = true;
+                            console.log("productsDialog.orderProductsModel", productsDialog.orderProductsModel.toJSON());
+
+                            if (!productsDialog.pairIsValid(pairUuid)){
+                                console.log("!productsDialog.pairIsValid");
+
+                                console.log("before unpairProducts", productsDialog.orderProductsModel.toJSON());
+                                productsDialog.unpairProducts(pairUuid);
+
+                                console.log("after unpairProducts", productsDialog.orderProductsModel.toJSON());
+
+                                console.log("softwareProductUuid", softwareProductUuid);
+                                console.log("hardwareProductUuid", hardwareProductUuid);
+                                if (softwareProductUuid !== "" && hardwareProductUuid !== ""){
+                                    productsDialog.createProductsPair(softwareProductUuid, hardwareProductUuid);
+                                }
+                            }
+
+                            console.log("productsDialog.orderProductsModel", productsDialog.orderProductsModel.toJSON());
                         }
                     }
                     else{
-                        categoryId = productsDialog.productModel.GetData("CategoryId")
-                        index = productsDialog.orderProductsModel.InsertNewItem();
-                        notPair = true;
-                    }
+                        if (index < 0){
+                            index = productsDialog.orderProductsModel.InsertNewItem();
+                        }
 
-                    if (notPair){
                         productsDialog.orderProductsModel.CopyItemDataFromModel(index, productsDialog.productModel);
-                    }
 
-                    let softwareId = "";
-                    let hardwareId = "";
+                        let softwareId = "";
+                        let hardwareId = "";
 
-                    if (categoryId === "Software"){
-//                        softwareId = productsDialog.orderProductsModel.GetData("Id", index);
-                        softwareId = productsDialog.productModel.GetData("Id");
-                        hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
-                    }
-                    else if (categoryId === "Hardware"){
-//                        hardwareId = productsDialog.orderProductsModel.GetData("Id", index);
-                        hardwareId = productsDialog.productModel.GetData("Id");
-                        softwareId = productsDialog.orderProductsModel.GetData("PairId", index);
-                    }
+                        let categoryId = productsDialog.productModel.GetData("CategoryId")
+                        let productId = productsDialog.productModel.GetData("Id")
 
-                    console.log("categoryId", categoryId);
-                    console.log("softwareId", softwareId);
-                    console.log("hardwareId", hardwareId);
+                        if (categoryId === "Software"){
+                            softwareId = productId;
+                            hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
+                        }
+                        else if (categoryId === "Hardware"){
+                            hardwareId = productId;
+                            softwareId = productsDialog.orderProductsModel.GetData("PairId", index);
+                        }
 
-                    if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
-                        productsDialog.createProductsPair(softwareId, hardwareId);
+                        if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
+                            productsDialog.createProductsPair(softwareId, hardwareId);
+                        }
                     }
 
                     if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
                         orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
                     }
-
 
                     console.log("productsDialog.orderProductsModel", productsDialog.orderProductsModel.toJSON());
 
@@ -706,146 +697,13 @@ DocumentBase {
 
                     updateGui();
 
-                    //                    let equals = false;
-                    //                    if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                    //                        let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                    //                        let firstModel = JSON.stringify(orderProductsModel)
-                    //                        let secondModel = JSON.stringify(productsDialog.orderProductsModel);
-                    //                        equals = _.isEqual(firstModel, secondModel);
-                    //                    }
 
-                    //                    if (!equals){
-                    //                        undoRedoManager.beginChanges();
-
-                    //                        if (productsDialog.activeProductIndex > -1){
-
-                    //                            console.log("SAVE");
-                    //                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-                    //                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
-                    //                            }
-
-                    //                            let softwareId = "";
-                    //                            let hardwareId = "";
-                    //                            let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", productsDialog.activeProductIndex);
-                    //                            if (categoryId === "Software"){
-                    //                                softwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
-                    //                                hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
-                    //                            }
-                    //                            else if (categoryId === "Hardware"){
-                    //                                hardwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
-                    //                                softwareId = productsDialog.orderProductsModel.GetData("PairId", productsDialog.activeProductIndex);
-                    //                            }
-
-                    //                            console.log("softwareId", softwareId);
-                    //                            console.log("hardwareId", hardwareId);
-
-                    //                            if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
-                    //                                productsDialog.createProductsPair(softwareId, hardwareId);
-                    //                            }
-
-                    //                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                    //                            orderProductsModel.Copy(productsDialog.orderProductsModel);
-                    //                        }
-
-                    //                        undoRedoManager.endChanges();
-                    //                        updateGui();
-                    //                    }
+                    productsDialog.productModel.Clear();
+                    productsDialog.orderProductsModel.Clear();
                 }
             }
         }
     }
-
-    //    Component {
-    //        id: productPairEditorDialog;
-
-    //        ProductEditorDialog {
-    //            id: productsDialog;
-    //            licensesModel: licensesProvider.model;
-    //            productsModel: orderEditorContainer.productsModel;
-
-    //            orderUuid: orderEditorContainer.orderUuid;
-    //            onStarted: {
-    //                productsDialog.orderProductsModel.Clear();
-    //                if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-    //                    console.log("A");
-    //                    productsDialog.activeProductIndex = productsView.activeProductIndex;
-    //                    let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-    //                    productsDialog.orderProductsModel.Copy(orderProductsModel);
-
-    //                    let pairModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-    //                    productsDialog.orderProductsModel.RemoveItem(productsView.activeProductIndex);
-
-    //                    let softwareModel = pairModel.GetData("SoftwareProduct");
-    //                    let hardwareModel = pairModel.GetData("HardwareProduct");
-
-    //                    let hardwareIndex = productsDialog.orderProductsModel.InsertNewItem();
-    //                    let softwareIndex = productsDialog.orderProductsModel.InsertNewItem();
-
-    //                    productsDialog.orderProductsModel.CopyItemDataFromModel(softwareIndex, softwareModel);
-    //                    productsDialog.orderProductsModel.CopyItemDataFromModel(hardwareIndex, hardwareModel);
-
-    //                    if (productsView.softwareEditing){
-    //                        productsDialog.activeProductIndex = softwareIndex;
-    //                    }
-    //                    else{
-    //                        productsDialog.activeProductIndex = hardwareIndex;
-    //                    }
-    //                }
-
-    //                if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
-    //                    productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
-    //                }
-
-    //                productsDialog.bodyItem.started();
-    //            }
-
-    //            onFinished: {
-    //                if (buttonId == "Save"){
-    //                    productsDialog.bodyItem.updateModel()
-
-    //                    let equals = false;
-    //                    if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-    //                        let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-    //                        let firstModel = JSON.stringify(orderProductsModel)
-    //                        let secondModel = JSON.stringify(productsDialog.orderProductsModel);
-    //                        equals = _.isEqual(firstModel, secondModel);
-    //                    }
-
-    //                    if (!equals){
-    //                        undoRedoManager.beginChanges();
-
-    //                        if (productsDialog.activeProductIndex > -1){
-    //                            if (!orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-    //                                orderEditorContainer.documentModel.AddTreeModel("OrderProducts");
-    //                            }
-
-    //                            let softwareId = "";
-    //                            let hardwareId = "";
-    //                            let categoryId = productsDialog.orderProductsModel.GetData("CategoryId", productsDialog.activeProductIndex);
-    //                            if (categoryId === "Software"){
-    //                                softwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
-    //                                hardwareId = productsDialog.bodyItem.findHardwarePair(softwareId);
-    //                            }
-    //                            else if (categoryId === "Hardware"){
-    //                                hardwareId = productsDialog.orderProductsModel.GetData("Id", productsDialog.activeProductIndex);
-    //                                softwareId = productsDialog.orderProductsModel.GetData("PairId", productsDialog.activeProductIndex);
-    //                            }
-
-    //                            if (softwareId && softwareId !== "" && hardwareId && hardwareId !== ""){
-    //                                productsDialog.createProductsPair(softwareId, hardwareId);
-    //                            }
-
-    //                            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-    //                            orderProductsModel.Copy(productsDialog.orderProductsModel);
-    //                        }
-
-    //                        undoRedoManager.endChanges();
-    //                        updateGui();
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
 
     CustomScrollbar {
         id: scrollbar;
