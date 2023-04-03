@@ -162,12 +162,6 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 			return false;
 		}
 
-//		if (!licensesModelPtr->ContainsKey(licenseId)){
-//			SendCriticalMessage(0, "The product does not contain a license " + licenseId, "Server data provider");
-
-//			return false;
-//		}
-
 		if (licensesModelPtr != nullptr){
 			imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
 			if (featuresModelPtr == nullptr){

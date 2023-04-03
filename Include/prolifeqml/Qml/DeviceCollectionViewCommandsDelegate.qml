@@ -5,20 +5,21 @@ import Acf 1.0
 CollectionViewCommandsDelegateBase {
     id: container;
 
-//    onSelectedIndexChanged: {
-//        console.log("DeviceCollectionViewCommands onSelectedIndexChanged", container.selectedIndex);
+    //    onSelectedIndexChanged: {
+    //        console.log("DeviceCollectionViewCommands onSelectedIndexChanged", container.selectedIndex);
 
-//        let isEnabled = container.selectedIndex > -1;
-//        if (isEnabled){
-//            let elementsModel = container.tableData.elements;
-//            let orderId = elementsModel.GetData("OrderId", container.selectedIndex);
-//            isEnabled = isEnabled && orderId !== "";
-//        }
+    //        let isEnabled = container.selectedIndex > -1;
+    //        if (isEnabled){
+    //            let elementsModel = container.tableData.elements;
+    //            let orderId = elementsModel.GetData("OrderId", container.selectedIndex);
+    //            isEnabled = isEnabled && orderId !== "";
+    //        }
 
-//        if (container.commandsProvider){
-//            commandsProvider.setCommandIsEnabled("OpenOrder", isEnabled);
-//        }
-//    }
+    //        if (container.commandsProvider){
+    //            commandsProvider.setCommandIsEnabled("OpenOrder", isEnabled);
+    //        }
+    //    }
+
 
     property bool filterByNewActive: false;
 
@@ -42,12 +43,14 @@ CollectionViewCommandsDelegateBase {
             let elementsModel = container.tableData.elements;
             let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
             if (orderId !== ""){
-                mainDocumentManager.openDocument("Orders", orderId);
+                if (container.collectionViewBase.mainDocumentManager){
+                    container.collectionViewBase.mainDocumentManager.openDocument("Orders", orderId);
+                }
             }
         }
         else if (commandId === "ShowNew"){
-            let showNewStr = qsTr("Show New");
-            let showAllStr = qsTr("Show All");
+            let showNewStr = qsTr("New Sensors");
+            let showAllStr = qsTr("All Sensors");
 
             let filterModel = container.collectionViewBase.modelFilter;
             if (!container.filterByNewActive){
@@ -74,7 +77,6 @@ CollectionViewCommandsDelegateBase {
             container.filterByNewActive = !container.filterByNewActive;
 
             container.collectionViewBase.updateGui();
-
         }
     }
 }

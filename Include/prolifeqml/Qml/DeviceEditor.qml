@@ -143,7 +143,7 @@ DocumentBase {
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             console.log("status", status);
-//            let statusModel = productionStatus.getAvailableModel(status);
+            //            let statusModel = productionStatus.getAvailableModel(status);
             let statusModel = stateMachine.getAvailableModel(status);
             if (statusModel){
                 console.log("statusModel", statusModel.toJSON());
@@ -325,7 +325,7 @@ DocumentBase {
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("Description");
-                        if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
+                        if (oldText && oldText !== descriptionInput.text || !oldText && descriptionInput.text !== ""){
                             deviceEditorContainer.updateModel();
                         }
                     }
@@ -352,8 +352,9 @@ DocumentBase {
                     borderColor: Style.iconColorOnSelected;
 
                     onEditingFinished: {
+                        console.log("onEditingFinished", serialNumberInput.text);
                         let oldText = deviceEditorContainer.documentModel.GetData("SerialNumber");
-                        if (oldText !== serialNumberInput.text && serialNumberInput.text !== ""){
+                        if (!oldText && serialNumberInput.text !== "" || oldText && oldText !== serialNumberInput.text){
                             deviceEditorContainer.updateModel();
                         }
                     }
@@ -389,7 +390,7 @@ DocumentBase {
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
-                        if (oldText !== macAddressInput.text && macAddressInput.text !== ""){
+                        if (oldText && oldText !== macAddressInput.text || !oldText && macAddressInput.text !== ""){
                             deviceEditorContainer.updateModel();
                         }
                     }
@@ -479,7 +480,7 @@ DocumentBase {
                                 deviceEditorContainer.updateModel();
 
                                 let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-//                                let statusModel = productionStatus.getAvailableModel(status);
+                                //                                let statusModel = productionStatus.getAvailableModel(status);
 
                                 let statusModel = stateMachine.getAvailableModel(status);
 

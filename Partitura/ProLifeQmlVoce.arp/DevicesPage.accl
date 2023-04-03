@@ -33,10 +33,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="625" Y="400" Note=""/>
@@ -56,6 +52,10 @@
                 <Element ComponentName="ShowNew" X="550" Y="725" Note=""/>
                 <Element ComponentName="ShowNewPermissions" X="1075" Y="775" Note=""/>
             </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

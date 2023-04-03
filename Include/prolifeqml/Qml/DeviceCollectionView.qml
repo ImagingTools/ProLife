@@ -7,6 +7,8 @@ CollectionView {
 
     visibleMetaInfo: false;
 
+    property MainDocumentManager mainDocumentManager: null;
+
     Component.onCompleted: {
         Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.subscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);

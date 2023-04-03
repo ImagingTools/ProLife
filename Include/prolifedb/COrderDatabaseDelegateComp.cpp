@@ -85,6 +85,19 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 
 			int revisionVersion = 1;
 
+//			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'")
+//					.arg(qPrintable(*m_tableNameAttrPtr))
+//					.arg(qPrintable(objectId)).toLocal8Bit();
+
+//			retVal.query = QString("INSERT INTO \"%1\"(OrderId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true)")
+//					.arg(qPrintable(*m_tableNameAttrPtr))
+//					.arg(qPrintable(objectId))
+//					.arg(qPrintable(accountId))
+//					.arg(SqlEncode(documentContent))
+//					.arg(revisionVersion)
+//					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+//					.arg(checksum).toLocal8Bit();
+
 			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE OrderId = '%2'; INSERT INTO \"%1\"(OrderId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(objectId))

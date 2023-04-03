@@ -52,14 +52,6 @@ Rectangle {
         }
     }
 
-    TreeItemModelObserver {
-        id: settingsModelObserver;
-
-        onModelChanged: {
-            buttons.setButtonState("Apply", true);
-        }
-    }
-
     ButtonsDialog {
         id: buttons;
 
@@ -70,6 +62,7 @@ Rectangle {
 
         Component.onCompleted: {
             buttons.addButton({"Id":"Apply", "Name": qsTr("Apply"), "Enabled": false});
+//            buttons.addButton({"Id":"Close", "Name": qsTr("Close"), "Enabled": true});
         }
 
         onButtonClicked: {
@@ -77,6 +70,9 @@ Rectangle {
                 window.settingsUpdate();
 
                 buttons.setButtonState("Apply", false);
+            }
+            else if (buttonId === "Close"){
+               Qt.quit();
             }
         }
     }

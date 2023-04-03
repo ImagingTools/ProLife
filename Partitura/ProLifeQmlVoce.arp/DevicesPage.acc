@@ -484,7 +484,7 @@
                                     <Data IsEnabled="true" Value="true"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Show New"/>
+                                    <Data IsEnabled="true" Value="New Sensors"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

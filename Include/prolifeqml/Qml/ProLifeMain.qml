@@ -33,11 +33,11 @@ Item {
     }
 
     function updateAllModels(){
-        if (thumbnailDecorator.documentManager.dirtyDocumentsExists()){
-            console.log("dirtyDocumentsExists");
+//        if (thumbnailDecorator.documentManager.dirtyDocumentsExists()){
+//            console.log("dirtyDocumentsExists");
 
-            return;
-        }
+//            return;
+//        }
 
         settingsProviderLocal.updateModel();
 
