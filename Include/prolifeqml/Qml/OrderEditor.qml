@@ -411,7 +411,7 @@ DocumentBase {
                 radius: 3;
 
                 onCurrentIndexChanged: {
-                    updateModel();
+                    orderEditorContainer.updateModel();
                 }
             }
         }
