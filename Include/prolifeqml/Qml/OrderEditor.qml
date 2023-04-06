@@ -19,6 +19,8 @@ DocumentBase {
 
     property alias licensesProviderLocal: licensesProvider;
 
+    property bool creatingLicenseFileFlag: false;
+
     Component.onCompleted: {
         licensesProvider.updateModel();
 
@@ -45,6 +47,16 @@ DocumentBase {
 
     onProductsModelChanged: {
         console.log("onProductsModelChanged", productsModel);
+    }
+
+    onSaved: {
+        console.log("Order onSaved", orderEditorContainer.creatingLicenseFileFlag);
+        if (orderEditorContainer.creatingLicenseFileFlag){
+            let result = orderEditorContainer.createLicenseFile(productsView.activeProductIndex);
+            if (result){
+                orderEditorContainer.creatingLicenseFileFlag = false;
+            }
+        }
     }
 
     CollectionDataProvider {
@@ -469,8 +481,6 @@ DocumentBase {
                 height: 22;
                 width: height;
 
-                //                tooltipText: qsTr("Add product to this order");
-
                 iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
 
                 gradient: Gradient {
@@ -482,15 +492,6 @@ DocumentBase {
                 onClicked: {
                     productsView.activeProductIndex = -1;
                     modalDialogManager.openDialog(productEditorDialog, {});
-
-                    //                    let productsModel = documentModel.GetData("OrderProducts");
-                    //                    if (!productsModel){
-                    //                        productsModel = documentModel.AddTreeModel("OrderProducts")
-                    //                    }
-
-                    //                    productsModel.InsertNewItem();
-
-                    //                    productsView.model = productsModel;
                 }
             }
 
@@ -764,9 +765,6 @@ DocumentBase {
                 if (categoryId == "Software" &&  productsModel.GetData("PairId", i) == id){
                     let modelProductId = productsModel.GetData("ProductId", i)
                     retVal = "#" + (i + 1) + " " + getProductName(modelProductId);
-                    //                    let productMacAddress = productsModel.GetData("MacAddress", i)
-                    //                    retVal += " (" + productMacAddress + ")";
-
                     break;
                 }
                 if (categoryId == "Hardware" && productsModel.GetData("Id", i) == pairId){
@@ -948,23 +946,25 @@ DocumentBase {
 
             onCreateLicenseFile: {
                 productsView.activeProductIndex = model.index;
-                if (model.CategoryId === "Pair"){
-                    let orderUuid = orderEditorContainer.itemId;
-                    if (orderUuid === "" || orderEditorContainer.isDirty){
-                        modalDialogManager.openDialog(errorDialog, {"message": qsTr("Please save this order first")});
-                    }
-                    else{
-                        let productId = "";
-                        if (model.HardwareProduct){
-                            let hardwareProductModel = model.HardwareProduct;
-                            productId = hardwareProductModel.GetData("Id");
-                        }
 
-                        if (productId !== ""){
-                            licenseFileController.createLicenseFile(orderUuid + "/" + productId);
-                        }
-                    }
-                }
+                orderEditorContainer.createLicenseFile(model.index);
+                //                if (model.CategoryId === "Pair"){
+                //                    let orderUuid = orderEditorContainer.itemId;
+                //                    if (orderUuid === "" || orderEditorContainer.isDirty){
+                //                        modalDialogManager.openDialog(errorDialog, {"message": qsTr("To create a license, you need to save the current order. Save the order ?")});
+                //                    }
+                //                    else{
+                //                        let productId = "";
+                //                        if (model.HardwareProduct){
+                //                            let hardwareProductModel = model.HardwareProduct;
+                //                            productId = hardwareProductModel.GetData("Id");
+                //                        }
+
+                //                        if (productId !== ""){
+                //                            licenseFileController.createLicenseFile(orderUuid + "/" + productId);
+                //                        }
+                //                    }
+                //                }
             }
 
             onPairEdited: {
@@ -988,12 +988,46 @@ DocumentBase {
         productProvider: productsView;
     }
 
+    function createLicenseFile(pairIndex){
+        console.log("createLicenseFile", pairIndex);
+        if (pairIndex >= 0){
+            let categoryId = productsView.model.GetData("CategoryId", pairIndex);
+            if (categoryId === "Pair"){
+                let orderUuid = orderEditorContainer.itemId;
+                if (orderUuid === "" || orderEditorContainer.isDirty){
+                    modalDialogManager.openDialog(errorDialog, {"message": qsTr("To create a license, you need to save the current order. Save the order ?")});
+                }
+                else{
+                    let productId = "";
+                    if (productsView.model.ContainsKey("HardwareProduct", pairIndex)){
+                        let hardwareProductModel = productsView.model.GetData("HardwareProduct", pairIndex);
+                        productId = hardwareProductModel.GetData("Id");
+                    }
+
+                    if (productId !== ""){
+                        licenseFileController.createLicenseFile(orderUuid + "/" + productId);
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     Component {
         id: errorDialog;
 
-        ErrorDialog {
-            title: qsTr("Unable to create a license");
-            onFinished: {}
+        MessageDialog {
+            title: qsTr("Save Order");
+            onFinished: {
+                if (buttonId == "Yes"){
+                    Events.sendEvent(orderEditorContainer.documentUuid + "CommandActivated", "Save");
+
+                    orderEditorContainer.creatingLicenseFileFlag = true;
+                }
+            }
         }
     }
 

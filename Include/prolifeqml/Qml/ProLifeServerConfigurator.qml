@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
 
@@ -12,14 +12,8 @@ Rectangle {
     property alias localSettings: preferenceDialog.settingsModel;
     signal settingsUpdate();
 
-    onLocalSettingsChanged: {
-        if (window.localSettings){
-            console.log("window onLocalSettingsChanged", window.localSettings.toJSON());
-        }
-    }
-
     onSettingsUpdate: {
-        console.log("window onSettingsUpdate", window.localSettings.toJSON());
+        console.log("window onSettingsUpdate", localSettings.toJSON());
     }
 
     MouseArea{
@@ -38,17 +32,8 @@ Rectangle {
         anchors.right: parent.right;
         anchors.bottom: buttons.top;
 
-        onSettingsModelChanged: {
-            if (preferenceDialog.settingsModel != null){
-                console.log("typeof settingsModel", typeof settingsModel);
-
-//                settingsModelObserver.registerModel(settingsModel);
-            }
-        }
-
-        onModelChanged: {
-            console.log("onModelChanged");
-            buttons.setButtonState("Apply", true);
+        onModelIsDirtyChanged: {
+            buttons.setButtonState("Apply", preferenceDialog.modelIsDirty);
         }
     }
 
@@ -62,17 +47,23 @@ Rectangle {
 
         Component.onCompleted: {
             buttons.addButton({"Id":"Apply", "Name": qsTr("Apply"), "Enabled": false});
-//            buttons.addButton({"Id":"Close", "Name": qsTr("Close"), "Enabled": true});
+            buttons.addButton({"Id":"Close", "Name": qsTr("Close"), "Enabled": true});
         }
 
         onButtonClicked: {
             if (buttonId === "Apply"){
                 window.settingsUpdate();
+                preferenceDialog.modelIsDirty = false;
 
-                buttons.setButtonState("Apply", false);
+                //                buttons.setButtonState("Apply", false);
             }
             else if (buttonId === "Close"){
-               Qt.quit();
+                if (preferenceDialog.modelIsDirty){
+                    modalDialogManager.openDialog(saveDialog, {"message": qsTr("Save all changes ?")});
+                }
+                else{
+                    Qt.quit();
+                }
             }
         }
     }
@@ -83,6 +74,39 @@ Rectangle {
         z: 30;
 
         anchors.fill: parent;
+    }
+
+//    Connections {
+//        target: Qt.application;
+
+//        onAboutToQuit: {
+//            console.log("onAboutToQuit");
+
+//            buttons.buttonClicked("Close");
+//        }
+//    }
+
+    Component {
+        id: saveDialog;
+
+        MessageDialog {
+            Component.onCompleted: {
+                console.log("saveDialog onCompleted");
+                buttons.addButton({"Id":"Cancel", "Name":"Cancel", "Enabled": true});
+            }
+
+            onFinished: {
+                console.log("saveDialog onFinished", buttonId);
+                if (buttonId == "Yes"){
+                    window.settingsUpdate();
+
+                    Qt.quit();
+                }
+                else if (buttonId == "No"){
+                    Qt.quit();
+                }
+            }
+        }
     }
 }
 
