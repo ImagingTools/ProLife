@@ -85,7 +85,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery CDeviceDatabaseDelegateComp::Crea
 
 			int revisionVersion = 1;
 
-			retVal.query = QString("UPDATE \"%1\" SET IsActive = false WHERE DocumentId = '%2'; INSERT INTO \"%1\"(DocumentId, AccountId, Document, RevisionNumber, LastModified, Checksum, IsActive) VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
+			retVal.query = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"DocumentId\" = '%2'; INSERT INTO \"%1\"(\"DocumentId\", \"AccountId\", \"Document\", \"RevisionNumber\", \"LastModified\", \"Checksum\", \"IsActive\") VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(objectId))
 						.arg(qPrintable(""))
@@ -118,7 +118,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 			return QByteArray();
 		}
 
-		retVal = QString("UPDATE \"%1\" SET IsActive = false WHERE DocumentId = '%2'; INSERT INTO \"%1\" (DocumentId, AccountId, Document, LastModified, Checksum, IsActive, RevisionNumber) VALUES('%2', '%3', '%4', '%5', '%6', true, (Select count(Id) from \"%1\" where DocumentId = '%2') + 1 );")
+		retVal = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"DocumentId\" = '%2'; INSERT INTO \"%1\" (\"DocumentId\", \"AccountId\", \"Document\", \"LastModified\", \"Checksum\", \"IsActive\", \"RevisionNumber\") VALUES('%2', '%3', '%4', '%5', '%6', true, (SELECT COUNT(\"Id\") FROM \"%1\" WHERE \"DocumentId\" = '%2') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
 					.arg(qPrintable(objectId))
 					.arg(qPrintable(""))
@@ -135,11 +135,11 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return QString("SELECT Id, %1, AccountId, Document, RevisionNumber, LastModified,"
-					"(SELECT LastModified FROM \"%2\" as t1 WHERE RevisionNumber = 1 AND t2.%1 = t1.%1 LIMIT 1) as Added,"
-					"(SELECT Document->>'OrderId' FROM \"Orders\" as t3 WHERE t3.IsActive = true AND t3.OrderId = t2.Document->>'OrderId' LIMIT 1) as OrderId"
+	return QString("SELECT \"Id\", \"%1\", \"AccountId\", \"Document\", \"RevisionNumber\", \"LastModified\","
+					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
+					"(SELECT \"Document\"->>'OrderId' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"OrderId\" = t2.\"Document\"->>'OrderId' LIMIT 1) as \"OrderId\""
 					" FROM \"%2\""
-					" as t2 WHERE IsActive = true")
+					" as t2 WHERE \"IsActive\" = true")
 			.arg(qPrintable(*m_objectIdColumnAttrPtr))
 			.arg(qPrintable(*m_tableNameAttrPtr));
 }
@@ -165,10 +165,10 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
 		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId"){
-			sortQuery = QString("ORDER BY %1 %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
-			sortQuery = QString("ORDER BY document->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+			sortQuery = QString("ORDER BY \"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 	}
 
