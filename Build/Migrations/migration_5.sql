@@ -12,7 +12,7 @@ CREATE TABLE public."UserGroups"
     "Checksum" bigint,
     "IsActive" boolean,
      PRIMARY KEY ("Id")
-)
+);
 
 ALTER TABLE "Devices" RENAME COLUMN Id TO "Id";
 ALTER TABLE "Devices" RENAME COLUMN DocumentId TO "DocumentId";

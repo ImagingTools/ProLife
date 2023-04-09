@@ -16,9 +16,13 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 		const imtgql::CGqlRequest& gqlRequest,
 		imtbase::CTreeItemModel& model,
 		int itemIndex,
-		const QByteArray& collectionId,
+		const imtbase::IObjectCollectionQuery* objectCollectionQuery,
 		QString& errorMessage) const
 {
+	if (objectCollectionQuery == nullptr){
+		return false;
+	}
+
 	bool retVal = true;
 
 	gqlRequest.GetFields();
@@ -27,13 +31,14 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
 		prolifedata::CIdentifiableOrderInfo* orderInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(collectionId, orderDataPtr)){
+		if (objectCollectionQuery->GetObjectData(orderDataPtr)){
 			orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderDataPtr.GetPtr());
 		}
 
 		if (orderInfoPtr != nullptr){
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
+				QByteArray collectionId = objectCollectionQuery->GetObjectId();
 
 				if(informationId == "TypeId"){
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
@@ -86,18 +91,12 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 					elementInformation = orderInfoPtr->GetDescription();
 				}
 				else if(informationId == "Added"){
-					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
-					if (metaInfoPtr.IsValid()){
-						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME)
-								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
-					}
+					QDateTime addedTime =  objectCollectionQuery->GetElementInfo("added").toDateTime();
+					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 				else if(informationId == "LastModified"){
-					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
-					if (metaInfoPtr.IsValid()){
-						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME)
-								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
-					}
+					QDateTime lastTime =  objectCollectionQuery->GetElementInfo("lastmodified").toDateTime();
+					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 
 				if (elementInformation.isNull()){
