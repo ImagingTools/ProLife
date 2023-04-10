@@ -25,7 +25,7 @@ protected:
 			const imtgql::CGqlRequest& gqlRequest,
 			imtbase::CTreeItemModel& model,
 			int itemIndex,
-			const imtbase::IObjectCollectionQuery* objectCollectionQuery,
+			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 			QString& errorMessage) const;
 };
 

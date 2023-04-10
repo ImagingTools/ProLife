@@ -16,10 +16,10 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 		const imtgql::CGqlRequest& gqlRequest,
 		imtbase::CTreeItemModel& model,
 		int itemIndex,
-		const imtbase::IObjectCollectionQuery* objectCollectionQuery,
+		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 		QString& errorMessage) const
 {
-	if (objectCollectionQuery == nullptr){
+	if (objectCollectionIterator == nullptr){
 		return false;
 	}
 
@@ -31,14 +31,14 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
 		prolifedata::CIdentifiableOrderInfo* orderInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
-		if (objectCollectionQuery->GetObjectData(orderDataPtr)){
+		if (objectCollectionIterator->GetObjectData(orderDataPtr)){
 			orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderDataPtr.GetPtr());
 		}
 
 		if (orderInfoPtr != nullptr){
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
-				QByteArray collectionId = objectCollectionQuery->GetObjectId();
+				QByteArray collectionId = objectCollectionIterator->GetObjectId();
 
 				if(informationId == "TypeId"){
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
@@ -91,11 +91,11 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 					elementInformation = orderInfoPtr->GetDescription();
 				}
 				else if(informationId == "Added"){
-					QDateTime addedTime =  objectCollectionQuery->GetElementInfo("added").toDateTime();
+					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
 					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 				else if(informationId == "LastModified"){
-					QDateTime lastTime =  objectCollectionQuery->GetElementInfo("lastmodified").toDateTime();
+					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
 					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 
