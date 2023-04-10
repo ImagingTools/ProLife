@@ -25,7 +25,6 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 
 	bool retVal = true;
 
-	gqlRequest.GetFields();
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){

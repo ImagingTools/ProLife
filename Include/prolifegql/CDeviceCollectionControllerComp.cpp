@@ -59,7 +59,7 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 		const imtgql::CGqlRequest& gqlRequest,
 		imtbase::CTreeItemModel& model,
 		int itemIndex,
-		const QByteArray& collectionId,
+		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 		QString& errorMessage) const
 {
 	bool retVal = true;
@@ -69,11 +69,13 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
 		prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+		if (objectCollectionIterator->GetObjectData(dataPtr)){
 			deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 		}
 
 		if (deviceInfoPtr != nullptr){
+			QByteArray collectionId = objectCollectionIterator->GetObjectId();
+
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
 
@@ -151,18 +153,12 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					}
 				}
 				else if(informationId == "Added"){
-					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
-					if (metaInfoPtr.IsValid()){
-						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME)
-								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
-					}
+					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
+					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 				else if(informationId == "LastModified"){
-					idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetElementMetaInfo(collectionId);
-					if (metaInfoPtr.IsValid()){
-						elementInformation = metaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_LAST_OPERATION_TIME)
-								.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
-					}
+					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
+					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 
 				if (elementInformation.isNull()){
