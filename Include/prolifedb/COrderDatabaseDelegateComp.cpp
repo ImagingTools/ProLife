@@ -84,7 +84,7 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 			QByteArray orderId = orderInfoPtr->GetOrderId();
 
 			int revisionVersion = 1;
-			retVal.query = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"OrderId\" = '%2'; INSERT INTO \"%1\"(\"OrderId\", \"AccountId\", \"Document\", \"RevisionNumber\", \"LastModified\", \"CheckSum\", \"IsActive\") VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
+			retVal.query = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"OrderId\" = '%2'; INSERT INTO \"%1\"(\"OrderId\", \"AccountId\", \"Document\", \"RevisionNumber\", \"LastModified\", \"Checksum\", \"IsActive\") VALUES('%2', '%3', '%4', '%5', '%6', '%7', true);")
 						.arg(qPrintable(*m_tableNameAttrPtr))
 						.arg(qPrintable(objectId))
 						.arg(qPrintable(accountId))
@@ -104,11 +104,13 @@ imtdb::IDatabaseObjectDelegate::NewObjectQuery COrderDatabaseDelegateComp::Creat
 QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
-			const istd::IChangeable& object) const
+			const istd::IChangeable& object,
+			bool /*useExternDelegate*/) const
 {
 	QByteArray retVal;
 
 	QByteArray documentContent;
+
 	if (WriteDataToMemory("Software", object, documentContent)){
 		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
 		const prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::CIdentifiableOrderInfo*>(&object);
@@ -120,7 +122,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 		QByteArray orderId = orderInfoPtr->GetOrderId();
 		QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
 
-		retVal = QString("UPDATE \"%1\" SET \"IsActive\" = false, \"OrderId\" = '%2' WHERE \"OrderId\" = '%3'; INSERT INTO \"%1\" (\"OrderId\", \"AccountId\", \"Document\", \"LastModified\", \"CheckSum\", \"IsActive\", \"RevisionNumber\") VALUES('%2', '%4', '%5', '%6', '%7', true, (SELECT COUNT(\"Id\") FROM \"%1\" WHERE \"OrderId\" = '%3') + 1 );")
+		retVal = QString("UPDATE \"%1\" SET \"IsActive\" = false, \"OrderId\" = '%2' WHERE \"OrderId\" = '%3'; INSERT INTO \"%1\" (\"OrderId\", \"AccountId\", \"Document\", \"LastModified\", \"Checksum\", \"IsActive\", \"RevisionNumber\") VALUES('%2', '%4', '%5', '%6', '%7', true, (SELECT COUNT(\"Id\") FROM \"%1\" WHERE \"OrderId\" = '%3') + 1 );")
 					.arg(qPrintable(*m_tableNameAttrPtr))
 					.arg(qPrintable(objectUuid))
 					.arg(qPrintable(objectId))

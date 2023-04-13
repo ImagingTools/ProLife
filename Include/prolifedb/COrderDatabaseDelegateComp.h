@@ -32,7 +32,8 @@ public:
 	virtual QByteArray CreateUpdateObjectQuery(
 				const imtbase::IObjectCollection& collection,
 				const QByteArray& objectId,
-				const istd::IChangeable& object) const override;
+				const istd::IChangeable& object,
+				bool useExternDelegate = true) const override;
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual bool SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const override;

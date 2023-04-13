@@ -7,6 +7,7 @@
 
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/TOrderedWrap.h>
 
 
 namespace prolifedata
@@ -50,7 +51,9 @@ private:
 	DeviceProductionStatus m_status;
 };
 
+
 typedef imtbase::TIdentifiableWrap<CDeviceInfo> CIdentifiableDeviceInfo;
+typedef prolifedata::TOrderedWrap<CIdentifiableDeviceInfo> COrderedIdentifiableDeviceInfo;
 
 
 } // namespace prolifedata

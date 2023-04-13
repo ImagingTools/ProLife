@@ -9,6 +9,7 @@
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CKeyDataProviderComp.h>
+#include <prolifedata/CDeviceInfoComp.h>
 
 
 namespace ProLifeDataPck
@@ -23,15 +24,8 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> OrderInfo;
-typedef icomp::TModelCompWrap<
-			icomp::TMakeComponentWrap <
-						prolifedata::CIdentifiableDeviceInfo,
-						prolifedata::IDeviceInfo,
-						imtbase::IIdentifiable,
-						iser::IObject,
-						iser::ISerializable,
-						istd::IChangeable>> DeviceInfo;
 typedef prolifedata::CKeyDataProviderComp KeyDataProvider;
+typedef icomp::TModelCompWrap<prolifedata::CDeviceInfoComp> DeviceInfo;
 
 
 } // namespace ProLifeDataPck

@@ -6,9 +6,6 @@
 
 // ImtCore includes
 #include <imtbase/ICollectionInfo.h>
-#include <imtgui/CObjectCollectionViewDelegate.h>
-#include <imtlic/CFeaturePackageCollectionUtility.h>
-#include <imtlic/CLicenseInstance.h>
 #include <imtlic/CProductInstanceCollection.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 
@@ -160,7 +157,6 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 						softwareProductModelPtr->SetData("Id", objectUuid, productIndex);
 						softwareProductModelPtr->SetData("ProductId", productId, productIndex);
 						softwareProductModelPtr->SetData("CategoryId", categoryId, productIndex);
-//						softwareProductModelPtr->SetData("MacAddress", productInstance, productIndex);
 
 						imtbase::CTreeItemModel* activeLicenses = softwareProductModelPtr->AddTreeModel("ActiveLicenses", productIndex);
 						const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();
