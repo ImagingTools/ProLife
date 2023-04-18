@@ -124,7 +124,7 @@
                             <Values>
                                 <Value>AccountName</Value>
                                 <Value>Mail</Value>
-                                <Value>AccountDescription</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -151,7 +151,7 @@
                             <Values>
                                 <Value>AccountName</Value>
                                 <Value>Mail</Value>
-                                <Value>AccountDescription</Value>
+                                <Value>Description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

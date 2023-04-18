@@ -10,7 +10,7 @@ CollectionView {
     property MainDocumentManager mainDocumentManager: null;
 
     Component.onCompleted: {
-        Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
+       // Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.subscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
@@ -18,8 +18,14 @@ CollectionView {
     }
 
     Component.onDestruction: {
-        Events.unSubscribeEvent("OrdersCollectionUpdated", container.updateGui);
+//        Events.unSubscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.unSubscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
+    }
+
+    onVisibleChanged: {
+        if (container.visible){
+            container.updateGui();
+        }
     }
 
     function fillContextMenuModel(){

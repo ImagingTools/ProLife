@@ -24,17 +24,6 @@
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PageData">
-            <PositionMap>
-                <Element ComponentName="AccountsPage" X="450" Y="75" Note=""/>
-                <Element ComponentName="AdministrationPage" X="550" Y="375" Note=""/>
-                <Element ComponentName="DevicesPage" X="725" Y="75" Note=""/>
-                <Element ComponentName="OrdersPage" X="175" Y="75" Note=""/>
-                <Element ComponentName="ProductPermissionController" X="550" Y="625" Note=""/>
-                <Element ComponentName="SingleProductPermission" X="550" Y="500" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountDocumentSqlRepository" X="575" Y="275" Note=""/>
@@ -42,6 +31,7 @@
                 <Element ComponentName="CompanyInfo" X="575" Y="450" Note=""/>
                 <Element ComponentName="DeviceDocumentSqlRepository" X="975" Y="275" Note=""/>
                 <Element ComponentName="DeviceInfo" X="975" Y="450" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="975" Y="625" Note=""/>
                 <Element ComponentName="OrderDocumentSqlRepository" X="200" Y="275" Note=""/>
                 <Element ComponentName="OrderInfo" X="175" Y="450" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="200" Y="625" Note=""/>
@@ -55,6 +45,17 @@
                 <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
                 <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
                 <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AccountsPage" X="450" Y="75" Note=""/>
+                <Element ComponentName="AdministrationPage" X="550" Y="375" Note=""/>
+                <Element ComponentName="DevicesPage" X="725" Y="75" Note=""/>
+                <Element ComponentName="OrdersPage" X="175" Y="75" Note=""/>
+                <Element ComponentName="ProductPermissionController" X="550" Y="625" Note=""/>
+                <Element ComponentName="SingleProductPermission" X="550" Y="500" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

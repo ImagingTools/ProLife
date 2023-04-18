@@ -42,7 +42,7 @@ Item {
         id: fileDialogSave;
 
         title: qsTr("Save file");
-        folder: shortcuts.home;
+       // folder: shortcuts.home;
 
         nameFilters: ["License files (*.lic)", "All files (*)"];
 
