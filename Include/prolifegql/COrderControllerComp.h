@@ -2,7 +2,6 @@
 
 
 // ImtCore includes
-#include <imtbase/IMetaInfoCreator.h>
 #include <imtguigql/CObjectCollectionControllerCompBase.h>
 
 // ProLife includes

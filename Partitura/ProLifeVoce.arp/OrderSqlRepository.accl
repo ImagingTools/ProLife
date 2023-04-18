@@ -9,9 +9,9 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CompactXmlFileSerializer" X="275" Y="200" Note=""/>
-        <Element ComponentName="OrderDatabaseDelegate" X="650" Y="200" Note=""/>
+        <Element ComponentName="OrderDatabaseDelegate" X="650" Y="225" Note=""/>
         <Element ComponentName="OrderInfo" X="975" Y="200" Note=""/>
-        <Element ComponentName="Orders" X="525" Y="425" Note=""/>
+        <Element ComponentName="Orders" X="650" Y="425" Note=""/>
         <Element ComponentName="Types" X="625" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

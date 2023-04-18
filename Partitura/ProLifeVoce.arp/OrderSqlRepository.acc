@@ -25,6 +25,9 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DocumentContentColumnId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Document"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -36,7 +39,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>CompactXmlFileSerializer</Value>
-                                <Value>CompactXmlFileSerializer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -44,7 +46,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="OrderId"/>
+                        <Data IsEnabled="true" Value="DocumentId"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectTypes" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Types"/>
@@ -87,16 +89,14 @@
                     <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Software</Value>
-                                <Value>Hardware</Value>
+                                <Value>DocumentInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Software</Value>
-                                <Value>Hardware</Value>
+                                <Value>DocumentInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -110,6 +110,7 @@
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Orders"/>
+        <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="OrderDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Orders"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Orders"/>
     </ExportedInterfaces>

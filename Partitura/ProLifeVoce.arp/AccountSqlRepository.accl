@@ -8,12 +8,11 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountInfoMetaInfoCreator" X="175" Y="600" Note=""/>
-        <Element ComponentName="CompanyDatabaseDelegate" X="225" Y="150" Note=""/>
-        <Element ComponentName="CompanyInfo" X="600" Y="150" Note=""/>
-        <Element ComponentName="CompanyInfoMetaInfoCreator" X="225" Y="500" Note=""/>
-        <Element ComponentName="OptionsListAdapter" X="600" Y="500" Note=""/>
-        <Element ComponentName="Repository" X="650" Y="300" Note=""/>
+        <Element ComponentName="AccountDatabaseDelegate" X="600" Y="325" Note=""/>
+        <Element ComponentName="CompanyInfo" X="600" Y="100" Note=""/>
+        <Element ComponentName="JsonSerializer" X="600" Y="575" Note=""/>
+        <Element ComponentName="Repository" X="200" Y="325" Note=""/>
+        <Element ComponentName="Types" X="1000" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

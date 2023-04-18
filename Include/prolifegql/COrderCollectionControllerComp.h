@@ -14,6 +14,7 @@ public:
 	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
+		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 	I_END_COMPONENT;
 
 protected:
@@ -24,6 +25,10 @@ protected:
 			int itemIndex,
 			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 			QString& errorMessage) const override;
+	virtual imtbase::CTreeItemModel* ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+
+protected:
+	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 };
 
 

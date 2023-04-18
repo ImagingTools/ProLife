@@ -67,10 +67,10 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>* deviceInfoPtr = nullptr;
+		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (objectCollectionIterator->GetObjectData(dataPtr)){
-			deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CDeviceInfo>*>(dataPtr.GetPtr());
+			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(dataPtr.GetPtr());
 		}
 
 		if (deviceInfoPtr != nullptr){

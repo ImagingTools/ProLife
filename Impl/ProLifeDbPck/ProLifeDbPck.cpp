@@ -25,6 +25,11 @@ I_EXPORT_COMPONENT(
 			"SQL Product Device Delegate");
 
 I_EXPORT_COMPONENT(
+			AccountDatabaseDelegate,
+			"Account info object for SQL table",
+			"SQL Account Delegate");
+
+I_EXPORT_COMPONENT(
 			DatabaseConverterComp,
 			"Component used for conversion of database entries to JSON objects",
 			"Database Converter");

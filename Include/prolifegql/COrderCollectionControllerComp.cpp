@@ -3,6 +3,13 @@
 
 // ACF includes
 #include <idoc/IDocumentMetaInfo.h>
+#include <iprm/CTextParam.h>
+
+// ImtCore includes
+#include <imtbase/CCollectionFilter.h>
+#include <imtauth/IAccountBaseInfo.h>
+#include <imtbase/IObjectCollectionIterator.h>
+#include <imtdb/CSqlDatabaseObjectCollectionComp.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -35,81 +42,256 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 		}
 
 		if (orderInfoPtr != nullptr){
-			for (QByteArray informationId : informationIds){
-				QVariant elementInformation;
-				QByteArray collectionId = objectCollectionIterator->GetObjectId();
+//			QByteArrayList userGroupIds;
+//			imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetGqlContext();
+//			if (gqlContextPtr != nullptr){
+//				imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+//				if (userInfoPtr != nullptr){
+//					userGroupIds = userInfoPtr->GetGroups();
+//				}
+//			}
 
-				if(informationId == "TypeId"){
-					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
-				}
-				else if(informationId == "Id"){
-					QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
-					if (objectUuid.isEmpty()){
+//			QByteArrayList accountGroupIds;
+//			if (m_accountCollectionCompPtr.IsValid()){
+//				QByteArray customerId = orderInfoPtr->GetCustomerId();
+//				imtbase::IObjectCollection::DataPtr dataPtr;
+//				if (m_accountCollectionCompPtr->GetObjectData(customerId, dataPtr)){
+//					imtauth::IAccountBaseInfo* accountInfoPtr = dynamic_cast<imtauth::IAccountBaseInfo*>(dataPtr.GetPtr());
+//					if (accountInfoPtr != nullptr){
+//						accountGroupIds = accountInfoPtr->GetGroups();
+//					}
+//				}
+//			}
+
+//			bool ok = false;
+//			for (const QByteArray& groupId : userGroupIds){
+//				if (accountGroupIds.contains(groupId)){
+//					ok = true;
+//					break;
+//				}
+//			}
+
+//			if (ok){
+				for (QByteArray informationId : informationIds){
+					QVariant elementInformation;
+					QByteArray collectionId = objectCollectionIterator->GetObjectId();
+
+					if(informationId == "TypeId"){
+						elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
+					}
+					else if(informationId == "Id"){
+						QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
+						if (objectUuid.isEmpty()){
+							elementInformation = orderInfoPtr->GetOrderId();
+						}
+						else{
+							elementInformation = objectUuid;
+						}
+					}
+					else if(informationId == "Name"){
 						elementInformation = orderInfoPtr->GetOrderId();
 					}
-					else{
-						elementInformation = objectUuid;
+					else if(informationId == "Status"){
+						int status = orderInfoPtr->GetOrderStatus();
+						switch (status){
+						case prolifedata::IOrderInfo::OS_NONE:
+							elementInformation = "None";
+							break;
+						case prolifedata::IOrderInfo::OS_CREATED:
+							elementInformation = "Created";
+							break;
+						case prolifedata::IOrderInfo::OS_IN_PROGRESS:
+							elementInformation = "In Progress";
+							break;
+						case prolifedata::IOrderInfo::OS_CANCELED:
+							elementInformation = "Canceled";
+							break;
+						case prolifedata::IOrderInfo::OS_ON_HOLD:
+							elementInformation = "Hold";
+							break;
+						case prolifedata::IOrderInfo::OS_FINISHED:
+							elementInformation = "Finished";
+							break;
+						case prolifedata::IOrderInfo::OS_CLOSED:
+							elementInformation = "Closed";
+							break;
+						}
 					}
-				}
-				else if(informationId == "Name"){
-					elementInformation = orderInfoPtr->GetOrderId();
-				}
-				else if(informationId == "Status"){
-					int status = orderInfoPtr->GetOrderStatus();
-					switch (status){
-					case prolifedata::IOrderInfo::OS_NONE:
-						elementInformation = "None";
-						break;
-					case prolifedata::IOrderInfo::OS_CREATED:
-						elementInformation = "Created";
-						break;
-					case prolifedata::IOrderInfo::OS_IN_PROGRESS:
-						elementInformation = "In Progress";
-						break;
-					case prolifedata::IOrderInfo::OS_CANCELED:
-						elementInformation = "Canceled";
-						break;
-					case prolifedata::IOrderInfo::OS_ON_HOLD:
-						elementInformation = "Hold";
-						break;
-					case prolifedata::IOrderInfo::OS_FINISHED:
-						elementInformation = "Finished";
-						break;
-					case prolifedata::IOrderInfo::OS_CLOSED:
-						elementInformation = "Closed";
-						break;
+					else if(informationId == "OrderId"){
+						elementInformation = orderInfoPtr->GetOrderId();
 					}
-				}
-				else if(informationId == "OrderId"){
-					elementInformation = orderInfoPtr->GetOrderId();
-				}
-				else if(informationId == "OrderCustomer"){
-					elementInformation = orderInfoPtr->GetCustomerId();
-				}
-				else if(informationId == "Description"){
-					elementInformation = orderInfoPtr->GetDescription();
-				}
-				else if(informationId == "Added"){
-					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
-					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
-				}
-				else if(informationId == "LastModified"){
-					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
-					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
-				}
+					else if(informationId == "OrderCustomer"){
+						if (m_accountCollectionCompPtr.IsValid()){
+							QByteArray customerId = orderInfoPtr->GetCustomerId();
+							imtbase::IObjectCollection::DataPtr dataPtr;
+							if (m_accountCollectionCompPtr->GetObjectData(customerId, dataPtr)){
+								imtauth::IAccountBaseInfo* accountInfoPtr = dynamic_cast<imtauth::IAccountBaseInfo*>(dataPtr.GetPtr());
+								if (accountInfoPtr != nullptr){
+									elementInformation = accountInfoPtr->GetAccountName();
+								}
+							}
+						}
+					}
+					else if(informationId == "Description"){
+						elementInformation = orderInfoPtr->GetDescription();
+					}
+					else if(informationId == "Added"){
+						QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
+						elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
+					}
+					else if(informationId == "LastModified"){
+						QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
+						elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
+					}
 
-				if (elementInformation.isNull()){
-					elementInformation = "";
-				}
+					if (elementInformation.isNull()){
+						elementInformation = "";
+					}
 
-				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
-			}
+					retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
+				}
+//			}
 		}
 
 		return true;
 	}
 
 	return false;
+}
+
+
+imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	if (!m_objectCollectionCompPtr.IsValid() || !m_accountCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlObject* viewParamsGql = nullptr;
+	if (inputParams->size() > 0){
+		viewParamsGql = inputParams->at(0).GetFieldArgumentObjectPtr("viewParams");
+	}
+
+	iprm::CParamsSet filterParams;
+
+	imtbase::CCollectionFilter m_filter;
+	int offset = 0, count = -1;
+	if (viewParamsGql != nullptr){
+		offset = viewParamsGql->GetFieldArgumentValue("Offset").toInt();
+		count = viewParamsGql->GetFieldArgumentValue("Count").toInt();
+
+		QByteArray filterBA = viewParamsGql->GetFieldArgumentValue("FilterModel").toByteArray();
+		if (!filterBA.isEmpty()){
+			imtbase::CTreeItemModel generalModel;
+			generalModel.CreateFromJson(filterBA);
+
+			imtbase::CTreeItemModel* filterModel = generalModel.GetTreeItemModel("FilterIds");
+			if (filterModel != nullptr){
+				QByteArrayList filteringInfoIds;
+				for (int i = 0; i < filterModel->GetItemsCount(); i++){
+					QByteArray headerId = filterModel->GetData("Id", i).toByteArray();
+					if (!headerId.isEmpty()){
+						filteringInfoIds << headerId;
+					}
+				}
+				m_filter.SetFilteringInfoIds(filteringInfoIds);
+			}
+
+			QString filterText = generalModel.GetData("TextFilter").toString();
+			if (!filterText.isEmpty()){
+				m_filter.SetTextFilter(filterText);
+			}
+
+			imtbase::CTreeItemModel* sortModel = generalModel.GetTreeItemModel("Sort");
+			if (sortModel != nullptr){
+				QByteArray headerId = sortModel->GetData("HeaderId").toByteArray();
+				QByteArray sortOrder = sortModel->GetData("SortOrder").toByteArray();
+				if (!headerId.isEmpty() && !sortOrder.isEmpty()){
+					m_filter.SetSortingOrder(sortOrder == "ASC" ? imtbase::ICollectionFilter::SO_ASC : imtbase::ICollectionFilter::SO_DESC);
+					m_filter.SetSortingInfoIds(QByteArrayList() << headerId);
+				}
+			}
+		}
+
+		filterParams.SetEditableParameter("Filter", &m_filter);
+
+		this->SetAdditionalFilters(*viewParamsGql, &filterParams);
+	}
+
+	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetGqlContext();
+	if (gqlContextPtr == nullptr){
+		return nullptr;
+	}
+
+	// User group ID-s from GQL context user
+	QByteArrayList userGroupIds;
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr != nullptr){
+		userGroupIds = userInfoPtr->GetGroups();
+	}
+
+	iprm::COptionsManager optionsManager;
+	for (const QByteArray& groupId : userGroupIds){
+		optionsManager.InsertOption("", groupId);
+	}
+
+	iprm::CParamsSet accountFilter;
+	iprm::CParamsSet groups;
+	groups.SetEditableParameter("Groups", &optionsManager);
+	accountFilter.SetEditableParameter("ObjectFilter", &groups);
+
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
+	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
+	imtbase::CTreeItemModel* notificationModel = dataModel->AddTreeModel("notification");
+
+	iprm::CParamsSet orderParams;
+	imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
+
+	iprm::COptionsManager accountsOptionsManager;
+	for (const QByteArray& accountId : accountIds){
+		accountsOptionsManager.InsertOption("", accountId);
+	}
+	iprm::CParamsSet accountParams;
+	accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
+	filterParams.SetEditableParameter("ObjectFilter", &accountParams);
+
+	int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);
+
+	int pagesCount = std::ceil(elementsCount / (double)count);
+	if (pagesCount <= 0){
+		pagesCount = 1;
+	}
+
+	notificationModel->SetData("PagesCount", pagesCount);
+
+	if (offset >= elementsCount){
+		offset -= count;
+	}
+
+	imtdb::CSqlDatabaseObjectCollectionComp* objectCollectionCompPtr = dynamic_cast<imtdb::CSqlDatabaseObjectCollectionComp*>(m_objectCollectionCompPtr.GetPtr());
+	istd::TDelPtr<imtbase::IObjectCollectionIterator> objectCollectionIterator(objectCollectionCompPtr->CreateObjectCollectionIterator(offset, count, &filterParams));
+
+	if (objectCollectionIterator != nullptr){
+		while (objectCollectionIterator->Next()){
+			imtbase::IObjectCollection::DataPtr objectDataPtr;
+			if (objectCollectionIterator->GetObjectData(objectDataPtr)){
+				int itemIndex = itemsModel->InsertNewItem();
+				if (itemIndex >= 0){
+					if (!SetupGqlItem(gqlRequest, *itemsModel, itemIndex, objectCollectionIterator.GetPtr(), errorMessage)){
+						return nullptr;
+					}
+				}
+			}
+			else{
+				return nullptr;
+			}
+		}
+	}
+
+	return rootModelPtr.PopPtr();
 }
 
 

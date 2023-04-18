@@ -61,11 +61,12 @@ DocumentBase {
 
     CollectionDataProvider {
         id: accountsList;
-        fields: ["Id", "Name"];
+        fields: ["Id", "AccountName"];
         commandId: "Accounts";
 
         onCollectionModelChanged: {
             if (accountsList.collectionModel != null){
+                customerCB.nameId = "AccountName";
                 customerCB.model = accountsList.collectionModel;
 
                 productsList.updateModel({});

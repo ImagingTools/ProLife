@@ -1,16 +1,10 @@
 #include <prolifegql/COrderControllerComp.h>
 
 
-// ACF includes
-#include <idoc/CStandardDocumentMetaInfo.h>
-
 // ImtCore includes
-#include <imtbase/ICollectionInfo.h>
-#include <imtlic/CProductInstanceCollection.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
-#include <prolifedata/IOrderedProductInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
@@ -44,25 +38,20 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		//		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-		prolifedata::CIdentifiableOrderInfo* orderPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
 		if (orderPtr == nullptr){
 			errorMessage = QT_TR_NOOP("Unable to get an product instance");
 			return nullptr;
 		}
 
-		imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("OrderProducts");
-
-		QByteArray objectUuid = orderPtr->GetObjectUuid();
+		QByteArray objectUuid = objectId;
 		QByteArray orderId = orderPtr->GetOrderId();
 		QByteArray customerId = orderPtr->GetCustomerId();
 		QString description = orderPtr->GetDescription();
 		prolifedata::IOrderInfo::OrderStatus status = orderPtr->GetOrderStatus();
 
-		QString name = m_objectCollectionCompPtr->GetElementInfo(objectId, idoc::IDocumentMetaInfo::MIT_TITLE).toString();
-
 		dataModel->SetData("Id", objectUuid);
-		dataModel->SetData("Name", name);
+		dataModel->SetData("Name", orderId);
 		dataModel->SetData("OrderId", orderId);
 		dataModel->SetData("CustomerId", customerId);
 		dataModel->SetData("Description", description);
@@ -90,6 +79,8 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 			dataModel->SetData("OrderStatus", "Closed");
 			break;
 		}
+
+		imtbase::CTreeItemModel* productsModel = dataModel->AddTreeModel("OrderProducts");
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
