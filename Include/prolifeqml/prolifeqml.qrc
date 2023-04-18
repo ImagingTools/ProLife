@@ -10,6 +10,7 @@
     <qresource prefix="/qml">
         <file alias="Acf/Style.qml">Qml/Acf/Style.qml</file>
         <file alias="ProLife/ProLifeMain.qml">Qml/ProLifeMain.qml</file>
+	<file alias="ProLife/ProLifeWeb.qml">Qml/ProLifeWeb.qml</file>
 	<file alias="ProLife/ProLifeServerConfigurator.qml">Qml/ProLifeServerConfigurator.qml</file>
         <file alias="ProLife/OrderCollectionView.qml">Qml/OrderCollectionView.qml</file>
         <file alias="ProLife/OrderEditor.qml">Qml/OrderEditor.qml</file>
