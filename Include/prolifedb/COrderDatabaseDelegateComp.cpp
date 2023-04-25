@@ -46,14 +46,16 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 							filterQuery += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(qPrintable(accountId));
 						}
 
-						filterQuery = '(' + filterQuery + ')';
+						if (!filterQuery.isEmpty()){
+							filterQuery = '(' + filterQuery + ')';
+						}
 					}
 				}
 			}
 		}
 	}
 
-	return true;
+	return !filterQuery.isEmpty();
 }
 
 
@@ -81,6 +83,37 @@ bool COrderDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilte
 		}
 		else{
 			sortQuery = QString("ORDER BY \"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+		}
+	}
+
+	return true;
+}
+
+
+bool COrderDatabaseDelegateComp::CreateTextFilterQuery(
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
+{
+	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
+	if (filteringColumnIds.isEmpty()){
+		return true;
+	}
+
+	QString textFilter = collectionFilter.GetTextFilter();
+	if (!textFilter.isEmpty()){
+		for (int i = 0; i < filteringColumnIds.size(); i++){
+			if (i > 0){
+				textFilterQuery += " OR ";
+			}
+
+			if (filteringColumnIds[i] == "OrderCustomer"){
+				textFilterQuery += QString("(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
+										.arg(qPrintable(filteringColumnIds[i]))
+										.arg(textFilter);
+			}
+			else{
+				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
+			}
 		}
 	}
 

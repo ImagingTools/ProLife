@@ -98,6 +98,7 @@ DocumentBase {
         onModelUpdated: {
             if (devicesList.collectionModel != null){
                 orderEditorContainer.devicesModel = devicesList.collectionModel;
+                console.log("devicesList onModelUpdated", devicesList.collectionModel.toJSON());
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
                     let status = orderEditorContainer.documentModel.GetData("OrderStatus");
@@ -107,6 +108,8 @@ DocumentBase {
                 else{
                     orderStatusCB.model = orderStatus.statusModel;
                 }
+
+                console.log("orderStatusCB.model", orderStatusCB.model.toJSON());
 
                 orderEditorContainer.updateGui();
                 undoRedoManager.registerModel(documentModel);

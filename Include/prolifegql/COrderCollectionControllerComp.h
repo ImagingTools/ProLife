@@ -15,6 +15,7 @@ public:
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
+		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all orders", true, "");
 	I_END_COMPONENT;
 
 protected:
@@ -29,6 +30,7 @@ protected:
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
+	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 };
 
 

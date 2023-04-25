@@ -33,6 +33,10 @@ bool CAccountDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSe
 							QByteArray groupId = optionsListPtr->GetOptionId(i);
 							filterQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupId));
 						}
+
+						if (!filterQuery.isEmpty()){
+							filterQuery = '(' + filterQuery + ')';
+						}
 					}
 				}
 			}

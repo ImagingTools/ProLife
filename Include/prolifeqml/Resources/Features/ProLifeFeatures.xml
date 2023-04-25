@@ -5,7 +5,7 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{55b77d84-a441-4030-a97a-46f1d0e2a6f2}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
+            <Object ID="{52839f1f-3337-40a2-a222-552ff016f54d}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
                 <Data Id="SensorManagement" Name="Sensor Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewSensors" Name="View Sensors" Optional="false">
@@ -24,10 +24,13 @@
                                 </Object>
                             </SubFeatures>
                         </Object>
+                        <Object Id="ViewAllSensors" Name="View All Sensors" Optional="false">
+                            <SubFeatures/>
+                        </Object>
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{45148791-b891-4515-85fd-62cdcc206b21}" Description="" TypeId="FeatureInfo" Name="Account Management">
+            <Object ID="{b1dcbb4d-ff7a-4523-abd9-b7e57a2f7621}" Description="" TypeId="FeatureInfo" Name="Account Management">
                 <Data Id="AccountManagement" Name="Account Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
@@ -49,7 +52,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{811c1b7e-7f3a-4a6a-91bb-e704ae1a3d7a}" Description="" TypeId="FeatureInfo" Name="Order Management">
+            <Object ID="{d31e1667-b473-477b-877a-32fff007ce3b}" Description="" TypeId="FeatureInfo" Name="Order Management">
                 <Data Id="OrderManagement" Name="Order Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewOrders" Name="View Orders" Optional="false">
@@ -71,10 +74,13 @@
                         <Object Id="CreateLicenseFile" Name="Create License File" Optional="false">
                             <SubFeatures/>
                         </Object>
+                        <Object Id="ViewAllOrders" Name="View All Orders" Optional="false">
+                            <SubFeatures/>
+                        </Object>
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{c4d84d7d-36f1-4354-b7c3-133c0a0abc1a}" Description="" TypeId="FeatureInfo" Name="Administration">
+            <Object ID="{a24f5fed-ba6c-446a-a050-34c7e2f25003}" Description="" TypeId="FeatureInfo" Name="Administration">
                 <Data Id="Administration" Name="Administration" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAdministration" Name="View Administration" Optional="false">
@@ -120,7 +126,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{07501fcc-637f-49d0-9bf6-7eaa146c82b9}" Description="" TypeId="FeatureInfo" Name="Settings Management">
+            <Object ID="{5488b534-7001-46af-86f0-165b3da1c607}" Description="" TypeId="FeatureInfo" Name="Settings Management">
                 <Data Id="SettingsManagement" Name="Settings Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewClientSettings" Name="View Client Settings" Optional="false">

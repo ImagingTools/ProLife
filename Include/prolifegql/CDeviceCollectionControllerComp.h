@@ -15,6 +15,8 @@ public:
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
+		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
+		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all devices", true, "");
 	I_END_COMPONENT;
 
 protected:
@@ -30,6 +32,8 @@ protected:
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
+	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 };
 
 

@@ -42,36 +42,6 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 		}
 
 		if (orderInfoPtr != nullptr){
-//			QByteArrayList userGroupIds;
-//			imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetGqlContext();
-//			if (gqlContextPtr != nullptr){
-//				imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-//				if (userInfoPtr != nullptr){
-//					userGroupIds = userInfoPtr->GetGroups();
-//				}
-//			}
-
-//			QByteArrayList accountGroupIds;
-//			if (m_accountCollectionCompPtr.IsValid()){
-//				QByteArray customerId = orderInfoPtr->GetCustomerId();
-//				imtbase::IObjectCollection::DataPtr dataPtr;
-//				if (m_accountCollectionCompPtr->GetObjectData(customerId, dataPtr)){
-//					imtauth::IAccountBaseInfo* accountInfoPtr = dynamic_cast<imtauth::IAccountBaseInfo*>(dataPtr.GetPtr());
-//					if (accountInfoPtr != nullptr){
-//						accountGroupIds = accountInfoPtr->GetGroups();
-//					}
-//				}
-//			}
-
-//			bool ok = false;
-//			for (const QByteArray& groupId : userGroupIds){
-//				if (accountGroupIds.contains(groupId)){
-//					ok = true;
-//					break;
-//				}
-//			}
-
-//			if (ok){
 				for (QByteArray informationId : informationIds){
 					QVariant elementInformation;
 					QByteArray collectionId = objectCollectionIterator->GetObjectId();
@@ -150,7 +120,6 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 
 					retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
 				}
-//			}
 		}
 
 		return true;
@@ -225,38 +194,57 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 		return nullptr;
 	}
 
-	// User group ID-s from GQL context user
-	QByteArrayList userGroupIds;
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr != nullptr){
-		userGroupIds = userInfoPtr->GetGroups();
+	bool filterByGroup = true;
+	if (m_checkPermissionCompPtr.IsValid()){
+		QByteArrayList userPermissions;
+
+		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+		if (userInfoPtr != nullptr){
+			userPermissions = userInfoPtr->GetPermissions();
+		}
+
+		QByteArrayList permissions;
+		permissions << *m_permissionIdAttrPtr;
+		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
 	}
 
 	iprm::COptionsManager optionsManager;
-	for (const QByteArray& groupId : userGroupIds){
-		optionsManager.InsertOption("", groupId);
-	}
+	iprm::COptionsManager accountsOptionsManager;
 
 	iprm::CParamsSet accountFilter;
 	iprm::CParamsSet groups;
-	groups.SetEditableParameter("Groups", &optionsManager);
-	accountFilter.SetEditableParameter("ObjectFilter", &groups);
+	iprm::CParamsSet orderParams;
+	iprm::CParamsSet accountParams;
+
+	if (filterByGroup){
+		// User group ID-s from GQL context user
+		QByteArrayList userGroupIds;
+		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+		if (userInfoPtr != nullptr){
+			userGroupIds = userInfoPtr->GetGroups();
+		}
+
+		for (const QByteArray& groupId : userGroupIds){
+			optionsManager.InsertOption("", groupId);
+		}
+
+		groups.SetEditableParameter("Groups", &optionsManager);
+		accountFilter.SetEditableParameter("ObjectFilter", &groups);
+
+		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
+
+		for (const QByteArray& accountId : accountIds){
+			accountsOptionsManager.InsertOption("", accountId);
+		}
+
+		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
+		filterParams.SetEditableParameter("ObjectFilter", &accountParams);
+	}
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
 	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
 	imtbase::CTreeItemModel* notificationModel = dataModel->AddTreeModel("notification");
-
-	iprm::CParamsSet orderParams;
-	imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-
-	iprm::COptionsManager accountsOptionsManager;
-	for (const QByteArray& accountId : accountIds){
-		accountsOptionsManager.InsertOption("", accountId);
-	}
-	iprm::CParamsSet accountParams;
-	accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-	filterParams.SetEditableParameter("ObjectFilter", &accountParams);
 
 	int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);
 
