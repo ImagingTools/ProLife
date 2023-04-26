@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -31,7 +31,6 @@
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="200" Y="425" Note=""/>
                 <Element ComponentName="PgSqlDatabaseEngine" X="600" Y="425" Note=""/>
-                <Element ComponentName="ProductInstanceSqlRepository" X="200" Y="525" Note=""/>
                 <Element ComponentName="ProductSqlRepository" X="200" Y="325" Note=""/>
                 <Element ComponentName="RelativeFileNameParam" X="875" Y="425" Note=""/>
                 <Element ComponentName="SystemLocation" X="875" Y="525" Note=""/>

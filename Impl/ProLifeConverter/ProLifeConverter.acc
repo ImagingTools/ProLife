@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5048" Description="ACF"/>
-            <Version Id="1" Number="2178" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5060" Description="ACF"/>
+            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -210,15 +210,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductInstanceSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductInstanceSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PgSqlDatabaseEngine"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="ProductSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -257,7 +248,6 @@
                 <ExportedInterfaces/>
                 <ExportedComponents>
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
-                    <Component ExportedId="ProductInstanceSqlRepository" ComponentId="ProductInstanceSqlRepository"/>
                     <Component ExportedId="ProductSqlRepository" ComponentId="ProductSqlRepository"/>
                 </ExportedComponents>
             </Data>

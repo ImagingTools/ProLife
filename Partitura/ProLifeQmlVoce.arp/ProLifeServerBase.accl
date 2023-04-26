@@ -29,7 +29,6 @@
                 <Element ComponentName="AesInitVector" X="300" Y="125" Note=""/>
                 <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
                 <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
-                <Element ComponentName="InstallationRepository" X="1025" Y="250" Note=""/>
                 <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="875" Y="125" Note=""/>
                 <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
