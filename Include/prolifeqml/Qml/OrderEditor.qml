@@ -560,25 +560,36 @@ DocumentBase {
 
         ProductEditorDialog {
             id: productsDialog;
-            licensesModel: licensesProvider.model;
-            productsModel: orderEditorContainer.productsModel;
+//            licensesModel: licensesProvider.model;
+//            productsModel: orderEditorContainer.productsModel;
 
-            orderUuid: orderEditorContainer.orderUuid;
+//            orderUuid: orderEditorContainer.orderUuid;
             onStarted: {
-                console.log("productsDialog.productModel", productsDialog.productModel.toJSON())
+                console.log("ProductEditorDialog onStarted", productsDialog.productModel);
+                productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
+                productsDialog.bodyItem.licensesModel = licensesProvider.model;
+                productsDialog.bodyItem.orderUuid = orderEditorContainer.orderUuid;
+
                 productsDialog.isPairEditing = false;
                 productsDialog.activeProductIndex = productsView.activeProductIndex;
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
-                    productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
+//                    productsDialog.orderId = orderEditorContainer.documentModel.GetData("OrderId");
+                    productsDialog.bodyItem.orderId = orderEditorContainer.documentModel.GetData("OrderId");
                 }
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
                     let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                    productsDialog.orderProductsModel.Copy(orderProductsModel);
+//                    productsDialog.orderProductsModel.Copy(orderProductsModel);
 
+                    console.log("orderProductsModel", orderProductsModel.toJSON());
+
+                    productsDialog.bodyItem.orderProductsModel.Copy(orderProductsModel);
+                    console.log("productsView.activeProductIndex", productsView.activeProductIndex);
                     if (productsView.activeProductIndex >= 0){
-                        let productModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+//                        let productModel = productsDialog.orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                        let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                        console.log("productModel", productModel.toJSON());
                         if (productModel){
                             let category = productModel.GetData("CategoryId");
                             if (category === "Pair"){
@@ -592,9 +603,18 @@ DocumentBase {
                             }
                         }
 
-                        productsDialog.productModel.Copy(productModel);
+                        console.log("productsDialog.productModel Copy1", productsDialog.bodyItem.productModel.toJSON());
+
+//                        productsDialog.productModel.Copy(productModel);
+
+                        productsDialog.bodyItem.productModel.Copy(productModel);
+                        console.log("productsDialog.productModel Copy2", productsDialog.bodyItem.productModel.toJSON());
                     }
                 }
+
+                console.log("productsDialog.productModel", productsDialog.productModel);
+                console.log("productsDialog.bodyItem", productsDialog.bodyItem);
+                console.log("productsDialog.bodyItem.productModel", productsDialog.bodyItem.productModel);
 
                 productsDialog.bodyItem.started();
             }
@@ -607,7 +627,6 @@ DocumentBase {
 
                     let index = productsView.activeProductIndex;
                     if (productsDialog.isPairEditing){
-                        console.log("productsDialog.productModel", productsDialog.productModel.toJSON());
                         if (index >= 0){
                             let pairUuid = productsDialog.orderProductsModel.GetData("Id", index);
                             let editingProductCategory = productsDialog.productModel.GetData("CategoryId");

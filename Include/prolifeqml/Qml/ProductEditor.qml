@@ -5,7 +5,7 @@ import imtqml 1.0
 import imtlicgui 1.0
 
 Item {
-    id: root;
+    id: productEditor;
 
     //    property TreeItemModel documentModel: TreeItemModel{}
     property TreeItemModel licensesModel: TreeItemModel{}
@@ -34,18 +34,18 @@ Item {
     }
 
     onBlockUpdatingModelChanged: {
-        loading.visible = root.blockUpdatingModel;
+        loading.visible = productEditor.blockUpdatingModel;
     }
 
     onProductModelChanged: {
-        console.log("onProductModelChanged", root.productModel);
+//        console.log("onProductModelChanged", productEditor.productModel);
 
-        if (root.productModel == null && root.productModel === undefined){
-            loading.visible = true;
-        }
-        else{
-            loading.visible = false;
-        }
+//        if (productEditor.productModel == null && productEditor.productModel === undefined){
+//            loading.visible = true;
+//        }
+//        else{
+//            loading.visible = false;
+//        }
     }
 
     width: 550;
@@ -57,7 +57,7 @@ Item {
 
     function onModelChanged(){
         console.log("onModelChanged");
-        root.rootItem.buttons.setButtonState("Save", true);
+        productEditor.rootItem.buttons.setButtonState("Save", true);
     }
 
     TreeItemModel {
@@ -65,11 +65,11 @@ Item {
     }
 
     function productsModelFilter(categoryId){
-        for (let i = 0; i < root.productsModel.GetItemsCount(); i++){
-            if (root.productsModel.GetData("CategoryId", i) === categoryId){
+        for (let i = 0; i < productEditor.productsModel.GetItemsCount(); i++){
+            if (productEditor.productsModel.GetData("CategoryId", i) === categoryId){
                 let index = productsFilteringModel.InsertNewItem();
 
-                productsFilteringModel.CopyItemDataFromModel(index, root.productsModel, i);
+                productsFilteringModel.CopyItemDataFromModel(index, productEditor.productsModel, i);
             }
         }
 
@@ -77,36 +77,38 @@ Item {
     }
 
     function started(){
-        console.log("started", root.productModel.toJSON())
+        console.log("started")
+        console.log("productEditor", productEditor);
+        console.log("productEditor.productModel", productEditor.productModel);
 
-        if (root.rootItem.isPairEditing){
-            let categoryId = root.productModel.GetData("CategoryId");
-            productCB.model = root.productsModelFilter(categoryId);
+        if (productEditor.rootItem.isPairEditing){
+            let categoryId = productEditor.productModel.GetData("CategoryId");
+            productCB.model = productEditor.productsModelFilter(categoryId);
         }
         else{
-            productCB.model = root.productsModel;
+            productCB.model = productEditor.productsModel;
         }
 
-        if (!root.productModel.ContainsKey("Id")){
+        if (!productEditor.productModel.ContainsKey("Id")){
             let uuid = uuidGenerator.generateUUID();
 
-            root.productModel.SetData("Id", uuid);
+            productEditor.productModel.SetData("Id", uuid);
         }
 
-        if (root.productModel.ContainsKey("CategoryId")){
-            bodyColumn.productCategory = root.productModel.GetData("CategoryId")
+        if (productEditor.productModel.ContainsKey("CategoryId")){
+            bodyColumn.productCategory = productEditor.productModel.GetData("CategoryId")
         }
 
         devicesList.updateModel({});
 
-        root.productModel.modelChanged.connect(root.onModelChanged);
-        root.orderProductsModel.modelChanged.connect(root.onModelChanged);
+        productEditor.productModel.modelChanged.connect(productEditor.onModelChanged);
+        productEditor.orderProductsModel.modelChanged.connect(productEditor.onModelChanged);
 
-        console.log("end", root.productModel.toJSON())
+        console.log("end", productEditor.productModel.toJSON())
     }
 
     function getProductName(productId){
-        let productModel = root.productsModel;
+        let productModel = productEditor.productsModel;
         let retVal = "";
         for (let i = 0; i < productsModel.GetItemsCount(); i++){
             let id = productsModel.GetData("Id", i);
@@ -120,9 +122,9 @@ Item {
 
     function resetPairHardware(){
         console.log("resetPairHardware");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
         if (categoryId === "Hardware"){
-            root.productModel.SetData("PairId", "");
+            productEditor.productModel.SetData("PairId", "");
             return true;
         }
 
@@ -131,9 +133,9 @@ Item {
 
     function setPairHardware(softwareId){
         console.log("setPairHardware");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
         if (categoryId === "Hardware"){
-            root.productModel.SetData("PairId", softwareId);
+            productEditor.productModel.SetData("PairId", softwareId);
             return true;
         }
 
@@ -142,21 +144,21 @@ Item {
 
     function setPairSoftware(hardwareId){
         console.log("setPairSoftware");
-        let softwareId = root.productModel.GetData("Id");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let softwareId = productEditor.productModel.GetData("Id");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
         if (categoryId === "Software"){
-            for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-                let currentCategoryId = root.orderProductsModel.GetData("CategoryId", i);
-                let currentProductId = root.orderProductsModel.GetData("ProductId", i)
+            for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
+                let currentCategoryId = productEditor.orderProductsModel.GetData("CategoryId", i);
+                let currentProductId = productEditor.orderProductsModel.GetData("ProductId", i)
                 if (currentCategoryId === "Hardware"){
-                    let currentId = root.orderProductsModel.GetData("Id", i);
+                    let currentId = productEditor.orderProductsModel.GetData("Id", i);
                     if (currentId === hardwareId){
-                        root.orderProductsModel.SetData("PairId", softwareId, i);
+                        productEditor.orderProductsModel.SetData("PairId", softwareId, i);
                         return true;
                     }
                 }
                 else if (currentCategoryId === "Pair"){
-                    let hardwareModel = root.orderProductsModel.GetData("HardwareProduct", i);
+                    let hardwareModel = productEditor.orderProductsModel.GetData("HardwareProduct", i);
                     if (hardwareModel){
                         let currentId = hardwareModel.GetData("Id");
                         if (currentId === hardwareId){
@@ -173,21 +175,21 @@ Item {
 
     function resetPairSoftware(){
         console.log("resetPairSoftware");
-        let softwareId = root.productModel.GetData("Id");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let softwareId = productEditor.productModel.GetData("Id");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
         if (categoryId === "Software"){
-            for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-                let currentCategoryId = root.orderProductsModel.GetData("CategoryId", i);
-                let currentProductId = root.orderProductsModel.GetData("ProductId", i)
+            for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
+                let currentCategoryId = productEditor.orderProductsModel.GetData("CategoryId", i);
+                let currentProductId = productEditor.orderProductsModel.GetData("ProductId", i)
                 if (currentCategoryId === "Hardware"){
-                    let currentPairId = root.orderProductsModel.GetData("PairId", i);
+                    let currentPairId = productEditor.orderProductsModel.GetData("PairId", i);
                     if (currentPairId === softwareId){
-                        root.orderProductsModel.SetData("PairId", "", i);
+                        productEditor.orderProductsModel.SetData("PairId", "", i);
                         return true;
                     }
                 }
                 else if (currentCategoryId === "Pair"){
-                    let hardwareModel = root.orderProductsModel.GetData("HardwareProduct", i);
+                    let hardwareModel = productEditor.orderProductsModel.GetData("HardwareProduct", i);
                     if (hardwareModel){
                         let currentPairId = hardwareModel.GetData("PairId");
                         if (currentPairId === softwareId){
@@ -206,10 +208,10 @@ Item {
 
     function updatePairGui(){
         console.log("updatePairGui");
-        root.blockUpdatingPairModel = true;
+        productEditor.blockUpdatingPairModel = true;
 
         pairCB.currentIndex = -1;
-        let pairId = root.getPairId();
+        let pairId = productEditor.getPairId();
         console.log("pairId", pairId);
         for (let i = 0; i < pairCB.model.GetItemsCount(); i++){
             let id = pairCB.model.GetData("Id", i);
@@ -220,38 +222,38 @@ Item {
             }
         }
 
-        root.blockUpdatingPairModel = false;
+        productEditor.blockUpdatingPairModel = false;
     }
 
     function updatePairModel(){
         console.log("updatePairModel");
-        if (root.blockUpdatingPairModel){
+        if (productEditor.blockUpdatingPairModel){
             return;
         }
 
-        let categoryId = root.productModel.GetData("CategoryId");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
         if (categoryId === "Hardware"){
-            root.resetPairHardware();
+            productEditor.resetPairHardware();
             if (pairCB.currentIndex >= 0){
                 let selectedSoftwareId = pairCB.model.GetData("Id", pairCB.currentIndex);
-                root.setPairHardware(selectedSoftwareId);
+                productEditor.setPairHardware(selectedSoftwareId);
             }
         }
         else if (categoryId === "Software"){
-            root.resetPairSoftware();
+            productEditor.resetPairSoftware();
             if (pairCB.currentIndex >= 0){
                 let selectedHardwareId = pairCB.model.GetData("Id", pairCB.currentIndex);
-                root.setPairSoftware(selectedHardwareId);
+                productEditor.setPairSoftware(selectedHardwareId);
             }
         }
     }
 
     function updateHardwareCategoryProducts(){
         console.log("updateHardwareCategoryProducts")
-        let productModel = root.orderProductsModel;
-        console.log("root.orderProductsModel", root.orderProductsModel.toJSON())
+        let productModel = productEditor.orderProductsModel;
+        console.log("productEditor.orderProductsModel", productEditor.orderProductsModel.toJSON())
 
-        let id = root.productModel.GetData("Id");
+        let id = productEditor.productModel.GetData("Id");
         let resultModel = pairCB.model;
         for (let i = 0; i < productModel.GetItemsCount(); i++){
             let productCategory = productModel.GetData("CategoryId", i);
@@ -290,7 +292,7 @@ Item {
     function findHardwarePair(id){
         console.log("findHardwarePair");
         let retVal = ""
-        let productsModel = root.orderProductsModel;
+        let productsModel = productEditor.orderProductsModel;
         for (let i = 0; i < productsModel.GetItemsCount(); i++){
 
             if (productsModel.GetData("CategoryId", i) === "Hardware"){
@@ -312,28 +314,28 @@ Item {
 
     function getPairId(){
         console.log("getPairId");
-        let id = root.productModel.GetData("Id");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let id = productEditor.productModel.GetData("Id");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
 
         console.log("id", id);
         console.log("categoryId", categoryId);
 
         if (categoryId === "Hardware"){
-            let pairId = root.productModel.GetData("PairId");
+            let pairId = productEditor.productModel.GetData("PairId");
             return pairId;
         }
         else if (categoryId === "Software"){
-            for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-                let currentId = root.orderProductsModel.GetData("Id", i);
-                let currentCategoryId = root.orderProductsModel.GetData("CategoryId", i);
+            for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
+                let currentId = productEditor.orderProductsModel.GetData("Id", i);
+                let currentCategoryId = productEditor.orderProductsModel.GetData("CategoryId", i);
                 if (currentCategoryId === "Hardware"){
-                    let currentPairId = root.orderProductsModel.GetData("PairId", i);
+                    let currentPairId = productEditor.orderProductsModel.GetData("PairId", i);
                     if (currentPairId === id){
                         return currentId;
                     }
                 }
                 else if (currentCategoryId === "Pair"){
-                    let hardwareModel = root.orderProductsModel.GetData("HardwareProduct", i);
+                    let hardwareModel = productEditor.orderProductsModel.GetData("HardwareProduct", i);
                     currentId = hardwareModel.GetData("Id");
                     let currentPairId = hardwareModel.GetData("PairId");
                     if (currentPairId === id){
@@ -348,10 +350,10 @@ Item {
 
     function updateSoftwareCategoryProducts(){
         console.log("updateSoftwareCategoryProducts");
-        console.log("root.orderProductsModel", root.orderProductsModel.toJSON());
-        let id = root.productModel.GetData("Id")
-        let categoryId = root.productModel.GetData("CategoryId")
-        let productModel = root.orderProductsModel;
+        console.log("productEditor.orderProductsModel", productEditor.orderProductsModel.toJSON());
+        let id = productEditor.productModel.GetData("Id")
+        let categoryId = productEditor.productModel.GetData("CategoryId")
+        let productModel = productEditor.orderProductsModel;
         let resultModel = pairCB.model;
         for (let i = 0; i < productModel.GetItemsCount(); i++){
             let currentCategoryId = productModel.GetData("CategoryId", i);
@@ -387,10 +389,10 @@ Item {
         console.log("updateGui");
         blockUpdatingModel = true;
 
-        let productId = root.productModel.GetData("ProductId");
-        let id = root.productModel.GetData("Id");
-        let pairId = root.productModel.GetData("PairId");
-        let categoryId = root.productModel.GetData("CategoryId");
+        let productId = productEditor.productModel.GetData("ProductId");
+        let id = productEditor.productModel.GetData("Id");
+        let pairId = productEditor.productModel.GetData("PairId");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
 
         productCB.currentIndex = -1;
         let productModel = productCB.model;
@@ -405,8 +407,8 @@ Item {
         }
 
         deviceCB.currentIndex = -1;
-        if (root.productModel.ContainsKey("DeviceId")){
-            let deviceId = root.productModel.GetData("DeviceId");
+        if (productEditor.productModel.ContainsKey("DeviceId")){
+            let deviceId = productEditor.productModel.GetData("DeviceId");
             let deviceModel = deviceCB.model;
             for (let i = 0; i < deviceModel.GetItemsCount(); i++){
                 let id = deviceModel.GetData("Id", i);
@@ -420,11 +422,11 @@ Item {
         licensesTable.rowModel.clear();
 
         let licensesModel;
-        if (root.licensesModel){
-            for (let i = 0; i < root.licensesModel.GetItemsCount(); i++){
-                let id = root.licensesModel.GetData("Id", i);
+        if (productEditor.licensesModel){
+            for (let i = 0; i < productEditor.licensesModel.GetItemsCount(); i++){
+                let id = productEditor.licensesModel.GetData("Id", i);
                 if (id === productId){
-                    let productLicensesModel = root.licensesModel.GetData("Licenses", i);
+                    let productLicensesModel = productEditor.licensesModel.GetData("Licenses", i);
                     licensesModel = productLicensesModel;
                 }
             }
@@ -437,8 +439,8 @@ Item {
 
                 let row = {"Id": licenseId, "Name": licenseName, "LicenseState": Qt.Unchecked, "ExpirationState": Qt.Unchecked, "Expiration": ""}
 
-                if (root.productModel.ContainsKey("ActiveLicenses")){
-                    let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
+                if (productEditor.productModel.ContainsKey("ActiveLicenses")){
+                    let activeLicensesModel = productEditor.productModel.GetData("ActiveLicenses");
                     for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
                         let activeLicenseId = activeLicensesModel.GetData("Id", j);
                         let expiration = activeLicensesModel.GetData("Expiration", j);
@@ -460,7 +462,7 @@ Item {
             }
         }
 
-        root.updatePairGui();
+        productEditor.updatePairGui();
 
         blockUpdatingModel = false;
     }
@@ -474,38 +476,38 @@ Item {
         if (productCB.currentIndex >= 0){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
             let selectedCategoryId = productCB.model.GetData("CategoryId", productCB.currentIndex);
-            root.productModel.SetData("ProductId", selectedProductId);
-            root.productModel.SetData("CategoryId", selectedCategoryId);
+            productEditor.productModel.SetData("ProductId", selectedProductId);
+            productEditor.productModel.SetData("CategoryId", selectedCategoryId);
         }
         else{
-            root.productModel.SetData("ProductId", "");
-            root.productModel.SetData("CategoryId", "");
+            productEditor.productModel.SetData("ProductId", "");
+            productEditor.productModel.SetData("CategoryId", "");
         }
 
-        let categoryId = root.productModel.GetData("CategoryId");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
 //        console.log("categoryId", categoryId);
 //        pairCB.model.Clear();
 //        if (categoryId === "Software"){
-//            root.updateHardwareCategoryProducts();
+//            productEditor.updateHardwareCategoryProducts();
 //        }
 //        else if (categoryId === "Hardware"){
-//            root.updateSoftwareCategoryProducts();
+//            productEditor.updateSoftwareCategoryProducts();
 //        }
 
         bodyColumn.productCategory = categoryId;
         if (categoryId === "Hardware"){
             if (deviceCB.currentIndex >= 0){
                 let selectedDeviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
-                root.productModel.SetData("DeviceId", selectedDeviceId);
+                productEditor.productModel.SetData("DeviceId", selectedDeviceId);
             }
             else{
-                if (root.productModel.ContainsKey("DeviceId")){
-                    root.productModel.RemoveData("DeviceId");
+                if (productEditor.productModel.ContainsKey("DeviceId")){
+                    productEditor.productModel.RemoveData("DeviceId");
                 }
             }
         }
         else{
-            let activeLicenses = root.productModel.AddTreeModel("ActiveLicenses");
+            let activeLicenses = productEditor.productModel.AddTreeModel("ActiveLicenses");
             activeLicenses.Clear();
             for (let i = 0; i < licensesTable.rowModel.count; i++){
                 let rowObj = licensesTable.rowModel.get(i);
@@ -535,34 +537,34 @@ Item {
             }
         }
 
-//        root.updatePairModel();
+//        productEditor.updatePairModel();
 
         console.log("updateModel end", orderProductsModel.toJSON());
     }
 
     function clearPairLink(){
         console.log("clearPairLink");
-        let id = root.productModel.GetData("Id");
-        let categoryId = root.productModel.GetData("CategoryId");
-        let pairId = root.productModel.GetData("PairId");
+        let id = productEditor.productModel.GetData("Id");
+        let categoryId = productEditor.productModel.GetData("CategoryId");
+        let pairId = productEditor.productModel.GetData("PairId");
 
         // clear parents data
         if(categoryId === "Hardware"){
-            root.productModel.SetData("PairId", "");
+            productEditor.productModel.SetData("PairId", "");
         }
         else if (categoryId === "Software"){
-            if (root.rootItem.isPairEditing){
-                if (root.rootItem.activeProductIndex >= 0){
-                    if (root.orderProductsModel.ContainsKey("HardwareProduct", root.rootItem.activeProductIndex)){
-                        let hardwareProductModel = root.orderProductsModel.GetData("HardwareProduct", root.rootItem.activeProductIndex);
+            if (productEditor.rootItem.isPairEditing){
+                if (productEditor.rootItem.activeProductIndex >= 0){
+                    if (productEditor.orderProductsModel.ContainsKey("HardwareProduct", productEditor.rootItem.activeProductIndex)){
+                        let hardwareProductModel = productEditor.orderProductsModel.GetData("HardwareProduct", productEditor.rootItem.activeProductIndex);
                         hardwareProductModel.SetData("PairId", "");
                     }
                 }
             }
             else{
-                for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-                    if (root.orderProductsModel.GetData("CategoryId", i) === "Hardware" && id === root.orderProductsModel.GetData("PairId", i)){
-                        root.orderProductsModel.SetData("PairId", "",i);
+                for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
+                    if (productEditor.orderProductsModel.GetData("CategoryId", i) === "Hardware" && id === productEditor.orderProductsModel.GetData("PairId", i)){
+                        productEditor.orderProductsModel.SetData("PairId", "",i);
                     }
                 }
             }
@@ -605,22 +607,22 @@ Item {
             onCurrentIndexChanged: {
                 console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
 
-                root.updateModel();
+                productEditor.updateModel();
                 if (productCB.currentIndex >= 0){
                     let categoryId = productCB.model.GetData("CategoryId", productCB.currentIndex);
 
                     pairCB.model.Clear();
                     if (categoryId === "Software"){
-                        root.updateHardwareCategoryProducts();
+                        productEditor.updateHardwareCategoryProducts();
                     }
                     else if (categoryId === "Hardware"){
-                        root.updateSoftwareCategoryProducts();
+                        productEditor.updateSoftwareCategoryProducts();
                     }
 
                     devicesList.devicesListUpdate();
 
-                    if (!root.blockUpdatingModel){
-                        root.updateGui();
+                    if (!productEditor.blockUpdatingModel){
+                        productEditor.updateGui();
                     }
                 }
 
@@ -692,7 +694,7 @@ Item {
                 onModelUpdated: {
                     devicesList.devicesListUpdate();
 
-                    root.updateGui();
+                    productEditor.updateGui();
                 }
 
                 TreeItemModel {
@@ -714,7 +716,7 @@ Item {
                         deviceCB.model = filteringModel;
                     }
 
-//                    root.updateGui();
+//                    productEditor.updateGui();
                 }
 
                 function filteringDevicesList(){
@@ -726,15 +728,15 @@ Item {
                         let orderId = devicesList.collectionModel.GetData("OrderUuid", i);
                         let deviceType = devicesList.collectionModel.GetData("DeviceType", i);
 //                        let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-                        let selectedProductId = root.productModel.GetData("ProductId");
+                        let selectedProductId = productEditor.productModel.GetData("ProductId");
 
-                        console.log("root.orderUuid", root.orderUuid);
+                        console.log("productEditor.orderUuid", productEditor.orderUuid);
                         console.log("deviceType", deviceType);
                         console.log("status", status);
                         console.log("selectedProductId", selectedProductId);
 
-                        if (selectedProductId === deviceType && (root.orderUuid === "" || root.orderUuid === orderId) && (status === "Finished" || status === "None")||
-                                selectedProductId === deviceType && root.orderUuid === orderId){
+                        if (selectedProductId === deviceType && (productEditor.orderUuid === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
+                                selectedProductId === deviceType && productEditor.orderUuid === orderId){
                             let index = filteringModel.InsertNewItem();
                             filteringModel.CopyItemDataFromModel(index, devicesList.collectionModel, i);
 
@@ -755,7 +757,7 @@ Item {
 
                 onCurrentIndexChanged: {
                     console.log("deviceCB onCurrentIndexChanged", deviceCB.currentIndex);
-                    root.updateModel();
+                    productEditor.updateModel();
                 }
             }
 
@@ -802,10 +804,10 @@ Item {
 
                 onCurrentIndexChanged: {
                     console.log("pairCB onCurrentIndexChanged", pairCB.currentIndex);
-                    root.updatePairModel();
+                    productEditor.updatePairModel();
                     productCB.changeable = pairCB.currentIndex < 0;
 
-//                    if (!root.blockUpdatingPairModel){
+//                    if (!productEditor.blockUpdatingPairModel){
 //                        updatePairGui();
 //                    }
                 }
@@ -860,7 +862,6 @@ Item {
         width: bodyColumn.width;
         visible: titleLicenses.visible;
 
-
         rowDelegate: LicenseInstanceItemDelegate {root: licensesTable;}
 
         Component.onCompleted: {
@@ -871,7 +872,7 @@ Item {
         onRowModelDataChanged: {
             console.log("licensesTable onRowModelDataChanged");
 
-            root.updateModel();
+            productEditor.updateModel();
         }
     }
 

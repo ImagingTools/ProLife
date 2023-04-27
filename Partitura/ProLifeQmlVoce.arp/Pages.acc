@@ -534,37 +534,6 @@
         <EmbeddedRegistry Id="Repositories">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="AccountDocumentSqlRepository" PackageId="ImtCoreVoce" ComponentId="JsonDocumentSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>CompanyInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="DocumentId"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TableName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Accounts"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="AccountSqlRepository" PackageId="ProLifeVoce" ComponentId="AccountSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -578,47 +547,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CompanyInfo" PackageId="ImtAuthPck" ComponentId="CompanyInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="DeviceDocumentSqlRepository" PackageId="ImtCoreVoce" ComponentId="JsonDocumentSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>DeviceInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="DocumentId"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TableName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Devices"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="DeviceInfo" PackageId="ProLifeDataPck" ComponentId="DeviceInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
                         </Data>
                     </Element>
                     <Element Id="DeviceSqlRepository" PackageId="ProLifeVoce" ComponentId="DeviceSqlRepository">
@@ -637,42 +565,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrderDocumentSqlRepository" PackageId="ImtCoreVoce" ComponentId="JsonDocumentSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OrderInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="DocumentId"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TableName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Orders"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
                         </Data>
                     </Element>
                     <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">

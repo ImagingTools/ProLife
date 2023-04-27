@@ -4,11 +4,11 @@ import imtqml 1.0
 import Acf 1.0
 
 Dialog {
-    id: root;
+    id: productEditorDialog;
 
     width: 500;
 
-    property TreeItemModel productModel: TreeItemModel{}
+    property TreeItemModel productModel: TreeItemModel {}
 
     property TreeItemModel documentModel: TreeItemModel{}
     property TreeItemModel licensesModel: TreeItemModel{}
@@ -26,15 +26,19 @@ Dialog {
     }
 
     Component.onCompleted: {
-        root.buttons.addButton({"Id": "Save", "Name": "Ok", "Enabled": false});
-        root.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
+        productEditorDialog.buttons.addButton({"Id": "Save", "Name": "Ok", "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
 
-        root.title = qsTr("Product editor");
+        productEditorDialog.title = qsTr("Product editor");
+    }
+
+    onProductModelChanged: {
+        console.log("ProductEditorDialog onProductModelChanged", productEditorDialog.productModel);
     }
 
     function unpairProducts(pairId){
         console.log("\nunpairProducts");
-            let orderProductsModel = root.orderProductsModel;
+            let orderProductsModel = productEditorDialog.orderProductsModel;
 
             let linkIndex = -1;
             for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
@@ -87,11 +91,11 @@ Dialog {
 
     function pairIsValid(pairId){
         console.log("pairIsValid", pairId);
-        for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-            let id = root.orderProductsModel.GetData("Id", i);
+        for (let i = 0; i < productEditorDialog.orderProductsModel.GetItemsCount(); i++){
+            let id = productEditorDialog.orderProductsModel.GetData("Id", i);
             if (id === pairId){
-                let hardwareProductModel = root.orderProductsModel.GetData("HardwareProduct", i);
-                let softwareProductModel = root.orderProductsModel.GetData("SoftwareProduct", i);
+                let hardwareProductModel = productEditorDialog.orderProductsModel.GetData("HardwareProduct", i);
+                let softwareProductModel = productEditorDialog.orderProductsModel.GetData("SoftwareProduct", i);
 
                 let hardwarePairId = hardwareProductModel.GetData("PairId");
                 let softwareId = softwareProductModel.GetData("Id");
@@ -108,17 +112,17 @@ Dialog {
 
     function createProductsPair(softwareId, hardwareId){
          console.log("createProductsPair", softwareId, hardwareId);
-        console.log("start root.orderProductsModel", root.orderProductsModel.toJSON());
+        console.log("start productEditorDialog.orderProductsModel", productEditorDialog.orderProductsModel.toJSON());
         let softwareIndex = -1;
         let softwareModel = null;
 
-        for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-            let categoryId = root.orderProductsModel.GetData("CategoryId", i);
+        for (let i = 0; i < productEditorDialog.orderProductsModel.GetItemsCount(); i++){
+            let categoryId = productEditorDialog.orderProductsModel.GetData("CategoryId", i);
             if (categoryId && categoryId !== "Pair"){
-                let productId = root.orderProductsModel.GetData("Id", i);
+                let productId = productEditorDialog.orderProductsModel.GetData("Id", i);
                 if (productId === softwareId){
                     softwareIndex = i;
-                    softwareModel = root.orderProductsModel.GetModelFromItem(i);
+                    softwareModel = productEditorDialog.orderProductsModel.GetModelFromItem(i);
 
                     console.log("softwareModel 1 ", softwareModel.toJSON());
 
@@ -128,7 +132,7 @@ Dialog {
         }
 
         if (softwareIndex > -1){
-            root.orderProductsModel.RemoveItem(softwareIndex);
+            productEditorDialog.orderProductsModel.RemoveItem(softwareIndex);
         }
 
         console.log("softwareModel 2", softwareModel.toJSON());
@@ -136,43 +140,43 @@ Dialog {
         let hardwareIndex = -1;
         let hardwareModel = null;
 
-        for (let i = 0; i < root.orderProductsModel.GetItemsCount(); i++){
-            let categoryId = root.orderProductsModel.GetData("CategoryId", i);
+        for (let i = 0; i < productEditorDialog.orderProductsModel.GetItemsCount(); i++){
+            let categoryId = productEditorDialog.orderProductsModel.GetData("CategoryId", i);
             if (categoryId && categoryId !== "Pair"){
-                let productId = root.orderProductsModel.GetData("Id", i);
+                let productId = productEditorDialog.orderProductsModel.GetData("Id", i);
                 if (productId === hardwareId){
                     hardwareIndex = i;
-                    root.orderProductsModel.SetData("PairId", softwareId, i);
-                    hardwareModel = root.orderProductsModel.GetModelFromItem(i);
+                    productEditorDialog.orderProductsModel.SetData("PairId", softwareId, i);
+                    hardwareModel = productEditorDialog.orderProductsModel.GetModelFromItem(i);
                     break;
                 }
             }
         }
 
         if (hardwareIndex > -1){
-            root.orderProductsModel.RemoveItem(hardwareIndex);
+            productEditorDialog.orderProductsModel.RemoveItem(hardwareIndex);
         }
 
         if (softwareModel != null && hardwareModel != null){
             console.log("softwareModel", softwareModel.toJSON());
             console.log("hardwareModel", hardwareModel.toJSON());
 
-            console.log("root.orderProductsModel 1 ", root.orderProductsModel.toJSON());
+            console.log("productEditorDialog.orderProductsModel 1 ", productEditorDialog.orderProductsModel.toJSON());
 
-            let index = root.orderProductsModel.InsertNewItem();
+            let index = productEditorDialog.orderProductsModel.InsertNewItem();
 
-            root.orderProductsModel.SetData("Id", uuidGenerator.generateUUID(), index);
-            root.orderProductsModel.SetData("CategoryId", "Pair", index);
+            productEditorDialog.orderProductsModel.SetData("Id", uuidGenerator.generateUUID(), index);
+            productEditorDialog.orderProductsModel.SetData("CategoryId", "Pair", index);
 
-            let emptySoftwareModel = root.orderProductsModel.AddTreeModel("SoftwareProduct", index);
+            let emptySoftwareModel = productEditorDialog.orderProductsModel.AddTreeModel("SoftwareProduct", index);
             let softwareKeys = softwareModel.GetKeys();
             for (let i = 0; i < softwareKeys.length; i++){
                 emptySoftwareModel.SetData(softwareKeys[i], softwareModel.GetData(softwareKeys[i]));
             }
 
-            console.log("root.orderProductsModel 2", root.orderProductsModel.toJSON());
+            console.log("productEditorDialog.orderProductsModel 2", productEditorDialog.orderProductsModel.toJSON());
 
-            let emptyHardwareModel = root.orderProductsModel.AddTreeModel("HardwareProduct", index);
+            let emptyHardwareModel = productEditorDialog.orderProductsModel.AddTreeModel("HardwareProduct", index);
 
             let hardwareKeys = hardwareModel.GetKeys();
             for (let i = 0; i < hardwareKeys.length; i++){
@@ -180,7 +184,7 @@ Dialog {
             }
             //emptyHardwareModel.Copy(hardwareModel);
 
-            console.log("root.orderProductsModel END ", root.orderProductsModel.toJSON());
+            console.log("productEditorDialog.orderProductsModel END ", productEditorDialog.orderProductsModel.toJSON());
         }
     }
 
@@ -188,17 +192,17 @@ Dialog {
         id: installationEditor;
 
         ProductEditor {
-            licensesModel: root.licensesModel;
-            productsModel: root.productsModel;
-            orderProductsModel: root.orderProductsModel;
-            orderId: root.orderId;
-            orderUuid: root.orderUuid;
-            width: root.width - 100;
+//            licensesModel: productEditorDialog.licensesModel;
+//            productsModel: productEditorDialog.productsModel;
+//            orderProductsModel: productEditorDialog.orderProductsModel;
+//            orderId: productEditorDialog.orderId;
+//            orderUuid: productEditorDialog.orderUuid;
+            width: productEditorDialog.width - 100;
             height: 350;
 
-            rootItem: root;
+            rootItem: productEditorDialog;
 
-            productModel: root.productModel;
+//            productModel: productEditorDialog.productModel;
         }
     }
 }//Container
