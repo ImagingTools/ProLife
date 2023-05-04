@@ -7,7 +7,7 @@
 
 // ImtCore includes
 #include <imtbase/CCollectionFilter.h>
-#include <imtauth/IAccountBaseInfo.h>
+#include <imtauth/ICompanyBaseInfo.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtdb/CSqlDatabaseObjectCollectionComp.h>
 
@@ -95,9 +95,9 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 							QByteArray customerId = orderInfoPtr->GetCustomerId();
 							imtbase::IObjectCollection::DataPtr dataPtr;
 							if (m_accountCollectionCompPtr->GetObjectData(customerId, dataPtr)){
-								imtauth::IAccountBaseInfo* accountInfoPtr = dynamic_cast<imtauth::IAccountBaseInfo*>(dataPtr.GetPtr());
+								imtauth::ICompanyBaseInfo* accountInfoPtr = dynamic_cast<imtauth::ICompanyBaseInfo*>(dataPtr.GetPtr());
 								if (accountInfoPtr != nullptr){
-									elementInformation = accountInfoPtr->GetAccountName();
+									elementInformation = accountInfoPtr->GetName();
 								}
 							}
 						}

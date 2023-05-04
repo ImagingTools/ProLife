@@ -17,6 +17,15 @@ DocumentBase {
         productsList.updateModel({});
     }
 
+    function documentCanBeSaved(){
+        let ok = deviceEditorContainer.macAddressIsValid();
+        if (!ok){
+            deviceEditorContainer.documentManager.openErrorDialog("MAC-Address invalid");
+        }
+
+        return ok;
+    }
+
     CollectionDataProvider {
         id: productsList;
 
@@ -245,6 +254,18 @@ DocumentBase {
         color: Style.backgroundColor;
     }
 
+    function macAddressIsValid(){
+        if (macAddressInput.text === ""){
+            return true;
+        }
+
+        if (macAddressInput.regExp){
+            return macAddressInput.regExp.test(macAddressInput.text);
+        }
+
+        return false;
+    }
+
     Column {
         id: bodyColumn;
 
@@ -373,7 +394,14 @@ DocumentBase {
                 RegExpValidator {
                     id: macAddressRegExp;
 
-                    regExp: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+                    regExp: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+
+                    Component.onCompleted: {
+//                        let re = new RegExp(macAddressRegExp.regExp)
+//                        if (re){
+//                            macAddressInput.regExp = re;
+//                        }
+                    }
                 }
 
                 CustomTextField {
@@ -386,7 +414,9 @@ DocumentBase {
 
                     borderColor: Style.iconColorOnSelected;
 
-                    textInputValidator: macAddressRegExp;
+                    maximumLength: 17;
+
+                   // textInputValidator: macAddressRegExp;
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
@@ -394,6 +424,36 @@ DocumentBase {
                             deviceEditorContainer.updateModel();
                         }
                     }
+
+                    property var regExp: new RegExp(macAddressRegExp.regExp)
+                    onTextChanged: {
+                        if (macAddressInput.text === ""){
+                            macAddressInput.borderColor = Style.iconColorOnSelected;
+                            macAddresInvalidText.visible = false;
+                        }
+                        else if (regExp){
+                            let isValid = regExp.test(macAddressInput.text);
+                            if (isValid){
+                                macAddressInput.borderColor = Style.iconColorOnSelected;
+                            }
+                            else{
+                                macAddressInput.borderColor = Style.errorTextColor;
+                            }
+
+                            macAddresInvalidText.visible = !isValid;
+                        }
+                    }
+                }
+
+                Text {
+                    id: macAddresInvalidText;
+
+                    text: qsTr("MAC-Address invalid");
+                    color: Style.errorTextColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+
+                    visible: false;
                 }
             }
         }

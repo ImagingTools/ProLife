@@ -176,9 +176,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		}
 
 		int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);
-
-//		int elementsCount2 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParams).size();
-
 		int pagesCount = std::ceil(elementsCount / (double)count);
 		if (pagesCount <= 0){
 			pagesCount = 1;

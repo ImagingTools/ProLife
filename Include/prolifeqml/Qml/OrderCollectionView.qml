@@ -7,17 +7,9 @@ CollectionView {
 
     visibleMetaInfo: false;
 
-    Component.onCompleted: {
-       // Events.subscribeEvent("AccountsCollectionUpdated", container.updateGui);
-    }
-
-    Component.onDestruction: {
-       // Events.unSubscribeEvent("AccountsCollectionUpdated", container.updateGui);
-    }
-
     onVisibleChanged: {
         if (container.visible){
-            container.updateGui();
+//            container.updateGui();
         }
     }
 
