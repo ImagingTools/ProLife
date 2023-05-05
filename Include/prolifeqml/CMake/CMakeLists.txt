@@ -20,9 +20,21 @@ message("LASA binary dir ${buildwebdir}")
 list(APPEND webdirs ${IMTCOREDIR}/3rdParty/JQML/Core/dist)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Qml/empty)
+# copy prolife qml from to
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Qml)
+list(APPEND webdirs ${buildwebdir}/src)
+
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/Translations)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src)
 list(APPEND webdirs ${buildwebdir}/src)
+
+#list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
+#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
+list(APPEND webdirs ${buildwebdir}/Resources)
+
+#list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Qml/empty)
+#list(APPEND webdirs ${buildwebdir}/src)
 
 # copy base qml sources from to
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtgui/Qml/Acf)
@@ -45,18 +57,6 @@ list(APPEND webdirs ${IMTCOREDIR}/Include/imtlicgui/Qml/imtlicgui)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtlicgui)
 list(APPEND webdirs ${buildwebdir}/src/imtlicgui)
 
-# copy prolife qml from to
-list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Qml)
-list(APPEND webdirs ${buildwebdir}/src)
-
-list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/Translations)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src)
-list(APPEND webdirs ${buildwebdir}/src)
-
-#list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
-list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
-list(APPEND webdirs ${buildwebdir}/Resources)
 
 message("PROLIFEDIR ${PROLIFEDIR}")
 
