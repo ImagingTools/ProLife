@@ -46,6 +46,15 @@ int main(int argc, char *argv[])
 
 	CProLifeClient instance;
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qmlRegisterModule("QtGraphicalEffects", 1, 12);
+    qmlRegisterModule("QtGraphicalEffects", 1, 0);
+    qmlRegisterModule("QtQuick.Dialogs", 1, 3);
+#else
+    qmlRegisterModule("QtQuick.Dialogs", 6, 2);
+    qmlRegisterModule("Qt5Compat.GraphicalEffects", 1, 0);
+#endif
+
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
 	qmlRegisterType<imtqml::CGqlModel>("Acf", 1, 0, "GqlModel");
 	qmlRegisterType<imtqml::CRemoteFileController>("Acf", 1, 0, "RemoteFileController");
