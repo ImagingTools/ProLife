@@ -33,9 +33,6 @@ list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-#list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Qml/empty)
-#list(APPEND webdirs ${buildwebdir}/src)
-
 # copy base qml sources from to
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtgui/Qml/Acf)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/Acf)
