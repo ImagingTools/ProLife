@@ -13,8 +13,23 @@ DocumentBase {
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
-    onDocumentModelChanged: {
-        productsList.updateModel({});
+    property bool modelsIsLoaded: ordersList.completed && productsList.completed && deviceEditorContainer.modelIsReady;
+
+//    onDocumentModelChanged: {
+//        productsList.updateModel({});
+//    }
+
+    Component.onCompleted: {
+        ordersList.updateModel();
+        productsList.updateModel();
+    }
+
+    onModelsIsLoadedChanged: {
+        console.log("onModelsIsLoadedChanged", deviceEditorContainer.modelsIsLoaded);
+        if (deviceEditorContainer.modelsIsLoaded){
+            deviceEditorContainer.updateGui();
+            undoRedoManager.registerModel(documentModel);
+        }
     }
 
     function documentCanBeSaved(){
@@ -33,11 +48,12 @@ DocumentBase {
 
         fields: ["Id", "Name", "Description", "CategoryId"];
 
+        property TreeItemModel filteringModel: TreeItemModel {}
+
         onCollectionModelChanged: {
             if (productsList.collectionModel != null){
                 productsList.filteringProductCollection();
                 productCB.model = filteringModel;
-                ordersList.updateModel({});
             }
         }
 
@@ -52,10 +68,6 @@ DocumentBase {
                     }
                 }
             }
-        }
-
-        TreeItemModel {
-            id: filteringModel;
         }
     }
 
@@ -72,16 +84,15 @@ DocumentBase {
 
                 if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
                     let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                    let statusModel = stateMachine.getAvailableModel(status);
-                    statusCB.model = statusModel;
-                }
-                else{
-                    statusCB.model = productionStatus.statusModel;
+                    if (status !== ""){
+                        let statusModel = stateMachine.getAvailableModel(status);
+                        statusCB.model = statusModel;
+
+                        return;
+                    }
                 }
 
-                deviceEditorContainer.updateGui();
-
-                undoRedoManager.registerModel(documentModel)
+                statusCB.model = productionStatus.statusModel;
             }
         }
     }
@@ -103,10 +114,6 @@ DocumentBase {
             stateMachine.addState("OnHold", ["OnHold", "Accepted", "InProgress"]);
             stateMachine.addState("Finished", ["Finished"]);
         }
-    }
-
-    onCommandsIdChanged: {
-        console.log("DeviceEditor onCommandsIdChanged", commandsId);
     }
 
     UndoRedoManager {
@@ -204,7 +211,7 @@ DocumentBase {
             return;
         }
 
-        undoRedoManager.beginChanges();
+//        undoRedoManager.beginChanges();
 
         documentModel.SetData("Id", deviceEditorContainer.itemId);
 
@@ -245,7 +252,7 @@ DocumentBase {
             deviceEditorContainer.documentModel.SetData("ProductionStatus", "");
         }
 
-        undoRedoManager.endChanges();
+//        undoRedoManager.endChanges();
     }
 
     Rectangle {

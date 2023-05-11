@@ -7,10 +7,6 @@ import Acf 1.0
 DocumentBase {
     id: orderEditorContainer;
 
-    // Загрузка моделей: Licenses -> Accounts -> Products -> Devices -> DocumentModel
-
-    commandsDelegateSourceComp: orderEditorCommandsDelegate;
-
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
     property TreeItemModel devicesModel: TreeItemModel {}
@@ -21,7 +17,7 @@ DocumentBase {
 
     property bool creatingLicenseFileFlag: false;
 
-    property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licensesProvider.completed;
+    property bool modelsIsLoaded: accountsList.completed /*&& productsList.completed */&& devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
 
     onModelsIsLoadedChanged: {
         if (orderEditorContainer.modelsIsLoaded){
@@ -36,22 +32,6 @@ DocumentBase {
         accountsList.updateModel({});
         productsList.updateModel({});
         devicesList.updateModel({});
-    }
-
-    Component {
-        id: orderEditorCommandsDelegate;
-        OrderEditorCommandsDelegate {}
-    }
-
-    onDocumentModelChanged: {
-        updateGui();
-
-        if (documentModel.ContainsKey("Id")){
-
-            orderEditorContainer.orderUuid = documentModel.GetData("Id");
-        }
-
-        undoRedoManager.registerModel(documentModel)
     }
 
     onSaved: {
@@ -101,12 +81,15 @@ DocumentBase {
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
                     let status = orderEditorContainer.documentModel.GetData("OrderStatus");
-                    let statusModel = stateMachine.getAvailableModel(status);
-                    orderStatusCB.model = statusModel;
+                    if (status !== ""){
+                        let statusModel = stateMachine.getAvailableModel(status);
+                        orderStatusCB.model = statusModel;
+
+                        return;
+                    }
                 }
-                else{
-                    orderStatusCB.model = orderStatus.statusModel;
-                }
+
+                orderStatusCB.model = orderStatus.statusModel;
             }
         }
 
@@ -229,7 +212,7 @@ DocumentBase {
             return;
         }
 
-        undoRedoManager.beginChanges();
+//        undoRedoManager.beginChanges();
 
         documentModel.SetData("Id", orderEditorContainer.itemId);
         documentModel.SetData("OrderId", instanceIdInput.text)
@@ -251,7 +234,7 @@ DocumentBase {
 
         documentModel.SetData("Description", descriptionInput.text);
 
-        undoRedoManager.endChanges();
+//        undoRedoManager.endChanges();
     }
 
     OrderStatus {

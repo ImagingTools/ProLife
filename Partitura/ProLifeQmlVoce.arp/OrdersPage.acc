@@ -157,6 +157,7 @@
                                 <Value>Description</Value>
                                 <Value>Status</Value>
                                 <Value>OrderCustomer</Value>
+                                <Value>MacAddress</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

@@ -122,8 +122,8 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AccountName</Value>
-                                <Value>Mail</Value>
+                                <Value>Name</Value>
+                                <Value>Email</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>

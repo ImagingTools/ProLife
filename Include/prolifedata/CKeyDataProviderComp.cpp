@@ -164,32 +164,24 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 		if (licensesModelPtr != nullptr){
 			imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
-			if (featuresModelPtr == nullptr){
-				SendCriticalMessage(0, "Future model pointer is null " + licenseId, "Server data provider");
-
-				return false;
+			if (featuresModelPtr != nullptr){
+				imtlic::ILicenseInfo::FeatureInfos featureInfos;
+				for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
+					imtlic::ILicenseInfo::FeatureInfo featureInfo;
+					featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
+					featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
+					featureInfos.append(featureInfo);
+				}
+				licenseInstancePtr->SetFeatureInfos(featureInfos);
 			}
-
-			imtlic::ILicenseInfo::FeatureInfos featureInfos;
-			for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
-				imtlic::ILicenseInfo::FeatureInfo featureInfo;
-				featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
-				featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
-				featureInfos.append(featureInfo);
-			}
-			licenseInstancePtr->SetFeatureInfos(featureInfos);
 		}
 
 		imtbase::CTreeItemModel* licensesItemsModelPtr = dataModelPtr->GetTreeItemModel("Items");
-		if (licensesItemsModelPtr == nullptr){
-			SendCriticalMessage(0, "Items model pointer is null ", "Server data provider");
-
-			return false;
-		}
-
-		for (int itemIndex = 0; itemIndex < licensesItemsModelPtr->GetItemsCount(); itemIndex++){
-			if (licensesItemsModelPtr->GetData("Id", itemIndex).toByteArray() == licenseId){
-				licenseInstancePtr->SetLicenseName(licensesItemsModelPtr->GetData("Name", itemIndex).toByteArray());
+		if (licensesItemsModelPtr != nullptr){
+			for (int itemIndex = 0; itemIndex < licensesItemsModelPtr->GetItemsCount(); itemIndex++){
+				if (licensesItemsModelPtr->GetData("Id", itemIndex).toByteArray() == licenseId){
+					licenseInstancePtr->SetLicenseName(licensesItemsModelPtr->GetData("Name", itemIndex).toByteArray());
+				}
 			}
 		}
 	}

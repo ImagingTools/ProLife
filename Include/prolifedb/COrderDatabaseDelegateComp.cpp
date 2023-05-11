@@ -13,15 +13,48 @@ namespace prolifedb
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
+//QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
+//{
+//	return QString("SELECT \"Id\", \"%1\", \"Document\", \"RevisionNumber\", \"LastModified\","
+//					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
+//					"(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderCustomer' LIMIT 1) as \"OrderCustomer\""
+//					" FROM \"%2\""
+//					" as t2 WHERE \"IsActive\" = true")
+//			.arg(qPrintable(*m_objectIdColumnAttrPtr))
+//			.arg(qPrintable(*m_tableNameAttrPtr));
+//}
+
+
 QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return QString("SELECT \"Id\", \"%1\", \"Document\", \"RevisionNumber\", \"LastModified\","
-					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
-					"(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderCustomer' LIMIT 1) as \"OrderCustomer\""
-					" FROM \"%2\""
-					" as t2 WHERE \"IsActive\" = true")
-			.arg(qPrintable(*m_objectIdColumnAttrPtr))
-			.arg(qPrintable(*m_tableNameAttrPtr));
+	return QString("SELECT *"
+					 "FROM ("
+						"SELECT "
+							"\"DocumentId\", "
+							"\"Document\", "
+							"\"LastModified\", "
+							"("
+								"SELECT \"LastModified\" "
+								"FROM \"Orders\" as t2 "
+								"WHERE \"RevisionNumber\" = 1 AND t1.\"DocumentId\" = t2.\"DocumentId\" LIMIT 1"
+							") as \"Added\", "
+							"("
+								"SELECT \"Document\"->>'Name' "
+								"FROM \"Accounts\" as t3 "
+								"WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t1.\"Document\"->>'OrderCustomer'"
+							") as \"OrderCustomer\", "
+							"("
+								"SELECT array_to_string(ARRAY(SELECT "
+									"(SELECT dev.\"Document\"->>'MacAddress' "
+									"FROM \"Devices\" as dev "
+									"WHERE dev.\"IsActive\" = true AND dev.\"DocumentId\" = item_object->'Data'->>'DeviceId') "
+								"FROM \"Orders\" as ord, jsonb_array_elements(\"Document\"->'Products'->'ObjectsList') with ordinality arr(item_object, position) "
+								"WHERE ord.\"IsActive\" = true AND ord.\"DocumentId\" = t1.\"DocumentId\" AND item_object->'Data'->'DeviceId' IS NOT NULL), '')"
+							") as \"MacAddress\", "
+							"\"IsActive\""
+							"FROM \"Orders\" as t1"
+						") u "
+					"WHERE \"IsActive\" = true");
 }
 
 
@@ -107,10 +140,18 @@ bool COrderDatabaseDelegateComp::CreateTextFilterQuery(
 			}
 
 			if (filteringColumnIds[i] == "OrderCustomer"){
-				textFilterQuery += QString("(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
-										.arg(qPrintable(filteringColumnIds[i]))
+				textFilterQuery += QString("\"OrderCustomer\" ILIKE '%%1%'")
 										.arg(textFilter);
 			}
+			else if (filteringColumnIds[i] == "MacAddress"){
+				textFilterQuery += QString("\"MacAddress\" ILIKE '%%1%'")
+										.arg(textFilter);
+			}
+//			else if (filteringColumnIds[i] == "OrderCustomer"){
+//				textFilterQuery += QString("(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
+//										.arg(qPrintable(filteringColumnIds[i]))
+//										.arg(textFilter);
+//			}
 			else{
 				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}

@@ -22,7 +22,7 @@ Dialog {
     property bool isPairEditing: false;
 
     Component.onCompleted: {
-        productEditorDialog.buttons.addButton({"Id": "Save", "Name": "Ok", "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": "Save", "Name": "OK", "Enabled": false});
         productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
 
         productEditorDialog.title = qsTr("Product editor");

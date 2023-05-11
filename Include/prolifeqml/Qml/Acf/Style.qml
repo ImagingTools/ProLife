@@ -3,7 +3,7 @@ import QtQuick 2.0
 import Acf 1.0
 import imtqml 1.0
 
-Item {
+QtObject {
     id: styleContainer;
 
     property int size_indicatorHeight: 50;
@@ -11,8 +11,8 @@ Item {
     property string color_text_titles: "#7700FF";
     property string color_text_notActive: "#C2CEDB";
 
-    property alias mainFontSource: mainFont.source;
-    property alias boldFontSource: boldFont.source;
+//    property alias mainFontSource: mainFont.source;
+//    property alias boldFontSource: boldFont.source;
 
     property bool mobile;
     property real mainWidth;
@@ -89,19 +89,19 @@ Item {
         return imageSource;
     }
 
-    FontLoader{
-        id: mainFont;
+    property FontLoader mainFont: FontLoader{
+//        id: mainFont;
         source: "../../Fonts/Ubuntu-Light.ttf";
     }
 
-    FontLoader{
-        id: boldFont;
+     property FontLoader boldFont: FontLoader{
+//        id: boldFont;
         source: "../../Fonts/Ubuntu-Medium.ttf";
     }
 
     function getDesignScheme(theme){
         console.log("PreferenceDialog callGetStyleQuery", theme);
-        styleQuery.getStyle(theme);
+        styleContainer.styleQuery.getStyle(theme);
     }
 
     function getThemeColor(colorType, colorKey, themeType){
@@ -182,8 +182,8 @@ Item {
         Style.customPanelDecoratorPath = styleContainer.getDecorator(dataDecorators, "CustomPanel", "Base");
     }
 
-    GqlModel {
-        id: styleQuery;
+    property GqlModel styleQuery: GqlModel {
+//        id: styleQuery;
 
         function getStyle(theme){
             var query = Gql.GqlRequest("query", "GetStyle");
@@ -204,19 +204,19 @@ Item {
         }
 
         onStateChanged: {
-            console.log("State:", this.state, styleQuery);
+            console.log("State:", this.state, styleContainer.styleQuery);
             console.log("AAAAA");
             if (this.state === "Ready") {
                 console.log("BBBBB");
                 var dataModelLocal;
 
-                if (styleQuery.ContainsKey("errors")){
+                if (styleContainer.styleQuery.ContainsKey("errors")){
                     return;
                 }
 
                 console.log("styleQuery");
-                if (styleQuery.ContainsKey("data")){
-                    dataModelLocal = styleQuery.GetData("data");
+                if (styleContainer.styleQuery.ContainsKey("data")){
+                    dataModelLocal = styleContainer.styleQuery.GetData("data");
 
                     console.log("data");
 
