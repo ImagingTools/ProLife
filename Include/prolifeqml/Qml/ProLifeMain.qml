@@ -60,6 +60,10 @@ Item {
             localSettingsModelObserver.registerModel(settingsProviderLocal.localModel);
             timer.start();
         }
+
+        onServerSettingsSaved: {
+            settingsObserver.observedModelDataChanged();
+        }
     }
 
     // Timer for updating design schema when start application, without this timer request does not come
