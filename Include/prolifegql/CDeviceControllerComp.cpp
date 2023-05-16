@@ -104,6 +104,11 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		return nullptr;
 	}
 
+	objectId = GetObjectIdFromInputParams(inputParams);
+	if (objectId.isEmpty()){
+		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+
 	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
 		istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>();
@@ -134,17 +139,6 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
 
 			devicePtr->SetSerialNumber(serialNumber);
-		}
-
-		if (itemModel.ContainsKey("Id")){
-			QByteArray id = itemModel.GetData("Id").toByteArray();
-			if (!id.isEmpty()){
-				objectId = id;
-			}
-		}
-
-		if (objectId.isEmpty()){
-			objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 		}
 
 		devicePtr->SetObjectUuid(objectId);

@@ -116,8 +116,8 @@ Item {
         productEditor.devicesListUpdate();
         productEditor.updateGui();
 
-        productEditor.productModel.modelChanged.connect(productEditor.onModelChanged);
-        productEditor.orderProductsModel.modelChanged.connect(productEditor.onModelChanged);
+        productEditor.productModel.dataChanged.connect(productEditor.onModelChanged);
+        productEditor.orderProductsModel.dataChanged.connect(productEditor.onModelChanged);
     }
 
     function getProductName(productId){

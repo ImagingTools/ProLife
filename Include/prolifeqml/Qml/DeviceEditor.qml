@@ -15,10 +15,6 @@ DocumentBase {
 
     property bool modelsIsLoaded: ordersList.completed && productsList.completed && deviceEditorContainer.modelIsReady;
 
-//    onDocumentModelChanged: {
-//        productsList.updateModel({});
-//    }
-
     Component.onCompleted: {
         ordersList.updateModel();
         productsList.updateModel();
@@ -119,9 +115,7 @@ DocumentBase {
     UndoRedoManager {
         id: undoRedoManager;
 
-        commandsId: deviceEditorContainer.documentUuid;
         documentBase: deviceEditorContainer;
-        commandsDelegate: deviceEditorContainer.commandsDelegate;
 
         onModelStateChanged: {
             deviceEditorContainer.updateGui();
@@ -211,9 +205,9 @@ DocumentBase {
             return;
         }
 
-//        undoRedoManager.beginChanges();
+        undoRedoManager.beginChanges();
 
-        documentModel.SetData("Id", deviceEditorContainer.itemId);
+//        documentModel.SetData("Id", deviceEditorContainer.itemId);
 
         if (productCB.currentIndex >= 0){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
@@ -252,7 +246,7 @@ DocumentBase {
             deviceEditorContainer.documentModel.SetData("ProductionStatus", "");
         }
 
-//        undoRedoManager.endChanges();
+        undoRedoManager.endChanges();
     }
 
     Rectangle {

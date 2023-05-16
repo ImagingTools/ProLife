@@ -45,12 +45,11 @@ DocumentBase {
 
     CollectionDataProvider {
         id: accountsList;
-        fields: ["Id", "AccountName"];
+        fields: ["Id", "Name"];
         commandId: "Accounts";
 
         onCollectionModelChanged: {
             if (accountsList.collectionModel != null){
-                customerCB.nameId = "AccountName";
                 customerCB.model = accountsList.collectionModel;
             }
         }
@@ -131,7 +130,6 @@ DocumentBase {
     UndoRedoManager {
         id: undoRedoManager;
 
-        commandsId: orderEditorContainer.documentUuid;
         documentBase: orderEditorContainer;
 
         onModelStateChanged: {
@@ -212,9 +210,9 @@ DocumentBase {
             return;
         }
 
-//        undoRedoManager.beginChanges();
+        undoRedoManager.beginChanges();
 
-        documentModel.SetData("Id", orderEditorContainer.itemId);
+//        documentModel.SetData("Id", orderEditorContainer.itemId);
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("Name", instanceIdInput.text);
 
@@ -234,7 +232,7 @@ DocumentBase {
 
         documentModel.SetData("Description", descriptionInput.text);
 
-//        undoRedoManager.endChanges();
+        undoRedoManager.endChanges();
     }
 
     OrderStatus {
