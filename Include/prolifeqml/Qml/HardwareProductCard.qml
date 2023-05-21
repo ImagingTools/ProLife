@@ -5,19 +5,22 @@ import Acf 1.0
 Rectangle {
     id: hardwareCard;
 
+    height: header.height + macAddressBlock.height + serialNumberBlock.height + 40;
+
     radius: 10;
     color: Style.backgroundColor;
 
-    property string productId: model.ProductId;
+    property string productId: model.ProductId ? model.ProductId : "";
 
-    property string deviceId: model.DeviceId;
+    property string deviceId: model.DeviceId ? model.DeviceId : "";
 
     property string macAddress;
     property string serialNumber;
 
     property TreeItemModel devicesModel: TreeItemModel {};
 
-    property bool commandsVisible: false;
+    property bool readOnly: false;
+    property bool commmandsVisible: false;
 
     signal clicked();
     signal edited();
@@ -84,7 +87,7 @@ Rectangle {
             iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
                                   "../../../../Icons/Light/Edit_Off_Disabled.svg";
 
-            visible: hardwareCard.commandsVisible;
+            visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
 
             onClicked: {
                 hardwareCard.edited();

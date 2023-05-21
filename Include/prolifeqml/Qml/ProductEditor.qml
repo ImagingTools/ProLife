@@ -59,8 +59,17 @@ Item {
             let deviceType = productEditor.devicesModel.GetData("DeviceType", i);
             let selectedProductId = productEditor.productModel.GetData("ProductId");
 
-            if (selectedProductId === deviceType && (productEditor.orderUuid === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
+            console.log("\n deviceType", deviceType);
+            console.log("selectedProductId", selectedProductId);
+
+            console.log("\n orderId", orderId);
+            console.log("productEditor.orderUuid", productEditor.orderUuid);
+
+            console.log("\n status", status);
+
+            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
                     selectedProductId === deviceType && productEditor.orderUuid === orderId){
+                console.log("YESY");
                 let index = filteringModel.InsertNewItem();
                 filteringModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
             }
@@ -748,7 +757,7 @@ Item {
         width: bodyColumn.width;
         visible: titleLicenses.visible;
 
-        rowDelegate: LicenseInstanceItemDelegate {root: licensesTable;}
+        rowDelegate: Component {LicenseInstanceItemDelegate {root: licensesTable;}}
 
         Component.onCompleted: {
             licensesTable.addColumn({"Id": "Name", "Name": "License Name"});

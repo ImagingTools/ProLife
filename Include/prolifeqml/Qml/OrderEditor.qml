@@ -72,7 +72,7 @@ DocumentBase {
 
         commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "Status", "MacAddress", "SerialNumber"];
+        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber"];
 
         onModelUpdated: {
             if (devicesList.collectionModel != null){
@@ -147,6 +147,30 @@ DocumentBase {
         onClicked: {
             orderEditorContainer.forceActiveFocus();
         }
+    }
+
+    function onCommandsModelLoaded(){
+        console.log("onCommandsModelLoaded");
+
+        let saveExists = orderEditorContainer.commandsProvider.commandExists("Save");
+        if (!saveExists){
+            orderEditorContainer.blockEditing();
+        }
+
+        let createLicenseExists = orderEditorContainer.commandsProvider.commandExists("CreateLicenseFile");
+        if (createLicenseExists){
+            productsView.isLicenseConsuming = true;
+        }
+    }
+
+    function blockEditing(){
+        instanceIdInput.readOnly = true;
+        descriptionInput.readOnly = true;
+        customerCB.changeable = false;
+        orderStatusCB.changeable = false;
+        productsView.readOnly = true;
+
+        addProduct.visible = false;
     }
 
     function updateGui(){
@@ -525,7 +549,7 @@ DocumentBase {
             onStarted: {
                 productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
                 productsDialog.bodyItem.licensesModel = licensesProvider.model;
-                productsDialog.bodyItem.orderUuid = orderEditorContainer.orderUuid;
+                productsDialog.bodyItem.orderUuid = orderEditorContainer.itemId;
 
                 productsDialog.isPairEditing = false;
                 productsDialog.activeProductIndex = productsView.activeProductIndex;
@@ -754,6 +778,8 @@ DocumentBase {
 
                     updateGui();
 
+                    orderEditorContainer.modelChanged();
+
                     productsDialog.bodyItem.productModel.Clear();
                     productsDialog.bodyItem.orderProductsModel.Clear();
                 }
@@ -800,7 +826,7 @@ DocumentBase {
         }
 
         property bool readOnly: false;
-        property bool createLicenseOnly: false;
+        property bool isLicenseConsuming: false;
 
         function getProductName(productId){
             let retVal = "";
@@ -944,11 +970,11 @@ DocumentBase {
         }
 
         OrderCommandsModelObserver {
-            productCommandsModel: commandsModelLocal;
-            orderCommandsProvider: orderEditorContainer.commandsProvider;
-            addProductButton: addProduct;
+//            productCommandsModel: commandsModelLocal;
+//            orderCommandsProvider: orderEditorContainer.commandsProvider;
+//            addProductButton: addProduct;
 
-            listView: productsView;
+//            listView: productsView;
         }
 
         TreeItemModel {
@@ -986,11 +1012,13 @@ DocumentBase {
         delegate: OrderProductCard {
             id: orderProductDelegate;
 
+            productsListView: productsView;
+
             productIndex: model.index;
             devicesModel: orderEditorContainer.devicesModel;
 
             readOnly: productsView.readOnly;
-            createLicenseOnly: productsView.createLicenseOnly;
+            isLicenseConsuming: productsView.isLicenseConsuming;
 
             licensesProvider: orderEditorContainer.licensesProviderLocal;
 

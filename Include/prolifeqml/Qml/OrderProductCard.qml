@@ -6,7 +6,7 @@ import imtlicgui 1.0
 Rectangle {
     id: root;
 
-    height: 180;
+    height: cardLoader.height + headerBlock.height + 30;
     width: 500;
 
     color: Style.imagingToolsGradient2;
@@ -15,7 +15,7 @@ Rectangle {
     radius: 10;
 
     property bool readOnly: false;
-    property bool createLicenseOnly: false;
+    property bool isLicenseConsuming: false;
 
     property bool selected: false;
     property string categoryId: model.CategoryId;
@@ -23,6 +23,7 @@ Rectangle {
     property TreeItemModel devicesModel: TreeItemModel {};
 
     property LicensesProvider licensesProvider: null;
+    property ListView productsListView: null;
 
     property int productIndex: -1;
 
@@ -42,6 +43,41 @@ Rectangle {
                 if (cardLoader.item){
                     cardLoader.item.licensesProvider = root.licensesProvider;
                 }
+            }
+        }
+    }
+
+    onProductsListViewChanged: {
+        if (cardLoader.item && cardLoader.item.productsView !== undefined){
+            cardLoader.item.productsView = root.productsListView;
+        }
+    }
+
+    onReadOnlyChanged: {
+        if (cardLoader.item){
+            cardLoader.item.readOnly = root.readOnly;
+        }
+
+        if (root.categoryId === "Pair"){
+            root.setIsEnabledCommand(pairCommandsModel, "Unlink", !root.readOnly);
+            root.setIsEnabledCommand(pairCommandsModel, "Remove", !root.readOnly);
+        }
+        else if (root.categoryId === "Hardware"){
+            root.setIsEnabledCommand(hardwareCommandsModel, "Edit", !root.readOnly);
+            root.setIsEnabledCommand(hardwareCommandsModel, "Remove", !root.readOnly);
+        }
+        else if (root.categoryId === "Software"){
+            root.setIsEnabledCommand(softwareCommandsModel, "Edit", !root.readOnly);
+            root.setIsEnabledCommand(softwareCommandsModel, "Remove", !root.readOnly);
+        }
+    }
+
+    function setIsEnabledCommand(commandsModel, commandId, isEnabled){
+        for (let i = 0; i < commandsModel.GetItemsCount(); i++){
+            let id = commandsModel.GetData("Id", i);
+            if (id === commandId){
+                commandsModel.SetData("IsEnabled", isEnabled, i);
+                break;
             }
         }
     }
@@ -124,8 +160,13 @@ Rectangle {
         anchors.leftMargin: 10;
         anchors.right: parent.right;
         anchors.rightMargin: 10;
-        anchors.bottom: parent.bottom;
-        anchors.bottomMargin: 10;
+//        anchors.bottom: parent.bottom;
+//        anchors.bottomMargin: 10;
+//        width: parent.width;
+
+        onHeightChanged: {
+            console.log("cardLoader onHeightChanged", height);
+        }
 
         onLoaded: {
             console.log("cardLoader onLoaded");
@@ -146,6 +187,14 @@ Rectangle {
             else if (root.categoryId === "Software"){
                 cardLoader.item.licensesProvider = root.licensesProvider;
             }
+
+            cardLoader.item.readOnly = root.readOnly;
+
+            if (cardLoader.item.productsView !== undefined){
+                cardLoader.item.productsView = root.productsListView;
+            }
+
+            cardLoader.height = cardLoader.item.height;
         }
     }
 
@@ -196,7 +245,7 @@ Rectangle {
             pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
             pairCommandsModel.SetData("Name", "Create License File", index);
             pairCommandsModel.SetData("Icon", "Key", index);
-            pairCommandsModel.SetData("IsEnabled", !root.createLicenseOnly, index);
+            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
             pairCommandsModel.SetData("Visible", true, index);
 
             index = pairCommandsModel.InsertNewItem();
@@ -206,6 +255,8 @@ Rectangle {
             pairCommandsModel.SetData("Icon", "Close", index);
             pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             pairCommandsModel.SetData("Visible", true, index);
+
+            console.log("pairCommandsModel onCompleted");
 
             if (root.categoryId == "Pair"){
                 commands.commandModel = pairCommandsModel;

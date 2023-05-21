@@ -6,6 +6,8 @@ import imtlicgui 1.0
 Rectangle {
     id: card;
 
+    height: Math.max(softwareProduct.height, hardwareProduct.height)
+
     color: Style.imagingToolsGradient2;
 
     radius: 10;
@@ -29,9 +31,16 @@ Rectangle {
     property TreeItemModel devicesModel: TreeItemModel {};
 
     property LicensesProvider licensesProvider: null;
+    property ListView productsView: null;
+
+    property bool readOnly: false;
 
     signal softwareEdited();
     signal hardwareEdited();
+
+    onProductsViewChanged: {
+        softwareProduct.productsView = card.productsView;
+    }
 
     onSoftwareProductModelChanged: {
         console.log("onHardwareProductModelChanged", softwareProductModel.toJSON());
@@ -70,12 +79,14 @@ Rectangle {
 
         anchors.top: card.top;
         anchors.left: card.left;
-        anchors.bottom: card.bottom;
+//        anchors.bottom: card.bottom;
 
         width: card.width / 2 - 15;
 
         licensesProvider: card.licensesProvider;
-        commandsVisible: true;
+        readOnly: card.readOnly;
+        productsView: card.productsView;
+        commmandsVisible: true;
 
         onEdited: {
             card.softwareEdited();
@@ -89,11 +100,14 @@ Rectangle {
         anchors.left: softwareProduct.right;
         anchors.leftMargin: 10;
         anchors.right: card.right;
-        anchors.bottom: card.bottom;
+//        anchors.bottom: card.bottom;
+
+        height: softwareProduct.height;
 
         devicesModel: card.devicesModel;
 
-        commandsVisible: true;
+        readOnly: card.readOnly;
+        commmandsVisible: true;
 
         onEdited: {
             card.hardwareEdited();

@@ -18,7 +18,6 @@ CollectionView {
     }
 
     Component.onDestruction: {
-//        Events.unSubscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.unSubscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
     }
 
@@ -27,6 +26,7 @@ CollectionView {
             container.updateGui();
         }
     }
+
 
     function fillContextMenuModel(){
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
@@ -44,6 +44,10 @@ CollectionView {
             else{
                 container.commandsProvider.setCommandNotification("ShowNew", "");
             }
+        }
+
+        if (container.commandsDelegate && container.commandsDelegate.filterByNewActive){
+            container.commandsProvider.setCommandNotification("ShowNew", "");
         }
     }
 }

@@ -5,22 +5,6 @@ import Acf 1.0
 CollectionViewCommandsDelegateBase {
     id: container;
 
-    //    onSelectedIndexChanged: {
-    //        console.log("DeviceCollectionViewCommands onSelectedIndexChanged", container.selectedIndex);
-
-    //        let isEnabled = container.selectedIndex > -1;
-    //        if (isEnabled){
-    //            let elementsModel = container.tableData.elements;
-    //            let orderId = elementsModel.GetData("OrderId", container.selectedIndex);
-    //            isEnabled = isEnabled && orderId !== "";
-    //        }
-
-    //        if (container.commandsProvider){
-    //            commandsProvider.setCommandIsEnabled("OpenOrder", isEnabled);
-    //        }
-    //    }
-
-
     property bool filterByNewActive: false;
 
     onSelectionChanged: {
@@ -75,6 +59,10 @@ CollectionViewCommandsDelegateBase {
             }
 
             container.filterByNewActive = !container.filterByNewActive;
+
+            if (!container.filterByNewActive){
+                container.commandsProvider.setCommandNotification("ShowNew", "");
+            }
 
             container.collectionViewBase.updateGui();
         }

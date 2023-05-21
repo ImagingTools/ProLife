@@ -130,6 +130,15 @@ DocumentBase {
         }
     }
 
+    function blockEditing(){
+        descriptionInput.readOnly = true;
+        serialNumberInput.readOnly = true;
+        macAddressInput.readOnly = true;
+        statusCB.changeable = false;
+        productCB.changeable = false;
+        orderCB.changeable = false;
+    }
+
     function updateGui(){
         console.log("DeviceEditor begin updateGui");
         deviceEditorContainer.blockUpdatingModel = true;
