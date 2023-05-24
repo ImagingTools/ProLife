@@ -45,8 +45,14 @@ Item {
 
             let newIndex = filteringModel.InsertNewItem(0);
 
-            filteringModel.SetData("Id", "", newIndex);
+            let deviceId = uuidGenerator.generateUUID();
+            if (productEditor.productModel.ContainsKey("IsNewDevice")){
+                deviceId = productEditor.productModel.GetData("DeviceId");
+            }
+
+            filteringModel.SetData("Id", deviceId, newIndex);
             filteringModel.SetData("Name", "New Device", newIndex);
+            filteringModel.SetData("IsNew", true, newIndex);
 
             deviceCB.model = filteringModel;
         }
@@ -59,17 +65,8 @@ Item {
             let deviceType = productEditor.devicesModel.GetData("DeviceType", i);
             let selectedProductId = productEditor.productModel.GetData("ProductId");
 
-            console.log("\n deviceType", deviceType);
-            console.log("selectedProductId", selectedProductId);
-
-            console.log("\n orderId", orderId);
-            console.log("productEditor.orderUuid", productEditor.orderUuid);
-
-            console.log("\n status", status);
-
             if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
                     selectedProductId === deviceType && productEditor.orderUuid === orderId){
-                console.log("YESY");
                 let index = filteringModel.InsertNewItem();
                 filteringModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
             }
@@ -489,6 +486,14 @@ Item {
         bodyColumn.productCategory = categoryId;
         if (categoryId === "Hardware"){
             if (deviceCB.currentIndex >= 0){
+                let isNew = deviceCB.model.ContainsKey("IsNew", deviceCB.currentIndex);
+                if (isNew){
+                    productEditor.productModel.SetData("IsNewDevice", true);
+                }
+                else{
+                    productEditor.productModel.RemoveData("IsNewDevice");
+                }
+
                 let selectedDeviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
                 productEditor.productModel.SetData("DeviceId", selectedDeviceId);
             }

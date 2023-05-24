@@ -13,18 +13,6 @@ namespace prolifedb
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
-//QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
-//{
-//	return QString("SELECT \"Id\", \"%1\", \"Document\", \"RevisionNumber\", \"LastModified\","
-//					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
-//					"(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderCustomer' LIMIT 1) as \"OrderCustomer\""
-//					" FROM \"%2\""
-//					" as t2 WHERE \"IsActive\" = true")
-//			.arg(qPrintable(*m_objectIdColumnAttrPtr))
-//			.arg(qPrintable(*m_tableNameAttrPtr));
-//}
-
-
 QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	return QString("SELECT *"

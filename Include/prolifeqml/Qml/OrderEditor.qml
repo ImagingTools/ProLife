@@ -41,6 +41,27 @@ DocumentBase {
                 orderEditorContainer.creatingLicenseFileFlag = false;
             }
         }
+
+        orderEditorContainer.blockUpdatingModel = true;
+        if (documentModel.ContainsKey("OrderProducts")){
+            let orderProductsModel = documentModel.GetData("OrderProducts");
+
+            for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+                let categoryId = orderProductsModel.GetData("CategoryId", i);
+                if (categoryId === "Pair"){
+                    let hardwareModel = orderProductsModel.GetData("HardwareProduct", i);
+                    if (hardwareModel.ContainsKey("IsNewDevice")){
+                        hardwareModel.RemoveData("IsNewDevice");
+                    }
+                }
+                else if (categoryId === "Hardware"){
+                    if (orderProductsModel.ContainsKey("IsNewDevice", i)){
+                        orderProductsModel.RemoveData("IsNewDevice", i);
+                    }
+                }
+            }
+        }
+        orderEditorContainer.blockUpdatingModel = false;
     }
 
     CollectionDataProvider {
@@ -90,6 +111,10 @@ DocumentBase {
 
                 orderStatusCB.model = orderStatus.statusModel;
             }
+        }
+
+        onCompletedChanged: {
+            orderEditorContainer.documentManager.documentLoading = !devicesList.completed;
         }
 
         function getMacAddress(deviceId){
@@ -1045,25 +1070,7 @@ DocumentBase {
 
             onCreateLicenseFile: {
                 productsView.activeProductIndex = model.index;
-
                 orderEditorContainer.createLicenseFile(model.index);
-                //                if (model.CategoryId === "Pair"){
-                //                    let orderUuid = orderEditorContainer.itemId;
-                //                    if (orderUuid === "" || orderEditorContainer.isDirty){
-                //                        modalDialogManager.openDialog(errorDialog, {"message": qsTr("To create a license, you need to save the current order. Save the order ?")});
-                //                    }
-                //                    else{
-                //                        let productId = "";
-                //                        if (model.HardwareProduct){
-                //                            let hardwareProductModel = model.HardwareProduct;
-                //                            productId = hardwareProductModel.GetData("Id");
-                //                        }
-
-                //                        if (productId !== ""){
-                //                            licenseFileController.createLicenseFile(orderUuid + "/" + productId);
-                //                        }
-                //                    }
-                //                }
             }
 
             onPairEdited: {
