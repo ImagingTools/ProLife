@@ -23,6 +23,8 @@ Rectangle {
     property bool readOnly: false;
     property bool commmandsVisible: false;
 
+    property Item productCardRoot: null;
+
     property LicensesProvider licensesProvider: null;
     property ListView productsView: null;
 

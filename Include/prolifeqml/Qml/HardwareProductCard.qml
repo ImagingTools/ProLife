@@ -11,11 +11,18 @@ Rectangle {
     color: Style.backgroundColor;
 
     property string productId: model.ProductId ? model.ProductId : "";
-
     property string deviceId: model.DeviceId ? model.DeviceId : "";
+    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
 
-    property string macAddress;
-    property string serialNumber;
+//    property string macAddress;
+//    property string serialNumber;
+
+    property string macAddress: model.MacAddress ? model.MacAddress : "";
+    property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
+
+    property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
+
+    property Item productCardRoot: null;
 
     property TreeItemModel devicesModel: TreeItemModel {};
 
@@ -25,22 +32,43 @@ Rectangle {
     signal clicked();
     signal edited();
 
-    onDevicesModelChanged: {
-        console.log("onDevicesModelChanged", devicesModel.toJSON());
-
-        if (hardwareCard.devicesModel != null){
-            for (let i = 0; i < hardwareCard.devicesModel.GetItemsCount(); i++){
-                let id = hardwareCard.devicesModel.GetData("Id", i);
-                if (id === hardwareCard.deviceId){
-                    let macAddress = hardwareCard.devicesModel.GetData("MacAddress", i);
-                    hardwareCard.macAddress = macAddress;
-
-                    let serialNumber = hardwareCard.devicesModel.GetData("SerialNumber", i);
-                    hardwareCard.serialNumber = serialNumber;
-                }
-            }
+    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
+    onCheckerChanged: {
+        console.log("onCheckerChanged", checker);
+        if (checker){
+            let message = qsTr("Sensor detection error. Please select a new sensor.");
+            hardwareCard.productCardRoot.showErrorMessage(message);
         }
     }
+
+    onNotExistsChanged: {
+        console.log("onNotExistsChanged", hardwareCard.notExists);
+    }
+
+//    onDevicesModelChanged: {
+//        if (hardwareCard.devicesModel != null){
+//            let deviceFound = false;
+//            for (let i = 0; i < hardwareCard.devicesModel.GetItemsCount(); i++){
+//                let id = hardwareCard.devicesModel.GetData("Id", i);
+//                if (id === hardwareCard.deviceId){
+//                    deviceFound = true;
+//                    let macAddress = hardwareCard.devicesModel.GetData("MacAddress", i);
+//                    hardwareCard.macAddress = macAddress;
+
+//                    let serialNumber = hardwareCard.devicesModel.GetData("SerialNumber", i);
+//                    hardwareCard.serialNumber = serialNumber;
+//                    break;
+//                }
+//            }
+
+//            if (!deviceFound && !hardwareCard.isNewDevice){
+//                if (hardwareCard.productCardRoot != null){
+//                    let message = qsTr("Sensor detection error. Please select a new sensor.");
+//                    hardwareCard.productCardRoot.showErrorMessage(message);
+//                }
+//            }
+//        }
+//    }
 
     Rectangle {
         id: header;
@@ -113,7 +141,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter;
             anchors.left: parent.left;
 
-            text: qsTr("Mac address:")
+            text: qsTr("MAC address:")
             color: Style.textColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;

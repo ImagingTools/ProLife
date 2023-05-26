@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5068" Description="ACF"/>
+            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -25,8 +25,11 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DocumentContentColumnId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Document"/>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceDatabaseSqlDelegate" Type="Reference" ExportId="DeviceDatabaseSqlDelegate">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">

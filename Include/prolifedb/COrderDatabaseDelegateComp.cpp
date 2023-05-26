@@ -3,6 +3,14 @@
 
 // ACF includes
 #include <iprm/ISelectionParam.h>
+#include <istd/CCrcCalculator.h>
+
+// ImtCore includes
+#include <imtlic/IHardwareInstanceInfo.h>
+
+// ProLife includes
+#include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/TOrderedWrap.h>
 
 
 namespace prolifedb
@@ -10,6 +18,111 @@ namespace prolifedb
 
 
 // public methods
+
+// reimplemented (imtdb::ISqlDatabaseObjectDelegate)
+
+QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId,
+			const istd::IChangeable& object,
+			const ContextDescription& description,
+			bool useExternDelegate) const
+{
+	QByteArray retVal;
+
+	if (useExternDelegate){
+		QByteArrayList oldOrderedDeviceIDs;
+		imtbase::IObjectCollection::DataPtr objectPtr;
+		if (collection.GetObjectData(objectId, objectPtr)){
+			prolifedata::COrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::COrderInfo*>(objectPtr.GetPtr());
+			if (oldOrderInfoPtr != nullptr){
+				oldOrderedDeviceIDs << GetDeviceIdsFromOrder(oldOrderInfoPtr);
+			}
+		}
+
+		QByteArrayList newOrderedDeviceIDs;
+		prolifedata::COrderInfo* newOrderInfoPtr = const_cast<prolifedata::COrderInfo*>(dynamic_cast<const prolifedata::COrderInfo*>(&object));
+		if (newOrderInfoPtr != nullptr){
+			newOrderedDeviceIDs << GetDeviceIdsFromOrder(newOrderInfoPtr);
+		}
+
+		// Calculate removed devices
+		QByteArrayList removedDeviceIDs;
+		for (const QByteArray& deviceId : oldOrderedDeviceIDs){
+			if (!newOrderedDeviceIDs.contains(deviceId)){
+				removedDeviceIDs << deviceId;
+			}
+		}
+
+		for (const QByteArray& deviceId : removedDeviceIDs){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+				if (deviceInfoPtr != nullptr){
+					deviceInfoPtr->SetOrderId("");
+
+					ContextDescription context;
+					retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, context, false);
+				}
+			}
+		}
+	}
+
+	QByteArray documentContent;
+	if (WriteDataToMemory("DocumentInfo", object, documentContent)){
+		quint32 checksum = istd::CCrcCalculator::GetCrcFromData((const quint8*)documentContent.constData(), documentContent.size());
+
+		QString queryStr;
+		if (*m_isMultiTypeAttrPtr){
+			queryStr = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"DocumentId\" = '%2'; INSERT INTO \"%1\" (\"DocumentId\", \"Document\", \"LastModified\", \"Checksum\", \"IsActive\", \"RevisionNumber\", \"TypeId\") VALUES('%2', '%3', '%4', '%5', true, "
+			" (SELECT COUNT(\"Id\") FROM \"%1\" WHERE \"DocumentId\" = '%2') + 1 ),"
+			" (SELECT \"TypeId\" FROM \"%1\" WHERE \"DocumentId\" = '%2' LIMIT 1) )," );
+
+		}
+		else{
+			queryStr = QString("UPDATE \"%1\" SET \"IsActive\" = false WHERE \"DocumentId\" = '%2'; INSERT INTO \"%1\" (\"DocumentId\", \"Document\", \"LastModified\", \"Checksum\", \"IsActive\", \"RevisionNumber\") VALUES('%2', '%3', '%4', '%5', true, (SELECT COUNT(\"Id\") FROM \"%1\" WHERE \"DocumentId\" = '%2') + 1 );");
+		}
+		retVal += queryStr
+					.arg(qPrintable(*m_tableNameAttrPtr))
+					.arg(qPrintable(objectId))
+					.arg(SqlEncode(documentContent))
+					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+					.arg(checksum).toLocal8Bit();
+	}
+
+	return retVal;
+}
+
+
+QByteArray COrderDatabaseDelegateComp::CreateDeleteObjectQuery(
+		const imtbase::IObjectCollection& collection,
+		const QByteArray& objectId) const
+{
+	QByteArray retVal;
+	imtbase::IObjectCollection::DataPtr objectPtr;
+	if (collection.GetObjectData(objectId, objectPtr)){
+		prolifedata::COrderInfo* orderInfoPtr = dynamic_cast<prolifedata::COrderInfo*>(objectPtr.GetPtr());
+		if (orderInfoPtr != nullptr){
+			QByteArrayList deviceIDs = GetDeviceIdsFromOrder(orderInfoPtr);
+			for (const QByteArray& deviceId : deviceIDs){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+					prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+					if (deviceInfoPtr != nullptr){
+						deviceInfoPtr->SetOrderId("");
+
+						ContextDescription context;
+						retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, context, false);
+					}
+				}
+			}
+		}
+	}
+	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toLocal8Bit();
+
+	return retVal;
+}
+
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
@@ -135,11 +248,6 @@ bool COrderDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += QString("\"MacAddress\" ILIKE '%%1%'")
 										.arg(textFilter);
 			}
-//			else if (filteringColumnIds[i] == "OrderCustomer"){
-//				textFilterQuery += QString("(SELECT \"Document\"->>'AccountName' FROM \"Accounts\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
-//										.arg(qPrintable(filteringColumnIds[i]))
-//										.arg(textFilter);
-//			}
 			else{
 				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
@@ -147,6 +255,33 @@ bool COrderDatabaseDelegateComp::CreateTextFilterQuery(
 	}
 
 	return true;
+}
+
+
+// protected methods
+
+QByteArrayList COrderDatabaseDelegateComp::GetDeviceIdsFromOrder(prolifedata::COrderInfo* orderInfoPtr) const
+{
+	QByteArrayList result;
+
+	if (orderInfoPtr != nullptr){
+		imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
+		if (productCollectionPtr != nullptr){
+			imtbase::ICollectionInfo::Ids orderedProductsIds = productCollectionPtr->GetElementIds();
+			for(const QByteArray& objectId : orderedProductsIds){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (productCollectionPtr->GetObjectData(objectId, dataPtr)){
+					const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(dataPtr.GetPtr());
+					if (hardwareProductPtr != nullptr){
+						QByteArray deviceId = hardwareProductPtr->GetDeviceId();
+						result << deviceId;
+					}
+				}
+			}
+		}
+	}
+
+	return result;
 }
 
 

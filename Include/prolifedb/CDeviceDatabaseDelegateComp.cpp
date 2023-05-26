@@ -6,12 +6,46 @@
 #include <iprm/ITextParam.h>
 #include <iprm/ISelectionParam.h>
 
+// ImtCore includes
+#include <imtlic/IHardwareInstanceInfo.h>
+
+// ProLife includes
+#include <prolifedata/COrderInfo.h>
+#include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/TOrderedWrap.h>
+
 
 namespace prolifedb
 {
 
 
 // public methods
+
+// reimplemented (imtdb::ISqlDatabaseObjectDelegate)
+
+QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId,
+			const istd::IChangeable& object,
+			const ContextDescription& description,
+			bool useExternDelegate) const
+{
+	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, description, false);
+
+	return retVal;
+}
+
+QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId) const
+{
+	QByteArray retVal;
+
+	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toLocal8Bit();
+
+	return retVal;
+}
+
 
 // reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 

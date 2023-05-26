@@ -435,35 +435,6 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(const imtbas
 		}
 	}
 
-//	if (hardwareProductModel.ContainsKey("DeviceId", modelIndex)){
-//		deviceId = hardwareProductModel.GetData("DeviceId", modelIndex).toByteArray();
-
-//		if (deviceId.isEmpty()){
-//			istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>();
-
-//			devicePtr->SetOrderId(orderId);
-//			devicePtr->SetDeviceType(productId);
-
-//			QByteArray deviceUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
-//			devicePtr->SetObjectUuid(deviceUuid);
-
-//			m_deviceCollectionCompPtr->InsertNewObject("DeviceInfo", "", "", devicePtr.GetPtr(), deviceUuid);
-
-//			deviceId = deviceUuid;
-//		}
-//		else{
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
-//				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
-//				if (deviceInfoPtr != nullptr){
-//					deviceInfoPtr->SetOrderId(orderId);
-//					deviceInfoPtr->SetDeviceType(productId);
-//					m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr);
-//				}
-//			}
-//		}
-//	}
-
 	hardwareInstancePtr->SetDeviceId(deviceId);
 
 	if (hardwareProductModel.ContainsKey("PairId", modelIndex)){

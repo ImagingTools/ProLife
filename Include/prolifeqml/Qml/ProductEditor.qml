@@ -467,6 +467,8 @@ Item {
     }
 
     function updateModel(){
+        console.log("updateModel", productModel.toJSON());
+
         if (blockUpdatingModel){
             return;
         }
@@ -492,6 +494,10 @@ Item {
                 }
                 else{
                     productEditor.productModel.RemoveData("IsNewDevice");
+                }
+
+                if (productEditor.productModel.ContainsKey("DeviceNotExists")){
+                    productEditor.productModel.RemoveData("DeviceNotExists");
                 }
 
                 let selectedDeviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);

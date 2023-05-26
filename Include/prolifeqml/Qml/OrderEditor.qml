@@ -34,6 +34,8 @@ DocumentBase {
         devicesList.updateModel({});
     }
 
+    property bool updateProductsData: devicesList.completed && orderEditorContainer.modelIsReady;
+
     onSaved: {
         if (orderEditorContainer.creatingLicenseFileFlag){
             let result = orderEditorContainer.createLicenseFile(productsView.activeProductIndex);
@@ -62,6 +64,85 @@ DocumentBase {
             }
         }
         orderEditorContainer.blockUpdatingModel = false;
+    }
+
+    function documentCanBeSaved(){
+        console.log("documentCanBeSaved", productsView.hasProductWithError);
+        let ok = true;
+
+        let orderProductsModel = documentModel.GetData("OrderProducts");
+        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
+            let categoryId = orderProductsModel.GetData("CategoryId", j);
+
+            let hardwareModel = undefined;
+            let index = j;
+            if (categoryId === "Pair"){
+                hardwareModel = orderProductsModel.GetData("HardwareProduct", j);
+                index = 0;
+            }
+            else if (categoryId === "Hardware"){
+                hardwareModel = orderProductsModel;
+                index = j;
+            }
+
+            if (hardwareModel){
+                if (hardwareModel.ContainsKey("DeviceNotExists")){
+                    ok = false;
+                    break;
+                }
+            }
+        }
+
+        if (!ok){
+            let message = qsTr("Sensor detection error. Please select a new sensor.");
+            orderEditorContainer.documentManager.openErrorDialog(message);
+        }
+
+        return ok;
+    }
+
+    function updateOrderProductsModel(){
+        let orderProductsModel = documentModel.GetData("OrderProducts");
+
+        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
+            let categoryId = orderProductsModel.GetData("CategoryId", j);
+
+            let hardwareModel = undefined;
+            let index = j;
+            if (categoryId === "Pair"){
+                hardwareModel = orderProductsModel.GetData("HardwareProduct", j);
+                index = 0;
+            }
+            else if (categoryId === "Hardware"){
+                hardwareModel = orderProductsModel;
+                index = j;
+            }
+
+            if (hardwareModel){
+                let deviceId = hardwareModel.GetData("DeviceId", index);
+                let isNew = hardwareModel.GetData("IsNewDevice", index);
+                let deviceIdFound = false;
+                if (!isNew){
+                    for (let i = 0; i < orderEditorContainer.devicesModel.GetItemsCount(); i++){
+                        let id = orderEditorContainer.devicesModel.GetData("Id", i);
+                        if (deviceId === id){
+                            deviceIdFound = true;
+                            let macAddress = orderEditorContainer.devicesModel.GetData("MacAddress", i);
+                            hardwareModel.SetData("MacAddress", macAddress, index);
+
+                            let serialNumber = orderEditorContainer.devicesModel.GetData("SerialNumber", i);
+                            hardwareModel.SetData("SerialNumber", serialNumber, index);
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!deviceIdFound && !isNew){
+                    hardwareModel.SetData("DeviceNotExists", true, index);
+                }
+            }
+        }
     }
 
     CollectionDataProvider {
@@ -244,6 +325,8 @@ DocumentBase {
         }
 
         if (documentModel.ContainsKey("OrderProducts")){
+
+            orderEditorContainer.updateOrderProductsModel();
             productsView.model = 0
             productsView.model = documentModel.GetData("OrderProducts");
         }
@@ -738,6 +821,8 @@ DocumentBase {
                 if (buttonId == "Save"){
                     productsDialog.bodyItem.updateModel()
 
+                    console.log("productModel", productsDialog.bodyItem.productModel.toJSON());
+
                     let index = productsView.activeProductIndex;
                     if (productsDialog.isPairEditing){
                         if (index >= 0){
@@ -770,7 +855,12 @@ DocumentBase {
                             index = productsDialog.bodyItem.orderProductsModel.InsertNewItem();
                         }
 
+                        console.log("orderProductsModel1", productsDialog.bodyItem.orderProductsModel.toJSON());
+                        console.log("productsDialog.bodyItem.productModel", productsDialog.bodyItem.productModel.toJSON());
+
                         productsDialog.bodyItem.orderProductsModel.CopyItemDataFromModel(index, productsDialog.bodyItem.productModel);
+
+                        console.log("orderProductsModel2", productsDialog.bodyItem.orderProductsModel.toJSON());
 
                         let softwareId = "";
                         let hardwareId = "";
@@ -800,6 +890,8 @@ DocumentBase {
                     let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
                     orderProductsModel.Copy(productsDialog.bodyItem.orderProductsModel);
                     undoRedoManager.endChanges();
+
+                    console.log("orderProductsModel", orderProductsModel.toJSON());
 
                     updateGui();
 
@@ -847,11 +939,13 @@ DocumentBase {
 
         property int selectedIndex: -1;
 
-        Component.onCompleted: {
-        }
-
         property bool readOnly: false;
         property bool isLicenseConsuming: false;
+
+        onModelChanged: {
+            console.log("productsView onModelChanged");
+           // productsView.hasProductWithError = false;
+        }
 
         function getProductName(productId){
             let retVal = "";

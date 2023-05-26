@@ -33,6 +33,8 @@ Rectangle {
     property LicensesProvider licensesProvider: null;
     property ListView productsView: null;
 
+    property Item productCardRoot: null;
+
     property bool readOnly: false;
 
     signal softwareEdited();
@@ -43,7 +45,6 @@ Rectangle {
     }
 
     onSoftwareProductModelChanged: {
-        console.log("onHardwareProductModelChanged", softwareProductModel.toJSON());
         if (card.softwareProductModel != null){
             if (softwareProductModel.ContainsKey("ProductId")){
                 let productId = softwareProductModel.GetData("ProductId");
@@ -59,8 +60,6 @@ Rectangle {
     }
 
     onHardwareProductModelChanged: {
-        console.log("onHardwareProductModelChanged", hardwareProductModel.toJSON());
-
         if (card.hardwareProductModel != null){
             if (hardwareProductModel.ContainsKey("ProductId")){
                 let productId = hardwareProductModel.GetData("ProductId");
@@ -71,6 +70,20 @@ Rectangle {
                 let deviceId = card.hardwareProductModel.GetData("DeviceId");
                 hardwareProduct.deviceId = deviceId;
             }
+
+            if (card.hardwareProductModel.ContainsKey("MacAddress")){
+                let macAddress = card.hardwareProductModel.GetData("MacAddress");
+                hardwareProduct.macAddress = macAddress;
+            }
+
+            if (card.hardwareProductModel.ContainsKey("SerialNumber")){
+                let serialNumber = card.hardwareProductModel.GetData("SerialNumber");
+                hardwareProduct.serialNumber = serialNumber;
+            }
+
+            if (card.hardwareProductModel.ContainsKey("DeviceNotExists")){
+                hardwareProduct.notExists = card.hardwareProductModel.GetData("DeviceNotExists")
+            }
         }
     }
 
@@ -79,7 +92,6 @@ Rectangle {
 
         anchors.top: card.top;
         anchors.left: card.left;
-//        anchors.bottom: card.bottom;
 
         width: card.width / 2 - 15;
 
@@ -87,6 +99,8 @@ Rectangle {
         readOnly: card.readOnly;
         productsView: card.productsView;
         commmandsVisible: true;
+
+        productCardRoot: card.productCardRoot;
 
         onEdited: {
             card.softwareEdited();
@@ -100,11 +114,12 @@ Rectangle {
         anchors.left: softwareProduct.right;
         anchors.leftMargin: 10;
         anchors.right: card.right;
-//        anchors.bottom: card.bottom;
 
         height: softwareProduct.height;
 
         devicesModel: card.devicesModel;
+
+        productCardRoot: card.productCardRoot;
 
         readOnly: card.readOnly;
         commmandsVisible: true;

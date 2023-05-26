@@ -6,16 +6,22 @@ import imtlicgui 1.0
 Rectangle {
     id: root;
 
-    height: cardLoader.height + headerBlock.height + 30;
+//    height: cardLoader.height + headerBlock.height + messageItem.height + 30;
     width: 500;
 
+    height: content.height + 2 * root.margin;
+
     color: Style.imagingToolsGradient2;
+
     border.color: root.selected ? Style.textSelected : "transparent";
+    border.width: 2;
 
     radius: 10;
 
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
+
+    property int margin: 10;
 
     property bool selected: false;
     property string categoryId: model.CategoryId;
@@ -94,107 +100,132 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: headerBlock;
-
-        anchors.left: parent.left;
-        anchors.leftMargin: 10;
-        anchors.right: parent.right;
-        anchors.rightMargin: 10;
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
-
-        height: 13;
-
-        color: "transparent";
-
-        Text {
-            id: pairProductTitle;
-
-            anchors.left: parent.left;
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.right: commands.left;
-            anchors.rightMargin: 10;
-
-            text: "#" + (root.productIndex + 1) + " " + root.categoryId;
-
-            color: Style.textColor;
-            font.family: Style.fontFamilyBold;
-            font.pixelSize: Style.fontSize_common;
-
-            elide: Text.ElideRight;
-            wrapMode: Text.NoWrap;
-        }
-
-        SimpleCommandsDecorator {
-            id: commands;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.right: parent.right;
-
-            height: headerBlock.height;
-
-            onCommandActivated: {
-                if (commandId == "Remove"){
-                    root.removed();
-                }
-                else if (commandId == "Edit"){
-                    root.edited();
-                }
-                else if (commandId == "CreateLicenseFile"){
-                    root.createLicenseFile();
-                }
-                else if (commandId == "Unlink"){
-                    root.unlinked();
-                }
-            }
-        }
+    function showErrorMessage(message){
+        errorText.text = message;
+        messageItem.visible = true;
+        root.border.color = Style.errorTextColor;
+        productsListView.hasProductWithError = true;
     }
 
-    Loader {
-        id: cardLoader;
+    Column {
+        id: content;
 
-        anchors.top: headerBlock.bottom;
-        anchors.topMargin: 10;
+        anchors.verticalCenter: parent.verticalCenter;
         anchors.left: parent.left;
         anchors.leftMargin: 10;
         anchors.right: parent.right;
         anchors.rightMargin: 10;
-//        anchors.bottom: parent.bottom;
-//        anchors.bottomMargin: 10;
-//        width: parent.width;
 
-        onHeightChanged: {
-            console.log("cardLoader onHeightChanged", height);
+        spacing: 10;
+
+        Rectangle {
+            id: headerBlock;
+
+            width: parent.width;
+            height: 13;
+
+            color: "transparent";
+
+            Text {
+                id: pairProductTitle;
+
+                anchors.left: parent.left;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: commands.left;
+                anchors.rightMargin: 10;
+
+                text: "#" + (root.productIndex + 1) + " " + root.categoryId;
+
+                color: Style.textColor;
+                font.family: Style.fontFamilyBold;
+                font.pixelSize: Style.fontSize_common;
+
+                elide: Text.ElideRight;
+                wrapMode: Text.NoWrap;
+            }
+
+            SimpleCommandsDecorator {
+                id: commands;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: parent.right;
+
+                height: headerBlock.height;
+
+                onCommandActivated: {
+                    if (commandId == "Remove"){
+                        root.removed();
+                    }
+                    else if (commandId == "Edit"){
+                        root.edited();
+                    }
+                    else if (commandId == "CreateLicenseFile"){
+                        root.createLicenseFile();
+                    }
+                    else if (commandId == "Unlink"){
+                        root.unlinked();
+                    }
+                }
+            }
         }
 
-        onLoaded: {
-            console.log("cardLoader onLoaded");
+        Loader {
+            id: cardLoader;
 
-            if (root.categoryId === "Pair"){
-                cardLoader.item.devicesModel = root.devicesModel;
+            width: parent.width;
 
-                let hardwareId = cardLoader.item.hardwareId;
-                let softwareId = cardLoader.item.softwareId;
+            onLoaded: {
+                cardLoader.item.productCardRoot = root;
 
-                pairProductTitle.text = "#" + (root.productIndex + 1) + " Software & Hardware";
+                if (root.categoryId === "Pair"){
+                    cardLoader.item.devicesModel = root.devicesModel;
 
-                cardLoader.item.licensesProvider = root.licensesProvider;
+                    let hardwareId = cardLoader.item.hardwareId;
+                    let softwareId = cardLoader.item.softwareId;
+
+                    pairProductTitle.text = "#" + (root.productIndex + 1) + " Software & Hardware";
+
+                    cardLoader.item.licensesProvider = root.licensesProvider;
+                }
+                else if (root.categoryId === "Hardware"){
+                    cardLoader.item.devicesModel = root.devicesModel;
+                }
+                else if (root.categoryId === "Software"){
+                    cardLoader.item.licensesProvider = root.licensesProvider;
+                }
+
+                cardLoader.item.readOnly = root.readOnly;
+
+                if (cardLoader.item.productsView !== undefined){
+                    cardLoader.item.productsView = root.productsListView;
+                }
             }
-            else if (root.categoryId === "Hardware"){
-                cardLoader.item.devicesModel = root.devicesModel;
-            }
-            else if (root.categoryId === "Software"){
-                cardLoader.item.licensesProvider = root.licensesProvider;
-            }
+        }
 
-            cardLoader.item.readOnly = root.readOnly;
+        Item {
+            id: messageItem;
 
-            if (cardLoader.item.productsView !== undefined){
-                cardLoader.item.productsView = root.productsListView;
+            width: parent.width;
+            height: visible ? 13 : 0;
+
+            visible: false;
+
+            Text {
+                id: errorText;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 10;
+                anchors.right: parent.right;
+                anchors.rightMargin: 10;
+
+                elide: Text.ElideRight;
+
+                color: Style.errorTextColor;
+
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
             }
-
-            cardLoader.height = cardLoader.item.height;
         }
     }
 
