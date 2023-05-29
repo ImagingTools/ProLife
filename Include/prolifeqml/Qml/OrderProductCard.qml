@@ -104,7 +104,6 @@ Rectangle {
         errorText.text = message;
         messageItem.visible = true;
         root.border.color = Style.errorTextColor;
-        productsListView.hasProductWithError = true;
     }
 
     Column {

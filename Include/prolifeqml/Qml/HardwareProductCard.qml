@@ -41,35 +41,6 @@ Rectangle {
         }
     }
 
-    onNotExistsChanged: {
-        console.log("onNotExistsChanged", hardwareCard.notExists);
-    }
-
-//    onDevicesModelChanged: {
-//        if (hardwareCard.devicesModel != null){
-//            let deviceFound = false;
-//            for (let i = 0; i < hardwareCard.devicesModel.GetItemsCount(); i++){
-//                let id = hardwareCard.devicesModel.GetData("Id", i);
-//                if (id === hardwareCard.deviceId){
-//                    deviceFound = true;
-//                    let macAddress = hardwareCard.devicesModel.GetData("MacAddress", i);
-//                    hardwareCard.macAddress = macAddress;
-
-//                    let serialNumber = hardwareCard.devicesModel.GetData("SerialNumber", i);
-//                    hardwareCard.serialNumber = serialNumber;
-//                    break;
-//                }
-//            }
-
-//            if (!deviceFound && !hardwareCard.isNewDevice){
-//                if (hardwareCard.productCardRoot != null){
-//                    let message = qsTr("Sensor detection error. Please select a new sensor.");
-//                    hardwareCard.productCardRoot.showErrorMessage(message);
-//                }
-//            }
-//        }
-//    }
-
     Rectangle {
         id: header;
 

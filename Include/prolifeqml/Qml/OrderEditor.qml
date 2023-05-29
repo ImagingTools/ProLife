@@ -17,7 +17,7 @@ DocumentBase {
 
     property bool creatingLicenseFileFlag: false;
 
-    property bool modelsIsLoaded: accountsList.completed /*&& productsList.completed */&& devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
+    property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
 
     onModelsIsLoadedChanged: {
         if (orderEditorContainer.modelsIsLoaded){
@@ -33,8 +33,6 @@ DocumentBase {
         productsList.updateModel({});
         devicesList.updateModel({});
     }
-
-    property bool updateProductsData: devicesList.completed && orderEditorContainer.modelIsReady;
 
     onSaved: {
         if (orderEditorContainer.creatingLicenseFileFlag){
@@ -67,7 +65,7 @@ DocumentBase {
     }
 
     function documentCanBeSaved(){
-        console.log("documentCanBeSaved", productsView.hasProductWithError);
+        console.log("documentCanBeSaved");
         let ok = true;
 
         let orderProductsModel = documentModel.GetData("OrderProducts");
@@ -86,7 +84,7 @@ DocumentBase {
             }
 
             if (hardwareModel){
-                if (hardwareModel.ContainsKey("DeviceNotExists")){
+                if (hardwareModel.ContainsKey("DeviceNotExists", index)){
                     ok = false;
                     break;
                 }
@@ -102,8 +100,9 @@ DocumentBase {
     }
 
     function updateOrderProductsModel(){
+        console.log("updateOrderProductsModel");
         let orderProductsModel = documentModel.GetData("OrderProducts");
-
+        console.log("orderProductsModel", orderProductsModel.toJSON());
         for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
             let categoryId = orderProductsModel.GetData("CategoryId", j);
 
@@ -136,6 +135,11 @@ DocumentBase {
                             break;
                         }
                     }
+                }
+
+                if (isNew){
+                    hardwareModel.SetData("MacAddress", "", index);
+                    hardwareModel.SetData("SerialNumber", "", index);
                 }
 
                 if (!deviceIdFound && !isNew){
@@ -941,11 +945,6 @@ DocumentBase {
 
         property bool readOnly: false;
         property bool isLicenseConsuming: false;
-
-        onModelChanged: {
-            console.log("productsView onModelChanged");
-           // productsView.hasProductWithError = false;
-        }
 
         function getProductName(productId){
             let retVal = "";

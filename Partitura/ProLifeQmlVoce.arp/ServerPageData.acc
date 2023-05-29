@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5068" Description="ACF"/>
+            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -83,7 +83,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Pasword" Type="Id" ExportId="DefaultDatabasePassword">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="true" Value="root"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Port" Type="Integer" ExportId="DefaultDatabasePort">
                         <Data IsEnabled="false"/>
