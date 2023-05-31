@@ -70,6 +70,7 @@ list(APPEND webdirs ${buildwebdir}/Resources)
 
 if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
-	jqml_compile_web("${webdirs}", "${buildwebdir}")
+	set(resname "prolife")
+	jqml_compile_web("${webdirs}", "${buildwebdir}", "${resname}")
 endif()
 

@@ -5,6 +5,6 @@
 	<file alias="Times New Roman.ttf">Times New Roman.ttf</file>
         <file alias="GraphQLRequest.js">GraphQLRequest.js</file>
         <file alias="main.js">main.js</file>
-        <file alias="jqml.full.js">jqml.full.js</file>
+        <file alias="jqml.prolife.js">jqml.prolife.js</file>
     </qresource>
 </RCC>
