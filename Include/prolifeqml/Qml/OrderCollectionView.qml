@@ -7,6 +7,9 @@ CollectionView {
 
     visibleMetaInfo: false;
 
+    defaultSortHeaderIndex: 6;
+    defaultOrderType: "DESC";
+
     onVisibleChanged: {
         if (container.visible){
             container.updateGui();

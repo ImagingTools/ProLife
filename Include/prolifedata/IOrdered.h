@@ -22,6 +22,16 @@ public:
 		Set order ID.
 	*/
 	virtual void SetOrderId(const QByteArray& orderId) = 0;
+
+	/**
+		Get purchase ID of the order.
+	*/
+	virtual QByteArray GetPurchaseOrderId() const = 0;
+
+	/**
+		Set purchase order ID.
+	*/
+	virtual void SetPurchaseOrderId(const QByteArray& purchaseOrderId) = 0;
 };
 
 

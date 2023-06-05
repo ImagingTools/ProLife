@@ -23,10 +23,13 @@ public:
 	COrderInfo();
 	~COrderInfo();
 
-	// reimplemented (IOrderInfo)
+	// reimplemented (prolifedata::IOrdered)
 	virtual QByteArray GetOrderId() const override;
 	virtual void SetOrderId(const QByteArray& orderId) override;
+	virtual QByteArray GetPurchaseOrderId() const override;
+	virtual void SetPurchaseOrderId(const QByteArray& purchaseOrderId) override;
 
+	// reimplemented (IOrderInfo)
 	virtual QByteArray GetCustomerId() const override;
 	virtual void SetCustomerId(const QByteArray& customerId) override;
 	virtual QString GetDescription() const override;
@@ -49,6 +52,7 @@ public:
 
 private:
 	QByteArray m_orderId;
+	QByteArray m_purchaseId;
 	QByteArray m_customerId;
 	QString m_description;
 	OrderStatus m_status;

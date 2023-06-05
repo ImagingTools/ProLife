@@ -1,0 +1,177 @@
+import QtQuick 2.0
+import Acf 1.0
+import imtgui 1.0
+import imtlicgui 1.0
+
+Item {
+    id: root;
+
+//    height: content.height;
+
+    property int itemHeight: 23;
+    property int margin: 10;
+
+    property TreeItemModel productModel: TreeItemModel {}
+    property var productLicensesModel: TreeItemModel{}
+
+    Text {
+        id: licensesText;
+
+        anchors.top: parent.top;
+        //anchors.topMargin: root.margin;
+
+        text: qsTr("Licenses");
+        color: Style.textColor;
+        font.family: Style.fontFamilyBold;
+        font.pixelSize: Style.fontSize_common;
+    }
+
+    AuxTable {
+        id: licensesTable;
+
+        anchors.top: licensesText.bottom;
+        anchors.topMargin: root.margin;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: root.margin;
+
+        width: parent.width;
+//        height: 200;
+
+        radius: 0;
+
+        checkable: true;
+        canSelectAll: false;
+
+        delegate: Component {
+            LicenseInstanceItemDelegate {
+                width: licensesTable.width;
+
+                onStateChanged: {
+                    if (root.blockUpdatingModel){
+                        return;
+                    }
+
+                    let state = this.licenseState;
+                    let licenseId = this.licenseId;
+                    let licenseName = this.licenseName;
+                    let expiration = this.expiration;
+
+                    console.log("state", state);
+                    console.log("licenseId", licenseId);
+                    console.log("expiration", expiration);
+
+                    let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
+
+                    if (state === Qt.Checked){
+                        if (!activeLicensesModel){
+                            activeLicensesModel = root.productModel.AddTreeModel("ActiveLicenses");
+                        }
+
+                        let index = activeLicensesModel.InsertNewItem();
+
+                        activeLicensesModel.SetData("Id", licenseId, index);
+                        activeLicensesModel.SetData("Name", licenseName, index);
+                        activeLicensesModel.SetData("Expiration", expiration, index);
+                    }
+                    else if (state === Qt.Unchecked){
+                        if (activeLicensesModel){
+                            for (let i = 0; i < activeLicensesModel.GetItemsCount(); i++){
+                                let id = activeLicensesModel.GetData("Id", i);
+                                if (id === licenseId){
+                                    activeLicensesModel.RemoveItem(i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                onDateChanged: {
+                    if (root.blockUpdatingModel){
+                        return;
+                    }
+
+                    let licenseId = this.licenseId;
+                    let expiration = this.expiration;
+
+                    let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
+                    if (activeLicensesModel){
+                        for (let i = 0; i < activeLicensesModel.GetItemsCount(); i++){
+                            let id = activeLicensesModel.GetData("Id", i);
+                            if (id === licenseId){
+                                activeLicensesModel.SetData("Expiration", expiration, i);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    property bool blockUpdatingModel: false;
+
+    function updateModel(){
+        if (root.blockUpdatingModel){
+            return;
+        }
+    }
+
+    function updateGui(){
+        blockUpdatingModel = true;
+
+        if (root.productLicensesModel){
+            for (let i = 0; i < root.productLicensesModel.GetItemsCount(); i++){
+                let licenseId = root.productLicensesModel.GetData("Id", i);
+                let licenseName = root.productLicensesModel.GetData("Name", i);
+
+                root.productLicensesModel.SetData("ExpirationState", Qt.Unchecked, i);
+                root.productLicensesModel.SetData("LicenseState", Qt.Unchecked, i);
+                root.productLicensesModel.SetData("Expiration", "", i);
+
+                if (root.productModel.ContainsKey("ActiveLicenses")){
+                    let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
+                    for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
+                        let activeLicenseId = activeLicensesModel.GetData("Id", j);
+                        if (licenseId === activeLicenseId){
+//                            activeLicensesModel.SetData("Name", licenseName, j);
+
+                            let expiration = activeLicensesModel.GetData("Expiration", j);
+                            if (expiration === "Unlimited"){
+                                expiration = ""
+                            }
+
+                            root.productLicensesModel.SetData("LicenseState", Qt.Checked, i);
+                            root.productLicensesModel.SetData("Expiration", expiration, i);
+
+                            if (expiration !== ""){
+                                root.productLicensesModel.SetData("ExpirationState", Qt.Checked, i);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        licensesTable.elements = root.productLicensesModel;
+
+        blockUpdatingModel = false;
+    }
+
+    TreeItemModel {
+        id: headersModel;
+        Component.onCompleted: {
+            let index = headersModel.InsertNewItem();
+            headersModel.SetData("Id", "Name", index)
+            headersModel.SetData("Name", "License Name", index)
+
+            index = headersModel.InsertNewItem();
+            headersModel.SetData("Id", "Expiration", index)
+            headersModel.SetData("Name", "Expiration", index)
+
+            licensesTable.headers = headersModel;
+        }
+    }
+}//Container
+
+

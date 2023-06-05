@@ -1,9 +1,6 @@
 #include <prolifedata/COrderInfo.h>
 
 
-//Qt include
-#include <QtCore/QByteArrayList>
-
 // ACF includes
 #include <istd/TDelPtr.h>
 #include <istd/CChangeNotifier.h>
@@ -64,6 +61,21 @@ void COrderInfo::SetOrderId(const QByteArray& orderId)
 		istd::CChangeNotifier changeNotifier(this);
 
 		m_orderId = orderId;
+	}
+}
+
+QByteArray COrderInfo::GetPurchaseOrderId() const
+{
+	return m_purchaseId;
+}
+
+
+void COrderInfo::SetPurchaseOrderId(const QByteArray& purchaseOrderId)
+{
+	if (m_purchaseId != purchaseOrderId){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_purchaseId = purchaseOrderId;
 	}
 }
 
@@ -143,6 +155,11 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 		prolifeVersion = 0;
 	}
 
+	quint32 imtCoreVersion;
+	if (!versionInfo.GetVersionNumber(imtcore::VI_IMTCORE, imtCoreVersion)){
+		imtCoreVersion = 0;
+	}
+
 	bool retVal = true;
 
 	// Serialize order with the new format:
@@ -162,6 +179,13 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.BeginTag(orderIdTag);
 	retVal = retVal && archive.Process(m_orderId);
 	retVal = retVal && archive.EndTag(orderIdTag);
+
+	if (imtCoreVersion > 6630) {
+		static iser::CArchiveTag purchaseOrderIdTag("PurchaseId", "User-defined purchase order-ID", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(purchaseOrderIdTag);
+		retVal = retVal && archive.Process(m_purchaseId);
+		retVal = retVal && archive.EndTag(purchaseOrderIdTag);
+	}
 
 	static iser::CArchiveTag orderCustomerTag("OrderCustomer", "Order Customer", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderCustomerTag);
@@ -201,6 +225,7 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 		istd::CChangeNotifier changeNotifier(this);
 
 		m_orderId = sourcePtr->m_orderId;
+		m_purchaseId = sourcePtr->m_purchaseId;
 		m_customerId = sourcePtr->m_customerId;
 		m_description = sourcePtr->m_description;
 		m_status = sourcePtr->m_status;
@@ -232,6 +257,7 @@ bool COrderInfo::ResetData(CompatibilityMode /*mode*/)
 	istd::CChangeNotifier changeNotifier(this);
 
 	m_orderId.clear();
+	m_purchaseId.clear();
 	m_customerId.clear();
 	m_productInstanceCollection.ResetData();
 	m_status = OS_NONE;

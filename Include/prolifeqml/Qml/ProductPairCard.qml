@@ -23,8 +23,8 @@ Rectangle {
 
     property int productIndex: -1;
 
-    property TreeItemModel softwareProductModel: model.SoftwareProduct;
-    property TreeItemModel hardwareProductModel: model.HardwareProduct;
+    property TreeItemModel softwareProductModel: model.SoftwareProduct ? model.SoftwareProduct : null;
+    property TreeItemModel hardwareProductModel: model.HardwareProduct ? model.HardwareProduct : null;
 
     property TreeItemModel commandsModel: null;
 
@@ -66,19 +66,35 @@ Rectangle {
                 hardwareProduct.productId = productId;
             }
 
-            if (card.hardwareProductModel.ContainsKey("DeviceId")){
-                let deviceId = card.hardwareProductModel.GetData("DeviceId");
-                hardwareProduct.deviceId = deviceId;
+            if (card.hardwareProductModel.ContainsKey("IsNewDevice")){
+                let isNewDevice = card.hardwareProductModel.GetData("IsNewDevice");
+                hardwareProduct.isNewDevice = isNewDevice;
             }
 
             if (card.hardwareProductModel.ContainsKey("MacAddress")){
                 let macAddress = card.hardwareProductModel.GetData("MacAddress");
-                hardwareProduct.macAddress = macAddress;
+
+                if (hardwareProduct.isNewDevice){
+                    hardwareProduct.macAddress = qsTr("New Sensor")
+                }
+                else{
+                    hardwareProduct.macAddress = macAddress;
+                }
             }
 
             if (card.hardwareProductModel.ContainsKey("SerialNumber")){
                 let serialNumber = card.hardwareProductModel.GetData("SerialNumber");
-                hardwareProduct.serialNumber = serialNumber;
+                if (hardwareProduct.isNewDevice){
+                    hardwareProduct.serialNumber = qsTr("New Sensor")
+                }
+                else{
+                    hardwareProduct.serialNumber = serialNumber;
+                }
+            }
+
+            if (card.hardwareProductModel.ContainsKey("ModelTypeId")){
+                let modelType = card.hardwareProductModel.GetData("ModelTypeId");
+                hardwareProduct.modelType = modelType;
             }
 
             if (card.hardwareProductModel.ContainsKey("DeviceNotExists")){
@@ -93,7 +109,8 @@ Rectangle {
         anchors.top: card.top;
         anchors.left: card.left;
 
-        width: card.width / 2 - 15;
+        width: card.width / 2;
+        height: Math.max(hardwareProduct.contentHeight, softwareProduct.contentHeight);
 
         licensesProvider: card.licensesProvider;
         readOnly: card.readOnly;
@@ -115,9 +132,7 @@ Rectangle {
         anchors.leftMargin: 10;
         anchors.right: card.right;
 
-        height: softwareProduct.height;
-
-        devicesModel: card.devicesModel;
+        height: Math.max(hardwareProduct.contentHeight, softwareProduct.contentHeight);
 
         productCardRoot: card.productCardRoot;
 

@@ -90,6 +90,9 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "OrderId"){
 					elementInformation = orderInfoPtr->GetOrderId();
 				}
+				else if(informationId == "PurchaseId"){
+					elementInformation = orderInfoPtr->GetPurchaseOrderId();
+				}
 				else if(informationId == "OrderCustomer"){
 					if (m_accountCollectionCompPtr.IsValid()){
 						QByteArray customerId = orderInfoPtr->GetCustomerId();

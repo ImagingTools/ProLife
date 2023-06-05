@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5068" Description="ACF"/>
+            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -141,7 +141,6 @@
                                 <Value>Status</Value>
                                 <Value>DeviceType</Value>
                                 <Value>MacAddress</Value>
-                                <Value>SerialNumber</Value>
                                 <Value>OrderId</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
@@ -155,7 +154,6 @@
                                 <Value>Production Status</Value>
                                 <Value>Device Type</Value>
                                 <Value>MAC-Address</Value>
-                                <Value>Serial Number</Value>
                                 <Value>Order-ID</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
@@ -577,6 +575,7 @@
                                             <Value>Save</Value>
                                             <Value>Empty</Value>
                                             <Value>Close</Value>
+                                            <Value>OrderEdit</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -680,6 +679,24 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OrderEdit" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderEdit"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderEdit"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

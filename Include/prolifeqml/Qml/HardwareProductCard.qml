@@ -5,36 +5,32 @@ import Acf 1.0
 Rectangle {
     id: hardwareCard;
 
-    height: header.height + macAddressBlock.height + serialNumberBlock.height + 40;
+    height: contentHeight;
 
     radius: 10;
     color: Style.backgroundColor;
 
     property string productId: model.ProductId ? model.ProductId : "";
-    property string deviceId: model.DeviceId ? model.DeviceId : "";
     property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
 
-//    property string macAddress;
-//    property string serialNumber;
-
-    property string macAddress: model.MacAddress ? model.MacAddress : "";
-    property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
+    property string macAddress: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.MacAddress ? model.MacAddress : "";
+    property string serialNumber: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.SerialNumber ? model.SerialNumber : "";
+    property string modelType: model.ModelTypeId ? model.ModelTypeId : "";
 
     property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
 
     property Item productCardRoot: null;
 
-    property TreeItemModel devicesModel: TreeItemModel {};
-
     property bool readOnly: false;
     property bool commmandsVisible: false;
+
+    property int contentHeight: header.height + macAddressBlock.height + serialNumberBlock.height + modelTypeBlock.height + 50;
 
     signal clicked();
     signal edited();
 
     property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
     onCheckerChanged: {
-        console.log("onCheckerChanged", checker);
         if (checker){
             let message = qsTr("Sensor detection error. Please select a new sensor.");
             hardwareCard.productCardRoot.showErrorMessage(message);
@@ -83,6 +79,8 @@ Rectangle {
             width: 18;
             height: width;
 
+//            tooltipText: qsTr("Edit");
+
             iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
                                   "../../../../Icons/Light/Edit_Off_Disabled.svg";
 
@@ -93,6 +91,9 @@ Rectangle {
             }
         }
     }
+
+    property int firstWidthPercent: 45;
+    property int secondWidthPercent: 55;
 
     Item {
         id: macAddressBlock;
@@ -106,35 +107,49 @@ Rectangle {
 
         height: macAddressTitle.height;
 
-        Text {
-            id: macAddressTitle;
-
-            anchors.verticalCenter: parent.verticalCenter;
+        Item {
             anchors.left: parent.left;
 
-            text: qsTr("MAC address:")
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            font.bold: true;
+            width: parent.width * (firstWidthPercent / 100);
+            height: parent.height;
+
+            Text {
+                id: macAddressTitle;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+
+                width: parent.width;
+
+                text: qsTr("MAC Address:")
+                color: Style.textColor;
+                font.family: Style.fontFamilyBold;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
 
-        Text {
-            id: macAddress;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: macAddressTitle.right;
-            anchors.leftMargin: 10;
+        Item {
             anchors.right: parent.right;
 
-            elide: Text.ElideRight;
-            wrapMode: Text.NoWrap;
+            width: parent.width * (secondWidthPercent / 100);
+            height: parent.height;
 
-            text: hardwareCard.macAddress;
+            Text {
+                id: macAddress;
 
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                width: parent.width;
+
+                elide: Text.ElideRight;
+                wrapMode: Text.NoWrap;
+
+                text: hardwareCard.macAddress;
+
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
     }
 
@@ -150,35 +165,109 @@ Rectangle {
 
         height: serialNumberTitle.height;
 
-        Text {
-            id: serialNumberTitle;
-
-            anchors.verticalCenter: parent.verticalCenter;
+        Item {
             anchors.left: parent.left;
 
-            text: qsTr("Serial Number:")
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            font.bold: true;
+            width: parent.width * (firstWidthPercent / 100);
+            height: parent.height;
+
+            Text {
+                id: serialNumberTitle;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+
+                width: parent.width;
+
+                text: qsTr("Serial Number:")
+                color: Style.textColor;
+                font.family: Style.fontFamilyBold;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
 
-        Text {
-            id: serialNumber;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: serialNumberTitle.right;
-            anchors.leftMargin: 10;
+        Item {
             anchors.right: parent.right;
 
-            elide: Text.ElideRight;
-            wrapMode: Text.NoWrap;
+            width: parent.width * (secondWidthPercent / 100);
+            height: parent.height;
 
-            text: hardwareCard.serialNumber;
+            Text {
+                id: serialNumber;
 
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                width: parent.width;
+
+                elide: Text.ElideRight;
+                wrapMode: Text.NoWrap;
+
+                text: hardwareCard.serialNumber;
+
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+        }
+    }
+
+    Item {
+        id: modelTypeBlock;
+
+        anchors.top: serialNumberBlock.bottom;
+        anchors.topMargin: visible ? 10 : 0;
+        anchors.left: parent.left;
+        anchors.leftMargin: 10;
+        anchors.right: parent.right;
+        anchors.rightMargin: 10;
+
+        height: visible ? modelTypeTitle.height : -10;
+
+        visible: hardwareCard.modelType !== "";
+
+        Item {
+            anchors.left: parent.left;
+
+            width: parent.width * (firstWidthPercent / 100);
+            height: parent.height;
+
+            Text {
+                id: modelTypeTitle;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+
+                width: parent.width;
+
+                text: qsTr("Model Type:")
+                color: Style.textColor;
+                font.family: Style.fontFamilyBold;
+                font.pixelSize: Style.fontSize_common;
+            }
+        }
+
+        Item {
+            anchors.right: parent.right;
+
+            width: parent.width * (secondWidthPercent / 100);
+            height: parent.height;
+
+            Text {
+                id: modelType;
+
+                anchors.verticalCenter: parent.verticalCenter;
+
+                width: parent.width;
+
+                elide: Text.ElideRight;
+                wrapMode: Text.NoWrap;
+
+                text: hardwareCard.modelType;
+
+                color: Style.textColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
     }
 

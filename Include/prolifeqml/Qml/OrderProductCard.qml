@@ -6,8 +6,7 @@ import imtlicgui 1.0
 Rectangle {
     id: root;
 
-//    height: cardLoader.height + headerBlock.height + messageItem.height + 30;
-    width: 500;
+    width: 600;
 
     height: content.height + 2 * root.margin;
 
@@ -21,15 +20,19 @@ Rectangle {
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
 
+    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
+
     property int margin: 10;
 
     property bool selected: false;
-    property string categoryId: model.CategoryId;
+    property string categoryId: model.CategoryId ? model.CategoryId : "";
+    property string title: root.categoryId;
 
     property TreeItemModel devicesModel: TreeItemModel {};
 
     property LicensesProvider licensesProvider: null;
     property ListView productsListView: null;
+    property Item orderEditorPtr: null;
 
     property int productIndex: -1;
 
@@ -126,14 +129,25 @@ Rectangle {
             color: "transparent";
 
             Text {
+                id: newText;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+
+                color: Style.textColor;
+                font.family: Style.fontFamilyBold;
+                font.pixelSize: Style.fontSize_common;
+            }
+
+            Text {
                 id: pairProductTitle;
 
-                anchors.left: parent.left;
+                anchors.left: newText.right;
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.right: commands.left;
                 anchors.rightMargin: 10;
 
-                text: "#" + (root.productIndex + 1) + " " + root.categoryId;
+                text: "#" + (root.productIndex + 1) + " " + root.title;
 
                 color: Style.textColor;
                 font.family: Style.fontFamilyBold;
@@ -182,12 +196,12 @@ Rectangle {
                     let hardwareId = cardLoader.item.hardwareId;
                     let softwareId = cardLoader.item.softwareId;
 
-                    pairProductTitle.text = "#" + (root.productIndex + 1) + " Software & Hardware";
+                    root.title = "Software & Hardware";
 
                     cardLoader.item.licensesProvider = root.licensesProvider;
                 }
                 else if (root.categoryId === "Hardware"){
-                    cardLoader.item.devicesModel = root.devicesModel;
+                    //cardLoader.item.devicesModel = root.devicesModel;
                 }
                 else if (root.categoryId === "Software"){
                     cardLoader.item.licensesProvider = root.licensesProvider;

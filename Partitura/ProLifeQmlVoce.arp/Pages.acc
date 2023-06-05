@@ -616,6 +616,7 @@
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
+        <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
         <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Repositories/ProductInstanceSqlRepository"/>
         <Component ExportedId="ProductSqlRepository" ComponentId="Repositories/ProductSqlRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="PageData/UserSqlRepository"/>

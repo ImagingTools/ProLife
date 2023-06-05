@@ -3,6 +3,7 @@
 
 // ImtCore includes
 #include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtbase/IIdentifiable.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -31,6 +32,9 @@ protected:
 
 	virtual void InsertSoftwareProductToProductCollection(const imtbase::CTreeItemModel& softwareProductModel, int modelIndex, imtbase::IObjectCollection& productCollection) const;
 	virtual void InsertHardwareProductToProductCollection(const imtbase::CTreeItemModel& hardwareProductModel, int modelIndex, imtbase::IObjectCollection& productCollection, const QByteArray& orderId = QByteArray()) const;
+
+	virtual void InsertSoftwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& softwareProductModel, int modelIndex, const QByteArray& pairId = QByteArray()) const;
+	virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel, int modelIndex) const;
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);

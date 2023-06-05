@@ -130,6 +130,18 @@ DocumentBase {
         }
     }
 
+    function onCommandsModelLoaded(){
+        let saveExists = deviceEditorContainer.commandsProvider.commandExists("Save");
+        if (!saveExists){
+            deviceEditorContainer.blockEditing();
+        }
+
+        let isOrderEdited = deviceEditorContainer.commandsProvider.commandExists("OrderEdit");
+        if (!isOrderEdited){
+            orderCB.changeable = false;
+        }
+    }
+
     function blockEditing(){
         descriptionInput.readOnly = true;
         serialNumberInput.readOnly = true;
@@ -215,8 +227,6 @@ DocumentBase {
         }
 
         undoRedoManager.beginChanges();
-
-//        documentModel.SetData("Id", deviceEditorContainer.itemId);
 
         if (productCB.currentIndex >= 0){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);

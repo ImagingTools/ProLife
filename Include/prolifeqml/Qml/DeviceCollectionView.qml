@@ -7,10 +7,13 @@ CollectionView {
 
     visibleMetaInfo: false;
 
+    defaultSortHeaderIndex: 6;
+    defaultOrderType: "DESC";
+
     property MainDocumentManager mainDocumentManager: null;
 
     Component.onCompleted: {
-       // Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
+        // Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.subscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
@@ -27,6 +30,35 @@ CollectionView {
         }
     }
 
+    filterMenu: Component {
+        FilterMenu {
+            decoratorSource: Style.filterPanelDecoratorPath;
+
+            onVisibleChanged: {
+                if (visible){
+                    let ok = container.commandsDelegate.filterByNewActive;
+                    prefixLoaderComp = ok ? textComp: null;
+                }
+            }
+
+            Component {
+                id: textComp;
+
+                Text {
+                    id: titleInstanceId;
+                    text: qsTr("Only new sensors!");
+                    color: Style.errorTextColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+            }
+
+            property bool isNewDevices: container.commandsDelegate.filterByNewActive;
+            onIsNewDevicesChanged: {
+                prefixLoaderComp = isNewDevices ? textComp: null;
+            }
+        }
+    }
 
     function fillContextMenuModel(){
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});

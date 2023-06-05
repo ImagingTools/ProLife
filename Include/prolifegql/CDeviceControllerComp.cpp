@@ -158,8 +158,8 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 							return nullptr;
 						}
 
-						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber();
-						if (!serialNumber.isEmpty() && currentSerialNumber == serialNumber){
+						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
+						if (!serialNumber.isEmpty() && currentSerialNumber == serialNumber.toLower()){
 							errorMessage = QT_TR_NOOP("Serial number already exists");
 							return nullptr;
 						}

@@ -21,7 +21,7 @@ Item {
         let defaultName = "License.lic";
         if (controller.productProvider != null){
             let macAddress = controller.productProvider.getMacAddressFromCurrentPair();
-            if (macAddress != null && macAddress !== ""){
+            if (macAddress !== null && macAddress !== ""){
                 let splitData = macAddress.split(':');
                 defaultName = splitData.join('_') + '_' + defaultName;
             }

@@ -24,22 +24,21 @@
         <Element ComponentName="WebResourcesServlet" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="KeyDataProviders">
+            <PositionMap>
+                <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
+                <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DatabaseBackup">
             <PositionMap>
                 <Element ComponentName="DatabaseAutomaticBackup" X="525" Y="425" Note=""/>
                 <Element ComponentName="RelativeFileNameParam" X="525" Y="275" Note=""/>
                 <Element ComponentName="SystemLocation" X="525" Y="100" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="KeyDataProviders">
-            <PositionMap>
-                <Element ComponentName="AesInitVector" X="300" Y="125" Note=""/>
-                <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
-                <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
-                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="875" Y="125" Note=""/>
-                <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
