@@ -11,7 +11,7 @@ if(NOT DEFINED PUMADIR)
 endif()
 
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
-include(${PUMADIR}/Config/CMake/PumaEnv.cmake)
+include(${IMTCOREDIR}/../Puma/Config/CMake/PumaEnv.cmake)
 
 set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include")
 set(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl")
