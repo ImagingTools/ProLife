@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -138,6 +138,21 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="PumaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="PumaUrl"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Puma URL"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SchedulerParams" PackageId="ImtAppPck" ComponentId="SchedulerParamsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -204,6 +219,7 @@
                             <Values>
                                 <Value>InstanceMaskRepresentation</Value>
                                 <Value>LisaUrlRepresentation</Value>
+                                <Value>PumaUrlRepresentation</Value>
                                 <Value>ServerPortRepresentation</Value>
                             </Values>
                         </Data>

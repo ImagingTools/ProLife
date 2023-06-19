@@ -140,9 +140,8 @@
                             <Values>
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/OrdersPage</Value>
-                                <Value>PageData/AdministrationPages</Value>
-                                <Value>PageData/ProductPermissionController</Value>
                                 <Value>PageData/DevicesPage</Value>
+                                <Value>PageData/ProductPermissionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -289,14 +288,8 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="FeatureInfoProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SingleProductPermission/FeaturePackage"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SingleProductPermission"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -374,6 +367,9 @@
                     <Element Id="SingleProductPermission" PackageId="ImtCoreVoce" ComponentId="SingleProductPermission">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
                                 </AttributeInfo>

@@ -11,6 +11,8 @@
     <PackageDirs>
         <Dir>../Bin/$(ConfigurationName)</Dir>
         <Dir>../Partitura</Dir>
+		<Dir>../../Puma/Partitura</Dir>
+		<Dir>../../Puma/Bin/$(ConfigurationName)</Dir>
     </PackageDirs>
     <PackageFiles/>
     <RegistryFiles>

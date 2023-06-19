@@ -37,30 +37,41 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		return nullptr;
 	}
 
-	bool filterByGroup = true;
+	bool isAdmin = false;
+	QByteArrayList userPermissions;
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr != nullptr){
+		userPermissions = userInfoPtr->GetPermissions();
+
+		isAdmin = userInfoPtr->IsAdmin();
+	}
+
+	bool filterByGroup = false;
 	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList userPermissions;
-
-		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-		if (userInfoPtr != nullptr){
-			userPermissions = userInfoPtr->GetPermissions();
-		}
-
 		QByteArrayList permissions;
 		permissions << *m_permissionIdAttrPtr;
 		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
 	}
 
-	iprm::CParamsSet objectFilter;
+	if (isAdmin){
+		filterByGroup = false;
+	}
 
-	iprm::COptionsManager optionsManager;
-	iprm::COptionsManager accountsOptionsManager;
+	iprm::CParamsSet objectFilter;
 
 	iprm::CParamsSet accountFilter;
 	iprm::CParamsSet groups;
 	iprm::CParamsSet accountParams;
 	iprm::CParamsSet orderFilter;
+
+	iprm::COptionsManager optionsManager;
+	iprm::COptionsManager accountsOptionsManager;
 	iprm::COptionsManager ordersOptionsManager;
+
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+
+	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
+	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
 
 	if (filterByGroup){
 		// User group ID-s from GQL context user
@@ -74,29 +85,37 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 			optionsManager.InsertOption("", groupId);
 		}
 
-		groups.SetEditableParameter("Groups", &optionsManager);
-		accountFilter.SetEditableParameter("ObjectFilter", &groups);
+		if (optionsManager.GetOptionsCount() > 0){
+			groups.SetEditableParameter("Groups", &optionsManager);
+			accountFilter.SetEditableParameter("ObjectFilter", &groups);
 
-		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-		for (const QByteArray& accountId : accountIds){
-			accountsOptionsManager.InsertOption("", accountId);
-		}
-		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-		orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
+			imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
+			for (const QByteArray& accountId : accountIds){
+				accountsOptionsManager.InsertOption("", accountId);
+			}
 
-		imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
-		for (const QByteArray& orderId : ordersIds){
-			ordersOptionsManager.InsertOption("", orderId);
+			accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
+			orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
+
+			imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
+			for (const QByteArray& orderId : ordersIds){
+				ordersOptionsManager.InsertOption("", orderId);
+			}
+
+			if (ordersOptionsManager.GetOptionsCount() == 0){
+				ordersOptionsManager.InsertOption("", "");
+			}
+
+			if (ordersOptionsManager.GetOptionsCount() > 0){
+				objectFilter.SetEditableParameter("Orders", &ordersOptionsManager);
+			}
 		}
-		objectFilter.SetEditableParameter("Orders", &ordersOptionsManager);
+		else{
+			return rootModelPtr.PopPtr();
+		}
 	}
 
-	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
-
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
-	imtbase::CTreeItemModel* dataModel = nullptr;
-	imtbase::CTreeItemModel* itemsModel = nullptr;
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
 	imtbase::CTreeItemModel* notificationModel = nullptr;
 
 	if (!errorMessage.isEmpty()){
@@ -104,13 +123,11 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		errorsItemModel->SetData("message", errorMessage);
 	}
 	else{
-		dataModel = new imtbase::CTreeItemModel();
-		itemsModel = new imtbase::CTreeItemModel();
 		notificationModel = new imtbase::CTreeItemModel();
 
 		const imtgql::CGqlObject* viewParamsGql = nullptr;
-		if (inputParams->size() > 0){
-			viewParamsGql = inputParams->at(0).GetFieldArgumentObjectPtr("viewParams");
+		if (inputParams.size() > 0){
+			viewParamsGql = inputParams.at(0).GetFieldArgumentObjectPtr("viewParams");
 		}
 
 		iprm::CParamsSet filterParams;
@@ -219,11 +236,8 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		int newElementsCount = m_objectCollectionCompPtr->GetElementsCount(&newObjectsFilterParams);
 		notificationModel->SetData("NewCount", newElementsCount);
 
-		dataModel->SetExternTreeModel("items", itemsModel);
 		dataModel->SetExternTreeModel("notification", notificationModel);
 	}
-
-	rootModelPtr->SetExternTreeModel("data", dataModel);
 
 	return rootModelPtr.PopPtr();
 }

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,13 +17,6 @@
         <Element ComponentName="VersionInfo" X="475" Y="175" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Settings">
-            <PositionMap>
-                <Element ComponentName="ServerPageData" X="350" Y="250" Note=""/>
-                <Element ComponentName="ServerPageRepresentation" X="775" Y="250" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Representation">
             <PositionMap>
                 <Element ComponentName="BackupSettingsRepresentation" X="600" Y="475" Note=""/>
@@ -36,6 +29,13 @@
                 <Element ComponentName="ServerPortRepresentation" X="425" Y="375" Note=""/>
                 <Element ComponentName="ServerSettingsPermission" X="650" Y="75" Note=""/>
                 <Element ComponentName="ServerSettingsRepresentation" X="375" Y="200" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Settings">
+            <PositionMap>
+                <Element ComponentName="ServerPageData" X="350" Y="250" Note=""/>
+                <Element ComponentName="ServerPageRepresentation" X="775" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

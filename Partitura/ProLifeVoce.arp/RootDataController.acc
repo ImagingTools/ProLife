@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -16,10 +16,11 @@
                     <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>PumaGQLClientEngine</Value>
                                 <Value>Pages</Value>
                                 <Value>SettingsController</Value>
-                                <Value>AuthorizationConcept</Value>
-                                <Value>GraphQLClientEngine</Value>
+                                <Value>RemoteAuthorizationOptions</Value>
+                                <Value>LisaGQLEngine</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -29,34 +30,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AuthorizationConcept" PackageId="ImtCoreVoce" ComponentId="AuthorizationConcept">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/UserSqlRepository"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="GraphQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="GraphQLClientEngine">
+        <Element Id="LisaGQLEngine" PackageId="ImtGraphQlVoce" ComponentId="GraphQLClientEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -107,6 +81,83 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="PumaGQLClientEngine" PackageId="PumaVoce" ComponentId="PumaGQLClientEngine">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>UserToken</Value>
+                                <Value>SessionItem</Value>
+                                <Value>UsersObjectView</Value>
+                                <Value>UsersInfo</Value>
+                                <Value>UsersList</Value>
+                                <Value>UserItem</Value>
+                                <Value>UserAdd</Value>
+                                <Value>UserUpdate</Value>
+                                <Value>UsersRemove</Value>
+                                <Value>UsersCommands</Value>
+                                <Value>UserCommands</Value>
+                                <Value>RolesList</Value>
+                                <Value>RoleItem</Value>
+                                <Value>RoleAdd</Value>
+                                <Value>RoleUpdate</Value>
+                                <Value>RolesRemove</Value>
+                                <Value>RolesObjectView</Value>
+                                <Value>RolesInfo</Value>
+                                <Value>RolesCommands</Value>
+                                <Value>RoleCommands</Value>
+                                <Value>GroupsList</Value>
+                                <Value>GroupsInfo</Value>
+                                <Value>GroupsObjectView</Value>
+                                <Value>GroupItem</Value>
+                                <Value>GroupAdd</Value>
+                                <Value>GroupUpdate</Value>
+                                <Value>GroupsRemove</Value>
+                                <Value>GroupsCommands</Value>
+                                <Value>GroupCommands</Value>
+                                <Value>RolesMetaInfo</Value>
+                                <Value>UsersMetaInfo</Value>
+                                <Value>GroupsMetaInfo</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Url" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="http://localhost:7788/Puma/graphql"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SettingsController/PumaUrlConnection"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="RemoteAuthorizationOptions" PackageId="ImtAuthVoce" ComponentId="RemoteAuthorizationOptions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SettingsController" PackageId="ProLifeQmlVoce" ComponentId="ProLifeApplicationSettings">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -141,13 +192,11 @@
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
         <Component ExportedId="BackupParamsSet" ComponentId="SettingsController/BackupParamsSet"/>
-        <Component ExportedId="BackupSettings" ComponentId="SettingsController/BackupSettings"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
-        <Component ExportedId="GraphQLClientEngine" ComponentId="GraphQLClientEngine"/>
+        <Component ExportedId="GraphQLClientEngine" ComponentId="LisaGQLEngine"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Pages/OrderSqlRepository"/>
-        <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Pages/ProductInstanceSqlRepository"/>
-        <Component ExportedId="ProductSqlRepository" ComponentId="Pages/ProductSqlRepository"/>
+        <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
         <Component ExportedId="UserSessionRepository" ComponentId="AuthorizationConcept/UserSessionRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>

@@ -1,10 +1,6 @@
 #pragma once
 
 
-// ACF includes
-#include <icomp/TMakeComponentWrap.h>
-#include <icomp/TModelCompWrap.h>
-
 // ProLife includes
 #include <prolifegql/COrderControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>

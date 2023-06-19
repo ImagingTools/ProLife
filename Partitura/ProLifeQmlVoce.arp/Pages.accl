@@ -10,14 +10,14 @@
     <PositionMap>
         <Element ComponentName="AccountsPage" X="175" Y="625" Note=""/>
         <Element ComponentName="AdministrationPage" X="175" Y="700" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="675" Y="575" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="675" Y="600" Note=""/>
         <Element ComponentName="DevicesPage" X="175" Y="475" Note=""/>
         <Element ComponentName="OrdersPage" X="175" Y="550" Note=""/>
         <Element ComponentName="PageData" X="1025" Y="350" Note=""/>
         <Element ComponentName="PageDataControllers" X="1026" Y="229" Note=""/>
         <Element ComponentName="Pages" X="175" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
-        <Element ComponentName="PagesPermissions" X="675" Y="475" Note=""/>
+        <Element ComponentName="PagesPermissions" X="675" Y="474" Note=""/>
         <Element ComponentName="PagesRepresentation" X="700" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="425" Y="225" Note=""/>
         <Element ComponentName="PermissionsChecker" X="675" Y="725" Note=""/>
@@ -35,7 +35,7 @@
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="450" Y="75" Note=""/>
-                <Element ComponentName="AdministrationPage" X="550" Y="375" Note=""/>
+                <Element ComponentName="AdministrationPage" X="925" Y="300" Note=""/>
                 <Element ComponentName="DevicesPage" X="725" Y="75" Note=""/>
                 <Element ComponentName="OrdersPage" X="175" Y="75" Note=""/>
                 <Element ComponentName="ProductPermissionController" X="550" Y="625" Note=""/>

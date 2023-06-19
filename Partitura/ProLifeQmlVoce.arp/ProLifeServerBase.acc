@@ -85,6 +85,9 @@
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="GqlContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="RemoteGqlContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="GqlRequestHandler" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -95,17 +98,8 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/UserSessionRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SettingsCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/UserSettingsRepository"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/UserSqlRepository"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -241,6 +235,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="RemoteGqlContextController" PackageId="ImtGqlPck" ComponentId="RemoteGqlContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/PumaGQLClientEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="UserInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ResourcesPath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -271,6 +280,15 @@
         <Element Id="TimeStampFileNameParam" PackageId="FilePck" ComponentId="TimeStampFileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="UserInfo" PackageId="ImtAuthPck" ComponentId="UserInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AdminId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="su"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="WebResourcesServlet" PackageId="ImtRestPck" ComponentId="HttpFileProviderBasedServlet">
@@ -342,6 +360,41 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="GqlContextCache">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="GqlContextCacheController" PackageId="ImtGqlPck" ComponentId="GqlContextCacheController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="GqlRequest">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
+                                    <Data IsEnabled="true" Value="UserInfo"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="UserInfo" PackageId="ImtAuthPck" ComponentId="UserInfo">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="AdminId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="su"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlContextCacheController" ComponentId="GqlContextCacheController"/>
+                </ExportedInterfaces>
                 <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>

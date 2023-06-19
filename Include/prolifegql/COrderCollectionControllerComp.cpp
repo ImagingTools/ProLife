@@ -140,10 +140,10 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 		return nullptr;
 	}
 
-	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
 	const imtgql::CGqlObject* viewParamsGql = nullptr;
-	if (inputParams->size() > 0){
-		viewParamsGql = inputParams->at(0).GetFieldArgumentObjectPtr("viewParams");
+	if (inputParams.size() > 0){
+		viewParamsGql = inputParams.at(0).GetFieldArgumentObjectPtr("viewParams");
 	}
 
 	iprm::CParamsSet filterParams;

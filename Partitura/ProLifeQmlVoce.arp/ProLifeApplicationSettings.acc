@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -194,6 +194,7 @@
                     <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
                     <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettings/LisaUrlConnection"/>
                     <Component ExportedId="Preferences" ComponentId="ServerSettings/Preferences"/>
+                    <Component ExportedId="PumaUrlConnection" ComponentId="ServerSettings/PumaUrlConnection"/>
                     <Component ExportedId="ServerPort" ComponentId="ServerSettings/ServerPort"/>
                     <Component ExportedId="WebSocketServerPort" ComponentId="ServerSettings/WebSocketServerPort"/>
                 </ExportedComponents>
@@ -306,6 +307,7 @@
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettingsController/LisaUrlConnection"/>
         <Component ExportedId="Preferences" ComponentId="ServerSettingsController/Preferences"/>
+        <Component ExportedId="PumaUrlConnection" ComponentId="ServerSettingsController/PumaUrlConnection"/>
         <Component ExportedId="ServerPort" ComponentId="ServerSettingsController/ServerPort"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="UserSettingsController/UserSettingsRepository"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="ServerSettingsController/WebSocketServerPort"/>

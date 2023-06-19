@@ -6,7 +6,12 @@ if(NOT DEFINED IMTCOREDIR)
 	set(IMTCOREDIR "$ENV{IMTCOREDIR}")
 endif()
 
+if(NOT DEFINED PUMADIR)
+	set(PUMADIR "$ENV{PUMADIR}")
+endif()
+
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
+include(${PUMADIR}/Config/CMake/PumaEnv.cmake)
 
 set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include")
 set(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl")

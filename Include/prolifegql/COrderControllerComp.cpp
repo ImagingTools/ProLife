@@ -24,13 +24,9 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 		return nullptr;
 	}
 
-	QByteArray objectId;
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
 
-	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
-
-	if (inputParams != nullptr){
-		objectId = GetObjectIdFromInputParams(*inputParams);
-	}
+	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 
 	dataModel->SetData("Name", "");
 	dataModel->SetData("Id", objectId);

@@ -20,11 +20,9 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 		return nullptr;
 	}
 
-	QByteArray objectId;
-	const QList<imtgql::CGqlObject>* inputParams = gqlRequest.GetParams();
-	if (inputParams != nullptr){
-		objectId = GetObjectIdFromInputParams(*inputParams);
-	}
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+
+	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 

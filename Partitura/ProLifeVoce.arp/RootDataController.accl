@@ -2,17 +2,18 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationController" X="575" Y="50" Note=""/>
-        <Element ComponentName="AuthorizationConcept" X="775" Y="350" Note=""/>
-        <Element ComponentName="GraphQLClientEngine" X="450" Y="350" Note=""/>
-        <Element ComponentName="Pages" X="1050" Y="350" Note=""/>
-        <Element ComponentName="SettingsController" X="150" Y="350" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="375" Y="350" Note=""/>
+        <Element ComponentName="Pages" X="1100" Y="350" Note=""/>
+        <Element ComponentName="PumaGQLClientEngine" X="600" Y="350" Note=""/>
+        <Element ComponentName="RemoteAuthorizationOptions" X="875" Y="350" Note=""/>
+        <Element ComponentName="SettingsController" X="125" Y="350" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
