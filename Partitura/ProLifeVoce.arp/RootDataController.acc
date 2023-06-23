@@ -81,7 +81,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaGQLClientEngine" PackageId="PumaVoce" ComponentId="PumaGQLClientEngine">
+        <Element Id="PumaGQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="PumaGQLClientEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -198,7 +198,6 @@
         <Component ExportedId="OrderSqlRepository" ComponentId="Pages/OrderSqlRepository"/>
         <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
-        <Component ExportedId="UserSessionRepository" ComponentId="AuthorizationConcept/UserSessionRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
         <Component ExportedId="UserSqlRepository" ComponentId="Pages/UserSqlRepository"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="SettingsController/WebSocketServerPort"/>

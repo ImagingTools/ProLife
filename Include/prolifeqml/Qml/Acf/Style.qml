@@ -183,8 +183,6 @@ QtObject {
     }
 
     property GqlModel styleQuery: GqlModel {
-//        id: styleQuery;
-
         function getStyle(theme){
             var query = Gql.GqlRequest("query", "GetStyle");
 
