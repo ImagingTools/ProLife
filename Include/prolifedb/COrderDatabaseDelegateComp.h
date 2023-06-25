@@ -27,11 +27,12 @@ public:
 				const imtbase::IObjectCollection& collection,
 				const QByteArray& objectId,
 				const istd::IChangeable& object,
-				const ContextDescription& description,
+				const imtbase::IOperationContext* operationContextPtr,
 				bool useExternDelegate = true) const override;
 	virtual QByteArray CreateDeleteObjectQuery(
 				const imtbase::IObjectCollection& collection,
-				const QByteArray& objectId) const override;
+				const QByteArray& objectId,
+				const imtbase::IOperationContext* operationContextPtr) const override;
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual QString GetBaseSelectionQuery() const override;

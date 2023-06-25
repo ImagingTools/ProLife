@@ -25,7 +25,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
 			const istd::IChangeable& object,
-			const ContextDescription& description,
+			const imtbase::IOperationContext* operationContextPtr,
 			bool useExternDelegate) const
 {
 	QByteArray retVal;
@@ -61,8 +61,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 				if (deviceInfoPtr != nullptr){
 					deviceInfoPtr->SetOrderId("");
 
-					ContextDescription context;
-					retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, context, false);
+					retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, operationContextPtr, false);
 				}
 			}
 		}
@@ -96,7 +95,8 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 QByteArray COrderDatabaseDelegateComp::CreateDeleteObjectQuery(
 		const imtbase::IObjectCollection& collection,
-		const QByteArray& objectId) const
+		const QByteArray& objectId,
+		const imtbase::IOperationContext* operationContextPtr) const
 {
 	QByteArray retVal;
 	imtbase::IObjectCollection::DataPtr objectPtr;
@@ -111,8 +111,7 @@ QByteArray COrderDatabaseDelegateComp::CreateDeleteObjectQuery(
 					if (deviceInfoPtr != nullptr){
 						deviceInfoPtr->SetOrderId("");
 
-						ContextDescription context;
-						retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, context, false);
+						retVal += m_deviceDatabaseDelegateCompPtr->CreateUpdateObjectQuery(*m_deviceCollectionCompPtr, deviceId, *deviceInfoPtr, operationContextPtr, false);
 					}
 				}
 			}

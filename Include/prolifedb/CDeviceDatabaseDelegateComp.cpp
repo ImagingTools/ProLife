@@ -27,17 +27,18 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
 			const istd::IChangeable& object,
-			const ContextDescription& description,
+			const imtbase::IOperationContext* operationContextPtr,
 			bool useExternDelegate) const
 {
-	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, description, false);
+	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
 	return retVal;
 }
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
 			const imtbase::IObjectCollection& collection,
-			const QByteArray& objectId) const
+			const QByteArray& objectId,
+			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	QByteArray retVal;
 
