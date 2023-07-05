@@ -32,7 +32,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		return nullptr;
 	}
 
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetGqlContext();
+	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		return nullptr;
 	}

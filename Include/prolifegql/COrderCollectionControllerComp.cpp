@@ -192,7 +192,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 		this->SetAdditionalFilters(*viewParamsGql, &filterParams);
 	}
 
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetGqlContext();
+	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		return nullptr;
 	}
