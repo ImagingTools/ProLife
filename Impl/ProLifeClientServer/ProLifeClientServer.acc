@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,6 +17,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProLifeServerBase</Value>
+                                <Value>ClientApplication/ClientMainWindowQml</Value>
                                 <Value>ClientApplication/ObserverQml</Value>
                             </Values>
                         </Data>
@@ -35,6 +36,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SystemStatusUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerBase/ProLifeLocalization"/>

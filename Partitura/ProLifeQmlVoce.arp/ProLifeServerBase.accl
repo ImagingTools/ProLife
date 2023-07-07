@@ -12,27 +12,20 @@
         <Element ComponentName="DatabaseAutomaticBackup" X="875" Y="625" Note=""/>
         <Element ComponentName="DatabaseEngine" X="475" Y="750" Note=""/>
         <Element ComponentName="FileDataProvider" X="1100" Y="750" Note=""/>
+        <Element ComponentName="GqlContextController" X="225" Y="225" Note=""/>
         <Element ComponentName="GraphQlRoot" X="100" Y="425" Note=""/>
         <Element ComponentName="HttpFileAccess" X="900" Y="425" Note=""/>
         <Element ComponentName="HttpRedirect" X="550" Y="425" Note=""/>
         <Element ComponentName="HttpServerFramework" X="550" Y="275" Note=""/>
         <Element ComponentName="KeyDataProviders" X="775" Y="750" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="525" Y="550" Note=""/>
-        <Element ComponentName="RemoteGqlContextController" X="225" Y="250" Note=""/>
         <Element ComponentName="ResourcesPath" X="1075" Y="125" Note=""/>
         <Element ComponentName="RessourcesProvider" X="825" Y="125" Note=""/>
-        <Element ComponentName="TimeStampFileNameParam" X="225" Y="75" Note=""/>
-        <Element ComponentName="UserInfo" X="200" Y="150" Note=""/>
+        <Element ComponentName="SessionInfo" X="300" Y="100" Note=""/>
+        <Element ComponentName="UserInfo" X="125" Y="100" Note=""/>
         <Element ComponentName="WebResourcesServlet" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="GqlContextCache">
-            <PositionMap>
-                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
-                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
                 <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
@@ -48,6 +41,13 @@
                 <Element ComponentName="DatabaseAutomaticBackup" X="525" Y="425" Note=""/>
                 <Element ComponentName="RelativeFileNameParam" X="525" Y="275" Note=""/>
                 <Element ComponentName="SystemLocation" X="525" Y="100" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="GqlContextCache">
+            <PositionMap>
+                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
+                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

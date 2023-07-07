@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -141,7 +141,6 @@
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/OrdersPage</Value>
                                 <Value>PageData/DevicesPage</Value>
-                                <Value>PageData/ProductPermissionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -282,24 +281,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="AdministrationPage" PackageId="ImtUserAdministrationVoce" ComponentId="AdministrationPage">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="DevicesPage" PackageId="ProLifeQmlVoce" ComponentId="DevicesPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -342,54 +323,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductPermissionController" PackageId="ImtLicenseGqlPck" ComponentId="ProductPermissionController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProductPermissions</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SingleProductPermission"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SingleProductPermission" PackageId="ImtCoreVoce" ComponentId="SingleProductPermission">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProLife</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProLife</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
@@ -404,7 +337,6 @@
                     <Component ExportedId="OrderVisualStatus" ComponentId="OrdersPage/OrderVisualStatus"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
-                    <Component ExportedId="ProductPermissionController" ComponentId="ProductPermissionController"/>
                     <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>

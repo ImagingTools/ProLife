@@ -76,6 +76,24 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="GqlContextController" PackageId="ImtGqlPck" ComponentId="RemoteGqlContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/PumaGQLClientEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SessionFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="SessionInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="UserInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="GraphQlRoot" PackageId="ImtGqlPck" ComponentId="GraphQLServlet">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -86,7 +104,7 @@
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GqlContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="RemoteGqlContextController"/>
+                        <Data IsEnabled="true" Value="GqlContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GqlRequestHandler" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -235,21 +253,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="RemoteGqlContextController" PackageId="ImtGqlPck" ComponentId="RemoteGqlContextController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/PumaGQLClientEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="UserInfo"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="ResourcesPath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -277,8 +280,8 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="TimeStampFileNameParam" PackageId="FilePck" ComponentId="TimeStampFileNameParam">
-            <Data IsEnabled="true" Flags="0">
+        <Element Id="SessionInfo" PackageId="ImtAuthPck" ComponentId="SessionInfo">
+            <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
             </Data>
         </Element>

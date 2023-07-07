@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -25,8 +25,8 @@
                 <Element ComponentName="Close" X="428" Y="600" Note=""/>
                 <Element ComponentName="Commands" X="275" Y="275" Note=""/>
                 <Element ComponentName="CommandsRepresentation" X="1050" Y="275" Note=""/>
-                <Element ComponentName="DeviceCommandPermissions" X="1050" Y="425" Note=""/>
                 <Element ComponentName="DeviceCommandsController" X="575" Y="75" Note=""/>
+                <Element ComponentName="DeviceCommandsPermissions" X="1050" Y="425" Note=""/>
                 <Element ComponentName="Empty" X="125" Y="725" Note=""/>
                 <Element ComponentName="OrderEdit" X="425" Y="725" Note=""/>
                 <Element ComponentName="Redo" X="425" Y="425" Note=""/>

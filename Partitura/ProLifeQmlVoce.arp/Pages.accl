@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5075" Description="ACF"/>
+            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -34,12 +34,9 @@
         </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
-                <Element ComponentName="AccountsPage" X="450" Y="75" Note=""/>
-                <Element ComponentName="AdministrationPage" X="925" Y="300" Note=""/>
-                <Element ComponentName="DevicesPage" X="725" Y="75" Note=""/>
-                <Element ComponentName="OrdersPage" X="175" Y="75" Note=""/>
-                <Element ComponentName="ProductPermissionController" X="550" Y="625" Note=""/>
-                <Element ComponentName="SingleProductPermission" X="550" Y="500" Note=""/>
+                <Element ComponentName="AccountsPage" X="550" Y="350" Note=""/>
+                <Element ComponentName="DevicesPage" X="925" Y="350" Note=""/>
+                <Element ComponentName="OrdersPage" X="175" Y="350" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

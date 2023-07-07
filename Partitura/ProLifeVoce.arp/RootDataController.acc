@@ -19,12 +19,31 @@
                                 <Value>PumaGQLClientEngine</Value>
                                 <Value>Pages</Value>
                                 <Value>SettingsController</Value>
-                                <Value>RemoteAuthorizationOptions</Value>
+                                <Value>AuthorizationOptionsController</Value>
                                 <Value>LisaGQLEngine</Value>
+                                <Value>PermissionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="AuthorizationOptionsController" PackageId="ImtAuthVoce" ComponentId="RemoteAuthorizationOptions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -51,11 +70,14 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="/Lisa"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Url" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7776/Lisa/graphql"/>
+                        <Data IsEnabled="true" Value="http://localhost:7776"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SettingsController/LisaUrlConnection"/>
@@ -81,12 +103,39 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="PermissionController" PackageId="ImtLicenseGqlPck" ComponentId="ProductPermissionController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProductPermissions</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SingleProductPermission"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="PumaGQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="PumaGQLClientEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>GetUserInfo</Value>
+                                <Value>GetRoleInfo</Value>
+                                <Value>GetSessionInfo</Value>
+                                <Value>GetUserGroupInfo</Value>
+                                <Value>GetDatabaseStatus</Value>
                                 <Value>UserToken</Value>
                                 <Value>SessionItem</Value>
                                 <Value>UsersObjectView</Value>
@@ -128,32 +177,14 @@
                     <AttributeInfo Id="ProductId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="/Puma"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Url" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7788/Puma/graphql"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SettingsController/PumaUrlConnection"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="RemoteAuthorizationOptions" PackageId="ImtAuthVoce" ComponentId="RemoteAuthorizationOptions">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -182,6 +213,35 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SingleProductPermission" PackageId="ImtCoreVoce" ComponentId="SingleProductPermission">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
@@ -199,7 +259,6 @@
         <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
-        <Component ExportedId="UserSqlRepository" ComponentId="Pages/UserSqlRepository"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="SettingsController/WebSocketServerPort"/>
     </ExportedComponents>
 </Acf>
