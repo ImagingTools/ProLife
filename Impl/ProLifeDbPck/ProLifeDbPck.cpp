@@ -34,6 +34,11 @@ I_EXPORT_COMPONENT(
 			"Component used for conversion of database entries to JSON objects",
 			"Database Converter");
 
+I_EXPORT_COMPONENT(
+			SoftwareProductDatabaseDelegate,
+			"Software product database delegate",
+			"Software Product Database Delegate");
+
 
 } // namespace ProLifeLicenseDbPck
 

@@ -6,19 +6,50 @@ import imtlicgui 1.0
 Item {
     id: root;
 
-//    height: content.height;
-
-    property int itemHeight: 23;
+    property int itemHeight: 30;
     property int margin: 10;
 
     property TreeItemModel productModel: TreeItemModel {}
     property var productLicensesModel: TreeItemModel{}
 
+    property bool serialNumberEdit: true;
+
+    Text {
+        id: serialNumberText;
+
+        anchors.top: parent.top;
+
+        text: qsTr("Serial Number");
+        color: Style.textColor;
+        font.family: Style.fontFamilyBold;
+        font.pixelSize: Style.fontSize_common;
+
+        visible: root.serialNumberEdit;
+    }
+
+    CustomTextField {
+        id: serialNumberInput;
+
+        anchors.top: serialNumberText.bottom;
+        anchors.topMargin: root.margin;
+
+        height: root.itemHeight;
+        width: parent.width;
+
+        placeHolderText: qsTr("Enter the serial number");
+
+        visible: root.serialNumberEdit;
+
+        onEditingFinished: {
+            root.productModel.SetData("SerialNumber", serialNumberInput.text);
+        }
+    }
+
     Text {
         id: licensesText;
 
-        anchors.top: parent.top;
-        //anchors.topMargin: root.margin;
+        anchors.top: serialNumberInput.bottom;
+        anchors.topMargin: root.margin;
 
         text: qsTr("Licenses");
         color: Style.textColor;
@@ -35,7 +66,6 @@ Item {
         anchors.bottomMargin: root.margin;
 
         width: parent.width;
-//        height: 200;
 
         radius: 0;
 
@@ -154,6 +184,10 @@ Item {
         }
 
         licensesTable.elements = root.productLicensesModel;
+
+        if (root.productModel.ContainsKey("SerialNumber")){
+            serialNumberInput.text = root.productModel.GetData("SerialNumber");
+        }
 
         blockUpdatingModel = false;
     }

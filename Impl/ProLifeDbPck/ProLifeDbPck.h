@@ -10,6 +10,7 @@
 #include <prolifedb/CDeviceDatabaseDelegateComp.h>
 #include <prolifedb/CAccountDatabaseDelegateComp.h>
 #include <prolifedb/CDatabaseConverterComp.h>
+#include <prolifedb/CSoftwareProductDatabaseDelegateComp.h>
 
 
 /**
@@ -23,6 +24,7 @@ typedef prolifedb::COrderDatabaseDelegateComp OrderDatabaseDelegateComp;
 typedef prolifedb::CDeviceDatabaseDelegateComp DeviceDatabaseDelegate;
 typedef prolifedb::CAccountDatabaseDelegateComp AccountDatabaseDelegate;
 typedef prolifedb::CDatabaseConverterComp DatabaseConverterComp;
+typedef prolifedb::CSoftwareProductDatabaseDelegateComp SoftwareProductDatabaseDelegate;
 
 
 } // namespace ProLifeDbPck

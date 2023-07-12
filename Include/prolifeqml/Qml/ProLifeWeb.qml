@@ -10,7 +10,7 @@ Item {
         anchors.fill: parent;
 
         Component.onCompleted: {
-            designSchemaProviderAlias.applyDesignSchema("Light");
+//            designSchemaProviderAlias.applyDesignSchema("Light");
         }
     }
 }

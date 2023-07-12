@@ -34,6 +34,16 @@ I_EXPORT_COMPONENT(
 		"Collection controller for device documents",
 		"Collection Controller Device Document");
 
+I_EXPORT_COMPONENT(
+		SoftwareProductCollectionController,
+		"Software product collection controller",
+		"Software Product Collection Controller");
+
+I_EXPORT_COMPONENT(
+		SoftwareProductController,
+		"Software product controller",
+		"Software Product Controller");
+
 
 } // namespace ProLifeGqlPck
 

@@ -33,6 +33,8 @@
 	<file alias="ProLife/ProductEditor.qml">Qml/ProductEditor.qml</file>
 	<file alias="ProLife/SoftwareProductEditor.qml">Qml/SoftwareProductEditor.qml</file>
 	<file alias="ProLife/HardwareProductEditor.qml">Qml/HardwareProductEditor.qml</file>
+	<file alias="ProLife/SoftwareEditor.qml">Qml/SoftwareEditor.qml</file>
+	<file alias="ProLife/SoftwareProductCollectionView.qml">Qml/SoftwareProductCollectionView.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>

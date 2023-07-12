@@ -1,5 +1,6 @@
 #include <prolifegql/COrderControllerComp.h>
 
+
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
 
@@ -152,11 +153,11 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 
 istd::IChangeable* COrderControllerComp::CreateObject(
-		const QList<imtgql::CGqlObject>& inputParams,
-		QByteArray& objectId,
-		QString& name,
-		QString& description,
-		QString &errorMessage) const
+			const QList<imtgql::CGqlObject>& inputParams,
+			QByteArray& objectId,
+			QString& name,
+			QString& description,
+			QString &errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		return nullptr;
@@ -338,6 +339,12 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(const imtbas
 		softwareInstancePtr->SetupProductInstance(productId, "", "");
 	}
 
+	if (softwareProductModel.ContainsKey("SerialNumber", modelIndex)){
+		QByteArray serialNumber = softwareProductModel.GetData("SerialNumber", modelIndex).toByteArray();
+
+		softwareInstancePtr->SetSerialNumber(serialNumber);
+	}
+
 	if (softwareProductModel.ContainsKey("ActiveLicenses", modelIndex)){
 		imtbase::CTreeItemModel* activeLicenses = softwareProductModel.GetTreeItemModel("ActiveLicenses", modelIndex);
 		if (activeLicenses != nullptr){
@@ -434,6 +441,7 @@ void COrderControllerComp::InsertSoftwareProductToModel(const imtbase::IIdentifi
 		softwareProductModel.SetData("PairId", pairId, modelIndex);
 		softwareProductModel.SetData("ProductId", softwareProductPtr->GetProductId(), modelIndex);
 		softwareProductModel.SetData("CategoryId", softwareProductPtr->GetFactoryId(), modelIndex);
+		softwareProductModel.SetData("SerialNumber", softwareProductPtr->GetSerialNumber(), modelIndex);
 
 		imtbase::CTreeItemModel* activeLicenses = softwareProductModel.AddTreeModel("ActiveLicenses", modelIndex);
 		const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();

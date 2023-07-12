@@ -152,13 +152,13 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 					if (currentObjectUuid != objectId){
 						QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
 						if (!macAddress.isEmpty() && currentMacAddress == macAddress){
-							errorMessage = QT_TR_NOOP("MAC-address already exists");
+							errorMessage = QT_TR_NOOP("MAC-Address already exists");
 							return nullptr;
 						}
 
 						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
 						if (!serialNumber.isEmpty() && currentSerialNumber == serialNumber.toLower()){
-							errorMessage = QT_TR_NOOP("Serial number already exists");
+							errorMessage = QT_TR_NOOP("Serial Number already exists");
 							return nullptr;
 						}
 					}

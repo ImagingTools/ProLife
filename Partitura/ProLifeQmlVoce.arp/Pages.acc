@@ -105,9 +105,6 @@
                     <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
@@ -123,10 +120,10 @@
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -141,6 +138,7 @@
                                 <Value>PageData/AccountsPage</Value>
                                 <Value>PageData/OrdersPage</Value>
                                 <Value>PageData/DevicesPage</Value>
+                                <Value>PageData/SoftwareProductsPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -160,6 +158,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>DevicesPage</Value>
+                                <Value>SoftwareProductsPage</Value>
                                 <Value>OrdersPage</Value>
                                 <Value>AccountsPage</Value>
                                 <Value>AdministrationPage</Value>
@@ -261,6 +260,27 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SoftwareProductsPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Key"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Id" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProducts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Licenses"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../../ProLife/SoftwareProductCollectionView.qml"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
         <EmbeddedRegistry Id="PageData">
@@ -323,6 +343,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="SoftwareProductsPage" PackageId="ProLifeQmlVoce" ComponentId="SoftwareProductsPage">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
@@ -338,6 +376,7 @@
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
                     <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
+                    <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
                 </ExportedComponents>
@@ -525,6 +564,21 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="SoftwareSqlRepository" PackageId="ProLifeVoce" ComponentId="SoftwareSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
@@ -532,12 +586,12 @@
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
+                    <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="PageData/UserSqlRepository"/>
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="PagesDemultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="PagesDemultiplexer"/>
     </ExportedInterfaces>
@@ -545,8 +599,5 @@
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
-        <Component ExportedId="ProductInstanceSqlRepository" ComponentId="Repositories/ProductInstanceSqlRepository"/>
-        <Component ExportedId="ProductSqlRepository" ComponentId="Repositories/ProductSqlRepository"/>
-        <Component ExportedId="UserSqlRepository" ComponentId="PageData/UserSqlRepository"/>
     </ExportedComponents>
 </Acf>

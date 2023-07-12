@@ -35,6 +35,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 	return retVal;
 }
 
+
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
