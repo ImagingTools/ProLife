@@ -20,6 +20,7 @@ QtObject {
     property real mainSize;
 
     property string theme: "Light";
+    property bool enableAlternating: true;
 
     property string fontFamily: mainFont.name;
     property string fontFamilyBold: boldFont.name;

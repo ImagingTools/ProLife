@@ -29,18 +29,9 @@
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="550" Y="350" Note=""/>
                 <Element ComponentName="DevicesPage" X="925" Y="350" Note=""/>
+                <Element ComponentName="HardwareProductCollectionController" X="250" Y="600" Note=""/>
                 <Element ComponentName="OrdersPage" X="175" Y="350" Note=""/>
                 <Element ComponentName="SoftwareProductsPage" X="550" Y="475" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="PagesPermissions">
-            <PositionMap>
-                <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
-                <Element ComponentName="AdministrationPermissions" X="1050" Y="400" Note=""/>
-                <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
-                <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
-                <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -50,6 +41,17 @@
                 <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PagesPermissions">
+            <PositionMap>
+                <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="1050" Y="400" Note=""/>
+                <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
+                <Element ComponentName="LicensesPermissions" X="150" Y="550" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

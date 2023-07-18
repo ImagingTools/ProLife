@@ -20,6 +20,7 @@ Dialog {
     property string orderUuid;
 
     property bool isPairEditing: false;
+    property bool serialNumberEdit: true;
 
     Component.onCompleted: {
         productEditorDialog.buttons.addButton({"Id": "Save", "Name": "OK", "Enabled": false});
@@ -37,6 +38,8 @@ Dialog {
             height: 400;
 
             rootItem: productEditorDialog;
+
+            serialNumberEdit: productEditorDialog.serialNumberEdit;
         }
     }
 }//Container

@@ -5,7 +5,8 @@ import Qt.labs.platform 1.1
 Item {
     id: controller;
 
-    property Item productProvider: null;
+    property string defaultName: "License.lic";
+    property string fileName: controller.defaultName;
 
     Item {
         id: _private;
@@ -14,20 +15,10 @@ Item {
     }
 
     function createLicenseFile(dataId){
-
         console.log("createLicenseFile", dataId);
         _private.dataId = dataId;
 
-        let defaultName = "License.lic";
-        if (controller.productProvider != null){
-            let macAddress = controller.productProvider.getMacAddressFromCurrentPair();
-            if (macAddress !== null && macAddress !== ""){
-                let splitData = macAddress.split(':');
-                defaultName = splitData.join('_') + '_' + defaultName;
-            }
-        }
-
-        fileDialogSave.currentFile = 'file:///' + defaultName;
+        fileDialogSave.currentFile = 'file:///' + controller.fileName;
 
         fileDialogSave.open();
     }

@@ -10,7 +10,7 @@ Rectangle {
 
     color: Style.imagingToolsGradient2;
 
-    radius: 10;
+    radius: 3;
 
     // Software
     property string softwareId: softwareProduct.productId;
@@ -40,15 +40,20 @@ Rectangle {
     signal softwareEdited();
     signal hardwareEdited();
 
-    onProductsViewChanged: {
-        softwareProduct.productsView = card.productsView;
-    }
+//    onProductsViewChanged: {
+//        softwareProduct.productsView = card.productsView;
+//    }
 
     onSoftwareProductModelChanged: {
         if (card.softwareProductModel != null){
             if (softwareProductModel.ContainsKey("ProductId")){
                 let productId = softwareProductModel.GetData("ProductId");
                 softwareProduct.productId = productId;
+            }
+
+            if (softwareProductModel.ContainsKey("SerialNumber")){
+                let serialNumber = softwareProductModel.GetData("SerialNumber");
+                softwareProduct.serialNumber = serialNumber;
             }
 
             if (softwareProductModel.ContainsKey("ActiveLicenses")){
@@ -114,7 +119,6 @@ Rectangle {
 
         licensesProvider: card.licensesProvider;
         readOnly: card.readOnly;
-        productsView: card.productsView;
         commmandsVisible: true;
 
         productCardRoot: card.productCardRoot;

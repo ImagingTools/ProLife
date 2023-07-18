@@ -9,6 +9,7 @@ DocumentBase {
         serialNumberInput.focus = true;
 
         root.updateGui();
+        undoRedoManager.registerModel(root.documentModel);
     }
 
     function updateGui(){
@@ -26,7 +27,21 @@ DocumentBase {
             return;
         }
 
+        undoRedoManager.beginChanges();
+
         root.documentModel.SetData("SerialNumber", serialNumberInput.text)
+
+        undoRedoManager.endChanges();
+    }
+
+    UndoRedoManager {
+        id: undoRedoManager;
+
+        documentBase: root;
+
+        onModelStateChanged: {
+            root.updateGui();
+        }
     }
 
     Rectangle {

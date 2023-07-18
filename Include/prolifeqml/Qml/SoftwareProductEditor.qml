@@ -19,7 +19,9 @@ Item {
 
         anchors.top: parent.top;
 
-        text: qsTr("Serial Number");
+        height: visible ? licensesText.height : 0;
+
+        text: qsTr("License Number");
         color: Style.textColor;
         font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;
@@ -33,12 +35,14 @@ Item {
         anchors.top: serialNumberText.bottom;
         anchors.topMargin: root.margin;
 
-        height: root.itemHeight;
+        height: visible ? root.itemHeight : 0;
         width: parent.width;
 
-        placeHolderText: qsTr("Enter the serial number");
+        placeHolderText: qsTr("Enter the license number");
 
         visible: root.serialNumberEdit;
+
+        radius: 3;
 
         onEditingFinished: {
             root.productModel.SetData("SerialNumber", serialNumberInput.text);

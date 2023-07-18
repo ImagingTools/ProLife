@@ -15,6 +15,9 @@ DocumentBase {
 
     property bool modelsIsLoaded: ordersList.completed && productsList.completed && deviceEditorContainer.modelIsReady;
 
+    property int radius: 3;
+    property int spacing: 20;
+
     Component.onCompleted: {
         ordersList.updateModel();
         productsList.updateModel();
@@ -47,6 +50,7 @@ DocumentBase {
         property TreeItemModel filteringModel: TreeItemModel {}
 
         onCollectionModelChanged: {
+            console.log("productsList onCollectionModelChanged");
             if (productsList.collectionModel != null){
                 productsList.filteringProductCollection();
                 productCB.model = filteringModel;
@@ -75,6 +79,8 @@ DocumentBase {
         fields: ["Id", "OrderId", "Description"];
 
         onCollectionModelChanged: {
+            console.log("ordersList onCollectionModelChanged");
+
             if (ordersList.collectionModel != null){
                 orderCB.model = ordersList.collectionModel;
 
@@ -207,11 +213,13 @@ DocumentBase {
         if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
             let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
             let ordersModel = orderCB.model;
-            for (let i = 0; i < ordersModel.GetItemsCount(); i++){
-                let id = ordersModel.GetData("Id", i);
-                if (id === orderId){
-                    orderCB.currentIndex = i;
-                    break;
+            if (ordersModel){
+                for (let i = 0; i < ordersModel.GetItemsCount(); i++){
+                    let id = ordersModel.GetData("Id", i);
+                    if (id === orderId){
+                        orderCB.currentIndex = i;
+                        break;
+                    }
                 }
             }
         }
@@ -298,7 +306,7 @@ DocumentBase {
             id: titleDeviceInformationBlock;
             text: qsTr("Device information");
             color: Style.textColor;
-            font.family: Style.fontFamily;
+            font.family: Style.fontFamilyBold;
             font.pixelSize: Style.fontSize_common;
         }
 
@@ -313,56 +321,55 @@ DocumentBase {
             border.width: 1;
             border.color: Style.borderColor;
 
+            radius: deviceEditorContainer.radius;
+
             Column {
                 id: deviceInformationBlock;
 
-                anchors.horizontalCenter: deviceInformationBlockBorders.horizontalCenter;
-                anchors.verticalCenter: deviceInformationBlockBorders.verticalCenter;
+                anchors.centerIn: deviceInformationBlockBorders;
 
                 width: parent.width - 20;
 
-                spacing: 7;
+                spacing: deviceEditorContainer.spacing;
 
-                Text {
-                    id: titleDeviceName;
-                    text: qsTr("Device Type");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-
-                ComboBox {
-                    id: productCB;
-
+                Item {
                     width: parent.width;
-                    height: 23;
+                    height: titleDeviceName.height + productCB.height + productCB.anchors.topMargin;
 
-                    radius: 3;
+                    Text {
+                        id: titleDeviceName;
+                        text: qsTr("Device Type");
+                        color: Style.textColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
 
-                    model: deviceEditorContainer.productsModel;
+                    ComboBox {
+                        id: productCB;
 
-                    onCurrentIndexChanged: {
-                        deviceEditorContainer.updateModel();
+                        anchors.top: titleDeviceName.bottom;
+                        anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
+
+                        width: parent.width;
+                        height: 23;
+
+                        radius: deviceEditorContainer.radius;
+
+                        model: deviceEditorContainer.productsModel;
+
+                        onCurrentIndexChanged: {
+                            deviceEditorContainer.updateModel();
+                        }
                     }
                 }
 
-                Text {
-                    id: titleDescriptionId;
-                    text: qsTr("Description");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-
-                CustomTextField {
+                TextFieldWithTitle {
                     id: descriptionInput;
 
                     width: parent.width;
-                    height: 30;
 
+                    title: qsTr("Description");
                     placeHolderText: qsTr("Enter description");
-
-                    borderColor: Style.iconColorOnSelected;
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("Description");
@@ -374,23 +381,13 @@ DocumentBase {
                     KeyNavigation.tab: serialNumberInput;
                 }
 
-                Text {
-                    id: titleSerialNumberId;
-                    text: qsTr("Serial number");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-
-                CustomTextField {
+                TextFieldWithTitle {
                     id: serialNumberInput;
 
                     width: parent.width;
-                    height: 30;
 
+                    title: qsTr("Serial Number");
                     placeHolderText: qsTr("Enter serial number");
-
-                    borderColor: Style.iconColorOnSelected;
 
                     onEditingFinished: {
                         console.log("onEditingFinished", serialNumberInput.text);
@@ -403,77 +400,71 @@ DocumentBase {
                     KeyNavigation.tab: macAddressInput;
                 }
 
-                Text {
-                    id: titleMacAddressId;
-                    text: qsTr("MAC-Address");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-
-                RegExpValidator {
-                    id: macAddressRegExp;
-
-                    regExp: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
-
-                    Component.onCompleted: {
-//                        let re = new RegExp(macAddressRegExp.regExp)
-//                        if (re){
-//                            macAddressInput.regExp = re;
-//                        }
-                    }
-                }
-
-                CustomTextField {
-                    id: macAddressInput;
-
+                Item {
                     width: parent.width;
-                    height: 30;
 
-                    placeHolderText: qsTr("Enter MAC-Address");
+                    height: macAddresInvalidText.visible ?
+                                macAddressInput.height + macAddresInvalidText.height + macAddresInvalidText.anchors.topMargin :
+                                    macAddressInput.height ;
 
-                    borderColor: Style.iconColorOnSelected;
+                    TextFieldWithTitle {
+                        id: macAddressInput;
 
-                    maximumLength: 17;
+                        width: parent.width;
 
-                   // textInputValidator: macAddressRegExp;
+                        title: qsTr("MAC-Address");
+                        placeHolderText: qsTr("Enter MAC-Address");
 
-                    onEditingFinished: {
-                        let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
-                        if (oldText && oldText !== macAddressInput.text || !oldText && macAddressInput.text !== ""){
-                            deviceEditorContainer.updateModel();
+                        maximumLength: 17;
+
+                        onEditingFinished: {
+                            let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
+                            if (oldText && oldText !== macAddressInput.text || !oldText && macAddressInput.text !== ""){
+                                deviceEditorContainer.updateModel();
+                            }
                         }
-                    }
 
-                    property var regExp: new RegExp(macAddressRegExp.regExp)
-                    onTextChanged: {
-                        if (macAddressInput.text === ""){
-                            macAddressInput.borderColor = Style.iconColorOnSelected;
-                            macAddresInvalidText.visible = false;
-                        }
-                        else if (regExp){
-                            let isValid = regExp.test(macAddressInput.text);
-                            if (isValid){
+                        property var regExp: new RegExp(macAddressRegExp.regExp)
+                        onTextChanged: {
+                            if (macAddressInput.text === ""){
                                 macAddressInput.borderColor = Style.iconColorOnSelected;
+                                macAddresInvalidText.visible = false;
                             }
-                            else{
-                                macAddressInput.borderColor = Style.errorTextColor;
-                            }
+                            else if (regExp){
+                                let isValid = regExp.test(macAddressInput.text);
+                                if (isValid){
+                                    macAddressInput.borderColor = Style.iconColorOnSelected;
+                                }
+                                else{
+                                    macAddressInput.borderColor = Style.errorTextColor;
+                                }
 
-                            macAddresInvalidText.visible = !isValid;
+                                macAddresInvalidText.visible = !isValid;
+                            }
                         }
+
+                        KeyNavigation.tab: macAddressInput;
                     }
-                }
 
-                Text {
-                    id: macAddresInvalidText;
+                    Text {
+                        id: macAddresInvalidText;
 
-                    text: qsTr("MAC-Address invalid");
-                    color: Style.errorTextColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
+                        anchors.top: macAddressInput.bottom;
+                        anchors.topMargin: 5;
 
-                    visible: false;
+                        text: qsTr("MAC-Address invalid");
+                        color: Style.errorTextColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+
+                        visible: false;
+                    }
+
+                    RegExpValidator {
+                        id: macAddressRegExp;
+
+                        regExp: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+                    }
                 }
             }
         }
@@ -482,7 +473,7 @@ DocumentBase {
             id: titleAdditonalInfoId;
             text: qsTr("Additional information");
             color: Style.textColor;
-            font.family: Style.fontFamily;
+            font.family: Style.fontFamilyBold;
             font.pixelSize: Style.fontSize_common;
         }
 
@@ -497,6 +488,8 @@ DocumentBase {
             border.width: 1;
             border.color: Style.borderColor;
 
+            radius: deviceEditorContainer.radius;
+
             Column {
                 id: additionalInfoBlock;
 
@@ -505,118 +498,138 @@ DocumentBase {
 
                 width: parent.width - 15;
 
-                spacing: 7;
+                spacing: deviceEditorContainer.spacing;
 
-                Text {
-                    id: titleStatusId;
-                    text: qsTr("Production Status");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
+                Item {
+                    width: parent.width;
+                    height: titleStatusId.height + comboBoxItem.height + comboBoxItem.anchors.topMargin;
+
+                    Text {
+                        id: titleStatusId;
+                        text: qsTr("Production Status");
+                        color: Style.textColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
+
+                    Item {
+                        id: comboBoxItem;
+
+                        anchors.top: titleStatusId.bottom;
+                        anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
+
+                        width: parent.width;
+                        height: 23;
+
+                        ComboBox {
+                            id: statusCB;
+
+                            anchors.left: parent.left;
+
+                            width: parent.width - iconStatus.width - 10;
+                            height: 23;
+
+                            radius: deviceEditorContainer.radius;
+
+                            function updateIcon(statusId){
+                                if (statusId === "None"){
+                                    iconStatus.source = "qrc:/Icons/Light/StateUnknown_On_Active";
+                                }
+                                else if (statusId === "Canceled"){
+                                    iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
+                                }
+                                else if (statusId === "Accepted" || statusId === "InProgress"){
+                                    iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
+                                }
+                                else if (statusId === "OnHold"){
+                                    iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
+                                }
+                                else{
+                                    iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
+                                }
+                            }
+
+                            property bool blockingIndexChanged: false;
+
+                            onCurrentIndexChanged: {
+                                console.log("statusCB onCurrentIndexChanged", statusCB.currentIndex);
+
+                                if (statusCB.blockingIndexChanged){
+                                    return;
+                                }
+
+                                if (statusCB.currentIndex >= 0){
+                                    deviceEditorContainer.updateModel();
+
+                                    let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                    //                                let statusModel = productionStatus.getAvailableModel(status);
+
+                                    let statusModel = stateMachine.getAvailableModel(status);
+
+                                    statusCB.model = statusModel;
+                                    statusCB.updateIcon(status);
+
+                                    statusCB.blockingIndexChanged = true;
+                                    statusCB.currentIndex = 0;
+                                    statusCB.blockingIndexChanged = false;
+                                }
+                                else{
+                                    statusCB.model = productionStatus.statusModel;
+                                }
+                            }
+                        }
+
+                        Image {
+                            id: iconStatus;
+
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.left: statusCB.right;
+                            anchors.leftMargin: 10;
+
+                            width: 20;
+                            height: width;
+
+                            sourceSize.height: height;
+                            sourceSize.width: width;
+                        }
+                    }
                 }
 
                 Item {
                     width: parent.width;
-                    height: 23;
+                    height: orderCB.height + titleOrderId.height + orderCB.anchors.topMargin;
+
+                    Text {
+                        id: titleOrderId;
+                        text: qsTr("Order ID");
+                        color: Style.textColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
 
                     ComboBox {
-                        id: statusCB;
+                        id: orderCB;
 
-                        anchors.left: parent.left;
+                        anchors.top: titleOrderId.bottom;
+                        anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
-                        width: parent.width - iconStatus.width - 10;
+                        width: parent.width;
                         height: 23;
 
-                        radius: 3;
+                        radius: deviceEditorContainer.radius;
 
-                        function updateIcon(statusId){
-                            if (statusId === "None"){
-                                iconStatus.source = "qrc:/Icons/Light/StateUnknown_On_Active";
-                            }
-                            else if (statusId === "Canceled"){
-                                iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
-                            }
-                            else if (statusId === "Accepted" || statusId === "InProgress"){
-                                iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
-                            }
-                            else if (statusId === "OnHold"){
-                                iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
-                            }
-                            else{
-                                iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
-                            }
-                        }
-
-                        property bool blockingIndexChanged: false;
+                        nameId: "OrderId";
 
                         onCurrentIndexChanged: {
-                            console.log("statusCB onCurrentIndexChanged", statusCB.currentIndex);
-
-                            if (statusCB.blockingIndexChanged){
-                                return;
-                            }
-
-                            if (statusCB.currentIndex >= 0){
-                                deviceEditorContainer.updateModel();
-
-                                let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                //                                let statusModel = productionStatus.getAvailableModel(status);
-
-                                let statusModel = stateMachine.getAvailableModel(status);
-
-                                statusCB.model = statusModel;
-                                statusCB.updateIcon(status);
-
-                                statusCB.blockingIndexChanged = true;
-                                statusCB.currentIndex = 0;
-                                statusCB.blockingIndexChanged = false;
-                            }
-                            else{
-                                statusCB.model = productionStatus.statusModel;
-                            }
+                            deviceEditorContainer.updateModel();
                         }
-                    }
-
-                    Image {
-                        id: iconStatus;
-
-                        anchors.verticalCenter: parent.verticalCenter;
-                        anchors.left: statusCB.right;
-                        anchors.leftMargin: 10;
-
-                        width: 20;
-                        height: width;
-
-                        sourceSize.height: height;
-                        sourceSize.width: width;
-                    }
-                }
-
-                Text {
-                    id: titleOrderId;
-                    text: qsTr("Order ID");
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-
-                ComboBox {
-                    id: orderCB;
-
-                    width: parent.width;
-                    height: 23;
-
-                    radius: 3;
-
-                    nameId: "OrderId";
-
-                    onCurrentIndexChanged: {
-                        deviceEditorContainer.updateModel();
                     }
                 }
             }
         }
     }
+
+    property int heightBetweenTitleAndComp: 5;
 }
 
 

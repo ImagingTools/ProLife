@@ -7,10 +7,16 @@ Item {
     anchors.fill: parent;
 
     ProLifeMain {
+        id: application;
+
         anchors.fill: parent;
 
+        systemStatus: "NO_ERROR";
+
         Component.onCompleted: {
-//            designSchemaProviderAlias.applyDesignSchema("Light");
+            designProvider.applyDesignSchema("Light");
+
+            application.firstModelsInit();
         }
     }
 }

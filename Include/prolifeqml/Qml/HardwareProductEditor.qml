@@ -5,14 +5,14 @@ import imtgui 1.0
 Item {
     id: root;
 
-//    height: content.height;
-
     property int itemHeight: 23;
     property int margin: 10;
 
     property TreeItemModel productModel: TreeItemModel {}
     property var productLicensesModel: TreeItemModel{}
     property TreeItemModel devicesModel: TreeItemModel{}
+
+    property alias deviceIndex: deviceCB.currentIndex;
 
     Text {
         id: deviceText;

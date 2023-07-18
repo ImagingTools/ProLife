@@ -17,6 +17,11 @@ DocumentBase {
 
     property bool creatingLicenseFileFlag: false;
 
+    property bool serialNumberEdit: true;
+
+    property int radius: 3;
+    property int spacing: 25;
+
     property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
 
     onModelsIsLoadedChanged: {
@@ -36,8 +41,8 @@ DocumentBase {
         licensesProvider.updateModel();
 
         accountsList.updateModel({});
-        productsList.updateModel({});
         devicesList.updateModel({});
+        productsList.updateModel({});
     }
 
     onSaved: {
@@ -184,6 +189,14 @@ DocumentBase {
                 orderEditorContainer.productsModel = productsList.collectionModel;
             }
         }
+
+        onFailed: {
+            if (orderEditorContainer.documentManager){
+//                productsList.completed = true;
+//                orderEditorContainer.modelsIsLoaded = true;
+//                orderEditorContainer.documentManager.openErrorDialog(qsTr("Error loading products"));
+            }
+        }
     }
 
     CollectionDataProvider {
@@ -282,10 +295,14 @@ DocumentBase {
         if (createLicenseExists){
             productsView.isLicenseConsuming = true;
         }
+
+        let editLicenseExists = orderEditorContainer.commandsProvider.commandExists("EditLicense");
+        orderEditorContainer.serialNumberEdit = editLicenseExists;
     }
 
     function blockEditing(){
         instanceIdInput.readOnly = true;
+        purchaseIdInput.readOnly = true;
         descriptionInput.readOnly = true;
         customerCB.changeable = false;
         orderStatusCB.changeable = false;
@@ -428,11 +445,13 @@ DocumentBase {
 
         width: 500;
 
-        spacing: 15;
+        spacing: orderEditorContainer.spacing;
 
         Item {
             width: parent.width;
-            height: titleInstanceId.height + instanceIdInput.height;
+            height: errorInstanceId.visible ?
+                        titleInstanceId.height + instanceIdInput.height + errorInstanceId.height + errorInstanceId.anchors.topMargin
+                             : titleInstanceId.height + instanceIdInput.height;
 
             RegExpValidator {
                 id: regexValid;
@@ -467,7 +486,7 @@ DocumentBase {
 
                 placeHolderText: qsTr("Enter the ERP Order-ID");
 
-//                maximumLength: 5;
+                radius: orderEditorContainer.radius;
 
                 borderColor: Style.iconColorOnSelected;
 
@@ -480,16 +499,20 @@ DocumentBase {
 
                 KeyNavigation.tab: purchaseIdInput;
             }
-        }
 
-        Text {
-            id: errorInstanceId;
-            text: qsTr("Enter a five-digit number");
+            Text {
+                id: errorInstanceId;
 
-            visible: !instanceIdInput.acceptableInput;
-            color: Style.errorTextColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
+                anchors.top: instanceIdInput.bottom;
+                anchors.topMargin: 5;
+
+                text: qsTr("Enter a five-digit number");
+
+                visible: !instanceIdInput.acceptableInput;
+                color: Style.errorTextColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
         }
 
         Item {
@@ -512,6 +535,8 @@ DocumentBase {
 
                 width: parent.width;
                 height: 30;
+
+                radius: orderEditorContainer.radius;
 
                 placeHolderText: qsTr("Enter the Purchase-ID");
 
@@ -548,6 +573,8 @@ DocumentBase {
 
                 width: parent.width;
                 height: 60;
+
+                radius: orderEditorContainer.radius;
 
                 placeHolderText: qsTr("Enter the comment");
 
@@ -586,7 +613,7 @@ DocumentBase {
                 width: parent.width;
                 height: 23;
 
-                radius: 3;
+                radius: orderEditorContainer.radius;
 
                 onCurrentIndexChanged: {
                     orderEditorContainer.updateModel();
@@ -616,7 +643,7 @@ DocumentBase {
                 width: parent.width;
                 height: 23;
 
-                radius: 3;
+                radius: orderEditorContainer.radius;
 
                 property bool blockingIndexChanged: false;
 
@@ -641,50 +668,6 @@ DocumentBase {
                         orderStatusCB.model = orderStatus.statusModel;
                     }
                 }
-            }
-        }
-
-        Item{
-            anchors.left: parent.left;
-            anchors.right: parent.right;
-
-            height: 25;
-
-            AuxButton {
-                id: addProduct;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right;
-
-                height: 22;
-                width: height;
-
-//                tooltipText: qsTr("Add a new product");
-
-                iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
-
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
-                    GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
-                    GradientStop { position: 0.98; color: Style.imagingToolsGradient3; }
-                    GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
-                }
-                onClicked: {
-                    productsView.activeProductIndex = -1;
-                    modalDialogManager.openDialog(productEditorDialog, {});
-                }
-            }
-
-            Text {
-                id: titleLicenses;
-
-                anchors.left: parent.left;
-                anchors.verticalCenter: parent.verticalCenter;
-
-                text: qsTr("Products");
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
             }
         }
     }//Column bodyColumn
@@ -852,6 +835,7 @@ DocumentBase {
                 productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
                 productsDialog.bodyItem.licensesModel = licensesProvider.model;
                 productsDialog.bodyItem.orderUuid = orderEditorContainer.itemId;
+                productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
 
                 productsDialog.isPairEditing = false;
                 productsDialog.activeProductIndex = productsView.activeProductIndex;
@@ -1030,11 +1014,68 @@ DocumentBase {
         targetItem: productsView;
     }
 
+    Rectangle {
+        id: productsTitle;
+
+        anchors.top: parent.top;
+        anchors.left: bodyColumn.right;
+        anchors.leftMargin: 25;
+
+        width: productsView.width;
+        height: 30;
+
+        color: "transparent";
+
+        border.width: 1;
+        border.color: Style.borderColor;
+
+        radius: 3;
+
+        AuxButton {
+            id: addProduct;
+
+            anchors.verticalCenter: parent.verticalCenter;
+            anchors.right: parent.right;
+            anchors.rightMargin: 10;
+
+            height: 22;
+            width: height;
+
+            iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
+
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
+                GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
+                GradientStop { position: 0.98; color: Style.imagingToolsGradient3; }
+                GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
+            }
+            onClicked: {
+                productsView.activeProductIndex = -1;
+                modalDialogManager.openDialog(productEditorDialog, {});
+            }
+        }
+
+        Text {
+            id: titleLicenses;
+
+            anchors.left: parent.left;
+            anchors.leftMargin: 10;
+            anchors.verticalCenter: parent.verticalCenter;
+
+            text: qsTr("Products");
+            color: Style.textColor;
+            font.family: Style.fontFamilyBold;
+            font.pixelSize: Style.fontSize_common;
+        }
+    }
+
     ListView {
         id: productsView;
-        anchors.top: bodyColumn.bottom;
+
+        anchors.top: productsTitle.bottom;
         anchors.topMargin: 10;
-        anchors.left: parent.left;
+        anchors.left: bodyColumn.right;
+        anchors.leftMargin: 25;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 
@@ -1109,6 +1150,7 @@ DocumentBase {
 
             onCreateLicenseFile: {
                 productsView.activeProductIndex = model.index;
+
                 orderEditorContainer.createLicenseFile(model.index);
             }
 
@@ -1129,8 +1171,6 @@ DocumentBase {
 
     LicenseFileController {
         id: licenseFileController;
-
-        productProvider: productsView;
     }
 
     function createLicenseFile(pairIndex){
@@ -1146,6 +1186,12 @@ DocumentBase {
                     if (productsView.model.ContainsKey("HardwareProduct", pairIndex)){
                         let hardwareProductModel = productsView.model.GetData("HardwareProduct", pairIndex);
                         productId = hardwareProductModel.GetData("Id");
+                    }
+
+                    let macAddress = productsView.getMacAddressFromCurrentPair();
+                    if (macAddress !== null && macAddress !== ""){
+                        let splitData = macAddress.split(':');
+                        licenseFileController.fileName = splitData.join('_') + '_' + licenseFileController.defaultName;
                     }
 
                     if (productId !== ""){

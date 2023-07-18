@@ -20,7 +20,7 @@
                         <Data IsEnabled="true" Value="Accounts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Accounts"/>
+                        <Data IsEnabled="true" Value="Customers"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
@@ -139,6 +139,7 @@
                                 <Value>PageData/OrdersPage</Value>
                                 <Value>PageData/DevicesPage</Value>
                                 <Value>PageData/SoftwareProductsPage</Value>
+                                <Value>PageData/HardwareProductCollectionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -322,6 +323,31 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="HardwareProductCollectionController" PackageId="ProLifeGqlPck" ComponentId="HardwareProductCollectionController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>HardwareProductsList</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="OrdersPage" PackageId="ProLifeQmlVoce" ComponentId="OrdersPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -346,6 +372,12 @@
                     <Element Id="SoftwareProductsPage" PackageId="ProLifeQmlVoce" ComponentId="SoftwareProductsPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -370,6 +402,7 @@
                     <Component ExportedId="AdministrationPageVisualStatus" ComponentId="AdministrationPage/AdministrationPageVisualStatus"/>
                     <Component ExportedId="AdministrationPages" ComponentId="AdministrationPage/AdministrationPages"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
+                    <Component ExportedId="HardwareProductCollectionController" ComponentId="HardwareProductCollectionController"/>
                     <Component ExportedId="InstancesPageVisualStatus" ComponentId="InstancesPage/InstancesPageVisualStatus"/>
                     <Component ExportedId="OrderPageVisualStatus" ComponentId="OrdersPage/OrderPageVisualStatus"/>
                     <Component ExportedId="OrderVisualStatus" ComponentId="OrdersPage/OrderVisualStatus"/>
@@ -451,6 +484,26 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="LicensesPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareProducts"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewLicenses</Value>
+                                            <Value>EditLicense</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="OrdersPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -484,6 +537,7 @@
                                             <Value>OrdersPermissions</Value>
                                             <Value>AdministrationPermissions</Value>
                                             <Value>DevicesPermissions</Value>
+                                            <Value>LicensesPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

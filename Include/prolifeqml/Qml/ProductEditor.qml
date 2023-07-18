@@ -29,6 +29,8 @@ Item {
     property string productCategory: "";
     property string productId: "";
 
+    property bool serialNumberEdit: true;
+
     // ProductEditorDialog reference
     property Item rootItem: null;
 
@@ -96,10 +98,18 @@ Item {
     function onModelChanged(){
         console.log("onModelChanged");
         if (productEditor.productCategory === "Hardware"){
-            if (productEditor.productModel.ContainsKey("DeviceId")){
-                let deviceId = productEditor.productModel.GetData("DeviceId");
-                productEditor.rootItem.buttons.setButtonState("Save", deviceId !== "");
+
+            if (contentLoader.item){
+                let index = contentLoader.item.deviceIndex;
+
+                productEditor.rootItem.buttons.setButtonState("Save", index >= 0);
             }
+
+//            if (productEditor.productModel.ContainsKey("DeviceId")){
+//                let deviceId = productEditor.productModel.GetData("DeviceId");
+//                console.log("deviceId", deviceId);
+//                productEditor.rootItem.buttons.setButtonState("Save", deviceId !== "");
+//            }
         }
         else{
             productEditor.rootItem.buttons.setButtonState("Save", true);
@@ -142,10 +152,6 @@ Item {
 
                     productEditor.productCategory = categoryId;
                     productEditor.productId = productId;
-
-//                    if (contentLoader.status == Loader.Ready && categoryId === "Hardware"){
-//                        contentLoader.item.devicesModel = productEditor.getDevicesModel();
-//                    }
 
                     productEditor.pairsModel = productEditor.getPairsModel();
 
@@ -320,7 +326,6 @@ Item {
         anchors.leftMargin: 10;
         anchors.right: parent.right;
         anchors.rightMargin: 10;
-//        anchors.bottomMargin: 10;
 
         width: parent.width;
 
@@ -392,7 +397,9 @@ Item {
 
     Component {
         id: softwareProductComponent;
-        SoftwareProductEditor {}
+        SoftwareProductEditor {
+            serialNumberEdit: productEditor.serialNumberEdit;
+        }
     }
 
     Component {
@@ -499,8 +506,6 @@ Item {
                 }
             }
         }
-
-//        productEditor.pairsModel = productEditor.getPairsModel();
 
         if (productEditor.productModel.ContainsKey("PairId")){
             let pairId = productEditor.productModel.GetData("PairId");

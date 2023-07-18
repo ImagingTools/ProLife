@@ -15,7 +15,7 @@ Rectangle {
     border.color: root.selected ? Style.textSelected : "transparent";
     border.width: 2;
 
-    radius: 10;
+    radius: 3;
 
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
