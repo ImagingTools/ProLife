@@ -219,6 +219,10 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 	iprm::CParamsSet orderParams;
 	iprm::CParamsSet accountParams;
 
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
+	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
+
 	if (filterByGroup){
 		// User group ID-s from GQL context user
 		QByteArrayList userGroupIds;
@@ -239,13 +243,14 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 			accountsOptionsManager.InsertOption("", accountId);
 		}
 
+		if (accountsOptionsManager.GetOptionsCount() == 0){
+			return rootModelPtr.PopPtr();
+		}
+
 		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
 		filterParams.SetEditableParameter("ObjectFilter", &accountParams);
 	}
 
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
-	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
 	imtbase::CTreeItemModel* notificationModel = dataModel->AddTreeModel("notification");
 
 	int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);

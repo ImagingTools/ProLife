@@ -7,6 +7,7 @@
 #include <prolifegql/COrderCollectionControllerComp.h>
 #include <prolifegql/CDeviceCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
+#include <prolifegql/CHardwareProductCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductControllerComp.h>
 
 
@@ -22,6 +23,7 @@ typedef prolifegql::COrderCollectionControllerComp OrderCollectionController;
 typedef prolifegql::CDeviceControllerComp DeviceController;
 typedef prolifegql::CDeviceCollectionControllerComp DeviceCollectionController;
 typedef prolifegql::CSoftwareProductCollectionControllerComp SoftwareProductCollectionController;
+typedef prolifegql::CHardwareProductCollectionControllerComp HardwareProductCollectionController;
 typedef prolifegql::CSoftwareProductControllerComp SoftwareProductController;
 
 

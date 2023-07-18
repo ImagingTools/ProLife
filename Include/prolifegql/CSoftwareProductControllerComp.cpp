@@ -1,8 +1,14 @@
 #include <prolifegql/CSoftwareProductControllerComp.h>
 
 
+// ACF includes
+#include <iprm/CParamsSet.h>
+#include <iprm/CTextParam.h>
+#include <iprm/CEnableableParam.h>
+
 // ImtCore includes
 #include <imtlic/IProductInstanceInfo.h>
+#include <imtlic/IHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -105,10 +111,38 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		serialNumber = itemModel.GetData("SerialNumber").toByteArray();
 	}
 
-//	QByteArray orderUuid;
-//	if (itemModel.ContainsKey("OrderUuid")){
-//		orderUuid = itemModel.GetData("OrderUuid").toByteArray();
-//	}
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+
+	if (!serialNumber.isEmpty()){
+		iprm::CTextParam valueParam;
+		valueParam.SetText(serialNumber);
+
+		iprm::CEnableableParam isEqualParam;
+		isEqualParam.SetEnabled(true);
+
+		iprm::CParamsSet valueParamsSet;
+		valueParamsSet.SetEditableParameter("Value", &valueParam);
+		valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+		iprm::CParamsSet paramsSet;
+		paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+		imtbase::IObjectCollection::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		if (!collectionIds.isEmpty()){
+			QByteArray objectId = collectionIds[0];
+			if (objectId != productId){
+				errorMessage = QT_TR_NOOP("Serial Number already exists");
+
+				imtbase::CTreeItemModel* errorsModelPtr = rootModelPtr->AddTreeModel("errors");
+				errorsModelPtr->SetData("message", errorMessage);
+
+				return rootModelPtr.PopPtr();
+			}
+		}
+	}
 
 	imtbase::IIdentifiable* productOrderPtr = nullptr;
 
@@ -121,11 +155,15 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		return nullptr;
 	}
 
+	QByteArray pairId;
+	if (itemModel.ContainsKey("PairId")){
+		pairId = itemModel.GetData("PairId").toByteArray();
+	}
+
 	QByteArray orderUuid = productOrderPtr->GetObjectUuid();
 
 	QString name;
 
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 	imtbase::CTreeItemModel* notificationModelPtr = dataModelPtr->AddTreeModel("updatedNotification");
 
@@ -135,6 +173,18 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		if (orderPtr != nullptr){
 			imtbase::IObjectCollection* orderProductsPtr = orderPtr->GetProducts();
 			if (orderProductsPtr != nullptr){
+				imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
+				if (orderProductsPtr->GetObjectData(pairId, hardwareProductDataPtr)){
+					imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<imtlic::IHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
+					if (hardwareProductPtr != nullptr){
+						hardwareProductPtr->SetSoftwareId(productId);
+
+						if (!orderProductsPtr->SetObjectData(pairId, *hardwareProductPtr)){
+							return nullptr;
+						}
+					}
+				}
+
 				imtbase::IObjectCollection::DataPtr productDataPtr;
 				if (orderProductsPtr->GetObjectData(productId, productDataPtr)){
 					imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
@@ -145,12 +195,12 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 							return nullptr;
 						}
 
-						if (!m_orderCollectionCompPtr->SetObjectData(orderUuid, *orderPtr)){
-							return nullptr;
-						}
-
 						name = softwareProductPtr->GetProductId();
 					}
+				}
+
+				if (!m_orderCollectionCompPtr->SetObjectData(orderUuid, *orderPtr)){
+					return nullptr;
 				}
 			}
 		}
