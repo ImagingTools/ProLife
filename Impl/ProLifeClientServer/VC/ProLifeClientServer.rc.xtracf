@@ -42,4 +42,4 @@ BEGIN
     END
 END
 
-IDI_ICON1               ICON                    "..\\..\\ProLifeQmlExe\\VC\\Logo.ico"
+IDI_ICON1               ICON                    "..\\..\\ProLifeClientServer\\VC\\Logo.ico"
