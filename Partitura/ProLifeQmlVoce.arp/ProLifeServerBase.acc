@@ -91,6 +91,9 @@
                     <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="UserInfo"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/UserSettingsRepository"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>

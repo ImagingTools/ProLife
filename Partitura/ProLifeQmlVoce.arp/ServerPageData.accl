@@ -9,7 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Backup" X="1075" Y="350" Note=""/>
-        <Element ComponentName="BackupFilePath" X="1100" Y="675" Note=""/>
+        <Element ComponentName="BackupFilePath" X="1075" Y="625" Note=""/>
         <Element ComponentName="Database" X="150" Y="350" Note=""/>
         <Element ComponentName="DatabaseAccessSettings" X="125" Y="525" Note=""/>
         <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
@@ -21,7 +21,7 @@
         <Element ComponentName="SchedulerParams" X="950" Y="525" Note=""/>
         <Element ComponentName="Server" X="575" Y="350" Note=""/>
         <Element ComponentName="ServerPort" X="600" Y="525" Note=""/>
-        <Element ComponentName="SystemLocation" X="1100" Y="725" Note=""/>
+        <Element ComponentName="SystemLocation" X="1075" Y="725" Note=""/>
         <Element ComponentName="WebSocketServerPort" X="775" Y="525" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

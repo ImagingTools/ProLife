@@ -8,10 +8,6 @@ include($(PROLIFEDIR)/Config/QMake/ProLife.pri)
 HEADERS =
 QT += quick qml
 
-#INCLUDEPATH += ../../../Include
-#INCLUDEPATH += ../../../Impl
-#INCLUDEPATH +=  $$AUXINCLUDEDIR
-
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui

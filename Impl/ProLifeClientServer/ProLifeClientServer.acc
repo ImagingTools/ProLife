@@ -13,6 +13,9 @@
         <Element Id="ClientApplication" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeClientServer"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -27,6 +30,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="2022"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
@@ -73,7 +79,7 @@
         <Element Id="LogFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="LogPath">
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeClientServerLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathType" Type="Integer" ExportId="">
@@ -91,8 +97,8 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LogLocationType">
-                        <Data IsEnabled="true" Value="104"/>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="9"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

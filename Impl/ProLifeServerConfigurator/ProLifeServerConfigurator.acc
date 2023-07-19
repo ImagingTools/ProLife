@@ -14,7 +14,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife Server Configurator"/>
+                        <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -33,7 +33,7 @@
                         <Data IsEnabled="true" Value="2022"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
+                        <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Settings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
@@ -71,8 +71,8 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LogLocationType">
-                        <Data IsEnabled="true" Value="9"/>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="105"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -332,6 +332,12 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="prolife"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="ProLife/ProLifeServer/ProLifeServerSettings.xml"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="104"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
