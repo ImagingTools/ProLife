@@ -282,6 +282,9 @@
                                 <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="CheckPermissionOr"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -688,6 +691,9 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="SoftwareProduct"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
