@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5079" Description="ACF"/>
+            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -34,13 +34,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="GqlContextCache">
-            <PositionMap>
-                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
-                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
                 <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
@@ -48,6 +41,13 @@
                 <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
                 <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
                 <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="GqlContextCache">
+            <PositionMap>
+                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
+                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

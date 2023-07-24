@@ -10,14 +10,31 @@ CollectionViewCommandsDelegateBase {
     property bool onlyPaired: false;
 
     onOnlyPairedChanged: {
+        console.log("onOnlyPairedChanged", onlyPaired);
         if (container.commandsProvider){
-            commandsProvider.setCommandIsEnabled("OnlyUnpaired", !container.onlyPaired);
+            let unpairedIndex = commandsProvider.getCommandIndex("OnlyUnpaired");
+            let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
+
+            commandsProvider.commandsModel.SetData("IsToggled", onlyPaired, pairedIndex);
+
+            if (onlyPaired){
+                commandsProvider.commandsModel.SetData("IsToggled", false,  unpairedIndex);
+            }
         }
     }
 
     onOnlyUnpairedChanged: {
+        console.log("onOnlyUnpairedChanged", onlyUnpaired);
         if (container.commandsProvider){
-            commandsProvider.setCommandIsEnabled("OnlyPaired", !container.onlyUnpaired);
+//            commandsProvider.setCommandIsEnabled("OnlyPaired", !container.onlyUnpaired);
+            let unpairedIndex = commandsProvider.getCommandIndex("OnlyUnpaired");
+            let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
+
+            commandsProvider.commandsModel.SetData("IsToggled", onlyUnpaired, unpairedIndex);
+
+            if (onlyUnpaired){
+                commandsProvider.commandsModel.SetData("IsToggled", false,  pairedIndex);
+            }
         }
     }
 
@@ -51,6 +68,10 @@ CollectionViewCommandsDelegateBase {
     }
 
     onCommandActivated: {
+        let commandsProvider = container.commandsProvider;
+        let unpairedIndex = commandsProvider.getCommandIndex("OnlyUnpaired");
+        let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
+
         if (commandId === "Pair"){
             console.log("Pair");
             let indexes = container.tableData.getSelectedIndexes();
@@ -63,16 +84,15 @@ CollectionViewCommandsDelegateBase {
             }
         }
         else if (commandId === "OnlyPaired"){
-            let commandsProvider = container.commandsProvider;
             let filterModel = container.collectionViewBase.modelFilter;
 
-            if (container.onlyPaired){
+            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", pairedIndex);
+            if (isToggled){
                 if (filterModel.ContainsKey("ObjectFilter")){
                     filterModel.RemoveData("ObjectFilter");
                 }
 
-                container.onlyPaired = false;
-                commandsProvider.setCommandIcon("OnlyPaired", "ShownPassword");
+                commandsProvider.commandsModel.SetData("IsToggled", false, pairedIndex);
             }
             else{
                 let objectFilter = filterModel.GetData("ObjectFilter");
@@ -84,23 +104,22 @@ CollectionViewCommandsDelegateBase {
                 objectFilter.SetData("Value", "");
                 objectFilter.SetData("IsEqual", false);
 
-                container.onlyPaired = true;
-                commandsProvider.setCommandIcon("OnlyPaired", "HiddenPassword");
+                commandsProvider.commandsModel.SetData("IsToggled", true, pairedIndex);
+                commandsProvider.commandsModel.SetData("IsToggled", false, unpairedIndex);
             }
 
             container.collectionViewBase.updateGui();
         }
         else if (commandId === "OnlyUnpaired"){
-            let commandsProvider = container.commandsProvider;
             let filterModel = container.collectionViewBase.modelFilter;
 
-            if (container.onlyUnpaired){
+            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", unpairedIndex);
+            if (isToggled){
                 if (filterModel.ContainsKey("ObjectFilter")){
                     filterModel.RemoveData("ObjectFilter");
                 }
 
-                container.onlyUnpaired = false;
-                commandsProvider.setCommandIcon("OnlyUnpaired", "ShownPassword");
+                commandsProvider.commandsModel.SetData("IsToggled", false, unpairedIndex);
             }
             else{
                 let objectFilter = filterModel.GetData("ObjectFilter");
@@ -112,8 +131,8 @@ CollectionViewCommandsDelegateBase {
                 objectFilter.SetData("Value", "");
                 objectFilter.SetData("IsEqual", true);
 
-                container.onlyUnpaired = true;
-                commandsProvider.setCommandIcon("OnlyUnpaired", "HiddenPassword");
+                commandsProvider.commandsModel.SetData("IsToggled", true, unpairedIndex);
+                commandsProvider.commandsModel.SetData("IsToggled", false, pairedIndex);
             }
 
             container.collectionViewBase.updateGui();

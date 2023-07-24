@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5079" Description="ACF"/>
+            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -14,7 +14,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeClient"/>
+                        <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Client"/>
@@ -58,7 +58,7 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Languages" Type="Reference" ExportId="">
+                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5079" Description="ACF"/>
+            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -59,7 +59,7 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
+                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="LanguageConstraints">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -206,7 +206,7 @@
                     <Element Id="GeneralSettingsFactory" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
                         <Data IsEnabled="true" Flags="2">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="Languages" Type="Reference" ExportId="Languages">
+                                <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="LanguageConstraints">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>

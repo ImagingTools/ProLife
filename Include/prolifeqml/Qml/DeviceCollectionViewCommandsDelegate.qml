@@ -36,8 +36,18 @@ CollectionViewCommandsDelegateBase {
             let showNewStr = qsTr("New Sensors");
             let showAllStr = qsTr("All Sensors");
 
+            let index = commandsProvider.getCommandIndex("ShowNew");
+            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
+
+            commandsProvider.commandsModel.SetData("IsToggled", !isToggled, index);
+
             let filterModel = container.collectionViewBase.modelFilter;
-            if (!container.filterByNewActive){
+            if (isToggled){
+                if (filterModel.ContainsKey("ObjectFilter")){
+                    filterModel.RemoveData("ObjectFilter");
+                }
+            }
+            else{
                 let objectFilter = filterModel.GetData("ObjectFilter");
                 if (!objectFilter){
                     objectFilter = filterModel.AddTreeModel("ObjectFilter")
@@ -45,25 +55,9 @@ CollectionViewCommandsDelegateBase {
 
                 objectFilter.SetData("Key", "Status");
                 objectFilter.SetData("Value", "none");
-
-                container.commandsProvider.setCommandName("ShowNew", showAllStr);
-                container.commandsProvider.setCommandIcon("ShowNew", "HiddenPassword");
-            }
-            else{
-                if (filterModel.ContainsKey("ObjectFilter")){
-                    filterModel.RemoveData("ObjectFilter");
-                }
-
-                container.commandsProvider.setCommandName("ShowNew", showNewStr);
-                container.commandsProvider.setCommandIcon("ShowNew", "ShownPassword");
             }
 
             container.filterByNewActive = !container.filterByNewActive;
-
-            if (!container.filterByNewActive){
-                container.commandsProvider.setCommandNotification("ShowNew", "");
-            }
-
             container.collectionViewBase.updateGui();
         }
     }

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5079" Description="ACF"/>
+            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -61,8 +61,8 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Languages" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerBase/ProLifeLocalization"/>
+                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="TextFileLog"/>
@@ -99,6 +99,28 @@
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProLifeLocalization" PackageId="ProLifeVoce" ComponentId="ProLifeLocalization">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>en_US</Value>
+                                <Value>de_DE</Value>
+                                <Value>ru_RU</Value>
+                                <Value>pl_PL</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

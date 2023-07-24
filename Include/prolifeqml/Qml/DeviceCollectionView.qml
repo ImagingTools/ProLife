@@ -36,8 +36,10 @@ CollectionView {
 
             onVisibleChanged: {
                 if (visible){
-                    let ok = container.commandsDelegate.filterByNewActive;
-                    prefixLoaderComp = ok ? textComp: null;
+                    if (container.commandsDelegate){
+                        let ok = container.commandsDelegate.filterByNewActive;
+                        prefixLoaderComp = ok ? textComp: null;
+                    }
                 }
             }
 
@@ -53,7 +55,7 @@ CollectionView {
                 }
             }
 
-            property bool isNewDevices: container.commandsDelegate.filterByNewActive;
+            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
             onIsNewDevicesChanged: {
                 prefixLoaderComp = isNewDevices ? textComp: null;
             }
@@ -78,8 +80,20 @@ CollectionView {
             }
         }
 
-        if (container.commandsDelegate && container.commandsDelegate.filterByNewActive){
-            container.commandsProvider.setCommandNotification("ShowNew", "");
+//        if (container.commandsDelegate && container.commandsDelegate.filterByNewActive){
+//            container.commandsProvider.setCommandNotification("ShowNew", "");
+//        }
+    }
+
+    function onCommandsModelChanged(){
+        console.log("onCommandsModelChanged");
+        let index = container.commandsProvider.getCommandIndex("ShowNew");
+        if (index >= 0){
+            container.commandsProvider.commandsModel.SetData("IsToggleable", true, index);
+            container.commandsProvider.commandsModel.SetData("IsToggled", false, index);
         }
+
+        container.commandsProvider.commandsModel.Refresh();
+        container.commandsProvider.updateGui();
     }
 }

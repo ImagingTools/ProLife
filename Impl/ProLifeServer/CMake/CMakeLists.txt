@@ -34,7 +34,7 @@ if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
 endif()
 
 target_link_libraries(${PROJECT_NAME} iauth iservice)
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui ImtCoreLoc imtwidgets imtzip imtrest imtcrypt imt3dgui imtrepo imtstyle imtqml imtdb imtfile)
+target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui ImtCoreLoc imtwidgets imtzip imtrest imtcrypt imt3dgui imtrepo imtstyle imtqml imtstyleqml imtdb imtfile)
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtgql imtauthgql imtauthdb imtcom imtapp)
 target_link_libraries(${PROJECT_NAME} prolifeqml ImtCoreLoc ProLifeLoc prolifedata prolifedb prolifegql)
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${QT_VERSION_MAJOR}::WebSockets)

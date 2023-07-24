@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5079" Description="ACF"/>
+            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -31,21 +31,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Default"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="BackupFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="Backups"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SystemLocation"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -103,7 +88,7 @@
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="DefaultPath">
                         <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LocationType">
                         <Data IsEnabled="true" Value="105"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -236,18 +221,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="LocationType">
-                        <Data IsEnabled="true" Value="9"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="WebSocketServerPort" PackageId="BasePck" ComponentId="TextParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -260,7 +233,6 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="ifile::IFileNameParam" ComponentId="BackupFilePath"/>
         <Interface InterfaceId="imod::IModel" ComponentId="Preferences"/>
         <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
         <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>

@@ -28,6 +28,26 @@ CollectionView {
         container.table.tableDecorator = tableDecoratorModel;
     }
 
+    function onCommandsModelChanged(){
+        console.log("onCommandsModelChanged");
+        let onlyPairedIndex = container.commandsProvider.getCommandIndex("OnlyPaired");
+        console.log("onlyPairedIndex", onlyPairedIndex);
+
+        if (onlyPairedIndex >= 0){
+            container.commandsProvider.commandsModel.SetData("IsToggleable", true, onlyPairedIndex);
+            container.commandsProvider.commandsModel.SetData("IsToggled", false, onlyPairedIndex);
+        }
+
+        let onlyUnpairedIndex = container.commandsProvider.getCommandIndex("OnlyUnpaired");
+        if (onlyUnpairedIndex >= 0){
+            container.commandsProvider.commandsModel.SetData("IsToggleable", true, onlyUnpairedIndex);
+            container.commandsProvider.commandsModel.SetData("IsToggled", false, onlyUnpairedIndex);
+        }
+
+        container.commandsProvider.commandsModel.Refresh();
+        container.commandsProvider.updateGui();
+    }
+
     Component {
         id: pairComp;
         Item {
