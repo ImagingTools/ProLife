@@ -188,7 +188,6 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 		}
 	}
 
-//	return true;
 	return !filterQuery.isEmpty();
 }
 

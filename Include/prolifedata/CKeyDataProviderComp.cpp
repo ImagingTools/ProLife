@@ -200,7 +200,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 	QFile file(filePathTmp);
 
-	if (!file.open(QIODevice::ReadOnly )){
+	if (!file.open(QIODevice::ReadOnly)){
 		SendErrorMessage(0, "License file could not be opened", "Server data provider");
 
 		return false;

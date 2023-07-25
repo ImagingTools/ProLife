@@ -9,11 +9,29 @@ Rectangle {
 
     color: Style.backgroundColor;
 
-    property alias localSettings: preferenceDialog.settingsModel;
+    property var localSettings;
+
+//    property alias localSettings: preferenceDialog.settingsModel;
     signal settingsUpdate();
 
     onSettingsUpdate: {
         console.log("window onSettingsUpdate", localSettings.toJSON());
+    }
+
+    onLocalSettingsChanged: {
+        console.log("onLocalSettingsChanged", localSettings.toJSON());
+
+        preferenceDialog.settingsModel = localSettings;
+    }
+
+    Component.onCompleted: {
+        Events.subscribeEvent("StartLoading", loading.start);
+        Events.subscribeEvent("StopLoading", loading.stop);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("StartLoading", loading.start);
+        Events.unSubscribeEvent("StopLoading", loading.stop);
     }
 
     MouseArea{
@@ -107,6 +125,14 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Loading {
+        id: loading;
+
+        anchors.fill: parent;
+
+        visible: false;
     }
 }
 

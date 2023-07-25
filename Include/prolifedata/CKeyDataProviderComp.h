@@ -21,9 +21,9 @@ namespace prolifedata
 	This component accepts data and returns it in encrypted form
 */
 class CKeyDataProviderComp:
-		public imtbase::IBinaryDataProvider,
-		public ilog::CLoggerComponentBase,
-		virtual public imtcrypt::IEncryptionKeysProvider
+			public imtbase::IBinaryDataProvider,
+			public ilog::CLoggerComponentBase,
+			virtual public imtcrypt::IEncryptionKeysProvider
 {
 public:
 	typedef ilog::CLoggerComponentBase BaseClass;

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5079" Description="ACF"/>
-            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5082" Description="ACF"/>
+            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -21,6 +21,7 @@
         <Element ComponentName="ProLifeLocalization" X="525" Y="550" Note=""/>
         <Element ComponentName="ResourcesPath" X="1075" Y="125" Note=""/>
         <Element ComponentName="RessourcesProvider" X="825" Y="125" Note=""/>
+        <Element ComponentName="RestoringDatabaseController" X="1025" Y="275" Note=""/>
         <Element ComponentName="SessionInfo" X="300" Y="100" Note=""/>
         <Element ComponentName="UserInfo" X="125" Y="100" Note=""/>
         <Element ComponentName="WebResourcesServlet" X="550" Y="125" Note=""/>
