@@ -40,6 +40,9 @@
         <Element Id="GeneralPageData" PackageId="ImtCoreVoce" ComponentId="GeneralPageDataModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="LanguageConstraints">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

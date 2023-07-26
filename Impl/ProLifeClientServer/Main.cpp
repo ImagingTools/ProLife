@@ -11,7 +11,6 @@
 #include <ibase/IApplication.h>
 
 // ImtCore includes
-#include <imtstyle/CImtStyle.h>
 #include <imtbase/CTreeItemModel.h>
 #include <imtqml/CGqlModel.h>
 #include <imtqml/CRemoteFileController.h>
@@ -45,9 +44,6 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(Webimtlicgui);
 
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
-	imtstyle::CImtStyle* imtStylePtr = imtstyle::CImtStyle::GetInstance();
-	Q_ASSERT(imtStylePtr != nullptr);
 	
 	CProLifeClientServer instance;
 

@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import Acf 1.0
+import imtgui 1.0
 import Qt.labs.platform 1.1
 
 Item {
@@ -27,13 +28,24 @@ Item {
         id: remoteFileController;
 
         prefix: "/files";
+
+        onFileDownloadFailed: {
+            modalDialogManager.openDialog(messageErrorDialog, {"message": qsTr("Error when trying to create a license")});
+        }
+    }
+
+    Component {
+        id: messageErrorDialog;
+
+        ErrorDialog {
+            title: qsTr("License creation error");
+        }
     }
 
     FileDialog {
         id: fileDialogSave;
 
         title: qsTr("Save file");
-       // folder: shortcuts.home;
 
         nameFilters: ["License files (*.lic)", "All files (*)"];
 

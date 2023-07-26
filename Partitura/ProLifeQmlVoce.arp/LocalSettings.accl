@@ -14,7 +14,7 @@
         <Element ComponentName="LocalPageData" X="225" Y="350" Note=""/>
         <Element ComponentName="LocalPageRepresentation" X="225" Y="450" Note=""/>
         <Element ComponentName="Settings" X="575" Y="225" Note=""/>
-        <Element ComponentName="SettingsRepresentation" X="600" Y="575" Note=""/>
+        <Element ComponentName="SettingsRepresentation" X="600" Y="550" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
