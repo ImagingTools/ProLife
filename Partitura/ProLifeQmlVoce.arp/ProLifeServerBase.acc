@@ -300,6 +300,9 @@
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/BackupParamsSet"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="Command-ID" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="GetBackupFile"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DatabaseAccessSettings"/>
                     </AttributeInfo>
