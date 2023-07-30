@@ -5,10 +5,9 @@ import Acf 1.0
 Rectangle {
     id: hardwareCard;
 
-    height: hardwareCard.contentHeight + 20;
+    height: hardwareCard.contentHeight;
 
-    radius: 3;
-    color: Style.backgroundColor;
+    color: Style.baseColor;
 
     property string productId: model.ProductId ? model.ProductId : "";
     property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
@@ -24,7 +23,6 @@ Rectangle {
     property bool readOnly: false;
     property bool commmandsVisible: false;
 
-//    property int contentHeight: header.height + macAddressBlock.height + serialNumberBlock.height + modelTypeBlock.height + 50;
     property int contentHeight: contentColumn.height + 20;
 
     signal clicked();
@@ -38,233 +36,107 @@ Rectangle {
         }
     }
 
+    onMacAddressChanged: {
+        updateElements();
+    }
+
+    onSerialNumberChanged: {
+        updateElements();
+    }
+
+    onModelTypeChanged: {
+        updateElements();
+    }
+
+    function updateElements(){
+        elementsTableModel.Clear();
+
+        let index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", "MAC Address", index)
+        elementsTableModel.SetData("Value", hardwareCard.macAddress, index)
+
+        index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", "Serial Number", index)
+        elementsTableModel.SetData("Value", hardwareCard.serialNumber, index)
+
+        index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", "Model Type", index)
+        elementsTableModel.SetData("Value", hardwareCard.modelType, index)
+
+        table.elements = elementsTableModel;
+    }
+
+    TreeItemModel {
+        id: headersTableModel;
+
+        Component.onCompleted: {
+            let index = headersTableModel.InsertNewItem();
+
+            headersTableModel.SetData("Id", "Key", index)
+            headersTableModel.SetData("Name", "Key", index)
+
+            index = headersTableModel.InsertNewItem();
+
+            headersTableModel.SetData("Id", "Value", index)
+            headersTableModel.SetData("Name", "Value", index)
+
+            table.headers = headersTableModel;
+        }
+    }
+
+    TreeItemModel {
+        id: elementsTableModel;
+    }
+
     Column {
         id: contentColumn;
 
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
+        anchors.verticalCenter: parent.verticalCenter;
         anchors.left: parent.left;
         anchors.leftMargin: 10;
         anchors.right: parent.right;
         anchors.rightMargin: 10;
 
-        spacing: 10;
+        AuxTable {
+            id: table;
 
-        property int firstWidthPercent: 45;
-        property int secondWidthPercent: 55;
+            width: contentColumn.width;
+            height: contentHeight;
 
-        Rectangle {
-            id: header;
+            radius: 0;
 
-            width: parent.width;
-            height: 30;
+            selectable: false;
+            separatorVisible: false;
 
-            radius: hardwareCard.radius;
-            color: Style.imagingToolsGradient2;
+            itemHeight: 25;
+            headerHeight: 20;
 
-            Text {
-                id: productTitle;
+            enableAlternating: false;
 
-                anchors.left: parent.left;
-                anchors.leftMargin: 10;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: editButton.left;
-                anchors.rightMargin: 10;
+            clip: true;
 
-                text: hardwareCard.productId;
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-            }
+            showHeaders: false;
+        }
+    }
 
-            AuxButton {
-                id: editButton;
+    AuxButton {
+        id: editButton;
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right;
-                anchors.rightMargin: 10;
+        anchors.top: parent.top;
+        anchors.topMargin: 10;
+        anchors.right: parent.right;
+        anchors.rightMargin: 10;
 
-                width: 18;
-                height: width;
+        width: 18;
+        height: width;
 
-    //            tooltipText: qsTr("Edit");
+        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
+        visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
 
-                iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                                      "../../../../Icons/Light/Edit_Off_Disabled.svg";
-
-                visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
-
-                onClicked: {
-                    hardwareCard.edited();
-                }
-            }
-        } // header
-
-        Item {
-            id: macAddressBlock;
-
-            width: parent.width;
-            height: macAddressTitle.height;
-
-            Item {
-                anchors.left: parent.left;
-
-                width: parent.width * (contentColumn.firstWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: macAddressTitle;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-                    anchors.left: parent.left;
-
-                    width: parent.width;
-
-                    text: qsTr("MAC Address:")
-                    color: Style.textColor;
-                    font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-
-            Item {
-                anchors.right: parent.right;
-
-                width: parent.width * (contentColumn.secondWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: macAddress;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-
-                    width: parent.width;
-
-                    elide: Text.ElideRight;
-                    wrapMode: Text.NoWrap;
-
-                    text: hardwareCard.macAddress;
-
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-        } // Mac Address
-
-        Item {
-            id: serialNumberBlock;
-
-            width: parent.width;
-            height: serialNumberTitle.height;
-
-            Item {
-                anchors.left: parent.left;
-
-                width: parent.width * (contentColumn.firstWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: serialNumberTitle;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-                    anchors.left: parent.left;
-
-                    width: parent.width;
-
-                    text: qsTr("Serial Number:")
-                    color: Style.textColor;
-                    font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-
-            Item {
-                anchors.right: parent.right;
-
-                width: parent.width * (contentColumn.secondWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: serialNumber;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-
-                    width: parent.width;
-
-                    elide: Text.ElideRight;
-                    wrapMode: Text.NoWrap;
-
-                    text: hardwareCard.serialNumber;
-
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-        } // Serial Number
-
-        Item {
-            id: modelTypeBlock;
-//            anchors.top: serialNumberBlock.bottom;
-//            anchors.topMargin: visible ? 10 : 0;
-//            anchors.left: parent.left;
-//            anchors.leftMargin: 10;
-//            anchors.right: parent.right;
-//            anchors.rightMargin: 10;
-
-            width: parent.width;
-            height: visible ? modelTypeTitle.height : -10;
-
-            visible: hardwareCard.modelType !== "";
-
-            Item {
-                anchors.left: parent.left;
-
-                width: parent.width * (contentColumn.firstWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: modelTypeTitle;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-                    anchors.left: parent.left;
-
-                    width: parent.width;
-
-                    text: qsTr("Model Type:")
-                    color: Style.textColor;
-                    font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-
-            Item {
-                anchors.right: parent.right;
-
-                width: parent.width * (contentColumn.secondWidthPercent / 100);
-                height: parent.height;
-
-                Text {
-                    id: modelType;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-
-                    width: parent.width;
-
-                    elide: Text.ElideRight;
-                    wrapMode: Text.NoWrap;
-
-                    text: hardwareCard.modelType;
-
-                    color: Style.textColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
-                }
-            }
-        } // Model Type
+        onClicked: {
+            hardwareCard.edited();
+        }
     }
 
     MouseArea {

@@ -8,12 +8,12 @@ Rectangle {
 
     width: 600;
 
-    height: content.height + 2 * root.margin;
+    height: header.height + content.height /*+ 2 * root.margin*/ + 2 * root.border.width;
 
-    color: Style.imagingToolsGradient2;
+    color: "transparent";
 
-    border.color: root.selected ? Style.textSelected : "transparent";
-    border.width: 2;
+    border.color: root.selected ? Style.textSelected : Style.borderColor;
+    border.width: 1;
 
     radius: 3;
 
@@ -26,7 +26,7 @@ Rectangle {
 
     property bool selected: false;
     property string categoryId: model.CategoryId ? model.CategoryId : "";
-    property string title: root.categoryId;
+    property string title: model.ProductId + " (" + root.categoryId + ")";
 
     property TreeItemModel devicesModel: TreeItemModel {};
 
@@ -109,78 +109,73 @@ Rectangle {
         root.border.color = Style.errorTextColor;
     }
 
-    Column {
-        id: content;
+    Rectangle {
+        id: header;
 
-        anchors.verticalCenter: parent.verticalCenter;
+        anchors.top: parent.top;
+        anchors.topMargin: parent.border.width;
         anchors.left: parent.left;
-        anchors.leftMargin: 10;
+        anchors.leftMargin: parent.border.width;
         anchors.right: parent.right;
-        anchors.rightMargin: 10;
+        anchors.rightMargin: parent.border.width;
 
-        spacing: 10;
+        height: 30;
 
-        Rectangle {
-            id: headerBlock;
+        color: Style.alternateBaseColor;
 
-            width: parent.width;
-            height: 13;
+        Text {
+            id: pairProductTitle;
 
-            color: "transparent";
+            anchors.verticalCenter: parent.verticalCenter;
+            anchors.left: parent.left;
+            anchors.leftMargin: 10;
+            anchors.right: commands.left;
+            anchors.rightMargin: 10;
 
-            Text {
-                id: newText;
+            text: "#" + (root.productIndex + 1) + " " + root.title;
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
+            color: Style.textColor;
+            font.family: Style.fontFamilyBold;
+            font.pixelSize: Style.fontSize_common;
 
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-            }
+            elide: Text.ElideRight;
+            wrapMode: Text.NoWrap;
+        }
 
-            Text {
-                id: pairProductTitle;
+        SimpleCommandsDecorator {
+            id: commands;
 
-                anchors.left: newText.right;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: commands.left;
-                anchors.rightMargin: 10;
+            anchors.verticalCenter: parent.verticalCenter;
+            anchors.right: parent.right;
+            anchors.rightMargin: 10;
 
-                text: "#" + (root.productIndex + 1) + " " + root.title;
+            height: header.height;
 
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-            }
-
-            SimpleCommandsDecorator {
-                id: commands;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right;
-
-                height: headerBlock.height;
-
-                onCommandActivated: {
-                    if (commandId == "Remove"){
-                        root.removed();
-                    }
-                    else if (commandId == "Edit"){
-                        root.edited();
-                    }
-                    else if (commandId == "CreateLicenseFile"){
-                        root.createLicenseFile();
-                    }
-                    else if (commandId == "Unlink"){
-                        root.unlinked();
-                    }
+            onCommandActivated: {
+                if (commandId == "Remove"){
+                    root.removed();
+                }
+                else if (commandId == "Edit"){
+                    root.edited();
+                }
+                else if (commandId == "CreateLicenseFile"){
+                    root.createLicenseFile();
+                }
+                else if (commandId == "Unlink"){
+                    root.unlinked();
                 }
             }
         }
+    }
+
+    Column {
+        id: content;
+
+        anchors.top: header.bottom;
+        anchors.left: parent.left;
+        anchors.leftMargin: parent.border.width;
+        anchors.right: parent.right;
+        anchors.rightMargin: parent.border.width;
 
         Loader {
             id: cardLoader;
@@ -196,12 +191,24 @@ Rectangle {
                     let hardwareId = cardLoader.item.hardwareId;
                     let softwareId = cardLoader.item.softwareId;
 
-                    root.title = "Software & Hardware";
+                    let softwareProduct = model.SoftwareProduct;
+                    let hardwareProduct = model.HardwareProduct;
+
+                    let softwareProductId = "";
+                    if (softwareProduct){
+                        softwareProductId = softwareProduct.GetData("ProductId");
+                    }
+
+                    let hardwareProductId = "";
+                    if (hardwareProduct){
+                        hardwareProductId = hardwareProduct.GetData("ProductId");
+                    }
+
+                    root.title = softwareProductId + ' & ' + hardwareProductId;
 
                     cardLoader.item.licensesProvider = root.licensesProvider;
                 }
                 else if (root.categoryId === "Hardware"){
-                    //cardLoader.item.devicesModel = root.devicesModel;
                 }
                 else if (root.categoryId === "Software"){
                     cardLoader.item.licensesProvider = root.licensesProvider;
@@ -268,7 +275,6 @@ Rectangle {
         id: hardwareProductCard;
 
         HardwareProductCard {
-
         }
     }
 

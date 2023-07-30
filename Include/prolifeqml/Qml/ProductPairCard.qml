@@ -6,9 +6,10 @@ import imtlicgui 1.0
 Rectangle {
     id: card;
 
-    height: Math.max(softwareProduct.height, hardwareProduct.height)
+    height: Math.max(softwareProduct.height, hardwareProduct.height);
 
-    color: Style.imagingToolsGradient2;
+    color: "transparent";
+//    color: Style.imagingToolsGradient2;
 
     radius: 3;
 
@@ -133,7 +134,7 @@ Rectangle {
 
         anchors.top: card.top;
         anchors.left: softwareProduct.right;
-        anchors.leftMargin: 10;
+        anchors.leftMargin: 1;
         anchors.right: card.right;
 
         height: Math.max(hardwareProduct.contentHeight, softwareProduct.contentHeight);

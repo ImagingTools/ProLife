@@ -87,6 +87,8 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 					.arg(SqlEncode(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
 					.arg(checksum).toLocal8Bit();
+
+		retVal += CreateOperationDescriptionQuery(objectId, operationContextPtr);
 	}
 
 	return retVal;

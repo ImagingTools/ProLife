@@ -7,10 +7,9 @@ Rectangle {
     id: softwareCard;
 
     width: 500;
-    height: softwareCard.contentHeight + 20;
+    height: softwareCard.contentHeight;
 
-    radius: 3;
-    color: Style.backgroundColor;
+    color: Style.baseColor;
 
     property string productId: model.ProductId ? model.ProductId : "";
     property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
@@ -26,9 +25,8 @@ Rectangle {
 
     property LicensesProvider licensesProvider: null;
 
-//    property int contentHeight: Math.max(header.height + licensesView.height + 30, 108);
-
     property int contentHeight: contentColumn.height + 20;
+//    property int contentHeight: contentColumn.height;
 
     signal clicked();
     signal edited();
@@ -63,142 +61,53 @@ Rectangle {
         }
     }
 
+    Item {
+        width: parent.width;
+        height: visible ? 30 : 0;
+
+        visible: licenceText.visible;
+
+        Text {
+            id: licenceText;
+
+            anchors.verticalCenter: parent.verticalCenter;
+            anchors.left: parent.left;
+            anchors.leftMargin: 10;
+
+            width: parent.width;
+
+            text: qsTr("No Licenses");
+            color: Style.textColor;
+            font.family: Style.fontFamily;
+            font.pixelSize: Style.fontSize_common;
+
+            elide: Text.ElideRight;
+            wrapMode: Text.NoWrap;
+
+            visible: licensesView.elementsList.count === 0;
+        }
+    }
+
     Column {
         id: contentColumn;
 
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
+        anchors.verticalCenter: parent.verticalCenter;
         anchors.left: parent.left;
         anchors.leftMargin: 10;
         anchors.right: parent.right;
         anchors.rightMargin: 10;
-//        anchors.verticalCenter: parent.verticalCenter;
-
-        spacing: 10;
-
-        Rectangle {
-            id: header;
-
-            width: parent.width;
-            height: 30;
-
-            radius: softwareCard.radius;
-            color: Style.imagingToolsGradient2;
-
-            Text {
-                id: productTitle;
-
-                anchors.left: parent.left;
-                anchors.leftMargin: 10;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: editButton.left;
-                anchors.rightMargin: 10;
-
-                text: softwareCard.productId;
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-            }
-
-            AuxButton {
-                id: editButton;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right;
-                anchors.rightMargin: 10;
-
-                width: 18;
-                height: width;
-
-                iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                                      "../../../../Icons/Light/Edit_Off_Disabled.svg";
-
-                //            tooltipText: qsTr("Edit");
-
-                visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
-
-                onClicked: {
-                    softwareCard.edited();
-                }
-            }
-        }
-
-        Item {
-            width: parent.width;
-            height: serialNumberTitle.height;
-
-            Text {
-                id: serialNumberTitle;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: 8;
-
-                text: qsTr("License Number:")
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-            }
-
-            Text {
-                id: serialNumber;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: serialNumberTitle.right;
-                anchors.leftMargin: 10;
-
-                width: parent.width - serialNumberTitle.width;
-
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-
-                text: softwareCard.serialNumber != "" ? softwareCard.serialNumber : qsTr("Not set");
-
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-        }
-
-        Item {
-            width: parent.width;
-            height: licenceText.height;
-
-            visible: licenceText.visible;
-
-            Text {
-                id: licenceText;
-
-                anchors.left: parent.left;
-                anchors.leftMargin: 8;
-
-                width: parent.width;
-
-                text: qsTr("No Licenses");
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-
-                visible: licensesView.elementsList.count === 0;
-            }
-        }
 
         AuxTable {
             id: licensesView;
 
-            width: parent.width;
-            height: contentHeight + itemHeight;
+            width: contentColumn.width;
+            height: contentHeight;
 
             enableAlternating: false;
 
-            radius: softwareCard.radius;
-            backgroundElementsColor: Style.backgroundColor;
-            backgroundHeadersColor: Style.backgroundColor;
+            radius: 0;
+            backgroundElementsColor: Style.baseColor;
+            backgroundHeadersColor: Style.alternateBaseColor;
 
             visible: licensesView.elementsList.count !== 0;
             selectable: false;
@@ -208,8 +117,29 @@ Rectangle {
             headerHeight: 20;
 
             clip: true;
+            showHeaders: false;
         }
     } // Column
+
+    AuxButton {
+        id: editButton;
+
+        anchors.top: parent.top;
+        anchors.topMargin: 10;
+        anchors.right: parent.right;
+        anchors.rightMargin: 10;
+
+        width: 18;
+        height: width;
+
+        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
+        visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
+
+        onClicked: {
+            softwareCard.edited();
+        }
+    }
 
     TreeItemModel {
         id: headersLicensesTable;

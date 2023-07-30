@@ -192,9 +192,7 @@ DocumentBase {
 
         onFailed: {
             if (orderEditorContainer.documentManager){
-//                productsList.completed = true;
-//                orderEditorContainer.modelsIsLoaded = true;
-//                orderEditorContainer.documentManager.openErrorDialog(qsTr("Error loading products"));
+                orderEditorContainer.documentManager.openErrorDialog(qsTr("Error loading products. Please check Lisa connection."));
             }
         }
     }
@@ -1083,7 +1081,7 @@ DocumentBase {
 
         clip: true;
         boundsBehavior: Flickable.StopAtBounds;
-        spacing: 10;
+        spacing: 5;
 
         cacheBuffer: 1000;
 
