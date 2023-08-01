@@ -79,6 +79,9 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 	case imtbase::ICollectionFilter::SO_DESC:
 		sortOrder = "DESC";
 		break;
+	case imtbase::ICollectionFilter::SO_NO_ORDER:
+		sortOrder = "ASC";
+		break;
 	}
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){

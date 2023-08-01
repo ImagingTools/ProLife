@@ -25,7 +25,7 @@ Rectangle {
 
     property LicensesProvider licensesProvider: null;
 
-    property int contentHeight: contentColumn.height + 20;
+    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
 //    property int contentHeight: contentColumn.height;
 
     signal clicked();
@@ -62,8 +62,41 @@ Rectangle {
     }
 
     Item {
+        id: rightPanel;
+
+        anchors.top: parent.top;
+        anchors.right: parent.right;
+
+        width: visible ? 30 : 0;
+        height: parent.height;
+
+        visible: editButton.visible;
+
+        AuxButton {
+            id: editButton;
+
+            anchors.horizontalCenter: parent.horizontalCenter;
+            anchors.top: parent.top;
+            anchors.topMargin: 10;
+
+            width: 18;
+            height: width;
+
+            iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+                                  "../../../../Icons/Light/Edit_Off_Disabled.svg";
+            visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
+
+            onClicked: {
+                softwareCard.edited();
+            }
+        }
+    }
+
+    Item {
+        id: noLicensesView;
+
         width: parent.width;
-        height: visible ? 30 : 0;
+        height: visible ? 40 : 0;
 
         visible: licenceText.visible;
 
@@ -72,9 +105,11 @@ Rectangle {
 
             anchors.verticalCenter: parent.verticalCenter;
             anchors.left: parent.left;
-            anchors.leftMargin: 10;
+            anchors.leftMargin: 20;
+            anchors.right: parent.right;
+            anchors.rightMargin: 20;
 
-            width: parent.width;
+//            width: parent.width;
 
             text: qsTr("No Licenses");
             color: Style.textColor;
@@ -91,11 +126,13 @@ Rectangle {
     Column {
         id: contentColumn;
 
-        anchors.verticalCenter: parent.verticalCenter;
+//        anchors.verticalCenter: parent.verticalCenter;
+        anchors.top: parent.top;
+        anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.leftMargin: 10;
-        anchors.right: parent.right;
-        anchors.rightMargin: 10;
+        anchors.right: rightPanel.left;
+        anchors.rightMargin: rightPanel.visible ? 0 : 10;
 
         AuxTable {
             id: licensesView;
@@ -121,25 +158,25 @@ Rectangle {
         }
     } // Column
 
-    AuxButton {
-        id: editButton;
+//    AuxButton {
+//        id: editButton;
 
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
-        anchors.right: parent.right;
-        anchors.rightMargin: 10;
+//        anchors.top: parent.top;
+//        anchors.topMargin: 10;
+//        anchors.right: parent.right;
+//        anchors.rightMargin: 10;
 
-        width: 18;
-        height: width;
+//        width: 18;
+//        height: width;
 
-        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
-        visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
+//        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+//                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
+//        visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
 
-        onClicked: {
-            softwareCard.edited();
-        }
-    }
+//        onClicked: {
+//            softwareCard.edited();
+//        }
+//    }
 
     TreeItemModel {
         id: headersLicensesTable;

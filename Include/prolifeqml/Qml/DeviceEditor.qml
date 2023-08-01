@@ -23,6 +23,17 @@ DocumentBase {
         productsList.updateModel();
     }
 
+    onVisibleChanged: {
+        if (visible){
+            if (deviceEditorContainer.errorMessage !== ""){
+                deviceEditorContainer.documentManager.showAlertMessage(deviceEditorContainer.errorMessage);
+            }
+        }
+        else{
+            deviceEditorContainer.documentManager.hideAlertMessage();
+        }
+    }
+
     onModelsIsLoadedChanged: {
         console.log("onModelsIsLoadedChanged", deviceEditorContainer.modelsIsLoaded);
         if (deviceEditorContainer.modelsIsLoaded){
@@ -54,6 +65,15 @@ DocumentBase {
             if (productsList.collectionModel != null){
                 productsList.filteringProductCollection();
                 productCB.model = filteringModel;
+            }
+        }
+
+        onFailed: {
+            if (deviceEditorContainer.documentManager){
+                let message = qsTr("Error loading products. Please check Lisa connection.");
+                deviceEditorContainer.documentManager.openErrorDialog(message);
+                deviceEditorContainer.documentManager.showAlertMessage(message);
+                deviceEditorContainer.errorMessage = message;
             }
         }
 
@@ -95,6 +115,15 @@ DocumentBase {
                 }
 
                 statusCB.model = productionStatus.statusModel;
+            }
+        }
+
+        onFailed: {
+            if (deviceEditorContainer.documentManager){
+                let message = qsTr("Error loading orders");
+                deviceEditorContainer.documentManager.openErrorDialog(message);
+                deviceEditorContainer.documentManager.showAlertMessage(message);
+                deviceEditorContainer.errorMessage = message;
             }
         }
     }

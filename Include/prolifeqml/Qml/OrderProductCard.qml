@@ -195,8 +195,10 @@ Rectangle {
                     let hardwareProduct = model.HardwareProduct;
 
                     let softwareProductId = "";
+                    let softwareSerialNumber = "";
                     if (softwareProduct){
                         softwareProductId = softwareProduct.GetData("ProductId");
+                        softwareSerialNumber = softwareProduct.GetData("SerialNumber");
                     }
 
                     let hardwareProductId = "";
@@ -204,7 +206,12 @@ Rectangle {
                         hardwareProductId = hardwareProduct.GetData("ProductId");
                     }
 
-                    root.title = softwareProductId + ' & ' + hardwareProductId;
+                    if (softwareSerialNumber != ""){
+                        root.title = softwareProductId + ' (' + softwareSerialNumber +')' + ' & ' + hardwareProductId;
+                    }
+                    else{
+                        root.title = softwareProductId + ' & ' + hardwareProductId;
+                    }
 
                     cardLoader.item.licensesProvider = root.licensesProvider;
                 }

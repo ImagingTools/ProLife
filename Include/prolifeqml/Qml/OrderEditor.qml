@@ -25,6 +25,7 @@ DocumentBase {
     property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
 
     onModelsIsLoadedChanged: {
+        console.log("onModelsIsLoadedChanged", modelsIsLoaded);
         if (orderEditorContainer.modelsIsLoaded){
             orderEditorContainer.blockUpdatingModel = true;
 
@@ -77,6 +78,17 @@ DocumentBase {
         devicesList.updateModel();
 
         orderEditorContainer.blockUpdatingModel = false;
+    }
+
+    onVisibleChanged: {
+        if (visible){
+            if (orderEditorContainer.errorMessage !== ""){
+                orderEditorContainer.documentManager.showAlertMessage(orderEditorContainer.errorMessage);
+            }
+        }
+        else{
+            orderEditorContainer.documentManager.hideAlertMessage();
+        }
     }
 
     function documentCanBeSaved(){
@@ -177,6 +189,16 @@ DocumentBase {
                 customerCB.model = accountsList.collectionModel;
             }
         }
+
+        onFailed: {
+            if (orderEditorContainer.documentManager){
+                let message = qsTr("Error loading accounts.");
+                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManager.showAlertMessage(message);
+
+                orderEditorContainer.errorMessage = message;
+            }
+        }
     }
 
     CollectionDataProvider {
@@ -192,7 +214,12 @@ DocumentBase {
 
         onFailed: {
             if (orderEditorContainer.documentManager){
-                orderEditorContainer.documentManager.openErrorDialog(qsTr("Error loading products. Please check Lisa connection."));
+                let message = qsTr("Error loading products. Please check Lisa connection.");
+
+                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManager.showAlertMessage(message);
+
+                orderEditorContainer.errorMessage = message;
             }
         }
     }
@@ -222,9 +249,16 @@ DocumentBase {
             }
         }
 
-//        onCompletedChanged: {
-//            orderEditorContainer.documentManager.documentLoading = !devicesList.completed;
-//        }
+        onFailed: {
+            if (orderEditorContainer.documentManager){
+                let message = qsTr("Error loading sensors.");
+
+                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManager.showAlertMessage(message);
+
+                orderEditorContainer.errorMessage = message;
+            }
+        }
 
         function getMacAddress(deviceId){
             if (!deviceId){
@@ -309,10 +343,10 @@ DocumentBase {
         addProduct.visible = false;
     }
 
-    function updateGui(){
+    function onUpdateGui(){
         console.log("updateGui");
        // orderEditorContainer.documentManager.showLoading = true;
-        orderEditorContainer.blockUpdatingModel = true;
+//        orderEditorContainer.blockUpdatingModel = true;
 
         if (documentModel.ContainsKey("OrderId")){
             instanceIdInput.text = documentModel.GetData("OrderId");
@@ -373,13 +407,13 @@ DocumentBase {
             productsView.model = 0;
         }
 
-        orderEditorContainer.blockUpdatingModel = false;
+//        orderEditorContainer.blockUpdatingModel = false;
     }
 
-    function updateModel(){
-        if (orderEditorContainer.blockUpdatingModel){
-            return;
-        }
+    function onUpdateModel(){
+//        if (orderEditorContainer.blockUpdatingModel){
+//            return;
+//        }
 
         undoRedoManager.beginChanges();
 
@@ -1022,7 +1056,7 @@ DocumentBase {
         width: productsView.width;
         height: 30;
 
-        color: "transparent";
+        color: Style.alternateBaseColor;
 
         border.width: 1;
         border.color: Style.borderColor;
@@ -1071,13 +1105,13 @@ DocumentBase {
         id: productsView;
 
         anchors.top: productsTitle.bottom;
-        anchors.topMargin: 10;
+        anchors.topMargin: productsView.spacing;
         anchors.left: bodyColumn.right;
         anchors.leftMargin: 25;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 
-        width: 500;
+        width: 600;
 
         clip: true;
         boundsBehavior: Flickable.StopAtBounds;

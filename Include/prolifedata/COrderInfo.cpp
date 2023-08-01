@@ -233,7 +233,6 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 
 		bool retVal = true;
 
-
 		return retVal;
 	}
 

@@ -36,20 +36,15 @@ Rectangle {
         }
     }
 
-    onMacAddressChanged: {
-        updateElements();
-    }
-
-    onSerialNumberChanged: {
-        updateElements();
-    }
-
-    onModelTypeChanged: {
-        updateElements();
+    Component.onCompleted: {
+        hardwareCard.updateElements();
     }
 
     function updateElements(){
+        console.log("updateElements");
         elementsTableModel.Clear();
+
+        console.log("Start");
 
         let index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", "MAC Address", index)
@@ -62,6 +57,10 @@ Rectangle {
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", "Model Type", index)
         elementsTableModel.SetData("Value", hardwareCard.modelType, index)
+
+        console.log("Count:", elementsTableModel.GetItemsCount());
+
+        console.log("End");
 
         table.elements = elementsTableModel;
     }
@@ -88,14 +87,46 @@ Rectangle {
         id: elementsTableModel;
     }
 
+    Item {
+        id: rightPanel;
+
+        anchors.top: parent.top;
+        anchors.right: parent.right;
+
+        width: visible ? 30 : 0;
+        height: parent.height;
+
+        visible: editButton.visible;
+
+        AuxButton {
+            id: editButton;
+
+            anchors.horizontalCenter: parent.horizontalCenter;
+            anchors.top: parent.top;
+            anchors.topMargin: 10;
+
+            width: 18;
+            height: width;
+
+            iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+                                  "../../../../Icons/Light/Edit_Off_Disabled.svg";
+            visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
+
+            onClicked: {
+                hardwareCard.edited();
+            }
+        }
+    }
+
     Column {
         id: contentColumn;
 
-        anchors.verticalCenter: parent.verticalCenter;
+        anchors.top: parent.top;
+        anchors.topMargin: 10;
         anchors.left: parent.left;
         anchors.leftMargin: 10;
-        anchors.right: parent.right;
-        anchors.rightMargin: 10;
+        anchors.right: rightPanel.left;
+        anchors.rightMargin: rightPanel.visible ? 0 : 10;
 
         AuxTable {
             id: table;
@@ -119,25 +150,25 @@ Rectangle {
         }
     }
 
-    AuxButton {
-        id: editButton;
+//    AuxButton {
+//        id: editButton;
 
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
-        anchors.right: parent.right;
-        anchors.rightMargin: 10;
+//        anchors.top: parent.top;
+//        anchors.topMargin: 10;
+//        anchors.right: parent.right;
+//        anchors.rightMargin: 10;
 
-        width: 18;
-        height: width;
+//        width: 18;
+//        height: width;
 
-        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
-        visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
+//        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
+//                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
+//        visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
 
-        onClicked: {
-            hardwareCard.edited();
-        }
-    }
+//        onClicked: {
+//            hardwareCard.edited();
+//        }
+//    }
 
     MouseArea {
         id: mouseArea;
