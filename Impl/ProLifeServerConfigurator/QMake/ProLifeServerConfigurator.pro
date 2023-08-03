@@ -11,7 +11,7 @@ QT += quick qml
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
-LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql
+LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql -limtstyleqml
 LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc
 
 # Set OS-specific build options:

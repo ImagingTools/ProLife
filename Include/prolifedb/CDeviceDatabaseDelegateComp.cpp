@@ -43,7 +43,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
 {
 	QByteArray retVal;
 
-	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toLocal8Bit();
+	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toUtf8();
 
 	return retVal;
 }
@@ -102,9 +102,12 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 			QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
-
 	if (!paramIds.isEmpty()){
+#if QT_VERSION >= 0x051500
 		QByteArrayList idsList(paramIds.cbegin(), paramIds.cend());
+#else
+		QByteArrayList idsList = paramIds.toList();
+#endif
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
 

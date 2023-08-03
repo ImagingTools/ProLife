@@ -6,7 +6,7 @@
     <message>
         <location filename="../../ProLifeClientServer/CMake/InstallationCollectionView.qml" line="+321"/>
         <source>Save file</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei speichern</translation>
     </message>
 </context>
 </TS>

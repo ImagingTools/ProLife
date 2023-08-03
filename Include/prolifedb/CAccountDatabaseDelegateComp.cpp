@@ -18,8 +18,11 @@ bool CAccountDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSe
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 
 	if (!paramIds.isEmpty()){
+#if QT_VERSION >= 0x051500
 		QByteArrayList ids(paramIds.cbegin(), paramIds.cend());
-
+#else
+		QByteArrayList ids = paramIds.toList();
+#endif
 		for (const QByteArray& id : ids){
 			if (id == "Groups"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));

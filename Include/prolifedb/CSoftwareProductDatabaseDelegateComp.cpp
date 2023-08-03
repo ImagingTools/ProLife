@@ -30,8 +30,7 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 	if (!objectId.isEmpty()){
 		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
 
-		QByteArray selectionQuery = QString("AND \"DocumentId\" = '%1' ")
-				.arg(qPrintable(objectId)).toLocal8Bit();
+		QByteArray selectionQuery = QString("AND \"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
 
 		selectionQuery = baseQuery + selectionQuery;
 
@@ -131,7 +130,11 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 
 	if (!paramIds.isEmpty()){
+#if QT_VERSION >= 0x051500
 		QByteArrayList paramIdsList(paramIds.cbegin(), paramIds.cend());
+#else
+		QByteArrayList paramIdsList = paramIds.toList();
+#endif
 
 		int index = 0;
 		for (const QByteArray& key : paramIdsList){

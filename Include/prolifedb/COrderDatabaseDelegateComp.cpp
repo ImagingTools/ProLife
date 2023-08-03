@@ -86,7 +86,8 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 					.arg(qPrintable(objectId))
 					.arg(SqlEncode(documentContent))
 					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
-					.arg(checksum).toLocal8Bit();
+					.arg(checksum)
+					.toUtf8();
 
 		retVal += CreateOperationDescriptionQuery(objectId, operationContextPtr);
 	}
@@ -119,7 +120,7 @@ QByteArray COrderDatabaseDelegateComp::CreateDeleteObjectQuery(
 			}
 		}
 	}
-	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toLocal8Bit();
+	retVal += QString("DELETE FROM \"%1\" WHERE \"%2\" = '%3';").arg(qPrintable(*m_tableNameAttrPtr)).arg(qPrintable(*m_objectIdColumnAttrPtr)).arg(qPrintable(objectId)).toUtf8();
 
 	return retVal;
 }
@@ -163,10 +164,12 @@ QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
-
 	if (!paramIds.isEmpty()){
+#if QT_VERSION >= 0x051500
 		QByteArrayList ids(paramIds.cbegin(), paramIds.cend());
-
+#else
+		QByteArrayList ids = paramIds.toList();
+#endif
 		for (const QByteArray& id : ids){
 			if (id == "OrderCustomers"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
