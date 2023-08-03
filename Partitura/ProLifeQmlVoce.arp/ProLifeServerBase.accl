@@ -27,13 +27,10 @@
         <Element ComponentName="WebResourcesServlet" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="KeyDataProviders">
+        <EmbededRegistry Id="GqlContextCache">
             <PositionMap>
-                <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
-                <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
-                <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
-                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
-                <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
+                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
+                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -45,10 +42,13 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="GqlContextCache">
+        <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
-                <Element ComponentName="GqlContextCacheController" X="550" Y="75" Note=""/>
-                <Element ComponentName="UserInfo" X="554" Y="244" Note=""/>
+                <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
+                <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

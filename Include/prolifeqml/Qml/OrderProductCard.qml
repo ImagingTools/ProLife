@@ -206,7 +206,7 @@ Rectangle {
                         hardwareProductId = hardwareProduct.GetData("ProductId");
                     }
 
-                    if (softwareSerialNumber != ""){
+                    if (softwareSerialNumber && softwareSerialNumber != ""){
                         root.title = softwareProductId + ' (' + softwareSerialNumber +')' + ' & ' + hardwareProductId;
                     }
                     else{
@@ -229,13 +229,15 @@ Rectangle {
             }
         }
 
-        Item {
+        Rectangle {
             id: messageItem;
 
             width: parent.width;
-            height: visible ? 13 : 0;
+            height: visible ? 20 : 0;
 
             visible: false;
+
+            color: Style.baseColor;
 
             Text {
                 id: errorText;
@@ -260,7 +262,6 @@ Rectangle {
         id: productPairCard;
 
         ProductPairCard {
-
             onSoftwareEdited: {
                 root.pairEdited("Software");
             }
@@ -291,21 +292,21 @@ Rectangle {
         Component.onCompleted: {
             let index = pairCommandsModel.InsertNewItem();
 
-            pairCommandsModel.SetData("Id", "Unlink", index);
-            pairCommandsModel.SetData("Name", "Unlink", index);
-            pairCommandsModel.SetData("Icon", "Unlink", index);
-            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            pairCommandsModel.SetData("Visible", true, index);
+//            pairCommandsModel.SetData("Id", "Unlink", index);
+//            pairCommandsModel.SetData("Name", "Unlink", index);
+//            pairCommandsModel.SetData("Icon", "Unlink", index);
+//            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
+//            pairCommandsModel.SetData("Visible", true, index);
 
-            index = pairCommandsModel.InsertNewItem();
+//            index = pairCommandsModel.InsertNewItem();
 
-            pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
-            pairCommandsModel.SetData("Name", "Create License File", index);
-            pairCommandsModel.SetData("Icon", "Key", index);
-            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
-            pairCommandsModel.SetData("Visible", true, index);
+//            pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
+//            pairCommandsModel.SetData("Name", "Create License File", index);
+//            pairCommandsModel.SetData("Icon", "Key", index);
+//            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
+//            pairCommandsModel.SetData("Visible", true, index);
 
-            index = pairCommandsModel.InsertNewItem();
+//            index = pairCommandsModel.InsertNewItem();
 
             pairCommandsModel.SetData("Id", "Remove", index);
             pairCommandsModel.SetData("Name", "Remove", index);

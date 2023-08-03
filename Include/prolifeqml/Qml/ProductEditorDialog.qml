@@ -6,7 +6,7 @@ import Acf 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: 500;
+    width: 650;
 
     property TreeItemModel productModel: TreeItemModel {}
 

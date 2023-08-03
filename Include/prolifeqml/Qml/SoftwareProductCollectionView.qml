@@ -12,6 +12,7 @@ CollectionView {
     property MainDocumentManager mainDocumentManager: null;
 
     function fillContextMenuModel(){
+        contextMenuModel.clear();
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
     }
 
@@ -29,9 +30,7 @@ CollectionView {
     }
 
     function onCommandsModelChanged(){
-        console.log("onCommandsModelChanged");
         let onlyPairedIndex = container.commandsProvider.getCommandIndex("OnlyPaired");
-        console.log("onlyPairedIndex", onlyPairedIndex);
 
         if (onlyPairedIndex >= 0){
             container.commandsProvider.commandsModel.SetData("IsToggleable", true, onlyPairedIndex);

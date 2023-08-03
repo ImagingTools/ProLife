@@ -26,10 +26,21 @@ Rectangle {
     property LicensesProvider licensesProvider: null;
 
     property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
-//    property int contentHeight: contentColumn.height;
 
     signal clicked();
     signal edited();
+
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", softwareCard.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", softwareCard.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(language){
+        softwareCard.updateHeaders();
+    }
 
     onLicensesProviderChanged: {
         if (softwareCard.licensesProvider != null){
@@ -155,44 +166,48 @@ Rectangle {
 
             clip: true;
             showHeaders: false;
+
+            onHeadersChanged: {
+                licensesView.tableDecorator = tableDecoratorModel;
+            }
         }
     } // Column
-
-//    AuxButton {
-//        id: editButton;
-
-//        anchors.top: parent.top;
-//        anchors.topMargin: 10;
-//        anchors.right: parent.right;
-//        anchors.rightMargin: 10;
-
-//        width: 18;
-//        height: width;
-
-//        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-//                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
-//        visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
-
-//        onClicked: {
-//            softwareCard.edited();
-//        }
-//    }
 
     TreeItemModel {
         id: headersLicensesTable;
 
         Component.onCompleted: {
-            let index = headersLicensesTable.InsertNewItem();
+            softwareCard.updateHeaders();
+        }
+    }
 
-            headersLicensesTable.SetData("Id", "Name", index)
-            headersLicensesTable.SetData("Name", "License Name", index)
+    function updateHeaders(){
+        headersLicensesTable.Clear();
 
-            index = headersLicensesTable.InsertNewItem();
+        let index = headersLicensesTable.InsertNewItem();
 
-            headersLicensesTable.SetData("Id", "Expiration", index)
-            headersLicensesTable.SetData("Name", "Expiration", index)
+        headersLicensesTable.SetData("Id", "Name", index)
+        headersLicensesTable.SetData("Name", qsTr("License Name"), index)
 
-            licensesView.headers = headersLicensesTable;
+        index = headersLicensesTable.InsertNewItem();
+
+        headersLicensesTable.SetData("Id", "Expiration", index)
+        headersLicensesTable.SetData("Name", qsTr("Expiration"), index)
+
+        licensesView.headers = headersLicensesTable;
+    }
+
+    TreeItemModel {
+        id: tableDecoratorModel;
+
+        Component.onCompleted: {
+            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+
+            let index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", 75, index);
         }
     }
 } //Card

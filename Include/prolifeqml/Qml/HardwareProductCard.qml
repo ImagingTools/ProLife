@@ -38,29 +38,33 @@ Rectangle {
 
     Component.onCompleted: {
         hardwareCard.updateElements();
+        Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(language){
+        hardwareCard.updateHeaders();
+
+        hardwareCard.updateElements();
     }
 
     function updateElements(){
-        console.log("updateElements");
         elementsTableModel.Clear();
 
-        console.log("Start");
-
         let index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", "MAC Address", index)
+        elementsTableModel.SetData("Key", qsTr("MAC Address"), index)
         elementsTableModel.SetData("Value", hardwareCard.macAddress, index)
 
         index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", "Serial Number", index)
+        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
         elementsTableModel.SetData("Value", hardwareCard.serialNumber, index)
 
         index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", "Model Type", index)
+        elementsTableModel.SetData("Key", qsTr("Model Type"), index)
         elementsTableModel.SetData("Value", hardwareCard.modelType, index)
-
-        console.log("Count:", elementsTableModel.GetItemsCount());
-
-        console.log("End");
 
         table.elements = elementsTableModel;
     }
@@ -69,18 +73,24 @@ Rectangle {
         id: headersTableModel;
 
         Component.onCompleted: {
-            let index = headersTableModel.InsertNewItem();
-
-            headersTableModel.SetData("Id", "Key", index)
-            headersTableModel.SetData("Name", "Key", index)
-
-            index = headersTableModel.InsertNewItem();
-
-            headersTableModel.SetData("Id", "Value", index)
-            headersTableModel.SetData("Name", "Value", index)
-
-            table.headers = headersTableModel;
+            hardwareCard.updateHeaders();
         }
+    }
+
+    function updateHeaders(){
+        headersTableModel.Clear();
+
+        let index = headersTableModel.InsertNewItem();
+
+        headersTableModel.SetData("Id", "Key", index)
+        headersTableModel.SetData("Name", qsTr("Key"), index)
+
+        index = headersTableModel.InsertNewItem();
+
+        headersTableModel.SetData("Id", "Value", index)
+        headersTableModel.SetData("Name", qsTr("Value"), index)
+
+        table.headers = headersTableModel;
     }
 
     TreeItemModel {
@@ -149,53 +159,6 @@ Rectangle {
             showHeaders: false;
         }
     }
-
-//    AuxButton {
-//        id: editButton;
-
-//        anchors.top: parent.top;
-//        anchors.topMargin: 10;
-//        anchors.right: parent.right;
-//        anchors.rightMargin: 10;
-
-//        width: 18;
-//        height: width;
-
-//        iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-//                              "../../../../Icons/Light/Edit_Off_Disabled.svg";
-//        visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
-
-//        onClicked: {
-//            hardwareCard.edited();
-//        }
-//    }
-
-    MouseArea {
-        id: mouseArea;
-
-        anchors.fill: parent;
-        cursorShape: Qt.PointingHandCursor;
-
-        hoverEnabled: true;
-
-        visible: false;
-
-        onClicked: {
-            hardwareCard.clicked();
-        }
-
-        onEntered: {
-            console.log("onEntered");
-
-            hardwareCard.scale = 1.03;
-        }
-
-        onExited: {
-            console.log("onExited");
-            hardwareCard.scale = 1;
-        }
-    }
-
 } //Card
 
 

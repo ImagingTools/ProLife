@@ -7,7 +7,6 @@
 #include <QtCore/QTemporaryDir>
 
 // ImtCore includes
-#include <imtlic/CProductInstanceInfo.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 #include <imtlic/ILicenseInstance.h>
 
@@ -140,8 +139,6 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		return false;
 	}
 
-	QString json = productModelPtr->toJSON();
-
 	imtbase::CTreeItemModel* dataModelPtr = productModelPtr->GetTreeItemModel("data");
 	if (dataModelPtr == nullptr){
 		SendCriticalMessage(0, "No date in product: " + productId, "Server data provider");
@@ -150,12 +147,13 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 	}
 
 	imtbase::CTreeItemModel* licensesModelPtr = dataModelPtr->GetTreeItemModel("Features");
+	imtbase::CTreeItemModel* dependenciesModelPtr = dataModelPtr->GetTreeItemModel("Dependencies");
 
 	const imtbase::ICollectionInfo& licenseList = productInstancePtr->GetLicenseInstances();
 
 	imtbase::ICollectionInfo::Ids licenseIds = licenseList.GetElementIds();
 	for (const QByteArray& licenseId : licenseIds){
-		imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>( const_cast<imtlic::ILicenseInstance*>(productInstancePtr->GetLicenseInstance(licenseId)));
+		imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>(const_cast<imtlic::ILicenseInstance*>(productInstancePtr->GetLicenseInstance(licenseId)));
 		if (licenseInstancePtr == nullptr){
 			SendCriticalMessage(0, "License instance error: " + licenseId, "Server data provider");
 
@@ -163,17 +161,32 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		}
 
 		if (licensesModelPtr != nullptr){
-			imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(licenseId);
-			if (featuresModelPtr != nullptr){
-				imtlic::ILicenseInfo::FeatureInfos featureInfos;
-				for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
-					imtlic::ILicenseInfo::FeatureInfo featureInfo;
-					featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
-					featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
-					featureInfos.append(featureInfo);
-				}
-				licenseInstancePtr->SetFeatureInfos(featureInfos);
+			imtlic::ILicenseInfo::FeatureInfos featureInfos;
+
+			// License together with all dependent licenses
+			QByteArrayList licenses;
+			licenses << licenseId;
+
+			if (dependenciesModelPtr != nullptr){
+				licenses += GetAllLicenseDependencies(licenseId, *dependenciesModelPtr);
 			}
+
+			for (const QByteArray& dependencyId : licenses){
+				imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(dependencyId);
+				if (featuresModelPtr != nullptr){
+					for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
+						imtlic::ILicenseInfo::FeatureInfo featureInfo;
+						featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
+						featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
+
+						if (!featureInfos.contains(featureInfo)){
+							featureInfos.append(featureInfo);
+						}
+					}
+				}
+			}
+
+			licenseInstancePtr->SetFeatureInfos(featureInfos);
 		}
 
 		imtbase::CTreeItemModel* licensesItemsModelPtr = dataModelPtr->GetTreeItemModel("Items");
@@ -234,6 +247,27 @@ QByteArray CKeyDataProviderComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvi
 			retVal = m_vectorKeyCompPtr->GetId();
 		}
 	}
+
+	return retVal;
+}
+
+
+QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& dependenciesModel) const
+{
+	QByteArrayList retVal;
+
+	if (dependenciesModel.ContainsKey(licenseId)){
+		QByteArray dependencies = dependenciesModel.GetData(licenseId).toByteArray();
+		QByteArrayList dependenciesIDs = dependencies.split(';');
+
+		retVal += dependenciesIDs;
+
+		for (const QByteArray& dependencyId : dependenciesIDs){
+			retVal += GetAllLicenseDependencies(dependencyId, dependenciesModel);
+		}
+	}
+
+	retVal = retVal.toSet().values();
 
 	return retVal;
 }

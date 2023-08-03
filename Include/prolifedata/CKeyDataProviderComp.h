@@ -11,6 +11,7 @@
 #include <imtbase/IObjectCollection.h>
 #include <imtcrypt/IEncryptionKeysProvider.h>
 #include <imtgql/IGqlRequestHandler.h>
+#include <imtlic/CProductInstanceInfo.h>
 
 
 namespace prolifedata
@@ -48,6 +49,9 @@ public:
 
 	// reimplemented (imtcrypt::IEncryptionKeysProvider)
 	virtual QByteArray GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const override;
+
+protected:
+	virtual QByteArrayList GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& dependenciesModel) const;
 
 private:
 	mutable QByteArray m_productInstanceId;

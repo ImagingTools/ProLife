@@ -14,6 +14,18 @@ Item {
 
     property alias deviceIndex: deviceCB.currentIndex;
 
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(language){
+        root.updateHeaders();
+    }
+
     Text {
         id: deviceText;
 
@@ -170,20 +182,22 @@ Item {
     TreeItemModel {
         id: headersModel;
         Component.onCompleted: {
-            let index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "Name", index)
-            headersModel.SetData("Name", "Model Name", index)
-
-            index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "Id", index)
-            headersModel.SetData("Name", "Model-ID", index)
-
-//            index = headersModel.InsertNewItem();
-//            headersModel.SetData("Id", "Description", index)
-//            headersModel.SetData("Name", "Description", index)
-
-            modelsTable.headers = headersModel;
+            root.updateHeaders();
         }
+    }
+
+    function updateHeaders(){
+        headersModel.Clear();
+
+        let index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "Name", index)
+        headersModel.SetData("Name", qsTr("Model Name"), index)
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "Id", index)
+        headersModel.SetData("Name", qsTr("Model-ID"), index)
+
+        modelsTable.headers = headersModel;
     }
 }//Container
 

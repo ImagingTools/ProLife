@@ -21,6 +21,41 @@ Item {
         hardwareProductCollection.updateModel({"OrderId":productEditor.orderId});
     }
 
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(language){
+        productEditor.updateHeaders();
+
+        errorType.updateMessage();
+    }
+
+    QtObject {
+        id: errorType;
+        property int type: -1;
+
+        onTypeChanged: {
+            errorType.updateMessage();
+        }
+
+        function updateMessage(){
+            if (errorType.type == 0){
+                message.text = qsTr("There are no suitable products in this order");
+            }
+            else if (errorType.type == 1){
+                message.text = qsTr("Unable to select this product, empty Mac Address");
+            }
+            else if (errorType.type < 0){
+                message.text = "";
+            }
+        }
+    }
+
     CollectionDataProvider {
         id: hardwareProductCollection;
 
@@ -29,18 +64,18 @@ Item {
         fields: ["Id", "ProductId", "MacAddress", "SerialNumber"]
 
         onModelUpdated: {
-            console.log("hardwareProductCollection onModelUpdated", hardwareProductCollection.collectionModel.toJSON());
-
             hardwareProductsTable.elements = hardwareProductCollection.collectionModel;
 
             let elementsCount = hardwareProductCollection.collectionModel.GetItemsCount();
             if (elementsCount !== 0){
                 message.visible = false;
-                message.text = "";
+//                message.text = "";
+                errorType.type = -1;
             }
             else{
                 message.visible = true;
-                message.text = qsTr("There are no suitable products in this order");
+                errorType.type = 0;
+//                message.text = qsTr("There are no suitable products in this order");
             }
         }
 
@@ -86,20 +121,21 @@ Item {
                         productEditor.selectedProductId = "";
 
                         message.visible = true;
-                        message.text = qsTr("Unable to select this product, empty Mac Address");
+//                        message.text = qsTr("Unable to select this product, empty Mac Address");
+                        errorType.type = 1;
                     }
                     else{
                         productEditor.selectedProductId = hardwareId;
 
                         message.visible = false;
-                        message.text = "";
+                        errorType.type = -1;
                     }
                 }
                 else{
                     productEditor.selectedProductId = "";
 
                     message.visible = false;
-                    message.text = "";
+                    errorType.type = -1;
                 }
 
                 productEditor.selectionChanged();
@@ -124,20 +160,26 @@ Item {
         id: headersModel;
 
         Component.onCompleted: {
-            let index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "ProductId", index);
-            headersModel.SetData("Name", "Product", index);
-
-            index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "MacAddress", index);
-            headersModel.SetData("Name", "MAC Address", index);
-
-            index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "SerialNumber", index);
-            headersModel.SetData("Name", "Serial Number", index);
-
-            hardwareProductsTable.headers = headersModel;
+            productEditor.updateHeaders();
         }
+    }
+
+    function updateHeaders(){
+        headersModel.Clear();
+
+        let index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "ProductId", index);
+        headersModel.SetData("Name", qsTr("Product"), index);
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "MacAddress", index);
+        headersModel.SetData("Name", qsTr("MAC Address"), index);
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "SerialNumber", index);
+        headersModel.SetData("Name", qsTr("Serial Number"), index);
+
+        hardwareProductsTable.headers = headersModel;
     }
 }//Container
 

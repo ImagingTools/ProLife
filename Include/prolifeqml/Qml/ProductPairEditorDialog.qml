@@ -11,10 +11,19 @@ Dialog {
     property string softwareId;
 
     Component.onCompleted: {
-        productEditorDialog.buttons.addButton({"Id": "Link", "Name": "Link", "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
+        productEditorDialog.fillButtons();
 
         productEditorDialog.title = qsTr("Product pair editor");
+    }
+
+    onLocalizationChanged: {
+        productEditorDialog.fillButtons();
+    }
+
+    function fillButtons(){
+        productEditorDialog.buttonsModel.clear();
+        productEditorDialog.buttons.addButton({"Id": "Link", "Name": qsTr("Link"), "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Cancel"), "Enabled": true});
     }
 
     contentComp: Component {

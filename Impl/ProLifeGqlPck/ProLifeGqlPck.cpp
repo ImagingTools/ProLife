@@ -49,6 +49,11 @@ I_EXPORT_COMPONENT(
 		"Software product controller",
 		"Software Product Controller");
 
+I_EXPORT_COMPONENT(
+		OrderHistoryController,
+		"Order history controller",
+		"Order History Controller");
+
 
 } // namespace ProLifeGqlPck
 

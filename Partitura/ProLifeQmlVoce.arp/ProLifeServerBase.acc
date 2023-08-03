@@ -122,6 +122,9 @@
                     <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/UserSettingsRepository"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>

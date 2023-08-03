@@ -14,6 +14,18 @@ Item {
 
     property bool serialNumberEdit: true;
 
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(language){
+        root.updateHeaders();
+    }
+
     Text {
         id: serialNumberText;
 
@@ -75,6 +87,11 @@ Item {
 
         checkable: true;
         canSelectAll: false;
+        isMultiCheckable: false;
+
+        onHeadersChanged: {
+            //licensesTable.tableDecorator = tableDecoratorModel;
+        }
 
         delegate: Component {
             LicenseInstanceItemDelegate {
@@ -90,16 +107,14 @@ Item {
                     let licenseName = this.licenseName;
                     let expiration = this.expiration;
 
-                    console.log("state", state);
-                    console.log("licenseId", licenseId);
-                    console.log("expiration", expiration);
-
                     let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
 
                     if (state === Qt.Checked){
                         if (!activeLicensesModel){
                             activeLicensesModel = root.productModel.AddTreeModel("ActiveLicenses");
                         }
+
+                        activeLicensesModel.Clear();
 
                         let index = activeLicensesModel.InsertNewItem();
 
@@ -118,6 +133,8 @@ Item {
                             }
                         }
                     }
+
+                    root.updateGui();
                 }
 
                 onDateChanged: {
@@ -199,15 +216,42 @@ Item {
     TreeItemModel {
         id: headersModel;
         Component.onCompleted: {
-            let index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "Name", index)
-            headersModel.SetData("Name", "License Name", index)
+             root.updateHeaders();
+        }
+    }
 
-            index = headersModel.InsertNewItem();
-            headersModel.SetData("Id", "Expiration", index)
-            headersModel.SetData("Name", "Expiration", index)
+    function updateHeaders(){
+        headersModel.Clear();
 
-            licensesTable.headers = headersModel;
+        let index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "Name", index)
+        headersModel.SetData("Name", qsTr("License Name"), index)
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "Id", index)
+        headersModel.SetData("Name", qsTr("License-ID"), index)
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "Expiration", index)
+        headersModel.SetData("Name", qsTr("Expiration"), index)
+
+        licensesTable.headers = headersModel;
+    }
+
+    TreeItemModel {
+        id: tableDecoratorModel;
+
+        Component.onCompleted: {
+            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+
+            let index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", 220, index);
         }
     }
 }//Container

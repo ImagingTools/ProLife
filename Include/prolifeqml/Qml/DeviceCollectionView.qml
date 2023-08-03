@@ -63,6 +63,7 @@ CollectionView {
     }
 
     function fillContextMenuModel(){
+        contextMenuModel.clear();
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
         contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../Icons/Light/Remove_On_Normal.svg"});
         contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
@@ -73,16 +74,16 @@ CollectionView {
         if (notificationModel){
             let counter = notificationModel.GetData("NewCount");
             if (counter > 0){
+                if (counter > 99){
+                    counter = '99+'
+                }
+
                 container.commandsProvider.setCommandNotification("ShowNew", counter);
             }
             else{
                 container.commandsProvider.setCommandNotification("ShowNew", "");
             }
         }
-
-//        if (container.commandsDelegate && container.commandsDelegate.filterByNewActive){
-//            container.commandsProvider.setCommandNotification("ShowNew", "");
-//        }
     }
 
     function onCommandsModelChanged(){
