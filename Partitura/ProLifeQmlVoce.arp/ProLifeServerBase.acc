@@ -227,8 +227,8 @@
         <Element Id="KeyDataProviders" PackageId="" ComponentId="KeyDataProviders">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DeviceSqlRepository"/>
@@ -239,8 +239,8 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/OrderSqlRepository"/>
+                    <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/SoftwareSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -353,89 +353,6 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="DatabaseBackup">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="DatabaseAutomaticBackup" PackageId="ImtDatabasePck" ComponentId="DatabaseAutomaticBackup">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="BackupFolderPath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="RelativeFileNameParam"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="DatabaseLoginSettings">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="StartTime" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="14:00"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="RelativeFileNameParam" PackageId="FilePck" ComponentId="RelativeFileNameParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Backups"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PathType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="2"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SystemLocation"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="1"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="GqlContextCache">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="GqlContextCacheController" PackageId="ImtGqlPck" ComponentId="GqlContextCacheController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="GqlRequest">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
-                                    <Data IsEnabled="true" Value="UserInfo"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="UserInfo" PackageId="ImtAuthPck" ComponentId="UserInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="AdminId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="su"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlContextCacheController" ComponentId="GqlContextCacheController"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
         <EmbeddedRegistry Id="KeyDataProviders">
             <Data Description="" Keywords="">
                 <ElementsList>
@@ -484,6 +401,9 @@
                     <Element Id="KeyDataProvider" PackageId="ProLifeDataPck" ComponentId="KeyDataProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -491,12 +411,12 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicensePersistence" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
+                                    <Data IsEnabled="true" Value="XmlFileSerializer"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="ObjectCollection">
+                                <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">

@@ -20,6 +20,11 @@ I_EXPORT_COMPONENT(
 			"Oredr Information Authority");
 
 I_EXPORT_COMPONENT(
+			HardwareProductBindingInfo,
+			"Hardware product binding info",
+			"Hardware Product Binding Info");
+
+I_EXPORT_COMPONENT(
 			DeviceInfo,
 			"Device information",
 			"Device Information Authority");

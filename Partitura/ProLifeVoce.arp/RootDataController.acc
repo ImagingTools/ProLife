@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5079" Description="ACF"/>
-            <Version Id="1" Number="2184" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5082" Description="ACF"/>
+            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -245,19 +245,20 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Pages"/>
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ApplicationController"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationController"/>
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
         <Component ExportedId="BackupParamsSet" ComponentId="SettingsController/BackupParamsSet"/>
+        <Component ExportedId="BindingProductsRepository" ComponentId="Pages/BindingProductsRepository"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
         <Component ExportedId="GraphQLClientEngine" ComponentId="LisaGQLEngine"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Pages/OrderSqlRepository"/>
         <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
+        <Component ExportedId="SoftwareSqlRepository" ComponentId="Pages/SoftwareSqlRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="SettingsController/WebSocketServerPort"/>
     </ExportedComponents>

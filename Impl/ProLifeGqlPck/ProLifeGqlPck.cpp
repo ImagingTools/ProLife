@@ -54,6 +54,11 @@ I_EXPORT_COMPONENT(
 		"Order history controller",
 		"Order History Controller");
 
+I_EXPORT_COMPONENT(
+		HardwareProductBindingController,
+		"Hardware product binding controller",
+		"Hardware Product Binding Controller");
+
 
 } // namespace ProLifeGqlPck
 

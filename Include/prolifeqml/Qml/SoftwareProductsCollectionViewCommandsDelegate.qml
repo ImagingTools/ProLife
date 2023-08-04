@@ -147,20 +147,20 @@ CollectionViewCommandsDelegateBase {
                 }
             }
         }
-        else if (commandId === "CreateLicenseFile"){
-            let indexes = container.tableData.getSelectedIndexes();
-            let elementsModel = container.tableData.elements;
-            let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
-            let hardwareId = elementsModel.GetData("HardwareUuid", indexes[0]);
-            let macAddress = elementsModel.GetData("DeviceId", indexes[0]);
+//        else if (commandId === "CreateLicenseFile"){
+//            let indexes = container.tableData.getSelectedIndexes();
+//            let elementsModel = container.tableData.elements;
+//            let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
+//            let hardwareId = elementsModel.GetData("HardwareUuid", indexes[0]);
+//            let macAddress = elementsModel.GetData("DeviceId", indexes[0]);
 
-            if (macAddress !== null && macAddress !== ""){
-                let splitData = macAddress.split(':');
-                licenseFileController.fileName = splitData.join('_') + '_' + licenseFileController.defaultName;
-            }
+//            if (macAddress !== null && macAddress !== ""){
+//                let splitData = macAddress.split(':');
+//                licenseFileController.fileName = splitData.join('_') + '_' + licenseFileController.defaultName;
+//            }
 
-            licenseFileController.createLicenseFile(orderId + "/" + hardwareId);
-        }
+//            licenseFileController.createLicenseFile(orderId + "/" + hardwareId);
+//        }
     }
 
     LicenseFileController {

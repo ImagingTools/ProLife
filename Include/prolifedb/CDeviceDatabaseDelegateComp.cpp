@@ -28,7 +28,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const QByteArray& objectId,
 			const istd::IChangeable& object,
 			const imtbase::IOperationContext* operationContextPtr,
-			bool useExternDelegate) const
+			bool /*useExternDelegate*/) const
 {
 	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
@@ -37,7 +37,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-			const imtbase::IObjectCollection& collection,
+			const imtbase::IObjectCollection& /*collection*/,
 			const QByteArray& objectId,
 			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
@@ -125,11 +125,11 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							ordersFilterQuery += "(";
 						}
 
-						for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-							if (i > 0){
+						for (int j = 0; j < optionsListPtr->GetOptionsCount(); j++){
+							if (j > 0){
 								ordersFilterQuery += " OR ";
 							}
-							QByteArray orderId = optionsListPtr->GetOptionId(i);
+							QByteArray orderId = optionsListPtr->GetOptionId(j);
 							ordersFilterQuery += QString("\"Document\"->>'OrderId' = '%1'").arg(qPrintable(orderId));
 						}
 

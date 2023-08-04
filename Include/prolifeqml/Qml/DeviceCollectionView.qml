@@ -5,7 +5,7 @@ import Acf 1.0
 CollectionView {
     id: container;
 
-    visibleMetaInfo: false;
+//    visibleMetaInfo: false;
 
     defaultSortHeaderIndex: 6;
     defaultOrderType: "DESC";
@@ -18,6 +18,7 @@ CollectionView {
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
         baseCollectionView.commands.fieldsData.push("OrderUuid");
+        baseCollectionView.commands.fieldsData.push("Licenses");
     }
 
     Component.onDestruction: {

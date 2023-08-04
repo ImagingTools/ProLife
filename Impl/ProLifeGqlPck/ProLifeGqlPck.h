@@ -10,6 +10,7 @@
 #include <prolifegql/CHardwareProductCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductControllerComp.h>
 #include <prolifegql/COrderHistoryControllerComp.h>
+#include <prolifegql/CHardwareProductBindingControllerComp.h>
 
 
 /**
@@ -27,6 +28,7 @@ typedef prolifegql::CSoftwareProductCollectionControllerComp SoftwareProductColl
 typedef prolifegql::CHardwareProductCollectionControllerComp HardwareProductCollectionController;
 typedef prolifegql::CSoftwareProductControllerComp SoftwareProductController;
 typedef prolifegql::COrderHistoryControllerComp OrderHistoryController;
+typedef prolifegql::CHardwareProductBindingControllerComp HardwareProductBindingController;
 
 
 } // namespace ImtLicenseGqlPck

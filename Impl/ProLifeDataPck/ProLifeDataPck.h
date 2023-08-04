@@ -7,6 +7,7 @@
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
+#include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CKeyDataProviderComp.h>
 #include <prolifedata/CDeviceInfoComp.h>
@@ -24,6 +25,13 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> OrderInfo;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CHardwareProductBinding,
+						prolifedata::IHardwareProductBinding,
+						iser::IObject,
+						iser::ISerializable,
+						istd::IChangeable>> HardwareProductBindingInfo;
 typedef prolifedata::CKeyDataProviderComp KeyDataProvider;
 typedef icomp::TModelCompWrap<prolifedata::CDeviceInfoComp> DeviceInfo;
 

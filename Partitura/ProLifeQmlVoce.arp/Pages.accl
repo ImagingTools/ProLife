@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5082" Description="ACF"/>
+            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -38,6 +38,7 @@
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="575" Y="200" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="575" Y="650" Note=""/>
                 <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>

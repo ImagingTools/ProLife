@@ -33,10 +33,11 @@ public:
 		I_REGISTER_INTERFACE(imtbase::IBinaryDataProvider);
 		I_REGISTER_INTERFACE(imtcrypt::IEncryptionKeysProvider);
 		I_ASSIGN(m_licensePersistenceCompPtr, "LicensePersistence", "Persistence used for license export", false, "LicensePersistence");
-		I_ASSIGN(m_objectCollectionCompPtr, "ObjectCollection", "Object collection", true, "ObjectCollection");
+		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
 		I_ASSIGN(m_vectorKeyCompPtr, "VectorKey", "Additional key for AES encryption", false, "VectorKey");
 		I_ASSIGN(m_gqlLicenseRequestCompPtr, "GqlLicenseRequest", "License GraphQL request", true, "GqlLicenseRequest");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
+		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
 	I_END_COMPONENT;
 
 	enum CommandGroup
@@ -52,15 +53,17 @@ public:
 
 protected:
 	virtual QByteArrayList GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& dependenciesModel) const;
+	virtual QString GetLicenseName(const QByteArray& licenseId, const imtbase::CTreeItemModel& licensesModel) const;
 
 private:
 	mutable QByteArray m_productInstanceId;
 
 	I_REF(ifile::IFilePersistence, m_licensePersistenceCompPtr);
 	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
-	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtgql::IGqlRequestHandler, m_gqlLicenseRequestCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 };
 
 

@@ -14,6 +14,7 @@
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/TOrderedWrap.h>
+#include <prolifedata/CHardwareProductBinding.h>
 
 
 namespace prolifegql
@@ -25,8 +26,8 @@ namespace prolifegql
 // reimplemented (imtguigql::CObjectCollectionControllerCompBase)
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
-			const imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
 		return nullptr;
@@ -342,6 +343,16 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
 					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
+				else if(informationId == "Licenses"){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_bindingCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+						const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+						if (bindingInfoPtr != nullptr){
+							QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+							elementInformation = softwareIds.join(';');
+						}
+					}
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";
@@ -360,7 +371,67 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	return nullptr;
+	if (!m_bindingCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	QByteArray objectId;
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	if (inputParamPtr != nullptr){
+		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
+	}
+
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
+	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
+
+	int index = dataModelPtr->InsertNewItem();
+
+	dataModelPtr->SetData("Name", QT_TR_NOOP("Licenses"), index);
+	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("Children", index);
+//	childrenModelPtr->SetData("Value", QObject::tr("No related licenses"));
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+		if (bindingInfoPtr != nullptr){
+			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+			for (const QByteArray& softwareId : softwareIds){
+				imtbase::IObjectCollection::DataPtr orderDataPtr;
+				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, orderDataPtr)){
+					prolifedata::IOrderInfo* softwareOrderProductPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+					if (softwareOrderProductPtr != nullptr){
+						imtbase::IObjectCollection* productCollectionPtr = softwareOrderProductPtr->GetProducts();
+						if (productCollectionPtr != nullptr){
+							imtbase::IObjectCollection::DataPtr productDataPtr;
+							if (productCollectionPtr->GetObjectData(softwareId, productDataPtr)){
+								imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
+								if (productInstanceInfoPtr != nullptr){
+									QByteArray productId = productInstanceInfoPtr->GetProductId();
+									QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
+
+									const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
+									for (const QByteArray& licenseId : licenseList.GetElementIds()){
+										const imtlic::ILicenseInstance* licenseInstancePtr = productInstanceInfoPtr->GetLicenseInstance(licenseId);
+										if (licenseInstancePtr != nullptr){
+											int childrenIndex = childrenModelPtr->InsertNewItem();
+
+											childrenModelPtr->SetData("Value", productId + " (" + licenseId + ")", childrenIndex);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return rootModelPtr.PopPtr();
 }
 
 
