@@ -13,7 +13,6 @@ Dialog {
     property string hardwareId: "";
 
     onHardwareIdChanged: {
-        console.log("onHardwareIdChanged", hardwareId);
         documentController.getData(hardwareId, {}, "HardwareProductBinding")
     }
 
@@ -54,10 +53,6 @@ Dialog {
 
             height: contentHeight + 40;
 
-//            onCheckedItemsChanged: {
-//                productEditorDialog.buttons.setButtonState("Save", true);
-//            }
-
             onModelChanged: {
                 productEditorDialog.buttons.setButtonState("Save", true);
             }
@@ -71,8 +66,10 @@ Dialog {
 
         onDocumentModelChanged: {
             productEditorDialog.contentItem.bindingModel = documentModel;
+        }
 
-            productEditorDialog.contentItem.updateGui();
+        onError: {
+            productEditorDialog.contentItem.bindingModelReady = true;
         }
     }
 }//Container

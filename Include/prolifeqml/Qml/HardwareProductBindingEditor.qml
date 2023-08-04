@@ -35,20 +35,30 @@ Item {
         productEditor.updateHeaders();
     }
 
-    onBindingModelChanged: {
-        productEditor.productId = productEditor.getCurrentSoftwareProductId();
+    property bool bindingModelReady: false;
+    property bool allCompleted: bindingModelReady && softwareProductCollection.modelReady;
+    onAllCompletedChanged: {
+        if (allCompleted){
+            productEditor.productId = productEditor.getCurrentSoftwareProductId();
 
+            productEditor.updateGui();
+        }
+    }
+
+    onBindingModelChanged: {
         bindingModel.dataChanged.connect(productEditor.modelChanged);
+
+        productEditor.bindingModelReady = true;
     }
 
     property bool blockUpdatingModel: false;
-
     onBlockUpdatingModelChanged: {
         loading.visible = blockUpdatingModel;
     }
 
-
     function updateGui(){
+        console.log("updateGui", productEditor.productId);
+
         blockUpdatingModel = true;
 
         productsCB.currentIndex = -1;
@@ -170,12 +180,11 @@ Item {
 
         fields: ["Id", "ProductId", "OrderId", "SerialNumber", "Customer"]
 
+        property bool modelReady: false;
+
         onModelUpdated: {
-//            softwareProductsTable.elements = softwareProductCollection.collectionModel;
-
             productEditor.createProductsModel();
-
-            productEditor.updateGui();
+            softwareProductCollection.modelReady = true;
         }
 
         onStateModelChanged: {
@@ -185,10 +194,6 @@ Item {
             else{
                 loading.stop();
             }
-        }
-
-        function filterByProduct(){
-
         }
     }
 
