@@ -12,6 +12,8 @@ Dialog {
     property var softwareIds: [];
     property string hardwareId: "";
 
+    notClosingButtons: "Save";
+
     onHardwareIdChanged: {
         documentController.getData(hardwareId, {}, "HardwareProductBinding")
     }
@@ -42,6 +44,8 @@ Dialog {
 
                 documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
             }
+
+            productEditorDialog.buttons.setButtonState("Save", false);
         }
     }
 
