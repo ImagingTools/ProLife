@@ -75,7 +75,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DbName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="prolife_2"/>
+                        <Data IsEnabled="true" Value="prolife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Password" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="root"/>
