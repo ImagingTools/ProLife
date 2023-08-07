@@ -265,7 +265,8 @@ QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray&
 		}
 	}
 
-	retVal = retVal.toSet().values();
+	QSet<QByteArray> set(retVal.cbegin(), retVal.cend());
+	retVal = set.values();
 
 	return retVal;
 }
