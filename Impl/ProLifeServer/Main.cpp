@@ -29,10 +29,10 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtresthtml);
 	Q_INIT_RESOURCE(imtlicgui);
 
-	Q_INIT_RESOURCE(Webimt3dgui);
-	Q_INIT_RESOURCE(Webimtauthgui);
-	Q_INIT_RESOURCE(Webimtgui);
-	Q_INIT_RESOURCE(Webimtlicgui);
+	Q_INIT_RESOURCE(imt3dguiTheme);
+	Q_INIT_RESOURCE(imtauthguiTheme);
+	Q_INIT_RESOURCE(imtguiTheme);
+	Q_INIT_RESOURCE(imtlicguiTheme);
 
 	CProLifeServer instance;
 
