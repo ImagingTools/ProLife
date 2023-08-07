@@ -1,9 +1,20 @@
 #include <prolifedb/CDatabaseConverterComp.h>
-#include "imtlic/IProductInstanceInfo.h"
+
+
+// Qt includes
+#include <QtCore/QDebug>>
+
+// ImtCore includes
+#include <imtlic/IHardwareInstanceInfo.h>
+
+// ProLife includes
+#include <prolifedata/CHardwareProductBinding.h>
+#include <prolifedata/IOrderInfo.h>
 
 
 namespace prolifedb
 {
+
 
 // protected methods
 
@@ -11,31 +22,66 @@ namespace prolifedb
 
 void CDatabaseConverterComp::OnComponentCreated()
 {
-    BaseClass::OnComponentCreated();
+	BaseClass::OnComponentCreated();
 
-    imtbase::IObjectCollection::DataPtr dataPtr;
-    imtbase::ICollectionInfo::Ids elementIds = m_productInstanceCollectionCompPtr->GetElementIds();
+	qDebug() << "ProLife convertation has started";
 
-    for(const imtbase::ICollectionInfo::Id& elementId : elementIds){
-        if (m_productInstanceCollectionCompPtr->GetObjectData(elementId, dataPtr)){
-            imtlic::IProductInstanceInfo* productInstancePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-            istd::TDelPtr<prolifedata::IOrderInfo> orderPtr = m_orderPtr.CreateInstance();
-            //
+	if (m_orderCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::Ids orderObjectIds = m_orderCollectionCompPtr->GetElementIds();
+		for (const imtbase::IObjectCollection::Id& orderObjectId : orderObjectIds){
+			imtbase::IObjectCollection::DataPtr orderDataPtr;
+			if (m_orderCollectionCompPtr->GetObjectData(orderObjectId, orderDataPtr)){
+				prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+				if (orderInfoPtr != nullptr){
+					imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
+					if (productCollectionPtr != nullptr){
+						imtbase::ICollectionInfo::Ids orderedProductsIds = productCollectionPtr->GetElementIds();
+						for(const QByteArray& productId : orderedProductsIds){
+							imtbase::IObjectCollection::DataPtr productDataPtr;
+							if (productCollectionPtr->GetObjectData(productId, productDataPtr)){
+								imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<imtlic::IHardwareInstanceInfo*>(productDataPtr.GetPtr());
+								if (hardwareProductPtr != nullptr){
+									QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
+									QByteArray deviceId = hardwareProductPtr->GetDeviceId();
+									if (!softwareId.isEmpty()){
+										if (m_bindingCollectionCompPtr.IsValid()){
+											istd::TDelPtr<prolifedata::CHardwareProductBinding> productBindingPtr;
+											productBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding);
 
-            orderPtr->SetOrderId(productInstancePtr->GetProductId());
-            orderPtr->SetCustomerId(productInstancePtr->GetCustomerId());
-            //
-            QString errorMessage;
-            orderPtr.PopPtr();
+											productBindingPtr->SetHardwareId(deviceId);
 
-        }
-    }
+											QByteArrayList softwareIds;
+											softwareIds << softwareId;
+
+											productBindingPtr->SetSoftwareIds(softwareIds);
+
+											m_bindingCollectionCompPtr->InsertNewObject("", "", "", productBindingPtr.GetPtr(), deviceId);
+
+											qDebug() << QString("Insert object into binding collection: ") << deviceId;
+										}
+
+										hardwareProductPtr->SetSoftwareId("");
+
+										productCollectionPtr->SetObjectData(productId, *hardwareProductPtr);
+
+										m_orderCollectionCompPtr->SetObjectData(orderObjectId, *orderInfoPtr);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	qDebug() << "ProLife convertation finished!";
 }
 
 
 void CDatabaseConverterComp::OnComponentDestroyed()
 {
-    BaseClass::OnComponentDestroyed();
+	BaseClass::OnComponentDestroyed();
 }
 
 

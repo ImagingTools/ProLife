@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5060" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5082" Description="ACF"/>
+            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -31,6 +31,18 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="BindingProductsRepository" PackageId="ProLifeVoce" ComponentId="BindingProductsRepository">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ConsoleApplication" PackageId="BasePck" ComponentId="ConsoleApplication">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -40,48 +52,57 @@
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DatabaseConverterComp</Value>
+                                <Value>DatabaseConverter</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DatabaseConverterComp" PackageId="ProLifeDbPck" ComponentId="DatabaseConverterComp">
+        <Element Id="DatabaseConverter" PackageId="ProLifeDbPck" ComponentId="DatabaseConverterComp">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaProducts/AccountSqlRepository"/>
+                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeOrders/OrderSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OrderController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="OrderInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaProducts/ProductSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductInstanceCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaProducts/ProductInstanceSqlRepository"/>
+                        <Data IsEnabled="true" Value="OrderSqlRepository"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaProducts" PackageId="" ComponentId="LisaProducts">
+        <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife_2"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Password" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qwerty"/>
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PgHostName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PgPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DeviceSqlRepository" PackageId="ProLifeVoce" ComponentId="DeviceSqlRepository">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderDatabaseSqlDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -101,19 +122,20 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="ProLifeOrders" PackageId="" ComponentId="ProlifeOrders">
+        <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Password" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qwerty"/>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceDatabaseSqlDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -124,215 +146,7 @@
             </Data>
         </Element>
     </ElementsList>
-    <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="Enums">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="ApplicationDataEnumProvider" PackageId="ImtQmlPck" ComponentId="ApplicationDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/AppEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandDataEnumProvider" PackageId="ImtQmlPck" ComponentId="CommandDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/CommandEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PageDataEnumProvider" PackageId="ImtQmlPck" ComponentId="PageDataEnumProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DataId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="qml/PageEnum.qml"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="ApplicationDataEnumProvider" ComponentId="ApplicationDataEnumProvider"/>
-                    <Component ExportedId="CommandDataEnumProvider" ComponentId="CommandDataEnumProvider"/>
-                    <Component ExportedId="PageDataEnumProvider" ComponentId="PageDataEnumProvider"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="LisaProducts">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AccountSqlRepository" PackageId="ProLifeVoce" ComponentId="AccountSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PgSqlDatabaseEngine"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PgSqlDatabaseEngine" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseEngine">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseCreationScriptPath" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Database/CreateDatabase"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DbType" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="QPSQL"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="HostName" Type="Id" ExportId="PgHostName">
-                                    <Data IsEnabled="true" Value="127.0.0.1"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="RelativeFileNameParam"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Pasword" Type="Id" ExportId="Password">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Port" Type="Integer" ExportId="PgPort">
-                                    <Data IsEnabled="true" Value="5432"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Suffix" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="1"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PgSqlDatabaseEngine"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="RelativeFileNameParam" PackageId="FilePck" ComponentId="RelativeFileNameParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Migrations"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PathType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="2"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SystemLocation"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="101"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
-                    <Component ExportedId="ProductSqlRepository" ComponentId="ProductSqlRepository"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="ProlifeOrders">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PgSqlDatabaseEngine"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PgSqlDatabaseEngine" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseEngine">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseCreationScriptPath" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value=":/Database/CreateDatabase"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="prolife"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DbType" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="QPSQL"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="HostName" Type="Id" ExportId="PgHostName">
-                                    <Data IsEnabled="true" Value="127.0.0.1"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="RelativeFileNameParam"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Pasword" Type="Id" ExportId="Password">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Port" Type="Integer" ExportId="PgPort">
-                                    <Data IsEnabled="true" Value="5432"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Suffix" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="1"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="RelativeFileNameParam" PackageId="FilePck" ComponentId="RelativeFileNameParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Migrations"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PathType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="2"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SystemLocation"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="101"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-    </EmbeddedRegistriesList>
+    <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="ibase::IApplication" ComponentId="ConsoleApplication"/>
     </ExportedInterfaces>
