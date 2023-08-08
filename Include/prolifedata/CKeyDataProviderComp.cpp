@@ -265,9 +265,13 @@ QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray&
 		}
 	}
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 	QSet<QByteArray> set(retVal.cbegin(), retVal.cend());
 	retVal = set.values();
-
+#else
+	QSet<QByteArray> set(retVal.toSet());
+	retVal = set.values();
+#endif
 	return retVal;
 }
 
