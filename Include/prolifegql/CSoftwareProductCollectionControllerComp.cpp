@@ -53,42 +53,45 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 			}
 
-			QByteArray hardwareMacAddress;
-			QByteArray hardwareUuid;
-			if (m_orderCollectionCompPtr.IsValid() && m_deviceCollectionCompPtr.IsValid()){
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-					prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-					if (orderInfoPtr != nullptr){
-						imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
-						if (orderProductCollectionPtr != nullptr){
-							imtbase::IObjectCollection::Ids productIds = orderProductCollectionPtr->GetElementIds();
+//			QByteArray hardwareMacAddress;
+//			QByteArray hardwareUuid;
+//			if (m_orderCollectionCompPtr.IsValid() && m_deviceCollectionCompPtr.IsValid()){
+//				imtbase::IObjectCollection::DataPtr dataPtr;
+//				if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
+//					prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+//					if (orderInfoPtr != nullptr){
+//						imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
+//						if (orderProductCollectionPtr != nullptr){
+//							imtbase::IObjectCollection::Ids productIds = orderProductCollectionPtr->GetElementIds();
 
-							for (const imtbase::IObjectCollection::Id& productId : productIds){
-								imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
-								if (orderProductCollectionPtr->GetObjectData(productId, hardwareProductDataPtr)){
-									const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
-									if (hardwareProductPtr != nullptr){
-										QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
-										if (softwareId == collectionId){
-											QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-											hardwareUuid = productId;
+//							for (const imtbase::IObjectCollection::Id& productId : productIds){
+//								imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
+//								if (orderProductCollectionPtr->GetObjectData(productId, hardwareProductDataPtr)){
+//									const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
+//									if (hardwareProductPtr != nullptr){
+//										QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
+//										if (softwareId == collectionId){
+//											QByteArray deviceId = hardwareProductPtr->GetObjectUuid();
+//											hardwareUuid = productId;
 
-											imtbase::IObjectCollection::DataPtr deviceDataPtr;
-											if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
-												const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
-												if (deviceInfoPtr != nullptr){
-													hardwareMacAddress = deviceInfoPtr->GetMacAddress();
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+//											imtbase::IObjectCollection::DataPtr deviceDataPtr;
+//											if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
+//												const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
+//												if (deviceInfoPtr != nullptr){
+//													hardwareMacAddress = deviceInfoPtr->GetMacAddress();
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+
+			QByteArray hardwareMacAddress = objectCollectionIterator->GetElementInfo("DeviceId").toByteArray();
+			QByteArray hardwareUuid = objectCollectionIterator->GetElementInfo("DeviceUuid").toByteArray();;
 
 			for (const QByteArray& informationId : informationIds){
 				QVariant elementInformation;

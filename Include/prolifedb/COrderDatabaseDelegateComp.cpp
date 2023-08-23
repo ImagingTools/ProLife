@@ -6,7 +6,7 @@
 #include <istd/CCrcCalculator.h>
 
 // ImtCore includes
-#include <imtlic/IHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
@@ -275,9 +275,9 @@ QByteArrayList COrderDatabaseDelegateComp::GetDeviceIdsFromOrder(prolifedata::CO
 			for(const QByteArray& objectId : orderedProductsIds){
 				imtbase::IObjectCollection::DataPtr dataPtr;
 				if (productCollectionPtr->GetObjectData(objectId, dataPtr)){
-					const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(dataPtr.GetPtr());
+					const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(dataPtr.GetPtr());
 					if (hardwareProductPtr != nullptr){
-						QByteArray deviceId = hardwareProductPtr->GetDeviceId();
+						QByteArray deviceId = hardwareProductPtr->GetObjectUuid();
 						result << deviceId;
 					}
 				}

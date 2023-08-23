@@ -36,10 +36,14 @@ istd::IChangeable* CHardwareProductBindingControllerComp::CreateObject(
 
 	hardwareProductBindingPtr->SetHardwareId(objectId);
 
-	if (itemModel.ContainsKey("SoftwareIds")){
-		QByteArray softwareIds = itemModel.GetData("SoftwareIds").toByteArray();
+	if (itemModel.ContainsKey("SoftwareLinks")){
+		imtbase::CTreeItemModel *linksModel = itemModel.GetTreeItemModel("SoftwareLinks");
 
-		hardwareProductBindingPtr->SetSoftwareIds(softwareIds.split(';'));
+		for (int linkIndex = 0; linkIndex < linksModel->GetItemsCount(); linksModel++){
+			QByteArray softwareId = linksModel->GetData("softwareId", linkIndex).toByteArray();
+			QByteArray hardwareId = linksModel->GetData("hardwareId", linkIndex).toByteArray();
+			hardwareProductBindingPtr->Bind(softwareId);
+		}
 	}
 
 	return hardwareProductBindingPtr.PopPtr();

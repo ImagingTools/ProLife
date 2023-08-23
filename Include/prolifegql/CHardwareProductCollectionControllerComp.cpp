@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtlic/IHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -44,13 +44,13 @@ imtbase::CTreeItemModel* CHardwareProductCollectionControllerComp::ListObjects(c
 				for (const imtbase::IObjectCollection::Id& productId : productIds){
 					imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
 					if (productCollectionPtr->GetObjectData(productId, hardwareProductDataPtr)){
-						const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
+						const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
 						if (hardwareProductPtr != nullptr){
 							QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
 							if (softwareId.isEmpty()){
 								int index = itemsModelPtr->InsertNewItem();
 
-								QByteArray deviceId = hardwareProductPtr->GetDeviceId();
+								QByteArray deviceId = hardwareProductPtr->GetObjectUuid();
 								QByteArray hardwareProductId = hardwareProductPtr->GetProductId();
 
 								itemsModelPtr->SetData("Id", productId, index);

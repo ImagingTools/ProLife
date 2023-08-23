@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,6 +17,11 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderedIdentifiableSoftwareInstanceInfo" PackageId="ProLifeDataPck" ComponentId="OrderedIdentifiableSoftwareInstanceInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
@@ -46,7 +51,7 @@
                     <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>CompanyInfo</Value>
+                                <Value>OrderedIdentifiableSoftwareInstanceInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -60,11 +65,34 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypes" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Types"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareProducts"/>
+                        <Data IsEnabled="true" Value="SoftwareInstances"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Types" PackageId="BasePck" ComponentId="SelectionConstraints">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DocumentInfo</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DocumentInfo</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

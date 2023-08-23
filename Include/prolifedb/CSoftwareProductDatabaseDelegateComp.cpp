@@ -11,6 +11,7 @@
 
 //ProLife includes
 #include <prolifedata/COrderInfo.h>
+#include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 
 
 namespace prolifedb
@@ -58,8 +59,10 @@ istd::IChangeable* CSoftwareProductDatabaseDelegateComp::CreateObjectFromRecord(
 	istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderInfoPtr;
 	orderInfoPtr.SetPtr(new prolifedata::CIdentifiableOrderInfo());
 
-	istd::TDelPtr<imtlic::CIdentifiableSoftwareInstanceInfo> productInstancePtr;
-	productInstancePtr.SetPtr(new imtlic::CIdentifiableSoftwareInstanceInfo());
+//	istd::TDelPtr<imtlic::CIdentifiableSoftwareInstanceInfo> productInstancePtr;
+//	productInstancePtr.SetPtr(new imtlic::CIdentifiableSoftwareInstanceInfo());
+	istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> productInstancePtr;
+	productInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo());
 
 	if (record.contains("Document")){
 		QByteArray productJson = record.value(qPrintable("Document")).toByteArray();
@@ -103,23 +106,35 @@ istd::IChangeable* CSoftwareProductDatabaseDelegateComp::CreateObjectFromRecord(
 QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	// COALESCE (NULLIF()) - Replacing all null values with an empty string
-	return R"(SELECT * FROM
-				(SELECT
-					"Product"->'Data'->>'SerialNumber' as "SerialNumber",
-					"Product"->'Data'->>'Uuid' as "DocumentId",
-					"DocumentId" as "OrderUuid",
-					"Document"->>'OrderId' as "OrderId",
-					(SELECT "Document"->>'Name' FROM "Accounts" WHERE "Accounts"."IsActive" = true AND "Accounts"."DocumentId" = orders."Document"->>'OrderCustomer') as "Customer",
-					"Product"->'Data' as "Document",
-					COALESCE (
-						NULLIF ((SELECT "Document"->>'MacAddress' FROM "Devices" WHERE "Devices"."IsActive" = true AND "Devices"."DocumentId" =
-							(SELECT "HardwareProduct"->'Data'->>'DeviceId' as "HardwareId" FROM "Orders" as "HardwareOrders", jsonb_array_elements("Document"->'Products'->'ObjectsList') as "HardwareProduct"
-								WHERE "HardwareProduct"->>'TypeId' = 'Hardware' AND "HardwareProduct"->'Data'->>'SoftwareId' = "Product"->'Data'->>'Uuid' AND "HardwareOrders"."IsActive" = true LIMIT 1)), ''), '') as "DeviceId",
-					"IsActive"
-					FROM "Orders" as orders, jsonb_array_elements("Document"->'Products'->'ObjectsList') as "Product"
-				WHERE "Product"->>'TypeId' = 'Software' AND "IsActive" = true
-				) t
-			WHERE "IsActive" = true )";
+//	return R"(SELECT * FROM
+//				(SELECT
+//					"Product"->'Data'->>'SerialNumber' as "SerialNumber",
+//					"Product"->'Data'->>'Uuid' as "DocumentId",
+//					"DocumentId" as "OrderUuid",
+//					"Document"->>'OrderId' as "OrderId",
+//					(SELECT "Document"->>'Name' FROM "Accounts" WHERE "Accounts"."IsActive" = true AND "Accounts"."DocumentId" = orders."Document"->>'OrderCustomer') as "Customer",
+//					"Product"->'Data' as "Document",
+//					COALESCE (
+//						NULLIF ((SELECT "Document"->>'MacAddress' FROM "Devices" WHERE "Devices"."IsActive" = true AND "Devices"."DocumentId" =
+//							(SELECT "HardwareProduct"->'ID' as "HardwareId" FROM "Orders" as "HardwareOrders", jsonb_array_elements("Document"->'Products'->'ObjectsList') as "HardwareProduct"
+//								WHERE "HardwareProduct"->>'TypeId' = 'Hardware' AND "HardwareProduct"->'Data'->>'SoftwareId' = "Product"->'Data'->>'Uuid' AND "HardwareOrders"."IsActive" = true LIMIT 1)), ''), '') as "DeviceId",
+//					"IsActive"
+//					FROM "Orders" as orders, jsonb_array_elements("Document"->'Products'->'ObjectsList') as "Product"
+//				WHERE "Product"->>'TypeId' = 'Software' AND "IsActive" = true
+//				) t
+//			WHERE "IsActive" = true )";
+	return R"( SELECT si."DocumentId",  si."Document"->>'SerialNumber' as "SerialNumber",  si."Document"->>'OrderId' as "OrderUuid",
+ bp."Document"->>'HardwareId'  as "DeviceUuid",
+ ord."Document"->>'OrderId' as "OrderId",
+ acc."Document"->>'Name' as "Customer",
+ dev."Document"->>'MacAddress'  as "DeviceId",
+ si."Document"
+ FROM "SoftwareInstances" as si
+ LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds'->>0 = si."DocumentId" AND bp."IsActive"=true
+ LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
+ LEFT JOIN "Orders" as ord ON ord."DocumentId"=si."Document"->>'OrderId' AND ord."IsActive"=true
+ LEFT JOIN "Accounts" as acc ON acc."IsActive" = true AND acc."DocumentId" = ord."Document"->>'OrderCustomer'
+ WHERE si."IsActive"=true )";
 }
 
 
@@ -190,10 +205,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					if (isEqual){
-						filterQuery += QString("\"%1\" = '%2'").arg(qPrintable(key)).arg(value);
+						filterQuery += "dev.\"Document\"->>'MacAddress' = '' or dev.\"Document\"->>'MacAddress' is null";
 					}
 					else{
-						filterQuery += QString("\"%1\" != '%2'").arg(qPrintable(key)).arg(value);
+						filterQuery += "dev.\"Document\"->>'MacAddress' != ''";
 					}
 				}
 			}
@@ -229,7 +244,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
-			sortQuery = QString("ORDER BY \"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+			sortQuery = QString("ORDER BY si.\"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 	}
 
@@ -254,12 +269,22 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 			}
 
 			QByteArray columnId = filteringColumnIds[i];
-			if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer"){
-				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+
+			QString shortTableName = "si";
+			if (columnId == "OrderId"){
+				shortTableName = "ord";
 			}
-			else{
-				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+			if (columnId == "DeviceId"){
+				shortTableName = "dev";
 			}
+			if (columnId == "Customer"){
+				shortTableName = "acc";
+			}
+			if (columnId == "DeviceUuid"){
+				shortTableName = "bp";
+			}
+
+			textFilterQuery += QString("%1.\"Document\"->>'%2' ILIKE '%%3%'").arg(shortTableName).arg(qPrintable(columnId)).arg(textFilter);
 		}
 	}
 

@@ -300,9 +300,17 @@ Item {
     function updateHeaders(){
         headersModel.Clear();
 
+//        let index = headersModel.InsertNewItem();
+//        headersModel.SetData("Id", "ProductId", index);
+//        headersModel.SetData("Name", qsTr("Product"), index);
+
         let index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "ProductId", index);
-        headersModel.SetData("Name", qsTr("Product"), index);
+        headersModel.SetData("Id", "LicenseName", index);
+        headersModel.SetData("Name", qsTr("License name"), index);
+
+        index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "LicenseId", index);
+        headersModel.SetData("Name", qsTr("License-ID"), index);
 
         index = headersModel.InsertNewItem();
         headersModel.SetData("Id", "OrderId", index);

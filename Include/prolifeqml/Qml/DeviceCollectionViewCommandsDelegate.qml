@@ -6,6 +6,7 @@ CollectionViewCommandsDelegateBase {
     id: container;
 
     property bool filterByNewActive: false;
+    property string filterLicense: "";
 
     onSelectionChanged: {
         let elementsModel = container.tableData.elements;
@@ -49,6 +50,12 @@ CollectionViewCommandsDelegateBase {
     }
 
     onCommandActivated: {
+        let filterModel = container.collectionViewBase.modelFilter;
+        let licenseFilter = filterModel.GetData("LicenseFilter");
+        if (!licenseFilter){
+            licenseFilter = filterModel.AddTreeModel("LicenseFilter")
+        }
+
         if (commandId === "Bind"){
             let indexes = container.tableData.getSelectedIndexes();
             let elementsModel = container.tableData.elements;
@@ -92,6 +99,53 @@ CollectionViewCommandsDelegateBase {
             }
 
             container.filterByNewActive = !container.filterByNewActive;
+            container.collectionViewBase.updateGui();
+        }
+
+        else if (commandId === "WithLicense"){
+            let index = commandsProvider.getCommandIndex("WithLicense");
+            let withoutLicenseindex = commandsProvider.getCommandIndex("WithoutLicense");
+            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
+
+            isToggled = !isToggled
+
+            commandsProvider.commandsModel.SetData("IsToggled", isToggled, index);
+
+            if (isToggled){
+                licenseFilter.SetData("Key", "Status");
+                licenseFilter.SetData("Value", "WithLicense");
+                commandsProvider.commandsModel.SetData("IsToggled", false, withoutLicenseindex);
+                container.filterLicense = commandsProvider.commandsModel.GetData("Name", index);
+            }
+            else{
+                licenseFilter.SetData("Key", "Status");
+                licenseFilter.SetData("Value", "None");
+                container.filterLicense = ""
+            }
+
+            container.collectionViewBase.updateGui();
+        }
+
+        else if (commandId === "WithoutLicense"){
+            let index = commandsProvider.getCommandIndex("WithoutLicense");
+            let withLicenseindex = commandsProvider.getCommandIndex("WithLicense");
+            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
+
+            isToggled = !isToggled
+            commandsProvider.commandsModel.SetData("IsToggled", isToggled, index);
+
+            if (isToggled){
+                licenseFilter.SetData("Key", "Status");
+                licenseFilter.SetData("Value", "WithoutLicense");
+                commandsProvider.commandsModel.SetData("IsToggled", false, withLicenseindex);
+                container.filterLicense = commandsProvider.commandsModel.GetData("Name", index);
+            }
+            else{
+                licenseFilter.SetData("Key", "Status");
+                licenseFilter.SetData("Value", "None");
+                container.filterLicense = ""
+            }
+
             container.collectionViewBase.updateGui();
         }
 

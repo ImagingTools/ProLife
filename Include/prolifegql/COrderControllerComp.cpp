@@ -404,7 +404,7 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(const imtbas
 		}
 	}
 
-	hardwareInstancePtr->SetDeviceId(deviceId);
+	hardwareInstancePtr->SetObjectUuid(deviceId);
 
 	if (hardwareProductModel.ContainsKey("PairId", modelIndex)){
 		QByteArray pairId = hardwareProductModel.GetData("PairId", modelIndex).toByteArray();
@@ -467,11 +467,11 @@ void COrderControllerComp::InsertSoftwareProductToModel(const imtbase::IIdentifi
 
 void COrderControllerComp::InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel, int modelIndex) const
 {
-	const imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(&identifiable);
+	const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(&identifiable);
 	if (hardwareProductPtr != nullptr){
 		hardwareProductModel.SetData("Id", identifiable.GetObjectUuid(), modelIndex);
 		hardwareProductModel.SetData("PairId", hardwareProductPtr->GetSoftwareId(), modelIndex);
-		hardwareProductModel.SetData("DeviceId", hardwareProductPtr->GetDeviceId(), modelIndex);
+		hardwareProductModel.SetData("DeviceId", hardwareProductPtr->GetObjectUuid(), modelIndex);
 		hardwareProductModel.SetData("ProductId", hardwareProductPtr->GetProductId(), modelIndex);
 		hardwareProductModel.SetData("CategoryId", hardwareProductPtr->GetFactoryId(), modelIndex);
 		hardwareProductModel.SetData("ModelTypeId", hardwareProductPtr->GetModelTypeId(), modelIndex);

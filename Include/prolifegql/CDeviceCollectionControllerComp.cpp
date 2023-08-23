@@ -59,6 +59,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 	}
 
 	iprm::CParamsSet objectFilter;
+	iprm::CParamsSet licenseFilter;
 
 	iprm::CParamsSet accountFilter;
 	iprm::CParamsSet groups;
@@ -185,10 +186,27 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 					}
 					objectFilter.SetEditableParameter(key, textParamPtr.PopPtr());
 				}
+
+				imtbase::CTreeItemModel* licenseFilterPtr = generalModel.GetTreeItemModel("LicenseFilter");
+				if (licenseFilterPtr != nullptr){
+					QByteArray key;
+					if (licenseFilterPtr->ContainsKey("Key")){
+						key = licenseFilterPtr->GetData("Key").toByteArray();
+					}
+
+					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+					if (licenseFilterPtr->ContainsKey("Value")){
+						QString value = licenseFilterPtr->GetData("Value").toString();
+						textParamPtr->SetText(value);
+					}
+					objectFilter.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
+				}
+
 			}
 
 			filterParams.SetEditableParameter("Filter", &m_filter);
 			filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
+			filterParams.SetEditableParameter("LicenseFilter", &licenseFilter);
 
 			this->SetAdditionalFilters(*viewParamsGql, &filterParams);
 		}
@@ -264,6 +282,7 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 
 		if (deviceInfoPtr != nullptr){
 			QByteArray collectionId = objectCollectionIterator->GetObjectId();
+			int licenseCount = 0;
 
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
@@ -360,6 +379,10 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 
 				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
 			}
+
+			QVariant  softwareLinksCount = objectCollectionIterator->GetElementInfo("SoftwareLinksCount").toInt();
+			retVal = retVal && model.SetData("SoftwareLinksCount", softwareLinksCount, itemIndex);
+
 
 			return true;
 		}

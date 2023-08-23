@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5082" Description="ACF"/>
-            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -36,33 +36,37 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
-                <Element ComponentName="Bind" X="75" Y="600" Note=""/>
+                <Element ComponentName="Bind" X="75" Y="650" Note=""/>
                 <Element ComponentName="BindPermissions" X="725" Y="450" Note=""/>
                 <Element ComponentName="CheckPermissionOr" X="700" Y="225" Note=""/>
                 <Element ComponentName="Commands" X="300" Y="225" Note=""/>
                 <Element ComponentName="CommandsJoiner" X="1025" Y="375" Note=""/>
                 <Element ComponentName="CommandsRepresentation" X="1050" Y="225" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="250" Y="450" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="450" Y="450" Note=""/>
                 <Element ComponentName="CreateLicenseFilePermissions" X="1025" Y="450" Note=""/>
                 <Element ComponentName="DeviceCollectionCommandsController" X="625" Y="75" Note=""/>
-                <Element ComponentName="Edit" X="75" Y="750" Note=""/>
+                <Element ComponentName="Edit" X="75" Y="525" Note=""/>
                 <Element ComponentName="EditPermissions" X="1025" Y="725" Note=""/>
-                <Element ComponentName="Empty" X="250" Y="375" Note=""/>
+                <Element ComponentName="Empty" X="445.757359313" Y="375" Note=""/>
                 <Element ComponentName="New" X="75" Y="450" Note=""/>
                 <Element ComponentName="NewPermissions" X="1025" Y="600" Note=""/>
-                <Element ComponentName="OpenOrder" X="75" Y="525" Note=""/>
+                <Element ComponentName="OpenOrder" X="75" Y="575" Note=""/>
                 <Element ComponentName="OpenOrderPermissions" X="1025" Y="650" Note=""/>
                 <Element ComponentName="Remove" X="75" Y="375" Note=""/>
                 <Element ComponentName="RemovePermissions" X="1025" Y="525" Note=""/>
-                <Element ComponentName="ShowNew" X="75" Y="675" Note=""/>
+                <Element ComponentName="ShowNew" X="75" Y="725" Note=""/>
                 <Element ComponentName="ShowNewPermissions" X="1025" Y="800" Note=""/>
+                <Element ComponentName="WithLicense" X="250" Y="375" Note=""/>
+                <Element ComponentName="WithLicensePermissions" X="725" Y="525" Note=""/>
+                <Element ComponentName="WithoutLicense" X="250" Y="450" Note=""/>
+                <Element ComponentName="WithoutLicensePermissions" X="725" Y="600" Note=""/>
             </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

@@ -25,6 +25,11 @@ I_EXPORT_COMPONENT(
 			"Hardware Product Binding Info");
 
 I_EXPORT_COMPONENT(
+			OrderedIdentifiableSoftwareInstanceInfo,
+			"Ordered identifiable software instance info",
+			"Ordered Identifiable Software Instance Info");
+
+I_EXPORT_COMPONENT(
 			DeviceInfo,
 			"Device information",
 			"Device Information Authority");

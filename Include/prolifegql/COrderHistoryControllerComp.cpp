@@ -10,7 +10,7 @@
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/IIdentifiable.h>
 #include <imtlic/IProductInstanceInfo.h>
-#include <imtlic/IHardwareInstanceInfo.h>
+#include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -245,9 +245,9 @@ void COrderHistoryControllerComp::GenerateDifferences(
 					}
 				}
 
-				const imtlic::IHardwareInstanceInfo* prevHardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(prevProductIdentifiablePtr);
+				const imtlic::CIdentifiableHardwareInstanceInfo* prevHardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(prevProductIdentifiablePtr);
 				if (prevHardwareProductPtr != nullptr){
-					const imtlic::IHardwareInstanceInfo* currentHardwareProductPtr = dynamic_cast<const imtlic::IHardwareInstanceInfo*>(currentProductIdentifiablePtr);
+					const imtlic::CIdentifiableHardwareInstanceInfo* currentHardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(currentProductIdentifiablePtr);
 					if (currentHardwareProductPtr != nullptr){
 						QByteArray prevProductId = prevHardwareProductPtr->GetProductId();
 						QByteArray currentProductId = currentHardwareProductPtr->GetProductId();
@@ -255,8 +255,8 @@ void COrderHistoryControllerComp::GenerateDifferences(
 							isUpdated = true;
 						}
 
-						QByteArray prevDeviceId = prevHardwareProductPtr->GetDeviceId();
-						QByteArray currentDeviceId = currentHardwareProductPtr->GetDeviceId();
+						QByteArray prevDeviceId = prevHardwareProductPtr->GetObjectUuid();
+						QByteArray currentDeviceId = currentHardwareProductPtr->GetObjectUuid();
 						if (prevDeviceId != currentDeviceId){
 							isUpdated = true;
 						}

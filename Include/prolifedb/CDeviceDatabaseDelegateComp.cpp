@@ -55,7 +55,9 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	return QString("SELECT \"Id\", \"%1\", \"Document\", \"RevisionNumber\", \"LastModified\","
 					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
-					"(SELECT \"Document\"->>'OrderId' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderId') as \"OrderId\""
+					"(SELECT \"Document\"->>'OrderId' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderId') as \"OrderId\","
+					" (SELECT jsonb_array_length(\"Document\"->'SoftwareIds')  FROM \"BindingProducts\" as t3 "
+					" WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" ) as \"SoftwareLinksCount\" "
 					" FROM \"%2\""
 					" as t2 WHERE \"IsActive\" = true")
 			.arg(qPrintable(*m_objectIdColumnAttrPtr))
@@ -111,6 +113,33 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
 
+			if (key == "LicenseStatus"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+
+				if (value == "None"){
+					continue;
+				}
+
+				if (i > 0){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
+
+				if (value == "WithoutLicense"){
+					filterQuery += " is null";
+				}
+				else{
+					filterQuery += " > 0";
+				}
+				continue;
+			}
+
 			if (i > 0){
 				filterQuery += " AND ";
 			}
@@ -150,6 +179,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				QString value = textParamPtr->GetText();
 				filterQuery += QString("\"Document\"->>'%1' = '%2'").arg(qPrintable(key)).arg(value);
 			}
+
 		}
 
 		if (!filterQuery.isEmpty()){
