@@ -9,20 +9,24 @@ Item {
 
     property int contentHeight: bodyColumn.height;
 
-    property alias collectionModel: softwareProductCollection.collectionModel;
-    property alias table: softwareProductsTable;
+//    property alias collectionModel: softwareProductCollection.collectionModel;
+//    property alias table: softwareProductsTable;
 
     property TreeItemModel bindingModel: TreeItemModel {}
 
     property string productId: ""
 
+    property string hardwareId: "";
+
     signal checkedItemsChanged();
     signal modelChanged();
 
+
+
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
-
-        softwareProductCollection.updateModel();
+        console.log("DEBUG::24",softwareProductCollection.modelFilter.toJSON())
+//        softwareProductCollection.updateModel();
 
         bindingModel.dataChanged.connect(productEditor.modelChanged);
     }
@@ -98,9 +102,9 @@ Item {
         }
 
         let selectedProductIds = []
-        let indexes = softwareProductsTable.getCheckedItems();
+        let indexes = softwareProductCollection.table.getCheckedItems();
         for (let index of indexes){
-            let id = softwareProductsTable.elements.GetData("Id", index);
+            let id = softwareProductCollection.table.elements.GetData("Id", index);
             selectedProductIds.push(id)
         }
 
@@ -112,96 +116,13 @@ Item {
         id: productsModel;
     }
 
-    function getCurrentSoftwareProductId(){
-        let retVal = ""
-        if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
-            let software = productEditor.bindingModel.GetData("SoftwareIds");
-            let softwareIds = software.split(';')
 
-            if (softwareIds.length > 0){
-                for (let i = 0; i < softwareProductCollection.collectionModel.GetItemsCount(); i++){
-                    let id = softwareProductCollection.collectionModel.GetData("Id", i);
-                    if (softwareIds.includes(id)){
-                        let productId = softwareProductCollection.collectionModel.GetData("ProductId", i);
-                        return productId;
-                    }
-                }
-            }
-        }
-
-        return retVal;
-    }
-
-    function createProductsModel(){
-        productsModel.Clear();
-
-        let productIds = []
-
-        for (let i = 0; i < softwareProductCollection.collectionModel.GetItemsCount(); i++){
-            let productId = softwareProductCollection.collectionModel.GetData("ProductId", i);
-
-            if (!productIds.includes(productId)){
-                productIds.push(productId);
-            }
-        }
-
-        for (let productId of productIds){
-            let index = productsModel.InsertNewItem();
-
-            productsModel.SetData("Id", productId, index);
-        }
-
-        productsCB.model = productsModel;
-    }
-
-    TreeItemModel {
-        id: elementsModel;
-    }
-
-    function createElementsModel(productId){
-        elementsModel.Clear();
-
-        for (let i = 0; i < softwareProductCollection.collectionModel.GetItemsCount(); i++){
-            let currentProductId = softwareProductCollection.collectionModel.GetData("ProductId", i);
-             if (currentProductId === productId){
-                 let index = elementsModel.InsertNewItem();
-
-                 elementsModel.CopyItemDataFromModel(index, softwareProductCollection.collectionModel, i)
-             }
-        }
-
-        softwareProductsTable.elements = elementsModel;
-    }
-
-    CollectionDataProvider {
-        id: softwareProductCollection;
-
-        commandId: "SoftwareProducts";
-
-        fields: ["Id", "ProductId", "OrderId", "SerialNumber", "Customer"]
-
-        property bool modelReady: false;
-
-        onModelUpdated: {
-            productEditor.createProductsModel();
-            softwareProductCollection.modelReady = true;
-        }
-
-        onStateModelChanged: {
-            if (softwareProductCollection.stateModel === "Loading"){
-                loading.start();
-            }
-            else{
-                loading.stop();
-            }
-        }
-    }
 
     Column {
         id: bodyColumn;
 
         anchors.verticalCenter: parent.verticalCenter;
-        anchors.right: parent.right;
+        anchors.right: parent.horizontalCenter;
         anchors.left: parent.left;
         anchors.rightMargin: productEditor.margin;
         anchors.leftMargin: productEditor.margin;
@@ -248,30 +169,110 @@ Item {
             visible: productsCB.currentIndex < 0;
         }
 
-        AuxTable {
-            id: softwareProductsTable;
-
+        Rectangle{
             width: parent.width;
-            height: 500;
+            height: 400;
 
-            radius: 0;
+            CollectionViewBase {
+                id: softwareProductCollection;
+                anchors.fill: parent
 
-            isMultiSelect: false;
+                defaultSortHeaderIndex: 2;
 
-            checkable: true;
+                commands.headerInfoModel: headerInfoModel
 
-            cacheBuffer: 10000;
-
-            onCheckedItemsChanged: {
-                if (productEditor.blockUpdatingModel){
-                    return;
+                GqlModel {
+                    id: headerInfoModel
+                    function updateModel(){
+                        softwareProductCollection.commands.itemsInfoModel.updateModel();
+                    }
                 }
 
-                productEditor.updateModel();
+                property MainDocumentManager mainDocumentManager: null;
 
-                productEditor.checkedItemsChanged();
+                Component.onCompleted: {
+                    console.log("DEBUG::29")
+                    softwareProductCollection.pagination.countElements = 9
+                    softwareProductCollection.loadData = false;
+                    softwareProductCollection.table.checkable = true
+                    softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
+                }
+
+                function checkedItemsChanged(){
+                    let selectedProductIds = []
+                    let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
+                    if (softwareIds != ""){
+                        selectedProductIds = softwareIds.split(';')
+                    }
+                    console.log("DEBUG::41_1", selectedProductIds)
+                    let indexes = softwareProductCollection.table.getCheckedItems();
+                    if (indexes.length === 0){
+                        return
+                    }
+                     for (let index of indexes){
+                         let id = softwareProductCollection.table.elements.GetData("Id", index);
+                         if (!selectedProductIds.includes(id)){
+                             selectedProductIds.push(id)
+                             let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+                             bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+                         }
+                     }
+                     let products = selectedProductIds.join(';');
+                     productEditor.bindingModel.SetData("SoftwareIds", products)
+                     console.log("DEBUG::41_2", products, selectedProductIds)
+                     updateData()
+                     softwareProductCollection.table.properties.clearCheckedItems()
+                }
+
+                onHeadersChanged: {
+                    console.log("DEBUG::26", softwareProductCollection.modelFilter.toJSON())
+                    console.log("DEBUG::27",  softwareProductCollection.tableHeaders.toJSON())
+                    console.log("DEBUG::28", softwareProductCollection.commands.headers.toJSON())
+                }
+
+                function updateData() {
+                    if (visible){
+                        console.log("DEBUG::30", softwareProductCollection.modelFilter.toJSON())
+                        let objectFilter =  softwareProductCollection.modelFilter.AddTreeModel("ObjectFilter")
+                        objectFilter.SetData("Key", "DeviceId");
+                        objectFilter.SetData("Value", "");
+                        objectFilter.SetData("IsEqual", true);
+                        console.log("onCompleted filterModel", softwareProductCollection.modelFilter.toJSON());
+                        let filterIdsModel = softwareProductCollection.modelFilter.GetData("FilterIds")
+                        filterIdsModel.Clear();
+
+                        for(var i = 0; i < softwareProductCollection.commands.headers.GetItemsCount(); i++){
+                            let headerId = softwareProductCollection.commands.headers.GetData("Id", i);
+                            if (!softwareProductCollection.commands.fieldsData.includes(headerId)){
+                                softwareProductCollection.commands.fieldsData.push(headerId);
+                            }
+                            filterIdsModel.InsertNewItem()
+                            filterIdsModel.SetData("Id", headerId, i);
+
+                        }
+                        let products = ""
+                        for(var i = 0; i < bindingProductsCollection.table.elements.GetItemsCount(); i++){
+                            let id = bindingProductsCollection.table.elements.GetData("Id", i);
+                            if (i > 0){
+                                products += ";"
+                            }
+                            products += id
+                        }
+
+//                        let products = productEditor.bindingModel.GetData("SoftwareIds")
+                        if (products != ""){
+                            objectFilter.SetData("ExcludeIds", products);
+                        }
+
+                        softwareProductCollection.commandsId = "SoftwareProducts"
+                        softwareProductCollection.commands.itemsInfoModel.updateModel();
+                        console.log("DEBUG::31", softwareProductCollection.modelFilter.toJSON())
+                    }
+                }
+
             }
         }
+
 
         BaseText {
             id: message;
@@ -279,6 +280,138 @@ Item {
 
             visible: false;
         }
+    }
+
+    Column {
+        anchors.bottom: bodyColumn.bottom;
+        anchors.right: parent.right;
+        anchors.left: parent.horizontalCenter;
+        anchors.rightMargin: productEditor.margin;
+        anchors.leftMargin: productEditor.margin;
+
+        Rectangle{
+            width: parent.width;
+            height: 400;
+
+            CollectionViewBase {
+                id: bindingProductsCollection;
+                anchors.fill: parent
+
+                defaultSortHeaderIndex: 2;
+
+                property MainDocumentManager mainDocumentManager: null;
+
+                commands.headerInfoModel: headerInfoBindingModel
+
+                GqlModel {
+                    id: headerInfoBindingModel
+                    function updateModel(){
+                        bindingProductsCollection.commands.itemsInfoModel.updateModel();
+                    }
+                }
+
+                Component.onCompleted: {
+                    console.log("DEBUG::29")
+                    bindingProductsCollection.pagination.countElements = 9
+                    bindingProductsCollection.loadData = false;
+                    bindingProductsCollection.table.checkable = true
+                    bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
+                }
+
+                onVisibleChanged: {
+                    if (visible){
+                        console.log("DEBUG::30", bindingProductsCollection.modelFilter.toJSON())
+                        let objectFilter =  bindingProductsCollection.modelFilter.AddTreeModel("ObjectFilter")
+//                        objectFilter.SetData("Key", "DeviceId");
+//                        objectFilter.SetData("Value", "");
+//                        objectFilter.SetData("IsEqual", false);
+                        console.log("onCompleted filterModel", bindingProductsCollection.modelFilter.toJSON());
+                        let filterIdsModel = bindingProductsCollection.modelFilter.GetData("FilterIds")
+                        filterIdsModel.Clear();
+
+                        for(let i = 0; i < bindingProductsCollection.commands.headers.GetItemsCount(); i++){
+                            let headerId = bindingProductsCollection.commands.headers.GetData("Id", i);
+                            if (!bindingProductsCollection.commands.fieldsData.includes(headerId)){
+                                bindingProductsCollection.commands.fieldsData.push(headerId);
+                            }
+                            filterIdsModel.InsertNewItem()
+                            filterIdsModel.SetData("Id", headerId, i);
+                        }
+                        console.log("DEBUG::40",productEditor.hardwareId)
+                        objectFilter.SetData("HardwareUuid", productEditor.hardwareId);
+                        bindingProductsCollection.commandsId = "SoftwareProducts"
+                        bindingProductsCollection.commands.itemsInfoModel.updateModel();
+                    }
+                }
+
+                onElementsChanged: {
+                    softwareProductCollection.updateData();
+                }
+
+                function checkedItemsChanged(){
+                    let selectedProductIds = []
+                    selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
+                    console.log("DEBUG::50", selectedProductIds)
+                    let indexes = bindingProductsCollection.table.getCheckedItems();
+                    if (indexes.length === 0){
+                        return
+                    }
+                     for (let i = indexes.length - 1; i > -1; i--){
+                         let index = indexes[i]
+                         let id = bindingProductsCollection.table.elements.GetData("Id", index);
+                         console.log("DEBUG::51", id, index)
+                         if (selectedProductIds.indexOf(id) > -1){
+                             console.log("DEBUG::52", index)
+                             bindingProductsCollection.table.elements.RemoveItem(index)
+                             selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+//                             delete selectedProductIds[selectedProductIds.indexOf(id)]
+                         }
+
+//                         selectedProductIds.push(id)
+//                         let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+//                         bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+
+//                         let keys = softwareProductCollection.table.elements.GetKeys()
+//                         console.log("DEBUG::41", bindingProductsCollection.table.elements.toJSON())
+                     }
+                     console.log("DEBUG::55", selectedProductIds)
+                     let products = selectedProductIds.join(';');
+                     productEditor.bindingModel.SetData("SoftwareIds", products)
+                     softwareProductCollection.updateData()
+                     bindingProductsCollection.table.properties.clearCheckedItems()
+                }
+
+
+
+
+            }
+        }
+
+//        AuxTable {
+//            id: bindingProductsTable;
+
+//            width: parent.width;
+//            height: 400;
+
+//            radius: 0;
+
+//            isMultiSelect: false;
+
+//            checkable: true;
+
+//            cacheBuffer: 10000;
+
+//            onCheckedItemsChanged: {
+////                if (productEditor.blockUpdatingModel){
+////                    return;
+////                }
+
+////                productEditor.updateModel();
+
+////                productEditor.checkedItemsChanged();
+//            }
+//        }
+
     }
 
     Loading {
@@ -324,7 +457,11 @@ Item {
         headersModel.SetData("Id", "Customer", index);
         headersModel.SetData("Name", qsTr("Customer"), index);
 
-        softwareProductsTable.headers = headersModel;
+        softwareProductCollection.commands.headers  = headersModel;
+        bindingProductsCollection.commands.headers = headersModel;
+
+//        softwareProductCollection.tableHeaders = headersModel;
+//        bindingProductsTable.headers = headersModel;
     }
 }//Container
 

@@ -123,7 +123,7 @@ void CDatabaseConverterComp::OnComponentCreated()
 						for (const QByteArray& productId : hardwareProductsIds){
 							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = mapHardware.value(productId);
 							QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-							QUuid deviceUuid = QUuid::fromRfc4122(deviceId);
+							QUuid deviceUuid = QUuid::fromString(QString(deviceId));
 							if (deviceId != deviceUuid.toString(QUuid::WithoutBraces).toUtf8()){
 								deviceId = deviceUuid.toString(QUuid::WithoutBraces).toUtf8();
 							}

@@ -7,7 +7,7 @@ import imtqml 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: 800;
+    width: root.width - 100;
 
     property var softwareIds: [];
     property string hardwareId: "";
@@ -52,14 +52,22 @@ Dialog {
     contentComp: Component {
         id: productPairEditor;
 
+//        onStatusChanged: {
+//            console.log("DEBUG::31", status, productBinding.modelFilter.toJSON())
+////            Component.Ready
+//        }
+
         HardwareProductBindingEditor {
             id: productBinding;
 
             height: contentHeight + 40;
 
+            hardwareId: productEditorDialog.hardwareId
+
             onModelChanged: {
                 productEditorDialog.buttons.setButtonState("Save", true);
             }
+
         }
     }
 

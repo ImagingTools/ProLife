@@ -105,32 +105,16 @@ istd::IChangeable* CSoftwareProductDatabaseDelegateComp::CreateObjectFromRecord(
 
 QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	// COALESCE (NULLIF()) - Replacing all null values with an empty string
-//	return R"(SELECT * FROM
-//				(SELECT
-//					"Product"->'Data'->>'SerialNumber' as "SerialNumber",
-//					"Product"->'Data'->>'Uuid' as "DocumentId",
-//					"DocumentId" as "OrderUuid",
-//					"Document"->>'OrderId' as "OrderId",
-//					(SELECT "Document"->>'Name' FROM "Accounts" WHERE "Accounts"."IsActive" = true AND "Accounts"."DocumentId" = orders."Document"->>'OrderCustomer') as "Customer",
-//					"Product"->'Data' as "Document",
-//					COALESCE (
-//						NULLIF ((SELECT "Document"->>'MacAddress' FROM "Devices" WHERE "Devices"."IsActive" = true AND "Devices"."DocumentId" =
-//							(SELECT "HardwareProduct"->'ID' as "HardwareId" FROM "Orders" as "HardwareOrders", jsonb_array_elements("Document"->'Products'->'ObjectsList') as "HardwareProduct"
-//								WHERE "HardwareProduct"->>'TypeId' = 'Hardware' AND "HardwareProduct"->'Data'->>'SoftwareId' = "Product"->'Data'->>'Uuid' AND "HardwareOrders"."IsActive" = true LIMIT 1)), ''), '') as "DeviceId",
-//					"IsActive"
-//					FROM "Orders" as orders, jsonb_array_elements("Document"->'Products'->'ObjectsList') as "Product"
-//				WHERE "Product"->>'TypeId' = 'Software' AND "IsActive" = true
-//				) t
-//			WHERE "IsActive" = true )";
 	return R"( SELECT si."DocumentId",  si."Document"->>'SerialNumber' as "SerialNumber",  si."Document"->>'OrderId' as "OrderUuid",
  bp."Document"->>'HardwareId'  as "DeviceUuid",
  ord."Document"->>'OrderId' as "OrderId",
  acc."Document"->>'Name' as "Customer",
  dev."Document"->>'MacAddress'  as "DeviceId",
+ si."Document"->'Licenses'->0->'LicenseData'->'LicenseId' as "LicenseId",
+ si."Document"->'Licenses'->0->'LicenseData'->'LicenseName' as "LicenseName",
  si."Document"
  FROM "SoftwareInstances" as si
- LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds'->>0 = si."DocumentId" AND bp."IsActive"=true
+ LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
  LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
  LEFT JOIN "Orders" as ord ON ord."DocumentId"=si."Document"->>'OrderId' AND ord."IsActive"=true
  LEFT JOIN "Accounts" as acc ON acc."IsActive" = true AND acc."DocumentId" = ord."Document"->>'OrderCustomer'
@@ -157,13 +141,73 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				continue;
 			}
 
+			if (key == "LicenseStatus"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+
+				if (value == "None"){
+					continue;
+				}
+
+				if (index > 0){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += "bp.\"Document\"->'SoftwareIds'->>0";
+
+				if (value == "WithoutLicense"){
+					filterQuery += " is null";
+				}
+				else{
+					filterQuery += " != ''";
+				}
+				continue;
+			}
+
 			if (index > 0){
 				filterQuery += " AND ";
 			}
 
 			index++;
 
-			if (key == "Orders"){
+			if (key == "HardwareUuid"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "bp.\"Document\"->>'HardwareId' = '";
+					filterQuery += value.toUtf8();
+					filterQuery += "'";
+				}
+			}
+			else if (key == "ExcludeIds"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "si.\"DocumentId\" NOT IN (";
+					QStringList keys = value.split(';');
+					for (int index = 0; index < keys.count(); index++){
+						QString key = keys[index];
+						if (index > 0){
+							filterQuery += ",";
+						}
+						filterQuery += "'" + key.toUtf8() + "'";
+					}
+					filterQuery += ")";
+				}
+			}
+			else if (key == "Orders"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(key));
 				if (selectionPtr != nullptr){
 					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
@@ -205,7 +249,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					if (isEqual){
-						filterQuery += "dev.\"Document\"->>'MacAddress' = '' or dev.\"Document\"->>'MacAddress' is null";
+						filterQuery += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
 					}
 					else{
 						filterQuery += "dev.\"Document\"->>'MacAddress' != ''";

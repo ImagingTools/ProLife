@@ -1,6 +1,9 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
 
 
+// Acf includes
+#include <iprm/CTextParam.h>
+
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
 
@@ -127,6 +130,12 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 						elementInformation = "";
 					}
 				}
+				else if (informationId == "LicenseName"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseName").toByteArray();;
+				}
+				else if (informationId == "LicenseId"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId").toByteArray();;
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";
@@ -204,6 +213,40 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());
 	}
+
+	imtbase::CTreeItemModel* licenseFilterPtr = objectFilterModel.GetTreeItemModel("LicenseFilter");
+	if (licenseFilterPtr != nullptr){
+		QByteArray key;
+		if (licenseFilterPtr->ContainsKey("Key")){
+			key = licenseFilterPtr->GetData("Key").toByteArray();
+		}
+
+		istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+		if (licenseFilterPtr->ContainsKey("Value")){
+			QString value = licenseFilterPtr->GetData("Value").toString();
+			textParamPtr->SetText(value);
+		}
+		filterParams.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
+	}
+
+	if (objectFilterModel.ContainsKey("HardwareUuid")){
+		QByteArray hardwareUuid = objectFilterModel.GetData("HardwareUuid").toByteArray();
+		if (!hardwareUuid.isEmpty()){
+			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			textParamPtr->SetText(hardwareUuid);
+			filterParams.SetEditableParameter("HardwareUuid", textParamPtr.PopPtr());
+		}
+	}
+
+	if (objectFilterModel.ContainsKey("ExcludeIds")){
+		QByteArray hardwareUuid = objectFilterModel.GetData("ExcludeIds").toByteArray();
+		if (!hardwareUuid.isEmpty()){
+			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			textParamPtr->SetText(hardwareUuid);
+			filterParams.SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
+		}
+	}
+
 }
 
 
