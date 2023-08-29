@@ -84,11 +84,11 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 
 istd::IChangeable* CDeviceControllerComp::CreateObject(
-		const QList<imtgql::CGqlObject>& inputParams,
-		QByteArray& objectId,
-		QString& name,
-		QString& /*description*/,
-		QString &errorMessage) const
+			const QList<imtgql::CGqlObject>& inputParams,
+			QByteArray& objectId,
+			QString& name,
+			QString& /*description*/,
+			QString &errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		return nullptr;

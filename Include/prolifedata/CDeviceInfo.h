@@ -26,6 +26,8 @@ public:
 	virtual void SetMacAddress(const QByteArray& macAddress) override;
 	virtual QByteArray GetDeviceType() const override;
 	virtual void SetDeviceType(const QByteArray& deviceType) override;
+	virtual QByteArray GetConfigurationType() const override;
+	virtual void SetConfigurationType(const QByteArray& configurationType) override;
 	virtual QString GetDescription() const override;
 	virtual void SetDescription(const QString& description) override;
 	virtual DeviceProductionStatus GetDeviceProductionStatus() const override;
@@ -47,6 +49,7 @@ private:
 	QByteArray m_serialNumber;
 	QByteArray m_macAddress;
 	QByteArray m_deviceType;
+	QByteArray m_configurationType;
 	QString m_description;
 	DeviceProductionStatus m_status;
 };

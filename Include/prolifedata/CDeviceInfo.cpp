@@ -72,6 +72,22 @@ void CDeviceInfo::SetDeviceType(const QByteArray& deviceType)
 }
 
 
+QByteArray CDeviceInfo::GetConfigurationType() const
+{
+	return m_configurationType;
+}
+
+
+void CDeviceInfo::SetConfigurationType(const QByteArray& configurationType)
+{
+	if (m_configurationType != configurationType){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_configurationType = configurationType;
+	}
+}
+
+
 QString CDeviceInfo::GetDescription() const
 {
 	return m_description;
@@ -118,6 +134,12 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 {
 	istd::CChangeNotifier notifier(archive.IsStoring() ? nullptr : this);
 
+	const iser::IVersionInfo& versionInfo = archive.GetVersionInfo();
+	quint32 imtCoreVersion;
+	if (!versionInfo.GetVersionNumber(imtcore::VI_IMTCORE, imtCoreVersion)){
+		imtCoreVersion = 0;
+	}
+
 	bool retVal = true;
 
 	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
@@ -134,6 +156,13 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.BeginTag(deviceTypeTag);
 	retVal = retVal && archive.Process(m_deviceType);
 	retVal = retVal && archive.EndTag(deviceTypeTag);
+
+	if (imtCoreVersion >= 7386){
+		static iser::CArchiveTag configurationTypeTag("ConfigurationType", "Configuration type", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(configurationTypeTag);
+		retVal = retVal && archive.Process(m_configurationType);
+		retVal = retVal && archive.EndTag(configurationTypeTag);
+	}
 
 	static iser::CArchiveTag descriptionTag("Description", "Description of the device", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(descriptionTag);

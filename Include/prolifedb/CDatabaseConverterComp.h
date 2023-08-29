@@ -20,6 +20,7 @@ public:
 	I_BEGIN_COMPONENT(CDatabaseConverterComp)
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
+		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_productInstanceCollectionCompPtr, "ProductInstanceCollection", "Product instance collection", true, "ProductInstanceCollection");
 	I_END_COMPONENT
 
@@ -31,6 +32,7 @@ protected:
 private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productInstanceCollectionCompPtr);
 };
 

@@ -2,15 +2,17 @@
 
 
 // Qt includes
-#include <QtCore/QDebug>>
+#include <QtCore/QDebug>
 
 // ImtCore includes
+#include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IOrderInfo.h>
+#include <prolifedata/IDeviceInfo.h>
 
 
 namespace prolifedb
@@ -30,7 +32,7 @@ void CDatabaseConverterComp::OnComponentCreated()
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::Ids orderObjectIds = m_orderCollectionCompPtr->GetElementIds();
 		for (const imtbase::IObjectCollection::Id& orderObjectId : orderObjectIds){
-			if (orderObjectId == "395e4ac9-1481-4305-9cce-0042903f4999"){
+			if (orderObjectId == "f5483879-3701-4bd6-8382-48c0ce4b3d44"){
 				qDebug() << "find";
 			}
 			imtbase::IObjectCollection::DataPtr orderDataPtr;
@@ -88,6 +90,7 @@ void CDatabaseConverterComp::OnComponentCreated()
 									orderedProductInstancePtr->SetOrderId(orderObjectId);
 									orderedProductInstancePtr->AddLicense(licenseInstancePtr->GetLicenseId(), licenseInstancePtr->GetExpiration());
 									orderedProductInstancePtr->SetObjectUuid(newProductUuid);
+
 									QByteArray serialNumber = productInstancePtr->GetSerialNumber();
 									if (!serialNumber.isEmpty() && index > 0){
 										serialNumber += QString("-%1").arg(index).toUtf8();
@@ -102,36 +105,60 @@ void CDatabaseConverterComp::OnComponentCreated()
 										istd::TDelPtr<prolifedata::CHardwareProductBinding> productBindingPtr;
 										productBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding);
 
-
 										productBindingPtr->SetHardwareId(deviceId);
-//										productBindingPtr->SetOrderId(orderObjectId);
-
 										productBindingPtr->Bind(newProductUuid);
 
 										m_bindingCollectionCompPtr->InsertNewObject("", "", "", productBindingPtr.GetPtr(), deviceId);
 
 										qDebug() << QString("Insert object into binding collection: ") << deviceId;
 									}
-
 								}
-
 							}
 						}
 
-						productCollectionPtr->ResetData();
+//						productCollectionPtr->ResetData();
 
 						for (const QByteArray& productId : hardwareProductsIds){
 							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = mapHardware.value(productId);
 							QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-							QUuid deviceUuid = QUuid::fromString(QString(deviceId));
-							if (deviceId != deviceUuid.toString(QUuid::WithoutBraces).toUtf8()){
-								deviceId = deviceUuid.toString(QUuid::WithoutBraces).toUtf8();
+//							QUuid deviceUuid = QUuid::fromString(QString(deviceId));
+//							if (deviceId != deviceUuid.toString(QUuid::WithoutBraces).toUtf8()){
+//								deviceId = deviceUuid.toString(QUuid::WithoutBraces).toUtf8();
+//							}
+
+							QByteArray modelTypeId = hardwareProductPtr->GetModelTypeId();
+
+							imtbase::IObjectCollection::DataPtr deviceDataPtr;
+							if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
+								prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
+								if (deviceInfoPtr != nullptr){
+									deviceInfoPtr->SetConfigurationType(modelTypeId);
+
+									m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr);
+								}
 							}
-							productCollectionPtr->InsertNewObject("Hardware","","",nullptr,hardwareProductPtr->GetDeviceId());
+
+							productCollectionPtr->RemoveElement(productId);
+
+							istd::TDelPtr<imtbase::CObjectLink> deviceLinkPtr;
+							deviceLinkPtr.SetPtr(new imtbase::CObjectLink);
+
+							deviceLinkPtr->SetFactoryId("Hardware");
+							deviceLinkPtr->SetObjectUuid(hardwareProductPtr->GetDeviceId());
+
+//							productCollectionPtr->InsertNewObject(deviceLinkPtr->GetFactoryId(), "", "", deviceLinkPtr.GetPtr(), hardwareProductPtr->GetDeviceId());
 						}
 
 						for (const QByteArray& productId : softwareProductsIds){
-							productCollectionPtr->InsertNewObject("Software","","",nullptr,productId);
+							productCollectionPtr->RemoveElement(productId);
+
+							istd::TDelPtr<imtbase::CObjectLink> softwareLinkPtr;
+							softwareLinkPtr.SetPtr(new imtbase::CObjectLink);
+
+							softwareLinkPtr->SetFactoryId("Software");
+							softwareLinkPtr->SetObjectUuid(productId);
+
+//							productCollectionPtr->InsertNewObject(softwareLinkPtr->GetFactoryId(), "", "", softwareLinkPtr.GetPtr(), productId);
 						}
 
 						m_orderCollectionCompPtr->SetObjectData(orderObjectId, *orderInfoPtr);
@@ -170,6 +197,8 @@ void CDatabaseConverterComp::OnComponentCreated()
 	}
 
 	qDebug() << "ProLife convertation finished!";
+
+	QCoreApplication::exit();
 }
 
 

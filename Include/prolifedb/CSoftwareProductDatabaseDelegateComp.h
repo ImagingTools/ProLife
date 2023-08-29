@@ -26,7 +26,6 @@ public:
 				int count = -1,
 				const iprm::IParamsSet* paramsPtr = nullptr) const override;
 	virtual QByteArray GetObjectIdFromRecord(const QSqlRecord& record) const override;
-	virtual istd::IChangeable* CreateObjectFromRecord(const QSqlRecord& record) const override;
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual QString GetBaseSelectionQuery() const override;

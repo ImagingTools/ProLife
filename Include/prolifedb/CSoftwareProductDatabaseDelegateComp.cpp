@@ -31,14 +31,16 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 	if (!objectId.isEmpty()){
 		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
 
-		QByteArray selectionQuery = QString("AND \"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
+		QByteArray selectionQuery = QString("AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
 
 		selectionQuery = baseQuery + selectionQuery;
 
 		return selectionQuery;
 	}
 
-	return BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+
+	return selectionQuery;
 }
 
 
@@ -51,53 +53,6 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetObjectIdFromRecord(const QSq
 	}
 
 	return QByteArray();
-}
-
-
-istd::IChangeable* CSoftwareProductDatabaseDelegateComp::CreateObjectFromRecord(const QSqlRecord& record) const
-{
-	istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderInfoPtr;
-	orderInfoPtr.SetPtr(new prolifedata::CIdentifiableOrderInfo());
-
-//	istd::TDelPtr<imtlic::CIdentifiableSoftwareInstanceInfo> productInstancePtr;
-//	productInstancePtr.SetPtr(new imtlic::CIdentifiableSoftwareInstanceInfo());
-	istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> productInstancePtr;
-	productInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo());
-
-	if (record.contains("Document")){
-		QByteArray productJson = record.value(qPrintable("Document")).toByteArray();
-
-		if (!ReadDataFromMemory("Software", productJson, *productInstancePtr)){
-			return nullptr;
-		}
-	}
-
-	if (record.contains("OrderUuid")){
-		QByteArray orderUuid = record.value(qPrintable("OrderUuid")).toByteArray();
-
-		orderInfoPtr->SetObjectUuid(orderUuid);
-	}
-
-	if (record.contains("OrderId")){
-		QByteArray orderId = record.value(qPrintable("OrderId")).toByteArray();
-
-		orderInfoPtr->SetOrderId(orderId);
-	}
-
-	if (record.contains("Customer")){
-		QByteArray customer = record.value(qPrintable("Customer")).toByteArray();
-
-		orderInfoPtr->SetCustomerId(customer);
-	}
-
-	QByteArray productObjectUuid = productInstancePtr->GetObjectUuid();
-
-	imtbase::IObjectCollection* productCollection = orderInfoPtr->GetProducts();
-	if (productCollection != nullptr){
-		productCollection->InsertNewObject(QByteArray("Software"), "", "", productInstancePtr.GetPtr(), productObjectUuid);
-	}
-
-	return orderInfoPtr.PopPtr();
 }
 
 
@@ -173,8 +128,20 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 			}
 
 			index++;
+			if (key == "OrderId"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
 
-			if (key == "HardwareUuid"){
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "si.\"Document\"->>'OrderId' = '";
+					filterQuery += value.toUtf8();
+					filterQuery += "'";
+				}
+			}
+			else if (key == "HardwareUuid"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
@@ -249,10 +216,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					if (isEqual){
-						filterQuery += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
+						filterQuery += QString("(si.\"Document\"->>'SerialNumber' = '%1')").arg(value);
 					}
 					else{
-						filterQuery += "dev.\"Document\"->>'MacAddress' != ''";
+						filterQuery += QString("si.\"Document\"->>'SerialNumber' != '%1'").arg(value);
 					}
 				}
 			}

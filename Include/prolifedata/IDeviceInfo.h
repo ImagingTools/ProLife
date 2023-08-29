@@ -79,6 +79,16 @@ public:
 	virtual void SetDeviceType(const QByteArray& deviceType) = 0;
 
 	/**
+		Get the configuration type of this device instance.
+	*/
+	virtual QByteArray GetConfigurationType() const = 0;
+
+	/**
+		Set the configuration type of this device instance.
+	*/
+	virtual void SetConfigurationType(const QByteArray& configurationType) = 0;
+
+	/**
 		Get the description of this device instance.
 	*/
 	virtual QString GetDescription() const = 0;

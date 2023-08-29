@@ -10,6 +10,7 @@
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 
 
 namespace prolifegql
@@ -33,65 +34,16 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::CIdentifiableOrderInfo* productOrderInfoPtr = nullptr;
+		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
 		if (objectCollectionIterator->GetObjectData(orderDataPtr)){
-			productOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderDataPtr.GetPtr());
+			productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(orderDataPtr.GetPtr());
 		}
 
 		if (productOrderInfoPtr != nullptr){
-			QByteArray orderUuid = productOrderInfoPtr->GetObjectUuid();
-			QByteArray serialNumber;
-			QByteArray productId;
-
-			imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
-			if (productCollectionPtr != nullptr){
-				imtbase::IObjectCollection::DataPtr productDataPtr;
-				if (productCollectionPtr->GetObjectData(collectionId, productDataPtr)){
-					imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-					if (softwareProductPtr != nullptr){
-						serialNumber = softwareProductPtr->GetSerialNumber();
-						productId = softwareProductPtr->GetProductId();
-					}
-				}
-			}
-
-//			QByteArray hardwareMacAddress;
-//			QByteArray hardwareUuid;
-//			if (m_orderCollectionCompPtr.IsValid() && m_deviceCollectionCompPtr.IsValid()){
-//				imtbase::IObjectCollection::DataPtr dataPtr;
-//				if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-//					prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-//					if (orderInfoPtr != nullptr){
-//						imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
-//						if (orderProductCollectionPtr != nullptr){
-//							imtbase::IObjectCollection::Ids productIds = orderProductCollectionPtr->GetElementIds();
-
-//							for (const imtbase::IObjectCollection::Id& productId : productIds){
-//								imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
-//								if (orderProductCollectionPtr->GetObjectData(productId, hardwareProductDataPtr)){
-//									const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
-//									if (hardwareProductPtr != nullptr){
-//										QByteArray softwareId = hardwareProductPtr->GetSoftwareId();
-//										if (softwareId == collectionId){
-//											QByteArray deviceId = hardwareProductPtr->GetObjectUuid();
-//											hardwareUuid = productId;
-
-//											imtbase::IObjectCollection::DataPtr deviceDataPtr;
-//											if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
-//												const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
-//												if (deviceInfoPtr != nullptr){
-//													hardwareMacAddress = deviceInfoPtr->GetMacAddress();
-//												}
-//											}
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
+			QByteArray serialNumber = productOrderInfoPtr->GetSerialNumber();
+			QByteArray productId = productOrderInfoPtr->GetProductId();
+			QByteArray orderUuid = productOrderInfoPtr->GetOrderId();
 
 			QByteArray hardwareMacAddress = objectCollectionIterator->GetElementInfo("DeviceId").toByteArray();
 			QByteArray hardwareUuid = objectCollectionIterator->GetElementInfo("DeviceUuid").toByteArray();;
@@ -102,10 +54,10 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = collectionId;
 				}
 				else if (informationId == "OrderId"){
-					elementInformation = productOrderInfoPtr->GetOrderId();
+					elementInformation = objectCollectionIterator->GetElementInfo("OrderId").toByteArray();
 				}
 				else if (informationId == "Customer"){
-					elementInformation = productOrderInfoPtr->GetCustomerId();
+					elementInformation = objectCollectionIterator->GetElementInfo("Customer").toByteArray();
 				}
 				else if (informationId == "OrderUuid"){
 					elementInformation = orderUuid;
@@ -131,10 +83,10 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					}
 				}
 				else if (informationId == "LicenseName"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseName").toByteArray();;
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseName").toByteArray();
 				}
 				else if (informationId == "LicenseId"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId").toByteArray();;
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId").toByteArray();
 				}
 
 				if (elementInformation.isNull()){

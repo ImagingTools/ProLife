@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5082" Description="ACF"/>
-            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5096" Description="ACF"/>
+            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -125,6 +125,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
@@ -385,6 +388,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">

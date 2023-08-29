@@ -12,6 +12,7 @@
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
+#include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 
 
 namespace prolifegql
@@ -43,33 +44,24 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-		if (orderPtr != nullptr){
-			imtbase::IObjectCollection* orderProductsPtr = orderPtr->GetProducts();
-			if (orderProductsPtr != nullptr){
-				imtbase::IObjectCollection::DataPtr productDataPtr;
-				if (orderProductsPtr->GetObjectData(objectId, productDataPtr)){
-					const imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-					if (softwareProductPtr != nullptr){
-						QByteArray serialNumber = softwareProductPtr->GetSerialNumber();
+		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+		if (productOrderInfoPtr != nullptr){
+			QByteArray serialNumber = productOrderInfoPtr->GetSerialNumber();
 
-						dataModelPtr->SetData("Id", objectId);
-						dataModelPtr->SetData("ProductId", softwareProductPtr->GetProductId());
-						dataModelPtr->SetData("CategoryId", softwareProductPtr->GetFactoryId());
-						dataModelPtr->SetData("SerialNumber", serialNumber);
+			dataModelPtr->SetData("Id", objectId);
+			dataModelPtr->SetData("ProductId", productOrderInfoPtr->GetProductId());
+			dataModelPtr->SetData("CategoryId", productOrderInfoPtr->GetFactoryId());
+			dataModelPtr->SetData("SerialNumber", serialNumber);
 
-						QString name = softwareProductPtr->GetProductId();
+			QString name = productOrderInfoPtr->GetProductId();
 
-						if (!serialNumber.isEmpty()){
-							name += " (" + serialNumber + ")";
-						}
-
-						dataModelPtr->SetData("Name", name);
-
-						return rootModelPtr.PopPtr();
-					}
-				}
+			if (!serialNumber.isEmpty()){
+				name += " (" + serialNumber + ")";
 			}
+
+			dataModelPtr->SetData("Name", name);
+
+			return rootModelPtr.PopPtr();
 		}
 	}
 
@@ -78,10 +70,10 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 
 
 imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
-			const imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
+	if (!m_objectCollectionCompPtr.IsValid()){
 		return nullptr;
 	}
 
@@ -144,70 +136,33 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		}
 	}
 
-	imtbase::IIdentifiable* productOrderPtr = nullptr;
+	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = nullptr;
 
 	imtbase::IObjectCollection::DataPtr orderProductDataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(productId, orderProductDataPtr)){
-		productOrderPtr = dynamic_cast<imtbase::IIdentifiable*>(orderProductDataPtr.GetPtr());
+		productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(orderProductDataPtr.GetPtr());
 	}
 
-	if (productOrderPtr == nullptr){
+	if (productOrderInfoPtr == nullptr){
 		return nullptr;
 	}
 
-	QByteArray pairId;
-	if (itemModel.ContainsKey("PairId")){
-		pairId = itemModel.GetData("PairId").toByteArray();
+	QByteArray oldSerialNumber = productOrderInfoPtr->GetSerialNumber();
+
+	if (oldSerialNumber != serialNumber){
+		productOrderInfoPtr->SetSerialNumber(serialNumber);
+
+		if (!m_objectCollectionCompPtr->SetObjectData(productId, *productOrderInfoPtr)){
+			return nullptr;
+		}
 	}
-
-	QByteArray orderUuid = productOrderPtr->GetObjectUuid();
-
-	QString name;
 
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 	imtbase::CTreeItemModel* notificationModelPtr = dataModelPtr->AddTreeModel("updatedNotification");
 
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-		if (orderPtr != nullptr){
-			imtbase::IObjectCollection* orderProductsPtr = orderPtr->GetProducts();
-			if (orderProductsPtr != nullptr){
-				imtbase::IObjectCollection::DataPtr hardwareProductDataPtr;
-				if (orderProductsPtr->GetObjectData(pairId, hardwareProductDataPtr)){
-					imtlic::IHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<imtlic::IHardwareInstanceInfo*>(hardwareProductDataPtr.GetPtr());
-					if (hardwareProductPtr != nullptr){
-						hardwareProductPtr->SetSoftwareId(productId);
-
-						if (!orderProductsPtr->SetObjectData(pairId, *hardwareProductPtr)){
-							return nullptr;
-						}
-					}
-				}
-
-				imtbase::IObjectCollection::DataPtr productDataPtr;
-				if (orderProductsPtr->GetObjectData(productId, productDataPtr)){
-					imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-					if (softwareProductPtr != nullptr){
-						softwareProductPtr->SetSerialNumber(serialNumber);
-
-						if (!orderProductsPtr->SetObjectData(productId, *softwareProductPtr)){
-							return nullptr;
-						}
-
-						name = softwareProductPtr->GetProductId();
-					}
-				}
-
-				if (!m_orderCollectionCompPtr->SetObjectData(orderUuid, *orderPtr)){
-					return nullptr;
-				}
-			}
-		}
-	}
-
 	notificationModelPtr->SetData("Id", productId);
 
+	QString name;
 	if (!serialNumber.isEmpty()){
 		name += " (" + serialNumber + ")";
 	}

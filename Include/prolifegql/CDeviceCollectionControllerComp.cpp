@@ -423,29 +423,20 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 		if (bindingInfoPtr != nullptr){
 			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
 			for (const QByteArray& softwareId : softwareIds){
-				imtbase::IObjectCollection::DataPtr orderDataPtr;
-				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, orderDataPtr)){
-					prolifedata::IOrderInfo* softwareOrderProductPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-					if (softwareOrderProductPtr != nullptr){
-						imtbase::IObjectCollection* productCollectionPtr = softwareOrderProductPtr->GetProducts();
-						if (productCollectionPtr != nullptr){
-							imtbase::IObjectCollection::DataPtr productDataPtr;
-							if (productCollectionPtr->GetObjectData(softwareId, productDataPtr)){
-								imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-								if (productInstanceInfoPtr != nullptr){
-									QByteArray productId = productInstanceInfoPtr->GetProductId();
-									QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
+				imtbase::IObjectCollection::DataPtr productDataPtr;
+				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
+					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
+					if (productInstanceInfoPtr != nullptr){
+						QByteArray productId = productInstanceInfoPtr->GetProductId();
+						QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
 
-									const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
-									for (const QByteArray& licenseId : licenseList.GetElementIds()){
-										const imtlic::ILicenseInstance* licenseInstancePtr = productInstanceInfoPtr->GetLicenseInstance(licenseId);
-										if (licenseInstancePtr != nullptr){
-											int childrenIndex = childrenModelPtr->InsertNewItem();
+						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
+						for (const QByteArray& licenseId : licenseList.GetElementIds()){
+							const imtlic::ILicenseInstance* licenseInstancePtr = productInstanceInfoPtr->GetLicenseInstance(licenseId);
+							if (licenseInstancePtr != nullptr){
+								int childrenIndex = childrenModelPtr->InsertNewItem();
 
-											childrenModelPtr->SetData("Value", productId + " (" + licenseId + ")", childrenIndex);
-										}
-									}
-								}
+								childrenModelPtr->SetData("Value", productId + " (" + licenseId + ")", childrenIndex);
 							}
 						}
 					}
