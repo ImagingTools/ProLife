@@ -600,9 +600,9 @@ Item {
 //                             delete selectedProductIds[selectedProductIds.indexOf(id)]
                  }
              }
-             console.log("DEBUG::55", selectedProductIds)
              let products = selectedProductIds.join(';');
              productEditor.bindingModel.SetData("SoftwareIds", products)
+             console.log("DEBUG::55", selectedProductIds, products)
 
              bindingProductsCollection.table.tableSelection.selectedIndexes = []
              if (bindingProductsCollection.table.elements.GetItemsCount() == 0){

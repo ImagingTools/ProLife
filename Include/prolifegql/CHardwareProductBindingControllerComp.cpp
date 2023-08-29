@@ -38,8 +38,12 @@ istd::IChangeable* CHardwareProductBindingControllerComp::CreateObject(
 
 	if (itemModel.ContainsKey("SoftwareIds")){
 		QByteArray softwareIds = itemModel.GetData("SoftwareIds").toByteArray();
-
-		hardwareProductBindingPtr->SetSoftwareIds(softwareIds.split(';'));
+		if (!softwareIds.isEmpty()){
+			hardwareProductBindingPtr->SetSoftwareIds(softwareIds.split(';'));
+		}
+		else{
+			hardwareProductBindingPtr->SetSoftwareIds(QByteArrayList());
+		}
 	}
 
 	return hardwareProductBindingPtr.PopPtr();

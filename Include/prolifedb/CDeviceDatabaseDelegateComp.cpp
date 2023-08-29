@@ -128,14 +128,13 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				if (i > 0){
 					filterQuery += " AND ";
 				}
-
-				filterQuery += "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
+				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
 
 				if (value == "WithoutLicense"){
-					filterQuery += " is null";
+					filterQuery += "(" + countLicenseSql + " IS NULL OR " + countLicenseSql + " = 0)";
 				}
 				else{
-					filterQuery += " > 0";
+					filterQuery += countLicenseSql + " > 0";
 				}
 				continue;
 			}
