@@ -150,6 +150,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 
 	imtbase::CCollectionFilter m_filter;
 	int offset = 0, count = -1;
+
 	if (viewParamsGql != nullptr){
 		offset = viewParamsGql->GetFieldArgumentValue("Offset").toInt();
 		count = viewParamsGql->GetFieldArgumentValue("Count").toInt();

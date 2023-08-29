@@ -4,6 +4,7 @@
 // ACF includes
 #include <iprm/CTextParam.h>
 #include <iprm/CParamsSet.h>
+#include <iprm/CEnableableParam.h>
 
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
@@ -204,20 +205,66 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			purchaseOrderId = itemModel.GetData("PurchaseId").toByteArray().trimmed();
 		}
 
-		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
-		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-				prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					QByteArray currentObjectUuid = orderInfoPtr->GetObjectUuid();
-					if (currentObjectUuid != objectId){
+		iprm::CTextParam valueParam;
+		valueParam.SetText(orderId);
+
+		iprm::CEnableableParam isEqualParam;
+		isEqualParam.SetEnabled(true);
+
+		iprm::CParamsSet valueParamsSet;
+		valueParamsSet.SetEditableParameter("Value", &valueParam);
+		valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+		iprm::CParamsSet paramsSet1;
+		paramsSet1.SetEditableParameter("OrderId", &valueParamsSet);
+
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+
+		// Check Order-ID exists
+		imtbase::ICollectionInfo::Ids collectionIds1 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		if (!collectionIds1.isEmpty()){
+			QByteArray orderObjectId = collectionIds1[0];
+			if (objectId != orderObjectId){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
+					prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+					if (orderInfoPtr != nullptr){
 						QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
 						if (currentOrderId == orderId.toLower()){
 							errorMessage = QT_TR_NOOP("Order ID already exists");
 							return nullptr;
 						}
+					}
+				}
+			}
+		}
 
+		iprm::CTextParam valueParam2;
+		valueParam2.SetText(purchaseOrderId);
+
+		iprm::CEnableableParam isEqualParam2;
+		isEqualParam2.SetEnabled(true);
+
+		iprm::CParamsSet valueParamsSet2;
+		valueParamsSet2.SetEditableParameter("Value", &valueParam2);
+		valueParamsSet2.SetEditableParameter("IsEqual", &isEqualParam2);
+
+		iprm::CParamsSet paramsSet2;
+		paramsSet2.SetEditableParameter("PurchaseId", &valueParamsSet2);
+
+		iprm::CParamsSet filterParam2;
+		filterParam2.SetEditableParameter("ObjectFilter", &paramsSet2);
+
+		// Check Purchase-ID exists
+		imtbase::ICollectionInfo::Ids collectionIds2 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam2);
+		if (!collectionIds2.isEmpty()){
+			QByteArray orderObjectId = collectionIds2[0];
+			if (objectId != orderObjectId){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
+					prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+					if (orderInfoPtr != nullptr){
 						QByteArray currentPurchaseId = orderInfoPtr->GetPurchaseOrderId().toLower();
 						if (purchaseOrderId != "" && currentPurchaseId == purchaseOrderId.toLower()){
 							errorMessage = QT_TR_NOOP("Purchase order ID already exists");
@@ -227,6 +274,30 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 				}
 			}
 		}
+
+//		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
+//		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
+//			imtbase::IObjectCollection::DataPtr dataPtr;
+//			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+//				prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+//				if (orderInfoPtr != nullptr){
+//					QByteArray currentObjectUuid = orderInfoPtr->GetObjectUuid();
+//					if (currentObjectUuid != objectId){
+//						QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
+//						if (currentOrderId == orderId.toLower()){
+//							errorMessage = QT_TR_NOOP("Order ID already exists");
+//							return nullptr;
+//						}
+
+//						QByteArray currentPurchaseId = orderInfoPtr->GetPurchaseOrderId().toLower();
+//						if (purchaseOrderId != "" && currentPurchaseId == purchaseOrderId.toLower()){
+//							errorMessage = QT_TR_NOOP("Purchase order ID already exists");
+//							return nullptr;
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		QByteArray customerId;
 		if (itemModel.ContainsKey("CustomerId")){

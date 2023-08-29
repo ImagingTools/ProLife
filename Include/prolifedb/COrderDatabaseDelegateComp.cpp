@@ -4,6 +4,9 @@
 // ACF includes
 #include <iprm/ISelectionParam.h>
 #include <istd/CCrcCalculator.h>
+#include <iprm/ITextParam.h>
+#include <iprm/IEnableableParam.h>
+#include <iprm/TParamsPtr.h>
 
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
@@ -187,6 +190,29 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 						if (!filterQuery.isEmpty()){
 							filterQuery = '(' + filterQuery + ')';
 						}
+					}
+				}
+			}
+			else if (id == "OrderId" || id == "PurchaseId"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, id);
+				if (filterParamPtr.IsValid()){
+					QString value;
+					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
+					if (valueParamPtr.IsValid()){
+						value = valueParamPtr->GetText();
+					}
+
+					bool isEqual = true;
+					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
+					if (enableableParamPtr.IsValid()){
+						isEqual = enableableParamPtr->IsEnabled();
+					}
+
+					if (isEqual){
+						filterQuery += QString("(\"Document\"->>'%1' = '%2')").arg(qPrintable(id)).arg(value);
+					}
+					else{
+						filterQuery += QString("(\"Document\"->>'%1' != '%1')").arg(qPrintable(id)).arg(value);
 					}
 				}
 			}

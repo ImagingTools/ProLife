@@ -65,8 +65,8 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
  ord."Document"->>'OrderId' as "OrderId",
  acc."Document"->>'Name' as "Customer",
  dev."Document"->>'MacAddress'  as "DeviceId",
- si."Document"->'Licenses'->0->'LicenseData'->'LicenseId' as "LicenseId",
- si."Document"->'Licenses'->0->'LicenseData'->'LicenseName' as "LicenseName",
+ si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseId",
+ si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
  si."Document"
  FROM "SoftwareInstances" as si
  LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
