@@ -114,6 +114,9 @@
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="GqlLicenseRequest">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
@@ -330,6 +333,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="GqlLicenseRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="HardwareProductBindingRepository">

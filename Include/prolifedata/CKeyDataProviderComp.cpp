@@ -115,8 +115,6 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		return false;
 	}
 
-	qDebug() << "Product JSON " << productModelPtr->toJSON();
-
 	imtbase::CTreeItemModel* dataModelPtr = productModelPtr->GetTreeItemModel("data");
 	if (dataModelPtr == nullptr){
 		SendCriticalMessage(0, "No date in product: " + productId, "Server data provider");
