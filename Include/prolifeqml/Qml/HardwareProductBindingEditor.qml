@@ -7,7 +7,7 @@ Item {
 
     property int margin: 10;
 
-    property int contentHeight: bodyColumn.height;
+    property int contentHeight: availableLicensesColumn.height + titleLable.height;
 
 //    property alias collectionModel: softwareProductCollection.collectionModel;
 //    property alias table: softwareProductsTable;
@@ -116,45 +116,108 @@ Item {
         id: productsModel;
     }
 
-
+    BaseText {
+        id: titleLable
+        anchors.top: parent.top
+        anchors.topMargin: Style.margin
+        anchors.horizontalCenter: availableLicensesColumn.horizontalCenter
+        text: qsTr("Available licenses");
+        font.family: Style.fontFamilyBold;
+    }
 
     Column {
-        id: bodyColumn;
+        id: availableLicensesColumn;
 
-        anchors.verticalCenter: parent.verticalCenter;
+//        anchors.verticalCenter: parent.verticalCenter;
+        anchors.top: titleLable.bottom
+        anchors.topMargin: Style.margin
         anchors.right: parent.horizontalCenter;
+        anchors.rightMargin: 20;
         anchors.left: parent.left;
-        anchors.rightMargin: productEditor.margin;
+//        anchors.rightMargin: productEditor.margin;
         anchors.leftMargin: productEditor.margin;
 
         spacing: 10;
 
-        BaseText {
-            text: qsTr("Product");
-
-            font.family: Style.fontFamilyBold;
-        }
-
-        ComboBox {
-            id: productsCB;
-
+        Item {
             width: parent.width;
             height: 25;
 
-            radius: 3;
+            BaseText {
+                id: productLable
+                anchors.verticalCenter: parent.verticalCenter
 
-            nameId: "Id";
+                text: qsTr("Product");
+                font.family: Style.fontFamilyBold;
+            }
 
-            onCurrentIndexChanged: {
-                if (productEditor.blockUpdatingModel){
-                    return;
+            ComboBox {
+                id: productsCB;
+                anchors.left: productLable.right
+                anchors.leftMargin: Style.margin
+                anchors.right: parent.right
+
+                height: 25;
+                radius: 3;
+                nameId: "Id";
+
+                onVisibleChanged: {
+                    if (visible){
+                        //                    let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+                        //                    objectFilter.SetData("CategoryId", "Software");
+                        //                    productsList.updateModel()
+                    }
                 }
 
-                productEditor.bindingModel.SetData("SoftwareIds", "");
+                onCurrentIndexChanged: {
+                    if (productEditor.blockUpdatingModel){
+                        return;
+                    }
 
-                productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
+                    //                productEditor.bindingModel.SetData("SoftwareIds", "");
+                    if (productsCB.currentIndex > -1){
+                        productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
+                    }
+                    softwareProductCollection.updateData();
+                    //                productEditor.updateGui();
+                }
 
-                productEditor.updateGui();
+                CollectionDataProvider {
+                    id: productsList;
+                    fields: ["Id", "Name", "CategoryId"];
+                    commandId: "Products";
+
+                    onCollectionModelChanged: {
+                        if (productsList.collectionModel != null){
+                            productsCB.model = productsList.collectionModel
+                            if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
+                                //                            productsCB.currentIndex = -1;
+                                productEditor.productId = bindingProductsCollection.table.elements.GetData("ProductId")
+                                for (let i = 0; i < productsList.collectionModel.GetItemsCount(); i++){
+                                    let id = productsList.collectionModel.GetData("Id", i);
+                                    if (id === productEditor.productId){
+                                        productsCB.currentIndex = i;
+                                    }
+                                }
+                            }
+                            else{
+                                //                            softwareProductCollection.updateData();
+                            }
+                        }
+                    }
+
+                    onFailed: {
+                        if (orderEditorContainer.documentManager){
+                            let message = qsTr("Error loading products. Please check Lisa connection.");
+
+                            orderEditorContainer.documentManager.openErrorDialog(message);
+                            orderEditorContainer.documentManager.showAlertMessage(message);
+
+                            orderEditorContainer.errorMessage = message;
+                        }
+                    }
+
+                }
             }
         }
 
@@ -177,6 +240,7 @@ Item {
                 id: softwareProductCollection;
                 anchors.fill: parent
 
+
                 defaultSortHeaderIndex: 2;
 
                 commands.headerInfoModel: headerInfoModel
@@ -194,8 +258,22 @@ Item {
                     console.log("DEBUG::29")
                     softwareProductCollection.pagination.countElements = 9
                     softwareProductCollection.loadData = false;
-                    softwareProductCollection.table.checkable = true
+//                    softwareProductCollection.table.checkable = true
+//                    bindingProductsCollection.table.selectable = false;
+                    bindingProductsCollection.table.canSelectAll = true;
+//                    bindingProductsCollection.table.hoverEnabled = false
                     softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
+                    softwareProductCollection.table.selectionChanged.connect(selectionItemsChanged);
+                }
+
+                function selectionItemsChanged(selection){
+                    console.log("DEBUG::60", selection)
+                    if (selection.length === 0){
+                        bindButton.enabled = false
+                    }
+                    else{
+                        bindButton.enabled = true
+                    }
                 }
 
                 function checkedItemsChanged(){
@@ -248,20 +326,37 @@ Item {
                             }
                             filterIdsModel.InsertNewItem()
                             filterIdsModel.SetData("Id", headerId, i);
-
                         }
+
+                        if (!softwareProductCollection.commands.fieldsData.includes("CustomerUuid")){
+                            softwareProductCollection.commands.fieldsData.push("CustomerUuid");
+                        }
+
                         let products = ""
+                        let customerUuid = ""
                         for(var i = 0; i < bindingProductsCollection.table.elements.GetItemsCount(); i++){
                             let id = bindingProductsCollection.table.elements.GetData("Id", i);
                             if (i > 0){
                                 products += ";"
                             }
+                            else{
+                                customerUuid = bindingProductsCollection.table.elements.GetData("CustomerUuid", i);
+                            }
+
                             products += id
                         }
 
 //                        let products = productEditor.bindingModel.GetData("SoftwareIds")
                         if (products != ""){
                             objectFilter.SetData("ExcludeIds", products);
+                        }
+
+                        if (customerUuid != ""){
+                            objectFilter.SetData("CustomerUuid", customerUuid);
+                        }
+
+                        if (productEditor.productId != ""){
+                            objectFilter.SetData("ProductId", productEditor.productId);
                         }
 
                         softwareProductCollection.commandsId = "SoftwareProducts"
@@ -282,12 +377,22 @@ Item {
         }
     }
 
+    BaseText {
+        anchors.top: parent.top
+        anchors.topMargin: Style.margin
+        anchors.horizontalCenter: bindingLicensesColumn.horizontalCenter
+        text: qsTr("Binding licenses");
+        font.family: Style.fontFamilyBold;
+    }
+
     Column {
-        anchors.bottom: bodyColumn.bottom;
+        id: bindingLicensesColumn
+        anchors.bottom: availableLicensesColumn.bottom;
         anchors.right: parent.right;
         anchors.left: parent.horizontalCenter;
+        anchors.leftMargin: 20;
         anchors.rightMargin: productEditor.margin;
-        anchors.leftMargin: productEditor.margin;
+//        anchors.leftMargin: productEditor.margin;
 
         Rectangle{
             width: parent.width;
@@ -297,7 +402,10 @@ Item {
                 id: bindingProductsCollection;
                 anchors.fill: parent
 
-                defaultSortHeaderIndex: 2;
+//                defaultSortHeaderIndex: 2;
+                hasFilter: false
+                hasPagination: false
+                hasSort: false
 
                 property MainDocumentManager mainDocumentManager: null;
 
@@ -312,19 +420,31 @@ Item {
 
                 Component.onCompleted: {
                     console.log("DEBUG::29")
-                    bindingProductsCollection.pagination.countElements = 9
+                    bindingProductsCollection.pagination.countElements = 1000
                     bindingProductsCollection.loadData = false;
-                    bindingProductsCollection.table.checkable = true
+//                    bindingProductsCollection.table.checkable = false;
+//                    bindingProductsCollection.table.selectable = false;
+//                    bindingProductsCollection.table.canSelectAll = true;
+//                    bindingProductsCollection.table.hoverEnabled = false
+                    bindingProductsCollection.table.canSelectAll = false;
                     bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
+                    bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
+                }
+
+                function selectionItemsChanged(selection){
+                    if (selection.length === 0){
+                        unbindButton.enabled = false
+                    }
+                    else{
+                        unbindButton.enabled = true
+                    }
                 }
 
                 onVisibleChanged: {
                     if (visible){
                         console.log("DEBUG::30", bindingProductsCollection.modelFilter.toJSON())
                         let objectFilter =  bindingProductsCollection.modelFilter.AddTreeModel("ObjectFilter")
-//                        objectFilter.SetData("Key", "DeviceId");
-//                        objectFilter.SetData("Value", "");
-//                        objectFilter.SetData("IsEqual", false);
+
                         console.log("onCompleted filterModel", bindingProductsCollection.modelFilter.toJSON());
                         let filterIdsModel = bindingProductsCollection.modelFilter.GetData("FilterIds")
                         filterIdsModel.Clear();
@@ -337,6 +457,14 @@ Item {
                             filterIdsModel.InsertNewItem()
                             filterIdsModel.SetData("Id", headerId, i);
                         }
+
+                        if (!bindingProductsCollection.commands.fieldsData.includes("CustomerUuid")){
+                            bindingProductsCollection.commands.fieldsData.push("CustomerUuid");
+                        }
+                        if (!bindingProductsCollection.commands.fieldsData.includes("ProductId")){
+                            bindingProductsCollection.commands.fieldsData.push("ProductId");
+                        }
+
                         console.log("DEBUG::40",productEditor.hardwareId)
                         objectFilter.SetData("HardwareUuid", productEditor.hardwareId);
                         bindingProductsCollection.commandsId = "SoftwareProducts"
@@ -345,7 +473,10 @@ Item {
                 }
 
                 onElementsChanged: {
-                    softwareProductCollection.updateData();
+                    let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+                    objectFilter.SetData("CategoryId", "Software");
+
+                    productsList.updateModel()
                 }
 
                 function checkedItemsChanged(){
@@ -366,52 +497,123 @@ Item {
                              selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
 //                             delete selectedProductIds[selectedProductIds.indexOf(id)]
                          }
-
-//                         selectedProductIds.push(id)
-//                         let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-//                         bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
-
-//                         let keys = softwareProductCollection.table.elements.GetKeys()
-//                         console.log("DEBUG::41", bindingProductsCollection.table.elements.toJSON())
                      }
                      console.log("DEBUG::55", selectedProductIds)
                      let products = selectedProductIds.join(';');
                      productEditor.bindingModel.SetData("SoftwareIds", products)
-                     softwareProductCollection.updateData()
+
                      bindingProductsCollection.table.properties.clearCheckedItems()
+                     if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
+                         productEditor.productId = ""
+                         productsCB.enabled = true
+                         productsCB.currentIndex = -1
+                     }
+                     else{
+                          softwareProductCollection.updateData()
+                     }
                 }
-
-
-
 
             }
         }
 
-//        AuxTable {
-//            id: bindingProductsTable;
+    }
 
-//            width: parent.width;
-//            height: 400;
+    AuxButton {
+        id: bindButton;
 
-//            radius: 0;
+        anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.verticalCenterOffset: - 25;
 
-//            isMultiSelect: false;
+        enabled: false;
 
-//            checkable: true;
+        width: 18;
+        height: 25;
 
-//            cacheBuffer: 10000;
+        iconSource: "../../../" + "Icons/" + Style.theme + "/Right.svg";
+//        iconSource: "../../../" + "Icons/" + Style.theme + "/Link_On_" + enabled ? "Active" : "Disabled" + ".svg";
 
-//            onCheckedItemsChanged: {
-////                if (productEditor.blockUpdatingModel){
-////                    return;
-////                }
+        iconWidth: 15;
+        iconHeight: iconWidth;
 
-////                productEditor.updateModel();
+        onClicked: {
+            let selectedProductIds = []
+            let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
+            if (softwareIds != ""){
+                selectedProductIds = softwareIds.split(';')
+            }
+            console.log("DEBUG::41_1", selectedProductIds)
+            let indexes = softwareProductCollection.table.tableSelection.selectedIndexes;
+            if (indexes.length === 0){
+                return
+            }
+             for (let index of indexes){
+                 let id = softwareProductCollection.table.elements.GetData("Id", index);
+                 if (!selectedProductIds.includes(id)){
+                     selectedProductIds.push(id)
+                     let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+                     bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+                 }
+             }
+             let products = selectedProductIds.join(';');
+             productEditor.bindingModel.SetData("SoftwareIds", products)
+             console.log("DEBUG::41_2", products, selectedProductIds)
+             softwareProductCollection.updateData()
+             softwareProductCollection.table.tableSelection.selectedIndexes = []
+        }
+    }
 
-////                productEditor.checkedItemsChanged();
-//            }
-//        }
+    AuxButton {
+        id: unbindButton;
 
+        anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.verticalCenterOffset: 25;
+
+        enabled: false;
+
+        width: 18;
+        height: 25;
+
+        iconSource: "../../../" + "Icons/" + Style.theme + "/Left.svg";
+//        iconSource: "../../../" + "Icons/" + Style.theme + "/Unlink_On_" + enabled ? "Active" : "Disabled" + ".svg";
+
+        iconWidth: 15;
+        iconHeight: iconWidth;
+
+        onClicked: {
+            let selectedProductIds = []
+            selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
+            console.log("DEBUG::50", selectedProductIds)
+            let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
+            if (indexes.length === 0){
+                return
+            }
+             for (let i = indexes.length - 1; i > -1; i--){
+                 let index = indexes[i]
+                 let id = bindingProductsCollection.table.elements.GetData("Id", index);
+                 console.log("DEBUG::51", id, index)
+                 if (selectedProductIds.indexOf(id) > -1){
+                     console.log("DEBUG::52", index)
+                     bindingProductsCollection.table.elements.RemoveItem(index)
+                     selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+//                             delete selectedProductIds[selectedProductIds.indexOf(id)]
+                 }
+             }
+             console.log("DEBUG::55", selectedProductIds)
+             let products = selectedProductIds.join(';');
+             productEditor.bindingModel.SetData("SoftwareIds", products)
+
+             bindingProductsCollection.table.tableSelection.selectedIndexes = []
+             if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
+                 productEditor.productId = ""
+                 productsCB.enabled = true
+                 productsCB.currentIndex = -1
+             }
+             else{
+                  softwareProductCollection.updateData()
+             }
+        }
     }
 
     Loading {
@@ -432,10 +634,6 @@ Item {
 
     function updateHeaders(){
         headersModel.Clear();
-
-//        let index = headersModel.InsertNewItem();
-//        headersModel.SetData("Id", "ProductId", index);
-//        headersModel.SetData("Name", qsTr("Product"), index);
 
         let index = headersModel.InsertNewItem();
         headersModel.SetData("Id", "LicenseName", index);
@@ -459,9 +657,6 @@ Item {
 
         softwareProductCollection.commands.headers  = headersModel;
         bindingProductsCollection.commands.headers = headersModel;
-
-//        softwareProductCollection.tableHeaders = headersModel;
-//        bindingProductsTable.headers = headersModel;
     }
 }//Container
 

@@ -215,7 +215,7 @@ CollectionView {
                 width: 18;
                 height: width;
 
-                source: "../../../../Icons/Light/Key.svg";
+                source: "../../../../Icons/" + Style.theme + "/Key.svg";
 
                 sourceSize.width: width;
                 sourceSize.height: height;

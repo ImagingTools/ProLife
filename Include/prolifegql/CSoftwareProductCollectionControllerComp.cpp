@@ -88,6 +88,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				else if (informationId == "LicenseId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId").toByteArray();
 				}
+				else if (informationId == "CustomerUuid"){
+					elementInformation = objectCollectionIterator->GetElementInfo("CustomerUuid").toByteArray();;
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";
@@ -181,24 +184,20 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		filterParams.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
 	}
 
-	if (objectFilterModel.ContainsKey("HardwareUuid")){
-		QByteArray hardwareUuid = objectFilterModel.GetData("HardwareUuid").toByteArray();
-		if (!hardwareUuid.isEmpty()){
-			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-			textParamPtr->SetText(hardwareUuid);
-			filterParams.SetEditableParameter("HardwareUuid", textParamPtr.PopPtr());
+	QByteArrayList keys;
+
+	keys << "HardwareUuid" << "ExcludeIds" << "CustomerUuid" << "ProductId";
+
+	for (QByteArray key: keys){
+		if (objectFilterModel.ContainsKey(key)){
+			QByteArray filterValue = objectFilterModel.GetData(key).toByteArray();
+			if (!filterValue.isEmpty()){
+				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+				textParamPtr->SetText(filterValue);
+				filterParams.SetEditableParameter(key, textParamPtr.PopPtr());
+			}
 		}
 	}
-
-	if (objectFilterModel.ContainsKey("ExcludeIds")){
-		QByteArray hardwareUuid = objectFilterModel.GetData("ExcludeIds").toByteArray();
-		if (!hardwareUuid.isEmpty()){
-			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-			textParamPtr->SetText(hardwareUuid);
-			filterParams.SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
-		}
-	}
-
 }
 
 

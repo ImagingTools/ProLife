@@ -64,9 +64,11 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
  bp."Document"->>'HardwareId'  as "DeviceUuid",
  ord."Document"->>'OrderId' as "OrderId",
  acc."Document"->>'Name' as "Customer",
+ acc."DocumentId" as "CustomerUuid",
  dev."Document"->>'MacAddress'  as "DeviceId",
  si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseId",
  si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
+ si."Document"->>'ProductId' as "ProductId",
  si."Document"
  FROM "SoftwareInstances" as si
  LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
@@ -141,6 +143,19 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += "'";
 				}
 			}
+			else if (key == "CustomerUuid"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "acc.\"DocumentId\" = '";
+					filterQuery += value.toUtf8();
+					filterQuery += "'";
+				}
+			}
 			else if (key == "HardwareUuid"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
@@ -150,6 +165,19 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				QString value = textParamPtr->GetText();
 				if (!value.isEmpty()){
 					filterQuery += "bp.\"Document\"->>'HardwareId' = '";
+					filterQuery += value.toUtf8();
+					filterQuery += "'";
+				}
+			}
+			else if (key == "ProductId"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "si.\"Document\"->>'ProductId' = '";
 					filterQuery += value.toUtf8();
 					filterQuery += "'";
 				}
