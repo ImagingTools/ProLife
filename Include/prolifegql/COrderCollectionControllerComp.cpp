@@ -262,6 +262,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 	}
 
 	notificationModel->SetData("PagesCount", pagesCount);
+	notificationModel->SetData("TotalCount", elementsCount);
 
 	if (offset >= elementsCount){
 		offset -= count;

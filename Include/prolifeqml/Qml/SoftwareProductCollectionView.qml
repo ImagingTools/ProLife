@@ -21,6 +21,7 @@ CollectionView {
 
         baseCollectionView.commands.fieldsData.push("OrderUuid");
         baseCollectionView.commands.fieldsData.push("HardwareUuid");
+        baseCollectionView.commands.fieldsData.push("InUse");
     }
 
     onVisibleChanged: {

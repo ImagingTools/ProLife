@@ -81,16 +81,16 @@ Item {
             let software = productEditor.bindingModel.GetData("SoftwareIds");
             let softwareIds = software.split(';')
 
-            softwareProductsTable.uncheckAll();
+//            softwareProductsTable.uncheckAll();
 
-            if (softwareProductsTable.elements){
-                for (let i = 0; i < softwareProductsTable.elements.GetItemsCount(); i++){
-                    let id = softwareProductsTable.elements.GetData("Id", i);
-                    if (softwareIds.includes(id)){
-                        softwareProductsTable.checkItem(i);
-                    }
-                }
-            }
+//            if (softwareProductsTable.elements){
+//                for (let i = 0; i < softwareProductsTable.elements.GetItemsCount(); i++){
+//                    let id = softwareProductsTable.elements.GetData("Id", i);
+//                    if (softwareIds.includes(id)){
+//                        softwareProductsTable.checkItem(i);
+//                    }
+//                }
+//            }
         }
 
         blockUpdatingModel = false;
@@ -240,6 +240,7 @@ Item {
                 id: softwareProductCollection;
                 anchors.fill: parent
 
+                isMultiCheckable: false;
 
                 defaultSortHeaderIndex: 2;
 
@@ -403,6 +404,8 @@ Item {
                 anchors.fill: parent
 
 //                defaultSortHeaderIndex: 2;
+                isMultiCheckable: false;
+
                 hasFilter: false
                 hasPagination: false
                 hasSort: false
@@ -422,10 +425,6 @@ Item {
                     console.log("DEBUG::29")
                     bindingProductsCollection.pagination.countElements = 1000
                     bindingProductsCollection.loadData = false;
-//                    bindingProductsCollection.table.checkable = false;
-//                    bindingProductsCollection.table.selectable = false;
-//                    bindingProductsCollection.table.canSelectAll = true;
-//                    bindingProductsCollection.table.hoverEnabled = false
                     bindingProductsCollection.table.canSelectAll = false;
                     bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
                     bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
@@ -442,10 +441,8 @@ Item {
 
                 onVisibleChanged: {
                     if (visible){
-                        console.log("DEBUG::30", bindingProductsCollection.modelFilter.toJSON())
                         let objectFilter =  bindingProductsCollection.modelFilter.AddTreeModel("ObjectFilter")
 
-                        console.log("onCompleted filterModel", bindingProductsCollection.modelFilter.toJSON());
                         let filterIdsModel = bindingProductsCollection.modelFilter.GetData("FilterIds")
                         filterIdsModel.Clear();
 
@@ -465,7 +462,6 @@ Item {
                             bindingProductsCollection.commands.fieldsData.push("ProductId");
                         }
 
-                        console.log("DEBUG::40",productEditor.hardwareId)
                         objectFilter.SetData("HardwareUuid", productEditor.hardwareId);
                         bindingProductsCollection.commandsId = "SoftwareProducts"
                         bindingProductsCollection.commands.itemsInfoModel.updateModel();
@@ -482,7 +478,6 @@ Item {
                 function checkedItemsChanged(){
                     let selectedProductIds = []
                     selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
-                    console.log("DEBUG::50", selectedProductIds)
                     let indexes = bindingProductsCollection.table.getCheckedItems();
                     if (indexes.length === 0){
                         return
@@ -490,15 +485,11 @@ Item {
                      for (let i = indexes.length - 1; i > -1; i--){
                          let index = indexes[i]
                          let id = bindingProductsCollection.table.elements.GetData("Id", index);
-                         console.log("DEBUG::51", id, index)
                          if (selectedProductIds.indexOf(id) > -1){
-                             console.log("DEBUG::52", index)
                              bindingProductsCollection.table.elements.RemoveItem(index)
                              selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-//                             delete selectedProductIds[selectedProductIds.indexOf(id)]
                          }
                      }
-                     console.log("DEBUG::55", selectedProductIds)
                      let products = selectedProductIds.join(';');
                      productEditor.bindingModel.SetData("SoftwareIds", products)
 
@@ -576,7 +567,6 @@ Item {
         height: 25;
 
         iconSource: "../../../" + "Icons/" + Style.theme + "/Left.svg";
-//        iconSource: "../../../" + "Icons/" + Style.theme + "/Unlink_On_" + enabled ? "Active" : "Disabled" + ".svg";
 
         iconWidth: 15;
         iconHeight: iconWidth;
@@ -584,7 +574,6 @@ Item {
         onClicked: {
             let selectedProductIds = []
             selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
-            console.log("DEBUG::50", selectedProductIds)
             let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
             if (indexes.length === 0){
                 return
@@ -592,17 +581,14 @@ Item {
              for (let i = indexes.length - 1; i > -1; i--){
                  let index = indexes[i]
                  let id = bindingProductsCollection.table.elements.GetData("Id", index);
-                 console.log("DEBUG::51", id, index)
                  if (selectedProductIds.indexOf(id) > -1){
                      console.log("DEBUG::52", index)
                      bindingProductsCollection.table.elements.RemoveItem(index)
                      selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-//                             delete selectedProductIds[selectedProductIds.indexOf(id)]
                  }
              }
              let products = selectedProductIds.join(';');
              productEditor.bindingModel.SetData("SoftwareIds", products)
-             console.log("DEBUG::55", selectedProductIds, products)
 
              bindingProductsCollection.table.tableSelection.selectedIndexes = []
              if (bindingProductsCollection.table.elements.GetItemsCount() == 0){

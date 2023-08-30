@@ -437,6 +437,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 						if (m_gqlLicenseRequestCompPtr.IsValid()){
 							imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
 							imtgql::CGqlObject queryFields("items");
+							queryFields.InsertField("Id");
 							queryFields.InsertField("Name");
 							gqlRequest.AddField(queryFields);
 

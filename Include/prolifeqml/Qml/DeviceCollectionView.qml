@@ -32,85 +32,8 @@ CollectionView {
     }
 
     filterMenu: Component {
-        Item {
-            height: 30;
-
-            TreeItemModel {
-                id: modelCategogy;
-
-                Component.onCompleted: {
-                    let index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "AllLicense", index);
-                    modelCategogy.SetData("Name", qsTr("All"), index);
-
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "WithoutLicense", index);
-                    modelCategogy.SetData("Name", qsTr("Without a license"), index);
-
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "WithLicense", index);
-                    modelCategogy.SetData("Name", qsTr("With license"), index);
-
-                    licenseComboBox.model = modelCategogy;
-                }
-            }
-
-            Text {
-                id: titleInstanceId;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: licenseTitle.left;
-                anchors.rightMargin: 20
-                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
-                text: qsTr("Only new sensors!");
-                color: Style.errorTextColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-
-            Text {
-                id: licenseTitle
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: filtermenu.left;
-                anchors.rightMargin: 20
-//                text: qsTr("Availability of a license")
-                text: container.commandsDelegate.filterLicense
-                color: Style.textColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-
-//            ComboBox {
-//                 id: licenseComboBox;
-
-//                 anchors.verticalCenter: parent.verticalCenter;
-//                 anchors.right: filtermenu.left;
-//                 anchors.rightMargin: 20
-
-//                 height: 25;
-//                 width: 140;
-
-//                 backgroundColor: Style.baseColor;
-//                 currentIndex: 0;
-
-//                 radius: 0;
-
-//                 onCurrentIndexChanged: {
-//                     let objectFilter = filterModel.GetData("LicenseFilter");
-//                     if (!objectFilter){
-//                         objectFilter = filterModel.AddTreeModel("LicenseFilter")
-//                     }
-
-//                     objectFilter.SetData("Key", "State");
-//                     objectFilter.SetData("Value", currentIndex);
-//                 }
-//            }
-
         FilterMenu {
-            id: filtermenu
-            anchors.right: parent.right
             decoratorSource: Style.filterPanelDecoratorPath;
-
-            width: 325
 
             onVisibleChanged: {
                 if (visible){
@@ -121,28 +44,22 @@ CollectionView {
                 }
             }
 
-            onTextFilterChanged: {
-                container.modelFilter.SetData("TextFilter", text);
-                container.baseCollectionView.commands.updateModels()
+            Component {
+                id: textComp;
+
+                Text {
+                    id: titleInstanceId;
+                    text: qsTr("Only new sensors!");
+                    color: Style.errorTextColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
             }
 
-//            Component {
-//                id: textComp;
-
-//                Text {
-//                    id: titleInstanceId;
-//                    text: qsTr("Only new sensors!");
-//                    color: Style.errorTextColor;
-//                    font.family: Style.fontFamily;
-//                    font.pixelSize: Style.fontSize_common;
-//                }
-//            }
-
-//            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
-//            onIsNewDevicesChanged: {
-//                prefixLoaderComp = isNewDevices ? textComp: null;
-//            }
-        }
+            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+            onIsNewDevicesChanged: {
+                prefixLoaderComp = isNewDevices ? textComp: null;
+            }
         }
     }
 

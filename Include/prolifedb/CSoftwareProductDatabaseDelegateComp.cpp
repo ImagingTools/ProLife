@@ -31,7 +31,7 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 	if (!objectId.isEmpty()){
 		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
 
-		QByteArray selectionQuery = QString("AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
+		QByteArray selectionQuery = QString(" AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
 
 		selectionQuery = baseQuery + selectionQuery;
 
@@ -60,22 +60,26 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetObjectIdFromRecord(const QSq
 
 QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return R"( SELECT si."DocumentId",  si."Document"->>'SerialNumber' as "SerialNumber", si."Document"->>'OrderId' as "OrderUuid",
- bp."Document"->>'HardwareId'  as "DeviceUuid",
- ord."Document"->>'OrderId' as "OrderId",
- acc."Document"->>'Name' as "Customer",
- acc."DocumentId" as "CustomerUuid",
- dev."Document"->>'MacAddress'  as "DeviceId",
- si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseId",
- si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
- si."Document"->>'ProductId' as "ProductId",
- si."Document"
- FROM "SoftwareInstances" as si
- LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
- LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
- LEFT JOIN "Orders" as ord ON ord."DocumentId"=si."Document"->>'OrderId' AND ord."IsActive"=true
- LEFT JOIN "Accounts" as acc ON acc."IsActive" = true AND acc."DocumentId" = ord."Document"->>'OrderCustomer'
- WHERE si."IsActive"=true )";
+	return R"(SELECT
+				 si."DocumentId",
+				 si."Document"->>'SerialNumber' as "SerialNumber",
+				 si."Document"->>'OrderId' as "OrderUuid",
+				 bp."Document"->>'HardwareId'  as "DeviceUuid",
+				 ord."Document"->>'OrderId' as "OrderId",
+				 acc."Document"->>'Name' as "Customer",
+				 acc."DocumentId" as "CustomerUuid",
+				 dev."Document"->>'MacAddress'  as "DeviceId",
+				 si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseId",
+				 si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
+				 si."Document"->>'InUse' as "InUse",
+				 si."Document"->>'ProductId' as "ProductId",
+				 si."Document"
+			FROM "SoftwareInstances" as si
+			LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
+			LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
+			LEFT JOIN "Orders" as ord ON ord."DocumentId"=si."Document"->>'OrderId' AND ord."IsActive"=true
+			LEFT JOIN "Accounts" as acc ON acc."IsActive" = true AND acc."DocumentId" = ord."Document"->>'OrderCustomer'
+			WHERE si."IsActive"=true)";
 }
 
 
@@ -88,7 +92,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 	if (!paramIds.isEmpty()){
 #if QT_VERSION >= 0x051500
 		QByteArrayList paramIdsList(paramIds.cbegin(), paramIds.cend());
-#else
+#else+
 		QByteArrayList paramIdsList = paramIds.toList();
 #endif
 

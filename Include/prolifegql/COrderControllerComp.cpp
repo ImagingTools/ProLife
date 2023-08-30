@@ -7,6 +7,7 @@
 #include <iprm/CEnableableParam.h>
 
 // ImtCore includes
+#include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
@@ -275,30 +276,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			}
 		}
 
-//		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
-//		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-//				prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-//				if (orderInfoPtr != nullptr){
-//					QByteArray currentObjectUuid = orderInfoPtr->GetObjectUuid();
-//					if (currentObjectUuid != objectId){
-//						QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
-//						if (currentOrderId == orderId.toLower()){
-//							errorMessage = QT_TR_NOOP("Order ID already exists");
-//							return nullptr;
-//						}
-
-//						QByteArray currentPurchaseId = orderInfoPtr->GetPurchaseOrderId().toLower();
-//						if (purchaseOrderId != "" && currentPurchaseId == purchaseOrderId.toLower()){
-//							errorMessage = QT_TR_NOOP("Purchase order ID already exists");
-//							return nullptr;
-//						}
-//					}
-//				}
-//			}
-//		}
-
 		QByteArray customerId;
 		if (itemModel.ContainsKey("CustomerId")){
 			customerId = itemModel.GetData("CustomerId").toByteArray();
@@ -427,7 +404,13 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 		}
 	}
 
-//	productCollection.InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId);
+	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+	objectLinkPtr->SetObjectUuid(uuidId);
+	objectLinkPtr->SetFactoryId("SoftwareInfo");
+
+	productCollection.InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), uuidId);
 
 	if (m_softwareInstanceCollectionCompPtr.IsValid()){
 		m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId);
@@ -458,25 +441,31 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 		deviceInstancePtr->SetConfigurationType(modelTypeId);
 	}
 
-	QByteArray deviceId = hardwareProductModel.GetData("DeviceId", modelIndex).toByteArray();
-	deviceInstancePtr->SetObjectUuid(deviceId);
+	QByteArray deviceUuid = hardwareProductModel.GetData("DeviceId", modelIndex).toByteArray();
+	deviceInstancePtr->SetObjectUuid(deviceUuid);
 
 	if (hardwareProductModel.ContainsKey("IsNewDevice", modelIndex)){
-		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), deviceId);
+		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), deviceUuid);
 	}
 	else{
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+		if (m_deviceCollectionCompPtr->GetObjectData(deviceUuid, dataPtr)){
 			prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
 				deviceInfoPtr->SetOrderId(orderUuid);
 
-				m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr);
+				m_deviceCollectionCompPtr->SetObjectData(deviceUuid, *deviceInfoPtr);
 			}
 		}
 	}
 
-//	productCollection.InsertNewObject(QByteArray("Hardware"), "", "", hardwareInstancePtr.PopPtr(), uuidId);
+	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+	objectLinkPtr->SetObjectUuid(deviceUuid);
+	objectLinkPtr->SetFactoryId("HardwareInfo");
+
+	productCollection.InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceUuid);
 }
 
 
@@ -528,20 +517,7 @@ void COrderControllerComp::InsertHardwareProductToModel(
 		hardwareProductModel.SetData("CategoryId", QByteArray("Hardware"), modelIndex);
 		hardwareProductModel.SetData("ModelTypeId", deviceInfoPtr->GetConfigurationType(), modelIndex);
 		hardwareProductModel.SetData("DeviceId", deviceInfoPtr->GetObjectUuid(), modelIndex);
-//		hardwareProductModel.SetData("MacAddress", deviceInfoPtr->GetMacAddress(), modelIndex);
-//		hardwareProductModel.SetData("SerialNumber", deviceInfoPtr->GetSerialNumber(), modelIndex);
 	}
-
-//	const imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(&identifiable);
-//	if (hardwareProductPtr != nullptr){
-//		int modelIndex = hardwareProductModel.InsertNewItem();
-
-//		hardwareProductModel.SetData("Id", identifiable.GetObjectUuid(), modelIndex);
-//		hardwareProductModel.SetData("DeviceId", hardwareProductPtr->GetObjectUuid(), modelIndex);
-//		hardwareProductModel.SetData("ProductId", hardwareProductPtr->GetProductId(), modelIndex);
-//		hardwareProductModel.SetData("CategoryId", hardwareProductPtr->GetFactoryId(), modelIndex);
-//		hardwareProductModel.SetData("ModelTypeId", hardwareProductPtr->GetModelTypeId(), modelIndex);
-//	}
 }
 
 
