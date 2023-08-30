@@ -1,8 +1,12 @@
 <RCC>
-  <qresource prefix="/Translations">
-		<file alias="ProLife_en_US">Translations/ProLife_en_US.qm</file>
-		<file alias="ProLife_de_DE">Translations/ProLife_de_DE.qm</file>
-		<file alias="ProLife_ru_RU">Translations/ProLife_ru_RU.qm</file>
-		<file alias="ProLife_pl_PL">Translations/ProLife_pl_PL.qm</file>
-   </qresource>
+    <qresource prefix="/Translations">
+        <file alias="ProLife_en_US">Translations/ProLife_en_US.qm</file>
+        <file alias="ProLife_de_DE">Translations/ProLife_de_DE.qm</file>
+        <file alias="ProLife_ru_RU">Translations/ProLife_ru_RU.qm</file>
+        <file alias="ProLife_pl_PL">Translations/ProLife_pl_PL.qm</file>
+        <file alias="ProLife_fr_FR">Translations/ProLife_fr_FR.qm</file>
+        <file alias="ProLife_it_IT">Translations/ProLife_it_IT.qm</file>
+        <file alias="ProLife_jp_JP">Translations/ProLife_jp_JP.qm</file>
+        <file alias="ProLife_zh_ZH">Translations/ProLife_zh_ZH.qm</file>
+    </qresource>
 </RCC>
