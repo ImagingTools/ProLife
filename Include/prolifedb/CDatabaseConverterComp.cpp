@@ -7,6 +7,7 @@
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
+#include <imtbase/CObjectCollection.h>
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
@@ -83,13 +84,16 @@ void CDatabaseConverterComp::OnComponentCreated()
 									istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> orderedProductInstancePtr;
 									orderedProductInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
 //											dynamic_cast<imtlic::CIdentifiableSoftwareInstanceInfo*>(orderedProductInstancePtr.GetPtr())->CopyFrom(*productInstancePtr);
-									QByteArray newProductUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+//									QByteArray newProductUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+
+									QByteArray newProductUuid = productId;
 									orderedProductInstancePtr->SetupProductInstance(productInstancePtr->GetProductId(),
 																					productInstancePtr->GetProductInstanceId(),
 																					productInstancePtr->GetCustomerId());
 									orderedProductInstancePtr->SetOrderId(orderObjectId);
 									orderedProductInstancePtr->AddLicense(licenseInstancePtr->GetLicenseId(), licenseInstancePtr->GetExpiration());
 									orderedProductInstancePtr->SetObjectUuid(newProductUuid);
+									orderedProductInstancePtr->SetInUse(true);
 
 									QByteArray serialNumber = productInstancePtr->GetSerialNumber();
 									if (!serialNumber.isEmpty() && index > 0){
@@ -118,6 +122,14 @@ void CDatabaseConverterComp::OnComponentCreated()
 
 //						productCollectionPtr->ResetData();
 
+//						imtbase::CObjectCollection* objectCollectionPtr = dynamic_cast<imtbase::CObjectCollection*>(productCollectionPtr);
+
+//						typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableSoftwareInstanceInfo> FactorySoftwareImpl;
+//						objectCollectionPtr->RegisterFactory<FactorySoftwareImpl>("Software");
+
+//						typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableHardwareInstanceInfo> FactoryHardwareImpl;
+//						objectCollectionPtr->RegisterFactory<FactoryHardwareImpl>("Hardware");
+
 						for (const QByteArray& productId : hardwareProductsIds){
 							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = mapHardware.value(productId);
 							QByteArray deviceId = hardwareProductPtr->GetDeviceId();
@@ -143,10 +155,10 @@ void CDatabaseConverterComp::OnComponentCreated()
 							istd::TDelPtr<imtbase::CObjectLink> deviceLinkPtr;
 							deviceLinkPtr.SetPtr(new imtbase::CObjectLink);
 
-							deviceLinkPtr->SetFactoryId("Hardware");
+							deviceLinkPtr->SetFactoryId("HardwareInfo");
 							deviceLinkPtr->SetObjectUuid(hardwareProductPtr->GetDeviceId());
 
-//							productCollectionPtr->InsertNewObject(deviceLinkPtr->GetFactoryId(), "", "", deviceLinkPtr.GetPtr(), hardwareProductPtr->GetDeviceId());
+							productCollectionPtr->InsertNewObject(deviceLinkPtr->GetFactoryId(), "", "", deviceLinkPtr.GetPtr(), hardwareProductPtr->GetDeviceId());
 						}
 
 						for (const QByteArray& productId : softwareProductsIds){
@@ -155,10 +167,10 @@ void CDatabaseConverterComp::OnComponentCreated()
 							istd::TDelPtr<imtbase::CObjectLink> softwareLinkPtr;
 							softwareLinkPtr.SetPtr(new imtbase::CObjectLink);
 
-							softwareLinkPtr->SetFactoryId("Software");
+							softwareLinkPtr->SetFactoryId("SoftwareInfo");
 							softwareLinkPtr->SetObjectUuid(productId);
 
-//							productCollectionPtr->InsertNewObject(softwareLinkPtr->GetFactoryId(), "", "", softwareLinkPtr.GetPtr(), productId);
+							productCollectionPtr->InsertNewObject(softwareLinkPtr->GetFactoryId(), "", "", softwareLinkPtr.GetPtr(), productId);
 						}
 
 						m_orderCollectionCompPtr->SetObjectData(orderObjectId, *orderInfoPtr);

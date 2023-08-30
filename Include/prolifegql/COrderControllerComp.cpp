@@ -83,65 +83,65 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 		imtbase::CTreeItemModel* productsModel = dataModelPtr->AddTreeModel("OrderProducts");
 
-//		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
-//		if (productCollectionPtr == nullptr){
-//			return nullptr;
-//		}
+		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
+		if (productCollectionPtr == nullptr){
+			return nullptr;
+		}
 
-//		imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
-//		for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
-//			imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(productId);
+		imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
+		for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
+			imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(productId);
 
+			imtbase::IObjectCollection::DataPtr productDataPtr;
+			if (typeId == QByteArray("SoftwareInfo")){
+				if (m_softwareInstanceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+					const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
+					if (productIdentifiablePtr != nullptr){
+						InsertSoftwareProductToModel(*productIdentifiablePtr, *productsModel);
+					}
+				}
+			}
+			else if (typeId == QByteArray("HardwareInfo")){
+				if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+					const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
+					if (productIdentifiablePtr != nullptr){
+						InsertHardwareProductToModel(*productIdentifiablePtr, *productsModel);
+					}
+				}
+			}
+		}
+
+//		iprm::CParamsSet filterParam;
+//		iprm::CParamsSet paramsSet;
+
+//		iprm::CTextParam orderIdParam;
+//		orderIdParam.SetText(objectId);
+
+//		paramsSet.SetEditableParameter("OrderId", &orderIdParam);
+//		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+//		imtbase::ICollectionInfo::Ids orderHardwareIds = m_deviceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+//		imtbase::ICollectionInfo::Ids orderSoftwareIds = m_softwareInstanceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+
+//		for (const imtbase::ICollectionInfo::Id& orderHardwareId : orderHardwareIds){
 //			imtbase::IObjectCollection::DataPtr productDataPtr;
-//			if (typeId == QByteArray("Software")){
-//				if (m_softwareInstanceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
-//					const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-//					if (productIdentifiablePtr != nullptr){
-//						InsertSoftwareProductToModel(*productIdentifiablePtr, *productsModel);
-//					}
-//				}
-//			}
-//			else if (typeId == QByteArray("Hardware")){
-//				if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
-//					const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-//					if (productIdentifiablePtr != nullptr){
-//						InsertHardwareProductToModel(*productIdentifiablePtr, *productsModel);
-//					}
+//			if (m_deviceCollectionCompPtr->GetObjectData(orderHardwareId, productDataPtr)){
+//				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
+//				if (productIdentifiablePtr != nullptr){
+//					InsertHardwareProductToModel(*productIdentifiablePtr, *productsModel);
 //				}
 //			}
 //		}
 
-		iprm::CParamsSet filterParam;
-		iprm::CParamsSet paramsSet;
-
-		iprm::CTextParam orderIdParam;
-		orderIdParam.SetText(objectId);
-
-		paramsSet.SetEditableParameter("OrderId", &orderIdParam);
-		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
-
-		imtbase::ICollectionInfo::Ids orderHardwareIds = m_deviceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-		imtbase::ICollectionInfo::Ids orderSoftwareIds = m_softwareInstanceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-
-		for (const imtbase::ICollectionInfo::Id& orderHardwareId : orderHardwareIds){
-			imtbase::IObjectCollection::DataPtr productDataPtr;
-			if (m_deviceCollectionCompPtr->GetObjectData(orderHardwareId, productDataPtr)){
-				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-				if (productIdentifiablePtr != nullptr){
-					InsertHardwareProductToModel(*productIdentifiablePtr, *productsModel);
-				}
-			}
-		}
-
-		for (const imtbase::ICollectionInfo::Id& orderSoftwareId : orderSoftwareIds){
-			imtbase::IObjectCollection::DataPtr productDataPtr;
-			if (m_softwareInstanceCollectionCompPtr->GetObjectData(orderSoftwareId, productDataPtr)){
-				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-				if (productIdentifiablePtr != nullptr){
-					InsertSoftwareProductToModel(*productIdentifiablePtr, *productsModel);
-				}
-			}
-		}
+//		for (const imtbase::ICollectionInfo::Id& orderSoftwareId : orderSoftwareIds){
+//			imtbase::IObjectCollection::DataPtr productDataPtr;
+//			if (m_softwareInstanceCollectionCompPtr->GetObjectData(orderSoftwareId, productDataPtr)){
+//				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
+//				if (productIdentifiablePtr != nullptr){
+//					InsertSoftwareProductToModel(*productIdentifiablePtr, *productsModel);
+//				}
+//			}
+//		}
 	}
 
 	return rootModelPtr.PopPtr();

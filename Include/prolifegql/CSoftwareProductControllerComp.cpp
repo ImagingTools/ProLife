@@ -52,6 +52,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 			dataModelPtr->SetData("ProductId", productOrderInfoPtr->GetProductId());
 			dataModelPtr->SetData("CategoryId", productOrderInfoPtr->GetFactoryId());
 			dataModelPtr->SetData("SerialNumber", serialNumber);
+			dataModelPtr->SetData("InUse", productOrderInfoPtr->IsInUse());
 
 			QString name = productOrderInfoPtr->GetProductId();
 

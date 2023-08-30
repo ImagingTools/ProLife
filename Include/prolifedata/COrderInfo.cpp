@@ -10,6 +10,7 @@
 #include <iser/CPrimitiveTypesSerializer.h>
 
 // ImtCore includes
+#include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 #include <imtlic/CProductInstanceInfo.h>
 
@@ -39,6 +40,12 @@ COrderInfo::COrderInfo():
 
 	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableHardwareInstanceInfo> FactoryHardwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactoryHardwareImpl>("Hardware");
+
+	typedef istd::TSingleFactory<istd::IChangeable, imtbase::CObjectLink> FactorySoftwareInfoImpl;
+	m_productInstanceCollection.RegisterFactory<FactorySoftwareInfoImpl>("SoftwareInfo");
+
+	typedef istd::TSingleFactory<istd::IChangeable, imtbase::CObjectLink> FactoryHardwareInfoImpl;
+	m_productInstanceCollection.RegisterFactory<FactoryHardwareInfoImpl>("HardwareInfo");
 }
 
 
