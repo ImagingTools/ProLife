@@ -17,6 +17,59 @@ namespace prolifegql
 {
 
 
+imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest &gqlRequest, QString &errorMessage) const
+{
+	imtbase::CTreeItemModel* retVal = BaseClass::ListObjects(gqlRequest, errorMessage);
+
+	if (retVal == nullptr){
+		return nullptr;
+	}
+
+	imtbase::CTreeItemModel* dataModel = retVal->GetTreeItemModel("data");
+	if (dataModel == nullptr){
+		return nullptr;
+	}
+
+	imtbase::CTreeItemModel* itemsModel = dataModel->GetTreeItemModel("items");
+	if (itemsModel == nullptr){
+		return nullptr;
+	}
+
+
+	if (m_gqlLicenseRequestCompPtr.IsValid()){
+		imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
+		imtgql::CGqlObject queryFields("items");
+		queryFields.InsertField("Name");
+		gqlRequest.AddField(queryFields);
+
+		imtgql::CGqlObject licenseParams("licenses");
+		for (int index = 0; index < itemsModel->GetItemsCount(); index++){
+			QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
+			licenseParams.InsertField(licenseId);
+		}
+		gqlRequest.AddParam(licenseParams);
+
+		QString errorMessage;
+		imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlRequest, errorMessage);
+		if (licensesModelPtr == nullptr){
+			return nullptr;
+		}
+
+		if (licensesModelPtr->ContainsKey("data")){
+			imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
+			if (dataModelPtr != nullptr){
+				for (int index = 0; index < dataModelPtr->GetItemsCount(); index++){
+					QString licenseName = dataModelPtr->GetData("Name", index).toString();
+					itemsModel->SetData("LicenseId", licenseName, index);
+				}
+			}
+		}
+	}
+
+	return retVal;
+}
+
+
 bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 			const imtgql::CGqlRequest& gqlRequest,
 			imtbase::CTreeItemModel& model,
@@ -199,6 +252,7 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		}
 	}
 }
+
 
 
 } // namespace prolifegql

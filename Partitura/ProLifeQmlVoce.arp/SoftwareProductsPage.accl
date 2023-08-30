@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5082" Description="ACF"/>
-            <Version Id="1" Number="2187" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,6 +17,19 @@
         <Element ComponentName="SoftwareProductController" X="1050" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="ObjectCommands">
+            <PositionMap>
+                <Element ComponentName="Close" X="550" Y="600" Note=""/>
+                <Element ComponentName="Commands" X="325" Y="450" Note=""/>
+                <Element ComponentName="CommandsController" X="575" Y="75" Note=""/>
+                <Element ComponentName="CommandsRepresentation" X="950" Y="450" Note=""/>
+                <Element ComponentName="Empty" X="325" Y="600" Note=""/>
+                <Element ComponentName="Redo" X="550" Y="300" Note=""/>
+                <Element ComponentName="Save" X="100" Y="600" Note=""/>
+                <Element ComponentName="Undo" X="100" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="650" Y="225" Note=""/>
@@ -35,19 +48,6 @@
                 <Element ComponentName="OpenOrderPermissions" X="975" Y="575" Note=""/>
                 <Element ComponentName="Remove" X="275" Y="400" Note=""/>
                 <Element ComponentName="RemovePermissions" X="975" Y="500" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="ObjectCommands">
-            <PositionMap>
-                <Element ComponentName="Close" X="550" Y="600" Note=""/>
-                <Element ComponentName="Commands" X="325" Y="450" Note=""/>
-                <Element ComponentName="CommandsController" X="575" Y="75" Note=""/>
-                <Element ComponentName="CommandsRepresentation" X="950" Y="450" Note=""/>
-                <Element ComponentName="Empty" X="325" Y="600" Note=""/>
-                <Element ComponentName="Redo" X="550" Y="300" Note=""/>
-                <Element ComponentName="Save" X="100" Y="600" Note=""/>
-                <Element ComponentName="Undo" X="100" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
