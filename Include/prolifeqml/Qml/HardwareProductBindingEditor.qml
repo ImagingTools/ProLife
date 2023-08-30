@@ -539,7 +539,7 @@ Item {
         onClicked: {
             let selectedProductIds = []
             let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
-            if (softwareIds != ""){
+            if (softwareIds && softwareIds != ""){
                 selectedProductIds = softwareIds.split(';')
             }
             console.log("DEBUG::41_1", selectedProductIds)

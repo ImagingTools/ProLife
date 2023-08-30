@@ -64,6 +64,7 @@
                                 <Value>ProductsList</Value>
                                 <Value>ProductsMetaInfo</Value>
                                 <Value>ProductsObjectView</Value>
+                                <Value>LicensesItems</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

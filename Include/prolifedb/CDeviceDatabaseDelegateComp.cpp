@@ -128,6 +128,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				if (i > 0){
 					filterQuery += " AND ";
 				}
+
 				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
 
 				if (value == "WithoutLicense"){
@@ -138,12 +139,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				}
 				continue;
 			}
-
-			if (i > 0){
-				filterQuery += " AND ";
-			}
-
-			if (key == "Orders"){
+			else if (key == "Orders"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(key));
 				if (selectionPtr != nullptr){
 					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
@@ -169,7 +165,11 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 				}
 			}
-			else{
+			else if (key == "Status"){
+				if (i > 0){
+					filterQuery += " AND ";
+				}
+
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
@@ -178,7 +178,6 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				QString value = textParamPtr->GetText();
 				filterQuery += QString("\"Document\"->>'%1' = '%2'").arg(qPrintable(key)).arg(value);
 			}
-
 		}
 
 		if (!filterQuery.isEmpty()){

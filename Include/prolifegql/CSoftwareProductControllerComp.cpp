@@ -162,7 +162,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	notificationModelPtr->SetData("Id", productId);
 
-	QString name;
+	QString name = productOrderInfoPtr->GetProductId();
 	if (!serialNumber.isEmpty()){
 		name += " (" + serialNumber + ")";
 	}

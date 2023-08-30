@@ -218,6 +218,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		}
 
 		notificationModel->SetData("PagesCount", pagesCount);
+		notificationModel->SetData("TotalCount", elementsCount);
 
 		if (offset >= elementsCount){
 			offset -= count;
@@ -433,42 +434,34 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
 
-//						if (m_gqlLicenseRequestCompPtr.IsValid()){
-//							imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "LicenseItems");
-//							imtgql::CGqlObject queryFields("items");
-//							queryFields.InsertField("Id");
-//							gqlRequest.AddField(queryFields);
+						if (m_gqlLicenseRequestCompPtr.IsValid()){
+							imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
+							imtgql::CGqlObject queryFields("items");
+							queryFields.InsertField("Name");
+							gqlRequest.AddField(queryFields);
 
-//							imtgql::CGqlObject licenseParams("licenses");
-//							for (const QByteArray& licenseId : elementsIds){
-//								licenseParams.InsertField(licenseId);
-//							}
-//							gqlRequest.AddParam(licenseParams);
+							imtgql::CGqlObject licenseParams("licenses");
+							for (const QByteArray& licenseId : elementsIds){
+								licenseParams.InsertField(licenseId);
+							}
+							gqlRequest.AddParam(licenseParams);
 
-//							QString errorMessage;
-//							imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlRequest, errorMessage);
-//							if (licensesModelPtr == nullptr){
-//								return nullptr;
-//							}
+							QString errorMessage;
+							imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlRequest, errorMessage);
+							if (licensesModelPtr == nullptr){
+								return nullptr;
+							}
 
-//							if (licensesModelPtr->ContainsKey("data")){
-//								imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
-//								if (dataModelPtr != nullptr){
-//									for (int i = 0; i < dataModelPtr->GetItemsCount(); i++){
-//										QString licenseName = dataModelPtr->GetData("Name", i).toString();
+							if (licensesModelPtr->ContainsKey("data")){
+								imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
+								if (dataModelPtr != nullptr){
+									for (int i = 0; i < dataModelPtr->GetItemsCount(); i++){
+										QString licenseName = dataModelPtr->GetData("Name", i).toString();
 
-//										int childrenIndex = childrenModelPtr->InsertNewItem();
-//										childrenModelPtr->SetData("Value", productId + " (" + licenseName + ")", childrenIndex);
-//									}
-//								}
-//							}
-//						}
-						for (const QByteArray& licenseId : elementsIds){
-							const imtlic::ILicenseInstance* licenseInstancePtr = productInstanceInfoPtr->GetLicenseInstance(licenseId);
-							if (licenseInstancePtr != nullptr){
-								int childrenIndex = childrenModelPtr->InsertNewItem();
-
-								childrenModelPtr->SetData("Value", productId + " (" + licenseId + ")", childrenIndex);
+										int childrenIndex = childrenModelPtr->InsertNewItem();
+										childrenModelPtr->SetData("Value", productId + " (" + licenseName + ")", childrenIndex);
+									}
+								}
 							}
 						}
 					}

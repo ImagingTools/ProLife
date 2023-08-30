@@ -23,6 +23,12 @@ CollectionView {
         baseCollectionView.commands.fieldsData.push("HardwareUuid");
     }
 
+    onVisibleChanged: {
+        if (container.visible){
+            container.updateGui();
+        }
+    }
+
     onHeadersChanged: {
         container.table.setColumnContentComponent(0, pairComp);
 

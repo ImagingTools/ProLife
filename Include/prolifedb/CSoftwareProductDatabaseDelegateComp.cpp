@@ -60,7 +60,7 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetObjectIdFromRecord(const QSq
 
 QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return R"( SELECT si."DocumentId",  si."Document"->>'SerialNumber' as "SerialNumber",  si."Document"->>'OrderId' as "OrderUuid",
+	return R"( SELECT si."DocumentId",  si."Document"->>'SerialNumber' as "SerialNumber", si."Document"->>'OrderId' as "OrderUuid",
  bp."Document"->>'HardwareId'  as "DeviceUuid",
  ord."Document"->>'OrderId' as "OrderId",
  acc."Document"->>'Name' as "Customer",
@@ -93,7 +93,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 #endif
 
 		int index = 0;
-		for (const QByteArray& key : paramIdsList){
+		for (const QByteArray& key : qAsConst(paramIdsList)){
 			if (key.contains('/')){
 				continue;
 			}
@@ -228,7 +228,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 				}
 			}
-			else{
+			else if (key == "SerialNumber"){
 				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
 				if (filterParamPtr.IsValid()){
 					QString value;
@@ -248,6 +248,29 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 					else{
 						filterQuery += QString("si.\"Document\"->>'SerialNumber' != '%1'").arg(value);
+					}
+				}
+			}
+			else if (key == "DeviceId"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
+				if (filterParamPtr.IsValid()){
+					QString value;
+					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
+					if (valueParamPtr.IsValid()){
+						value = valueParamPtr->GetText();
+					}
+
+					bool isEqual = true;
+					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
+					if (enableableParamPtr.IsValid()){
+						isEqual = enableableParamPtr->IsEnabled();
+					}
+
+					if (isEqual){
+						filterQuery += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
+					}
+					else{
+						filterQuery += "dev.\"Document\"->>'MacAddress' != ''";
 					}
 				}
 			}
@@ -275,6 +298,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 		break;
 	case imtbase::ICollectionFilter::SO_DESC:
 		sortOrder = "DESC";
+		break;
+	case imtbase::ICollectionFilter::SO_NO_ORDER:
 		break;
 	}
 
