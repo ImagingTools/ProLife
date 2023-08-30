@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5096" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -25,16 +25,6 @@
         <Element ComponentName="SoftwareProductsPage" X="400" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PageData">
-            <PositionMap>
-                <Element ComponentName="AccountsPage" X="550" Y="350" Note=""/>
-                <Element ComponentName="DevicesPage" X="925" Y="350" Note=""/>
-                <Element ComponentName="HardwareProductCollectionController" X="250" Y="600" Note=""/>
-                <Element ComponentName="OrdersPage" X="175" Y="350" Note=""/>
-                <Element ComponentName="SoftwareProductsPage" X="550" Y="475" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="575" Y="200" Note=""/>
@@ -42,6 +32,16 @@
                 <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AccountsPage" X="550" Y="350" Note=""/>
+                <Element ComponentName="DevicesPage" X="925" Y="350" Note=""/>
+                <Element ComponentName="HardwareProductCollectionController" X="250" Y="600" Note=""/>
+                <Element ComponentName="OrdersPage" X="175" Y="350" Note=""/>
+                <Element ComponentName="SoftwareProductsPage" X="550" Y="475" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

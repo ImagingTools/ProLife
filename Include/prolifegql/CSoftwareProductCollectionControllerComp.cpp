@@ -37,20 +37,21 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 
 
 	if (m_gqlLicenseRequestCompPtr.IsValid()){
-		imtgql::CGqlRequest gqlRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
+		imtgql::CGqlRequest gqlLisaRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
 		imtgql::CGqlObject queryFields("items");
+		queryFields.InsertField("Id");
 		queryFields.InsertField("Name");
-		gqlRequest.AddField(queryFields);
+		gqlLisaRequest.AddField(queryFields);
 
 		imtgql::CGqlObject licenseParams("licenses");
 		for (int index = 0; index < itemsModel->GetItemsCount(); index++){
 			QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
 			licenseParams.InsertField(licenseId);
 		}
-		gqlRequest.AddParam(licenseParams);
+		gqlLisaRequest.AddParam(licenseParams);
 
 		QString errorMessage;
-		imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlRequest, errorMessage);
+		imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlLisaRequest, errorMessage);
 		if (licensesModelPtr == nullptr){
 			return nullptr;
 		}
@@ -58,9 +59,15 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 		if (licensesModelPtr->ContainsKey("data")){
 			imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
 			if (dataModelPtr != nullptr){
-				for (int index = 0; index < dataModelPtr->GetItemsCount(); index++){
-					QString licenseName = dataModelPtr->GetData("Name", index).toString();
-					itemsModel->SetData("LicenseId", licenseName, index);
+				for (int lisaIndex = 0; lisaIndex < dataModelPtr->GetItemsCount(); lisaIndex++){
+					QByteArray licenseName = dataModelPtr->GetData("Name", lisaIndex).toByteArray();
+					QByteArray id = dataModelPtr->GetData("Id", lisaIndex).toByteArray();
+					for (int index = 0; index < itemsModel->GetItemsCount(); index++){
+						QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
+						if (id == licenseId){
+							itemsModel->SetData("LicenseName", licenseName, index);
+						}
+					}
 				}
 			}
 		}
