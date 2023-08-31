@@ -227,67 +227,6 @@ Item {
                 }
             }
         }
-
-//        Text {
-//            id: titleDependency;
-
-//            text: qsTr("Pair link");
-//            color: Style.textColor;
-//            font.family: Style.fontFamilyBold;
-//            font.pixelSize: Style.fontSize_common;
-
-//            visible: productCB.currentIndex >= 0;
-//        }
-
-//        Item {
-//            width: parent.width;
-//            height: 23;
-
-//            visible: productCB.currentIndex >= 0;
-
-//            ComboBox {
-//                id: pairCB;
-
-//                anchors.left: parent.left;
-//                anchors.right: clearPair.left;
-//                anchors.rightMargin: 10;
-
-//                height: parent.height;
-
-//                model: productEditor.pairsModel;
-
-//                radius: 3;
-
-//                onCurrentIndexChanged: {
-//                    productCB.changeable = pairCB.currentIndex < 0;
-
-//                    if (productEditor.blockUpdatingModel){
-//                        return;
-//                    }
-
-//                    if (pairCB.currentIndex >= 0){
-//                        let softwareId = productEditor.pairsModel.GetData("Id", pairCB.currentIndex);
-//                        productEditor.onUnlink();
-//                        productEditor.onLink(softwareId);
-//                    }
-//                }
-//            }
-
-//            BaseButton{
-//                id: clearPair;
-//                anchors.right: parent.right;
-//                height: parent.height;
-//                width: 100;
-//                enabled: pairCB.currentIndex > -1;
-//                text: qsTr("Unlink");
-
-//                onClicked: {
-//                    pairCB.currentIndex = -1;
-
-//                    productEditor.onUnlink();
-//                }
-//            }
-//        }
     }
 
     function onLink(pairId){

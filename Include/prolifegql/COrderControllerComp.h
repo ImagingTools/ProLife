@@ -31,11 +31,27 @@ protected:
 	virtual imtbase::CTreeItemModel* GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObject(const QList<imtgql::CGqlObject>& inputParams, QByteArray& objectId, QString& name, QString& description, QString& errorMessage) const override;
 
-	virtual void InsertSoftwareProductToProductCollection(const imtbase::CTreeItemModel& softwareProductModel, int modelIndex, imtbase::IObjectCollection& productCollection, const QByteArray& orderUuid = QByteArray()) const;
-	virtual void InsertHardwareProductToProductCollection(const imtbase::CTreeItemModel& hardwareProductModel, int modelIndex, imtbase::IObjectCollection& productCollection, const QByteArray& orderUuid = QByteArray()) const;
+	virtual void InsertSoftwareProductToProductCollection(
+				const imtbase::CTreeItemModel& softwareProductModel,
+				int modelIndex, imtbase::IObjectCollection& productCollection,
+				const QByteArray& orderUuid,
+				QString& errorMessage) const;
+	virtual void InsertHardwareProductToProductCollection(
+				const imtbase::CTreeItemModel& hardwareProductModel,
+				int modelIndex,
+				imtbase::IObjectCollection& productCollection,
+				const QByteArray& orderUuid,
+				QString& errorMessage) const;
 
 	virtual void InsertSoftwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& softwareProductModel) const;
 	virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel) const;
+
+	void GenerateDifferences(
+				prolifedata::IOrderInfo& currentOrder,
+				prolifedata::IOrderInfo& newOrder,
+				QByteArrayList& addedProducts,
+				QByteArrayList& removedProducts,
+				QByteArrayList& updatedProducts) const;
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);

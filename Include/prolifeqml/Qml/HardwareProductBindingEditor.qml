@@ -732,10 +732,10 @@ Item {
 
                 let value = tableCellDelegate.getValue();
                 if (value){
-                    image.source = "../../../../Icons/Light/Ok_On_Normal.svg";
+                    image.source = "../../../../Icons/Light/Lock_On_Normal.svg";
                 }
                 else{
-                    image.source = "../../../../Icons/Light/Close_On_Normal.svg";
+                    image.source = "";
                 }
             }
         }

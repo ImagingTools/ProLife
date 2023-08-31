@@ -118,11 +118,11 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 
 istd::IChangeable* COrderControllerComp::CreateObject(
-			const QList<imtgql::CGqlObject>& inputParams,
-			QByteArray& objectId,
-			QString& name,
-			QString& description,
-			QString &errorMessage) const
+		const QList<imtgql::CGqlObject>& inputParams,
+		QByteArray& objectId,
+		QString& name,
+		QString& description,
+		QString &errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		return nullptr;
@@ -303,16 +303,44 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 				}
 
 				if (productCategory == "Software"){
-					InsertSoftwareProductToProductCollection(*orderedProducts, productIndex, *productCollectionPtr, objectId);
+					InsertSoftwareProductToProductCollection(*orderedProducts, productIndex, *productCollectionPtr, objectId, errorMessage);
+					if (!errorMessage.isEmpty()){
+						return nullptr;
+					}
 				}
 				else if (productCategory == "Hardware"){
-					InsertHardwareProductToProductCollection(*orderedProducts, productIndex, *productCollectionPtr, objectId);
+					InsertHardwareProductToProductCollection(*orderedProducts, productIndex, *productCollectionPtr, objectId, errorMessage);
 				}
 			}
 		}
 
-		return orderPtr.PopPtr();
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+			if (oldOrderInfoPtr != nullptr){
+				QByteArrayList addedProducts;
+				QByteArrayList removedProducts;
+				QByteArrayList updatedProducts;
+
+				GenerateDifferences(*oldOrderInfoPtr, *orderPtr, addedProducts, removedProducts, updatedProducts);
+
+				for (const QByteArray& id : removedProducts){
+					imtbase::IObjectCollection::DataPtr productDataPtr;
+					if (m_softwareInstanceCollectionCompPtr->GetObjectData(id, productDataPtr)){
+						prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
+						if (productInfoPtr != nullptr){
+							productInfoPtr->SetOrderId("");
+
+							m_softwareInstanceCollectionCompPtr->SetObjectData(id, *productInfoPtr);
+						}
+					}
+				}
+			}
+
+			return orderPtr.PopPtr();
+		}
 	}
+
 	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));
 
 	return nullptr;
@@ -320,10 +348,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 
 void COrderControllerComp::InsertSoftwareProductToProductCollection(
-			const imtbase::CTreeItemModel& softwareProductModel,
-			int modelIndex,
-			imtbase::IObjectCollection& productCollection,
-			const QByteArray& orderUuid) const
+		const imtbase::CTreeItemModel& softwareProductModel,
+		int modelIndex,
+		imtbase::IObjectCollection& productCollection,
+		const QByteArray& orderUuid,
+		QString& errorMessage) const
 {
 	istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> softwareInstancePtr;
 	softwareInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
@@ -340,16 +369,44 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 		softwareInstancePtr->SetObjectUuid(uuidId);
 	}
 
+	QByteArray productId;
 	if (softwareProductModel.ContainsKey("ProductId", modelIndex)){
-		QByteArray productId = softwareProductModel.GetData("ProductId", modelIndex).toByteArray();
+		productId = softwareProductModel.GetData("ProductId", modelIndex).toByteArray();
 
 		softwareInstancePtr->SetupProductInstance(productId, "", "");
 	}
 
+	QByteArray serialNumber;
 	if (softwareProductModel.ContainsKey("SerialNumber", modelIndex)){
-		QByteArray serialNumber = softwareProductModel.GetData("SerialNumber", modelIndex).toByteArray();
+		serialNumber = softwareProductModel.GetData("SerialNumber", modelIndex).toByteArray();
 
 		softwareInstancePtr->SetSerialNumber(serialNumber);
+	}
+
+	iprm::CTextParam valueParam;
+	valueParam.SetText(serialNumber);
+
+	iprm::CEnableableParam isEqualParam;
+	isEqualParam.SetEnabled(true);
+
+	iprm::CParamsSet valueParamsSet;
+	valueParamsSet.SetEditableParameter("Value", &valueParam);
+	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+	iprm::CParamsSet paramsSet;
+	paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+	imtbase::IObjectCollection::Ids collectionIds = m_softwareInstanceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+	if (!collectionIds.isEmpty() && !serialNumber.isEmpty()){
+		QByteArray objectId = collectionIds[0];
+		if (objectId != uuidId){
+			errorMessage = QString("Serial number: %1 from %2 already exists.").arg(qPrintable(serialNumber)).arg(qPrintable(productId));
+
+			return;
+		}
 	}
 
 	if (softwareProductModel.ContainsKey("ActiveLicenses", modelIndex)){
@@ -387,7 +444,31 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 			if (productInfoPtr != nullptr){
 				bool isInUse = productInfoPtr->IsInUse();
 				if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
-					m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *productInfoPtr);
+					imtbase::ICollectionInfo::Ids ids = softwareInstancePtr->GetLicenseInstances().GetElementIds();
+					imtbase::ICollectionInfo::Ids currentIds = productInfoPtr->GetLicenseInstances().GetElementIds();
+
+					bool changed = false;
+					if (!ids.isEmpty() && !currentIds.isEmpty()){
+						const imtlic::ILicenseInstance* licensePtr = softwareInstancePtr->GetLicenseInstance(ids[0]);
+						const imtlic::ILicenseInstance* currentLicensePtr = productInfoPtr->GetLicenseInstance(currentIds[0]);
+
+						if (licensePtr->GetExpiration().toString("yyyy-MM-dd") != currentLicensePtr->GetExpiration().toString("yyyy-MM-dd")){
+							changed = true;
+						}
+					}
+
+					if (!changed){
+						QByteArray currentProductId = productInfoPtr->GetProductId();
+						QByteArray currentSerialNumber = productInfoPtr->GetSerialNumber();
+
+						if (productId != currentProductId || serialNumber != currentSerialNumber || ids != currentIds){
+							changed = true;
+						}
+					}
+
+					if (changed){
+						m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *softwareInstancePtr);
+					}
 				}
 			}
 		}
@@ -399,9 +480,10 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 
 
 void COrderControllerComp::InsertHardwareProductToProductCollection(
-			const imtbase::CTreeItemModel& hardwareProductModel,
-			int modelIndex, imtbase::IObjectCollection& productCollection,
-			const QByteArray& orderUuid) const
+		const imtbase::CTreeItemModel& hardwareProductModel,
+		int modelIndex, imtbase::IObjectCollection& productCollection,
+		const QByteArray& orderUuid,
+		QString& errorMessage) const
 {
 	istd::TDelPtr<prolifedata::COrderedIdentifiableDeviceInfo> deviceInstancePtr;
 	deviceInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableDeviceInfo);
@@ -459,8 +541,8 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 
 
 void COrderControllerComp::InsertSoftwareProductToModel(
-			const imtbase::IIdentifiable& identifiable,
-			imtbase::CTreeItemModel& softwareProductModel) const
+		const imtbase::IIdentifiable& identifiable,
+		imtbase::CTreeItemModel& softwareProductModel) const
 {
 	const imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(&identifiable);
 	if (softwareProductPtr != nullptr){
@@ -494,8 +576,8 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 
 
 void COrderControllerComp::InsertHardwareProductToModel(
-			const imtbase::IIdentifiable& identifiable,
-			imtbase::CTreeItemModel& hardwareProductModel) const
+		const imtbase::IIdentifiable& identifiable,
+		imtbase::CTreeItemModel& hardwareProductModel) const
 {
 	const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(&identifiable);
 	if (deviceInfoPtr != nullptr){
@@ -506,6 +588,33 @@ void COrderControllerComp::InsertHardwareProductToModel(
 		hardwareProductModel.SetData("CategoryId", QByteArray("Hardware"), modelIndex);
 		hardwareProductModel.SetData("ModelTypeId", deviceInfoPtr->GetConfigurationType(), modelIndex);
 		hardwareProductModel.SetData("DeviceId", deviceInfoPtr->GetObjectUuid(), modelIndex);
+	}
+}
+
+
+void COrderControllerComp::GenerateDifferences(
+			prolifedata::IOrderInfo& currentOrder,
+			prolifedata::IOrderInfo& newOrder,
+			QByteArrayList& addedProducts,
+			QByteArrayList& removedProducts,
+			QByteArrayList& updatedProducts) const
+{
+	imtbase::IObjectCollection* currentProductCollectionPtr = currentOrder.GetProducts();
+	imtbase::IObjectCollection* newProductCollectionPtr = newOrder.GetProducts();
+
+	imtbase::ICollectionInfo::Ids currentCollectionIds = currentProductCollectionPtr->GetElementIds();
+	imtbase::ICollectionInfo::Ids newCollectionIds = newProductCollectionPtr->GetElementIds();
+
+	for (const QByteArray& id : newCollectionIds){
+		if (!currentCollectionIds.contains(id)){
+			addedProducts.push_back(id);
+		}
+	}
+
+	for (const QByteArray& id : qAsConst(currentCollectionIds)){
+		if (!newCollectionIds.contains(id)){
+			removedProducts.push_back(id);
+		}
 	}
 }
 

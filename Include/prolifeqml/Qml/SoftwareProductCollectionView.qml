@@ -111,6 +111,15 @@ CollectionView {
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
         }
     }
 }

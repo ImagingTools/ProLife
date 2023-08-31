@@ -64,6 +64,7 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 				 si."DocumentId",
 				 si."Document"->>'SerialNumber' as "SerialNumber",
 				 si."Document"->>'OrderId' as "OrderUuid",
+				 si."Document"->>'Project' as "Project",
 				 bp."Document"->>'HardwareId'  as "DeviceUuid",
 				 ord."Document"->>'OrderId' as "OrderId",
 				 acc."Document"->>'Name' as "Customer",
@@ -333,7 +334,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 	}
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
-		if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer"){
+		if (columnId == "LicenseId"){
+			sortQuery = QString("ORDER BY si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' %1").arg(qPrintable(sortOrder));
+		}
+		else if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
@@ -367,14 +371,19 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 			if (columnId == "OrderId"){
 				shortTableName = "ord";
 			}
-			if (columnId == "DeviceId"){
+			else if (columnId == "DeviceId"){
 				shortTableName = "dev";
 			}
-			if (columnId == "Customer"){
+			else if (columnId == "Customer"){
 				shortTableName = "acc";
 			}
-			if (columnId == "DeviceUuid"){
+			else if (columnId == "DeviceUuid"){
 				shortTableName = "bp";
+			}
+			else if (columnId == "LicenseId"){
+				textFilterQuery += QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' ILIKE '%%1%'").arg(textFilter);
+
+				continue;
 			}
 
 			textFilterQuery += QString("%1.\"Document\"->>'%2' ILIKE '%%3%'").arg(shortTableName).arg(qPrintable(columnId)).arg(textFilter);

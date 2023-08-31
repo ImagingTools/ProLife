@@ -80,6 +80,23 @@ DocumentBase {
         orderEditorContainer.blockUpdatingModel = false;
     }
 
+    onWidthChanged: {
+        console.log("OrderEditor onWidthChanged", width);
+
+        if (width > bodyColumn.width + productsView.width + productsView.anchors.leftMargin){
+            productsTitle.anchors.top = bodyColumn.top;
+            productsTitle.anchors.topMargin = 0;
+            productsTitle.anchors.left = bodyColumn.right;
+            productsTitle.anchors.leftMargin = 25;
+        }
+        else{
+            productsTitle.anchors.top = bodyColumn.bottom;
+            productsTitle.anchors.topMargin = 15;
+            productsTitle.anchors.left = orderEditorContainer.left;
+            productsTitle.anchors.leftMargin = 0;
+        }
+    }
+
     onVisibleChanged: {
         if (visible){
             if (orderEditorContainer.errorMessage !== ""){
@@ -1049,8 +1066,8 @@ DocumentBase {
     Rectangle {
         id: productsTitle;
 
-        anchors.top: parent.top;
-        anchors.left: bodyColumn.right;
+//        anchors.top: parent.top;
+//        anchors.left: bodyColumn.right;
         anchors.leftMargin: 25;
 
         width: productsView.width;
@@ -1106,8 +1123,8 @@ DocumentBase {
 
         anchors.top: productsTitle.bottom;
         anchors.topMargin: productsView.spacing;
-        anchors.left: bodyColumn.right;
-        anchors.leftMargin: 25;
+        anchors.left: productsTitle.left;
+        anchors.leftMargin: productsView.leftMargin;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 

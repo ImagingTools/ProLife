@@ -14,6 +14,8 @@ Item {
 
     property bool serialNumberEdit: true;
 
+    property alias tableElements: licensesTable.elements;
+
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
     }
@@ -88,10 +90,6 @@ Item {
         checkable: true;
         canSelectAll: false;
         isMultiCheckable: false;
-
-        onHeadersChanged: {
-            //licensesTable.tableDecorator = tableDecoratorModel;
-        }
 
         delegate: Component {
             LicenseInstanceItemDelegate {
@@ -169,6 +167,7 @@ Item {
     }
 
     function updateGui(){
+        console.log("updateGui", root.productModel.toJSON());
         blockUpdatingModel = true;
 
         if (root.productLicensesModel){

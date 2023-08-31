@@ -119,6 +119,10 @@ CollectionView {
         console.log("onHeadersChanged2")
     }
 
+    DeviceProductionStatus {
+        id: deviceProductionStatus;
+    }
+
     Component {
         id: pairComp;
         Item {
@@ -132,7 +136,7 @@ CollectionView {
                 width: 18;
                 height: width;
 
-                source: "../../../../Icons/" + Style.theme + "/Key.svg";
+//                source: "../../../../Icons/" + Style.theme + "/Key.svg";
 
                 sourceSize.width: width;
                 sourceSize.height: height;
@@ -157,13 +161,14 @@ CollectionView {
                 let loader = parent;
                 let tableCellDelegate = loader.parent;
                 statusLable.text = tableCellDelegate.getValue();
-                let softwareLinksCount = container.table.elements.GetData("SoftwareLinksCount", tableCellDelegate.rowIndex);
-                if (softwareLinksCount === 0){
-                    console.log("softwareLinksCount",softwareLinksCount)
-                    image.visible = false
-                }
+
+                image.source = deviceProductionStatus.getIconPath(statusLable.text);
+//                let softwareLinksCount = container.table.elements.GetData("SoftwareLinksCount", tableCellDelegate.rowIndex);
+//                if (softwareLinksCount === 0){
+//                    console.log("softwareLinksCount",softwareLinksCount)
+//                    image.visible = false
+//                }
             }
         }
     }
-
 }

@@ -35,7 +35,6 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 		return nullptr;
 	}
 
-
 	if (m_gqlLicenseRequestCompPtr.IsValid()){
 		imtgql::CGqlRequest gqlLisaRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
 		imtgql::CGqlObject queryFields("items");
@@ -153,6 +152,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 				else if (informationId == "CustomerUuid"){
 					elementInformation = objectCollectionIterator->GetElementInfo("CustomerUuid").toByteArray();;
+				}
+				else if (informationId == "Project"){
+					elementInformation = objectCollectionIterator->GetElementInfo("Project").toByteArray();;
 				}
 
 				if (elementInformation.isNull()){

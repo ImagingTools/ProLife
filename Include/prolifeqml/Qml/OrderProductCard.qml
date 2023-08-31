@@ -310,7 +310,7 @@ Rectangle {
 
             pairCommandsModel.SetData("Id", "Remove", index);
             pairCommandsModel.SetData("Name", "Remove", index);
-            pairCommandsModel.SetData("Icon", "Close", index);
+            pairCommandsModel.SetData("Icon", "Remove", index);
             pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             pairCommandsModel.SetData("Visible", true, index);
 
@@ -338,7 +338,7 @@ Rectangle {
 
             softwareCommandsModel.SetData("Id", "Remove", index);
             softwareCommandsModel.SetData("Name", "Remove", index);
-            softwareCommandsModel.SetData("Icon", "Close", index);
+            softwareCommandsModel.SetData("Icon", "Remove", index);
             softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             softwareCommandsModel.SetData("Visible", true, index);
 
@@ -364,7 +364,7 @@ Rectangle {
 
             hardwareCommandsModel.SetData("Id", "Remove", index);
             hardwareCommandsModel.SetData("Name", "Remove", index);
-            hardwareCommandsModel.SetData("Icon", "Close", index);
+            hardwareCommandsModel.SetData("Icon", "Remove", index);
             hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             hardwareCommandsModel.SetData("Visible", true, index);
 

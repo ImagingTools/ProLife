@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5087" Description="ACF"/>
-            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5096" Description="ACF"/>
+            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -52,9 +52,12 @@
                             <Values>
                                 <Value>IsPaired</Value>
                                 <Value>ProductId</Value>
-                                <Value>OrderId</Value>
-                                <Value>Customer</Value>
+                                <Value>LicenseName</Value>
+                                <Value>LicenseId</Value>
                                 <Value>SerialNumber</Value>
+                                <Value>OrderId</Value>
+                                <Value>Project</Value>
+                                <Value>Customer</Value>
                                 <Value>DeviceId</Value>
                             </Values>
                         </Data>
@@ -67,9 +70,12 @@
                             <Values>
                                 <Value>In-Use</Value>
                                 <Value>Product</Value>
-                                <Value>Order-ID</Value>
-                                <Value>Customer</Value>
+                                <Value>License Name</Value>
+                                <Value>License-ID</Value>
                                 <Value>License Number</Value>
+                                <Value>Order-ID</Value>
+                                <Value>Project</Value>
+                                <Value>Customer</Value>
                                 <Value>Device-ID</Value>
                             </Values>
                         </Data>
@@ -85,6 +91,8 @@
                                 <Value>SerialNumber</Value>
                                 <Value>DeviceId</Value>
                                 <Value>Customer</Value>
+                                <Value>LicenseId</Value>
+                                <Value>Project</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -139,6 +147,7 @@
                                 <Value>SoftwareProductsInfo</Value>
                                 <Value>SoftwareProductsList</Value>
                                 <Value>SoftwareProductsObjectView</Value>
+                                <Value>SoftwareProductsRemove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -177,6 +186,7 @@
                             <Values>
                                 <Value>SoftwareProductItem</Value>
                                 <Value>SoftwareProductUpdate</Value>
+                                <Value>SoftwareProductAdd</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -239,8 +249,9 @@
                                 <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>Edit</Value>
+                                            <Value>New</Value>
                                             <Value>Remove</Value>
+                                            <Value>Edit</Value>
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
                                             <Value>Empty</Value>
@@ -263,6 +274,7 @@
                                             <Value>RemovePermissions</Value>
                                             <Value>OnlyPairedPermissions</Value>
                                             <Value>OnlyUnpairedPermissions</Value>
+                                            <Value>NewPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -336,6 +348,50 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="New" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Add"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="New"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="New product"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="NewPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="New"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>EditLicense</Value>
+                                            <Value>ChangeLicense</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -487,7 +543,7 @@
                                     <Data IsEnabled="true" Value="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
+                                    <Data IsEnabled="true" Value="true"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="Remove"/>

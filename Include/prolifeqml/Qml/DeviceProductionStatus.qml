@@ -46,69 +46,23 @@ QtObject {
         // 5
         root.statusModel.SetData("Id", "Finished", index);
         root.statusModel.SetData("Name", qsTr("Finished"), index);
-
-//        root.availableStates["None"] = ["None", "Accepted"]
-//        root.availableStates["Accepted"] = ["Accepted", "InProgress", "Canceled", "OnHold"]
-//        root.availableStates["InProgress"] = ["InProgress", "Finished"]
-//        root.availableStates["Canceled"] = ["Canceled", "None"]
-//        root.availableStates["OnHold"] = ["OnHold", "Accepted", "InProgress"]
-//        root.availableStates["Finished"] = ["Finished"]
     }
 
-//    function getStatusIndex(statusId){
-//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-//            let id = root.statusModel.GetData("Id", i);
-//            if (id === statusId){
-//                return i;
-//            }
-//        }
-
-//        return -1;
-//    }
-
-//    function getStatusName(statusId){
-//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-//            let id = root.statusModel.GetData("Id", i);
-//            if (id === statusId){
-//                let name = root.statusModel.GetData("Name", i);
-//                return name;
-//            }
-//        }
-
-//        return "";
-//    }
-
-//    function getAvailableModel(statusId){
-//        console.log("getAvailableModel", statusId);
-//        let index = -1;
-//        for (let i = 0; i < root.statusModel.GetItemsCount(); i++){
-//            let id = root.statusModel.GetData("Id", i);
-//            if (id === statusId){
-//                index = i;
-//                break;
-//            }
-//        }
-
-//        console.log("index", index);
-
-//        if (index >= 0){
-//            root.availableModel.Clear();
-
-//            let data = root.availableStates[statusId];
-
-//            for (let i = 0; i < data.length; i++){
-//                let id = data[i];
-//                let name = root.getStatusName(id);
-
-//                let j = root.availableModel.InsertNewItem();
-
-//                root.availableModel.SetData("Id", id, j);
-//                root.availableModel.SetData("Name", name, j);
-//            }
-
-//            return root.availableModel;
-//        }
-
-//        return null;
-//    }
+    function getIconPath(statusId){
+        if (statusId === "None"){
+            return "qrc:/Icons/Light/StateUnknown_On_Active";
+        }
+        else if (statusId === "Canceled"){
+            return  "qrc:/Icons/Light/Cancel_On_Active";
+        }
+        else if (statusId === "Accepted" || statusId === "InProgress"){
+            return  "qrc:/Icons/Light/Timeline_On_Active";
+        }
+        else if (statusId === "OnHold"){
+            return  "qrc:/Icons/Light/Pause_On_Active";
+        }
+        else{
+            return  "qrc:/Icons/Light/StateOk_On_Active";
+        }
+    }
 }
