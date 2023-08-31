@@ -144,6 +144,7 @@ CollectionView {
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.left: image.right
                 anchors.leftMargin: 10
+                anchors.right: parent.right
 
                 font.pixelSize: Style.fontSize_common;
                 font.family: Style.fontFamily;
