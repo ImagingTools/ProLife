@@ -125,9 +125,13 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					continue;
 				}
 
-				if (i > 0){
+				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
 				}
+
+//				if (i > 0){
+//					filterQuery += " AND ";
+//				}
 
 				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
 
@@ -161,18 +165,30 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							ordersFilterQuery += ')';
 						}
 
+//						if (i > 0){
+//							filterQuery += " AND ";
+//						}
+
+						if (!filterQuery.isEmpty()){
+							filterQuery += " AND ";
+						}
+
 						filterQuery += ordersFilterQuery;
 					}
 				}
 			}
 			else if (key == "Status"){
-				if (i > 0){
-					filterQuery += " AND ";
-				}
-
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
+				}
+
+//				if (i > 0){
+//					filterQuery += " AND ";
+//				}
+
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
 				}
 
 				QString value = textParamPtr->GetText();

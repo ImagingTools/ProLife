@@ -111,38 +111,6 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 				}
 			}
 		}
-
-//		iprm::CParamsSet filterParam;
-//		iprm::CParamsSet paramsSet;
-
-//		iprm::CTextParam orderIdParam;
-//		orderIdParam.SetText(objectId);
-
-//		paramsSet.SetEditableParameter("OrderId", &orderIdParam);
-//		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
-
-//		imtbase::ICollectionInfo::Ids orderHardwareIds = m_deviceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-//		imtbase::ICollectionInfo::Ids orderSoftwareIds = m_softwareInstanceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-
-//		for (const imtbase::ICollectionInfo::Id& orderHardwareId : orderHardwareIds){
-//			imtbase::IObjectCollection::DataPtr productDataPtr;
-//			if (m_deviceCollectionCompPtr->GetObjectData(orderHardwareId, productDataPtr)){
-//				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-//				if (productIdentifiablePtr != nullptr){
-//					InsertHardwareProductToModel(*productIdentifiablePtr, *productsModel);
-//				}
-//			}
-//		}
-
-//		for (const imtbase::ICollectionInfo::Id& orderSoftwareId : orderSoftwareIds){
-//			imtbase::IObjectCollection::DataPtr productDataPtr;
-//			if (m_softwareInstanceCollectionCompPtr->GetObjectData(orderSoftwareId, productDataPtr)){
-//				const imtbase::IIdentifiable* productIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(productDataPtr.GetPtr());
-//				if (productIdentifiablePtr != nullptr){
-//					InsertSoftwareProductToModel(*productIdentifiablePtr, *productsModel);
-//				}
-//			}
-//		}
 	}
 
 	return rootModelPtr.PopPtr();
@@ -413,7 +381,19 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 	productCollection.InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), uuidId);
 
 	if (m_softwareInstanceCollectionCompPtr.IsValid()){
-		m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId);
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareInstanceCollectionCompPtr->GetObjectData(uuidId, dataPtr)){
+			prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				bool isInUse = productInfoPtr->IsInUse();
+				if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
+					m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *productInfoPtr);
+				}
+			}
+		}
+		else{
+			m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId);
+		}
 	}
 }
 
@@ -435,8 +415,9 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 		deviceInstancePtr->SetDeviceType(productId);
 	}
 
+	QByteArray modelTypeId;
 	if (hardwareProductModel.ContainsKey("ModelTypeId", modelIndex)){
-		QByteArray modelTypeId = hardwareProductModel.GetData("ModelTypeId", modelIndex).toByteArray();
+		modelTypeId = hardwareProductModel.GetData("ModelTypeId", modelIndex).toByteArray();
 
 		deviceInstancePtr->SetConfigurationType(modelTypeId);
 	}
@@ -452,9 +433,17 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 		if (m_deviceCollectionCompPtr->GetObjectData(deviceUuid, dataPtr)){
 			prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
-				deviceInfoPtr->SetOrderId(orderUuid);
+				QByteArray deviceOrderUuid = deviceInfoPtr->GetOrderId();
+				QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+				QByteArray deviceConfigurationType = deviceInfoPtr->GetConfigurationType();
 
-				m_deviceCollectionCompPtr->SetObjectData(deviceUuid, *deviceInfoPtr);
+				if (deviceOrderUuid != orderUuid || deviceType != productId || deviceConfigurationType != modelTypeId){
+					deviceInfoPtr->SetOrderId(orderUuid);
+					deviceInfoPtr->SetDeviceType(productId);
+					deviceInfoPtr->SetConfigurationType(modelTypeId);
+
+					m_deviceCollectionCompPtr->SetObjectData(deviceUuid, *deviceInfoPtr);
+				}
 			}
 		}
 	}

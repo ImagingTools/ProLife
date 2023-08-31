@@ -30,8 +30,8 @@ Dialog {
 
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
-        productEditorDialog.buttons.addButton({"Id": "Save", "Name": qsTr("Save"), "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Close"), "Enabled": true});
+        productEditorDialog.buttons.addButton({"Id": "Save", "Name": qsTr("Apply"), "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Cancel"), "Enabled": true});
     }
 
     onFinished: {
@@ -45,6 +45,7 @@ Dialog {
                 documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
             }
 
+            productEditorDialog.contentItem.includeIds = [];
             productEditorDialog.buttons.setButtonState("Save", false);
         }
     }

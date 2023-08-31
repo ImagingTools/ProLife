@@ -40,6 +40,8 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			QByteArray orderId = deviceInfoPtr->GetOrderId();
 			QString description = deviceInfoPtr->GetDescription();
 			QByteArray deviceId = deviceInfoPtr->GetObjectUuid();
+			QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
+
 			prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 
 			dataModelPtr->SetData("Uuid", objectUuid);
@@ -49,6 +51,7 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			dataModelPtr->SetData("Description", description);
 			dataModelPtr->SetData("DeviceType", deviceType);
 			dataModelPtr->SetData("OrderId", orderId);
+			dataModelPtr->SetData("ConfigurationType", configurationType);
 
 			switch (status){
 			case prolifedata::IDeviceInfo::DPS_NONE:
@@ -199,6 +202,13 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			deviceType = itemModel.GetData("DeviceType").toByteArray();
 
 			devicePtr->SetDeviceType(deviceType);
+		}
+
+		QByteArray configurationType;
+		if (itemModel.ContainsKey("ConfigurationType")){
+			configurationType = itemModel.GetData("ConfigurationType").toByteArray();
+
+			devicePtr->SetConfigurationType(configurationType);
 		}
 
 		if (deviceType.isEmpty()){

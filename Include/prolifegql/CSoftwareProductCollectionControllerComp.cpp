@@ -134,6 +134,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				else if (informationId == "IsPaired"){
 					elementInformation = !hardwareMacAddress.isEmpty();
 				}
+				else if (informationId == "InUse"){
+					elementInformation = objectCollectionIterator->GetElementInfo("InUse").toBool();
+				}
 				else if (informationId == "DeviceId"){
 					if (!hardwareMacAddress.isEmpty()){
 						elementInformation = hardwareMacAddress;
@@ -246,7 +249,7 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 	QByteArrayList keys;
 
-	keys << "HardwareUuid" << "ExcludeIds" << "CustomerUuid" << "ProductId";
+	keys << "HardwareUuid" << "ExcludeIds" << "IncludeIds" << "CustomerUuid" << "ProductId";
 
 	for (QByteArray key: keys){
 		if (objectFilterModel.ContainsKey(key)){

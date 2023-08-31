@@ -129,8 +129,13 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				continue;
 			}
 
-			if (index > 0){
-				filterQuery += " AND ";
+			if (!filterQuery.isEmpty()){
+				if (key == "IncludeIds"){
+					filterQuery += " OR ";
+				}
+				else{
+					filterQuery += " AND ";
+				}
 			}
 
 			index++;
@@ -206,6 +211,26 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += ")";
 				}
 			}
+			else if (key == "IncludeIds"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+				if (!value.isEmpty()){
+					filterQuery += "si.\"DocumentId\" IN (";
+					QStringList keys = value.split(';');
+					for (int index = 0; index < keys.count(); index++){
+						QString key = keys[index];
+						if (index > 0){
+							filterQuery += ",";
+						}
+						filterQuery += "'" + key.toUtf8() + "'";
+					}
+					filterQuery += ")";
+				}
+			}
 			else if (key == "Orders"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(key));
 				if (selectionPtr != nullptr){
@@ -221,7 +246,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 								ordersFilterQuery += " OR ";
 							}
 							QByteArray orderId = optionsListPtr->GetOptionId(i);
-							ordersFilterQuery += QString("\"OrderUuid\" = '%1'").arg(qPrintable(orderId));
+							ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(qPrintable(orderId));
 						}
 
 						if (!ordersFilterQuery.isEmpty()){

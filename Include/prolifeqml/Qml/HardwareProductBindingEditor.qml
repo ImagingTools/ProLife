@@ -9,8 +9,8 @@ Item {
 
     property int contentHeight: availableLicensesColumn.height + titleLable.height;
 
-//    property alias collectionModel: softwareProductCollection.collectionModel;
-//    property alias table: softwareProductsTable;
+    //    property alias collectionModel: softwareProductCollection.collectionModel;
+    //    property alias table: softwareProductsTable;
 
     property TreeItemModel bindingModel: TreeItemModel {}
 
@@ -18,15 +18,16 @@ Item {
 
     property string hardwareId: "";
 
+    property var includeIds: [];
+
     signal checkedItemsChanged();
     signal modelChanged();
-
 
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
         console.log("DEBUG::24",softwareProductCollection.modelFilter.toJSON())
-//        softwareProductCollection.updateModel();
+        //        softwareProductCollection.updateModel();
 
         bindingModel.dataChanged.connect(productEditor.modelChanged);
     }
@@ -81,16 +82,16 @@ Item {
             let software = productEditor.bindingModel.GetData("SoftwareIds");
             let softwareIds = software.split(';')
 
-//            softwareProductsTable.uncheckAll();
+            //            softwareProductsTable.uncheckAll();
 
-//            if (softwareProductsTable.elements){
-//                for (let i = 0; i < softwareProductsTable.elements.GetItemsCount(); i++){
-//                    let id = softwareProductsTable.elements.GetData("Id", i);
-//                    if (softwareIds.includes(id)){
-//                        softwareProductsTable.checkItem(i);
-//                    }
-//                }
-//            }
+            //            if (softwareProductsTable.elements){
+            //                for (let i = 0; i < softwareProductsTable.elements.GetItemsCount(); i++){
+            //                    let id = softwareProductsTable.elements.GetData("Id", i);
+            //                    if (softwareIds.includes(id)){
+            //                        softwareProductsTable.checkItem(i);
+            //                    }
+            //                }
+            //            }
         }
 
         blockUpdatingModel = false;
@@ -128,13 +129,13 @@ Item {
     Column {
         id: availableLicensesColumn;
 
-//        anchors.verticalCenter: parent.verticalCenter;
+        //        anchors.verticalCenter: parent.verticalCenter;
         anchors.top: titleLable.bottom
         anchors.topMargin: Style.margin
         anchors.right: parent.horizontalCenter;
         anchors.rightMargin: 20;
         anchors.left: parent.left;
-//        anchors.rightMargin: productEditor.margin;
+        //        anchors.rightMargin: productEditor.margin;
         anchors.leftMargin: productEditor.margin;
 
         spacing: 10;
@@ -259,10 +260,10 @@ Item {
                     console.log("DEBUG::29")
                     softwareProductCollection.pagination.countElements = 9
                     softwareProductCollection.loadData = false;
-//                    softwareProductCollection.table.checkable = true
-//                    bindingProductsCollection.table.selectable = false;
+                    //                    softwareProductCollection.table.checkable = true
+                    //                    bindingProductsCollection.table.selectable = false;
                     bindingProductsCollection.table.canSelectAll = true;
-//                    bindingProductsCollection.table.hoverEnabled = false
+                    //                    bindingProductsCollection.table.hoverEnabled = false
                     softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
                     softwareProductCollection.table.selectionChanged.connect(selectionItemsChanged);
                 }
@@ -288,34 +289,45 @@ Item {
                     if (indexes.length === 0){
                         return
                     }
-                     for (let index of indexes){
-                         let id = softwareProductCollection.table.elements.GetData("Id", index);
-                         if (!selectedProductIds.includes(id)){
-                             selectedProductIds.push(id)
-                             let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-                             bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
-                         }
-                     }
-                     let products = selectedProductIds.join(';');
-                     productEditor.bindingModel.SetData("SoftwareIds", products)
-                     console.log("DEBUG::41_2", products, selectedProductIds)
-                     updateData()
-                     softwareProductCollection.table.properties.clearCheckedItems()
+                    for (let index of indexes){
+                        let id = softwareProductCollection.table.elements.GetData("Id", index);
+                        if (!selectedProductIds.includes(id)){
+                            selectedProductIds.push(id)
+                            let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+                            bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+                        }
+                    }
+                    let products = selectedProductIds.join(';');
+                    productEditor.bindingModel.SetData("SoftwareIds", products)
+                    console.log("DEBUG::41_2", products, selectedProductIds)
+                    updateData()
+                    softwareProductCollection.table.properties.clearCheckedItems()
                 }
 
                 onHeadersChanged: {
                     console.log("DEBUG::26", softwareProductCollection.modelFilter.toJSON())
                     console.log("DEBUG::27",  softwareProductCollection.tableHeaders.toJSON())
                     console.log("DEBUG::28", softwareProductCollection.commands.headers.toJSON())
+
+                    softwareProductCollection.table.setColumnContentComponent(0, pairComp);
                 }
 
                 function updateData() {
                     if (visible){
                         console.log("DEBUG::30", softwareProductCollection.modelFilter.toJSON())
                         let objectFilter =  softwareProductCollection.modelFilter.AddTreeModel("ObjectFilter")
-                        objectFilter.SetData("Key", "DeviceId");
-                        objectFilter.SetData("Value", "");
-                        objectFilter.SetData("IsEqual", true);
+
+                        console.log("productEditor.includeIds", productEditor.includeIds);
+
+                        if (productEditor.includeIds.length > 0){
+                            objectFilter.SetData("IncludeIds", productEditor.includeIds.join(';'));
+                        }
+                        else{
+                            objectFilter.SetData("Key", "DeviceId");
+                            objectFilter.SetData("Value", "");
+                            objectFilter.SetData("IsEqual", true);
+                        }
+
                         console.log("onCompleted filterModel", softwareProductCollection.modelFilter.toJSON());
                         let filterIdsModel = softwareProductCollection.modelFilter.GetData("FilterIds")
                         filterIdsModel.Clear();
@@ -333,6 +345,10 @@ Item {
                             softwareProductCollection.commands.fieldsData.push("CustomerUuid");
                         }
 
+                        if (!softwareProductCollection.commands.fieldsData.includes("InUse")){
+                            softwareProductCollection.commands.fieldsData.push("InUse");
+                        }
+
                         let products = ""
                         let customerUuid = ""
                         for(var i = 0; i < bindingProductsCollection.table.elements.GetItemsCount(); i++){
@@ -347,7 +363,7 @@ Item {
                             products += id
                         }
 
-//                        let products = productEditor.bindingModel.GetData("SoftwareIds")
+                        //                        let products = productEditor.bindingModel.GetData("SoftwareIds")
                         if (products != ""){
                             objectFilter.SetData("ExcludeIds", products);
                         }
@@ -382,7 +398,7 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: Style.margin
         anchors.horizontalCenter: bindingLicensesColumn.horizontalCenter
-        text: qsTr("Binding licenses");
+        text: qsTr("Used licenses");
         font.family: Style.fontFamilyBold;
     }
 
@@ -393,7 +409,7 @@ Item {
         anchors.left: parent.horizontalCenter;
         anchors.leftMargin: 20;
         anchors.rightMargin: productEditor.margin;
-//        anchors.leftMargin: productEditor.margin;
+        //        anchors.leftMargin: productEditor.margin;
 
         Rectangle{
             width: parent.width;
@@ -403,7 +419,7 @@ Item {
                 id: bindingProductsCollection;
                 anchors.fill: parent
 
-//                defaultSortHeaderIndex: 2;
+                //                defaultSortHeaderIndex: 2;
                 isMultiCheckable: false;
 
                 hasFilter: false
@@ -421,6 +437,10 @@ Item {
                     }
                 }
 
+                onHeadersChanged: {
+                    bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
+                }
+
                 Component.onCompleted: {
                     console.log("DEBUG::29")
                     bindingProductsCollection.pagination.countElements = 1000
@@ -428,15 +448,22 @@ Item {
                     bindingProductsCollection.table.canSelectAll = false;
                     bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
                     bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
+
+                    bindingProductsCollection.commands.fieldsData.push("InUse");
                 }
 
                 function selectionItemsChanged(selection){
-                    if (selection.length === 0){
-                        unbindButton.enabled = false
+                    if (selection.length <= 0){
+                        unbindButton.enabled = false;
+
+                        return;
                     }
-                    else{
-                        unbindButton.enabled = true
-                    }
+
+                    let index = selection[0];
+
+                    let elementsModel = bindingProductsCollection.table.elements;
+                    let inUse = elementsModel.GetData("InUse", index);
+                    unbindButton.enabled = !inUse;
                 }
 
                 onVisibleChanged: {
@@ -482,26 +509,26 @@ Item {
                     if (indexes.length === 0){
                         return
                     }
-                     for (let i = indexes.length - 1; i > -1; i--){
-                         let index = indexes[i]
-                         let id = bindingProductsCollection.table.elements.GetData("Id", index);
-                         if (selectedProductIds.indexOf(id) > -1){
-                             bindingProductsCollection.table.elements.RemoveItem(index)
-                             selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-                         }
-                     }
-                     let products = selectedProductIds.join(';');
-                     productEditor.bindingModel.SetData("SoftwareIds", products)
+                    for (let i = indexes.length - 1; i > -1; i--){
+                        let index = indexes[i]
+                        let id = bindingProductsCollection.table.elements.GetData("Id", index);
+                        if (selectedProductIds.indexOf(id) > -1){
+                            bindingProductsCollection.table.elements.RemoveItem(index)
+                            selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+                        }
+                    }
+                    let products = selectedProductIds.join(';');
+                    productEditor.bindingModel.SetData("SoftwareIds", products)
 
-                     bindingProductsCollection.table.properties.clearCheckedItems()
-                     if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
-                         productEditor.productId = ""
-                         productsCB.enabled = true
-                         productsCB.currentIndex = -1
-                     }
-                     else{
-                          softwareProductCollection.updateData()
-                     }
+                    bindingProductsCollection.table.properties.clearCheckedItems()
+                    if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
+                        productEditor.productId = ""
+                        productsCB.enabled = true
+                        productsCB.currentIndex = -1
+                    }
+                    else{
+                        softwareProductCollection.updateData()
+                    }
                 }
 
             }
@@ -521,8 +548,8 @@ Item {
         width: 18;
         height: 25;
 
-        iconSource: "../../../" + "Icons/" + Style.theme + "/Right.svg";
-//        iconSource: "../../../" + "Icons/" + Style.theme + "/Link_On_" + enabled ? "Active" : "Disabled" + ".svg";
+        iconSource: enabled ? "../../../" + "Icons/" + Style.theme + "/Right_On_Normal.svg":
+                              "../../../" + "Icons/" + Style.theme + "/Right_On_Disabled.svg"
 
         iconWidth: 15;
         iconHeight: iconWidth;
@@ -538,19 +565,23 @@ Item {
             if (indexes.length === 0){
                 return
             }
-             for (let index of indexes){
-                 let id = softwareProductCollection.table.elements.GetData("Id", index);
-                 if (!selectedProductIds.includes(id)){
-                     selectedProductIds.push(id)
-                     let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-                     bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
-                 }
-             }
-             let products = selectedProductIds.join(';');
-             productEditor.bindingModel.SetData("SoftwareIds", products)
-             console.log("DEBUG::41_2", products, selectedProductIds)
-             softwareProductCollection.updateData()
-             softwareProductCollection.table.tableSelection.selectedIndexes = []
+            for (let index of indexes){
+                let id = softwareProductCollection.table.elements.GetData("Id", index);
+                if (!selectedProductIds.includes(id)){
+                    selectedProductIds.push(id)
+                    let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+                    bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+                }
+
+                if (productEditor.includeIds.includes(id)){
+                    productEditor.includeIds.splice(productEditor.includeIds.indexOf(id), 1);
+                }
+            }
+            let products = selectedProductIds.join(';');
+            productEditor.bindingModel.SetData("SoftwareIds", products)
+            console.log("DEBUG::41_2", products, selectedProductIds)
+            softwareProductCollection.updateData()
+            softwareProductCollection.table.tableSelection.selectedIndexes = []
         }
     }
 
@@ -566,7 +597,8 @@ Item {
         width: 18;
         height: 25;
 
-        iconSource: "../../../" + "Icons/" + Style.theme + "/Left.svg";
+        iconSource: enabled ? "../../../" + "Icons/" + Style.theme + "/Left_On_Normal.svg":
+                              "../../../" + "Icons/" + Style.theme + "/Left_On_Disabled.svg"
 
         iconWidth: 15;
         iconHeight: iconWidth;
@@ -578,27 +610,53 @@ Item {
             if (indexes.length === 0){
                 return
             }
-             for (let i = indexes.length - 1; i > -1; i--){
-                 let index = indexes[i]
-                 let id = bindingProductsCollection.table.elements.GetData("Id", index);
-                 if (selectedProductIds.indexOf(id) > -1){
-                     console.log("DEBUG::52", index)
-                     bindingProductsCollection.table.elements.RemoveItem(index)
-                     selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-                 }
-             }
-             let products = selectedProductIds.join(';');
-             productEditor.bindingModel.SetData("SoftwareIds", products)
 
-             bindingProductsCollection.table.tableSelection.selectedIndexes = []
-             if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
-                 productEditor.productId = ""
-                 productsCB.enabled = true
-                 productsCB.currentIndex = -1
-             }
-             else{
-                  softwareProductCollection.updateData()
-             }
+            let index = indexes[0];
+            let elementsModel = bindingProductsCollection.table.elements;
+
+            if (elementsModel.ContainsKey("InUse", index)){
+                let inUse = elementsModel.GetData("InUse", index);
+                if (inUse){
+                    return;
+                }
+            }
+
+            let id = elementsModel.GetData("Id", index);
+            if (selectedProductIds.indexOf(id) > -1){
+                elementsModel.RemoveItem(index)
+                selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+
+                productEditor.includeIds.push(id)
+            }
+//            else{
+//                productEditor.includeIds.push(id)
+//            }
+
+//            for (let i = indexes.length - 1; i > -1; i--){
+//                let index = indexes[i]
+//                let id = elementsModel.GetData("Id", index);
+//                if (selectedProductIds.indexOf(id) > -1){
+//                    elementsModel.RemoveItem(index)
+//                    selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+//                }
+//                else{
+//                    productEditor.includeIds.push(id)
+//                }
+//            }
+            console.log("productEditor.includeIds", productEditor.includeIds);
+
+            let products = selectedProductIds.join(';');
+            productEditor.bindingModel.SetData("SoftwareIds", products)
+
+            bindingProductsCollection.table.tableSelection.selectedIndexes = []
+            if (elementsModel.GetItemsCount() == 0){
+                productEditor.productId = ""
+                productsCB.enabled = true
+                productsCB.currentIndex = -1
+            }
+            else{
+                softwareProductCollection.updateData()
+            }
         }
     }
 
@@ -622,6 +680,10 @@ Item {
         headersModel.Clear();
 
         let index = headersModel.InsertNewItem();
+        headersModel.SetData("Id", "InUse", index);
+        headersModel.SetData("Name", qsTr("In-Use"), index);
+
+        index = headersModel.InsertNewItem();
         headersModel.SetData("Id", "LicenseName", index);
         headersModel.SetData("Name", qsTr("License name"), index);
 
@@ -643,6 +705,40 @@ Item {
 
         softwareProductCollection.commands.headers  = headersModel;
         bindingProductsCollection.commands.headers = headersModel;
+    }
+
+    Component {
+        id: pairComp;
+        Item {
+            Image {
+                id: image;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 5;
+
+                width: 18;
+                height: width;
+
+                source: "../../../../Icons/Light/Ok_Off_Normal.svg";
+
+                sourceSize.width: width;
+                sourceSize.height: height;
+            }
+
+            Component.onCompleted: {
+                let loader = parent;
+                let tableCellDelegate = loader.parent;
+
+                let value = tableCellDelegate.getValue();
+                if (value){
+                    image.source = "../../../../Icons/Light/Ok_On_Normal.svg";
+                }
+                else{
+                    image.source = "../../../../Icons/Light/Close_On_Normal.svg";
+                }
+            }
+        }
     }
 }//Container
 

@@ -44,8 +44,8 @@ Rectangle {
 
     onLicensesProviderChanged: {
         if (softwareCard.licensesProvider != null){
-            licensesView.elements = 0;
-            licensesView.elements = softwareCard.licensesModel;
+//            licensesView.elements = 0;
+//            licensesView.elements = softwareCard.licensesModel;
         }
     }
 
@@ -68,7 +68,9 @@ Rectangle {
 
             productCardRoot.orderEditorPtr.blockUpdatingModel = false
 
-            licensesView.elements = softwareCard.licensesModel;
+            softwareCard.updateElements();
+
+//            licensesView.elements = softwareCard.licensesModel;
         }
     }
 
@@ -109,7 +111,8 @@ Rectangle {
         width: parent.width;
         height: visible ? 40 : 0;
 
-        visible: licenceText.visible;
+//        visible: licenceText.visible;
+        visible: false;
 
         Text {
             id: licenceText;
@@ -168,7 +171,7 @@ Rectangle {
             showHeaders: false;
 
             onHeadersChanged: {
-                licensesView.tableDecorator = tableDecoratorModel;
+//                licensesView.tableDecorator = tableDecoratorModel;
             }
         }
     } // Column
@@ -181,21 +184,65 @@ Rectangle {
         }
     }
 
+    TreeItemModel {
+        id: elementsTableModel;
+    }
+
+    function updateElements(){
+        elementsTableModel.Clear();
+
+        let index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
+        elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
+
+        let licenseId = softwareCard.licensesModel.GetData("Id");
+        let licenseName = softwareCard.licensesModel.GetData("Name");
+        let name = licenseName + " (" + licenseId + ")";
+
+        index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", qsTr("License"), index)
+        elementsTableModel.SetData("Value", name, index);
+
+        let expiration = softwareCard.licensesModel.GetData("Expiration");
+
+        index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", qsTr("Expiration"), index)
+        elementsTableModel.SetData("Value", expiration, index)
+
+        licensesView.elements = elementsTableModel;
+    }
+
     function updateHeaders(){
         headersLicensesTable.Clear();
 
         let index = headersLicensesTable.InsertNewItem();
 
-        headersLicensesTable.SetData("Id", "Name", index)
-        headersLicensesTable.SetData("Name", qsTr("License Name"), index)
+        headersLicensesTable.SetData("Id", "Key", index)
+        headersLicensesTable.SetData("Name", qsTr("Key"), index)
 
         index = headersLicensesTable.InsertNewItem();
 
-        headersLicensesTable.SetData("Id", "Expiration", index)
-        headersLicensesTable.SetData("Name", qsTr("Expiration"), index)
+        headersLicensesTable.SetData("Id", "Value", index)
+        headersLicensesTable.SetData("Name", qsTr("Value"), index)
 
         licensesView.headers = headersLicensesTable;
     }
+
+//    function updateHeaders(){
+//        headersLicensesTable.Clear();
+
+//        let index = headersLicensesTable.InsertNewItem();
+
+//        headersLicensesTable.SetData("Id", "Name", index)
+//        headersLicensesTable.SetData("Name", qsTr("License Name"), index)
+
+//        index = headersLicensesTable.InsertNewItem();
+
+//        headersLicensesTable.SetData("Id", "Expiration", index)
+//        headersLicensesTable.SetData("Name", qsTr("Expiration"), index)
+
+//        licensesView.headers = headersLicensesTable;
+//    }
 
     TreeItemModel {
         id: tableDecoratorModel;
