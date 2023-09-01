@@ -33,6 +33,9 @@ CollectionView {
     onHeadersChanged: {
         container.table.setColumnContentComponent(0, pairComp);
 
+        let orderIndex = container.table.getHeaderIndex("OrderId");
+        container.table.setColumnContentComponent(orderIndex, orderColumnContentComp);
+
         container.table.tableDecorator = tableDecoratorModel;
     }
 
@@ -75,14 +78,74 @@ CollectionView {
 
             Component.onCompleted: {
                 let loader = parent;
+                let tableCellDelegate = loader.cellDelegate;
+                let value = tableCellDelegate.getValue();
+
+                if (value === "NotPaired"){
+                    image.source = "../../../../Icons/Light/Unlink_On_Normal.svg";
+                }
+                else if (value === "IsPaired"){
+                    image.source = "../../../../Icons/Light/Link_On_Normal.svg";
+                }
+                else if (value === "InUse"){
+                    image.source = "../../../../Icons/Light/Lock_On_Normal.svg";
+                }
+            }
+        }
+    }
+
+    Component {
+        id: orderColumnContentComp;
+        Item {
+            Image {
+                id: image;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 5;
+
+                width: 18;
+                height: width;
+
+                source: "../../../../Icons/Light/Alert_On_Normal.svg";
+
+                visible: false;
+
+                sourceSize.width: width;
+                sourceSize.height: height;
+            }
+
+            Text {
+                id: lable;
+
+                anchors.left: parent.left;
+                anchors.right: parent.right;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                font.pixelSize: Style.fontSize_common;
+                font.family: Style.fontFamily;
+                color: Style.textColor;
+
+                elide: Text.ElideRight;
+            }
+
+            Component.onCompleted: {
+                let loader = parent;
                 let tableCellDelegate = loader.parent;
 
                 let value = tableCellDelegate.getValue();
-                if (value){
-                    image.source = "../../../../Icons/Light/Ok_On_Normal.svg";
-                }
-                else{
-                    image.source = "../../../../Icons/Light/Close_On_Normal.svg";
+                let rowIndex = tableCellDelegate.rowIndex;
+
+                if (rowIndex >= 0){
+                    let orderUuid = container.table.elements.GetData("OrderUuid", rowIndex);
+                    if (orderUuid === "undefined"){
+                        image.visible = true;
+                        lable.visible = false;
+                    }
+                    else{
+                        lable.visible = true;
+                        lable.text = value;
+                    }
                 }
             }
         }
@@ -95,7 +158,7 @@ CollectionView {
             var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
 
             let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 80, index);
+            cellWidthModel.SetData("Width", 40, index);
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);

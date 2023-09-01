@@ -112,11 +112,7 @@ CollectionView {
     }
 
     onHeadersChanged: {
-//        let rolesIndex = container.baseCollectionView.table.getHeaderIndex("Roles");
-//        let groupsIndex = container.baseCollectionView.table.getHeaderIndex("Groups");
-        console.log("onHeadersChanged")
         container.baseCollectionView.table.setColumnContentComponent(0, pairComp);
-        console.log("onHeadersChanged2")
     }
 
     DeviceProductionStatus {
@@ -163,11 +159,6 @@ CollectionView {
                 statusLable.text = tableCellDelegate.getValue();
 
                 image.source = deviceProductionStatus.getIconPath(statusLable.text);
-//                let softwareLinksCount = container.table.elements.GetData("SoftwareLinksCount", tableCellDelegate.rowIndex);
-//                if (softwareLinksCount === 0){
-//                    console.log("softwareLinksCount",softwareLinksCount)
-//                    image.visible = false
-//                }
             }
         }
     }

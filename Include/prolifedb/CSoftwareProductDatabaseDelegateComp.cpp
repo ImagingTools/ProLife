@@ -97,12 +97,15 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		QByteArrayList paramIdsList = paramIds.toList();
 #endif
 
+		QByteArray operation = " AND ";
 		int index = 0;
 		for (const QByteArray& key : qAsConst(paramIdsList)){
+
 			if (key.contains('/')){
 				continue;
 			}
 
+			QString elementFilter;
 			if (key == "LicenseStatus"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
@@ -115,32 +118,32 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					continue;
 				}
 
-				if (index > 0){
-					filterQuery += " AND ";
-				}
+//				if (index > 0){
+//					filterQuery += " AND ";
+//				}
 
-				filterQuery += "bp.\"Document\"->'SoftwareIds'->>0";
+				elementFilter += "bp.\"Document\"->'SoftwareIds'->>0";
 
 				if (value == "WithoutLicense"){
-					filterQuery += " is null";
+					elementFilter += " is null";
 				}
 				else{
-					filterQuery += " != ''";
+					elementFilter += " != ''";
 				}
-				continue;
+//				continue;
 			}
 
-			if (!filterQuery.isEmpty()){
-				if (key == "IncludeIds"){
-					filterQuery += " OR ";
-				}
-				else{
-					filterQuery += " AND ";
-				}
-			}
+//			if (!filterQuery.isEmpty()){
+//				if (key == "IncludeIds"){
+//					filterQuery += " OR ";
+//				}
+//				else{
+//					filterQuery += " AND ";
+//				}
+//			}
 
-			index++;
-			if (key == "OrderId"){
+//			index++;
+			else if (key == "OrderId"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
@@ -148,9 +151,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 				QString value = textParamPtr->GetText();
 				if (!value.isEmpty()){
-					filterQuery += "si.\"Document\"->>'OrderId' = '";
-					filterQuery += value.toUtf8();
-					filterQuery += "'";
+					elementFilter += "si.\"Document\"->>'OrderId' = '";
+					elementFilter += value.toUtf8();
+					elementFilter += "'";
 				}
 			}
 			else if (key == "CustomerUuid"){
@@ -161,9 +164,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 				QString value = textParamPtr->GetText();
 				if (!value.isEmpty()){
-					filterQuery += "acc.\"DocumentId\" = '";
-					filterQuery += value.toUtf8();
-					filterQuery += "'";
+					elementFilter += "acc.\"DocumentId\" = '";
+					elementFilter += value.toUtf8();
+					elementFilter += "'";
 				}
 			}
 			else if (key == "HardwareUuid"){
@@ -174,9 +177,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 				QString value = textParamPtr->GetText();
 				if (!value.isEmpty()){
-					filterQuery += "bp.\"Document\"->>'HardwareId' = '";
-					filterQuery += value.toUtf8();
-					filterQuery += "'";
+					elementFilter += "bp.\"Document\"->>'HardwareId' = '";
+					elementFilter += value.toUtf8();
+					elementFilter += "'";
 				}
 			}
 			else if (key == "ProductId"){
@@ -187,49 +190,90 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 				QString value = textParamPtr->GetText();
 				if (!value.isEmpty()){
-					filterQuery += "si.\"Document\"->>'ProductId' = '";
-					filterQuery += value.toUtf8();
-					filterQuery += "'";
+					elementFilter += "si.\"Document\"->>'ProductId' = '";
+					elementFilter += value.toUtf8();
+					elementFilter += "'";
 				}
 			}
-			else if (key == "ExcludeIds"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-				if (textParamPtr == nullptr){
-					return false;
-				}
-
-				QString value = textParamPtr->GetText();
-				if (!value.isEmpty()){
-					filterQuery += "si.\"DocumentId\" NOT IN (";
-					QStringList keys = value.split(';');
-					for (int index = 0; index < keys.count(); index++){
-						QString key = keys[index];
-						if (index > 0){
-							filterQuery += ",";
-						}
-						filterQuery += "'" + key.toUtf8() + "'";
+			else if (key == "FilterIds"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
+				if (filterParamPtr.IsValid()){
+					QString excludeText;
+					iprm::TParamsPtr<iprm::ITextParam> excludeTextParamPtr(filterParamPtr.GetPtr(), "ExcludeIds");
+					if (excludeTextParamPtr.IsValid()){
+						excludeText = excludeTextParamPtr->GetText();
 					}
-					filterQuery += ")";
-				}
-			}
-			else if (key == "IncludeIds"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-				if (textParamPtr == nullptr){
-					return false;
-				}
 
-				QString value = textParamPtr->GetText();
-				if (!value.isEmpty()){
-					filterQuery += "si.\"DocumentId\" IN (";
-					QStringList keys = value.split(';');
-					for (int index = 0; index < keys.count(); index++){
-						QString key = keys[index];
-						if (index > 0){
-							filterQuery += ",";
-						}
-						filterQuery += "'" + key.toUtf8() + "'";
+					QString includeText;
+					iprm::TParamsPtr<iprm::ITextParam> includeTextParamPtr(filterParamPtr.GetPtr(), "IncludeIds");
+					if (includeTextParamPtr.IsValid()){
+						includeText = includeTextParamPtr->GetText();
 					}
-					filterQuery += ")";
+
+					QStringList excludeIds;
+					if (!excludeText.isEmpty()){
+						elementFilter += "si.\"DocumentId\" NOT IN (";
+						QStringList keys = excludeText.split(';');
+						excludeIds = keys;
+						for (int index = 0; index < keys.count(); index++){
+							QString key = keys[index];
+							if (index > 0){
+								elementFilter += ",";
+							}
+							elementFilter += "'" + key.toUtf8() + "'";
+						}
+						elementFilter += ")";
+
+						QString deviceFilter = QString(" AND (dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)");
+						elementFilter += deviceFilter;
+					}
+
+					QStringList includeIds;
+					if (!includeText.isEmpty()){
+
+						QString suffixFilter;
+						if (!elementFilter.isEmpty()){
+							elementFilter += " OR ";
+						}
+						else{
+//							suffixFilter = QString()
+						}
+
+						elementFilter += "si.\"DocumentId\" IN (";
+						QStringList keys = includeText.split(';');
+						includeIds = keys;
+						for (int index = 0; index < keys.count(); index++){
+							QString key = keys[index];
+							if (index > 0){
+								elementFilter += ",";
+							}
+							elementFilter += "'" + key.toUtf8() + "'";
+						}
+						elementFilter += ")";
+
+
+
+//						QString deviceFilter = QString(" AND (dev.\"Document\"->>'MacAddress' != '' AND dev.\"Document\"->>'MacAddress' != NULL)");
+//						elementFilter += deviceFilter;
+					}
+
+					elementFilter = "(" + elementFilter + ")";
+
+					if (!excludeText.isEmpty()){
+						QStringList keys;
+
+						for (const QString& key : excludeIds){
+							if (!includeIds.contains(key)){
+								keys << key;
+							}
+						}
+
+						for (const QString& key : keys){
+							QString query = QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' != (SELECT \"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' as \"LicenseId\" FROM \"SoftwareInstances\" WHERE \"IsActive\" = true AND \"DocumentId\" = '%1' LIMIT 1)").arg(key);
+
+							elementFilter += " AND " + query;
+						}
+					}
 				}
 			}
 			else if (key == "Orders"){
@@ -254,7 +298,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							ordersFilterQuery += ')';
 						}
 
-						filterQuery += ordersFilterQuery;
+						elementFilter += ordersFilterQuery;
 					}
 				}
 			}
@@ -274,10 +318,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					if (isEqual){
-						filterQuery += QString("(si.\"Document\"->>'SerialNumber' = '%1')").arg(value);
+						elementFilter += QString("(si.\"Document\"->>'SerialNumber' = '%1')").arg(value);
 					}
 					else{
-						filterQuery += QString("si.\"Document\"->>'SerialNumber' != '%1'").arg(value);
+						elementFilter += QString("si.\"Document\"->>'SerialNumber' != '%1'").arg(value);
 					}
 				}
 			}
@@ -297,12 +341,19 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					if (isEqual){
-						filterQuery += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
+						elementFilter += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
 					}
 					else{
-						filterQuery += "dev.\"Document\"->>'MacAddress' != ''";
+						elementFilter += "dev.\"Document\"->>'MacAddress' != ''";
 					}
 				}
+			}
+
+			if (filterQuery.isEmpty()){
+				filterQuery = elementFilter;
+			}
+			else{
+				filterQuery += operation + elementFilter;
 			}
 		}
 	}

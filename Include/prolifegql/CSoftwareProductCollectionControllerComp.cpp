@@ -76,6 +76,56 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 }
 
 
+imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = "No collection component was set";
+
+		return nullptr;
+	}
+
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+
+	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
+	if (objectId.isEmpty()){
+		errorMessage = QObject::tr("No object-ID could not be extracted from the request");
+
+		return nullptr;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		if (productInstanceInfoPtr != nullptr){
+			bool isUse = productInstanceInfoPtr->IsInUse();
+			if (isUse){
+				errorMessage = QString("It is not possible to remove a product that is in use");
+
+				return nullptr;
+			}
+		}
+	}
+
+	imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Removed the object"));
+	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
+		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+
+		imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
+		imtbase::CTreeItemModel* notificationModel = dataModelPtr->AddTreeModel("removedNotification");
+
+		notificationModel->SetData("Id", objectId);
+
+		return rootModelPtr.PopPtr();
+	}
+
+	errorMessage = QObject::tr("Can't remove object: %1").arg(QString(objectId));
+
+	return nullptr;
+}
+
+
 bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 			const imtgql::CGqlRequest& gqlRequest,
 			imtbase::CTreeItemModel& model,
@@ -119,7 +169,15 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = objectCollectionIterator->GetElementInfo("Customer").toByteArray();
 				}
 				else if (informationId == "OrderUuid"){
-					elementInformation = orderUuid;
+					if (m_orderCollectionCompPtr.IsValid() && !orderUuid.isEmpty()){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
+							elementInformation = orderUuid;
+						}
+						else{
+							elementInformation = QByteArray("undefined");
+						}
+					}
 				}
 				else if (informationId == "HardwareUuid"){
 					elementInformation = hardwareUuid;
@@ -134,7 +192,26 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = !hardwareMacAddress.isEmpty();
 				}
 				else if (informationId == "InUse"){
-					elementInformation = objectCollectionIterator->GetElementInfo("InUse").toBool();
+					bool isUse = objectCollectionIterator->GetElementInfo("InUse").toBool();
+					if (isUse){
+						elementInformation = "InUse";
+					}
+				}
+				else if (informationId == "Status"){
+					bool isPaired = !hardwareMacAddress.isEmpty();
+					if (isPaired){
+						elementInformation = "IsPaired";
+					}
+					else{
+						elementInformation = "NotPaired";
+					}
+
+					if (isPaired){
+						bool isUse = objectCollectionIterator->GetElementInfo("InUse").toBool();
+						if (isUse){
+							elementInformation = "InUse";
+						}
+					}
 				}
 				else if (informationId == "DeviceId"){
 					if (!hardwareMacAddress.isEmpty()){
@@ -251,7 +328,36 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 	QByteArrayList keys;
 
-	keys << "HardwareUuid" << "ExcludeIds" << "IncludeIds" << "CustomerUuid" << "ProductId";
+	if (objectFilterModel.ContainsKey("FilterIds")){
+		imtbase::CTreeItemModel* filterIdsModelPtr = objectFilterModel.GetTreeItemModel("FilterIds");
+		if (filterIdsModelPtr != nullptr){
+			istd::TDelPtr<iprm::CParamsSet> filterIdsParamsSetPtr(new iprm::CParamsSet);
+
+			if (filterIdsModelPtr->ContainsKey("ExcludeIds")){
+				QByteArray filterValue = filterIdsModelPtr->GetData("ExcludeIds").toByteArray();
+				if (!filterValue.isEmpty()){
+					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+					textParamPtr->SetText(filterValue);
+
+					filterIdsParamsSetPtr->SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
+				}
+			}
+
+			if (filterIdsModelPtr->ContainsKey("IncludeIds")){
+				QByteArray filterValue = filterIdsModelPtr->GetData("IncludeIds").toByteArray();
+				if (!filterValue.isEmpty()){
+					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+					textParamPtr->SetText(filterValue);
+
+					filterIdsParamsSetPtr->SetEditableParameter("IncludeIds", textParamPtr.PopPtr());
+				}
+			}
+
+			filterParams.SetEditableParameter("FilterIds", filterIdsParamsSetPtr.PopPtr());
+		}
+	}
+
+	keys << "HardwareUuid" << "CustomerUuid" << "ProductId";
 
 	for (QByteArray key: keys){
 		if (objectFilterModel.ContainsKey(key)){
@@ -264,7 +370,6 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		}
 	}
 }
-
 
 
 } // namespace prolifegql

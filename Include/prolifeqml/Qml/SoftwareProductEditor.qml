@@ -100,6 +100,8 @@ Item {
                         return;
                     }
 
+                    licensesTable.forceActiveFocus();
+
                     let state = this.licenseState;
                     let licenseId = this.licenseId;
                     let licenseName = this.licenseName;

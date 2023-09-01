@@ -50,4 +50,22 @@ QtObject {
         root.statusModel.SetData("Id", "Closed", index);
         root.statusModel.SetData("Name", qsTr("Closed"), index);
     }
+
+    function getIconPath(statusId){
+        if (statusId === "None"){
+            return "qrc:/Icons/Light/StateUnknown_On_Active";
+        }
+        else if (statusId === "Canceled"){
+            return  "qrc:/Icons/Light/Cancel_On_Active";
+        }
+        else if (statusId === "Accepted" || statusId === "InProgress"){
+            return  "qrc:/Icons/Light/Timeline_On_Active";
+        }
+        else if (statusId === "OnHold"){
+            return  "qrc:/Icons/Light/Pause_On_Active";
+        }
+        else{
+            return  "qrc:/Icons/Light/StateOk_On_Active";
+        }
+    }
 }

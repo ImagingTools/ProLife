@@ -64,6 +64,19 @@ DocumentBase {
         }
     }
 
+    function documentCanBeSaved(){
+//        if (root.documentModel.ContainsKey("LicenseId")){
+//            let licenseId = root.documentModel.GetData("LicenseId");
+//            if (licenseId === ""){
+//                root.documentManager.openErrorDialog("MAC-Address invalid");
+
+//                return false;
+//            }
+//        }
+
+        return true;
+    }
+
     function updateGui(){
         console.log("Software updateGui", root.documentModel.toJSON());
 

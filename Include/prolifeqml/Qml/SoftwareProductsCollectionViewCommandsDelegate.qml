@@ -60,9 +60,19 @@ CollectionViewCommandsDelegateBase {
             createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
         }
 
+        let openOrderEnabled = isEnabled;
+        if (openOrderEnabled){
+            let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
+            let orderId = elementsModel.GetData("OrderId", indexes[0]);
+
+            if (orderUuid == "undefined" || orderUuid == ""){
+                openOrderEnabled = false;
+            }
+        }
+
         if (container.commandsProvider){
             commandsProvider.setCommandIsEnabled("Pair", pairIsEnabled);
-            commandsProvider.setCommandIsEnabled("OpenOrder", isEnabled);
+            commandsProvider.setCommandIsEnabled("OpenOrder", openOrderEnabled);
             commandsProvider.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
         }
     }
@@ -140,10 +150,10 @@ CollectionViewCommandsDelegateBase {
         else if (commandId === "OpenOrder"){
             let indexes = container.tableData.getSelectedIndexes();
             let elementsModel = container.tableData.elements;
-            let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
-            if (orderId !== ""){
+            let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
+            if (orderUuid !== ""){
                 if (container.collectionViewBase.mainDocumentManager){
-                    container.collectionViewBase.mainDocumentManager.openDocument("Orders", orderId);
+                    container.collectionViewBase.mainDocumentManager.openDocument("Orders", orderUuid);
                 }
             }
         }

@@ -263,6 +263,65 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 }
 
 
+imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	if (!m_objectCollectionCompPtr.IsValid() || !m_bindingCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
+		errorMessage = "No collection component was set";
+
+		return nullptr;
+	}
+
+	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+
+	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
+	if (objectId.isEmpty()){
+		errorMessage = QObject::tr("No object-ID could not be extracted from the request");
+
+		return nullptr;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+		if (bindingInfoPtr != nullptr){
+			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+			for (const QByteArray& softwareId : softwareIds){
+				imtbase::IObjectCollection::DataPtr softwareDataPtr;
+				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+					const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+					if (productInstanceInfoPtr != nullptr){
+						bool isUse = productInstanceInfoPtr->IsInUse();
+						if (isUse){
+							errorMessage = QString("It is not possible to remove a product that is in use");
+
+							return nullptr;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Removed the object"));
+	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
+		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
+
+		imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
+		imtbase::CTreeItemModel* notificationModel = dataModelPtr->AddTreeModel("removedNotification");
+
+		notificationModel->SetData("Id", objectId);
+
+		return rootModelPtr.PopPtr();
+	}
+
+	errorMessage = QObject::tr("Can't remove object: %1").arg(QString(objectId));
+
+	return nullptr;
+}
+
+
 bool CDeviceCollectionControllerComp::SetupGqlItem(
 		const imtgql::CGqlRequest& gqlRequest,
 		imtbase::CTreeItemModel& model,

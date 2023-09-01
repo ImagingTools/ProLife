@@ -336,9 +336,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					}
 				}
 			}
-
-			return orderPtr.PopPtr();
 		}
+
+		return orderPtr.PopPtr();
 	}
 
 	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));
@@ -552,6 +552,7 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 		softwareProductModel.SetData("ProductId", softwareProductPtr->GetProductId(), modelIndex);
 		softwareProductModel.SetData("CategoryId", softwareProductPtr->GetFactoryId(), modelIndex);
 		softwareProductModel.SetData("SerialNumber", softwareProductPtr->GetSerialNumber(), modelIndex);
+		softwareProductModel.SetData("InUse", softwareProductPtr->IsInUse(), modelIndex);
 
 		imtbase::CTreeItemModel* activeLicenses = softwareProductModel.AddTreeModel("ActiveLicenses", modelIndex);
 		const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();

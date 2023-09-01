@@ -41,19 +41,28 @@ Item {
     }
 
     property bool bindingModelReady: false;
-    property bool allCompleted: bindingModelReady && softwareProductCollection.modelReady;
-    onAllCompletedChanged: {
-        if (allCompleted){
-            productEditor.productId = productEditor.getCurrentSoftwareProductId();
+//    property bool allCompleted: bindingModelReady && softwareProductCollection.modelReady;
+//    onAllCompletedChanged: {
+//        if (allCompleted){
+//            productEditor.productId = productEditor.getCurrentSoftwareProductId();
 
-            productEditor.updateGui();
-        }
-    }
+//            productEditor.updateGui();
+//        }
+//    }
+
+    property string startSoftwareIds: "";
+    property string startProductId: "";
 
     onBindingModelChanged: {
         bindingModel.dataChanged.connect(productEditor.modelChanged);
 
         productEditor.bindingModelReady = true;
+
+        if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
+            let softwareIds = productEditor.bindingModel.GetData("SoftwareIds");
+
+            productEditor.startSoftwareIds = softwareIds;
+        }
     }
 
     property bool blockUpdatingModel: false;
@@ -74,9 +83,9 @@ Item {
             }
         }
 
-        if (productsCB.currentIndex >= 0){
-            productEditor.createElementsModel(productId);
-        }
+//        if (productsCB.currentIndex >= 0){
+//            productEditor.createElementsModel(productId);
+//        }
 
         if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
             let software = productEditor.bindingModel.GetData("SoftwareIds");
@@ -162,25 +171,17 @@ Item {
                 radius: 3;
                 nameId: "Id";
 
-                onVisibleChanged: {
-                    if (visible){
-                        //                    let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-                        //                    objectFilter.SetData("CategoryId", "Software");
-                        //                    productsList.updateModel()
-                    }
-                }
+                enabled: bindingProductsCollection.table.elementsList.count == 0;
 
                 onCurrentIndexChanged: {
                     if (productEditor.blockUpdatingModel){
                         return;
                     }
 
-                    //                productEditor.bindingModel.SetData("SoftwareIds", "");
                     if (productsCB.currentIndex > -1){
                         productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
                     }
                     softwareProductCollection.updateData();
-                    //                productEditor.updateGui();
                 }
 
                 CollectionDataProvider {
@@ -192,7 +193,6 @@ Item {
                         if (productsList.collectionModel != null){
                             productsCB.model = productsList.collectionModel
                             if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
-                                //                            productsCB.currentIndex = -1;
                                 productEditor.productId = bindingProductsCollection.table.elements.GetData("ProductId")
                                 for (let i = 0; i < productsList.collectionModel.GetItemsCount(); i++){
                                     let id = productsList.collectionModel.GetData("Id", i);
@@ -200,9 +200,6 @@ Item {
                                         productsCB.currentIndex = i;
                                     }
                                 }
-                            }
-                            else{
-                                //                            softwareProductCollection.updateData();
                             }
                         }
                     }
@@ -260,10 +257,7 @@ Item {
                     console.log("DEBUG::29")
                     softwareProductCollection.pagination.countElements = 9
                     softwareProductCollection.loadData = false;
-                    //                    softwareProductCollection.table.checkable = true
-                    //                    bindingProductsCollection.table.selectable = false;
                     bindingProductsCollection.table.canSelectAll = true;
-                    //                    bindingProductsCollection.table.hoverEnabled = false
                     softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
                     softwareProductCollection.table.selectionChanged.connect(selectionItemsChanged);
                 }
@@ -299,36 +293,36 @@ Item {
                     }
                     let products = selectedProductIds.join(';');
                     productEditor.bindingModel.SetData("SoftwareIds", products)
-                    console.log("DEBUG::41_2", products, selectedProductIds)
                     updateData()
                     softwareProductCollection.table.properties.clearCheckedItems()
                 }
 
                 onHeadersChanged: {
-                    console.log("DEBUG::26", softwareProductCollection.modelFilter.toJSON())
-                    console.log("DEBUG::27",  softwareProductCollection.tableHeaders.toJSON())
-                    console.log("DEBUG::28", softwareProductCollection.commands.headers.toJSON())
-
                     softwareProductCollection.table.setColumnContentComponent(0, pairComp);
+
+                    softwareProductCollection.table.tableDecorator = tableDecoratorModel;
                 }
 
                 function updateData() {
                     if (visible){
-                        console.log("DEBUG::30", softwareProductCollection.modelFilter.toJSON())
+                        if (productEditor.productId === ""){
+                            return;
+                        }
+
+
+
                         let objectFilter =  softwareProductCollection.modelFilter.AddTreeModel("ObjectFilter")
+                        let elementsModel = bindingProductsCollection.table.elements;
 
-                        console.log("productEditor.includeIds", productEditor.includeIds);
 
-                        if (productEditor.includeIds.length > 0){
-                            objectFilter.SetData("IncludeIds", productEditor.includeIds.join(';'));
+                        if (productEditor.startProductId != productEditor.productId){
+                            if (elementsModel.GetItemsCount() == 0){
+                                objectFilter.SetData("Key", "DeviceId");
+                                objectFilter.SetData("Value", "");
+                                objectFilter.SetData("IsEqual", true);
+                            }
                         }
-                        else{
-                            objectFilter.SetData("Key", "DeviceId");
-                            objectFilter.SetData("Value", "");
-                            objectFilter.SetData("IsEqual", true);
-                        }
 
-                        console.log("onCompleted filterModel", softwareProductCollection.modelFilter.toJSON());
                         let filterIdsModel = softwareProductCollection.modelFilter.GetData("FilterIds")
                         filterIdsModel.Clear();
 
@@ -363,9 +357,18 @@ Item {
                             products += id
                         }
 
-                        //                        let products = productEditor.bindingModel.GetData("SoftwareIds")
-                        if (products != ""){
-                            objectFilter.SetData("ExcludeIds", products);
+                        if (products != "" || productEditor.includeIds.length > 0){
+                            let model = objectFilter.AddTreeModel("FilterIds");
+
+                            if (products != ""){
+                                model.SetData("ExcludeIds", products);
+                            }
+
+                            if (productEditor.startProductId == productEditor.productId){
+                                if (productEditor.includeIds.length > 0){
+                                    model.SetData("IncludeIds", productEditor.includeIds.join(';'));
+                                }
+                            }
                         }
 
                         if (customerUuid != ""){
@@ -439,6 +442,8 @@ Item {
 
                 onHeadersChanged: {
                     bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
+
+                    bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                 }
 
                 Component.onCompleted: {
@@ -453,17 +458,17 @@ Item {
                 }
 
                 function selectionItemsChanged(selection){
-                    if (selection.length <= 0){
-                        unbindButton.enabled = false;
-
-                        return;
+                    console.log("selectionItemsChanged", selection);
+                    if (selection.length === 0){
+                        unbindButton.enabled = false
                     }
+                    else{
+                        let index = selection[0];
 
-                    let index = selection[0];
-
-                    let elementsModel = bindingProductsCollection.table.elements;
-                    let inUse = elementsModel.GetData("InUse", index);
-                    unbindButton.enabled = !inUse;
+                        let elementsModel = bindingProductsCollection.table.elements;
+                        let inUse = elementsModel.GetData("InUse", index);
+                        unbindButton.enabled = !inUse;
+                    }
                 }
 
                 onVisibleChanged: {
@@ -498,6 +503,10 @@ Item {
                 onElementsChanged: {
                     let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
                     objectFilter.SetData("CategoryId", "Software");
+
+                    if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
+                        productEditor.startProductId = bindingProductsCollection.table.elements.GetData("ProductId")
+                    }
 
                     productsList.updateModel()
                 }
@@ -560,7 +569,6 @@ Item {
             if (softwareIds && softwareIds != ""){
                 selectedProductIds = softwareIds.split(';')
             }
-            console.log("DEBUG::41_1", selectedProductIds)
             let indexes = softwareProductCollection.table.tableSelection.selectedIndexes;
             if (indexes.length === 0){
                 return
@@ -579,9 +587,9 @@ Item {
             }
             let products = selectedProductIds.join(';');
             productEditor.bindingModel.SetData("SoftwareIds", products)
-            console.log("DEBUG::41_2", products, selectedProductIds)
             softwareProductCollection.updateData()
-            softwareProductCollection.table.tableSelection.selectedIndexes = []
+
+             softwareProductCollection.table.resetSelection();
         }
     }
 
@@ -628,35 +636,22 @@ Item {
 
                 productEditor.includeIds.push(id)
             }
-//            else{
-//                productEditor.includeIds.push(id)
-//            }
-
-//            for (let i = indexes.length - 1; i > -1; i--){
-//                let index = indexes[i]
-//                let id = elementsModel.GetData("Id", index);
-//                if (selectedProductIds.indexOf(id) > -1){
-//                    elementsModel.RemoveItem(index)
-//                    selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-//                }
-//                else{
-//                    productEditor.includeIds.push(id)
-//                }
-//            }
-            console.log("productEditor.includeIds", productEditor.includeIds);
 
             let products = selectedProductIds.join(';');
             productEditor.bindingModel.SetData("SoftwareIds", products)
 
-            bindingProductsCollection.table.tableSelection.selectedIndexes = []
-            if (elementsModel.GetItemsCount() == 0){
-                productEditor.productId = ""
-                productsCB.enabled = true
-                productsCB.currentIndex = -1
-            }
-            else{
-                softwareProductCollection.updateData()
-            }
+            bindingProductsCollection.table.resetSelection();
+
+//            if (elementsModel.GetItemsCount() === 0){
+//                productEditor.productId = ""
+//                productsCB.enabled = true
+//                productsCB.currentIndex = -1
+//            }
+//            else{
+//                softwareProductCollection.updateData()
+//            }
+
+            softwareProductCollection.updateData()
         }
     }
 
@@ -681,7 +676,7 @@ Item {
 
         let index = headersModel.InsertNewItem();
         headersModel.SetData("Id", "InUse", index);
-        headersModel.SetData("Name", qsTr("In-Use"), index);
+        headersModel.SetData("Name", "", index);
 
         index = headersModel.InsertNewItem();
         headersModel.SetData("Id", "LicenseName", index);
@@ -705,6 +700,32 @@ Item {
 
         softwareProductCollection.commands.headers  = headersModel;
         bindingProductsCollection.commands.headers = headersModel;
+    }
+
+    TreeItemModel {
+        id: tableDecoratorModel;
+
+        Component.onCompleted: {
+            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+
+            let index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", 30, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+        }
     }
 
     Component {

@@ -1170,7 +1170,7 @@ DocumentBase {
             productIndex: model.index;
             devicesModel: orderEditorContainer.devicesModel;
 
-            readOnly: productsView.readOnly;
+            readOnly: productsView.readOnly || (model.CategoryId === "Software" && model.InUse !== undefined && model.InUse);
             isLicenseConsuming: productsView.isLicenseConsuming;
 
             licensesProvider: orderEditorContainer.licensesProviderLocal;

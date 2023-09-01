@@ -50,7 +50,7 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>IsPaired</Value>
+                                <Value>Status</Value>
                                 <Value>ProductId</Value>
                                 <Value>LicenseName</Value>
                                 <Value>LicenseId</Value>
@@ -68,7 +68,7 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>In-Use</Value>
+                                <Value></Value>
                                 <Value>Product</Value>
                                 <Value>License Name</Value>
                                 <Value>License-ID</Value>

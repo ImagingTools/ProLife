@@ -13,6 +13,8 @@ Rectangle {
 
     property string productId: model.ProductId ? model.ProductId : "";
     property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
+    property bool inUse: model.InUse ? model.InUse : "";
+
     property string licenseName;
     property int margin: 10;
 
@@ -48,6 +50,12 @@ Rectangle {
 //            licensesView.elements = softwareCard.licensesModel;
         }
     }
+
+//    onInUseChanged: {
+//        if (softwareCard.inUse){
+//            softwareCard.readOnly = true;
+//        }
+//    }
 
     property bool ok: softwareCard.licensesProvider != null && productId && licensesModel !== null;
 
