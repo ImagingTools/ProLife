@@ -235,9 +235,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 						if (!elementFilter.isEmpty()){
 							elementFilter += " OR ";
 						}
-						else{
-//							suffixFilter = QString()
-						}
 
 						elementFilter += "si.\"DocumentId\" IN (";
 						QStringList keys = includeText.split(';');
@@ -250,30 +247,25 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							elementFilter += "'" + key.toUtf8() + "'";
 						}
 						elementFilter += ")";
-
-
-
-//						QString deviceFilter = QString(" AND (dev.\"Document\"->>'MacAddress' != '' AND dev.\"Document\"->>'MacAddress' != NULL)");
-//						elementFilter += deviceFilter;
 					}
 
 					elementFilter = "(" + elementFilter + ")";
 
-					if (!excludeText.isEmpty()){
-						QStringList keys;
+//					if (!excludeText.isEmpty()){
+//						QStringList keys;
 
-						for (const QString& key : excludeIds){
-							if (!includeIds.contains(key)){
-								keys << key;
-							}
-						}
+//						for (const QString& key : excludeIds){
+//							if (!includeIds.contains(key)){
+//								keys << key;
+//							}
+//						}
 
-						for (const QString& key : keys){
-							QString query = QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' != (SELECT \"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' as \"LicenseId\" FROM \"SoftwareInstances\" WHERE \"IsActive\" = true AND \"DocumentId\" = '%1' LIMIT 1)").arg(key);
+//						for (const QString& key : keys){
+//							QString query = QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' != (SELECT \"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' as \"LicenseId\" FROM \"SoftwareInstances\" WHERE \"IsActive\" = true AND \"DocumentId\" = '%1' LIMIT 1)").arg(key);
 
-							elementFilter += " AND " + query;
-						}
-					}
+//							elementFilter += " AND " + query;
+//						}
+//					}
 				}
 			}
 			else if (key == "Orders"){

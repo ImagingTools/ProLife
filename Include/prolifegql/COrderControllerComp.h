@@ -24,6 +24,7 @@ public:
 	I_BEGIN_COMPONENT(COrderControllerComp)
 		I_ASSIGN(m_orderPtr, "OrderFactory", "Factory used for creation of the new order instance", true, "OrderFactory");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
+		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareInstanceCollectionCompPtr, "SoftwareInstanceCollection", "Software instance collection", true, "SoftwareInstanceCollection");
 	I_END_COMPONENT
 
@@ -57,6 +58,7 @@ private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareInstanceCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 };
 
 

@@ -22,6 +22,8 @@ Rectangle {
 
     property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
 
+    property bool inUse: model.InUse ? model.InUse : false;
+
     property int margin: 10;
 
     property bool selected: false;
@@ -62,6 +64,25 @@ Rectangle {
         }
     }
 
+    property bool hardwareInUse: hardwareCommandsModel.completed && root.inUse;
+    property bool softwareInUse: softwareCommandsModel.completed && root.inUse;
+
+    onHardwareInUseChanged: {
+        if (hardwareInUse){
+            root.setCommandValue(hardwareCommandsModel, "Edit", "Visible", !root.inUse);
+            root.setCommandValue(hardwareCommandsModel, "Remove", "Visible", !root.inUse);
+            root.setCommandValue(hardwareCommandsModel, "Lock", "Visible", root.inUse);
+        }
+    }
+
+    onSoftwareInUseChanged: {
+        if (softwareInUse){
+            root.setCommandValue(softwareCommandsModel, "Edit", "Visible", !root.inUse);
+            root.setCommandValue(softwareCommandsModel, "Remove", "Visible", !root.inUse);
+            root.setCommandValue(softwareCommandsModel, "Lock", "Visible", root.inUse);
+        }
+    }
+
     onReadOnlyChanged: {
         if (cardLoader.item){
             cardLoader.item.readOnly = root.readOnly;
@@ -86,6 +107,16 @@ Rectangle {
             let id = commandsModel.GetData("Id", i);
             if (id === commandId){
                 commandsModel.SetData("IsEnabled", isEnabled, i);
+                break;
+            }
+        }
+    }
+
+    function setCommandValue(commandsModel, commandId, commandKey, commandValue){
+        for (let i = 0; i < commandsModel.GetItemsCount(); i++){
+            let id = commandsModel.GetData("Id", i);
+            if (id === commandId){
+                commandsModel.SetData(commandKey, commandValue, i);
                 break;
             }
         }
@@ -292,21 +323,21 @@ Rectangle {
         Component.onCompleted: {
             let index = pairCommandsModel.InsertNewItem();
 
-//            pairCommandsModel.SetData("Id", "Unlink", index);
-//            pairCommandsModel.SetData("Name", "Unlink", index);
-//            pairCommandsModel.SetData("Icon", "Unlink", index);
-//            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-//            pairCommandsModel.SetData("Visible", true, index);
+            //            pairCommandsModel.SetData("Id", "Unlink", index);
+            //            pairCommandsModel.SetData("Name", "Unlink", index);
+            //            pairCommandsModel.SetData("Icon", "Unlink", index);
+            //            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
+            //            pairCommandsModel.SetData("Visible", true, index);
 
-//            index = pairCommandsModel.InsertNewItem();
+            //            index = pairCommandsModel.InsertNewItem();
 
-//            pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
-//            pairCommandsModel.SetData("Name", "Create License File", index);
-//            pairCommandsModel.SetData("Icon", "Key", index);
-//            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
-//            pairCommandsModel.SetData("Visible", true, index);
+            //            pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
+            //            pairCommandsModel.SetData("Name", "Create License File", index);
+            //            pairCommandsModel.SetData("Icon", "Key", index);
+            //            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
+            //            pairCommandsModel.SetData("Visible", true, index);
 
-//            index = pairCommandsModel.InsertNewItem();
+            //            index = pairCommandsModel.InsertNewItem();
 
             pairCommandsModel.SetData("Id", "Remove", index);
             pairCommandsModel.SetData("Name", "Remove", index);
@@ -325,6 +356,8 @@ Rectangle {
     TreeItemModel {
         id: softwareCommandsModel;
 
+        property bool completed: false;
+
         Component.onCompleted: {
             let index = softwareCommandsModel.InsertNewItem();
 
@@ -342,14 +375,26 @@ Rectangle {
             softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             softwareCommandsModel.SetData("Visible", true, index);
 
+            index = softwareCommandsModel.InsertNewItem();
+
+            softwareCommandsModel.SetData("Id", "Lock", index);
+            softwareCommandsModel.SetData("Name", "Lock", index);
+            softwareCommandsModel.SetData("Icon", "Lock", index);
+            softwareCommandsModel.SetData("IsEnabled", false, index);
+            softwareCommandsModel.SetData("Visible", false, index);
+
             if (root.categoryId == "Software"){
                 commands.commandModel = softwareCommandsModel;
             }
+
+            softwareCommandsModel.completed = true;
         }
     }
 
     TreeItemModel {
         id: hardwareCommandsModel;
+
+        property bool completed: false;
 
         Component.onCompleted: {
             let index = hardwareCommandsModel.InsertNewItem();
@@ -368,9 +413,19 @@ Rectangle {
             hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             hardwareCommandsModel.SetData("Visible", true, index);
 
+            index = hardwareCommandsModel.InsertNewItem();
+
+            hardwareCommandsModel.SetData("Id", "Lock", index);
+            hardwareCommandsModel.SetData("Name", "Lock", index);
+            hardwareCommandsModel.SetData("Icon", "Lock", index);
+            hardwareCommandsModel.SetData("IsEnabled", false, index);
+            hardwareCommandsModel.SetData("Visible", false, index);
+
             if (root.categoryId == "Hardware"){
                 commands.commandModel = hardwareCommandsModel;
             }
+
+            hardwareCommandsModel.completed = true;
         }
     }
 } //Card

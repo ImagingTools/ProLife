@@ -342,7 +342,6 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 
 		if (deviceInfoPtr != nullptr){
 			QByteArray collectionId = objectCollectionIterator->GetObjectId();
-			int licenseCount = 0;
 
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
@@ -373,6 +372,9 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				}
 				else if(informationId == "DeviceType"){
 					elementInformation = deviceInfoPtr->GetDeviceType();
+				}
+				else if(informationId == "ConfigurationType"){
+					elementInformation = deviceInfoPtr->GetConfigurationType();
 				}
 				else if(informationId == "OrderId"){
 					if (m_orderCollectionCompPtr.IsValid()){

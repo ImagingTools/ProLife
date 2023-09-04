@@ -44,19 +44,6 @@ Rectangle {
         softwareCard.updateHeaders();
     }
 
-    onLicensesProviderChanged: {
-        if (softwareCard.licensesProvider != null){
-//            licensesView.elements = 0;
-//            licensesView.elements = softwareCard.licensesModel;
-        }
-    }
-
-//    onInUseChanged: {
-//        if (softwareCard.inUse){
-//            softwareCard.readOnly = true;
-//        }
-//    }
-
     property bool ok: softwareCard.licensesProvider != null && productId && licensesModel !== null;
 
     onOkChanged: {
@@ -77,8 +64,6 @@ Rectangle {
             productCardRoot.orderEditorPtr.blockUpdatingModel = false
 
             softwareCard.updateElements();
-
-//            licensesView.elements = softwareCard.licensesModel;
         }
     }
 
@@ -119,7 +104,6 @@ Rectangle {
         width: parent.width;
         height: visible ? 40 : 0;
 
-//        visible: licenceText.visible;
         visible: false;
 
         Text {
@@ -177,10 +161,6 @@ Rectangle {
 
             clip: true;
             showHeaders: false;
-
-            onHeadersChanged: {
-//                licensesView.tableDecorator = tableDecoratorModel;
-            }
         }
     } // Column
 
@@ -235,22 +215,6 @@ Rectangle {
 
         licensesView.headers = headersLicensesTable;
     }
-
-//    function updateHeaders(){
-//        headersLicensesTable.Clear();
-
-//        let index = headersLicensesTable.InsertNewItem();
-
-//        headersLicensesTable.SetData("Id", "Name", index)
-//        headersLicensesTable.SetData("Name", qsTr("License Name"), index)
-
-//        index = headersLicensesTable.InsertNewItem();
-
-//        headersLicensesTable.SetData("Id", "Expiration", index)
-//        headersLicensesTable.SetData("Name", qsTr("Expiration"), index)
-
-//        licensesView.headers = headersLicensesTable;
-//    }
 
     TreeItemModel {
         id: tableDecoratorModel;

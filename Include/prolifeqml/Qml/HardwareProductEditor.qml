@@ -117,6 +117,12 @@ Item {
 
         elements: root.productLicensesModel;
 
+        readOnly: deviceCB.currentIndex !== 0;
+
+        onReadOnlyChanged: {
+            console.log("onReadOnlyChanged", modelsTable.readOnly);
+        }
+
         onCheckedItemsChanged: {
             if (root.blockUpdatingModel){
                 return;
@@ -145,6 +151,8 @@ Item {
     }
 
     function updateGui(){
+        console.log("HardwareProductEditor updateGui");
+
         blockUpdatingModel = true;
 
         deviceCB.currentIndex = -1;

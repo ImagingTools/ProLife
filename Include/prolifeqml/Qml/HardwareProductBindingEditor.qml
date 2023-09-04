@@ -122,6 +122,25 @@ Item {
         productEditor.bindingModel.SetData("SoftwareIds", products)
     }
 
+    function checkLicenseId(licenseId){
+        let bindingElements = bindingProductsCollection.table.elements;
+        if (bindingElements){
+            for (let i = 0; i < bindingElements.GetItemsCount(); i++){
+                let id = bindingElements.GetData("LicenseId", i)
+                if (id == licenseId){
+                    bindButton.enabled = false
+                    productEditor.setError(1);
+
+                    return false;
+                }
+            }
+        }
+
+        productEditor.setError(-1);
+
+        return true;
+    }
+
     TreeItemModel {
         id: productsModel;
     }
@@ -133,6 +152,18 @@ Item {
         anchors.horizontalCenter: availableLicensesColumn.horizontalCenter
         text: qsTr("Available licenses");
         font.family: Style.fontFamilyBold;
+    }
+
+    function setError(errorType){
+        if (errorType === 0){
+            errorText.text = qsTr("Please select a product");
+        }
+        else if (errorType === 1){
+            errorText.text = qsTr("Unable to add license with this License-ID");
+        }
+        else{
+            errorText.text = "";
+        }
     }
 
     Column {
@@ -178,6 +209,10 @@ Item {
                         return;
                     }
 
+                    if (productsCB.currentIndex < 0){
+                        productEditor.setError(0);
+                    }
+
                     if (productsCB.currentIndex > -1){
                         productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
                     }
@@ -203,32 +238,30 @@ Item {
                             }
                         }
                     }
-
-                    onFailed: {
-                        if (orderEditorContainer.documentManager){
-                            let message = qsTr("Error loading products. Please check Lisa connection.");
-
-                            orderEditorContainer.documentManager.openErrorDialog(message);
-                            orderEditorContainer.documentManager.showAlertMessage(message);
-
-                            orderEditorContainer.errorMessage = message;
-                        }
-                    }
-
                 }
             }
         }
 
         Text {
-            id: selectProductText;
+            id: errorText;
 
-            text: qsTr("Please select a product");
             color: Style.errorTextColor;
             font.family: Style.fontFamily;
             font.pixelSize: Style.fontSize_common;
 
-            visible: productsCB.currentIndex < 0;
+            visible: errorText.text !== "";
         }
+
+//        Text {
+//            id: selectProductText;
+
+//            text: qsTr("Please select a product");
+//            color: Style.errorTextColor;
+//            font.family: Style.fontFamily;
+//            font.pixelSize: Style.fontSize_common;
+
+//            visible: productsCB.currentIndex < 0;
+//        }
 
         Rectangle{
             width: parent.width;
@@ -264,11 +297,28 @@ Item {
 
                 function selectionItemsChanged(selection){
                     console.log("DEBUG::60", selection)
-                    if (selection.length === 0){
+                    if (selection.length <= 0){
                         bindButton.enabled = false
                     }
                     else{
-                        bindButton.enabled = true
+                        let index = selection[0];
+                        let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+
+                        let ok = productEditor.checkLicenseId(licenseId);
+                        bindButton.enabled = ok;
+//                        let bindingElements = bindingProductsCollection.table.elements;
+//                        if (bindingElements){
+//                            for (let i = 0; i < bindingElements.GetItemsCount(); i++){
+//                                let id = bindingElements.GetData("LicenseId", i)
+//                                if (id == licenseId){
+//                                    bindButton.enabled = false
+
+//                                    return;
+//                                }
+//                            }
+//                        }
+
+//                        bindButton.enabled = true
                     }
                 }
 
@@ -309,11 +359,8 @@ Item {
                             return;
                         }
 
-
-
                         let objectFilter =  softwareProductCollection.modelFilter.AddTreeModel("ObjectFilter")
                         let elementsModel = bindingProductsCollection.table.elements;
-
 
                         if (productEditor.startProductId != productEditor.productId){
                             if (elementsModel.GetItemsCount() == 0){
@@ -641,15 +688,6 @@ Item {
             productEditor.bindingModel.SetData("SoftwareIds", products)
 
             bindingProductsCollection.table.resetSelection();
-
-//            if (elementsModel.GetItemsCount() === 0){
-//                productEditor.productId = ""
-//                productsCB.enabled = true
-//                productsCB.currentIndex = -1
-//            }
-//            else{
-//                softwareProductCollection.updateData()
-//            }
 
             softwareProductCollection.updateData()
         }

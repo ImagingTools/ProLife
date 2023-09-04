@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5096" Description="ACF"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
             <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -151,6 +151,7 @@
                             <Values>
                                 <Value>Status</Value>
                                 <Value>DeviceType</Value>
+                                <Value>ConfigurationType</Value>
                                 <Value>MacAddress</Value>
                                 <Value>OrderId</Value>
                                 <Value>Description</Value>
@@ -164,6 +165,7 @@
                             <Values>
                                 <Value>Production Status</Value>
                                 <Value>Device Type</Value>
+                                <Value>Configuration Type</Value>
                                 <Value>MAC-Address</Value>
                                 <Value>Order-ID</Value>
                                 <Value>Description</Value>
@@ -184,6 +186,7 @@
                                 <Value>Status</Value>
                                 <Value>Description</Value>
                                 <Value>OrderId</Value>
+                                <Value>ConfigurationType</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

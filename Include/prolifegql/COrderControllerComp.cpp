@@ -15,6 +15,7 @@
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/IHardwareProductBinding.h>
 
 
 namespace prolifegql
@@ -584,11 +585,40 @@ void COrderControllerComp::InsertHardwareProductToModel(
 	if (deviceInfoPtr != nullptr){
 		int modelIndex = hardwareProductModel.InsertNewItem();
 
-		hardwareProductModel.SetData("Id", deviceInfoPtr->GetObjectUuid(), modelIndex);
+		QByteArray objectUuid = deviceInfoPtr->GetObjectUuid();
+
+		hardwareProductModel.SetData("Id", objectUuid, modelIndex);
 		hardwareProductModel.SetData("ProductId", deviceInfoPtr->GetDeviceType(), modelIndex);
 		hardwareProductModel.SetData("CategoryId", QByteArray("Hardware"), modelIndex);
 		hardwareProductModel.SetData("ModelTypeId", deviceInfoPtr->GetConfigurationType(), modelIndex);
 		hardwareProductModel.SetData("DeviceId", deviceInfoPtr->GetObjectUuid(), modelIndex);
+
+		if (m_bindingCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_bindingCollectionCompPtr->GetObjectData(objectUuid, dataPtr)){
+				const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+				if (bindingInfoPtr != nullptr){
+					QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+
+					hardwareProductModel.SetData("InUse", false, modelIndex);
+
+					for (const QByteArray& softwareId : softwareIds){
+						imtbase::IObjectCollection::DataPtr softwareDataPtr;
+						if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+							const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+							if (productInstanceInfoPtr != nullptr){
+								bool isUse = productInstanceInfoPtr->IsInUse();
+								if (isUse){
+									hardwareProductModel.SetData("InUse", true, modelIndex);
+
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

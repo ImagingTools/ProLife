@@ -37,6 +37,22 @@ DocumentBase {
     onModelsIsLoadedChanged: {
         console.log("onModelsIsLoadedChanged", deviceEditorContainer.modelsIsLoaded);
         if (deviceEditorContainer.modelsIsLoaded){
+            if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
+                let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
+                let productModel = productCB.model;
+                for (let i = 0; i < productModel.GetItemsCount(); i++){
+                    let id = productModel.GetData("Id", i);
+                    if (id === productId){
+                        let licensesModel = productModel.GetData("Licenses", i);
+                        if (licensesModel){
+                            configurationCB.model = licensesModel;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
             deviceEditorContainer.updateGui();
             undoRedoManager.registerModel(documentModel);
         }
@@ -56,15 +72,21 @@ DocumentBase {
 
         commandId: "Products";
 
-        fields: ["Id", "Name", "Description", "CategoryId"];
+        fields: ["Id", "Name", "Description", "CategoryId", "Licenses"];
 
         property TreeItemModel filteringModel: TreeItemModel {}
+
+        Component.onCompleted: {
+            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+            objectFilter.SetData("CategoryId", "Hardware");
+        }
 
         onCollectionModelChanged: {
             console.log("productsList onCollectionModelChanged");
             if (productsList.collectionModel != null){
-                productsList.filteringProductCollection();
-                productCB.model = filteringModel;
+                //                productsList.filteringProductCollection();
+                //                productCB.model = filteringModel;
+                productCB.model = productsList.collectionModel;
             }
         }
 
@@ -187,7 +209,6 @@ DocumentBase {
     }
 
     function updateGui(){
-        console.log("DeviceEditor begin updateGui");
         deviceEditorContainer.blockUpdatingModel = true;
 
         descriptionInput.text = "";
@@ -208,11 +229,8 @@ DocumentBase {
         statusCB.currentIndex = -1;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-            console.log("status", status);
-            //            let statusModel = productionStatus.getAvailableModel(status);
             let statusModel = stateMachine.getAvailableModel(status);
             if (statusModel){
-                console.log("statusModel", statusModel.toJSON());
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
@@ -238,6 +256,21 @@ DocumentBase {
             }
         }
 
+        configurationCB.currentIndex = -1;
+        if (deviceEditorContainer.documentModel.ContainsKey("ConfigurationType")){
+            let productId = deviceEditorContainer.documentModel.GetData("ConfigurationType");
+            let model = configurationCB.model;
+            if (model){
+                for (let i = 0; i < model.GetItemsCount(); i++){
+                    let id = model.GetData("Id", i);
+                    if (id === productId){
+                        configurationCB.currentIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
         orderCB.currentIndex = -1;
         if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
             let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
@@ -254,11 +287,9 @@ DocumentBase {
         }
 
         deviceEditorContainer.blockUpdatingModel = false;
-        console.log("DeviceEditor end updateGui");
     }
 
     function updateModel(){
-        console.log("DeviceEditor begin updateModel");
         if (deviceEditorContainer.blockUpdatingModel){
             return;
         }
@@ -271,6 +302,20 @@ DocumentBase {
         }
         else{
             deviceEditorContainer.documentModel.SetData("DeviceType", "");
+        }
+
+        let configurationExists = false;
+        if (configurationCB.model){
+            if (configurationCB.currentIndex >= 0){
+                let configurationType = configurationCB.model.GetData("Id", configurationCB.currentIndex);
+                deviceEditorContainer.documentModel.SetData("ConfigurationType", configurationType);
+
+                configurationExists = true;
+            }
+        }
+
+        if (!configurationExists){
+            deviceEditorContainer.documentModel.SetData("ConfigurationType", "");
         }
 
         if (orderCB.currentIndex >= 0){
@@ -292,10 +337,8 @@ DocumentBase {
             deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
         }
 
-        console.log("statusCB.currentIndex", statusCB.currentIndex);
         if (statusCB.currentIndex >= 0){
             let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
-            console.log("selectedStatus", selectedStatus);
             deviceEditorContainer.documentModel.SetData("ProductionStatus", selectedStatus);
         }
         else{
@@ -387,6 +430,47 @@ DocumentBase {
                         model: deviceEditorContainer.productsModel;
 
                         onCurrentIndexChanged: {
+                            if (productCB.currentIndex >= 0){
+                                let model = productCB.model.GetData("Licenses", productCB.currentIndex);
+                                if (model){
+                                    configurationCB.model = model;
+                                }
+                                else{
+                                    configurationCB.model = 0;
+                                }
+
+                                configurationCB.currentIndex = -1;
+                            }
+
+                            deviceEditorContainer.updateModel();
+                        }
+                    }
+                }
+
+                Item {
+                    width: parent.width;
+                    height: titleConfigurationName.height + configurationCB.height + configurationCB.anchors.topMargin;
+
+                    Text {
+                        id: titleConfigurationName;
+                        text: qsTr("Configuration Type");
+                        color: Style.textColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
+
+                    ComboBox {
+                        id: configurationCB;
+
+                        anchors.top: titleConfigurationName.bottom;
+                        anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
+
+                        width: parent.width;
+                        height: 23;
+
+                        radius: deviceEditorContainer.radius;
+
+                        onCurrentIndexChanged: {
                             deviceEditorContainer.updateModel();
                         }
                     }
@@ -434,7 +518,7 @@ DocumentBase {
 
                     height: macAddresInvalidText.visible ?
                                 macAddressInput.height + macAddresInvalidText.height + macAddresInvalidText.anchors.topMargin :
-                                    macAddressInput.height ;
+                                macAddressInput.height ;
 
                     TextFieldWithTitle {
                         id: macAddressInput;
@@ -555,7 +639,7 @@ DocumentBase {
 
                             anchors.left: parent.left;
 
-                            width: parent.width - iconStatus.width - 10;
+                            width: parent.width - iconStatus.width - 2*iconStatus.anchors.leftMargin - buttonContainer.width;
                             height: 23;
 
                             radius: deviceEditorContainer.radius;
@@ -587,12 +671,12 @@ DocumentBase {
                                     return;
                                 }
 
+                                deviceEditorContainer.updateModel()
+
                                 if (statusCB.currentIndex >= 0){
-                                    deviceEditorContainer.updateModel();
+//                                    deviceEditorContainer.updateModel();
 
                                     let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                    //                                let statusModel = productionStatus.getAvailableModel(status);
-
                                     let statusModel = stateMachine.getAvailableModel(status);
 
                                     statusCB.model = statusModel;
@@ -621,6 +705,33 @@ DocumentBase {
                             sourceSize.height: height;
                             sourceSize.width: width;
                         }
+
+                        BaseButton{
+                            id: buttonContainer;
+
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.right: parent.right;
+
+                            text: qsTr("Clear");
+
+                            decorator: defaultButtonDecorator;
+
+                            onClicked: {
+                                if(deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                                    if (statusCB.currentIndex != -1){
+                                        statusCB.currentIndex = -1;
+                                    }
+                                }
+                            }
+
+                            Component{
+                                id: defaultButtonDecorator;
+                                CommonButtonDecorator{
+                                    width: 70;
+                                    height: 23;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -639,10 +750,11 @@ DocumentBase {
                     ComboBox {
                         id: orderCB;
 
+                        anchors.left: parent.left;
                         anchors.top: titleOrderId.bottom;
                         anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
-                        width: parent.width;
+                        width: parent.width - orderClearButton.width - 10;
                         height: 23;
 
                         radius: deviceEditorContainer.radius;
@@ -651,6 +763,25 @@ DocumentBase {
 
                         onCurrentIndexChanged: {
                             deviceEditorContainer.updateModel();
+                        }
+                    }
+
+                    BaseButton{
+                        id: orderClearButton;
+
+                        anchors.top: orderCB.top;
+                        anchors.right: parent.right;
+
+                        text: qsTr("Clear");
+
+                        decorator: defaultButtonDecorator;
+
+                        onClicked: {
+                            if(deviceEditorContainer.documentModel.ContainsKey("OrderId")){
+                                if (orderCB.currentIndex != -1){
+                                    orderCB.currentIndex = -1;
+                                }
+                            }
                         }
                     }
                 }

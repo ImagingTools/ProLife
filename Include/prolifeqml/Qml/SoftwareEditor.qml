@@ -10,13 +10,36 @@ DocumentBase {
 
     property bool documentReady: modelIsReady && productsList.completed && ordersList.completed;
 
+    property string alertMessage: "";
+
     Component.onCompleted: {
         productsList.updateModel();
         ordersList.updateModel();
     }
 
+    onVisibleChanged: {
+        if (visible){
+            if (root.alertMessage !== ""){
+                root.documentManager.showAlertMessage(root.alertMessage);
+            }
+        }
+        else{
+            root.documentManager.hideAlertMessage();
+        }
+    }
+
     onDocumentReadyChanged: {
         if (root.documentReady){
+            if (root.documentModel.ContainsKey("InUse")){
+                let inUse = root.documentModel.GetData("InUse")
+                if (inUse){
+                    root.alertMessage = qsTr("The product cannot be edited as it is in use.");
+                    root.documentManager.showAlertMessage(root.alertMessage);
+
+                    root.blockEditing();
+                }
+            }
+
             root.updateGui();
             undoRedoManager.registerModel(root.documentModel);
         }
@@ -44,6 +67,11 @@ DocumentBase {
         fields: ["Id", "Name", "CategoryId", "Licenses"];
         commandId: "Products";
 
+        Component.onCompleted: {
+            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+            objectFilter.SetData("CategoryId", "Software");
+        }
+
         onCollectionModelChanged: {
             if (productsList.collectionModel != null){
                 root.productsModel = productsList.collectionModel;
@@ -64,16 +92,18 @@ DocumentBase {
         }
     }
 
+    function blockEditing(){
+        projectInput.readOnly = true;
+
+        ordersCB.enabled = false;
+        productCB.enabled = false;
+
+        buttonContainer.enabled = false;
+
+        softwareProductEditor.readOnly = true;
+    }
+
     function documentCanBeSaved(){
-//        if (root.documentModel.ContainsKey("LicenseId")){
-//            let licenseId = root.documentModel.GetData("LicenseId");
-//            if (licenseId === ""){
-//                root.documentManager.openErrorDialog("MAC-Address invalid");
-
-//                return false;
-//            }
-//        }
-
         return true;
     }
 
@@ -152,8 +182,6 @@ DocumentBase {
         if (root.blockUpdatingModel){
             return;
         }
-
-        console.log("updateModel", softwareProductEditor.productModel.toJSON());
 
         undoRedoManager.beginChanges();
 
@@ -327,7 +355,7 @@ DocumentBase {
                             height: 23;
                         }
                     }
-                }//delegate
+                }
             }
 
             Text {
@@ -348,7 +376,6 @@ DocumentBase {
                 radius: 3;
 
                 onCurrentIndexChanged: {
-                    console.log("onCurrentIndexChanged", productCB.currentIndex);
                     if (root.blockUpdatingModel){
                         return;
                     }
@@ -394,8 +421,6 @@ DocumentBase {
                 }
 
                 function onModelChanged(){
-                    console.log("onModelChanged", softwareProductEditor.productModel.toJSON());
-
                     root.updateModel()
                 }
             }

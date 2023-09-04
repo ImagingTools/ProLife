@@ -106,6 +106,23 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		return nullptr;
 	}
 
+	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = nullptr;
+
+	imtbase::IObjectCollection::DataPtr orderProductDataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectUuid, orderProductDataPtr)){
+		productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(orderProductDataPtr.GetPtr());
+	}
+
+	if (productOrderInfoPtr == nullptr){
+		return nullptr;
+	}
+
+	if (productOrderInfoPtr->IsInUse()){
+		errorMessage = QString("It is not possible to update an product in use");
+
+		return nullptr;
+	}
+
 	imtbase::CTreeItemModel itemModel;
 	if (!itemModel.CreateFromJson(itemData)){
 		errorMessage = QObject::tr("Unable to create an item model from json: %1").arg(qPrintable(itemData)).toUtf8();
@@ -174,17 +191,6 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 				return rootModelPtr.PopPtr();
 			}
 		}
-	}
-
-	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = nullptr;
-
-	imtbase::IObjectCollection::DataPtr orderProductDataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectUuid, orderProductDataPtr)){
-		productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(orderProductDataPtr.GetPtr());
-	}
-
-	if (productOrderInfoPtr == nullptr){
-		return nullptr;
 	}
 
 	QByteArray oldOrderUuid = productOrderInfoPtr->GetOrderId();

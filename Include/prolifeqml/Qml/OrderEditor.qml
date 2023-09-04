@@ -1061,6 +1061,8 @@ DocumentBase {
 
         secondSize: 10;
         targetItem: productsView;
+
+        radius: 2;
     }
 
     Rectangle {
@@ -1170,7 +1172,8 @@ DocumentBase {
             productIndex: model.index;
             devicesModel: orderEditorContainer.devicesModel;
 
-            readOnly: productsView.readOnly || (model.CategoryId === "Software" && model.InUse !== undefined && model.InUse);
+//            readOnly: productsView.readOnly || (model.CategoryId === "Software" && model.InUse !== undefined && model.InUse);
+            readOnly: productsView.readOnly;
             isLicenseConsuming: productsView.isLicenseConsuming;
 
             licensesProvider: orderEditorContainer.licensesProviderLocal;

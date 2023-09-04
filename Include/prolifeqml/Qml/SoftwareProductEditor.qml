@@ -15,6 +15,7 @@ Item {
     property bool serialNumberEdit: true;
 
     property alias tableElements: licensesTable.elements;
+    property bool readOnly: false;
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
@@ -58,8 +59,15 @@ Item {
 
         radius: 3;
 
+        readOnly: root.readOnly;
+
         onEditingFinished: {
-            root.productModel.SetData("SerialNumber", serialNumberInput.text);
+            if (root.productModel.ContainsKey("SerialNumber")){
+                let oldSerialNumber = root.productModel.GetData("SerialNumber");
+                if (oldSerialNumber != serialNumberInput.text){
+                    root.productModel.SetData("SerialNumber", serialNumberInput.text);
+                }
+            }
         }
     }
 
@@ -91,9 +99,13 @@ Item {
         canSelectAll: false;
         isMultiCheckable: false;
 
+        readOnly: root.readOnly;
+
         delegate: Component {
             LicenseInstanceItemDelegate {
                 width: licensesTable.width;
+
+                readOnly: licensesTable.readOnly;
 
                 onStateChanged: {
                     if (root.blockUpdatingModel){
