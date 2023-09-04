@@ -53,8 +53,29 @@ DocumentBase {
                 }
             }
 
+            if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                if (status !== ""){
+                    let statusModel = stateMachine.getAvailableModel(status);
+                    statusCB.model = statusModel;
+                }
+            }
+
+            if (!statusCB.model){
+                statusCB.model = productionStatus.statusModel;
+            }
+
             deviceEditorContainer.updateGui();
             undoRedoManager.registerModel(documentModel);
+        }
+    }
+
+    onSaved: {
+        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+            let statusModel = stateMachine.getAvailableModel(status);
+
+            statusCB.model = statusModel;
         }
     }
 
@@ -74,8 +95,6 @@ DocumentBase {
 
         fields: ["Id", "Name", "Description", "CategoryId", "Licenses"];
 
-        property TreeItemModel filteringModel: TreeItemModel {}
-
         Component.onCompleted: {
             let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
             objectFilter.SetData("CategoryId", "Hardware");
@@ -84,8 +103,6 @@ DocumentBase {
         onCollectionModelChanged: {
             console.log("productsList onCollectionModelChanged");
             if (productsList.collectionModel != null){
-                //                productsList.filteringProductCollection();
-                //                productCB.model = filteringModel;
                 productCB.model = productsList.collectionModel;
             }
         }
@@ -96,19 +113,6 @@ DocumentBase {
                 deviceEditorContainer.documentManager.openErrorDialog(message);
                 deviceEditorContainer.documentManager.showAlertMessage(message);
                 deviceEditorContainer.errorMessage = message;
-            }
-        }
-
-        function filteringProductCollection(){
-            let productsModel = productsList.collectionModel;
-            if (productsModel){
-                for (let i = 0; i < productsModel.GetItemsCount(); i++){
-                    let categoryId = productsModel.GetData("CategoryId", i);
-                    if (categoryId === "Hardware"){
-                        let index = filteringModel.InsertNewItem();
-                        filteringModel.CopyItemDataFromModel(index, productsList.collectionModel, i);
-                    }
-                }
             }
         }
     }
@@ -125,18 +129,17 @@ DocumentBase {
 
             if (ordersList.collectionModel != null){
                 orderCB.model = ordersList.collectionModel;
+//                if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+//                    let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+//                    if (status !== ""){
+//                        let statusModel = stateMachine.getAvailableModel(status);
+//                        statusCB.model = statusModel;
 
-                if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-                    let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                    if (status !== ""){
-                        let statusModel = stateMachine.getAvailableModel(status);
-                        statusCB.model = statusModel;
+//                        return;
+//                    }
+//                }
 
-                        return;
-                    }
-                }
-
-                statusCB.model = productionStatus.statusModel;
+//                statusCB.model = productionStatus.statusModel;
             }
         }
 
@@ -206,6 +209,10 @@ DocumentBase {
         statusCB.changeable = false;
         productCB.changeable = false;
         orderCB.changeable = false;
+        orderClearButton.enabled = false
+        buttonContainer.enabled = false;
+
+        configurationCB.changeable = false;
     }
 
     function updateGui(){
@@ -230,11 +237,12 @@ DocumentBase {
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             let statusModel = stateMachine.getAvailableModel(status);
+//            let statusModel = statusCB.model;
             if (statusModel){
+                statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
-                        console.log("statusCB.currentIndex", i);
                         statusCB.updateIcon(status);
                         statusCB.currentIndex = i;
                         break;
@@ -665,28 +673,16 @@ DocumentBase {
                             property bool blockingIndexChanged: false;
 
                             onCurrentIndexChanged: {
-                                console.log("statusCB onCurrentIndexChanged", statusCB.currentIndex);
-
-                                if (statusCB.blockingIndexChanged){
-                                    return;
-                                }
-
-                                deviceEditorContainer.updateModel()
+                                deviceEditorContainer.updateModel();
 
                                 if (statusCB.currentIndex >= 0){
-//                                    deviceEditorContainer.updateModel();
-
-                                    let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                    let statusModel = stateMachine.getAvailableModel(status);
-
-                                    statusCB.model = statusModel;
-                                    statusCB.updateIcon(status);
-
-                                    statusCB.blockingIndexChanged = true;
-                                    statusCB.currentIndex = 0;
-                                    statusCB.blockingIndexChanged = false;
+                                    if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                                        let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                        statusCB.updateIcon(status);
+                                    }
                                 }
                                 else{
+                                    iconStatus.source = "";
                                     statusCB.model = productionStatus.statusModel;
                                 }
                             }
@@ -766,7 +762,7 @@ DocumentBase {
                         }
                     }
 
-                    BaseButton{
+                    BaseButton {
                         id: orderClearButton;
 
                         anchors.top: orderCB.top;

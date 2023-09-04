@@ -33,6 +33,18 @@ DocumentBase {
                 documentModel.AddTreeModel("OrderProducts")
             }
 
+            if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+                let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+                if (status !== ""){
+                    let statusModel = stateMachine.getAvailableModel(status);
+                    orderStatusCB.model = statusModel;
+                }
+            }
+
+            if (!orderStatusCB.model){
+                orderStatusCB.model = orderStatus.statusModel;
+            }
+
             orderEditorContainer.updateGui();
             undoRedoManager.registerModel(documentModel);
         }
@@ -356,14 +368,13 @@ DocumentBase {
         customerCB.changeable = false;
         orderStatusCB.changeable = false;
         productsView.readOnly = true;
+        buttonContainer.enabled = false;
 
         addProduct.visible = false;
     }
 
     function onUpdateGui(){
         console.log("updateGui");
-       // orderEditorContainer.documentManager.showLoading = true;
-//        orderEditorContainer.blockUpdatingModel = true;
 
         if (documentModel.ContainsKey("OrderId")){
             instanceIdInput.text = documentModel.GetData("OrderId");
@@ -404,6 +415,7 @@ DocumentBase {
             let status = orderEditorContainer.documentModel.GetData("OrderStatus");
             let statusModel = stateMachine.getAvailableModel(status);
             if (statusModel){
+                orderStatusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
@@ -423,15 +435,9 @@ DocumentBase {
         else{
             productsView.model = 0;
         }
-
-//        orderEditorContainer.blockUpdatingModel = false;
     }
 
     function onUpdateModel(){
-//        if (orderEditorContainer.blockUpdatingModel){
-//            return;
-//        }
-
         undoRedoManager.beginChanges();
 
         documentModel.SetData("OrderId", instanceIdInput.text)
@@ -688,8 +694,9 @@ DocumentBase {
 
                 anchors.top: titleOrderStatus.bottom;
                 anchors.topMargin: 5;
+                anchors.left: parent.left;
 
-                width: parent.width;
+                width: parent.width - buttonContainer.width - 10;
                 height: 23;
 
                 radius: orderEditorContainer.radius;
@@ -697,24 +704,37 @@ DocumentBase {
                 property bool blockingIndexChanged: false;
 
                 onCurrentIndexChanged: {
-                    if (orderStatusCB.blockingIndexChanged){
-                        return;
-                    }
+                    orderEditorContainer.updateModel();
 
-                    if (orderStatusCB.currentIndex >= 0){
-                        orderEditorContainer.updateModel();
-
-                        let status = orderEditorContainer.documentModel.GetData("OrderStatus");
-                        let statusModel = stateMachine.getAvailableModel(status);
-
-                        orderStatusCB.model = statusModel;
-
-                        orderStatusCB.blockingIndexChanged = true;
-                        orderStatusCB.currentIndex = 0;
-                        orderStatusCB.blockingIndexChanged = false;
-                    }
-                    else{
+                    if (orderStatusCB.currentIndex < 0){
                         orderStatusCB.model = orderStatus.statusModel;
+                    }
+                }
+            }
+
+            BaseButton{
+                id: buttonContainer;
+
+                anchors.top: orderStatusCB.top;
+                anchors.right: parent.right;
+
+                text: qsTr("Clear");
+
+                decorator: defaultButtonDecorator;
+
+                onClicked: {
+                    if(orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+                        if (orderStatusCB.currentIndex != -1){
+                            orderStatusCB.currentIndex = -1;
+                        }
+                    }
+                }
+
+                Component{
+                    id: defaultButtonDecorator;
+                    CommonButtonDecorator{
+                        width: 70;
+                        height: 23;
                     }
                 }
             }
@@ -1068,8 +1088,6 @@ DocumentBase {
     Rectangle {
         id: productsTitle;
 
-//        anchors.top: parent.top;
-//        anchors.left: bodyColumn.right;
         anchors.leftMargin: 25;
 
         width: productsView.width;
@@ -1172,7 +1190,6 @@ DocumentBase {
             productIndex: model.index;
             devicesModel: orderEditorContainer.devicesModel;
 
-//            readOnly: productsView.readOnly || (model.CategoryId === "Software" && model.InUse !== undefined && model.InUse);
             readOnly: productsView.readOnly;
             isLicenseConsuming: productsView.isLicenseConsuming;
 
