@@ -5,7 +5,7 @@ import Acf 1.0
 CollectionView {
     id: container;
 
-//    visibleMetaInfo: false;
+    //    visibleMetaInfo: false;
 
     defaultSortHeaderIndex: 6;
     defaultOrderType: "DESC";
@@ -18,6 +18,7 @@ CollectionView {
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
         baseCollectionView.commands.fieldsData.push("OrderUuid");
+        baseCollectionView.commands.fieldsData.push("StatusId");
         baseCollectionView.commands.fieldsData.push("Licenses");
     }
 
@@ -32,36 +33,154 @@ CollectionView {
     }
 
     filterMenu: Component {
-        FilterMenu {
-            decoratorSource: Style.filterPanelDecoratorPath;
+        Item {
+            id: mainItem;
 
-            onVisibleChanged: {
-                if (visible){
-                    if (container.commandsDelegate){
-                        let ok = container.commandsDelegate.filterByNewActive;
-                        prefixLoaderComp = ok ? textComp: null;
+            width: parent.width;
+            height: 40;
+
+            onWidthChanged: {
+                console.log("Filter onWidthChanged", width);
+                if (width - filtermenu.width <= licenseFilterBlock.width){
+                    licenseFilterBlock.visible = false;
+                }
+                else{
+                    licenseFilterBlock.visible = true;
+                }
+            }
+
+            TreeItemModel {
+                id: modelCategogy;
+
+                Component.onCompleted: {
+                    let index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "None", index);
+                    modelCategogy.SetData("Name", qsTr("Show All Sensors"), index);
+
+                    index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "WithoutLicense", index);
+                    modelCategogy.SetData("Name", qsTr("Sensors without a license"), index);
+
+                    index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "WithLicense", index);
+                    modelCategogy.SetData("Name", qsTr("Sensors with license"), index);
+
+                    licenseComboBox.model = modelCategogy;
+                }
+            }
+
+            Text {
+                id: titleInstanceId;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: filtermenu.left;
+                anchors.rightMargin: 10;
+
+                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+
+                text: qsTr("Only new sensors!");
+                color: Style.errorTextColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+
+            Item {
+                id: licenseFilterBlock;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 10;
+
+                width: licenseComboBox.width;
+                height: filtermenu.height;
+
+                ComboBox {
+                    id: licenseComboBox;
+
+                    anchors.bottom: parent.bottom;
+                    anchors.left: parent.left;
+
+                    height: filtermenu.height;
+                    width: 200;
+
+                    backgroundColor: Style.baseColor;
+                    currentIndex: 0;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        let objectFilter = container.modelFilter.GetData("LicenseFilter");
+                        if (!objectFilter){
+                            objectFilter = container.modelFilter.AddTreeModel("LicenseFilter")
+                        }
+
+                        if (licenseComboBox.currentIndex >= 0){
+                            let value = licenseComboBox.model.GetData("Id", licenseComboBox.currentIndex);
+
+                            objectFilter.SetData("Key", "Status");
+                            objectFilter.SetData("Value", value);
+
+                            container.updateGui();
+                        }
                     }
                 }
             }
 
-            Component {
-                id: textComp;
+            FilterMenu {
+                id: filtermenu
 
-                Text {
-                    id: titleInstanceId;
-                    text: qsTr("Only new sensors!");
-                    color: Style.errorTextColor;
-                    font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: parent.right;
+
+                decoratorSource: Style.filterPanelDecoratorPath;
+
+                onTextFilterChanged: {
+                    parent.textFilterChanged(index, text);
+                }
+
+                onClosed: {
+                    licenseComboBox.currentIndex = 0;
+
+                    parent.closed();
                 }
             }
 
-            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
-            onIsNewDevicesChanged: {
-                prefixLoaderComp = isNewDevices ? textComp: null;
-            }
+            signal textFilterChanged(int index, string text);
+            signal closed();
         }
     }
+
+//    filterMenu: Component {
+//        FilterMenu {
+//            decoratorSource: Style.filterPanelDecoratorPath;
+
+//            onVisibleChanged: {
+//                if (visible){
+//                    if (container.commandsDelegate){
+//                        let ok = container.commandsDelegate.filterByNewActive;
+//                        prefixLoaderComp = ok ? textComp: null;
+//                    }
+//                }
+//            }
+
+//            Component {
+//                id: textComp;
+
+//                Text {
+//                    id: titleInstanceId;
+//                    text: qsTr("Only new sensors!");
+//                    color: Style.errorTextColor;
+//                    font.family: Style.fontFamily;
+//                    font.pixelSize: Style.fontSize_common;
+//                }
+//            }
+
+//            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+//            onIsNewDevicesChanged: {
+//                prefixLoaderComp = isNewDevices ? textComp: null;
+//            }
+//        }
+//    }
 
     function fillContextMenuModel(){
         contextMenuModel.clear();
@@ -132,7 +251,7 @@ CollectionView {
                 width: 18;
                 height: width;
 
-//                source: "../../../../Icons/" + Style.theme + "/Key.svg";
+                //                source: "../../../../Icons/" + Style.theme + "/Key.svg";
 
                 sourceSize.width: width;
                 sourceSize.height: height;
@@ -156,9 +275,14 @@ CollectionView {
             Component.onCompleted: {
                 let loader = parent;
                 let tableCellDelegate = loader.parent;
-                statusLable.text = tableCellDelegate.getValue();
 
-                image.source = deviceProductionStatus.getIconPath(statusLable.text);
+                let rowIndex = tableCellDelegate.rowIndex;
+                if (rowIndex >= 0){
+                    let statusId = container.table.elements.GetData("StatusId", rowIndex);
+                    image.source = deviceProductionStatus.getIconPath(statusId);
+                }
+
+                statusLable.text = tableCellDelegate.getValue();
             }
         }
     }

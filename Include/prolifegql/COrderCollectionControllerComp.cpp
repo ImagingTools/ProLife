@@ -94,16 +94,7 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 					elementInformation = orderInfoPtr->GetPurchaseOrderId();
 				}
 				else if(informationId == "OrderCustomer"){
-					if (m_accountCollectionCompPtr.IsValid()){
-						QByteArray customerId = orderInfoPtr->GetCustomerId();
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_accountCollectionCompPtr->GetObjectData(customerId, dataPtr)){
-							imtauth::ICompanyBaseInfo* accountInfoPtr = dynamic_cast<imtauth::ICompanyBaseInfo*>(dataPtr.GetPtr());
-							if (accountInfoPtr != nullptr){
-								elementInformation = accountInfoPtr->GetName();
-							}
-						}
-					}
+					elementInformation = objectCollectionIterator->GetElementInfo("OrderCustomer");
 				}
 				else if(informationId == "Description"){
 					elementInformation = orderInfoPtr->GetDescription();

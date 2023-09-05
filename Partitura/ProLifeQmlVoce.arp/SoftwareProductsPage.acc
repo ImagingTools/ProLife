@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5096" Description="ACF"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
             <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -254,9 +254,6 @@
                                             <Value>Edit</Value>
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
-                                            <Value>Empty</Value>
-                                            <Value>OnlyPaired</Value>
-                                            <Value>OnlyUnpaired</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

@@ -76,6 +76,8 @@ DocumentBase {
             let statusModel = stateMachine.getAvailableModel(status);
 
             statusCB.model = statusModel;
+
+            deviceEditorContainer.updateGui();
         }
     }
 

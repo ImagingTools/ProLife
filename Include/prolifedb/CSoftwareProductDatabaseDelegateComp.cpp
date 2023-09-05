@@ -74,7 +74,8 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 				 si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
 				 si."Document"->>'InUse' as "InUse",
 				 si."Document"->>'ProductId' as "ProductId",
-				 si."Document"
+				 si."Document",
+				(SELECT COUNT(*) FROM "Orders" WHERE "DocumentId" = si."Document"->>'OrderId' AND "IsActive" = true LIMIT 1) AS "OrderCount"
 			FROM "SoftwareInstances" as si
 			LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
 			LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
@@ -337,6 +338,30 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 					else{
 						elementFilter += "dev.\"Document\"->>'MacAddress' != ''";
+					}
+				}
+			}
+
+			else if (key == "InUse"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
+				if (filterParamPtr.IsValid()){
+					QString value;
+					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
+					if (valueParamPtr.IsValid()){
+						value = valueParamPtr->GetText();
+					}
+
+					bool isEqual = true;
+					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
+					if (enableableParamPtr.IsValid()){
+						isEqual = enableableParamPtr->IsEnabled();
+					}
+
+					if (isEqual){
+						elementFilter += "si.\"Document\"->>'InUse' = true";
+					}
+					else{
+						elementFilter += "(si.\"Document\"->>'InUse' = false";
 					}
 				}
 			}

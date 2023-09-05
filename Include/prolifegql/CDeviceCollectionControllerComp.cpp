@@ -323,11 +323,11 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 
 
 bool CDeviceCollectionControllerComp::SetupGqlItem(
-		const imtgql::CGqlRequest& gqlRequest,
-		imtbase::CTreeItemModel& model,
-		int itemIndex,
-		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			imtbase::CTreeItemModel& model,
+			int itemIndex,
+			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+			QString& errorMessage) const
 {
 	bool retVal = true;
 
@@ -377,18 +377,7 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = deviceInfoPtr->GetConfigurationType();
 				}
 				else if(informationId == "OrderId"){
-					if (m_orderCollectionCompPtr.IsValid()){
-						QByteArray orderUuid = deviceInfoPtr->GetOrderId();
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-							prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
-							if (orderPtr != nullptr){
-								QByteArray orderId = orderPtr->GetOrderId();
-
-								elementInformation = orderId;
-							}
-						}
-					}
+					elementInformation = objectCollectionIterator->GetElementInfo("OrderId");
 				}
 				else if(informationId == "OrderUuid"){
 					elementInformation = deviceInfoPtr->GetOrderId();
@@ -416,6 +405,29 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 						break;
 					}
 				}
+				else if(informationId == "StatusId"){
+					int status = deviceInfoPtr->GetDeviceProductionStatus();
+					switch (status){
+					case prolifedata::IDeviceInfo::DPS_NONE:
+						elementInformation = "None";
+						break;
+					case prolifedata::IDeviceInfo::DPS_ACCEPTED:
+						elementInformation = "Accepted";
+						break;
+					case prolifedata::IDeviceInfo::DPS_IN_PROGRESS:
+						elementInformation = "InProgress";
+						break;
+					case prolifedata::IDeviceInfo::DPS_CANCELED:
+						elementInformation = "Canceled";
+						break;
+					case prolifedata::IDeviceInfo::DPS_ON_HOLD:
+						elementInformation = "OnHold";
+						break;
+					case prolifedata::IDeviceInfo::DPS_FINISHED:
+						elementInformation = "Finished";
+						break;
+					}
+				}
 				else if(informationId == "Added"){
 					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
 					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
@@ -425,14 +437,14 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
 				}
 				else if(informationId == "Licenses"){
-					imtbase::IObjectCollection::DataPtr dataPtr;
-					if (m_bindingCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-						const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
-						if (bindingInfoPtr != nullptr){
-							QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
-							elementInformation = softwareIds.join(';');
-						}
-					}
+//					imtbase::IObjectCollection::DataPtr dataPtr;
+//					if (m_bindingCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+//						const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+//						if (bindingInfoPtr != nullptr){
+//							QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+//							elementInformation = softwareIds.join(';');
+//						}
+//					}
 				}
 
 				if (elementInformation.isNull()){

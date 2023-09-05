@@ -20,6 +20,10 @@
         <Element ComponentName="HardwareProductBindingController" X="750" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="775" Y="425" Note=""/>
@@ -34,10 +38,6 @@
                 <Element ComponentName="Save" X="125" Y="600" Note=""/>
                 <Element ComponentName="Undo" X="125" Y="425" Note=""/>
             </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">

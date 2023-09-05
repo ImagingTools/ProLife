@@ -57,6 +57,117 @@ CollectionView {
         container.commandsProvider.updateGui();
     }
 
+    filterMenu: Component {
+        Item {
+            id: mainItem;
+
+            width: parent.width;
+            height: 40;
+
+            TreeItemModel {
+                id: modelCategogy;
+
+                Component.onCompleted: {
+                    let index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "All", index);
+                    modelCategogy.SetData("Name", qsTr("Show all"), index);
+
+                    index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "Paired", index);
+                    modelCategogy.SetData("Name", qsTr("Show only paired"), index);
+
+                    index = modelCategogy.InsertNewItem();
+                    modelCategogy.SetData("Id", "NotPaired", index);
+                    modelCategogy.SetData("Name", qsTr("Show only not Paired"), index);
+
+//                    index = modelCategogy.InsertNewItem();
+//                    modelCategogy.SetData("Id", "InUse", index);
+//                    modelCategogy.SetData("Name", qsTr("In-Use"), index);
+
+                    licenseComboBox.model = modelCategogy;
+                }
+            }
+
+            Item {
+                id: licenseFilterBlock;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 10;
+
+                width: licenseComboBox.width;
+                height: filtermenu.height;
+
+                ComboBox {
+                    id: licenseComboBox;
+
+                    anchors.bottom: parent.bottom;
+                    anchors.left: parent.left;
+
+                    width: 200;
+                    height: filtermenu.height;
+
+                    backgroundColor: Style.baseColor;
+                    currentIndex: 0;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        let objectFilter = container.modelFilter.GetData("ObjectFilter");
+                        if (!objectFilter){
+                            objectFilter = container.modelFilter.AddTreeModel("ObjectFilter")
+                        }
+
+                        if (licenseComboBox.currentIndex == 0){
+                            container.modelFilter.RemoveData("ObjectFilter");
+                        }
+                        else if (licenseComboBox.currentIndex == 1){
+                            objectFilter.SetData("Key", "DeviceId");
+                            objectFilter.SetData("Value", "");
+                            objectFilter.SetData("IsEqual", false);
+                        }
+                        else if (licenseComboBox.currentIndex == 2){
+                            objectFilter.SetData("Key", "DeviceId");
+                            objectFilter.SetData("Value", "");
+                            objectFilter.SetData("IsEqual", true);
+                        }
+//                        else if (licenseComboBox.currentIndex == 3){
+//                            objectFilter.SetData("Key", "InUse");
+//                            objectFilter.SetData("Value", "true");
+//                            objectFilter.SetData("IsEqual", true);
+//                        }
+
+                        container.updateGui();
+                    }
+                }
+            }
+
+            FilterMenu {
+                id: filtermenu
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: parent.right;
+
+                decoratorSource: Style.filterPanelDecoratorPath;
+
+                width: 325
+
+                onTextFilterChanged: {
+                    parent.textFilterChanged(index, text);
+                }
+
+                onClosed: {
+                    licenseComboBox.currentIndex = 0;
+
+                    parent.closed();
+                }
+            }
+
+            signal textFilterChanged(int index, string text);
+            signal closed();
+        }
+    }
+
     Component {
         id: pairComp;
         Item {

@@ -312,9 +312,6 @@
                                             <Value>OpenOrder</Value>
                                             <Value>Empty</Value>
                                             <Value>ShowNew</Value>
-                                            <Value>Empty</Value>
-                                            <Value>WithLicense</Value>
-                                            <Value>WithoutLicense</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

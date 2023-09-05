@@ -584,7 +584,6 @@
                                             <Value>Save</Value>
                                             <Value>Empty</Value>
                                             <Value>Close</Value>
-                                            <Value>CreateLicenseFile</Value>
                                             <Value>LicenseEdit</Value>
                                         </Values>
                                     </Data>
