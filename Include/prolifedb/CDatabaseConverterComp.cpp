@@ -33,9 +33,10 @@ void CDatabaseConverterComp::OnComponentCreated()
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::Ids orderObjectIds = m_orderCollectionCompPtr->GetElementIds();
 		for (const imtbase::IObjectCollection::Id& orderObjectId : orderObjectIds){
-			if (orderObjectId == "f5483879-3701-4bd6-8382-48c0ce4b3d44"){
-				qDebug() << "find";
+			if (orderObjectId == "03b38efe-1ec1-44a8-8bf3-4e17c4a50f05"){
+				qDebug() << "Find";
 			}
+
 			imtbase::IObjectCollection::DataPtr orderDataPtr;
 			if (m_orderCollectionCompPtr->GetObjectData(orderObjectId, orderDataPtr)){
 				prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
@@ -61,6 +62,7 @@ void CDatabaseConverterComp::OnComponentCreated()
 						}
 						QList<QByteArray> hardwareProductsIds = mapHardware.keys();
 						QList<QByteArray> softwareProductsIds = mapSoftware.keys();
+
 						QByteArray deviceId;
 						for (const QByteArray& productId : softwareProductsIds){
 							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = nullptr;
@@ -71,10 +73,7 @@ void CDatabaseConverterComp::OnComponentCreated()
 									deviceId = hardwareProductPtr->GetDeviceId();
 								}
 							}
-//							if (hardwareProductPtr != nullptr){
-//								hardwareProductPtr->SetSoftwareId("");
-//								productCollectionPtr->SetObjectData(productId, *hardwareProductPtr);
-//							}
+
 							const imtbase::ICollectionInfo& licenseInstances = productInstancePtr->GetLicenseInstances();
 							const imtbase::ICollectionInfo::Ids licenseIds = licenseInstances.GetElementIds();
 							for (int index = 0; index < licenseIds.count(); index++){
@@ -83,17 +82,22 @@ void CDatabaseConverterComp::OnComponentCreated()
 								if (licenseInstancePtr != nullptr && m_productInstanceCollectionCompPtr.IsValid()){
 									istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> orderedProductInstancePtr;
 									orderedProductInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
-//											dynamic_cast<imtlic::CIdentifiableSoftwareInstanceInfo*>(orderedProductInstancePtr.GetPtr())->CopyFrom(*productInstancePtr);
-//									QByteArray newProductUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 
 									QByteArray newProductUuid = productId;
+									if (licenseIds.count() > 1){
+										newProductUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+									}
+
 									orderedProductInstancePtr->SetupProductInstance(productInstancePtr->GetProductId(),
 																					productInstancePtr->GetProductInstanceId(),
 																					productInstancePtr->GetCustomerId());
 									orderedProductInstancePtr->SetOrderId(orderObjectId);
 									orderedProductInstancePtr->AddLicense(licenseInstancePtr->GetLicenseId(), licenseInstancePtr->GetExpiration());
 									orderedProductInstancePtr->SetObjectUuid(newProductUuid);
-									orderedProductInstancePtr->SetInUse(true);
+
+									if (!deviceId.isEmpty()){
+										orderedProductInstancePtr->SetInUse(true);
+									}
 
 									QByteArray serialNumber = productInstancePtr->GetSerialNumber();
 									if (!serialNumber.isEmpty() && index > 0){
@@ -106,13 +110,24 @@ void CDatabaseConverterComp::OnComponentCreated()
 									qDebug() << QString("Insert object into productInstance collection: ") << newProductUuid;
 
 									if (m_bindingCollectionCompPtr.IsValid()){
-										istd::TDelPtr<prolifedata::CHardwareProductBinding> productBindingPtr;
-										productBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding);
+										imtbase::IObjectCollection::DataPtr bindingDataPtr;
+										if (m_bindingCollectionCompPtr->GetObjectData(deviceId, bindingDataPtr)){
+											prolifedata::CHardwareProductBinding* bindingDataInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(bindingDataPtr.GetPtr());
+											if (bindingDataInfoPtr != nullptr){
+												bindingDataInfoPtr->Bind(newProductUuid);
 
-										productBindingPtr->SetHardwareId(deviceId);
-										productBindingPtr->Bind(newProductUuid);
+												m_bindingCollectionCompPtr->SetObjectData(deviceId, *bindingDataInfoPtr);
+											}
+										}
+										else{
+											istd::TDelPtr<prolifedata::CHardwareProductBinding> productBindingPtr;
+											productBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding);
 
-										m_bindingCollectionCompPtr->InsertNewObject("", "", "", productBindingPtr.GetPtr(), deviceId);
+											productBindingPtr->SetHardwareId(deviceId);
+											productBindingPtr->Bind(newProductUuid);
+
+											m_bindingCollectionCompPtr->InsertNewObject("", "", "", productBindingPtr.GetPtr(), deviceId);
+										}
 
 										qDebug() << QString("Insert object into binding collection: ") << deviceId;
 									}
@@ -120,23 +135,9 @@ void CDatabaseConverterComp::OnComponentCreated()
 							}
 						}
 
-//						productCollectionPtr->ResetData();
-
-//						imtbase::CObjectCollection* objectCollectionPtr = dynamic_cast<imtbase::CObjectCollection*>(productCollectionPtr);
-
-//						typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableSoftwareInstanceInfo> FactorySoftwareImpl;
-//						objectCollectionPtr->RegisterFactory<FactorySoftwareImpl>("Software");
-
-//						typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableHardwareInstanceInfo> FactoryHardwareImpl;
-//						objectCollectionPtr->RegisterFactory<FactoryHardwareImpl>("Hardware");
-
 						for (const QByteArray& productId : hardwareProductsIds){
 							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = mapHardware.value(productId);
 							QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-//							QUuid deviceUuid = QUuid::fromString(QString(deviceId));
-//							if (deviceId != deviceUuid.toString(QUuid::WithoutBraces).toUtf8()){
-//								deviceId = deviceUuid.toString(QUuid::WithoutBraces).toUtf8();
-//							}
 
 							QByteArray modelTypeId = hardwareProductPtr->GetModelTypeId();
 
@@ -179,22 +180,6 @@ void CDatabaseConverterComp::OnComponentCreated()
 						qDeleteAll(mapHardware);
 						qDeleteAll(mapNewSoftware);
 						qDeleteAll(mapSoftware);
-//						for(const QByteArray& productId : orderedProductsIds){
-//							imtbase::IObjectCollection::DataPtr productDataPtr;
-//							if (productCollectionPtr->GetObjectData(productId, productDataPtr)){
-
-
-//								if (hardwareProductPtr != nullptr && productInstancePtr != nullptr){
-//									QByteArray productInstanceId = productInstancePtr->GetProductInstanceId();
-//									QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-//									hardwareProductPtr->SetSoftwareId("");
-//									productCollectionPtr->SetObjectData(productId, *hardwareProductPtr);
-//									m_orderCollectionCompPtr->SetObjectData(orderObjectId, *orderInfoPtr);
-
-
-//								}
-//							}
-//						}
 					}
 					else{
 						qDebug() << QString("OrderInfo is NULL!!!: ") << orderObjectId;
