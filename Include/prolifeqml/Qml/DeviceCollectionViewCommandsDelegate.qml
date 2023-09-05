@@ -33,13 +33,8 @@ CollectionViewCommandsDelegateBase {
 
         let createLicenseFileEnabled = indexes.length === 1;
         if (createLicenseFileEnabled){
-            let licenses = elementsModel.GetData("Licenses", indexes[0]);
-            if (licenses === ""){
-                createLicenseFileEnabled = false;
-            }
-            else{
-                createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "";
-            }
+            let count = elementsModel.GetData("SoftwareLinksCount", indexes[0]);
+            createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
         }
 
         if (container.commandsProvider){
