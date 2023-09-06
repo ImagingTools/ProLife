@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5096" Description="ACF"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
             <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -16,6 +16,7 @@
         <Element ComponentName="PumaGQLClientEngine" X="675" Y="575" Note=""/>
         <Element ComponentName="SettingsController" X="400" Y="575" Note=""/>
         <Element ComponentName="SingleProductPermission" X="300" Y="75" Note=""/>
+        <Element ComponentName="TestConnectionController" X="600" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

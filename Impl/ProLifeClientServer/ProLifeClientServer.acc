@@ -16,6 +16,15 @@
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeClientServer"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeTestConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="3"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="CheckSystemStatus" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
@@ -27,6 +36,9 @@
                                 <Value>ClientApplication/ObserverQml</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeGetDatabaseStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="TextFileLog"/>
@@ -40,6 +52,9 @@
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
@@ -48,6 +63,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveSystemStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaSystemStatusController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SystemStatusUrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
@@ -148,6 +166,36 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PumaSystemStatusController" PackageId="ImtCoreVoce" ComponentId="SystemStatusController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="PumaTestConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="3"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGetDatabaseStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Puma"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="/ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

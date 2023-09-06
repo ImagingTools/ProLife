@@ -5,7 +5,7 @@ import imtgui 1.0
 CollectionView {
     id: container;
 
-    defaultSortHeaderIndex: 2;
+    defaultSortHeaderIndex: 1;
 
     visibleMetaInfo: false;
 
@@ -70,15 +70,15 @@ CollectionView {
                 Component.onCompleted: {
                     let index = modelCategogy.InsertNewItem();
                     modelCategogy.SetData("Id", "All", index);
-                    modelCategogy.SetData("Name", qsTr("Show all"), index);
+                    modelCategogy.SetData("Name", qsTr("Show all licenses"), index);
 
                     index = modelCategogy.InsertNewItem();
                     modelCategogy.SetData("Id", "Paired", index);
-                    modelCategogy.SetData("Name", qsTr("Show only paired"), index);
+                    modelCategogy.SetData("Name", qsTr("Show only paired licenses"), index);
 
                     index = modelCategogy.InsertNewItem();
                     modelCategogy.SetData("Id", "NotPaired", index);
-                    modelCategogy.SetData("Name", qsTr("Show only not Paired"), index);
+                    modelCategogy.SetData("Name", qsTr("Show only not paired licenses"), index);
 
 //                    index = modelCategogy.InsertNewItem();
 //                    modelCategogy.SetData("Id", "InUse", index);

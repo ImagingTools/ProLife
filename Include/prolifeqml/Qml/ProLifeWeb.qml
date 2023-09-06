@@ -10,9 +10,8 @@ Item {
         id: application;
 
         anchors.fill: parent;
-
-        systemStatus: "NO_ERROR";
-
+		
+		systemStatus: "NO_ERROR";
         Component.onCompleted: {
             designProvider.applyDesignSchema("Light");
 

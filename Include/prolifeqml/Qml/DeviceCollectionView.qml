@@ -7,7 +7,7 @@ CollectionView {
 
     //    visibleMetaInfo: false;
 
-    defaultSortHeaderIndex: 6;
+    defaultSortHeaderIndex: 7;
     defaultOrderType: "DESC";
 
     property MainDocumentManager mainDocumentManager: null;
