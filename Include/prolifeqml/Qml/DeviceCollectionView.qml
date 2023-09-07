@@ -69,21 +69,6 @@ CollectionView {
                 }
             }
 
-            Text {
-                id: titleInstanceId;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: filtermenu.left;
-                anchors.rightMargin: 10;
-
-                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
-
-                text: qsTr("Only new sensors!");
-                color: Style.errorTextColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-
             Item {
                 id: licenseFilterBlock;
 
@@ -126,11 +111,29 @@ CollectionView {
                 }
             }
 
+            Text {
+                id: titleInstanceId;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: filtermenu.left;
+                anchors.rightMargin: 10;
+
+                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+
+                text: qsTr("Only new sensors!");
+
+                color: Style.errorTextColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+
             FilterMenu {
                 id: filtermenu
 
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.right: parent.right;
+
+                width: 325;
 
                 decoratorSource: Style.filterPanelDecoratorPath;
 
@@ -149,38 +152,6 @@ CollectionView {
             signal closed();
         }
     }
-
-//    filterMenu: Component {
-//        FilterMenu {
-//            decoratorSource: Style.filterPanelDecoratorPath;
-
-//            onVisibleChanged: {
-//                if (visible){
-//                    if (container.commandsDelegate){
-//                        let ok = container.commandsDelegate.filterByNewActive;
-//                        prefixLoaderComp = ok ? textComp: null;
-//                    }
-//                }
-//            }
-
-//            Component {
-//                id: textComp;
-
-//                Text {
-//                    id: titleInstanceId;
-//                    text: qsTr("Only new sensors!");
-//                    color: Style.errorTextColor;
-//                    font.family: Style.fontFamily;
-//                    font.pixelSize: Style.fontSize_common;
-//                }
-//            }
-
-//            property bool isNewDevices: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
-//            onIsNewDevicesChanged: {
-//                prefixLoaderComp = isNewDevices ? textComp: null;
-//            }
-//        }
-//    }
 
     function fillContextMenuModel(){
         contextMenuModel.clear();

@@ -26,7 +26,7 @@
                         <Data IsEnabled="true" Value="ProLifeTestConnection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="3"/>
+                        <Data IsEnabled="true" Value="7"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CheckSystemStatus" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
@@ -153,7 +153,7 @@
                         <Data IsEnabled="true" Value="PumaTestConnection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="3"/>
+                        <Data IsEnabled="true" Value="7"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaGetDatabaseStatus"/>
