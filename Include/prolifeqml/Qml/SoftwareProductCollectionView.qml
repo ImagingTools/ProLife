@@ -64,27 +64,47 @@ CollectionView {
             width: parent.width;
             height: 40;
 
-            TreeItemModel {
-                id: modelCategogy;
+            Component.onCompleted: {
+                Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+            }
 
-                Component.onCompleted: {
-                    let index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "All", index);
-                    modelCategogy.SetData("Name", qsTr("Show all licenses"), index);
+            Component.onDestruction: {
+                Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+            }
 
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "Paired", index);
-                    modelCategogy.SetData("Name", qsTr("Show only paired licenses"), index);
+            function onLocalizationChanged(language){
+                console.log("Filter onLocalizationChanged", language);
+                console.log("context.language", context.language);
+                mainItem.updateModel();
+            }
 
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "NotPaired", index);
-                    modelCategogy.SetData("Name", qsTr("Show only not paired licenses"), index);
+            function updateModel(){
+                modelCategogy.Clear();
+
+                let index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "All", index);
+                modelCategogy.SetData("Name", qsTr("Show all licenses"), index);
+
+                index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "Paired", index);
+                modelCategogy.SetData("Name", qsTr("Show only paired licenses"), index);
+
+                index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "NotPaired", index);
+                modelCategogy.SetData("Name", qsTr("Show only not paired licenses"), index);
 
 //                    index = modelCategogy.InsertNewItem();
 //                    modelCategogy.SetData("Id", "InUse", index);
 //                    modelCategogy.SetData("Name", qsTr("In-Use"), index);
 
-                    licenseComboBox.model = modelCategogy;
+                licenseComboBox.model = modelCategogy;
+            }
+
+            TreeItemModel {
+                id: modelCategogy;
+
+                Component.onCompleted: {
+                    mainItem.updateModel();
                 }
             }
 

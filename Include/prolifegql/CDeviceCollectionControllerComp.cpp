@@ -6,6 +6,7 @@
 #include <iprm/CTextParam.h>
 
 // ImtCore includes
+#include <imtbase/imtbase.h>
 #include <imtbase/CCollectionFilter.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtdb/CSqlDatabaseObjectCollectionComp.h>
@@ -487,9 +488,22 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 	int index = dataModelPtr->InsertNewItem();
 
-	dataModelPtr->SetData("Name", QT_TR_NOOP("Licenses"), index);
+	QString name = QT_TR_NOOP("Licenses");
+
+	if (m_translationManagerCompPtr.IsValid()){
+		QByteArray languageId;
+		imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+		if (gqlContextPtr != nullptr){
+			languageId = gqlContextPtr->GetLanguageId();
+		}
+
+		QString elementNameTr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), name.toUtf8(), languageId, "prolifegql::CDeviceCollectionControllerComp");
+
+		name = elementNameTr;
+	}
+
+	dataModelPtr->SetData("Name", name, index);
 	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("Children", index);
-//	childrenModelPtr->SetData("Value", QObject::tr("No related licenses"));
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){

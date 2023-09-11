@@ -19,7 +19,7 @@
         <Element ComponentName="HttpRedirect" X="550" Y="425" Note=""/>
         <Element ComponentName="HttpServerFramework" X="550" Y="275" Note=""/>
         <Element ComponentName="KeyDataProviders" X="775" Y="750" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="525" Y="550" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="575" Y="550" Note=""/>
         <Element ComponentName="ResourcesPath" X="1075" Y="125" Note=""/>
         <Element ComponentName="RessourcesProvider" X="825" Y="125" Note=""/>
         <Element ComponentName="RestoringDatabaseController" X="1025" Y="275" Note=""/>

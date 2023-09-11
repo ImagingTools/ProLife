@@ -39,6 +39,41 @@ CollectionView {
             width: parent.width;
             height: 40;
 
+            Component.onCompleted: {
+                Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+            }
+
+            Component.onDestruction: {
+                Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+            }
+
+            function onLocalizationChanged(language){
+                console.log("Filter onLocalizationChanged", language);
+                console.log("context.language", context.language);
+                mainItem.updateModel();
+            }
+
+            function updateModel(){
+                console.log("updateModel");
+                modelCategogy.Clear();
+
+                let index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "None", index);
+                modelCategogy.SetData("Name", qsTr("Show All Sensors"), index);
+
+                console.log("text", qsTr("Show All Sensors"));
+
+                index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "WithoutLicense", index);
+                modelCategogy.SetData("Name", qsTr("Sensors without a license"), index);
+
+                index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "WithLicense", index);
+                modelCategogy.SetData("Name", qsTr("Sensors with license"), index);
+
+                licenseComboBox.model = modelCategogy;
+            }
+
             onWidthChanged: {
                 console.log("Filter onWidthChanged", width);
                 if (width - filtermenu.width <= licenseFilterBlock.width){
@@ -53,19 +88,7 @@ CollectionView {
                 id: modelCategogy;
 
                 Component.onCompleted: {
-                    let index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "None", index);
-                    modelCategogy.SetData("Name", qsTr("Show All Sensors"), index);
-
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "WithoutLicense", index);
-                    modelCategogy.SetData("Name", qsTr("Sensors without a license"), index);
-
-                    index = modelCategogy.InsertNewItem();
-                    modelCategogy.SetData("Id", "WithLicense", index);
-                    modelCategogy.SetData("Name", qsTr("Sensors with license"), index);
-
-                    licenseComboBox.model = modelCategogy;
+                    mainItem.updateModel();
                 }
             }
 
