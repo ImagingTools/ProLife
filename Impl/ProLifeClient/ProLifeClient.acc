@@ -19,20 +19,8 @@
                     <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Client"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeTestConnection"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="10"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="CheckSystemStatus" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeGetDatabaseStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings/Language"/>
@@ -49,9 +37,6 @@
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
@@ -61,11 +46,8 @@
                     <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SlaveSystemStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaSystemStatusController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SystemStatusUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
+                    <AttributeInfo Id="SystemStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SystemStatusController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -90,6 +72,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -150,25 +135,58 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaTestConnection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="10"/>
+                        <Data IsEnabled="true" Value="0"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaGetDatabaseStatus"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Puma"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SystemStatusController" PackageId="ImtCoreVoce" ComponentId="SystemStatusController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeTestConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CheckInterval" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseCheckerCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeGetDatabaseStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="/ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveSystemStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaSystemStatusController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>

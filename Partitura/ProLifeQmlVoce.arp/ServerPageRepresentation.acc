@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
+            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -50,6 +50,21 @@
                 <AttributeInfoMap>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Backup"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="CacheClearingIntervalRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="CacheClearingInterval"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Cache clearing interval"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathToQml" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsIntegerInput.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -221,6 +236,7 @@
                                 <Value>LisaUrlRepresentation</Value>
                                 <Value>PumaUrlRepresentation</Value>
                                 <Value>ServerPortRepresentation</Value>
+                                <Value>CacheClearingIntervalRepresentation</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

@@ -38,6 +38,9 @@
                     <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
                     </AttributeInfo>
@@ -281,6 +284,7 @@
         <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
         <Component ExportedId="BackupParamsSet" ComponentId="SettingsController/BackupParamsSet"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Pages/BindingProductsRepository"/>
+        <Component ExportedId="CacheClearingIntervalParam" ComponentId="SettingsController/CacheClearingIntervalParam"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
         <Component ExportedId="GraphQLClientEngine" ComponentId="LisaGQLEngine"/>

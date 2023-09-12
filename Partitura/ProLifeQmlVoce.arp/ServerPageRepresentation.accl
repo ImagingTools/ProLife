@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
+            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -11,6 +11,7 @@
         <Element ComponentName="BackupFolder" X="1050" Y="575" Note=""/>
         <Element ComponentName="BackupSettingsRepresentation" X="1025" Y="275" Note=""/>
         <Element ComponentName="BackupSettingsRepresentationController" X="775" Y="700" Note=""/>
+        <Element ComponentName="CacheClearingIntervalRepresentation" X="175" Y="725" Note=""/>
         <Element ComponentName="DatabaseAccessSettingsRepresentation" X="600" Y="425" Note=""/>
         <Element ComponentName="DatabaseSettingsRepresentation" X="700" Y="275" Note=""/>
         <Element ComponentName="InstanceMaskRepresentation" X="175" Y="375" Note=""/>

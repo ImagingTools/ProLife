@@ -129,11 +129,13 @@ DocumentBase {
         if (root.documentModel.ContainsKey("OrderUuid")){
             let orderUuid = root.documentModel.GetData("OrderUuid");
 
-            for (let i = 0; i < ordersCB.model.GetItemsCount(); i++){
-                let id = ordersCB.model.GetData("Id", i);
-                if (id == orderUuid){
-                    ordersCB.currentIndex = i;
-                    break;
+            if (ordersCB.model){
+                for (let i = 0; i < ordersCB.model.GetItemsCount(); i++){
+                    let id = ordersCB.model.GetData("Id", i);
+                    if (id == orderUuid){
+                        ordersCB.currentIndex = i;
+                        break;
+                    }
                 }
             }
         }

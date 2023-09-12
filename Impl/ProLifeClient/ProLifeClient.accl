@@ -13,7 +13,8 @@
         <Element ComponentName="LogFilePath" X="150" Y="400" Note=""/>
         <Element ComponentName="LogSystemLocation" X="150" Y="575" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="1050" Y="575" Note=""/>
-        <Element ComponentName="PumaSystemStatusController" X="650" Y="575" Note=""/>
+        <Element ComponentName="PumaSystemStatusController" X="450" Y="725" Note=""/>
+        <Element ComponentName="SystemStatusController" X="850" Y="725" Note=""/>
         <Element ComponentName="TextFileLog" X="150" Y="175" Note=""/>
         <Element ComponentName="VersionInfo" X="475" Y="175" Note=""/>
     </PositionMap>

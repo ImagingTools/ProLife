@@ -104,6 +104,9 @@
         <Element Id="GqlContextController" PackageId="ImtGqlPck" ComponentId="RemoteGqlContextController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CacheClearingIntervalParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/CacheClearingIntervalParam"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/PumaGQLClientEngine"/>
                     </AttributeInfo>
@@ -115,9 +118,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="UserFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="UserInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/UserSettingsRepository"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

@@ -350,7 +350,7 @@
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+10"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+10"/>
         <source>Russian help</source>
-        <translation type="unfinished"></translation>
+        <translation>Русский</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -392,7 +392,7 @@
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
         <location line="+298"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Общее</translation>
     </message>
     <message>
         <location line="-300"/>
