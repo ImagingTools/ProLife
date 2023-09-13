@@ -4,86 +4,86 @@
 <context>
     <name>Attribute</name>
     <message>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="+103"/>
-        <location line="+306"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+125"/>
-        <location line="+298"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="+111"/>
+        <location line="+288"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+117"/>
+        <location line="+292"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+109"/>
-        <location line="+304"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+127"/>
-        <location line="+418"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+140"/>
-        <location line="+298"/>
+        <location line="+400"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+131"/>
+        <location line="+398"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+134"/>
+        <location line="+300"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location line="-278"/>
+        <location line="-268"/>
         <location line="+10"/>
-        <location line="+376"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-278"/>
+        <location line="+262"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-264"/>
         <location line="+10"/>
-        <location line="+376"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-284"/>
+        <location line="+374"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-380"/>
         <location line="+10"/>
-        <location line="+260"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-394"/>
+        <location line="+360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-378"/>
         <location line="+10"/>
-        <location line="+266"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-274"/>
+        <location line="+364"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-272"/>
         <location line="+10"/>
-        <location line="+380"/>
+        <location line="+258"/>
         <source>Accounts</source>
         <translation>Accounts</translation>
     </message>
     <message>
-        <location line="-390"/>
-        <location line="+10"/>
-        <location line="+386"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-390"/>
-        <location line="+10"/>
-        <location line="+386"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-274"/>
-        <location line="+10"/>
-        <location line="+270"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-280"/>
+        <location line="-276"/>
         <location line="+10"/>
         <location line="+272"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-394"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-388"/>
         <location line="+10"/>
-        <location line="+382"/>
+        <location line="+372"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-374"/>
+        <location line="+10"/>
+        <location line="+360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-378"/>
+        <location line="+10"/>
+        <location line="+360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-272"/>
+        <location line="+10"/>
+        <location line="+254"/>
         <source>Packages</source>
         <translation>Packages</translation>
     </message>
     <message>
-        <location line="-394"/>
+        <location line="-280"/>
         <location line="+10"/>
-        <location line="+380"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-394"/>
+        <location line="+262"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-380"/>
         <location line="+10"/>
-        <location line="+386"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-278"/>
+        <location line="+368"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-368"/>
         <location line="+10"/>
-        <location line="+264"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-280"/>
+        <location line="+360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-368"/>
         <location line="+10"/>
-        <location line="+266"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-390"/>
+        <location line="+360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-262"/>
         <location line="+10"/>
-        <location line="+378"/>
+        <location line="+254"/>
         <source>Products</source>
         <translation>Products</translation>
     </message>
     <message>
-        <location line="-384"/>
+        <location line="-266"/>
         <location line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-390"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-372"/>
         <location line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-268"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-364"/>
         <location line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-270"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-364"/>
         <location line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-382"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-258"/>
         <location line="+12"/>
         <source>Log</source>
         <translation type="unfinished"></translation>
@@ -99,28 +99,28 @@
     </message>
     <message>
         <location line="-42"/>
-        <location line="+16"/>
+        <location line="+12"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-42"/>
-        <location line="+16"/>
+        <location line="+12"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-42"/>
-        <location line="+16"/>
+        <location line="+12"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-42"/>
-        <location line="+20"/>
+        <location line="+24"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-42"/>
         <location line="+12"/>
         <source>Preference File</source>
         <translation>Preference File</translation>
     </message>
     <message>
-        <location line="-8"/>
+        <location line="-6"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-8"/>
         <location line="+2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-10"/>
         <location line="+2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-18"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-8"/>
         <location line="+2"/>
         <source>Preferences</source>
         <translation>Preferences</translation>
@@ -128,279 +128,224 @@
     <message>
         <location line="-6"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <source>Design</source>
         <translation>Design</translation>
     </message>
     <message>
-        <location line="-66"/>
+        <location line="-64"/>
         <location line="+2"/>
         <location line="+112"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-68"/>
-        <location line="+4"/>
-        <location line="+110"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-60"/>
-        <location line="+110"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-72"/>
-        <location line="+116"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-100"/>
-        <location line="+144"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-70"/>
+        <location line="+2"/>
+        <location line="+112"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-68"/>
+        <location line="+114"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-70"/>
+        <location line="+120"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-98"/>
+        <location line="+142"/>
         <source>ProLife</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-110"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-112"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-110"/>
         <source>Client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-108"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-108"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-108"/>
         <source>7788</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+8"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+10"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
-        <location line="+496"/>
+        <location line="+2"/>
+        <location line="+486"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
+        <location line="+484"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+16"/>
+        <location line="+474"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
+        <location line="+486"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
+        <location line="+474"/>
         <source>Backup Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-498"/>
-        <location line="+2"/>
-        <location line="+498"/>
-        <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-490"/>
-        <location line="+6"/>
-        <location line="+494"/>
-        <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-480"/>
-        <location line="+8"/>
-        <location line="+484"/>
-        <location line="+16"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-492"/>
+        <location line="-472"/>
+        <location line="+10"/>
+        <location line="+464"/>
         <location line="+14"/>
-        <location line="+490"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-476"/>
         <location line="+14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-530"/>
-        <location line="+8"/>
+        <location line="+472"/>
+        <location line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-486"/>
         <location line="+22"/>
+        <location line="+462"/>
+        <location line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-480"/>
+        <location line="+12"/>
+        <location line="+478"/>
         <location line="+10"/>
-        <location line="+486"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-514"/>
+        <location line="+6"/>
+        <location line="+26"/>
         <location line="+10"/>
+        <location line="+466"/>
+        <location line="+8"/>
         <source>Database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-514"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-514"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-492"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-524"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-490"/>
-        <location line="+504"/>
+        <location line="-474"/>
+        <location line="+478"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-476"/>
+        <location line="+480"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-474"/>
+        <location line="+476"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-504"/>
+        <location line="+486"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-478"/>
+        <location line="+472"/>
         <source>Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-494"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-492"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-506"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-498"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-562"/>
-        <location line="+30"/>
-        <location line="+496"/>
+        <location line="-480"/>
+        <location line="+478"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-500"/>
+        <location line="+484"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-484"/>
+        <location line="+478"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-484"/>
+        <location line="+486"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-530"/>
+        <location line="+34"/>
+        <location line="+484"/>
         <source>Backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-504"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-508"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-512"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-488"/>
-        <location line="+492"/>
+        <location line="-482"/>
+        <location line="+476"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-462"/>
+        <location line="+480"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-476"/>
+        <location line="+478"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-482"/>
+        <location line="+490"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-508"/>
         <location line="+32"/>
-        <location line="+496"/>
+        <location line="+484"/>
         <source>Server Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-494"/>
-        <location line="+16"/>
-        <location line="+4"/>
+        <location line="-496"/>
         <location line="+4"/>
         <location line="+2"/>
-        <location line="+230"/>
-        <location line="+236"/>
+        <location line="+4"/>
+        <location line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-496"/>
+        <location line="+4"/>
+        <location line="+2"/>
+        <location line="+2"/>
+        <location line="+10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-498"/>
+        <location line="+4"/>
+        <location line="+2"/>
+        <location line="+2"/>
+        <location line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-488"/>
+        <location line="+6"/>
+        <location line="+4"/>
+        <location line="+2"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-524"/>
+        <location line="+6"/>
+        <location line="+4"/>
+        <location line="+2"/>
+        <location line="+8"/>
+        <location line="+2"/>
         <location line="+4"/>
         <location line="+12"/>
-        <location line="+8"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-490"/>
-        <location line="+12"/>
-        <location line="+2"/>
-        <location line="+8"/>
-        <location line="+2"/>
-        <location line="+230"/>
-        <location line="+238"/>
-        <location line="+4"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+2"/>
-        <location line="+8"/>
-        <location line="+2"/>
-        <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-504"/>
-        <location line="+2"/>
-        <location line="+2"/>
-        <location line="+4"/>
-        <location line="+2"/>
-        <location line="+234"/>
-        <location line="+248"/>
-        <location line="+2"/>
-        <location line="+2"/>
-        <location line="+4"/>
-        <location line="+2"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-494"/>
-        <location line="+16"/>
-        <location line="+4"/>
-        <location line="+2"/>
-        <location line="+4"/>
-        <location line="+226"/>
-        <location line="+240"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+10"/>
-        <location line="+4"/>
-        <location line="+2"/>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-550"/>
-        <location line="+6"/>
-        <location line="+4"/>
-        <location line="+4"/>
         <location line="+4"/>
         <location line="+2"/>
         <location line="+8"/>
-        <location line="+8"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+236"/>
-        <location line="+238"/>
-        <location line="+6"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location line="+10"/>
-        <location line="+4"/>
+        <location line="+2"/>
         <source>qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-512"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-512"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-522"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-512"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-550"/>
-        <location line="+30"/>
-        <location line="+496"/>
+        <location line="-16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-40"/>
+        <location line="+32"/>
         <source>qrc:/qml/imtgui/AuxComponents/SettingsIntegerInput.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-500"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-498"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-490"/>
-        <location line="+492"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-508"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-530"/>
-        <location line="+30"/>
-        <location line="+496"/>
+        <location line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-30"/>
+        <location line="+32"/>
         <source>qrc:/qml/imtgui/AuxComponents/DatabaseInput.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-518"/>
+        <location line="+8"/>
+        <location line="+234"/>
         <location line="+244"/>
-        <location line="+252"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-494"/>
-        <location line="+230"/>
-        <location line="+270"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-474"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+8"/>
         <location line="+232"/>
-        <location line="+268"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-506"/>
+        <location line="+246"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
+        <location line="+236"/>
         <location line="+242"/>
-        <location line="+262"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-474"/>
-        <location line="+232"/>
-        <location line="+264"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-14"/>
+        <location line="+240"/>
+        <location line="+250"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-14"/>
+        <location line="+248"/>
+        <location line="+238"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-502"/>
-        <location line="+496"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-518"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-498"/>
-        <location line="+504"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-532"/>
-        <location line="+24"/>
-        <location line="+500"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-530"/>
+        <location line="-480"/>
+        <location line="+474"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-496"/>
+        <location line="+484"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-466"/>
+        <location line="+478"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-508"/>
+        <location line="+20"/>
+        <location line="+490"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-516"/>
         <location line="+32"/>
-        <location line="+496"/>
+        <location line="+486"/>
         <source>Server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-470"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-480"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-498"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-480"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-490"/>
+        <location line="-460"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-456"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-476"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-474"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-460"/>
         <source>Puma</source>
         <translation type="unfinished"></translation>
     </message>
@@ -435,88 +380,88 @@
     </message>
     <message>
         <location line="-68"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-68"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-66"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-66"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-68"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-68"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-66"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-66"/>
         <source>Contacts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
         <location line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location line="+4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
         <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
         <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location line="+6"/>
         <source>Contact info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
+        <location line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>Contact Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <source>ContactInfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+26"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
         <location line="+28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
-        <location line="+26"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+8"/>
         <location line="+22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+8"/>
+        <location line="+24"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+6"/>
+        <location line="+20"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
-        <location line="+28"/>
+        <location line="+26"/>
         <source>Russian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-26"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-20"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-26"/>
+        <location line="-26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-24"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-28"/>
         <source>Russian help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+12"/>
-        <location line="+294"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+12"/>
-        <location line="+296"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+10"/>
-        <location line="+306"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
-        <location line="+406"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+14"/>
-        <location line="+298"/>
+        <location line="+8"/>
+        <location line="+290"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
+        <location line="+280"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+12"/>
+        <location line="+400"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+10"/>
+        <location line="+410"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+16"/>
+        <location line="+290"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location line="-288"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-292"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-298"/>
+        <location line="-280"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-268"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-386"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-394"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-294"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-286"/>
         <source>Light</source>
         <translation>Light</translation>
     </message>
@@ -530,10 +475,10 @@
         <translation>Dark</translation>
     </message>
     <message>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-12"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-10"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <source>English</source>
         <translation>English</translation>
@@ -561,365 +506,365 @@
         <translation type="vanished">Product Licensing</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+60"/>
         <location line="+2"/>
-        <location line="+64"/>
+        <location line="+28"/>
         <location line="+2"/>
+        <location line="+74"/>
+        <location line="+32"/>
+        <location line="+2"/>
+        <location line="+94"/>
+        <location line="+12"/>
         <location line="+16"/>
+        <location line="+24"/>
+        <location line="+16"/>
+        <location line="+20"/>
+        <location line="+70"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+48"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+12"/>
+        <location line="+82"/>
+        <location line="+2"/>
+        <location line="+60"/>
+        <location line="+26"/>
+        <location line="+8"/>
+        <location line="+12"/>
+        <location line="+32"/>
+        <location line="+18"/>
         <location line="+84"/>
         <location line="+2"/>
-        <location line="+66"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+48"/>
+        <location line="+2"/>
+        <location line="+56"/>
+        <location line="+2"/>
+        <location line="+38"/>
+        <location line="+56"/>
+        <location line="+2"/>
+        <location line="+76"/>
+        <location line="+16"/>
+        <location line="+10"/>
         <location line="+10"/>
         <location line="+16"/>
-        <location line="+14"/>
-        <location line="+20"/>
-        <location line="+18"/>
-        <location line="+136"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+44"/>
-        <location line="+2"/>
-        <location line="+48"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+88"/>
-        <location line="+2"/>
-        <location line="+62"/>
-        <location line="+12"/>
-        <location line="+18"/>
-        <location line="+10"/>
-        <location line="+32"/>
-        <location line="+16"/>
+        <location line="+34"/>
         <location line="+114"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+36"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+66"/>
         <location line="+2"/>
-        <location line="+76"/>
+        <location line="+40"/>
         <location line="+2"/>
-        <location line="+24"/>
+        <location line="+38"/>
         <location line="+56"/>
         <location line="+2"/>
-        <location line="+106"/>
+        <location line="+78"/>
+        <location line="+28"/>
+        <location line="+12"/>
         <location line="+16"/>
-        <location line="+8"/>
+        <location line="+10"/>
+        <location line="+26"/>
+        <location line="+110"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+52"/>
+        <location line="+2"/>
+        <location line="+52"/>
+        <location line="+2"/>
+        <location line="+58"/>
+        <location line="+48"/>
+        <location line="+2"/>
+        <location line="+96"/>
         <location line="+14"/>
-        <location line="+18"/>
-        <location line="+12"/>
-        <location line="+130"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+58"/>
-        <location line="+2"/>
-        <location line="+76"/>
-        <location line="+2"/>
-        <location line="+32"/>
-        <location line="+32"/>
-        <location line="+2"/>
-        <location line="+116"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+12"/>
-        <location line="+18"/>
-        <location line="+22"/>
-        <location line="+128"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+36"/>
-        <location line="+2"/>
-        <location line="+56"/>
-        <location line="+2"/>
-        <location line="+70"/>
-        <location line="+30"/>
-        <location line="+2"/>
-        <location line="+106"/>
-        <location line="+24"/>
         <location line="+16"/>
-        <location line="+12"/>
-        <location line="+18"/>
-        <location line="+16"/>
-        <location line="+112"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+20"/>
+        <location line="+94"/>
         <location line="+2"/>
         <source>Edit</source>
         <translation>Edit</translation>
     </message>
     <message>
-        <location line="-106"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-94"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-102"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-110"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-102"/>
+        <location line="-62"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-74"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-86"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-90"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-86"/>
         <source>License Files</source>
         <translation>License Files</translation>
     </message>
     <message>
-        <location line="-340"/>
-        <location line="+72"/>
-        <location line="+152"/>
-        <location line="+8"/>
-        <location line="+18"/>
-        <location line="+8"/>
-        <location line="+22"/>
+        <location line="-338"/>
+        <location line="+106"/>
+        <location line="+126"/>
+        <location line="+10"/>
         <location line="+20"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-362"/>
-        <location line="+94"/>
-        <location line="+152"/>
         <location line="+8"/>
-        <location line="+20"/>
-        <location line="+10"/>
-        <location line="+18"/>
         <location line="+10"/>
         <location line="+22"/>
         <location line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-362"/>
-        <location line="+94"/>
-        <location line="+162"/>
-        <location line="+18"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+22"/>
         <location line="+10"/>
-        <location line="+20"/>
-        <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-340"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-354"/>
         <location line="+96"/>
-        <location line="+128"/>
-        <location line="+10"/>
-        <location line="+10"/>
+        <location line="+142"/>
+        <location line="+18"/>
         <location line="+10"/>
         <location line="+8"/>
         <location line="+8"/>
         <location line="+20"/>
+        <location line="+10"/>
+        <location line="+22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-350"/>
+        <location line="+94"/>
+        <location line="+130"/>
+        <location line="+20"/>
+        <location line="+8"/>
+        <location line="+10"/>
         <location line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-360"/>
-        <location line="+118"/>
+        <location line="+8"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-334"/>
+        <location line="+78"/>
+        <location line="+130"/>
+        <location line="+22"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+20"/>
+        <location line="+8"/>
+        <location line="+18"/>
+        <location line="+10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-330"/>
+        <location line="+98"/>
         <location line="+126"/>
         <location line="+10"/>
         <location line="+10"/>
-        <location line="+10"/>
+        <location line="+8"/>
         <location line="+22"/>
         <location line="+8"/>
-        <location line="+20"/>
+        <location line="+10"/>
         <location line="+18"/>
         <source>New</source>
         <translation>New</translation>
     </message>
     <message>
-        <location line="-8"/>
-        <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-38"/>
+        <location line="-48"/>
         <location line="+40"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-76"/>
+        <location line="+46"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-18"/>
         <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-82"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-74"/>
+        <location line="+66"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-84"/>
         <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-96"/>
-        <location line="+20"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location line="-344"/>
+        <location line="-318"/>
         <location line="+2"/>
-        <location line="+44"/>
+        <location line="+80"/>
         <location line="+2"/>
-        <location line="+78"/>
-        <location line="+38"/>
+        <location line="+22"/>
+        <location line="+64"/>
         <location line="+2"/>
-        <location line="+130"/>
-        <location line="+20"/>
-        <location line="+20"/>
-        <location line="+10"/>
-        <location line="+92"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-328"/>
-        <location line="+2"/>
-        <location line="+68"/>
-        <location line="+2"/>
-        <location line="+26"/>
-        <location line="+54"/>
-        <location line="+2"/>
-        <location line="+98"/>
-        <location line="+38"/>
+        <location line="+90"/>
+        <location line="+18"/>
         <location line="+22"/>
         <location line="+18"/>
-        <location line="+96"/>
+        <location line="+116"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-346"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-294"/>
         <location line="+2"/>
         <location line="+32"/>
         <location line="+2"/>
-        <location line="+80"/>
-        <location line="+48"/>
-        <location line="+2"/>
-        <location line="+132"/>
-        <location line="+30"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location line="+78"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-250"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+80"/>
-        <location line="+2"/>
-        <location line="+68"/>
-        <location line="+10"/>
-        <location line="+46"/>
+        <location line="+70"/>
         <location line="+40"/>
-        <location line="+100"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-248"/>
+        <location line="+102"/>
+        <location line="+36"/>
+        <location line="+10"/>
+        <location line="+22"/>
+        <location line="+106"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-282"/>
         <location line="+2"/>
         <location line="+68"/>
         <location line="+2"/>
-        <location line="+8"/>
-        <location line="+88"/>
+        <location line="+34"/>
+        <location line="+52"/>
         <location line="+2"/>
         <location line="+60"/>
-        <location line="+20"/>
+        <location line="+54"/>
+        <location line="+10"/>
         <location line="+22"/>
-        <location line="+28"/>
-        <location line="+126"/>
+        <location line="+94"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-308"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+34"/>
+        <location line="+48"/>
+        <location line="+2"/>
+        <location line="+66"/>
+        <location line="+10"/>
+        <location line="+30"/>
+        <location line="+36"/>
+        <location line="+102"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-254"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+12"/>
+        <location line="+66"/>
+        <location line="+2"/>
+        <location line="+82"/>
+        <location line="+10"/>
+        <location line="+30"/>
+        <location line="+56"/>
+        <location line="+70"/>
         <location line="+2"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location line="-436"/>
+        <location line="-446"/>
         <location line="+2"/>
-        <location line="+44"/>
+        <location line="+80"/>
         <location line="+2"/>
-        <location line="+78"/>
-        <location line="+38"/>
+        <location line="+34"/>
+        <location line="+52"/>
         <location line="+2"/>
-        <location line="+130"/>
-        <location line="+20"/>
-        <location line="+20"/>
-        <location line="+10"/>
-        <location line="+92"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-436"/>
-        <location line="+2"/>
-        <location line="+68"/>
-        <location line="+2"/>
-        <location line="+38"/>
-        <location line="+42"/>
-        <location line="+2"/>
-        <location line="+110"/>
-        <location line="+38"/>
+        <location line="+102"/>
+        <location line="+18"/>
         <location line="+22"/>
         <location line="+18"/>
-        <location line="+84"/>
+        <location line="+104"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-416"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-418"/>
         <location line="+2"/>
         <location line="+32"/>
         <location line="+2"/>
-        <location line="+72"/>
-        <location line="+56"/>
+        <location line="+66"/>
+        <location line="+48"/>
         <location line="+2"/>
-        <location line="+124"/>
-        <location line="+30"/>
+        <location line="+94"/>
+        <location line="+36"/>
         <location line="+10"/>
-        <location line="+10"/>
-        <location line="+86"/>
+        <location line="+22"/>
+        <location line="+110"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-452"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+2"/>
-        <location line="+60"/>
-        <location line="+64"/>
-        <location line="+2"/>
-        <location line="+84"/>
-        <location line="+10"/>
-        <location line="+46"/>
-        <location line="+40"/>
-        <location line="+84"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-436"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-414"/>
         <location line="+2"/>
         <location line="+68"/>
         <location line="+2"/>
-        <location line="+20"/>
-        <location line="+76"/>
+        <location line="+50"/>
+        <location line="+36"/>
         <location line="+2"/>
-        <location line="+72"/>
-        <location line="+20"/>
+        <location line="+76"/>
+        <location line="+54"/>
+        <location line="+10"/>
         <location line="+22"/>
-        <location line="+28"/>
-        <location line="+114"/>
+        <location line="+78"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-422"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+46"/>
+        <location line="+36"/>
+        <location line="+2"/>
+        <location line="+78"/>
+        <location line="+10"/>
+        <location line="+30"/>
+        <location line="+36"/>
+        <location line="+90"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-422"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+24"/>
+        <location line="+54"/>
+        <location line="+2"/>
+        <location line="+94"/>
+        <location line="+10"/>
+        <location line="+30"/>
+        <location line="+56"/>
+        <location line="+58"/>
         <location line="+2"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location line="-430"/>
-        <location line="+78"/>
-        <location line="+4"/>
-        <location line="+86"/>
+        <location line="-420"/>
+        <location line="+38"/>
         <location line="+66"/>
-        <location line="+8"/>
-        <location line="+18"/>
-        <location line="+8"/>
-        <location line="+22"/>
-        <location line="+20"/>
-        <location line="+148"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-440"/>
-        <location line="+46"/>
-        <location line="+54"/>
-        <location line="+84"/>
-        <location line="+68"/>
-        <location line="+8"/>
-        <location line="+20"/>
-        <location line="+10"/>
-        <location line="+28"/>
-        <location line="+22"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-444"/>
-        <location line="+62"/>
-        <location line="+30"/>
-        <location line="+68"/>
-        <location line="+94"/>
-        <location line="+18"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+22"/>
-        <location line="+10"/>
-        <location line="+134"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-418"/>
-        <location line="+50"/>
-        <location line="+52"/>
-        <location line="+42"/>
-        <location line="+106"/>
-        <location line="+10"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+20"/>
-        <location line="+18"/>
-        <location line="+128"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-434"/>
-        <location line="+70"/>
-        <location line="+46"/>
-        <location line="+44"/>
+        <location line="+34"/>
         <location line="+92"/>
-        <location line="+20"/>
-        <location line="+22"/>
-        <location line="+8"/>
+        <location line="+10"/>
         <location line="+20"/>
         <location line="+18"/>
-        <location line="+126"/>
+        <location line="+22"/>
+        <location line="+18"/>
+        <location line="+82"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-440"/>
+        <location line="+58"/>
+        <location line="+36"/>
+        <location line="+84"/>
+        <location line="+58"/>
+        <location line="+28"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location line="+30"/>
+        <location line="+22"/>
+        <location line="+76"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-412"/>
+        <location line="+74"/>
+        <location line="+26"/>
+        <location line="+54"/>
+        <location line="+76"/>
+        <location line="+20"/>
+        <location line="+8"/>
+        <location line="+10"/>
+        <location line="+18"/>
+        <location line="+28"/>
+        <location line="+130"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-400"/>
+        <location line="+30"/>
+        <location line="+54"/>
+        <location line="+54"/>
+        <location line="+76"/>
+        <location line="+32"/>
+        <location line="+10"/>
+        <location line="+20"/>
+        <location line="+8"/>
+        <location line="+28"/>
+        <location line="+100"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-392"/>
+        <location line="+42"/>
+        <location line="+62"/>
+        <location line="+58"/>
+        <location line="+88"/>
+        <location line="+8"/>
+        <location line="+22"/>
+        <location line="+8"/>
+        <location line="+10"/>
+        <location line="+18"/>
+        <location line="+100"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message>
-        <location line="-98"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-38"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-62"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-76"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-594"/>
-        <location line="+530"/>
+        <location line="-44"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-56"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-44"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-556"/>
+        <location line="+508"/>
         <source>Instance Mask</source>
         <translation>Instance Mask</translation>
     </message>
@@ -932,281 +877,257 @@
         <translation type="vanished">Server version</translation>
     </message>
     <message>
-        <location line="-366"/>
+        <location line="-370"/>
         <location line="+2"/>
-        <location line="+44"/>
+        <location line="+80"/>
         <location line="+2"/>
-        <location line="+64"/>
-        <location line="+56"/>
-        <location line="+2"/>
-        <location line="+268"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-400"/>
-        <location line="+2"/>
-        <location line="+68"/>
-        <location line="+2"/>
-        <location line="+24"/>
-        <location line="+56"/>
-        <location line="+2"/>
-        <location line="+272"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-384"/>
-        <location line="+2"/>
-        <location line="+32"/>
-        <location line="+2"/>
-        <location line="+70"/>
-        <location line="+58"/>
-        <location line="+2"/>
-        <location line="+260"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-380"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+2"/>
-        <location line="+42"/>
-        <location line="+82"/>
+        <location line="+20"/>
+        <location line="+66"/>
         <location line="+2"/>
         <location line="+264"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-392"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-372"/>
+        <location line="+2"/>
+        <location line="+32"/>
+        <location line="+2"/>
+        <location line="+60"/>
+        <location line="+54"/>
+        <location line="+2"/>
+        <location line="+272"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-370"/>
         <location line="+2"/>
         <location line="+68"/>
         <location line="+2"/>
-        <location line="+6"/>
-        <location line="+90"/>
+        <location line="+32"/>
+        <location line="+54"/>
         <location line="+2"/>
-        <location line="+256"/>
+        <location line="+240"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-386"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+40"/>
+        <location line="+42"/>
+        <location line="+2"/>
+        <location line="+244"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-386"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+10"/>
+        <location line="+68"/>
+        <location line="+2"/>
+        <location line="+248"/>
         <location line="+2"/>
         <source>Undo</source>
         <translation>Undo</translation>
     </message>
     <message>
-        <location line="-452"/>
+        <location line="-446"/>
         <location line="+2"/>
-        <location line="+44"/>
+        <location line="+80"/>
         <location line="+2"/>
-        <location line="+78"/>
-        <location line="+38"/>
-        <location line="+2"/>
-        <location line="+10"/>
-        <location line="+262"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-420"/>
-        <location line="+2"/>
-        <location line="+68"/>
-        <location line="+2"/>
-        <location line="+18"/>
-        <location line="+62"/>
-        <location line="+2"/>
+        <location line="+30"/>
+        <location line="+52"/>
         <location line="+4"/>
-        <location line="+268"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-424"/>
+        <location line="+264"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-418"/>
         <location line="+2"/>
         <location line="+32"/>
         <location line="+2"/>
-        <location line="+68"/>
-        <location line="+60"/>
-        <location line="+2"/>
-        <location line="+8"/>
-        <location line="+252"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-444"/>
-        <location line="+2"/>
-        <location line="+44"/>
-        <location line="+2"/>
+        <location line="+54"/>
         <location line="+48"/>
-        <location line="+76"/>
+        <location line="+12"/>
         <location line="+2"/>
-        <location line="+14"/>
-        <location line="+250"/>
+        <location line="+272"/>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-436"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-406"/>
         <location line="+2"/>
         <location line="+68"/>
         <location line="+2"/>
-        <location line="+16"/>
-        <location line="+76"/>
+        <location line="+38"/>
+        <location line="+48"/>
         <location line="+2"/>
+        <location line="+10"/>
+        <location line="+230"/>
         <location line="+2"/>
-        <location line="+258"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-406"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+34"/>
+        <location line="+48"/>
+        <location line="+2"/>
+        <location line="+10"/>
+        <location line="+234"/>
+        <location line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-406"/>
+        <location line="+2"/>
+        <location line="+80"/>
+        <location line="+2"/>
+        <location line="+4"/>
+        <location line="+54"/>
+        <location line="+20"/>
+        <location line="+2"/>
+        <location line="+248"/>
         <location line="+2"/>
         <source>Redo</source>
         <translation>Redo</translation>
     </message>
     <message>
-        <location line="-376"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-374"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-358"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-360"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-364"/>
+        <location line="-366"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-382"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-338"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-346"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-374"/>
         <source>With license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-2"/>
+        <location line="-26"/>
         <location line="+4"/>
-        <location line="+24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-26"/>
-        <location line="+4"/>
-        <location line="+24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-6"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-10"/>
-        <location line="+4"/>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-30"/>
+        <location line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
         <location line="+16"/>
+        <location line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-18"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-22"/>
+        <location line="+8"/>
         <location line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location line="+4"/>
+        <location line="+8"/>
         <source>ShownPassword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location line="+6"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+10"/>
         <source>Bind</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>Link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-22"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
+        <location line="-22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-22"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
         <source>New Sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-16"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+20"/>
+        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
         <source>New sensor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
-        <location line="+392"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+12"/>
-        <location line="+400"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location line="+392"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+24"/>
-        <location line="+380"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-16"/>
-        <location line="+412"/>
+        <location line="-16"/>
+        <location line="+362"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
+        <location line="+338"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
+        <location line="+378"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-20"/>
+        <location line="+386"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
+        <location line="+370"/>
         <source>Open Order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-394"/>
-        <location line="+138"/>
-        <location line="+254"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-398"/>
-        <location line="+140"/>
-        <location line="+260"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-390"/>
-        <location line="+150"/>
-        <location line="+242"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-382"/>
-        <location line="+114"/>
-        <location line="+266"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-414"/>
-        <location line="+166"/>
-        <location line="+246"/>
+        <location line="-364"/>
+        <location line="+160"/>
+        <location line="+202"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-340"/>
+        <location line="+112"/>
+        <location line="+226"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-380"/>
+        <location line="+168"/>
+        <location line="+210"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-388"/>
+        <location line="+152"/>
+        <location line="+234"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-372"/>
+        <location line="+112"/>
+        <location line="+258"/>
         <source>Deployment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-374"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-422"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-378"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-390"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-398"/>
+        <location line="-376"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-348"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-368"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-372"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-400"/>
         <source>Without a license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-14"/>
-        <location line="+82"/>
-        <location line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+14"/>
-        <location line="+94"/>
-        <location line="+62"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+14"/>
-        <location line="+78"/>
-        <location line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
-        <location line="+98"/>
-        <location line="+44"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
-        <location line="+102"/>
-        <location line="+60"/>
+        <location line="+18"/>
+        <location line="+120"/>
+        <location line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-14"/>
+        <location line="+84"/>
+        <location line="+68"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-18"/>
+        <location line="+120"/>
+        <location line="+48"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location line="+124"/>
+        <location line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+26"/>
+        <location line="+84"/>
+        <location line="+56"/>
         <source>Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-104"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-96"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-120"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-118"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-118"/>
+        <location line="-96"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-94"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-98"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-78"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-100"/>
         <source>Product-ID</source>
         <translation>Product-ID</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+34"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
         <source>http://localhost:7778</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-6"/>
-        <location line="+2"/>
-        <location line="+98"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location line="+2"/>
-        <location line="+96"/>
-        <location line="+2"/>
+        <location line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location line="+2"/>
-        <location line="+92"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-8"/>
-        <location line="+2"/>
-        <location line="+98"/>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
-        <location line="+2"/>
-        <location line="+98"/>
-        <location line="+2"/>
-        <source>qrc:/qml/imtgui/AuxComponents/SettingsComboBox.qml</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="-92"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-92"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-92"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-92"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-92"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <source>ERP Order-ID</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1229,59 +1150,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+42"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+36"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+14"/>
+        <location line="+10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+34"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+42"/>
         <source>New order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-32"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-28"/>
+        <location line="+32"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-24"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+20"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+24"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-28"/>
         <source>CreateLicenseFile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+56"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+44"/>
+        <location line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+72"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+48"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+12"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+60"/>
         <source>Licenses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>../../ProLife/SoftwareProductCollectionView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-26"/>
-        <location line="+16"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-20"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-30"/>
-        <location line="+16"/>
-        <location line="+8"/>
-        <location line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-34"/>
+        <location line="-10"/>
         <location line="+8"/>
         <location line="+8"/>
         <location line="+16"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-22"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-22"/>
+        <location line="+16"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
+        <location line="+8"/>
+        <location line="+8"/>
+        <location line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-26"/>
         <location line="+8"/>
         <location line="+8"/>
         <location line="+8"/>
@@ -1289,156 +1210,174 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-26"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-34"/>
+        <location line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-30"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+12"/>
         <source>Administration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>../../imtauthgui/AdministrationView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-6"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
         <source>LightSettings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <source>../../imtgui/AuxComponents/SingleDocumentWorkspaceView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-28"/>
         <source>Orders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>../../ProLife/OrderCollectionView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+12"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
+        <location line="-20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-34"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
         <source>Customers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>../../imtauthgui/AccountCollectionView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-6"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
         <source>Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
+        <location line="-14"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>Sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>../../ProLife/DeviceCollectionView.qml</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-6"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
         <source>Sensor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+50"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+38"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+54"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+146"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+22"/>
+        <location line="+42"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+34"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+140"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+126"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+50"/>
         <source>ProLife Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
-        <location line="+20"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
-        <location line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+44"/>
-        <location line="+30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-62"/>
+        <location line="+32"/>
         <location line="+40"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+40"/>
-        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+56"/>
+        <location line="+32"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-112"/>
+        <location line="+86"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-116"/>
+        <location line="+40"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+36"/>
+        <location line="+56"/>
         <source>Import</source>
         <translation>Import</translation>
     </message>
     <message>
-        <location line="-18"/>
-        <location line="+20"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-58"/>
-        <location line="+60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-28"/>
-        <location line="+30"/>
+        <location line="-38"/>
+        <location line="+40"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-30"/>
+        <location line="+32"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-84"/>
+        <location line="+86"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-38"/>
         <location line="+40"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-26"/>
-        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-54"/>
+        <location line="+56"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
     <message>
-        <location line="+116"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+104"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+96"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+86"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+112"/>
+        <location line="+52"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+38"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+38"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+82"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
+        <source>60</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+20"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
+        <source>Cache clearing interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+22"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
         <source>License Number</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1461,85 +1400,85 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+34"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+24"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
+        <location line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+40"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+32"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+20"/>
         <source>Only Unpaired</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>ShowUnlinked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
+        <location line="+18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
         <source>Only Paired</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>ShowLinked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-10"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-22"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-14"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
+        <location line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
         <source>New product</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-202"/>
-        <location line="+26"/>
-        <location line="+42"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-180"/>
-        <location line="+10"/>
-        <location line="+28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-190"/>
-        <location line="+34"/>
+        <location line="-180"/>
+        <location line="+48"/>
+        <location line="+40"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-178"/>
+        <location line="+74"/>
         <location line="+22"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-182"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-176"/>
+        <location line="+10"/>
         <location line="+46"/>
-        <location line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-208"/>
-        <location line="+20"/>
-        <location line="+50"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-216"/>
+        <location line="+32"/>
+        <location line="+38"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-152"/>
+        <location line="+30"/>
+        <location line="+10"/>
         <source>Duplicate</source>
         <translation>Duplicate</translation>
     </message>
     <message>
-        <location line="-250"/>
-        <location line="+28"/>
-        <location line="+164"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-254"/>
-        <location line="+42"/>
-        <location line="+194"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-226"/>
-        <location line="+14"/>
-        <location line="+166"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-246"/>
-        <location line="+40"/>
-        <location line="+198"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-262"/>
+        <location line="-274"/>
+        <location line="+66"/>
+        <location line="+218"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-268"/>
+        <location line="+36"/>
+        <location line="+146"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-270"/>
         <location line="+62"/>
-        <location line="+210"/>
+        <location line="+172"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-244"/>
+        <location line="+50"/>
+        <location line="+204"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-246"/>
+        <location line="+58"/>
+        <location line="+198"/>
         <source>Create License File</source>
         <translation>Create License File</translation>
     </message>
@@ -1548,19 +1487,19 @@
         <translation type="vanished">Lisa Settings</translation>
     </message>
     <message>
-        <location line="-28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-60"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-16"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-102"/>
+        <location line="-122"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-18"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+70"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+36"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-86"/>
         <source>Mode</source>
         <translation>Mode</translation>
     </message>
     <message>
-        <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
+        <location line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>DB Settings</source>
         <translation>DB Settings</translation>
@@ -1578,108 +1517,108 @@
         <translation type="vanished">Feature-ID</translation>
     </message>
     <message>
-        <location line="-202"/>
-        <location line="+80"/>
-        <location line="+30"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-200"/>
+        <location line="-196"/>
+        <location line="+66"/>
+        <location line="+38"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-198"/>
         <location line="+92"/>
-        <location line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-212"/>
+        <location line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-314"/>
+        <location line="+80"/>
+        <location line="+24"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-306"/>
+        <location line="+80"/>
+        <location line="+24"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-204"/>
         <location line="+78"/>
-        <location line="+32"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-320"/>
-        <location line="+78"/>
-        <location line="+32"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-200"/>
-        <location line="+78"/>
-        <location line="+32"/>
+        <location line="+26"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location line="+210"/>
-        <location line="+118"/>
+        <location line="+100"/>
+        <location line="+208"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+208"/>
-        <location line="+120"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+94"/>
-        <location line="+234"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+92"/>
-        <location line="+236"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+214"/>
-        <location line="+114"/>
+        <location line="+100"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+198"/>
+        <location line="+110"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+196"/>
+        <location line="+112"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+90"/>
+        <location line="+218"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-110"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-106"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-108"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-106"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-108"/>
+        <location line="-88"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-90"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-94"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-94"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-84"/>
         <source>^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
         <source>http://localhost:7788</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
+        <location line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <source>http://localhost:7776</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
+        <location line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+6"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <source>8888</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-2"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-4"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
+        <location line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-2"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>7778</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+12"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+40"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+48"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+12"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
         <source>Puma URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-8"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+6"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-562"/>
-        <location line="+526"/>
+        <location line="-10"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-4"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-8"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-536"/>
+        <location line="+516"/>
         <source>Lisa URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+28"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+40"/>
+        <location line="+26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+18"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+18"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+22"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+42"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+26"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
         <source>Product</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1702,19 +1641,19 @@
         <translation>License-ID</translation>
     </message>
     <message>
-        <location line="-314"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-302"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-316"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-316"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-316"/>
+        <location line="-302"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-276"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-288"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-288"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-290"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location line="-128"/>
+        <location line="-114"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-140"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-126"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-126"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-128"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-128"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-126"/>
         <source>PopupTest</source>
         <translation type="unfinished"></translation>
@@ -1729,59 +1668,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+28"/>
-        <location line="+78"/>
-        <location line="+90"/>
+        <location line="+32"/>
+        <location line="+38"/>
+        <location line="+100"/>
+        <location line="+262"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+16"/>
+        <location line="+58"/>
+        <location line="+120"/>
+        <location line="+230"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+12"/>
+        <location line="+74"/>
+        <location line="+80"/>
         <location line="+290"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+14"/>
-        <location line="+46"/>
-        <location line="+138"/>
-        <location line="+270"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+22"/>
-        <location line="+62"/>
-        <location line="+98"/>
-        <location line="+294"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+32"/>
-        <location line="+50"/>
-        <location line="+94"/>
-        <location line="+298"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+20"/>
-        <location line="+70"/>
-        <location line="+90"/>
-        <location line="+306"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+28"/>
+        <location line="+30"/>
+        <location line="+108"/>
+        <location line="+274"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+32"/>
+        <location line="+42"/>
+        <location line="+120"/>
+        <location line="+254"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-450"/>
-        <location line="+46"/>
-        <location line="+122"/>
-        <location line="+270"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-450"/>
-        <location line="+58"/>
-        <location line="+126"/>
-        <location line="+274"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-458"/>
-        <location line="+58"/>
-        <location line="+102"/>
-        <location line="+290"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-438"/>
-        <location line="+38"/>
-        <location line="+106"/>
-        <location line="+286"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-470"/>
+        <location line="-404"/>
         <location line="+62"/>
-        <location line="+98"/>
-        <location line="+306"/>
+        <location line="+76"/>
+        <location line="+278"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-412"/>
+        <location line="+78"/>
+        <location line="+100"/>
+        <location line="+242"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-440"/>
+        <location line="+54"/>
+        <location line="+100"/>
+        <location line="+278"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-408"/>
+        <location line="+50"/>
+        <location line="+88"/>
+        <location line="+290"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-412"/>
+        <location line="+30"/>
+        <location line="+132"/>
+        <location line="+246"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-434"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-436"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-428"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-426"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-442"/>
+        <location line="-404"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-392"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-408"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-420"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-404"/>
         <source>:/qml/imtgui/AuxComponents/MenuPanelButtonDecorator.qml</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1823,57 +1762,57 @@
     </message>
     <message>
         <location line="+2"/>
-        <location line="+392"/>
+        <location line="+366"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+2"/>
-        <location line="+392"/>
+        <location line="+366"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+2"/>
-        <location line="+392"/>
+        <location line="+366"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
-        <location line="+392"/>
+        <location line="+366"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
-        <location line="+392"/>
+        <location line="+366"/>
         <source>Order-ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-388"/>
-        <location line="+80"/>
-        <location line="+34"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-388"/>
+        <location line="-362"/>
+        <location line="+66"/>
+        <location line="+42"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-362"/>
         <location line="+92"/>
-        <location line="+22"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-388"/>
+        <location line="+16"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-362"/>
+        <location line="+80"/>
+        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-362"/>
+        <location line="+80"/>
+        <location line="+28"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-362"/>
         <location line="+78"/>
-        <location line="+36"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-388"/>
-        <location line="+78"/>
-        <location line="+36"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-388"/>
-        <location line="+78"/>
-        <location line="+36"/>
+        <location line="+30"/>
         <source>Added</source>
         <translation>Added</translation>
     </message>
     <message>
-        <location line="-112"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-112"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-112"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-112"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-112"/>
-        <location line="+114"/>
+        <location line="-106"/>
+        <location line="+108"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-106"/>
+        <location line="+108"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-106"/>
+        <location line="+108"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-106"/>
+        <location line="+108"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-106"/>
+        <location line="+108"/>
         <source>Last Modified</source>
         <translation>Last Modified</translation>
     </message>
     <message>
-        <location line="-164"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-164"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-164"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-164"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-164"/>
+        <location line="-158"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-158"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-158"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-158"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-158"/>
         <source>Account Name</source>
         <translation>Account Name</translation>
     </message>
@@ -1900,30 +1839,30 @@
         <translation>Account Description</translation>
     </message>
     <message>
-        <location line="+116"/>
+        <location line="+102"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+128"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+114"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+116"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+116"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+114"/>
         <source>Instance-ID</source>
         <translation>Instance-ID</translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+36"/>
-        <location line="+280"/>
+        <location line="+44"/>
+        <location line="+260"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="+4"/>
-        <location line="+24"/>
-        <location line="+280"/>
+        <location line="+18"/>
+        <location line="+260"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="+4"/>
-        <location line="+38"/>
-        <location line="+280"/>
+        <location line="+30"/>
+        <location line="+260"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+4"/>
-        <location line="+38"/>
-        <location line="+280"/>
+        <location line="+30"/>
+        <location line="+260"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
-        <location line="+38"/>
-        <location line="+280"/>
+        <location line="+32"/>
+        <location line="+260"/>
         <source>Customer</source>
         <translation>Customer</translation>
     </message>
@@ -1944,21 +1883,21 @@
         <translation type="vanished">Product Instance</translation>
     </message>
     <message>
-        <location line="-462"/>
+        <location line="-436"/>
         <location line="+138"/>
-        <location line="+254"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-462"/>
+        <location line="+136"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-436"/>
         <location line="+138"/>
-        <location line="+250"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-462"/>
-        <location line="+162"/>
-        <location line="+114"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-462"/>
-        <location line="+162"/>
-        <location line="+106"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-462"/>
-        <location line="+150"/>
         <location line="+240"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-436"/>
+        <location line="+126"/>
+        <location line="+246"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-436"/>
+        <location line="+126"/>
+        <location line="+244"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-436"/>
+        <location line="+150"/>
+        <location line="+114"/>
         <source>Installations</source>
         <translation>Installations</translation>
     </message>
@@ -1971,13 +1910,13 @@
         <translation type="vanished">Product Licensing Files</translation>
     </message>
     <message>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-480"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeClientServer/CProLifeClientServer.cpp" line="-468"/>
         <source>ProLifeClientServer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-370"/>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-360"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeConverter/CProLifeConverter.cpp" line="-464"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-464"/>
         <source>ImagingTools GmbH</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1987,7 +1926,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-4"/>
+        <location line="-2"/>
         <source>ProLife server</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1997,7 +1936,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-512"/>
+        <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-388"/>
         <source>ProLifeServerConfigurator</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2739,7 +2678,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+194"/>
+        <location line="+196"/>
         <source>Project</source>
         <translation type="unfinished"></translation>
     </message>

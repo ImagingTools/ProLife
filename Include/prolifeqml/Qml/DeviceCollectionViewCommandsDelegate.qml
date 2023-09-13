@@ -8,6 +8,21 @@ CollectionViewCommandsDelegateBase {
     property bool filterByNewActive: false;
     property string filterLicense: "";
 
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
+    }
+
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
+    }
+
+    function onLocalizationChanged(languageId){
+        let filterModel = container.collectionViewBase.modelFilter;
+        if (filterModel.ContainsKey("ObjectFilter")){
+            filterModel.RemoveData("ObjectFilter");
+        }
+    }
+
     onSelectionChanged: {
         let elementsModel = container.tableData.elements;
         if (!elementsModel){
