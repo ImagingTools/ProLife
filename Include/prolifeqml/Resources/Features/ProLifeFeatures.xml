@@ -5,7 +5,7 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{25bf7e4e-4c08-458b-ad6c-fdb78f126eb7}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
+            <Object ID="{a3b0da9b-ca70-4240-98bc-b87a2221c113}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
                 <Data Id="SensorManagement" Name="Sensor Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewSensors" Name="View Sensors" Optional="false">
@@ -13,13 +13,25 @@
                         </Object>
                         <Object Id="EditSensor" Name="Edit Sensor" Optional="false">
                             <SubFeatures>
-                                <Object Id="ChangeSensor" Name="Change Sensor" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
                                 <Object Id="AddSensor" Name="Add Sensor" Optional="false">
                                     <SubFeatures/>
                                 </Object>
                                 <Object Id="RemoveSensor" Name="Remove Sensor" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeSensor" Name="Change Sensor" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeMacAddress" Name="Change Mac Address" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeSerialNumber" Name="Change Serial Number" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeSensorDescription" Name="Change Sensor Description" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="ChangeProductionStatus" Name="Change Production Status" Optional="false">
                                     <SubFeatures/>
                                 </Object>
                             </SubFeatures>
@@ -36,7 +48,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{b3580bc9-0c09-409c-ab44-0c17017c1f30}" Description="" TypeId="FeatureInfo" Name="Administration">
+            <Object ID="{96a5adb3-b1d8-4f8a-923b-ddaae8f2e1e5}" Description="" TypeId="FeatureInfo" Name="Administration">
                 <Data Id="Administration" Name="Administration" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAdministration" Name="View Administration" Optional="false">
@@ -98,7 +110,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{fd267a8a-4aec-4a6d-b4a9-9c323569af97}" Description="" TypeId="FeatureInfo" Name="License Management">
+            <Object ID="{1eef7caf-98e3-4b26-b0b4-38cf343fb538}" Description="" TypeId="FeatureInfo" Name="License Management">
                 <Data Id="LicenseManagement" Name="License Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewLicenses" Name="View Licenses" Optional="false">
@@ -112,7 +124,10 @@
                                 <Object Id="ChangeLisenseNumber" Name="Change Lisense Number" Optional="false">
                                     <SubFeatures/>
                                 </Object>
-                                <Object Id="SetLicenseNumber" Name="Set License Number" Optional="false">
+                                <Object Id="AddLicense" Name="Add License" Optional="false">
+                                    <SubFeatures/>
+                                </Object>
+                                <Object Id="RemoveLicense" Name="Remove License" Optional="false">
                                     <SubFeatures/>
                                 </Object>
                             </SubFeatures>
@@ -120,7 +135,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{bafeaa9b-5fc1-43a0-9a34-3cddf84f0f17}" Description="" TypeId="FeatureInfo" Name="Account Management">
+            <Object ID="{40bdfbfe-4b56-4c5a-afaf-1ce423174652}" Description="" TypeId="FeatureInfo" Name="Account Management">
                 <Data Id="AccountManagement" Name="Account Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
@@ -142,7 +157,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{cecc9f3a-0a38-4133-8161-1e5003f132ad}" Description="" TypeId="FeatureInfo" Name="Order Management">
+            <Object ID="{7052b70f-a8ee-4e80-be26-e93c928fb9ef}" Description="" TypeId="FeatureInfo" Name="Order Management">
                 <Data Id="OrderManagement" Name="Order Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewOrders" Name="View Orders" Optional="false">
@@ -167,7 +182,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{27a38337-3a12-4e40-894d-f242ef8985d3}" Description="" TypeId="FeatureInfo" Name="Settings Management">
+            <Object ID="{e7636f6d-c870-457b-844c-1b4589587bfb}" Description="" TypeId="FeatureInfo" Name="Settings Management">
                 <Data Id="SettingsManagement" Name="Settings Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewClientSettings" Name="View Client Settings" Optional="false">
@@ -182,6 +197,31 @@
         </ObjectsList>
     </Features>
     <Dependencies>
+        <Dependency FeatureId="ChangeLisenseNumber">
+            <BaseFeatures>
+                <BaseFeatureId>ChangeLicense</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+        <Dependency FeatureId="ChangeMacAddress">
+            <BaseFeatures>
+                <BaseFeatureId>ChangeSensor</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+        <Dependency FeatureId="ChangeProductionStatus">
+            <BaseFeatures>
+                <BaseFeatureId>ChangeSensor</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+        <Dependency FeatureId="ChangeSensorDescription">
+            <BaseFeatures>
+                <BaseFeatureId>ChangeSensor</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
+        <Dependency FeatureId="ChangeSerialNumber">
+            <BaseFeatures>
+                <BaseFeatureId>ChangeSensor</BaseFeatureId>
+            </BaseFeatures>
+        </Dependency>
         <Dependency FeatureId="EditAccount">
             <BaseFeatures>
                 <BaseFeatureId>ViewAccounts</BaseFeatureId>

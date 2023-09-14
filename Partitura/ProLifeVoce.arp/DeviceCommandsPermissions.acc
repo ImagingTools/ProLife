@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5075" Description="ACF"/>
-            <Version Id="1" Number="2183" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5102" Description="ACF"/>
+            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -19,10 +19,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveSensor</Value>
-                                <Value>ChangeSensor</Value>
                                 <Value>ViewSensors</Value>
-                                <Value>EditSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -83,10 +80,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddSensor</Value>
-                                <Value>RemoveSensor</Value>
-                                <Value>ChangeSensor</Value>
                                 <Value>EditSensor</Value>
+                                <Value>ChangeSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeSerialNumber</Value>
+                                <Value>ChangeSensorDescription</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -108,10 +107,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddSensor</Value>
-                                <Value>RemoveSensor</Value>
-                                <Value>ChangeSensor</Value>
                                 <Value>EditSensor</Value>
+                                <Value>ChangeSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeSerialNumber</Value>
+                                <Value>ChangeSensorDescription</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -133,10 +134,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddSensor</Value>
-                                <Value>RemoveSensor</Value>
-                                <Value>ChangeSensor</Value>
                                 <Value>EditSensor</Value>
+                                <Value>ChangeSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeSerialNumber</Value>
+                                <Value>ChangeSensorDescription</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

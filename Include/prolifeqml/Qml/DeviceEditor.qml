@@ -2,6 +2,7 @@ import QtQuick 2.12
 import imtgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
+import imtauthgui 1.0
 import Acf 1.0
 
 DocumentBase {
@@ -439,6 +440,11 @@ DocumentBase {
 
                         model: deviceEditorContainer.productsModel;
 
+                        Component.onCompleted: {
+                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            productCB.changeable = ok;
+                        }
+
                         onCurrentIndexChanged: {
                             if (productCB.currentIndex >= 0){
                                 let model = productCB.model.GetData("Licenses", productCB.currentIndex);
@@ -480,6 +486,11 @@ DocumentBase {
 
                         radius: deviceEditorContainer.radius;
 
+                        Component.onCompleted: {
+                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            configurationCB.changeable = ok;
+                        }
+
                         onCurrentIndexChanged: {
                             deviceEditorContainer.updateModel();
                         }
@@ -493,6 +504,15 @@ DocumentBase {
 
                     title: qsTr("Description");
                     placeHolderText: qsTr("Enter description");
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeSensorDescription");
+                        }
+
+                        descriptionInput.readOnly = !ok;
+                    }
 
                     onEditingFinished: {
                         let oldText = deviceEditorContainer.documentModel.GetData("Description");
@@ -511,6 +531,15 @@ DocumentBase {
 
                     title: qsTr("Serial Number");
                     placeHolderText: qsTr("Enter serial number");
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeSerialNumber");
+                        }
+
+                        serialNumberInput.readOnly = !ok;
+                    }
 
                     onEditingFinished: {
                         console.log("onEditingFinished", serialNumberInput.text);
@@ -539,6 +568,15 @@ DocumentBase {
                         placeHolderText: qsTr("Enter MAC-Address");
 
                         maximumLength: 17;
+
+                        Component.onCompleted: {
+                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            if (!ok){
+                                ok = PermissionsController.checkPermission("ChangeMacAddress");
+                            }
+
+                            macAddressInput.readOnly = !ok;
+                        }
 
                         onEditingFinished: {
                             let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
@@ -674,6 +712,15 @@ DocumentBase {
 
                             property bool blockingIndexChanged: false;
 
+                            Component.onCompleted: {
+                                let ok = PermissionsController.checkPermission("ChangeSensor");
+                                if (!ok){
+                                    ok = PermissionsController.checkPermission("ChangeProductionStatus");
+                                }
+
+                                statusCB.changeable = ok;
+                            }
+
                             onCurrentIndexChanged: {
                                 deviceEditorContainer.updateModel();
 
@@ -713,6 +760,8 @@ DocumentBase {
                             text: qsTr("Clear");
 
                             decorator: defaultButtonDecorator;
+
+                            enabled: statusCB.changeable;
 
                             onClicked: {
                                 if(deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
@@ -759,6 +808,11 @@ DocumentBase {
 
                         nameId: "OrderId";
 
+                        Component.onCompleted: {
+                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            orderCB.changeable = ok;
+                        }
+
                         onCurrentIndexChanged: {
                             deviceEditorContainer.updateModel();
                         }
@@ -773,6 +827,8 @@ DocumentBase {
                         text: qsTr("Clear");
 
                         decorator: defaultButtonDecorator;
+
+                        enabled: orderCB.changeable;
 
                         onClicked: {
                             if(deviceEditorContainer.documentModel.ContainsKey("OrderId")){

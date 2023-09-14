@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 
 DocumentBase {
     id: root;
@@ -289,6 +290,12 @@ DocumentBase {
 
                 placeHolderText: qsTr("Enter the project");
 
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                    projectInput.readOnly = !ok;
+                }
+
                 onEditingFinished: {
                     let oldText = root.documentModel.GetData("Project");
                     if (oldText && oldText !== projectInput.text || !oldText && projectInput.text !== ""){
@@ -322,6 +329,12 @@ DocumentBase {
 
                     nameId: "OrderId";
 
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                        ordersCB.changeable = ok;
+                    }
+
                     onCurrentIndexChanged: {
                         console.log("onCurrentIndexChanged", ordersCB.currentIndex);
                         if (root.blockUpdatingModel){
@@ -340,6 +353,8 @@ DocumentBase {
                     text: qsTr("Clear");
 
                     decorator: defaultButtonDecorator;
+
+                    enabled: ordersCB.changeable;
 
                     onClicked: {
                         if(root.documentModel.ContainsKey("OrderUuid")){
@@ -376,6 +391,12 @@ DocumentBase {
                 height: 23;
 
                 radius: 3;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                    productCB.changeable = ok;
+                }
 
                 onCurrentIndexChanged: {
                     if (root.blockUpdatingModel){

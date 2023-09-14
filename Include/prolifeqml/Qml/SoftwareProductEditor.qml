@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtlicgui 1.0
 
 Item {
@@ -16,6 +17,11 @@ Item {
 
     property alias tableElements: licensesTable.elements;
     property bool readOnly: false;
+
+    onReadOnlyChanged: {
+        serialNumberInput.readOnly = root.readOnly;
+        licensesTable.readOnly = root.readOnly;
+    }
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
@@ -61,6 +67,17 @@ Item {
 
         readOnly: root.readOnly;
 
+        Component.onCompleted: {
+            let ok = PermissionsController.checkPermission("ChangeLicense");
+            if (!ok){
+                ok = PermissionsController.checkPermission("ChangeLisenseNumber");
+            }
+
+            console.log("ChangeLisenseNumber", ok);
+
+            serialNumberInput.readOnly = !ok;
+        }
+
         onEditingFinished: {
             if (root.productModel.ContainsKey("SerialNumber")){
                 let oldSerialNumber = root.productModel.GetData("SerialNumber");
@@ -100,6 +117,12 @@ Item {
         isMultiCheckable: false;
 
         readOnly: root.readOnly;
+
+        Component.onCompleted: {
+            let ok = PermissionsController.checkPermission("ChangeLicense");
+
+            licensesTable.readOnly = !ok;
+        }
 
         delegate: Component {
             LicenseInstanceItemDelegate {

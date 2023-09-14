@@ -459,7 +459,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewSensors</Value>
-                                            <Value>EditSensor</Value>
+                                            <Value>ChangeSensor</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -511,7 +511,6 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditSensor</Value>
                                             <Value>AddSensor</Value>
                                         </Values>
                                     </Data>
@@ -599,7 +598,6 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditSensor</Value>
                                             <Value>RemoveSensor</Value>
                                         </Values>
                                     </Data>
