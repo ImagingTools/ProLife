@@ -53,11 +53,6 @@ Dialog {
     contentComp: Component {
         id: productPairEditor;
 
-//        onStatusChanged: {
-//            console.log("DEBUG::31", status, productBinding.modelFilter.toJSON())
-////            Component.Ready
-//        }
-
         HardwareProductBindingEditor {
             id: productBinding;
 
