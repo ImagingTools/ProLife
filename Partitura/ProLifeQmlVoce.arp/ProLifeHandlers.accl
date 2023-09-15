@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="ApplicationController" X="225" Y="550" Note=""/>
+        <Element ComponentName="FileDataProvider" X="1100" Y="750" Note=""/>
+        <Element ComponentName="GqlContextController" X="225" Y="225" Note=""/>
+        <Element ComponentName="GraphQlRoot" X="100" Y="425" Note=""/>
+        <Element ComponentName="HttpFileAccess" X="900" Y="425" Note=""/>
+        <Element ComponentName="HttpRedirect" X="550" Y="425" Note=""/>
+        <Element ComponentName="HttpRootHandler" X="575" Y="225" Note=""/>
+        <Element ComponentName="KeyDataProviders" X="775" Y="750" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="525" Y="550" Note=""/>
+        <Element ComponentName="ResourcesPath" X="1075" Y="125" Note=""/>
+        <Element ComponentName="RessourcesProvider" X="825" Y="125" Note=""/>
+        <Element ComponentName="RestoringDatabaseController" X="1025" Y="275" Note=""/>
+        <Element ComponentName="SessionInfo" X="300" Y="100" Note=""/>
+        <Element ComponentName="UserInfo" X="125" Y="100" Note=""/>
+        <Element ComponentName="WebResourcesServlet" X="550" Y="125" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="KeyDataProviders">
+            <PositionMap>
+                <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>
+                <Element ComponentName="Encryption" X="975" Y="500" Note=""/>
+                <Element ComponentName="EncryptionBasePersistence" X="600" Y="500" Note=""/>
+                <Element ComponentName="KeyDataProvider" X="575" Y="250" Note=""/>
+                <Element ComponentName="XmlFileSerializer" X="250" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -18,6 +18,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Prefix" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="prolife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RepresentsationControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -39,6 +42,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="ServerSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -100,42 +106,6 @@
                             <AttributeInfoMap/>
                         </Data>
                     </Element>
-                    <Element Id="ServerSettings" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabaseHost" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="localhost"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="DefaultDatabaseName">
-                                    <Data IsEnabled="true" Value="prolife"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="root"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabasePort" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="5432"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabaseUserName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="postgres"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="ServerSettingsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -149,8 +119,8 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="Permission"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ServerSettings"/>
+                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="ServerSettings">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
                                     <Data IsEnabled="false"/>

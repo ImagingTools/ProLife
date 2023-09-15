@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -31,15 +31,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Default"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="CacheClearingInterval" PackageId="BasePck" ComponentId="TextParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="60"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -73,6 +64,9 @@
                     <AttributeInfo Id="DbName" Type="Id" ExportId="DefaultDatabaseName">
                         <Data IsEnabled="true" Value="prolife"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DbPath" Type="Id" ExportId="DefaultDatabasePath">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="HostName" Type="Id" ExportId="DefaultDatabaseHost">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -89,7 +83,7 @@
             </Data>
         </Element>
         <Element Id="FileAutoPersistence" PackageId="ImtCoreVoce" ComponentId="FileAutoPersistence">
-            <Data IsEnabled="true" Flags="1">
+            <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
@@ -201,7 +195,6 @@
                                 <Value>PumaUrlConnection</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
-                                <Value>CacheClearingInterval</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -213,7 +206,6 @@
                                 <Value>PumaUrl</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
-                                <Value>CacheClearingInterval</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -250,8 +242,8 @@
         <Interface InterfaceId="istd::IChangeable" ComponentId="Preferences"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="AutoPersistence" ComponentId="FileAutoPersistence/AutoPersistence"/>
         <Component ExportedId="BackupParamsSet" ComponentId="Backup"/>
-        <Component ExportedId="CacheClearingIntervalParam" ComponentId="CacheClearingInterval"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrlConnection"/>
         <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrlConnection"/>
