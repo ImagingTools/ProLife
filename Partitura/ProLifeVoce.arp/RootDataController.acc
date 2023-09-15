@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5087" Description="ACF"/>
+            <Version Id="1" Number="2190" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -37,9 +37,6 @@
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
@@ -84,8 +81,8 @@
                     <AttributeInfo Id="Url" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="http://localhost:7776"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SettingsController/LisaUrlConnection"/>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="LisaUrlConnection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -98,9 +95,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ImtCoreTranslationManager" Type="Reference" ExportId="ImtCoreTranslationManager">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -196,8 +190,8 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SettingsController/PumaUrlConnection"/>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="PumaUrlConnection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -215,6 +209,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="ServerSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -284,7 +281,6 @@
         <Component ExportedId="AccountSqlRepository" ComponentId="Pages/AccountSqlRepository"/>
         <Component ExportedId="BackupParamsSet" ComponentId="SettingsController/BackupParamsSet"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Pages/BindingProductsRepository"/>
-        <Component ExportedId="CacheClearingIntervalParam" ComponentId="SettingsController/CacheClearingIntervalParam"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
         <Component ExportedId="GraphQLClientEngine" ComponentId="LisaGQLEngine"/>
