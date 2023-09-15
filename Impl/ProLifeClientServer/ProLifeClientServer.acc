@@ -16,9 +16,6 @@
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeClientServer"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CheckSystemStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -92,7 +89,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeClientServerLog.txt"/>
+                        <Data IsEnabled="true" Value="ProLifeServerLog.txt"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="1"/>
@@ -110,7 +107,7 @@
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="9"/>
+                        <Data IsEnabled="true" Value="105"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

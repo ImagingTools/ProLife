@@ -19,9 +19,6 @@
                     <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Client"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CheckSystemStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="LanguageParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings/Language"/>
                     </AttributeInfo>
