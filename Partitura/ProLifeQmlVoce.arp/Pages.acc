@@ -222,6 +222,9 @@
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PagesPermissions"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Pages"/>
                     </AttributeInfo>

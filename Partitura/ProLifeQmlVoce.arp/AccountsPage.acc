@@ -315,6 +315,9 @@
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="AccountsCommandPermissions"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Accounts"/>
                                 </AttributeInfo>
@@ -520,6 +523,9 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="AccountCommandPermissions"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Account"/>

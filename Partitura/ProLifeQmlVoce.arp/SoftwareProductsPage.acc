@@ -284,6 +284,9 @@
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="CommandsJoiner"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="SoftwareProducts"/>
                                 </AttributeInfo>
@@ -697,6 +700,9 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="CommandPermissions"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="SoftwareProduct"/>
