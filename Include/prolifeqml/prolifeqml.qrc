@@ -40,7 +40,6 @@
         <file alias="ProLife/ProductPairEditor.qml">Qml/ProductPairEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingEditor.qml">Qml/HardwareProductBindingEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingDialog.qml">Qml/HardwareProductBindingDialog.qml</file>
-        <file alias="ProLife/IconCellDelegate.qml">Qml/IconCellDelegate.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>
