@@ -11,6 +11,7 @@
         <Element ComponentName="DatabaseEngine" X="325" Y="425" Note=""/>
         <Element ComponentName="HttpProtocolEngine" X="775" Y="325" Note=""/>
         <Element ComponentName="ProLifeHandlers" X="500" Y="250" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="475" Y="125" Note=""/>
         <Element ComponentName="ServerSettings" X="150" Y="225" Note=""/>
         <Element ComponentName="TcpServer" X="525" Y="550" Note=""/>
         <Element ComponentName="WorkerManager" X="575" Y="400" Note=""/>

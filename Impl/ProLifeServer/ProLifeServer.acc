@@ -26,6 +26,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProLifeServerBase</Value>
+                                <Value>ProLifeServerBase/ProLifeLocalization</Value>
                                 <Value>ProLifeServerBase/AutoPersistence</Value>
                                 <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
                                 <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>

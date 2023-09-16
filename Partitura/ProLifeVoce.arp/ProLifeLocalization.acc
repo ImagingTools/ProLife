@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5091" Description="ACF"/>
+            <Version Id="1" Number="2192" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -74,9 +74,9 @@
         <Interface InterfaceId="imod::IModel" ComponentId="ProLifeLocalization"/>
         <Interface InterfaceId="iprm::IOptionsList" ComponentId="ProLifeLocalization"/>
         <Interface InterfaceId="iqt::ITranslationManager" ComponentId="ProLifeLocalization"/>
-        <Interface InterfaceId="istd::IChangeable" ComponentId="ProLifeLocalization"/>
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="ImtCoreLocalization" ComponentId="ImtCoreLocalization"/>
+        <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization"/>
     </ExportedComponents>
 </Acf>

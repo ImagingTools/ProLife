@@ -24,6 +24,7 @@
                                 <Value>ClientApplication/ObserverQml</Value>
                                 <Value>TextFileLog</Value>
                                 <Value>PumaSystemStatusController</Value>
+                                <Value>ProLifeServerBase/ProLifeLocalization</Value>
                                 <Value>ProLifeServerBase/AutoPersistence</Value>
                                 <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
                                 <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
