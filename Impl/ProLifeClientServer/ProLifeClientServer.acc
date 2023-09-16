@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5091" Description="ACF"/>
+            <Version Id="1" Number="2192" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -27,10 +27,10 @@
                                 <Value>ProLifeServerBase/AutoPersistence</Value>
                                 <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
                                 <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
-                                <Value>ProLifeServerBase/TcpServer</Value>
-                                <Value>LocalSettings</Value>
                                 <Value>ProLifeServerBase/HttpProtocolEngine</Value>
                                 <Value>ProLifeServerBase/MultiThreadWorker</Value>
+                                <Value>ProLifeServerBase/TcpServer</Value>
+                                <Value>LocalSettings</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
