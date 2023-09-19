@@ -2,22 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5091" Description="ACF"/>
-            <Version Id="1" Number="2192" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5104" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ClientApplication" X="675" Y="425" Note=""/>
-        <Element ComponentName="LocalSettings" X="925" Y="575" Note=""/>
-        <Element ComponentName="LogFilePath" X="250" Y="425" Note=""/>
-        <Element ComponentName="LogSystemLocation" X="250" Y="600" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="550" Y="600" Note=""/>
-        <Element ComponentName="ProLifeServerBase" X="825" Y="275" Note=""/>
+        <Element ComponentName="ClientApplication" X="475" Y="400" Note=""/>
+        <Element ComponentName="ProLifeServerBase" X="475" Y="150" Note=""/>
         <Element ComponentName="PumaSystemStatusController" X="475" Y="750" Note=""/>
-        <Element ComponentName="SystemStatusController" X="800" Y="750" Note=""/>
-        <Element ComponentName="TextFileLog" X="250" Y="275" Note=""/>
-        <Element ComponentName="VersionInfo" X="1100" Y="425" Note=""/>
+        <Element ComponentName="SystemStatusController" X="900" Y="750" Note=""/>
+        <Element ComponentName="VersionInfo" X="975" Y="150" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

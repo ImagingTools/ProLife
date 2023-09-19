@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5091" Description="ACF"/>
-            <Version Id="1" Number="2192" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5104" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -22,24 +22,23 @@
                                 <Value>ProLifeServerBase</Value>
                                 <Value>ClientApplication/ClientMainWindowQml</Value>
                                 <Value>ClientApplication/ObserverQml</Value>
-                                <Value>TextFileLog</Value>
+                                <Value>ClientApplication/TextFileLog</Value>
                                 <Value>PumaSystemStatusController</Value>
                                 <Value>ProLifeServerBase/ProLifeLocalization</Value>
                                 <Value>ProLifeServerBase/AutoPersistence</Value>
                                 <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
                                 <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
-                                <Value>ProLifeServerBase/HttpProtocolEngine</Value>
-                                <Value>ProLifeServerBase/MultiThreadWorker</Value>
-                                <Value>ProLifeServerBase/TcpServer</Value>
-                                <Value>LocalSettings</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/Language"/>
+                    <AttributeInfo Id="IgnoreLocale" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
+                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogLocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="9"/>
                     </AttributeInfo>
                     <AttributeInfo Id="MainQmlPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value=":/qml/ProLife/ProLifeMain.qml"/>
@@ -47,96 +46,26 @@
                     <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="2022"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="PreferenceDefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProlifeClientPreferences.xml"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Settings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    <AttributeInfo Id="SystemStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SystemStatusController"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    <AttributeInfo Id="TranslationFilePath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value=":/Translations"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="VersionInfo"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LocalSettings" PackageId="ProLifeQmlVoce" ComponentId="LocalSettings">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/RuntimeStatus"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    <AttributeInfo Id="TranslationFilePrefix" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LogFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerLog.txt"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="1"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LogSystemLocation"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LogSystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="105"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ProLifeLocalization" PackageId="ProLifeVoce" ComponentId="ProLifeLocalization">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>en_US</Value>
-                                <Value>de_DE</Value>
-                                <Value>ru_RU</Value>
-                                <Value>pl_PL</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -148,13 +77,10 @@
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
+                        <Data IsEnabled="true" Value="ClientApplication/TextFileLog"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LogPath" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LogFilePath"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="7778"/>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ClientApplication/RuntimeStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -178,7 +104,7 @@
                         <Data IsEnabled="true" Value="PumaGetDatabaseStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
+                        <Data IsEnabled="true" Value="ClientApplication/TextFileLog"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Puma"/>
@@ -187,7 +113,7 @@
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
+                        <Data IsEnabled="true" Value="ClientApplication/ServerUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -208,7 +134,7 @@
                         <Data IsEnabled="true" Value="ProLifeGetDatabaseStatus"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="TextFileLog"/>
+                        <Data IsEnabled="true" Value="ClientApplication/TextFileLog"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
@@ -220,25 +146,7 @@
                         <Data IsEnabled="true" Value="PumaSystemStatusController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="TextFileLog" PackageId="FilePck" ComponentId="TextFileLog">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="LogFile" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LogFilePath"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UseCategory" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UseCode" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UseTimeStamp" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="ClientApplication/ServerUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
