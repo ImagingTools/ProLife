@@ -185,7 +185,16 @@ Rectangle {
 
         let licenseId = softwareCard.licensesModel.GetData("Id");
         let licenseName = softwareCard.licensesModel.GetData("Name");
-        let name = licenseName + " (" + licenseId + ")";
+
+        let name = "";
+
+        if (licenseName){
+            name = licenseName;
+        }
+
+        if (licenseId){
+            name += " (" + licenseId + ")";
+        }
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("License"), index)

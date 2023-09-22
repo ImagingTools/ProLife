@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5104" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -13,6 +13,9 @@
         <Element Id="BackupFolder" PackageId="ImtFilePck" ComponentId="FileNameParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="BackupFolder"/>
                     </AttributeInfo>
@@ -31,6 +34,9 @@
         <Element Id="BackupSettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Backup"/>
                     </AttributeInfo>
@@ -54,6 +60,9 @@
         <Element Id="BackupSettingsRepresentationController" PackageId="ImtAppPck" ComponentId="BackupSettingsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Backup"/>
                     </AttributeInfo>
@@ -66,6 +75,9 @@
         <Element Id="CacheClearingIntervalRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="CacheClearingInterval"/>
                     </AttributeInfo>
@@ -89,6 +101,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="HostSource" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/imtgui/AuxComponents/SettingsTextInput.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Database"/>
@@ -117,6 +132,9 @@
         <Element Id="DatabaseSettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Database"/>
                     </AttributeInfo>
@@ -139,6 +157,9 @@
         <Element Id="InstanceMaskRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="InstanceMask"/>
                     </AttributeInfo>
@@ -157,6 +178,9 @@
         <Element Id="LisaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="LisaUrl"/>
                     </AttributeInfo>
@@ -180,6 +204,9 @@
         <Element Id="PumaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaUrl"/>
                     </AttributeInfo>
@@ -198,6 +225,9 @@
         <Element Id="SchedulerParams" PackageId="ImtAppPck" ComponentId="SchedulerParamsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="SchedulerParams"/>
                     </AttributeInfo>
@@ -216,6 +246,9 @@
         <Element Id="ServerPortRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ServerPort"/>
                     </AttributeInfo>
@@ -256,6 +289,9 @@
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettingsPermission"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Server"/>
                     </AttributeInfo>
@@ -285,6 +321,9 @@
         <Element Id="SettingsRepresentation" PackageId="ImtCorePck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
                     </AttributeInfo>

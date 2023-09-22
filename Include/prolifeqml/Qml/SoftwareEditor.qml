@@ -182,29 +182,14 @@ DocumentBase {
     }
 
     function updateModel(){
+        console.log("updateModel");
         if (root.blockUpdatingModel){
             return;
         }
 
         undoRedoManager.beginChanges();
 
-        if (softwareProductEditor.productModel.ContainsKey("SerialNumber")){
-            let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
-            root.documentModel.SetData("SerialNumber", serialNumber)
-        }
-
-        let licenseId = "";
-        let expiration = "";
-        let activeLicensesModel = softwareProductEditor.productModel.GetData("ActiveLicenses");
-        if (activeLicensesModel){
-            licenseId =  activeLicensesModel.GetData("Id");
-            expiration =  activeLicensesModel.GetData("Expiration");
-        }
-
         root.documentModel.SetData("Project", projectInput.text);
-
-        //        let productId = productCB.model.GetData("Id", productCB.currentIndex);
-        //        root.documentModel.SetData("ProductId", productId);
 
         if (ordersCB.model){
             if (ordersCB.currentIndex >= 0){
@@ -216,8 +201,23 @@ DocumentBase {
             }
         }
 
+        let licenseId = "";
+        let expiration = "";
+        let activeLicensesModel = softwareProductEditor.productModel.GetData("ActiveLicenses");
+        if (activeLicensesModel){
+            licenseId =  activeLicensesModel.GetData("Id");
+            expiration =  activeLicensesModel.GetData("Expiration");
+        }
+
         root.documentModel.SetData("LicenseId", licenseId);
         root.documentModel.SetData("Expiration", expiration);
+
+        let serialNumber = "";
+        if (softwareProductEditor.productModel.ContainsKey("SerialNumber")){
+            serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
+        }
+
+        root.documentModel.SetData("SerialNumber", serialNumber);
 
         undoRedoManager.endChanges();
     }
@@ -404,8 +404,14 @@ DocumentBase {
                     }
 
                     if (productCB.currentIndex >= 0){
+                        let oldProductId = root.documentModel.GetData("ProductId");
                         let productId = productCB.model.GetData("Id", productCB.currentIndex);
                         root.documentModel.SetData("ProductId", productId);
+
+                        if (oldProductId != productId){
+                            root.documentModel.SetData("Expiration", "");
+                            root.documentModel.SetData("LicenseId", "");
+                        }
 
                         let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
                         if (!licensesModel){
@@ -444,7 +450,31 @@ DocumentBase {
                 }
 
                 function onModelChanged(){
-                    root.updateModel()
+                    let currentLicenseId = root.documentModel.GetData("LicenseId");
+                    let currentExpiration = root.documentModel.GetData("Expiration");
+                    let currentSerialNumber = root.documentModel.GetData("SerialNumber");
+
+                    console.log("currentLicenseId", currentLicenseId);
+                    console.log("currentExpiration", currentExpiration);
+                    console.log("currentSerialNumber", currentSerialNumber);
+
+                    let licenseId = "";
+                    let expiration = "";
+                    let activeLicensesModel = softwareProductEditor.productModel.GetData("ActiveLicenses");
+                    if (activeLicensesModel){
+                        licenseId =  activeLicensesModel.GetData("Id");
+                        expiration =  activeLicensesModel.GetData("Expiration");
+                    }
+
+                    let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
+
+                    console.log("licenseId", licenseId);
+                    console.log("expiration", expiration);
+                    console.log("serialNumber", serialNumber);
+
+                    if (currentLicenseId !== licenseId || currentExpiration !== expiration || currentSerialNumber !== serialNumber){
+                        root.updateModel();
+                    }
                 }
             }
         }

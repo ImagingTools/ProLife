@@ -26,6 +26,8 @@ Item {
     property string orderId;
     property string orderUuid;
 
+    property var excludeDeviceIds: [];
+
     property string productCategory: "";
     property string productId: "";
 
@@ -44,6 +46,10 @@ Item {
 
     onProductCategoryChanged: {
         productEditor.productModel.SetData("CategoryId", productEditor.productCategory);
+    }
+
+    onExcludeDeviceIdsChanged: {
+        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
     }
 
     property TreeItemModel hardwareProductsModel: TreeItemModel {}
@@ -67,12 +73,36 @@ Item {
     }
 
     function getDevicesModel(){
+        console.log("getDevicesModel");
+
         let resultModel = treeItemModelComp.createObject(null);
         let selectedProductId = productEditor.productModel.GetData("ProductId");
+        let selectedDeviceId = productEditor.productModel.GetData("DeviceId");
+
+        console.log("selectedDeviceId", selectedDeviceId);
+        console.log("productEditor.excludeDeviceIds", productEditor.excludeDeviceIds);
+
+        let index = productEditor.excludeDeviceIds.indexOf(selectedDeviceId);
+        console.log("index", index);
+
+        if (index >= 0){
+            productEditor.excludeDeviceIds.splice(index, 1)
+        }
+
+        console.log("productEditor.excludeDeviceIds2", productEditor.excludeDeviceIds);
+
         for (let i = 0; i < productEditor.devicesModel.GetItemsCount(); i++){
             let status = productEditor.devicesModel.GetData("Status", i);
             let orderId = productEditor.devicesModel.GetData("OrderUuid", i);
+            let deviceId = productEditor.devicesModel.GetData("Id", i);
             let deviceType = productEditor.devicesModel.GetData("DeviceType", i);
+
+            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
+                console.log("deviceId", deviceId);
+                console.log("continue");
+
+                continue;
+            }
 
             if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
                     selectedProductId === deviceType && productEditor.orderUuid === orderId){
@@ -101,6 +131,7 @@ Item {
 
             if (contentLoader.item){
                 let index = contentLoader.item.deviceIndex;
+                console.log("deviceIndex", index);
 
                 productEditor.rootItem.buttons.setButtonState("Save", index >= 0);
             }
@@ -300,6 +331,7 @@ Item {
             productEditor.productModel.SetData("CategoryId", "Software");
 
             productEditor.productModel.AddTreeModel("ActiveLicenses")
+            productEditor.productModel.SetData("SerialNumber", "");
 
             if (productEditor.productModel.ContainsKey("DeviceId")){
                 productEditor.productModel.RemoveData("DeviceId");
@@ -320,13 +352,7 @@ Item {
             if (productEditor.productModel.ContainsKey("MacAddress")){
                 productEditor.productModel.RemoveData("MacAddress");
             }
-
-            if (productEditor.productModel.ContainsKey("SerialNumber")){
-                productEditor.productModel.RemoveData("SerialNumber");
-            }
         }
-
-        clearPairLink();
     }
 
     Component {

@@ -73,19 +73,16 @@ Item {
                 ok = PermissionsController.checkPermission("ChangeLisenseNumber");
             }
 
-            console.log("ChangeLisenseNumber", ok);
-
             serialNumberInput.readOnly = !ok;
         }
 
-        onEditingFinished: {
-            if (root.productModel.ContainsKey("SerialNumber")){
-                let oldSerialNumber = root.productModel.GetData("SerialNumber");
-                if (oldSerialNumber != serialNumberInput.text){
-                    root.productModel.SetData("SerialNumber", serialNumberInput.text);
-                }
-            }
+        onTextChanged: {
+            root.productModel.SetData("SerialNumber", serialNumberInput.text);
         }
+
+//        onEditingFinished: {
+//            root.productModel.SetData("SerialNumber", serialNumberInput.text);
+//        }
     }
 
     Text {
@@ -201,6 +198,8 @@ Item {
         if (root.blockUpdatingModel){
             return;
         }
+
+        root.productModel.SetData("SerialNumber", serialNumberInput.text);
     }
 
     function updateGui(){
@@ -221,7 +220,7 @@ Item {
                     for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
                         let activeLicenseId = activeLicensesModel.GetData("Id", j);
                         if (licenseId === activeLicenseId){
-//                            activeLicensesModel.SetData("Name", licenseName, j);
+                            //                            activeLicensesModel.SetData("Name", licenseName, j);
 
                             let expiration = activeLicensesModel.GetData("Expiration", j);
                             if (expiration === "Unlimited"){
@@ -243,7 +242,13 @@ Item {
         licensesTable.elements = root.productLicensesModel;
 
         if (root.productModel.ContainsKey("SerialNumber")){
-            serialNumberInput.text = root.productModel.GetData("SerialNumber");
+            let serialNumber = root.productModel.GetData("SerialNumber");
+            if (serialNumber){
+                serialNumberInput.text = serialNumber;
+            }
+            else{
+                serialNumberInput.text = "";
+            }
         }
 
         blockUpdatingModel = false;
@@ -252,7 +257,7 @@ Item {
     TreeItemModel {
         id: headersModel;
         Component.onCompleted: {
-             root.updateHeaders();
+            root.updateHeaders();
         }
     }
 

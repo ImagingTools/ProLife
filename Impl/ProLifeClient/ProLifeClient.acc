@@ -35,17 +35,35 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="LogDefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeClientLog.txt"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogLocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="MainQmlPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value=":/qml/ProLife/ProLifeMain.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="2022"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="PreferenceDefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProlifeClientPreferences.xml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PreferenceLocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="/ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Settings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SystemStatus" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SystemStatusController"/>
@@ -55,6 +73,39 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationFilePrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LocalSettings" PackageId="ImtQmlVoce" ComponentId="LocalSettings">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultServerUrl" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="http://localhost:7778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/TextFileLog"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PreferenceDefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProlifeClientPreferences.xml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PreferenceLocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="9"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
@@ -87,7 +138,7 @@
                         <Data IsEnabled="true" Value="/ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Application/ServerUrl"/>
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -120,7 +171,7 @@
                         <Data IsEnabled="true" Value="PumaSystemStatusController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Application/ServerUrl"/>
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

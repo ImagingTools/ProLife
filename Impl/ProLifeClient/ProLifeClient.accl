@@ -9,6 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Application" X="625" Y="375" Note=""/>
+        <Element ComponentName="LocalSettings" X="200" Y="375" Note=""/>
         <Element ComponentName="PumaSystemStatusController" X="925" Y="700" Note=""/>
         <Element ComponentName="SystemStatusController" X="350" Y="700" Note=""/>
         <Element ComponentName="VersionInfo" X="627" Y="150" Note=""/>

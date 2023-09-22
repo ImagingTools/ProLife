@@ -258,7 +258,7 @@ DocumentBase {
 
         commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber"];
+        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ConfigurationType"];
 
         onModelUpdated: {
             if (devicesList.collectionModel != null){
@@ -426,6 +426,7 @@ DocumentBase {
             }
         }
 
+        productsView.deviceIds = []
         if (documentModel.ContainsKey("OrderProducts")){
 
             orderEditorContainer.updateOrderProductsModel();
@@ -902,6 +903,7 @@ DocumentBase {
 
             onStarted: {
                 productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
+                productsDialog.bodyItem.excludeDeviceIds = productsView.deviceIds;
                 productsDialog.bodyItem.licensesModel = licensesProvider.model;
                 productsDialog.bodyItem.orderUuid = orderEditorContainer.itemId;
                 productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
@@ -1164,6 +1166,8 @@ DocumentBase {
         property bool isLicenseConsuming: false;
         property bool softwareEditing: true;
 
+        property var deviceIds: []
+
         function getMacAddressFromCurrentPair(){
             if (productsView.activeProductIndex >= 0){
                 let categoryId = productsView.model.GetData("CategoryId", productsView.activeProductIndex);
@@ -1178,6 +1182,11 @@ DocumentBase {
             }
 
             return null;
+        }
+
+        onModelChanged: {
+            console.log("productsView onModelChanged")
+//            productsView.deviceIds = []
         }
 
         delegate: OrderProductCard {
@@ -1195,6 +1204,14 @@ DocumentBase {
 
             licensesProvider: orderEditorContainer.licensesProviderLocal;
             orderEditorPtr: orderEditorContainer;
+
+            Component.onCompleted: {
+                console.log("OrderProductCard onCompleted", model.CategoryId);
+                if (model.CategoryId === "Hardware"){
+                    console.log("DeviceId", model.DeviceId);
+                    productsView.deviceIds.push(model.DeviceId);
+                }
+            }
 
             onEdited: {
                 productsView.activeProductIndex = model.index;
@@ -1296,6 +1313,15 @@ DocumentBase {
         MessageDialog {
             onFinished: {
                 if (buttonId == "Yes"){
+                    let categoryId = productsView.model.GetData("CategoryId", productsView.activeProductIndex)
+                    if (categoryId === "Hardware"){
+                        let deviceId = productsView.model.GetData("DeviceId", productsView.activeProductIndex)
+                        let index = productsView.deviceIds.indexOf(deviceId);
+                        if (index >= 0){
+                            productsView.deviceIds.splice(index, 1);
+                        }
+                    }
+
                     productsView.model.RemoveItem(productsView.activeProductIndex);
 
                     orderEditorContainer.updateModel();

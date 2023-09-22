@@ -50,6 +50,8 @@ Item {
         model: root.devicesModel;
 
         onCurrentIndexChanged: {
+            console.log("deviceCB onCurrentIndexChanged", deviceCB.currentIndex)
+
             if (root.blockUpdatingModel){
                 return;
             }
@@ -69,6 +71,18 @@ Item {
 
                 let deviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
                 root.productModel.SetData("DeviceId", deviceId);
+
+                if (deviceCB.model.ContainsKey("ConfigurationType", deviceCB.currentIndex)){
+                    console.log("ContainsKey ConfigurationType", deviceCB.currentIndex)
+                    let configurationType = deviceCB.model.GetData("ConfigurationType", deviceCB.currentIndex);
+                    console.log("configurationType", configurationType)
+
+                    if (configurationType && configurationType != ""){
+                        root.productModel.SetData("ModelTypeId", configurationType);
+                    }
+                }
+
+                root.updateModelsGui();
             }
         }
     }
@@ -162,11 +176,32 @@ Item {
             for (let i = 0; i < deviceModel.GetItemsCount(); i++){
                 let id = deviceModel.GetData("Id", i);
                 if (id === deviceId){
+                    if (deviceModel.ContainsKey("ConfigurationType", i)){
+                        console.log("ContainsKey ConfigurationType");
+
+                        let configurationType = deviceModel.GetData("ConfigurationType", i);
+                        console.log("configurationType", configurationType);
+
+                        if (configurationType && configurationType != ""){
+                            root.productModel.SetData("ModelTypeId", configurationType);
+                        }
+                    }
+
+                    console.log("root.productModel", root.productModel.toJSON());
+
                     deviceCB.currentIndex = i;
                     break;
                 }
             }
         }
+
+        updateModelsGui();
+
+        blockUpdatingModel = false;
+    }
+
+    function updateModelsGui(){
+        blockUpdatingModel = true;
 
         modelsTable.uncheckAll();
 

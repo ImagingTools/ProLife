@@ -9,6 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ClientApplication" X="475" Y="400" Note=""/>
+        <Element ComponentName="LocalSettings" X="1025" Y="400" Note=""/>
         <Element ComponentName="ProLifeServerBase" X="475" Y="150" Note=""/>
         <Element ComponentName="PumaSystemStatusController" X="475" Y="750" Note=""/>
         <Element ComponentName="SystemStatusController" X="900" Y="750" Note=""/>

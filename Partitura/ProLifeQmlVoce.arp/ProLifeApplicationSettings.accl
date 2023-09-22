@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5104" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,7 +17,6 @@
             <PositionMap>
                 <Element ComponentName="Permission" X="250" Y="500" Note=""/>
                 <Element ComponentName="PermissionsChecker" X="250" Y="200" Note=""/>
-                <Element ComponentName="ServerSettings" X="975" Y="200" Note=""/>
                 <Element ComponentName="ServerSettingsController" X="600" Y="350" Note=""/>
                 <Element ComponentName="ServerSettingsRepresentation" X="975" Y="500" Note=""/>
             </PositionMap>

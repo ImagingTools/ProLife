@@ -85,8 +85,8 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 
 
 imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		return nullptr;
@@ -195,6 +195,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	QByteArray oldOrderUuid = productOrderInfoPtr->GetOrderId();
 	QByteArray oldProject = productOrderInfoPtr->GetProject();
+	QByteArray oldProductId = productOrderInfoPtr->GetProductId();
 
 	QByteArray oldExpiration;
 	QByteArray oldLicenseId;
@@ -210,10 +211,13 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	QByteArray oldSerialNumber = productOrderInfoPtr->GetSerialNumber();
-	if (oldSerialNumber != serialNumber || oldExpiration != expiration || oldLicenseId != licenseId || oldProject != project || oldOrderUuid != orderUuid){
+	if (oldSerialNumber != serialNumber || oldExpiration != expiration || oldLicenseId != licenseId ||
+			oldProject != project || oldOrderUuid != orderUuid || oldProductId != productId){
 		productOrderInfoPtr->SetSerialNumber(serialNumber);
 		productOrderInfoPtr->SetProject(project);
 		productOrderInfoPtr->SetOrderId(orderUuid);
+
+		productOrderInfoPtr->SetupProductInstance(productId, "", "");
 
 		productOrderInfoPtr->ClearLicenses();
 		productOrderInfoPtr->AddLicense(licenseId, QDateTime::fromString(expiration, "yyyy-MM-dd"));
@@ -314,12 +318,51 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 
 		productOrderInfoPtr->SetObjectUuid(objectId);
 
+		QByteArray productId;
+		if (itemModel.ContainsKey("ProductId")){
+			productId = itemModel.GetData("ProductId").toByteArray();
+		}
+
+		if (productId.isEmpty()){
+			errorMessage = QT_TR_NOOP("Product cannot be empty!");
+
+			return nullptr;
+		}
+
 		QByteArray serialNumber;
 		if (itemModel.ContainsKey("SerialNumber")){
 			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
-
-			productOrderInfoPtr->SetSerialNumber(serialNumber);
 		}
+
+		if (!serialNumber.isEmpty()){
+			iprm::CTextParam valueParam;
+			valueParam.SetText(serialNumber);
+
+			iprm::CEnableableParam isEqualParam;
+			isEqualParam.SetEnabled(true);
+
+			iprm::CParamsSet valueParamsSet;
+			valueParamsSet.SetEditableParameter("Value", &valueParam);
+			valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+			iprm::CParamsSet paramsSet;
+			paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+			iprm::CParamsSet filterParam;
+			filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+			imtbase::IObjectCollection::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+			if (!collectionIds.isEmpty()){
+				QByteArray id = collectionIds[0];
+				if (objectId != id){
+					errorMessage = QT_TR_NOOP("Serial Number already exists");
+
+					return nullptr;
+				}
+			}
+		}
+
+		productOrderInfoPtr->SetSerialNumber(serialNumber);
 
 		QByteArray project;
 		if (itemModel.ContainsKey("Project")){
@@ -361,11 +404,6 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 			QByteArray project = itemModel.GetData("Project").toByteArray();
 
 			productOrderInfoPtr->SetProject(project);
-		}
-
-		QByteArray productId;
-		if (itemModel.ContainsKey("ProductId")){
-			productId = itemModel.GetData("ProductId").toByteArray();
 		}
 
 		productOrderInfoPtr->SetupProductInstance(productId, "", customerUuid);

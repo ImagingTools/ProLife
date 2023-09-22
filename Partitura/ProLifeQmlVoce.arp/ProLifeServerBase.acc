@@ -163,9 +163,7 @@
         <Component ExportedId="AutoPersistence" ComponentId="ServerSettings/AutoPersistence"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseAccessSettings2" ComponentId="DatabaseEngine/DatabaseAccessSettings"/>
-        <Component ExportedId="FileAutoPersistence" ComponentId="ServerSettings/FileAutoPersistence"/>
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
-        <Component ExportedId="Preferences" ComponentId="ServerSettings/Preferences"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="ServerSettings" ComponentId="ServerSettings"/>
     </ExportedComponents>

@@ -6,6 +6,8 @@ import imtqml 1.0
 QtObject {
     id: styleContainer;
 
+    property string name: "ProLife";
+
     property int size_indicatorHeight: 50;
     property int size_leftPanelWidth: 250;
     property string color_text_titles: "#7700FF";
