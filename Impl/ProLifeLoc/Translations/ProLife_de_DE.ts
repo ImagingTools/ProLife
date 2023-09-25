@@ -1881,7 +1881,7 @@
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+32"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+30"/>
         <source>New product</source>
-        <translation type="unfinished"></translation>
+        <translation>Neue Lizenz</translation>
     </message>
     <message>
         <location line="+6"/>
