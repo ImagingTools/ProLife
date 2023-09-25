@@ -1050,7 +1050,7 @@
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt5_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <source>Bind</source>
-        <translation>Vernüpfen</translation>
+        <translation>Verknüpfen</translation>
     </message>
     <message>
         <location line="+14"/>
