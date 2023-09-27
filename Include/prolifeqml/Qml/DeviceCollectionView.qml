@@ -1,19 +1,18 @@
 import QtQuick 2.12
-import imtgui 1.0
 import Acf 1.0
+import imtgui 1.0
+import imtqml 1.0
 
 CollectionView {
     id: container;
 
-    //    visibleMetaInfo: false;
-
     defaultSortHeaderIndex: 7;
     defaultOrderType: "DESC";
+    filterMenuVisible: true;
 
     property MainDocumentManager mainDocumentManager: null;
 
     Component.onCompleted: {
-        // Events.subscribeEvent("OrdersCollectionUpdated", container.updateGui);
         Events.subscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
@@ -178,8 +177,8 @@ CollectionView {
 
     function fillContextMenuModel(){
         contextMenuModel.clear();
-        contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
-        contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../Icons/Light/Remove_On_Normal.svg"});
+        contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
+        contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../"  + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
         contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
     }
 
@@ -244,8 +243,6 @@ CollectionView {
 
                 width: 18;
                 height: width;
-
-                //                source: "../../../../Icons/" + Style.theme + "/Key.svg";
 
                 sourceSize.width: width;
                 sourceSize.height: height;

@@ -1,6 +1,7 @@
 import QtQuick 2.0
-import imtgui 1.0
 import Acf 1.0
+import imtgui 1.0
+import imtqml 1.0
 import imtlicgui 1.0
 
 Rectangle {
@@ -88,8 +89,8 @@ Rectangle {
             width: 18;
             height: width;
 
-            iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                                  "../../../../Icons/Light/Edit_Off_Disabled.svg";
+            iconSource: enabled ? "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal) :
+                                  "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.Off, Icon.Mode.Disabled);
             visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
 
             onClicked: {
@@ -115,8 +116,6 @@ Rectangle {
             anchors.right: parent.right;
             anchors.rightMargin: 20;
 
-//            width: parent.width;
-
             text: qsTr("No Licenses");
             color: Style.textColor;
             font.family: Style.fontFamily;
@@ -132,7 +131,6 @@ Rectangle {
     Column {
         id: contentColumn;
 
-//        anchors.verticalCenter: parent.verticalCenter;
         anchors.top: parent.top;
         anchors.topMargin: 10;
         anchors.left: parent.left;

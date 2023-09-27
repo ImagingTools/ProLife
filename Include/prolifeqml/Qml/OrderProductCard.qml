@@ -8,7 +8,7 @@ Rectangle {
 
     width: 600;
 
-    height: header.height + content.height /*+ 2 * root.margin*/ + 2 * root.border.width;
+    height: header.height + content.height + 2 * root.border.width;
 
     color: "transparent";
 
@@ -46,11 +46,8 @@ Rectangle {
     signal pairEdited(string categoryId);
 
     onLicensesProviderChanged: {
-        console.log("root onLicensesProviderChanged", root.licensesProvider);
-
         if (root.licensesProvider != null){
             if (root.categoryId !== "Hardware"){
-                console.log("cardLoader.item", cardLoader.item);
                 if (cardLoader.item){
                     cardLoader.item.licensesProvider = root.licensesProvider;
                 }
@@ -323,29 +320,11 @@ Rectangle {
         Component.onCompleted: {
             let index = pairCommandsModel.InsertNewItem();
 
-            //            pairCommandsModel.SetData("Id", "Unlink", index);
-            //            pairCommandsModel.SetData("Name", "Unlink", index);
-            //            pairCommandsModel.SetData("Icon", "Unlink", index);
-            //            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            //            pairCommandsModel.SetData("Visible", true, index);
-
-            //            index = pairCommandsModel.InsertNewItem();
-
-            //            pairCommandsModel.SetData("Id", "CreateLicenseFile", index);
-            //            pairCommandsModel.SetData("Name", "Create License File", index);
-            //            pairCommandsModel.SetData("Icon", "Key", index);
-            //            pairCommandsModel.SetData("IsEnabled", root.isLicenseConsuming, index);
-            //            pairCommandsModel.SetData("Visible", true, index);
-
-            //            index = pairCommandsModel.InsertNewItem();
-
             pairCommandsModel.SetData("Id", "Remove", index);
             pairCommandsModel.SetData("Name", "Remove", index);
-            pairCommandsModel.SetData("Icon", "Delete", index);
+            pairCommandsModel.SetData("Icon", "Icons/Delete", index);
             pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             pairCommandsModel.SetData("Visible", true, index);
-
-            console.log("pairCommandsModel onCompleted");
 
             if (root.categoryId == "Pair"){
                 commands.commandModel = pairCommandsModel;
@@ -363,7 +342,7 @@ Rectangle {
 
             softwareCommandsModel.SetData("Id", "Edit", index);
             softwareCommandsModel.SetData("Name", "Edit", index);
-            softwareCommandsModel.SetData("Icon", "Edit", index);
+            softwareCommandsModel.SetData("Icon", "Icons/Edit", index);
             softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             softwareCommandsModel.SetData("Visible", true, index);
 
@@ -371,7 +350,7 @@ Rectangle {
 
             softwareCommandsModel.SetData("Id", "Remove", index);
             softwareCommandsModel.SetData("Name", "Remove", index);
-            softwareCommandsModel.SetData("Icon", "Delete", index);
+            softwareCommandsModel.SetData("Icon", "Icons/Delete", index);
             softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             softwareCommandsModel.SetData("Visible", true, index);
 
@@ -379,7 +358,7 @@ Rectangle {
 
             softwareCommandsModel.SetData("Id", "Lock", index);
             softwareCommandsModel.SetData("Name", "Lock", index);
-            softwareCommandsModel.SetData("Icon", "Lock", index);
+            softwareCommandsModel.SetData("Icon", "Icons/Lock", index);
             softwareCommandsModel.SetData("IsEnabled", false, index);
             softwareCommandsModel.SetData("Visible", false, index);
 
@@ -401,7 +380,7 @@ Rectangle {
 
             hardwareCommandsModel.SetData("Id", "Edit", index);
             hardwareCommandsModel.SetData("Name", "Edit", index);
-            hardwareCommandsModel.SetData("Icon", "Edit", index);
+            hardwareCommandsModel.SetData("Icon", "Icons/Edit", index);
             hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             hardwareCommandsModel.SetData("Visible", true, index);
 
@@ -409,7 +388,7 @@ Rectangle {
 
             hardwareCommandsModel.SetData("Id", "Remove", index);
             hardwareCommandsModel.SetData("Name", "Remove", index);
-            hardwareCommandsModel.SetData("Icon", "Delete", index);
+            hardwareCommandsModel.SetData("Icon", "Icons/Delete", index);
             hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
             hardwareCommandsModel.SetData("Visible", true, index);
 
@@ -417,7 +396,7 @@ Rectangle {
 
             hardwareCommandsModel.SetData("Id", "Lock", index);
             hardwareCommandsModel.SetData("Name", "Lock", index);
-            hardwareCommandsModel.SetData("Icon", "Lock", index);
+            hardwareCommandsModel.SetData("Icon", "Icons/Lock", index);
             hardwareCommandsModel.SetData("IsEnabled", false, index);
             hardwareCommandsModel.SetData("Visible", false, index);
 

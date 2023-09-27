@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtqml 1.0
 
 CollectionView {
     id: container;
@@ -8,12 +9,13 @@ CollectionView {
     defaultSortHeaderIndex: 1;
 
     visibleMetaInfo: false;
+    filterMenuVisible: true;
 
     property MainDocumentManager mainDocumentManager: null;
 
     function fillContextMenuModel(){
         contextMenuModel.clear();
-        contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../Icons/Light/Edit_On_Normal.svg"});
+        contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" +  Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
     }
 
     Component.onCompleted: {
@@ -201,7 +203,7 @@ CollectionView {
                 width: 18;
                 height: width;
 
-                source: "../../../../Icons/Light/Ok_Off_Normal.svg";
+                source: "../../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
 
                 sourceSize.width: width;
                 sourceSize.height: height;
@@ -213,13 +215,13 @@ CollectionView {
                 let value = tableCellDelegate.getValue();
 
                 if (value === "NotPaired"){
-                    image.source = "../../../../Icons/Light/Unlink_On_Normal.svg";
+                    image.source = "../../../../" + Style.getIconPath("Icons/Unlink", Icon.State.On, Icon.Mode.Normal);
                 }
                 else if (value === "IsPaired"){
-                    image.source = "../../../../Icons/Light/Link_On_Normal.svg";
+                    image.source = "../../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal);
                 }
                 else if (value === "InUse"){
-                    image.source = "../../../../Icons/Light/Lock_On_Normal.svg";
+                    image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
                 }
             }
         }
@@ -238,7 +240,7 @@ CollectionView {
                 width: 18;
                 height: width;
 
-                source: "../../../../Icons/Light/Alert_On_Normal.svg";
+                source: "../../../../" + Style.getIconPath("Icons/Alert", Icon.State.On, Icon.Mode.Normal);
 
                 visible: false;
 

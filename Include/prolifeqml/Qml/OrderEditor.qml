@@ -1,8 +1,8 @@
 import QtQuick 2.0
+import Acf 1.0
 import imtgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
-import Acf 1.0
 
 DocumentBase {
     id: orderEditorContainer;
@@ -1112,7 +1112,7 @@ DocumentBase {
             height: 22;
             width: height;
 
-            iconSource: "../../../Icons/" + Style.theme + "/Add_On_Normal.svg";
+            iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
@@ -1184,11 +1184,6 @@ DocumentBase {
             return null;
         }
 
-        onModelChanged: {
-            console.log("productsView onModelChanged")
-//            productsView.deviceIds = []
-        }
-
         delegate: OrderProductCard {
             id: orderProductDelegate;
 
@@ -1206,9 +1201,7 @@ DocumentBase {
             orderEditorPtr: orderEditorContainer;
 
             Component.onCompleted: {
-                console.log("OrderProductCard onCompleted", model.CategoryId);
                 if (model.CategoryId === "Hardware"){
-                    console.log("DeviceId", model.DeviceId);
                     productsView.deviceIds.push(model.DeviceId);
                 }
             }

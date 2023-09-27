@@ -79,10 +79,6 @@ Item {
         onTextChanged: {
             root.productModel.SetData("SerialNumber", serialNumberInput.text);
         }
-
-//        onEditingFinished: {
-//            root.productModel.SetData("SerialNumber", serialNumberInput.text);
-//        }
     }
 
     Text {

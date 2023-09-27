@@ -169,16 +169,15 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = objectCollectionIterator->GetElementInfo("Customer").toByteArray();
 				}
 				else if (informationId == "OrderUuid"){
-					elementInformation = orderUuid;
-//					if (m_orderCollectionCompPtr.IsValid() && !orderUuid.isEmpty()){
-//						imtbase::IObjectCollection::DataPtr dataPtr;
-//						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-//							elementInformation = orderUuid;
-//						}
-//						else{
-//							elementInformation = QByteArray("undefined");
-//						}
-//					}
+					if (m_orderCollectionCompPtr.IsValid() && !orderUuid.isEmpty()){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
+							elementInformation = orderUuid;
+						}
+						else{
+							elementInformation = QByteArray("undefined");
+						}
+					}
 				}
 				else if (informationId == "HardwareUuid"){
 					elementInformation = hardwareUuid;

@@ -694,19 +694,23 @@ DocumentBase {
 
                             function updateIcon(statusId){
                                 if (statusId === "None"){
-                                    iconStatus.source = "qrc:/Icons/Light/StateUnknown_On_Active";
+                                    iconStatus.source = "../../../" + Style.getIconPath("Icons/StateUnknown", Icon.State.On, Icon.Mode.Normal);
                                 }
                                 else if (statusId === "Canceled"){
-                                    iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
+                                    iconStatus.source = "../../../" + Style.getIconPath("Icons/Cancel", Icon.State.On, Icon.Mode.Normal);
+//                                    iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
                                 }
                                 else if (statusId === "Accepted" || statusId === "InProgress"){
-                                    iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
+                                    iconStatus.source = "../../../" + Style.getIconPath("Icons/Timeline", Icon.State.On, Icon.Mode.Normal);
+//                                    iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
                                 }
                                 else if (statusId === "OnHold"){
-                                    iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
+                                    iconStatus.source = "../../../" + Style.getIconPath("Icons/Pause", Icon.State.On, Icon.Mode.Normal);
+//                                    iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
                                 }
                                 else{
-                                    iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
+                                    iconStatus.source = "../../../" + Style.getIconPath("Icons/StateOk", Icon.State.On, Icon.Mode.Normal);
+//                                    iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
                                 }
                             }
 

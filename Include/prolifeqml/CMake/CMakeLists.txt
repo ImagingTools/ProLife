@@ -43,8 +43,10 @@ list(APPEND webdirs ${IMTCOREDIR}/Include/imtgui/Qml/imtgui)
 list(APPEND webdirs ${buildwebdir}/src/imtgui)
 
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Qml/imtqml)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtqml)
 list(APPEND webdirs ${buildwebdir}/src/imtqml)
+
+list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Resources/dist)
+list(APPEND webdirs ${buildwebdir}/Resources)
 
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtauthgui/Qml/imtauthgui)
 #list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtauthgui)

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5105" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -35,6 +35,16 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="575" Y="200" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="575" Y="650" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
                 <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
@@ -43,16 +53,6 @@
                 <Element ComponentName="LicensesPermissions" X="150" Y="550" Note=""/>
                 <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
                 <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="575" Y="200" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="575" Y="650" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

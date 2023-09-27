@@ -31,22 +31,12 @@ Dialog {
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
         productEditorDialog.buttons.addButton({"Id": "Save", "Name": qsTr("Apply"), "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Cancel"), "Enabled": true});
+        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Close"), "Enabled": true});
     }
 
     onFinished: {
         if (buttonId === "Save"){
-            if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
-                documentController.updateData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
-            }
-            else{
-                productEditorDialog.contentItem.bindingModel.SetData("Id", productEditorDialog.hardwareId);
-
-                documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
-            }
-
-            productEditorDialog.contentItem.includeIds = [];
-            productEditorDialog.buttons.setButtonState("Save", false);
+            modalDialogManager.openDialog(messageDialog, {});
         }
     }
 
@@ -62,8 +52,35 @@ Dialog {
 
             onModelChanged: {
                 productEditorDialog.buttons.setButtonState("Save", true);
+                productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Cancel"));
             }
+        }
+    }
 
+    Component {
+        id: messageDialog;
+
+        MessageDialog {
+            title: qsTr("Apply Changes");
+            message: qsTr("Are you sure you want to apply the changes? Cancellation will not be possible.")
+            onFinished: {
+                if (buttonId == "Yes"){
+                    if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
+                        documentController.updateData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
+                    }
+                    else{
+                        productEditorDialog.contentItem.bindingModel.SetData("Id", productEditorDialog.hardwareId);
+
+                        documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
+                    }
+
+                    productEditorDialog.contentItem.includeIds = [];
+                    productEditorDialog.buttons.setButtonState("Save", false);
+                    productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
+                }
+                else if (buttonId == "No"){
+                }
+            }
         }
     }
 

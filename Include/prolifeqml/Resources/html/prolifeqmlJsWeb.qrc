@@ -2,6 +2,7 @@
     <qresource prefix="/html">
         <file alias="index.html">index.html</file>
         <file alias="Enums.js">Enums.js</file>
+	<file alias="Icon.js">Icon.js</file>
 	<file alias="Times New Roman.ttf">Times New Roman.ttf</file>
         <file alias="GraphQLRequest.js">GraphQLRequest.js</file>
         <file alias="main.js">main.js</file>

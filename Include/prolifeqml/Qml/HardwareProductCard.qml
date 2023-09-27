@@ -1,6 +1,7 @@
 import QtQuick 2.0
-import imtgui 1.0
 import Acf 1.0
+import imtgui 1.0
+import imtqml 1.0
 
 Rectangle {
     id: hardwareCard;
@@ -118,8 +119,8 @@ Rectangle {
             width: 18;
             height: width;
 
-            iconSource: enabled ? "../../../../Icons/Light/Edit_Off_Normal.svg" :
-                                  "../../../../Icons/Light/Edit_Off_Disabled.svg";
+            iconSource: enabled ? "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal) :
+                                  "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.Off, Icon.Mode.Disabled);
             visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
 
             onClicked: {

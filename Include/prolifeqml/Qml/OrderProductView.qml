@@ -134,24 +134,10 @@ Item {
             color: Style.textColor;
         }
 
-//        Text {
-//            id: productionStatus;
-
-//            anchors.left: parent.left;
-//            anchors.leftMargin: 5;
-
-//            text: qsTr("Status: ") + productInfo.productStatus;
-//            color: Style.textColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-//            visible:  productInfo.productCategory === "Hardware";
-//        }
-
         Text {
             id: licenseName;
 
             anchors.left: parent.left;
-//            anchors.leftMargin: 5;
 
             width: parent.width - 10;
 

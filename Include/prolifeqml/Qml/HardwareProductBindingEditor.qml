@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtqml 1.0
 
 Item {
     id: productEditor;
@@ -8,9 +9,6 @@ Item {
     property int margin: 10;
 
     property int contentHeight: availableLicensesColumn.height + titleLable.height;
-
-    //    property alias collectionModel: softwareProductCollection.collectionModel;
-    //    property alias table: softwareProductsTable;
 
     property TreeItemModel bindingModel: TreeItemModel {}
 
@@ -41,15 +39,6 @@ Item {
     }
 
     property bool bindingModelReady: false;
-//    property bool allCompleted: bindingModelReady && softwareProductCollection.modelReady;
-//    onAllCompletedChanged: {
-//        if (allCompleted){
-//            productEditor.productId = productEditor.getCurrentSoftwareProductId();
-
-//            productEditor.updateGui();
-//        }
-//    }
-
     property string startSoftwareIds: "";
     property string startProductId: "";
 
@@ -83,24 +72,9 @@ Item {
             }
         }
 
-//        if (productsCB.currentIndex >= 0){
-//            productEditor.createElementsModel(productId);
-//        }
-
         if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
             let software = productEditor.bindingModel.GetData("SoftwareIds");
             let softwareIds = software.split(';')
-
-            //            softwareProductsTable.uncheckAll();
-
-            //            if (softwareProductsTable.elements){
-            //                for (let i = 0; i < softwareProductsTable.elements.GetItemsCount(); i++){
-            //                    let id = softwareProductsTable.elements.GetData("Id", i);
-            //                    if (softwareIds.includes(id)){
-            //                        softwareProductsTable.checkItem(i);
-            //                    }
-            //                }
-            //            }
         }
 
         blockUpdatingModel = false;
@@ -169,13 +143,11 @@ Item {
     Column {
         id: availableLicensesColumn;
 
-        //        anchors.verticalCenter: parent.verticalCenter;
         anchors.top: titleLable.bottom
         anchors.topMargin: Style.margin
         anchors.right: parent.horizontalCenter;
         anchors.rightMargin: 20;
         anchors.left: parent.left;
-        //        anchors.rightMargin: productEditor.margin;
         anchors.leftMargin: productEditor.margin;
 
         spacing: 10;
@@ -252,17 +224,6 @@ Item {
             visible: errorText.text !== "";
         }
 
-//        Text {
-//            id: selectProductText;
-
-//            text: qsTr("Please select a product");
-//            color: Style.errorTextColor;
-//            font.family: Style.fontFamily;
-//            font.pixelSize: Style.fontSize_common;
-
-//            visible: productsCB.currentIndex < 0;
-//        }
-
         Rectangle{
             width: parent.width;
             height: 400;
@@ -306,19 +267,6 @@ Item {
 
                         let ok = productEditor.checkLicenseId(licenseId);
                         bindButton.enabled = ok;
-//                        let bindingElements = bindingProductsCollection.table.elements;
-//                        if (bindingElements){
-//                            for (let i = 0; i < bindingElements.GetItemsCount(); i++){
-//                                let id = bindingElements.GetData("LicenseId", i)
-//                                if (id == licenseId){
-//                                    bindButton.enabled = false
-
-//                                    return;
-//                                }
-//                            }
-//                        }
-
-//                        bindButton.enabled = true
                     }
                 }
 
@@ -604,8 +552,8 @@ Item {
         width: 18;
         height: 25;
 
-        iconSource: enabled ? "../../../" + "Icons/" + Style.theme + "/Right_On_Normal.svg":
-                              "../../../" + "Icons/" + Style.theme + "/Right_On_Disabled.svg"
+        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
+                              "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
 
         iconWidth: 15;
         iconHeight: iconWidth;
@@ -652,8 +600,8 @@ Item {
         width: 18;
         height: 25;
 
-        iconSource: enabled ? "../../../" + "Icons/" + Style.theme + "/Left_On_Normal.svg":
-                              "../../../" + "Icons/" + Style.theme + "/Left_On_Disabled.svg"
+        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
+                              "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
 
         iconWidth: 15;
         iconHeight: iconWidth;
@@ -779,7 +727,7 @@ Item {
                 width: 18;
                 height: width;
 
-                source: "../../../../Icons/Light/Ok_Off_Normal.svg";
+                source: "../../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
 
                 sourceSize.width: width;
                 sourceSize.height: height;
@@ -791,7 +739,7 @@ Item {
 
                 let value = tableCellDelegate.getValue();
                 if (value){
-                    image.source = "../../../../Icons/Light/Lock_On_Normal.svg";
+                    image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
                 }
                 else{
                     image.source = "";
