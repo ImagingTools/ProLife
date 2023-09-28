@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtgql/CObjectCollectionControllerCompBase.h>
 
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
@@ -12,10 +12,10 @@ namespace prolifegql
 {
 
 
-class CDeviceControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class CDeviceControllerComp: public imtgql::CObjectCollectionControllerCompBase
 {
 public:
-	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
+	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceControllerComp)
 		I_ASSIGN(m_deviceCompPtr, "DeviceFactory", "Factory used for creation of the new device instance", true, "DeviceFactory");

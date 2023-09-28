@@ -1,17 +1,17 @@
 #pragma once
 
 // ImtCore includes
-#include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtgql/CObjectCollectionControllerCompBase.h>
 
 
 namespace prolifegql
 {
 
 
-class COrderCollectionControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class COrderCollectionControllerComp: public imtgql::CObjectCollectionControllerCompBase
 {
 public:
-	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
+	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
@@ -19,7 +19,7 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (imtguigql::CObjectCollectionControllerCompBase)
+	// reimplemented (imtgql::CObjectCollectionControllerCompBase)
 	virtual bool SetupGqlItem(
 				const imtgql::CGqlRequest& gqlRequest,
 				imtbase::CTreeItemModel& model,

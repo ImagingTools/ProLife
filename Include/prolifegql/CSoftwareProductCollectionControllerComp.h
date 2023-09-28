@@ -2,17 +2,17 @@
 
 
 // ImtCore includes
-#include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtgql/CObjectCollectionControllerCompBase.h>
 
 
 namespace prolifegql
 {
 
 
-class CSoftwareProductCollectionControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class CSoftwareProductCollectionControllerComp: public imtgql::CObjectCollectionControllerCompBase
 {
 public:
-	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
+	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -22,7 +22,7 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (imtguigql::CObjectCollectionControllerCompBase)
+	// reimplemented (imtgql::CObjectCollectionControllerCompBase)
 	virtual imtbase::CTreeItemModel* ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual bool SetupGqlItem(

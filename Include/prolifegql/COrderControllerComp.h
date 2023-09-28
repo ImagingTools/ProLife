@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtgql/CObjectCollectionControllerCompBase.h>
 #include <imtbase/IIdentifiable.h>
 
 // ProLife includes
@@ -16,10 +16,10 @@ namespace prolifegql
 {
 
 
-class COrderControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class COrderControllerComp: public imtgql::CObjectCollectionControllerCompBase
 {
 public:
-	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
+	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderControllerComp)
 		I_ASSIGN(m_orderPtr, "OrderFactory", "Factory used for creation of the new order instance", true, "OrderFactory");

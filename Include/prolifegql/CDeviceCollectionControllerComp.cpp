@@ -24,7 +24,7 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (imtguigql::CObjectCollectionControllerCompBase)
+// reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		const imtgql::CGqlRequest& gqlRequest,

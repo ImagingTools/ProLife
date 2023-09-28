@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtguigql/CObjectCollectionControllerCompBase.h>
+#include <imtgql/CObjectCollectionControllerCompBase.h>
 
 
 #undef GetObject
@@ -12,10 +12,10 @@ namespace prolifegql
 {
 
 
-class CSoftwareProductControllerComp: public imtguigql::CObjectCollectionControllerCompBase
+class CSoftwareProductControllerComp: public imtgql::CObjectCollectionControllerCompBase
 {
 public:
-	typedef imtguigql::CObjectCollectionControllerCompBase BaseClass;
+	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductControllerComp)
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
