@@ -40,6 +40,8 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 
 	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
 
+	qDebug() << "selectionQuery" << selectionQuery;
+
 	return selectionQuery;
 }
 
@@ -69,12 +71,18 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 				 ord."Document"->>'OrderId' as "OrderId",
 				 acc."Document"->>'Name' as "Customer",
 				 acc."DocumentId" as "CustomerUuid",
-				 dev."Document"->>'MacAddress'  as "DeviceId",
+				 dev."Document"->>'MacAddress' as "DeviceId",
 				 si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseId",
 				 si."Document"->'Licenses'->0->'LicenseData'->>'LicenseName' as "LicenseName",
 				 si."Document"->>'InUse' as "InUse",
 				 si."Document"->>'ProductId' as "ProductId",
 				 si."Document",
+				 si."LastModified",
+				(
+					SELECT "LastModified"
+					FROM "SoftwareInstances" as t2
+					WHERE "RevisionNumber" = 1 AND si."DocumentId" = t2."DocumentId" LIMIT 1
+				) as "Added",
 				(SELECT COUNT(*) FROM "Orders" WHERE "DocumentId" = si."Document"->>'OrderId' AND "IsActive" = true LIMIT 1) AS "OrderCount"
 			FROM "SoftwareInstances" as si
 			LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
@@ -94,7 +102,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 	if (!paramIds.isEmpty()){
 #if QT_VERSION >= 0x051500
 		QByteArrayList paramIdsList(paramIds.cbegin(), paramIds.cend());
-#else+
+#else
 		QByteArrayList paramIdsList = paramIds.toList();
 #endif
 
@@ -119,10 +127,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					continue;
 				}
 
-//				if (index > 0){
-//					filterQuery += " AND ";
-//				}
-
 				elementFilter += "bp.\"Document\"->'SoftwareIds'->>0";
 
 				if (value == "WithoutLicense"){
@@ -131,19 +135,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				else{
 					elementFilter += " != ''";
 				}
-//				continue;
 			}
-
-//			if (!filterQuery.isEmpty()){
-//				if (key == "IncludeIds"){
-//					filterQuery += " OR ";
-//				}
-//				else{
-//					filterQuery += " AND ";
-//				}
-//			}
-
-//			index++;
 			else if (key == "OrderId"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
@@ -251,22 +243,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 
 					elementFilter = "(" + elementFilter + ")";
-
-//					if (!excludeText.isEmpty()){
-//						QStringList keys;
-
-//						for (const QString& key : excludeIds){
-//							if (!includeIds.contains(key)){
-//								keys << key;
-//							}
-//						}
-
-//						for (const QString& key : keys){
-//							QString query = QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' != (SELECT \"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' as \"LicenseId\" FROM \"SoftwareInstances\" WHERE \"IsActive\" = true AND \"DocumentId\" = '%1' LIMIT 1)").arg(key);
-
-//							elementFilter += " AND " + query;
-//						}
-//					}
 				}
 			}
 			else if (key == "Orders"){
@@ -283,8 +259,17 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							if (i > 0){
 								ordersFilterQuery += " OR ";
 							}
-							QByteArray orderId = optionsListPtr->GetOptionId(i);
-							ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(qPrintable(orderId));
+							QByteArray optionId = optionsListPtr->GetOptionId(i);
+							QString optionName = optionsListPtr->GetOptionName(i);
+
+							if (!optionName.isEmpty()){
+								ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(optionName);
+							}
+							else{
+								ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND %1 = '%2')")
+											.arg("(SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1)")
+											.arg(qPrintable(optionId));
+							}
 						}
 
 						if (!ordersFilterQuery.isEmpty()){
@@ -405,7 +390,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 		if (columnId == "LicenseId"){
 			sortQuery = QString("ORDER BY si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' %1").arg(qPrintable(sortOrder));
 		}
-		else if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer"){
+		else if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer" || columnId == "LastModified" || columnId == "Added"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
@@ -435,26 +420,24 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 
 			QByteArray columnId = filteringColumnIds[i];
 
-			QString shortTableName = "si";
 			if (columnId == "OrderId"){
-				shortTableName = "ord";
+				textFilterQuery += QString("ord.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 			else if (columnId == "DeviceId"){
-				shortTableName = "dev";
+				textFilterQuery += QString("dev.\"Document\"->>'MacAddress' ILIKE '%%1%'").arg(textFilter);
 			}
 			else if (columnId == "Customer"){
-				shortTableName = "acc";
+				textFilterQuery += QString("acc.\"Document\"->>'Name' ILIKE '%%1%'").arg(textFilter);
 			}
 			else if (columnId == "DeviceUuid"){
-				shortTableName = "bp";
+				textFilterQuery += QString("bp.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 			else if (columnId == "LicenseId"){
 				textFilterQuery += QString("si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId' ILIKE '%%1%'").arg(textFilter);
-
-				continue;
 			}
-
-			textFilterQuery += QString("%1.\"Document\"->>'%2' ILIKE '%%3%'").arg(shortTableName).arg(qPrintable(columnId)).arg(textFilter);
+			else{
+				textFilterQuery += QString("si.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+			}
 		}
 	}
 

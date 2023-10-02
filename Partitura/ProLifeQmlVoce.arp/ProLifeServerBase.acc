@@ -10,6 +10,24 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="DatabaseAutomaticBackup" PackageId="ImtDatabasePck" ComponentId="DatabaseAutomaticBackup">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="BackupOnStart" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine/DatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Program" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="pg_dump"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -81,6 +99,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="PumaUrlConnection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/PumaUrlConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings"/>
@@ -166,6 +187,7 @@
         <Component ExportedId="AutoPersistence" ComponentId="ServerSettings/AutoPersistence"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseAccessSettings2" ComponentId="DatabaseEngine/DatabaseAccessSettings"/>
+        <Component ExportedId="DatabaseAutomaticBackup" ComponentId="DatabaseAutomaticBackup"/>
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="ServerSettings" ComponentId="ServerSettings"/>

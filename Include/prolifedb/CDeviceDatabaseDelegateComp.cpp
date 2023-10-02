@@ -5,6 +5,7 @@
 #include <iprm/TParamsPtr.h>
 #include <iprm/ITextParam.h>
 #include <iprm/ISelectionParam.h>
+#include <iprm/IEnableableParam.h>
 
 // ImtCore includes
 #include <imtlic/IHardwareInstanceInfo.h>
@@ -53,7 +54,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
 
 QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return QString("SELECT \"Id\", \"%1\", \"Document\", \"RevisionNumber\", \"LastModified\","
+	return QString("SELECT \"Id\", \"%1\", \"Document\", \"OwnerId\", \"RevisionNumber\", \"LastModified\","
 					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
 					"(SELECT \"Document\"->>'OrderId' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderId') as \"OrderId\","
 					" (SELECT jsonb_array_length(\"Document\"->'SoftwareIds')  FROM \"BindingProducts\" as t3 "
@@ -129,10 +130,6 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += " AND ";
 				}
 
-//				if (i > 0){
-//					filterQuery += " AND ";
-//				}
-
 				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
 
 				if (value == "WithoutLicense"){
@@ -157,17 +154,23 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							if (j > 0){
 								ordersFilterQuery += " OR ";
 							}
-							QByteArray orderId = optionsListPtr->GetOptionId(j);
-							ordersFilterQuery += QString("\"Document\"->>'OrderId' = '%1'").arg(qPrintable(orderId));
+							QByteArray optionId = optionsListPtr->GetOptionId(j);
+							QString optionName = optionsListPtr->GetOptionName(j);
+
+							if (!optionName.isEmpty()){
+								ordersFilterQuery += QString("\"Document\"->>'OrderId' = '%1'").arg(qPrintable(optionName));
+							}
+							else{
+								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND %1 = '%2')")
+											.arg("(SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1)")
+											.arg(qPrintable(optionId));
+							}
 						}
 
 						if (!ordersFilterQuery.isEmpty()){
 							ordersFilterQuery += ')';
 						}
 
-//						if (i > 0){
-//							filterQuery += " AND ";
-//						}
 
 						if (!filterQuery.isEmpty()){
 							filterQuery += " AND ";
@@ -183,16 +186,35 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					return false;
 				}
 
-//				if (i > 0){
-//					filterQuery += " AND ";
-//				}
-
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
 				}
 
 				QString value = textParamPtr->GetText();
 				filterQuery += QString("\"Document\"->>'%1' = '%2'").arg(qPrintable(key)).arg(value);
+			}
+			else if (key == "MacAddress" || key == "SerialNumber"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
+				if (filterParamPtr.IsValid()){
+					QString value;
+					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
+					if (valueParamPtr.IsValid()){
+						value = valueParamPtr->GetText();
+					}
+
+					bool isEqual = true;
+					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
+					if (enableableParamPtr.IsValid()){
+						isEqual = enableableParamPtr->IsEnabled();
+					}
+
+					if (isEqual){
+						filterQuery += QString("(\"Document\"->>'%1' = '%2')").arg(qPrintable(key)).arg(value);
+					}
+					else{
+						filterQuery += QString("(\"Document\"->>'%1' != '%1')").arg(qPrintable(key)).arg(value);
+					}
+				}
 			}
 		}
 

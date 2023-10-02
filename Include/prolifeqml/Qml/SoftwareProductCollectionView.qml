@@ -6,8 +6,8 @@ import imtqml 1.0
 CollectionView {
     id: container;
 
-    defaultSortHeaderIndex: 1;
-
+    defaultSortHeaderIndex: 10;
+    defaultOrderType: "DESC";
     visibleMetaInfo: false;
     filterMenuVisible: true;
 
@@ -292,6 +292,12 @@ CollectionView {
 
             let index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", 40, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);

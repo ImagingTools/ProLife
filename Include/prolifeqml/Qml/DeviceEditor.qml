@@ -698,19 +698,15 @@ DocumentBase {
                                 }
                                 else if (statusId === "Canceled"){
                                     iconStatus.source = "../../../" + Style.getIconPath("Icons/Cancel", Icon.State.On, Icon.Mode.Normal);
-//                                    iconStatus.source = "qrc:/Icons/Light/Cancel_On_Active";
                                 }
                                 else if (statusId === "Accepted" || statusId === "InProgress"){
                                     iconStatus.source = "../../../" + Style.getIconPath("Icons/Timeline", Icon.State.On, Icon.Mode.Normal);
-//                                    iconStatus.source = "qrc:/Icons/Light/Timeline_On_Active";
                                 }
                                 else if (statusId === "OnHold"){
                                     iconStatus.source = "../../../" + Style.getIconPath("Icons/Pause", Icon.State.On, Icon.Mode.Normal);
-//                                    iconStatus.source = "qrc:/Icons/Light/Pause_On_Active";
                                 }
                                 else{
                                     iconStatus.source = "../../../" + Style.getIconPath("Icons/StateOk", Icon.State.On, Icon.Mode.Normal);
-//                                    iconStatus.source = "qrc:/Icons/Light/StateOk_On_Active";
                                 }
                             }
 

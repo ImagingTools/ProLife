@@ -19,6 +19,7 @@ public:
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 		I_ASSIGN(m_gqlLicenseRequestCompPtr, "GqlLicenseRequest", "License GraphQL request", true, "GqlLicenseRequest");
+		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all licenses", true, "ViewAllLicenses");
 	I_END_COMPONENT;
 
 protected:
@@ -38,6 +39,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtgql::IGqlRequestHandler, m_gqlLicenseRequestCompPtr);
+	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 };
 
 

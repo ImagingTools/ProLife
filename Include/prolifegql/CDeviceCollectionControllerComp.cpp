@@ -27,8 +27,8 @@ namespace prolifegql
 // reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
 		return nullptr;
@@ -40,10 +40,12 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 	}
 
 	bool isAdmin = false;
+	QByteArray userId;
 	QByteArrayList userPermissions;
 	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr != nullptr){
 		userPermissions = userInfoPtr->GetPermissions();
+		userId = userInfoPtr->GetId();
 
 		isAdmin = userInfoPtr->IsAdmin();
 	}
@@ -102,11 +104,15 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 
 			imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
 			for (const QByteArray& orderId : ordersIds){
-				ordersOptionsManager.InsertOption("", orderId);
+				ordersOptionsManager.InsertOption(orderId, orderId);
 			}
 
 			if (ordersOptionsManager.GetOptionsCount() == 0){
 				ordersOptionsManager.InsertOption("", "");
+			}
+
+			if (!userId.isEmpty()){
+				ordersOptionsManager.InsertOption("", userId);
 			}
 
 			if (ordersOptionsManager.GetOptionsCount() > 0){

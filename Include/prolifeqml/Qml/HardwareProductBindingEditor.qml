@@ -2,6 +2,7 @@ import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
 import imtqml 1.0
+import imtauthgui 1.0
 
 Item {
     id: productEditor;
@@ -12,21 +13,25 @@ Item {
 
     property TreeItemModel bindingModel: TreeItemModel {}
 
+    // Binding model before changes
+    property TreeItemModel beginBindingModel: TreeItemModel {}
+
     property string productId: ""
 
     property string hardwareId: "";
 
     property var includeIds: [];
 
+    property bool changesApplied: false;
+
+    property var addedLicenseInfo: ({});
+    property var removedLicenseInfo: ({});
+
     signal checkedItemsChanged();
     signal modelChanged();
 
-
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
-        console.log("DEBUG::24",softwareProductCollection.modelFilter.toJSON())
-        //        softwareProductCollection.updateModel();
-
         bindingModel.dataChanged.connect(productEditor.modelChanged);
     }
 
@@ -43,6 +48,8 @@ Item {
     property string startProductId: "";
 
     onBindingModelChanged: {
+        beginBindingModel.Copy(bindingModel);
+
         bindingModel.dataChanged.connect(productEditor.modelChanged);
 
         productEditor.bindingModelReady = true;
@@ -133,7 +140,7 @@ Item {
             errorText.text = qsTr("Please select a product");
         }
         else if (errorType === 1){
-            errorText.text = qsTr("Unable to add license with this License-ID");
+            errorText.text = qsTr("A license with this ID has already been added");
         }
         else{
             errorText.text = "";
@@ -264,6 +271,13 @@ Item {
                     else{
                         let index = selection[0];
                         let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+
+                        let inUse = softwareProductCollection.table.elements.GetData("InUse", index);
+                        if (inUse){
+                            bindButton.enabled = false;
+
+                            return;
+                        }
 
                         let ok = productEditor.checkLicenseId(licenseId);
                         bindButton.enabled = ok;
@@ -462,7 +476,13 @@ Item {
 
                         let elementsModel = bindingProductsCollection.table.elements;
                         let inUse = elementsModel.GetData("InUse", index);
-                        unbindButton.enabled = !inUse;
+
+                        if (unbindButton.userCanUnbind){
+                            unbindButton.enabled = true;
+                        }
+                        else{
+                            unbindButton.enabled = !inUse;
+                        }
                     }
                 }
 
@@ -534,10 +554,8 @@ Item {
                         softwareProductCollection.updateData()
                     }
                 }
-
             }
         }
-
     }
 
     AuxButton {
@@ -558,6 +576,14 @@ Item {
         iconWidth: 15;
         iconHeight: iconWidth;
 
+        tooltipText: qsTr("Bind to the sensor");
+
+        property bool userCanBind: false;
+
+        Component.onCompleted: {
+            bindButton.userCanBind = PermissionsController.checkPermission("BindSensor");
+        }
+
         onClicked: {
             let selectedProductIds = []
             let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
@@ -568,6 +594,7 @@ Item {
             if (indexes.length === 0){
                 return
             }
+
             for (let index of indexes){
                 let id = softwareProductCollection.table.elements.GetData("Id", index);
                 if (!selectedProductIds.includes(id)){
@@ -579,12 +606,17 @@ Item {
                 if (productEditor.includeIds.includes(id)){
                     productEditor.includeIds.splice(productEditor.includeIds.indexOf(id), 1);
                 }
+
+                let licenseName = softwareProductCollection.table.elements.GetData("LicenseName", index);
+                let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+
+                productEditor.addedLicenseInfo[id] = licenseName + " (" + licenseId + ")";
             }
             let products = selectedProductIds.join(';');
             productEditor.bindingModel.SetData("SoftwareIds", products)
             softwareProductCollection.updateData()
 
-             softwareProductCollection.table.resetSelection();
+            softwareProductCollection.table.resetSelection();
         }
     }
 
@@ -606,6 +638,14 @@ Item {
         iconWidth: 15;
         iconHeight: iconWidth;
 
+        property bool userCanUnbind: false;
+
+        tooltipText: qsTr("Unbind from the sensor");
+
+        Component.onCompleted: {
+            unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");
+        }
+
         onClicked: {
             let selectedProductIds = []
             selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
@@ -617,10 +657,12 @@ Item {
             let index = indexes[0];
             let elementsModel = bindingProductsCollection.table.elements;
 
-            if (elementsModel.ContainsKey("InUse", index)){
-                let inUse = elementsModel.GetData("InUse", index);
-                if (inUse){
-                    return;
+            if (!unbindButton.userCanUnbind){
+                if (elementsModel.ContainsKey("InUse", index)){
+                    let inUse = elementsModel.GetData("InUse", index);
+                    if (inUse){
+                        return;
+                    }
                 }
             }
 
@@ -638,6 +680,10 @@ Item {
             bindingProductsCollection.table.resetSelection();
 
             softwareProductCollection.updateData()
+
+            if (id in productEditor.addedLicenseInfo){
+                delete productEditor.addedLicenseInfo[id];
+            }
         }
     }
 

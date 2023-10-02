@@ -5,7 +5,7 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{a3b0da9b-ca70-4240-98bc-b87a2221c113}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
+            <Object ID="{b1b9ff54-efe8-486e-9b94-5cd1be550b13}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
                 <Data Id="SensorManagement" Name="Sensor Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewSensors" Name="View Sensors" Optional="false">
@@ -45,10 +45,13 @@
                         <Object Id="BindSensor" Name="Bind Sensor" Optional="false">
                             <SubFeatures/>
                         </Object>
+                        <Object Id="UnbindSensor" Name="Unbind Sensor" Optional="false">
+                            <SubFeatures/>
+                        </Object>
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{96a5adb3-b1d8-4f8a-923b-ddaae8f2e1e5}" Description="" TypeId="FeatureInfo" Name="Administration">
+            <Object ID="{81fc038c-8eb9-4142-9e76-17e48ab22e15}" Description="" TypeId="FeatureInfo" Name="Administration">
                 <Data Id="Administration" Name="Administration" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAdministration" Name="View Administration" Optional="false">
@@ -110,7 +113,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{1eef7caf-98e3-4b26-b0b4-38cf343fb538}" Description="" TypeId="FeatureInfo" Name="License Management">
+            <Object ID="{946fb38a-9182-466c-8c14-f8d7c54422b8}" Description="" TypeId="FeatureInfo" Name="License Management">
                 <Data Id="LicenseManagement" Name="License Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewLicenses" Name="View Licenses" Optional="false">
@@ -132,10 +135,13 @@
                                 </Object>
                             </SubFeatures>
                         </Object>
+                        <Object Id="ViewAllLicenses" Name="View All Licenses" Optional="false">
+                            <SubFeatures/>
+                        </Object>
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{40bdfbfe-4b56-4c5a-afaf-1ce423174652}" Description="" TypeId="FeatureInfo" Name="Account Management">
+            <Object ID="{2f5543c8-2b8f-4b64-9526-f599685da14f}" Description="" TypeId="FeatureInfo" Name="Account Management">
                 <Data Id="AccountManagement" Name="Account Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
@@ -157,7 +163,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{7052b70f-a8ee-4e80-be26-e93c928fb9ef}" Description="" TypeId="FeatureInfo" Name="Order Management">
+            <Object ID="{c8fb6e72-2072-4201-a7e3-3c4dfbdf56b9}" Description="" TypeId="FeatureInfo" Name="Order Management">
                 <Data Id="OrderManagement" Name="Order Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewOrders" Name="View Orders" Optional="false">
@@ -182,7 +188,7 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{e7636f6d-c870-457b-844c-1b4589587bfb}" Description="" TypeId="FeatureInfo" Name="Settings Management">
+            <Object ID="{7e7641fb-b817-496b-9a11-0cc7e7d8e0fd}" Description="" TypeId="FeatureInfo" Name="Settings Management">
                 <Data Id="SettingsManagement" Name="Settings Management" Optional="false">
                     <SubFeatures>
                         <Object Id="ViewClientSettings" Name="View Client Settings" Optional="false">

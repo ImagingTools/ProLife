@@ -3,6 +3,7 @@
 
 // Acf includes
 #include <iprm/CTextParam.h>
+#include <iprm/CIdParam.h>
 
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
@@ -17,7 +18,7 @@ namespace prolifegql
 {
 
 
-imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest &gqlRequest, QString &errorMessage) const
+imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
 	imtbase::CTreeItemModel* retVal = BaseClass::ListObjects(gqlRequest, errorMessage);
 
@@ -233,6 +234,14 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				else if (informationId == "Project"){
 					elementInformation = objectCollectionIterator->GetElementInfo("Project").toByteArray();;
 				}
+				else if(informationId == "Added"){
+					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
+					elementInformation = addedTime.toString("dd.MM.yyyy hh:mm:ss");
+				}
+				else if(informationId == "LastModified"){
+					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
+					elementInformation = lastTime.toString("dd.MM.yyyy hh:mm:ss");
+				}
 
 				if (elementInformation.isNull()){
 					elementInformation = "";
@@ -265,13 +274,24 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 	bool filterByGroup = true;
 
+	QByteArray userId;
 	QByteArrayList userGroupIds;
 	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr != nullptr){
 		userGroupIds = userInfoPtr->GetGroups();
+		userId = userInfoPtr->GetId();
 
 		if (userInfoPtr->IsAdmin()){
 			filterByGroup = false;
+		}
+		else{
+			if (m_checkPermissionCompPtr.IsValid()){
+				QByteArrayList userPermissions = userInfoPtr->GetPermissions();
+
+				QByteArrayList permissions;
+				permissions << *m_permissionIdAttrPtr;
+				filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
+			}
 		}
 	}
 
@@ -305,7 +325,11 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 		imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
 		for (const QByteArray& orderId : ordersIds){
-			ordersOptionsManagerPtr->InsertOption("", orderId);
+			ordersOptionsManagerPtr->InsertOption(orderId, orderId);
+		}
+
+		if (!userId.isEmpty()){
+			ordersOptionsManagerPtr->InsertOption("", userId);
 		}
 
 		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());

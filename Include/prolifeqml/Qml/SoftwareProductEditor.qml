@@ -254,6 +254,8 @@ Item {
         id: headersModel;
         Component.onCompleted: {
             root.updateHeaders();
+
+//            licensesTable.tableDecorator = tableDecoratorModel;
         }
     }
 

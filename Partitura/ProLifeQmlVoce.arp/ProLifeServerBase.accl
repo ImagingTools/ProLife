@@ -8,6 +8,7 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="DatabaseAutomaticBackup" X="575" Y="100" Note=""/>
         <Element ComponentName="DatabaseEngine" X="325" Y="425" Note=""/>
         <Element ComponentName="HttpServerFramework" X="675" Y="425" Note=""/>
         <Element ComponentName="ProLifeHandlers" X="550" Y="250" Note=""/>

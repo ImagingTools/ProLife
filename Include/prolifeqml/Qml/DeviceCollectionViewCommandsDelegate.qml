@@ -1,6 +1,6 @@
 import QtQuick 2.12
-import imtgui 1.0
 import Acf 1.0
+import imtgui 1.0
 
 CollectionViewCommandsDelegateBase {
     id: container;
@@ -9,6 +9,7 @@ CollectionViewCommandsDelegateBase {
     property string filterLicense: "";
 
     Component.onCompleted: {
+        console.log("DeviceCollectionViewCommandsDelegate onCompleted");
         Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
     }
 
@@ -24,10 +25,13 @@ CollectionViewCommandsDelegateBase {
     }
 
     onSelectionChanged: {
+        console.log("DeviceCollection onSelectionChanged");
         let elementsModel = container.tableData.elements;
         if (!elementsModel){
             return;
         }
+
+        console.log("elementsModel", elementsModel);
 
         let indexes = container.tableData.getSelectedIndexes();
 
@@ -51,6 +55,8 @@ CollectionViewCommandsDelegateBase {
             let count = elementsModel.GetData("SoftwareLinksCount", indexes[0]);
             createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
         }
+
+        console.log("container.commandsProvider", container.commandsProvider);
 
         if (container.commandsProvider){
             commandsProvider.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
@@ -178,10 +184,8 @@ CollectionViewCommandsDelegateBase {
         HardwareProductBindingDialog {
             id: dialog;
 
-            onFinished: {
-                if (buttonId == "Save"){
-                    container.collectionViewBase.updateGui();
-                }
+            onSaved: {
+                container.collectionViewBase.updateGui();
             }
         }
     }

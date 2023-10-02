@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5068" Description="ACF"/>
-            <Version Id="1" Number="2182" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5105" Description="ACF"/>
+            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -115,9 +115,13 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
+        <Interface InterfaceId="imod::IModel" ComponentId="Devices"/>
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Devices"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Devices"/>
+        <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Devices"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="DeviceDatabaseDelegate"/>
+        <Interface InterfaceId="istd::IChangeable" ComponentId="Devices"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="Devices"/>
     </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>

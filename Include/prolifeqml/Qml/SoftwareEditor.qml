@@ -258,7 +258,7 @@ DocumentBase {
         anchors.left: parent.left;
         anchors.leftMargin: 20;
 
-        width: 450;
+        width: 500;
 
         contentWidth: bodyColumn.width;
         contentHeight: bodyColumn.height;

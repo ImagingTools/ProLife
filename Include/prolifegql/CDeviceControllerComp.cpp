@@ -1,6 +1,11 @@
 #include <prolifegql/CDeviceControllerComp.h>
 
 
+// ACF includes
+#include <iprm/CTextParam.h>
+#include <iprm/CParamsSet.h>
+#include <iprm/CEnableableParam.h>
+
 // ProLife includes
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/CDeviceInfo.h>
@@ -131,43 +136,92 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		QByteArray macAddress;
 		if (itemModel.ContainsKey("MacAddress")){
 			macAddress = itemModel.GetData("MacAddress").toByteArray().toLower();
-
-			devicePtr->SetMacAddress(macAddress);
 		}
 
-		QByteArray serialNumber;
-		if (itemModel.ContainsKey("SerialNumber")){
-			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
+		if (!macAddress.isEmpty()){
+			iprm::CTextParam valueParam;
+			valueParam.SetText(macAddress);
 
-			devicePtr->SetSerialNumber(serialNumber);
-		}
+			iprm::CEnableableParam isEqualParam;
+			isEqualParam.SetEnabled(true);
 
-		devicePtr->SetObjectUuid(objectId);
+			iprm::CParamsSet valueParamsSet;
+			valueParamsSet.SetEditableParameter("Value", &valueParam);
+			valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
 
-		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds();
+			iprm::CParamsSet paramsSet1;
+			paramsSet1.SetEditableParameter("MacAddress", &valueParamsSet);
 
-		for (imtbase::ICollectionInfo::Id collectionId : collectionIds){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
-				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
-				if (deviceInfoPtr != nullptr){
-					QByteArray currentObjectUuid = deviceInfoPtr->GetObjectUuid();
-					if (currentObjectUuid != objectId){
-						QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
-						if (!macAddress.isEmpty() && currentMacAddress == macAddress){
-							errorMessage = QT_TR_NOOP("MAC-Address already exists");
-							return nullptr;
-						}
+			iprm::CParamsSet filterParam;
+			filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
 
-						QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
-						if (!serialNumber.isEmpty() && currentSerialNumber == serialNumber.toLower()){
-							errorMessage = QT_TR_NOOP("Serial Number already exists");
-							return nullptr;
+			imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+			if (!collectionIds.isEmpty()){
+				QByteArray id = collectionIds[0];
+				if (objectId != id){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_objectCollectionCompPtr->GetObjectData(id, dataPtr)){
+						prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+						if (deviceInfoPtr != nullptr){
+							QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
+							if (currentMacAddress == macAddress.toLower()){
+								errorMessage = QT_TR_NOOP("MAC-Address already exists");
+
+								return nullptr;
+							}
 						}
 					}
 				}
 			}
 		}
+
+		devicePtr->SetMacAddress(macAddress);
+
+		QByteArray serialNumber;
+		if (itemModel.ContainsKey("SerialNumber")){
+			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
+		}
+
+		if (!serialNumber.isEmpty()){
+			iprm::CTextParam valueParam;
+			valueParam.SetText(serialNumber);
+
+			iprm::CEnableableParam isEqualParam;
+			isEqualParam.SetEnabled(true);
+
+			iprm::CParamsSet valueParamsSet;
+			valueParamsSet.SetEditableParameter("Value", &valueParam);
+			valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+			iprm::CParamsSet paramsSet1;
+			paramsSet1.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+			iprm::CParamsSet filterParam;
+			filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+
+			imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+			if (!collectionIds.isEmpty()){
+				QByteArray id = collectionIds[0];
+				if (objectId != id){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_objectCollectionCompPtr->GetObjectData(id, dataPtr)){
+						prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+						if (deviceInfoPtr != nullptr){
+							QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
+							if (currentSerialNumber == serialNumber.toLower()){
+								errorMessage = QT_TR_NOOP("Serial Number already exists");
+
+								return nullptr;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		devicePtr->SetSerialNumber(serialNumber);
+
+		devicePtr->SetObjectUuid(objectId);
 
 		if (itemModel.ContainsKey("Description")){
 			QString description = itemModel.GetData("Description").toString();

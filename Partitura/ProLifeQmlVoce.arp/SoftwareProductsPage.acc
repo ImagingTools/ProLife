@@ -10,6 +10,11 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="CollectionCommands" PackageId="" ComponentId="CollectionCommands">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -59,6 +64,8 @@
                                 <Value>Project</Value>
                                 <Value>Customer</Value>
                                 <Value>DeviceId</Value>
+                                <Value>Added</Value>
+                                <Value>LastModified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -77,6 +84,8 @@
                                 <Value>Project</Value>
                                 <Value>Customer</Value>
                                 <Value>Device-ID</Value>
+                                <Value>Added</Value>
+                                <Value>Last Modified</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -171,6 +180,12 @@
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ViewAllLicenses"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>

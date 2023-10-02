@@ -47,8 +47,6 @@ CollectionView {
             }
 
             function onLocalizationChanged(language){
-                console.log("Filter onLocalizationChanged", language);
-                console.log("context.language", context.language);
                 mainItem.updateModel();
             }
 

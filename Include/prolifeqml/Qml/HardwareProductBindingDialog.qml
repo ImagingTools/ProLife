@@ -14,6 +14,8 @@ Dialog {
 
     notClosingButtons: "Save";
 
+    signal saved();
+
     onHardwareIdChanged: {
         documentController.getData(hardwareId, {}, "HardwareProductBinding")
     }
@@ -36,6 +38,12 @@ Dialog {
 
     onFinished: {
         if (buttonId === "Save"){
+//            let newLicensesInfo = productEditorDialog.contentItem.newLicensesInfo;
+//            let keys = Object.keys(newLicensesInfo);
+//            for (let key of keys){
+//                newLicensesInfo[key];
+//            }
+
             modalDialogManager.openDialog(messageDialog, {});
         }
     }
@@ -62,7 +70,7 @@ Dialog {
 
         MessageDialog {
             title: qsTr("Apply Changes");
-            message: qsTr("Are you sure you want to apply the changes? Cancellation will not be possible.")
+            message: qsTr("Please check the data before saving. Save changes ?")
             onFinished: {
                 if (buttonId == "Yes"){
                     if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
@@ -75,8 +83,13 @@ Dialog {
                     }
 
                     productEditorDialog.contentItem.includeIds = [];
+                    productEditorDialog.contentItem.changesApplied = true;
                     productEditorDialog.buttons.setButtonState("Save", false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
+
+                    productEditorDialog.contentItem.beginBindingModel.Copy(productEditorDialog.contentItem.bindingModel);
+
+                    productEditorDialog.saved();
                 }
                 else if (buttonId == "No"){
                 }

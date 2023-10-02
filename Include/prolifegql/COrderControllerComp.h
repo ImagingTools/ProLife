@@ -30,14 +30,16 @@ public:
 
 protected:
 	virtual imtbase::CTreeItemModel* GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual istd::IChangeable* CreateObject(const QList<imtgql::CGqlObject>& inputParams, QByteArray& objectId, QString& name, QString& description, QString& errorMessage) const override;
+	virtual istd::IChangeable* CreateObject(const imtgql::CGqlRequest& gqlRequest, QByteArray& newObjectId, QString& name, QString& description, QString& errorMessage) const override;
 
 	virtual void InsertSoftwareProductToProductCollection(
+				const imtgql::CGqlRequest& gqlRequest,
 				const imtbase::CTreeItemModel& softwareProductModel,
 				int modelIndex, imtbase::IObjectCollection& productCollection,
 				const QByteArray& orderUuid,
 				QString& errorMessage) const;
 	virtual void InsertHardwareProductToProductCollection(
+				const imtgql::CGqlRequest& gqlRequest,
 				const imtbase::CTreeItemModel& hardwareProductModel,
 				int modelIndex,
 				imtbase::IObjectCollection& productCollection,
