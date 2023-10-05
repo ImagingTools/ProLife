@@ -4,8 +4,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleFactory>
 #include <QtQml/QQmlEngine>
-#include <QQmlEngine>
-#include <QtQml>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QtQml>
 
 // ACF includes
 #include <ibase/IApplication.h>
@@ -39,22 +39,15 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtguiTheme);
 	Q_INIT_RESOURCE(imtlicguiTheme);
 
-//	imtstyle::CImtStyle* imtStylePtr = imtstyle::CImtStyle::GetInstance();
-//	Q_ASSERT(imtStylePtr != nullptr);
-	
-//	imtStylePtr->setBaseStyle(QStyleFactory::create("fusion"));
-//	QApplication::setStyle(imtStylePtr);
-	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
 	CProLifeClient instance;
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    qmlRegisterModule("QtGraphicalEffects", 1, 12);
-    qmlRegisterModule("QtGraphicalEffects", 1, 0);
-    qmlRegisterModule("QtQuick.Dialogs", 1, 3);
+	qmlRegisterModule("QtGraphicalEffects", 1, 12);
+	qmlRegisterModule("QtGraphicalEffects", 1, 0);
+	qmlRegisterModule("QtQuick.Dialogs", 1, 3);
 #else
-    qmlRegisterModule("QtQuick.Dialogs", 6, 2);
-    qmlRegisterModule("Qt5Compat.GraphicalEffects", 1, 0);
+	qmlRegisterModule("QtQuick.Dialogs", 6, 2);
+	qmlRegisterModule("Qt5Compat.GraphicalEffects", 1, 0);
 #endif
 
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
