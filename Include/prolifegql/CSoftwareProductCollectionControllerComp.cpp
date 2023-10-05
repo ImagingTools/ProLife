@@ -52,20 +52,18 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 
 		QString errorMessage;
 		imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlLisaRequest, errorMessage);
-		if (licensesModelPtr == nullptr){
-			return nullptr;
-		}
-
-		if (licensesModelPtr->ContainsKey("data")){
-			imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
-			if (dataModelPtr != nullptr){
-				for (int lisaIndex = 0; lisaIndex < dataModelPtr->GetItemsCount(); lisaIndex++){
-					QByteArray licenseName = dataModelPtr->GetData("Name", lisaIndex).toByteArray();
-					QByteArray id = dataModelPtr->GetData("Id", lisaIndex).toByteArray();
-					for (int index = 0; index < itemsModel->GetItemsCount(); index++){
-						QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
-						if (id == licenseId){
-							itemsModel->SetData("LicenseName", licenseName, index);
+		if (licensesModelPtr != nullptr){
+			if (licensesModelPtr->ContainsKey("data")){
+				imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
+				if (dataModelPtr != nullptr){
+					for (int lisaIndex = 0; lisaIndex < dataModelPtr->GetItemsCount(); lisaIndex++){
+						QByteArray licenseName = dataModelPtr->GetData("Name", lisaIndex).toByteArray();
+						QByteArray id = dataModelPtr->GetData("Id", lisaIndex).toByteArray();
+						for (int index = 0; index < itemsModel->GetItemsCount(); index++){
+							QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
+							if (id == licenseId){
+								itemsModel->SetData("LicenseName", licenseName, index);
+							}
 						}
 					}
 				}
