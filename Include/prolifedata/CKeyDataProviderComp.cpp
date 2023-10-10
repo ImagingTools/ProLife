@@ -152,32 +152,32 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 									productLicenseInstancePtr->SetLicenseName(name);
 								}
 
-								imtlic::ILicenseInfo::FeatureInfos featureInfos;
+//								imtlic::ILicenseInfo::FeatureInfos featureInfos;
 
-								// License together with all dependent licenses
-								QByteArrayList licenses;
-								licenses << licenseId;
+//								// License together with all dependent licenses
+//								QByteArrayList licenses;
+//								licenses << licenseId;
 
-								if (dependenciesModelPtr != nullptr){
-									licenses += GetAllLicenseDependencies(licenseId, *dependenciesModelPtr);
-								}
+//								if (dependenciesModelPtr != nullptr){
+//									licenses += GetAllLicenseDependencies(licenseId, *dependenciesModelPtr);
+//								}
 
-								for (const QByteArray& dependencyId : licenses){
-									imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(dependencyId);
-									if (featuresModelPtr != nullptr){
-										for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
-											imtlic::ILicenseInfo::FeatureInfo featureInfo;
-											featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
-											featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
+//								for (const QByteArray& dependencyId : licenses){
+//									imtbase::CTreeItemModel* featuresModelPtr = licensesModelPtr->GetTreeItemModel(dependencyId);
+//									if (featuresModelPtr != nullptr){
+//										for (int featureIndex = 0; featureIndex < featuresModelPtr->GetItemsCount(); featureIndex++){
+//											imtlic::ILicenseInfo::FeatureInfo featureInfo;
+//											featureInfo.id = featuresModelPtr->GetData("Id", featureIndex).toByteArray();
+//											featureInfo.name = featuresModelPtr->GetData("Name", featureIndex).toString();
 
-											if (!featureInfos.contains(featureInfo)){
-												featureInfos.append(featureInfo);
-											}
-										}
-									}
-								}
+//											if (!featureInfos.contains(featureInfo)){
+//												featureInfos.append(featureInfo);
+//											}
+//										}
+//									}
+//								}
 
-								productLicenseInstancePtr->SetFeatureInfos(featureInfos);
+//								productLicenseInstancePtr->SetFeatureInfos(featureInfos);
 							}
 						}
 					}

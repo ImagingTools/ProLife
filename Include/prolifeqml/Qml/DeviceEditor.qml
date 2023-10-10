@@ -121,6 +121,12 @@ DocumentBase {
     }
 
     CollectionDataProvider {
+        id: licenseList;
+
+
+    }
+
+    CollectionDataProvider {
         id: ordersList;
 
         commandId: "Orders";
