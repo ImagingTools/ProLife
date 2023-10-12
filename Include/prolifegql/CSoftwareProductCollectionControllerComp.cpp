@@ -21,51 +21,37 @@ namespace prolifegql
 imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
 	imtbase::CTreeItemModel* retVal = BaseClass::ListObjects(gqlRequest, errorMessage);
-
 	if (retVal == nullptr){
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
 		return nullptr;
 	}
 
 	imtbase::CTreeItemModel* dataModel = retVal->GetTreeItemModel("data");
 	if (dataModel == nullptr){
+		errorMessage = QString("Representation model is invalid.");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
 		return nullptr;
 	}
 
 	imtbase::CTreeItemModel* itemsModel = dataModel->GetTreeItemModel("items");
 	if (itemsModel == nullptr){
+		errorMessage = QString("Representation model is invalid.");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
 		return nullptr;
 	}
 
-	if (m_gqlLicenseRequestCompPtr.IsValid()){
-		imtgql::CGqlRequest gqlLisaRequest(imtgql::CGqlRequest::RT_QUERY, "LicensesItems");
-		imtgql::CGqlObject queryFields("items");
-		queryFields.InsertField("Id");
-		queryFields.InsertField("Name");
-		gqlLisaRequest.AddField(queryFields);
+	if (m_licenseCollectionCompPtr.IsValid()){
+		for (int i = 0; i < itemsModel->GetItemsCount(); i++){
+			QByteArray licenseUuid = itemsModel->GetData("LicenseId", i).toByteArray();
 
-		imtgql::CGqlObject licenseParams("licenses");
-		for (int index = 0; index < itemsModel->GetItemsCount(); index++){
-			QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
-			licenseParams.InsertField(licenseId);
-		}
-		gqlLisaRequest.AddParam(licenseParams);
-
-		QString errorMessage;
-		imtbase::CTreeItemModel* licensesModelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(gqlLisaRequest, errorMessage);
-		if (licensesModelPtr != nullptr){
-			if (licensesModelPtr->ContainsKey("data")){
-				imtbase::CTreeItemModel* dataModelPtr = licensesModelPtr->GetTreeItemModel("data");
-				if (dataModelPtr != nullptr){
-					for (int lisaIndex = 0; lisaIndex < dataModelPtr->GetItemsCount(); lisaIndex++){
-						QByteArray licenseName = dataModelPtr->GetData("Name", lisaIndex).toByteArray();
-						QByteArray id = dataModelPtr->GetData("Id", lisaIndex).toByteArray();
-						for (int index = 0; index < itemsModel->GetItemsCount(); index++){
-							QByteArray licenseId = itemsModel->GetData("LicenseId", index).toByteArray();
-							if (id == licenseId){
-								itemsModel->SetData("LicenseName", licenseName, index);
-							}
-						}
-					}
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_licenseCollectionCompPtr->GetObjectData(licenseUuid, dataPtr)){
+				imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+				if (licenseDefinitionPtr != nullptr){
+					itemsModel->SetData("LicenseName", licenseDefinitionPtr->GetLicenseName(), i);
 				}
 			}
 		}
@@ -81,6 +67,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = "No collection component was set";
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 		return nullptr;
 	}
@@ -90,6 +77,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
 		errorMessage = QObject::tr("No object-ID could not be extracted from the request");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 		return nullptr;
 	}
@@ -101,6 +89,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 			bool isUse = productInstanceInfoPtr->IsInUse();
 			if (isUse){
 				errorMessage = QString("It is not possible to remove a product that is in use");
+				SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 				return nullptr;
 			}
@@ -120,6 +109,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 	}
 
 	errorMessage = QObject::tr("Can't remove object: %1").arg(QString(objectId));
+	SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 	return nullptr;
 }
@@ -130,9 +120,12 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 			imtbase::CTreeItemModel& model,
 			int itemIndex,
 			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	if (objectCollectionIterator == nullptr){
+		errorMessage = QString("Object collection iterator is invalid.");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
 		return false;
 	}
 
@@ -183,6 +176,17 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 				else if (informationId == "ProductId"){
 					elementInformation = productId;
+
+					if (m_productCollectionCompPtr.IsValid()){
+						QByteArray productUuid = productId;
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+							const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
+							if (productInfoPtr != nullptr){
+								elementInformation = productInfoPtr->GetProductId();
+							}
+						}
+					}
 				}
 				else if (informationId == "SerialNumber"){
 					elementInformation = serialNumber;
@@ -267,6 +271,8 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
+		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
+
 		return;
 	}
 

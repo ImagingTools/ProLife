@@ -131,7 +131,7 @@ Item {
                     licensesTable.forceActiveFocus();
 
                     let state = this.licenseState;
-                    let licenseId = this.licenseId;
+                    let licenseId = model.Id;
                     let licenseName = this.licenseName;
                     let expiration = this.expiration;
 
@@ -147,7 +147,7 @@ Item {
                         let index = activeLicensesModel.InsertNewItem();
 
                         activeLicensesModel.SetData("Id", licenseId, index);
-                        activeLicensesModel.SetData("Name", licenseName, index);
+                        activeLicensesModel.SetData("LicenseName", licenseName, index);
                         activeLicensesModel.SetData("Expiration", expiration, index);
                     }
                     else if (state === Qt.Unchecked){
@@ -170,7 +170,7 @@ Item {
                         return;
                     }
 
-                    let licenseId = this.licenseId;
+                    let licenseId = model.Id;
                     let expiration = this.expiration;
 
                     let activeLicensesModel = root.productModel.GetData("ActiveLicenses");
@@ -205,7 +205,7 @@ Item {
         if (root.productLicensesModel){
             for (let i = 0; i < root.productLicensesModel.GetItemsCount(); i++){
                 let licenseId = root.productLicensesModel.GetData("Id", i);
-                let licenseName = root.productLicensesModel.GetData("Name", i);
+                let licenseName = root.productLicensesModel.GetData("LicenseName", i);
 
                 root.productLicensesModel.SetData("ExpirationState", Qt.Unchecked, i);
                 root.productLicensesModel.SetData("LicenseState", Qt.Unchecked, i);
@@ -216,8 +216,6 @@ Item {
                     for (let j = 0; j < activeLicensesModel.GetItemsCount(); j++){
                         let activeLicenseId = activeLicensesModel.GetData("Id", j);
                         if (licenseId === activeLicenseId){
-                            //                            activeLicensesModel.SetData("Name", licenseName, j);
-
                             let expiration = activeLicensesModel.GetData("Expiration", j);
                             if (expiration === "Unlimited"){
                                 expiration = ""
@@ -263,11 +261,11 @@ Item {
         headersModel.Clear();
 
         let index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "Name", index)
+        headersModel.SetData("Id", "LicenseName", index)
         headersModel.SetData("Name", qsTr("License Name"), index)
 
         index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "Id", index)
+        headersModel.SetData("Id", "LicenseId", index)
         headersModel.SetData("Name", qsTr("License-ID"), index)
 
         index = headersModel.InsertNewItem();

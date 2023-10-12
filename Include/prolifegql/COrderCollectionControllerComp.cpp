@@ -24,9 +24,12 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 			imtbase::CTreeItemModel& model,
 			int itemIndex,
 			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	if (objectCollectionIterator == nullptr){
+		errorMessage = QString("Object collection iterator is invalid.");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 		return false;
 	}
 
@@ -124,10 +127,13 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 
 
 imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_accountCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error.");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 		return nullptr;
 	}
 
@@ -186,6 +192,9 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 
 	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
+		errorMessage = QString("GraphQL context is invalid.");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 		return nullptr;
 	}
 
@@ -269,11 +278,17 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 				int itemIndex = itemsModel->InsertNewItem();
 				if (itemIndex >= 0){
 					if (!SetupGqlItem(gqlRequest, *itemsModel, itemIndex, objectCollectionIterator.GetPtr(), errorMessage)){
+						errorMessage = QString("Error when trying setup GQL item.");
+						SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 						return nullptr;
 					}
 				}
 			}
 			else{
+				errorMessage = QString("Unable to get an object from object iterator.");
+				SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 				return nullptr;
 			}
 		}

@@ -45,7 +45,7 @@ Rectangle {
         softwareCard.updateHeaders();
     }
 
-    property bool ok: softwareCard.licensesProvider != null && productId && licensesModel !== null;
+    property bool ok: productCardRoot != null && productId && licensesModel !== null;
 
     onOkChanged: {
         if (ok){
@@ -58,8 +58,9 @@ Rectangle {
                     softwareCard.licensesModel.SetData("Expiration", "Unlimited", i);
                 }
 
-                let licenseName = softwareCard.licensesProvider.getLicenseName(softwareCard.productId, licenseId);
-                softwareCard.licensesModel.SetData("Name", licenseName, i);
+//                let licenseName = softwareCard.licensesProvider.getLicenseName(softwareCard.productId, licenseId);
+//                let licenseName = softwareCard.licensesModel.GetData("LicenseName", i);
+//                softwareCard.licensesModel.SetData("Name", licenseName, i);
             }
 
             productCardRoot.orderEditorPtr.blockUpdatingModel = false
@@ -181,8 +182,8 @@ Rectangle {
         elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
         elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
 
-        let licenseId = softwareCard.licensesModel.GetData("Id");
-        let licenseName = softwareCard.licensesModel.GetData("Name");
+        let licenseId = softwareCard.licensesModel.GetData("LicenseId");
+        let licenseName = softwareCard.licensesModel.GetData("LicenseName");
 
         let name = "";
 
@@ -190,9 +191,9 @@ Rectangle {
             name = licenseName;
         }
 
-        if (licenseId){
-            name += " (" + licenseId + ")";
-        }
+//        if (licenseId){
+//            name += " (" + licenseId + ")";
+//        }
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("License"), index)

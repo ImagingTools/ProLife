@@ -176,6 +176,8 @@ Item {
 
             radius: 3;
 
+            nameId: "ProductName";
+
             onCurrentIndexChanged: {
                 if (productCB.currentIndex >= 0){
                     let productId = productCB.model.GetData("Id", productCB.currentIndex);
@@ -200,7 +202,7 @@ Item {
 
                     contentLoader.item.productLicensesModel = 0;
 
-                    let licensesModel = productEditor.getProductLicensesModel();
+                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
                     if (licensesModel){
                         contentLoader.item.productLicensesModel = licensesModel;
                     }
@@ -472,53 +474,12 @@ Item {
             }
         }
 
-//        if (productEditor.productModel.ContainsKey("PairId")){
-//            let pairId = productEditor.productModel.GetData("PairId");
-//            if (pairId !== ""){
-//                for (let i = 0; i < productEditor.pairsModel.GetItemsCount(); i++){
-//                    let id = productEditor.pairsModel.GetData("Id", i);
-//                    if (id === pairId){
-//                        pairCB.currentIndex = i;
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-
         productEditor.productModel.onDataChanged.connect(productEditor.onModelChanged);
 
         productEditor.blockUpdatingModel = false;
     }
 
     function updateModel(){}
-
-    function clearPairLink(){
-        let id = productEditor.productModel.GetData("Id");
-        let categoryId = productEditor.productModel.GetData("CategoryId");
-        let pairId = productEditor.productModel.GetData("PairId");
-
-        // clear parents data
-        if(categoryId === "Hardware"){
-            productEditor.productModel.SetData("PairId", "");
-        }
-        else if (categoryId === "Software"){
-            if (productEditor.rootItem.isPairEditing){
-                if (productEditor.rootItem.activeProductIndex >= 0){
-                    if (productEditor.orderProductsModel.ContainsKey("HardwareProduct", productEditor.rootItem.activeProductIndex)){
-                        let hardwareProductModel = productEditor.orderProductsModel.GetData("HardwareProduct", productEditor.rootItem.activeProductIndex);
-                        hardwareProductModel.SetData("PairId", "");
-                    }
-                }
-            }
-            else{
-                for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
-                    if (productEditor.orderProductsModel.GetData("CategoryId", i) === "Hardware" && id === productEditor.orderProductsModel.GetData("PairId", i)){
-                        productEditor.orderProductsModel.SetData("PairId", "",i);
-                    }
-                }
-            }
-        }
-    }
 }//Container
 
 

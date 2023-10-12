@@ -10,6 +10,7 @@ DocumentBase {
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
     property TreeItemModel devicesModel: TreeItemModel {}
+    property TreeItemModel licensesModel: TreeItemModel {}
 
     property string orderUuid: "";
 
@@ -22,7 +23,7 @@ DocumentBase {
     property int radius: 3;
     property int spacing: 25;
 
-    property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licensesProvider.completed && orderEditorContainer.modelIsReady;
+    property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licenseCollection.completed && orderEditorContainer.modelIsReady;
 
     onModelsIsLoadedChanged: {
         console.log("onModelsIsLoadedChanged", modelsIsLoaded);
@@ -51,7 +52,9 @@ DocumentBase {
     }
 
     Component.onCompleted: {
-        licensesProvider.updateModel();
+//        licensesProvider.updateModel();
+
+        licenseCollection.updateModel();
 
         accountsList.updateModel({});
         devicesList.updateModel({});
@@ -232,7 +235,7 @@ DocumentBase {
 
     CollectionDataProvider {
         id: productsList;
-        fields: ["Id", "Name", "CategoryId"];
+        fields: ["Id", "ProductId", "ProductName", "CategoryId", "Licenses"];
         commandId: "Products";
 
         onCollectionModelChanged: {
@@ -331,6 +334,20 @@ DocumentBase {
 
         onModelStateChanged: {
             updateGui();
+        }
+    }
+
+    CollectionDataProvider{
+        id: licenseCollection;
+
+        commandId: "Licenses";
+
+        fields: ["Id", "LicenseId", "LicenseName", "ProductId"]
+
+        onCollectionModelChanged: {
+            if (licenseCollection.collectionModel != null){
+                orderEditorContainer.licensesModel = licenseCollection.collectionModel;
+            }
         }
     }
 
@@ -904,7 +921,7 @@ DocumentBase {
             onStarted: {
                 productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
                 productsDialog.bodyItem.excludeDeviceIds = productsView.deviceIds;
-                productsDialog.bodyItem.licensesModel = licensesProvider.model;
+                productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
                 productsDialog.bodyItem.orderUuid = orderEditorContainer.itemId;
                 productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
 

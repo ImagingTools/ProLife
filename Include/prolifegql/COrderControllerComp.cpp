@@ -577,7 +577,7 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 				QString licenseName = licenseInstancePtr->GetLicenseName();
 
 				activeLicenses->SetData("Id", activeLicenseId, productIndex);
-				activeLicenses->SetData("Name", licenseName, productIndex);
+				activeLicenses->SetData("LicenseName", licenseName, productIndex);
 
 				QDate date = licenseInstancePtr->GetExpiration().date();
 				QString licenseExpiration = date.toString("yyyy-MM-dd");

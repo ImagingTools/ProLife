@@ -96,7 +96,7 @@ DocumentBase {
 
         commandId: "Products";
 
-        fields: ["Id", "Name", "Description", "CategoryId", "Licenses"];
+        fields: ["Id", "ProductName", "Description", "CategoryId", "Licenses"];
 
         Component.onCompleted: {
             let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
@@ -118,12 +118,6 @@ DocumentBase {
                 deviceEditorContainer.errorMessage = message;
             }
         }
-    }
-
-    CollectionDataProvider {
-        id: licenseList;
-
-
     }
 
     CollectionDataProvider {
@@ -446,6 +440,8 @@ DocumentBase {
 
                         model: deviceEditorContainer.productsModel;
 
+                        nameId: "ProductName";
+
                         Component.onCompleted: {
                             let ok = PermissionsController.checkPermission("ChangeSensor");
                             productCB.changeable = ok;
@@ -491,6 +487,8 @@ DocumentBase {
                         height: 23;
 
                         radius: deviceEditorContainer.radius;
+
+                        nameId: "LicenseName";
 
                         Component.onCompleted: {
                             let ok = PermissionsController.checkPermission("ChangeSensor");
@@ -794,7 +792,7 @@ DocumentBase {
 
                     Text {
                         id: titleOrderId;
-                        text: qsTr("Order ID");
+                        text: qsTr("Order-ID");
                         color: Style.textColor;
                         font.family: Style.fontFamily;
                         font.pixelSize: Style.fontSize_common;

@@ -65,7 +65,7 @@ DocumentBase {
     CollectionDataProvider {
         id: productsList;
 
-        fields: ["Id", "Name", "CategoryId", "Licenses"];
+        fields: ["Id", "ProductName", "CategoryId", "Licenses"];
         commandId: "Products";
 
         Component.onCompleted: {
@@ -391,6 +391,8 @@ DocumentBase {
                 height: 23;
 
                 radius: 3;
+
+                nameId: "ProductName";
 
                 Component.onCompleted: {
                     let ok = PermissionsController.checkPermission("ChangeLicense");

@@ -38,6 +38,9 @@ public:
 		I_ASSIGN(m_gqlLicenseRequestCompPtr, "GqlLicenseRequest", "License GraphQL request", true, "GqlLicenseRequest");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
+		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
+		I_ASSIGN(m_featureCollectionCompPtr, "FeatureCollection", "Feature collection", true, "FeatureCollection");
+		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 	I_END_COMPONENT;
 
 	enum CommandGroup
@@ -53,7 +56,11 @@ public:
 
 protected:
 	virtual QByteArrayList GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& dependenciesModel) const;
+	virtual QByteArrayList GetAllLicenseDependencies(const QByteArray& licenseId) const;
+
 	virtual QString GetLicenseName(const QByteArray& licenseId, const imtbase::CTreeItemModel& licensesModel) const;
+
+	virtual const imtlic::CLicenseDefinition* GetLicenseInfo(const QByteArray& licenseId) const;
 
 private:
 	mutable QByteArray m_productInstanceId;
@@ -64,6 +71,9 @@ private:
 	I_REF(imtgql::IGqlRequestHandler, m_gqlLicenseRequestCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 };
 
 
