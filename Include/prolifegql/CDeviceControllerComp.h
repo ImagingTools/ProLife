@@ -19,6 +19,7 @@ public:
 
 	I_BEGIN_COMPONENT(CDeviceControllerComp)
 		I_ASSIGN(m_deviceCompPtr, "DeviceFactory", "Factory used for creation of the new device instance", true, "DeviceFactory");
+		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 	I_END_COMPONENT
 
 protected:
@@ -27,6 +28,7 @@ protected:
 
 private:
 	I_FACT(prolifedata::IDeviceInfo, m_deviceCompPtr);
+	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 };
 
 

@@ -5,157 +5,108 @@
     </AcfHeader>
     <Features>
         <ObjectsList>
-            <Object ID="{b1b9ff54-efe8-486e-9b94-5cd1be550b13}" Description="" TypeId="FeatureInfo" Name="Sensor Management">
-                <Data Id="SensorManagement" Name="Sensor Management" Optional="false">
+            <Object ID="ce4a7f72-5303-4044-b25c-3a02020eebd3" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="Administration" FeatureName="Administration" FeatureDescription="" Optional="false">
+                    <Dependencies/>
                     <SubFeatures>
-                        <Object Id="ViewSensors" Name="View Sensors" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="EditSensor" Name="Edit Sensor" Optional="false">
+                        <Object FeatureId="EditAdministration" FeatureName="Edit Administration" FeatureDescription="" Optional="false">
+                            <Dependencies/>
                             <SubFeatures>
-                                <Object Id="AddSensor" Name="Add Sensor" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="RemoveSensor" Name="Remove Sensor" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeSensor" Name="Change Sensor" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeMacAddress" Name="Change Mac Address" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeSerialNumber" Name="Change Serial Number" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeSensorDescription" Name="Change Sensor Description" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeProductionStatus" Name="Change Production Status" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                            </SubFeatures>
-                        </Object>
-                        <Object Id="ViewAllSensors" Name="View All Sensors" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="CreateLicenseFile" Name="Create License File" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="BindSensor" Name="Bind Sensor" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="UnbindSensor" Name="Unbind Sensor" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                    </SubFeatures>
-                </Data>
-            </Object>
-            <Object ID="{81fc038c-8eb9-4142-9e76-17e48ab22e15}" Description="" TypeId="FeatureInfo" Name="Administration">
-                <Data Id="Administration" Name="Administration" Optional="false">
-                    <SubFeatures>
-                        <Object Id="ViewAdministration" Name="View Administration" Optional="false">
-                            <SubFeatures>
-                                <Object Id="ViewRoles" Name="View Roles" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ViewUsers" Name="View Users" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ViewGroups" Name="View Groups" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                            </SubFeatures>
-                        </Object>
-                        <Object Id="EditAdministration" Name="Edit Administration" Optional="false">
-                            <SubFeatures>
-                                <Object Id="EditRole" Name="Edit Role" Optional="false">
+                                <Object FeatureId="EditGroup" FeatureName="Edit Group" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures>
-                                        <Object Id="AddRole" Name="Add Role" Optional="false">
+                                        <Object FeatureId="ChangeGroup" FeatureName="Change Group" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="RemoveRole" Name="Remove Role" Optional="false">
+                                        <Object FeatureId="RemoveGroup" FeatureName="Remove Group" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="ChangeRole" Name="Change Role" Optional="false">
+                                        <Object FeatureId="AddGroup" FeatureName="Add Group" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
                                     </SubFeatures>
                                 </Object>
-                                <Object Id="EditUser" Name="Edit User" Optional="false">
+                                <Object FeatureId="EditRole" FeatureName="Edit Role" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures>
-                                        <Object Id="AddUser" Name="Add User" Optional="false">
+                                        <Object FeatureId="ChangeRole" FeatureName="Change Role" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="RemoveUser" Name="Remove User" Optional="false">
+                                        <Object FeatureId="RemoveRole" FeatureName="Remove Role" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="ChangeUser" Name="Change User" Optional="false">
+                                        <Object FeatureId="AddRole" FeatureName="Add Role" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
                                     </SubFeatures>
                                 </Object>
-                                <Object Id="EditGroup" Name="Edit Group" Optional="false">
+                                <Object FeatureId="EditUser" FeatureName="Edit User" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures>
-                                        <Object Id="AddGroup" Name="Add Group" Optional="false">
+                                        <Object FeatureId="ChangeUser" FeatureName="Change User" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="RemoveGroup" Name="Remove Group" Optional="false">
+                                        <Object FeatureId="RemoveUser" FeatureName="Remove User" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
-                                        <Object Id="ChangeGroup" Name="Change Group" Optional="false">
+                                        <Object FeatureId="AddUser" FeatureName="Add User" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
                                             <SubFeatures/>
                                         </Object>
                                     </SubFeatures>
                                 </Object>
                             </SubFeatures>
                         </Object>
-                    </SubFeatures>
-                </Data>
-            </Object>
-            <Object ID="{946fb38a-9182-466c-8c14-f8d7c54422b8}" Description="" TypeId="FeatureInfo" Name="License Management">
-                <Data Id="LicenseManagement" Name="License Management" Optional="false">
-                    <SubFeatures>
-                        <Object Id="ViewLicenses" Name="View Licenses" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="EditLicense" Name="Edit License" Optional="false">
+                        <Object FeatureId="ViewAdministration" FeatureName="View Administration" FeatureDescription="" Optional="false">
+                            <Dependencies>
+                                <Dependency>EditAdministration</Dependency>
+                                <Dependency>EditGroup</Dependency>
+                                <Dependency>ChangeGroup</Dependency>
+                                <Dependency>RemoveGroup</Dependency>
+                                <Dependency>AddGroup</Dependency>
+                                <Dependency>EditRole</Dependency>
+                                <Dependency>ChangeRole</Dependency>
+                                <Dependency>RemoveRole</Dependency>
+                                <Dependency>AddRole</Dependency>
+                                <Dependency>EditUser</Dependency>
+                                <Dependency>ChangeUser</Dependency>
+                                <Dependency>RemoveUser</Dependency>
+                                <Dependency>AddUser</Dependency>
+                            </Dependencies>
                             <SubFeatures>
-                                <Object Id="ChangeLicense" Name="Change License" Optional="false">
+                                <Object FeatureId="ViewGroups" FeatureName="View Groups" FeatureDescription="" Optional="false">
+                                    <Dependencies>
+                                        <Dependency>EditGroup</Dependency>
+                                        <Dependency>ChangeGroup</Dependency>
+                                        <Dependency>RemoveGroup</Dependency>
+                                        <Dependency>AddGroup</Dependency>
+                                    </Dependencies>
                                     <SubFeatures/>
                                 </Object>
-                                <Object Id="ChangeLisenseNumber" Name="Change Lisense Number" Optional="false">
+                                <Object FeatureId="ViewUsers" FeatureName="View Users" FeatureDescription="" Optional="false">
+                                    <Dependencies>
+                                        <Dependency>EditUser</Dependency>
+                                        <Dependency>ChangeUser</Dependency>
+                                        <Dependency>RemoveUser</Dependency>
+                                        <Dependency>AddUser</Dependency>
+                                    </Dependencies>
                                     <SubFeatures/>
                                 </Object>
-                                <Object Id="AddLicense" Name="Add License" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="RemoveLicense" Name="Remove License" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                            </SubFeatures>
-                        </Object>
-                        <Object Id="ViewAllLicenses" Name="View All Licenses" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                    </SubFeatures>
-                </Data>
-            </Object>
-            <Object ID="{2f5543c8-2b8f-4b64-9526-f599685da14f}" Description="" TypeId="FeatureInfo" Name="Account Management">
-                <Data Id="AccountManagement" Name="Account Management" Optional="false">
-                    <SubFeatures>
-                        <Object Id="ViewAccounts" Name="View Accounts" Optional="false">
-                            <SubFeatures/>
-                        </Object>
-                        <Object Id="EditAccount" Name="Edit Account" Optional="false">
-                            <SubFeatures>
-                                <Object Id="AddAccount" Name="Add Account" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="RemoveAccount" Name="Remove Account" Optional="false">
-                                    <SubFeatures/>
-                                </Object>
-                                <Object Id="ChangeAccount" Name="Change Account" Optional="false">
+                                <Object FeatureId="ViewRoles" FeatureName="View Roles" FeatureDescription="" Optional="false">
+                                    <Dependencies>
+                                        <Dependency>EditRole</Dependency>
+                                        <Dependency>ChangeRole</Dependency>
+                                        <Dependency>RemoveRole</Dependency>
+                                        <Dependency>AddRole</Dependency>
+                                    </Dependencies>
                                     <SubFeatures/>
                                 </Object>
                             </SubFeatures>
@@ -163,38 +114,152 @@
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{c8fb6e72-2072-4201-a7e3-3c4dfbdf56b9}" Description="" TypeId="FeatureInfo" Name="Order Management">
-                <Data Id="OrderManagement" Name="Order Management" Optional="false">
+            <Object ID="06d570ef-170c-48fc-bf81-fab890b8d9da" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="SensorManagement" FeatureName="Sensor Management" FeatureDescription="" Optional="false">
+                    <Dependencies/>
                     <SubFeatures>
-                        <Object Id="ViewOrders" Name="View Orders" Optional="false">
+                        <Object FeatureId="UnbindSensor" FeatureName="Unbind Sensor" FeatureDescription="" Optional="false">
+                            <Dependencies/>
                             <SubFeatures/>
                         </Object>
-                        <Object Id="EditOrder" Name="Edit Order" Optional="false">
+                        <Object FeatureId="BindSensor" FeatureName="Bind Sensor" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
+                        <Object FeatureId="CreateLicenseFile" FeatureName="Create License File" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
+                        <Object FeatureId="ViewAllSensors" FeatureName="View All Sensors" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
+                        <Object FeatureId="EditSensor" FeatureName="Edit Sensor" FeatureDescription="" Optional="false">
+                            <Dependencies/>
                             <SubFeatures>
-                                <Object Id="AddOrder" Name="Add Order" Optional="false">
+                                <Object FeatureId="ChangeSensor" FeatureName="Change Sensor" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures/>
                                 </Object>
-                                <Object Id="RemoveOrder" Name="Remove Order" Optional="false">
+                                <Object FeatureId="RemoveSensor" FeatureName="Remove Sensor" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures/>
                                 </Object>
-                                <Object Id="ChangeOrder" Name="Change Order" Optional="false">
+                                <Object FeatureId="AddSensor" FeatureName="Add Sensor" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
                                     <SubFeatures/>
                                 </Object>
                             </SubFeatures>
                         </Object>
-                        <Object Id="ViewAllOrders" Name="View All Orders" Optional="false">
+                        <Object FeatureId="ViewSensors" FeatureName="View Sensors" FeatureDescription="" Optional="false">
+                            <Dependencies/>
                             <SubFeatures/>
                         </Object>
                     </SubFeatures>
                 </Data>
             </Object>
-            <Object ID="{7e7641fb-b817-496b-9a11-0cc7e7d8e0fd}" Description="" TypeId="FeatureInfo" Name="Settings Management">
-                <Data Id="SettingsManagement" Name="Settings Management" Optional="false">
+            <Object ID="0b920f33-dad1-43c8-b885-a01860dac5dd" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="OrderManagement" FeatureName="Order Management" FeatureDescription="" Optional="false">
+                    <Dependencies/>
                     <SubFeatures>
-                        <Object Id="ViewClientSettings" Name="View Client Settings" Optional="false">
+                        <Object FeatureId="ViewAllOrders" FeatureName="View All Orders" FeatureDescription="" Optional="false">
+                            <Dependencies/>
                             <SubFeatures/>
                         </Object>
-                        <Object Id="ViewServerSettings" Name="View Server Settings" Optional="false">
+                        <Object FeatureId="EditOrder" FeatureName="Edit Order" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures>
+                                <Object FeatureId="ChangeOrder" FeatureName="Change Order" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="RemoveOrder" FeatureName="Remove Order" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="AddOrder" FeatureName="Add Order" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                            </SubFeatures>
+                        </Object>
+                        <Object FeatureId="ViewOrders" FeatureName="View Orders" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
+            </Object>
+            <Object ID="9225718e-3c9c-4e00-83d8-b39152e32a66" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="LicenseManagement" FeatureName="License Management" FeatureDescription="" Optional="false">
+                    <Dependencies/>
+                    <SubFeatures>
+                        <Object FeatureId="ViewAllLicenses" FeatureName="View All Licenses" FeatureDescription="" Optional="false">
+                            <Dependencies>
+                                <Dependency>EditLicense</Dependency>
+                                <Dependency>ChangeLicense</Dependency>
+                                <Dependency>RemoveLicense</Dependency>
+                                <Dependency>AddLicense</Dependency>
+                            </Dependencies>
+                            <SubFeatures/>
+                        </Object>
+                        <Object FeatureId="EditLicense" FeatureName="Edit License" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures>
+                                <Object FeatureId="ChangeLicense" FeatureName="Change License" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="RemoveLicense" FeatureName="Remove License" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="AddLicense" FeatureName="Add License" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                            </SubFeatures>
+                        </Object>
+                        <Object FeatureId="ViewLicenses" FeatureName="View Licenses" FeatureDescription="" Optional="false">
+                            <Dependencies>
+                                <Dependency>EditLicense</Dependency>
+                                <Dependency>ChangeLicense</Dependency>
+                                <Dependency>RemoveLicense</Dependency>
+                                <Dependency>AddLicense</Dependency>
+                            </Dependencies>
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
+            </Object>
+            <Object ID="d9372bb1-6d29-4531-ba18-4cf7329d99c8" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="AccountManagement" FeatureName="Account Management" FeatureDescription="" Optional="false">
+                    <Dependencies/>
+                    <SubFeatures>
+                        <Object FeatureId="EditAccount" FeatureName="Edit Account" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures>
+                                <Object FeatureId="ChangeAccount" FeatureName="Change Account" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="RemoveAccount" FeatureName="Remove Account" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="AddAccount" FeatureName="Add Account" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                            </SubFeatures>
+                        </Object>
+                        <Object FeatureId="ViewAccounts" FeatureName="View Accounts" FeatureDescription="" Optional="false">
+                            <Dependencies>
+                                <Dependency>EditAccount</Dependency>
+                                <Dependency>ChangeAccount</Dependency>
+                                <Dependency>RemoveAccount</Dependency>
+                                <Dependency>AddAccount</Dependency>
+                            </Dependencies>
                             <SubFeatures/>
                         </Object>
                     </SubFeatures>
@@ -202,64 +267,4 @@
             </Object>
         </ObjectsList>
     </Features>
-    <Dependencies>
-        <Dependency FeatureId="ChangeLisenseNumber">
-            <BaseFeatures>
-                <BaseFeatureId>ChangeLicense</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="ChangeMacAddress">
-            <BaseFeatures>
-                <BaseFeatureId>ChangeSensor</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="ChangeProductionStatus">
-            <BaseFeatures>
-                <BaseFeatureId>ChangeSensor</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="ChangeSensorDescription">
-            <BaseFeatures>
-                <BaseFeatureId>ChangeSensor</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="ChangeSerialNumber">
-            <BaseFeatures>
-                <BaseFeatureId>ChangeSensor</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditAccount">
-            <BaseFeatures>
-                <BaseFeatureId>ViewAccounts</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditGroup">
-            <BaseFeatures>
-                <BaseFeatureId>ViewGroups</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditLicense">
-            <BaseFeatures>
-                <BaseFeatureId>ViewLicenses</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditOrder">
-            <BaseFeatures>
-                <BaseFeatureId>ViewOrders</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditRole">
-            <BaseFeatures>
-                <BaseFeatureId>ViewRoles</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-        <Dependency FeatureId="EditUser">
-            <BaseFeatures>
-                <BaseFeatureId>ViewUsers</BaseFeatureId>
-            </BaseFeatures>
-        </Dependency>
-    </Dependencies>
-    <Parents>
-        <Items/>
-    </Parents>
 </Acf>

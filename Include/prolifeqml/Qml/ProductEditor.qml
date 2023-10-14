@@ -80,6 +80,8 @@ Item {
         let selectedDeviceId = productEditor.productModel.GetData("DeviceId");
 
         console.log("selectedDeviceId", selectedDeviceId);
+        console.log("selectedProductId", selectedProductId);
+
         console.log("productEditor.excludeDeviceIds", productEditor.excludeDeviceIds);
 
         let index = productEditor.excludeDeviceIds.indexOf(selectedDeviceId);
@@ -97,6 +99,11 @@ Item {
             let deviceId = productEditor.devicesModel.GetData("Id", i);
             let deviceType = productEditor.devicesModel.GetData("DeviceType", i);
 
+            console.log("DeviceUuid",deviceId);
+            console.log("OrderUuid",orderId);
+            console.log("ProductUuid",deviceType);
+            console.log("status",status);
+
             if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
                 console.log("deviceId", deviceId);
                 console.log("continue");
@@ -104,7 +111,7 @@ Item {
                 continue;
             }
 
-            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None")||
+            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None") ||
                     selectedProductId === deviceType && productEditor.orderUuid === orderId){
                 let index = resultModel.InsertNewItem();
                 resultModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);

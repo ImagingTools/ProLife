@@ -86,6 +86,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 	}
 
 	QByteArray productId;
+	QByteArray productUuid;
 	QByteArray customerId;
 	QByteArray instanceId = deviceInfoPtr->GetMacAddress();
 
@@ -102,18 +103,20 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 	if (m_softwareProductCollectionCompPtr->GetObjectData(softwareIds[0], firstSoftwareProductDataPtr)){
 		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* orderProductInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(firstSoftwareProductDataPtr.GetPtr());
 		if (orderProductInfoPtr != nullptr){
-			productId = orderProductInfoPtr->GetProductId();
+			productUuid = orderProductInfoPtr->GetProductId();
 		}
 	}
 
 	imtlic::IProductInfo* productInfoPtr = nullptr;
 	imtbase::IObjectCollection::DataPtr productInfoDataPtr;
-	if (m_productCollectionCompPtr->GetObjectData(productId, productInfoDataPtr)){
+	if (m_productCollectionCompPtr->GetObjectData(productUuid, productInfoDataPtr)){
 		productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productInfoDataPtr.GetPtr());
+
+		productId = productInfoPtr->GetProductId();
 	}
 
 	if (productInfoPtr == nullptr){
-		SendErrorMessage(0, QString("Unable to get a product info with ID: %1").arg(qPrintable(productId)), "CKeyDataProviderComp");
+		SendErrorMessage(0, QString("Unable to get a product info with ID: %1").arg(qPrintable(productUuid)), "CKeyDataProviderComp");
 
 		return false;
 	}
@@ -128,62 +131,64 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 			imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareProductDataPtr.GetPtr());
 			if (productInstanceInfoPtr != nullptr){
 				const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
-				for (const QByteArray& licenseId : licenseList.GetElementIds()){
-					imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>(const_cast<imtlic::ILicenseInstance*>(productInstanceInfoPtr->GetLicenseInstance(licenseId)));
+				for (const QByteArray& licenseCollectionId : licenseList.GetElementIds()){
+					imtlic::ILicenseInstance* licenseInstancePtr = dynamic_cast<imtlic::ILicenseInstance*>(const_cast<imtlic::ILicenseInstance*>(productInstanceInfoPtr->GetLicenseInstance(licenseCollectionId)));
 					if (licenseInstancePtr != nullptr){
+						QByteArray licenseId;
+						QString licenseName;
+
+						imtbase::IObjectCollection::DataPtr licenseDataPtr;
+						if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, licenseDataPtr)){
+							imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+							if (licenseInfoPtr != nullptr){
+								licenseId = licenseInfoPtr->GetLicenseId();
+								licenseName = licenseInfoPtr->GetLicenseName();
+							}
+						}
+
 						QDateTime expiration = licenseInstancePtr->GetExpiration();
 						productInstancePtr->AddLicense(licenseId, expiration);
 
 						imtlic::ILicenseInstance* productLicenseInstancePtr = const_cast<imtlic::ILicenseInstance*>(productInstancePtr->GetLicenseInstance(licenseId));
-						if (productLicenseInstancePtr != nullptr){
+						if (productLicenseInstancePtr == nullptr){
+							SendErrorMessage(0, QString("License instance pointer in invalid."), "CKeyDataProviderComp");
 
-							// Set name to license
-							imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
-							for (const imtbase::ICollectionInfo::Id& licenseCollectionId: licenseCollectionIds){
-								imtbase::IObjectCollection::DataPtr licenseDataPtr;
-								if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, licenseDataPtr)){
-									imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-									if (licenseInfoPtr != nullptr){
-										if (licenseCollectionId == licenseId){
-											productLicenseInstancePtr->SetLicenseName(licenseInfoPtr->GetLicenseName());
+							return false;
+						}
+
+						productLicenseInstancePtr->SetLicenseName(licenseName);
+
+						imtlic::ILicenseInstance::FeatureInfos featureInfos;
+
+						// License together with all dependent licenses
+						QByteArrayList licenses;
+						licenses << licenseCollectionId;
+
+						licenses += GetAllLicenseDependencies(licenseCollectionId);
+
+						for (const QByteArray& dependencyId : licenses){
+							const imtlic::CLicenseDefinition* licenseInfoPtr = GetLicenseInfo(dependencyId);
+							if (licenseInfoPtr != nullptr){
+								for (const imtlic::ILicenseInstance::FeatureInfo& featureInfo : licenseInfoPtr->GetFeatureInfos()){
+									imtbase::IObjectCollection::DataPtr featureDataPtr;
+									if (m_featureCollectionCompPtr->GetObjectData(featureInfo.id, featureDataPtr)){
+										imtlic::IFeatureInfo* featureInfoPtr = dynamic_cast<imtlic::IFeatureInfo*>(featureDataPtr.GetPtr());
+										if (featureInfoPtr != nullptr){
+											imtlic::ILicenseInstance::FeatureInfo resultFeatureInfo;
+
+											resultFeatureInfo.id = featureInfoPtr->GetFeatureId();
+											resultFeatureInfo.name = featureInfoPtr->GetFeatureName();
+
+											if (!featureInfos.contains(resultFeatureInfo)){
+												featureInfos.append(resultFeatureInfo);
+											}
 										}
 									}
 								}
 							}
-
-							imtlic::ILicenseInstance::FeatureInfos featureInfos;
-
-							// License together with all dependent licenses
-							QByteArrayList licenses;
-							licenses << licenseId;
-
-							licenses += GetAllLicenseDependencies(licenseId);
-
-							for (const QByteArray& dependencyId : licenses){
-								const imtlic::CLicenseDefinition* licenseInfoPtr = GetLicenseInfo(dependencyId);
-//								if (licenseInfoPtr != nullptr){
-//									QByteArrayList features = licenseInfoPtr->GetFeatures();
-//									for (const QByteArray& featureUuid : features){
-//										imtbase::IObjectCollection::DataPtr featureDataPtr;
-//										if (m_featureCollectionCompPtr->GetObjectData(featureUuid, featureDataPtr)){
-//											imtlic::IFeatureInfo* featureInfoPtr = dynamic_cast<imtlic::IFeatureInfo*>(featureDataPtr.GetPtr());
-//											if (featureInfoPtr != nullptr){
-//												imtlic::ILicenseInstance::FeatureInfo featureInfo;
-
-//												featureInfo.id = featureInfoPtr->GetFeatureId();
-//												featureInfo.name = featureInfoPtr->GetFeatureName();
-
-//												if (!featureInfos.contains(featureInfo)){
-//													featureInfos.append(featureInfo);
-//												}
-//											}
-//										}
-//									}
-//								}
-							}
-
-							productLicenseInstancePtr->SetFeatureInfos(featureInfos);
 						}
+
+						productLicenseInstancePtr->SetFeatureInfos(featureInfos);
 					}
 				}
 			}
@@ -228,7 +233,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		}
 	}
 
-	SendInfoMessage(0, QString("License file for product %1 successfully created").arg(QString(productId)), "CKeyDataProviderComp");
+	SendInfoMessage(0, QString("License file for product %1 successfully created").arg(QString(productUuid)), "CKeyDataProviderComp");
 
 	return true;
 }

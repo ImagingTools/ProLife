@@ -9,6 +9,7 @@
 
 // ImtCore includes
 #include <imtlic/IHardwareInstanceInfo.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -23,6 +24,90 @@ namespace prolifedb
 // public methods
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
+
+
+QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
+			const QByteArray& objectId,
+			int offset,
+			int count,
+			const iprm::IParamsSet* paramsPtr) const
+{
+	if (!objectId.isEmpty()){
+		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
+				.arg(qPrintable(*m_tableNameAttrPtr))
+				.arg(qPrintable(*m_objectIdColumnAttrPtr))
+				.arg(qPrintable(objectId)).toUtf8();
+	}
+
+	if (m_licenseCollectionCompPtr.IsValid() && m_productCollectionCompPtr.IsValid() && m_databaseEngineCompPtr.IsValid()){
+		QByteArray beforeSelectionQuery;
+
+		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
+		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
+
+		beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
+		beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
+
+		QByteArrayList licenseFields;
+
+		licenseFields << "Id";
+		licenseFields << "LicenseId";
+		licenseFields << "LicenseName";
+
+		imtbase::CTreeItemModel* licenseItemsModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
+		if (licenseItemsModelPtr != nullptr){
+			for (int i = 0; i < licenseItemsModelPtr->GetItemsCount(); i++){
+				QByteArray licenseUuid = licenseItemsModelPtr->GetData("Id", i).toByteArray();
+				QByteArray licenseId = licenseItemsModelPtr->GetData("LicenseId", i).toByteArray();
+				QString licenseName = licenseItemsModelPtr->GetData("LicenseName", i).toString();
+
+				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
+							.arg(qPrintable(licenseUuid))
+							.arg(qPrintable(licenseId))
+							.arg(licenseName)
+							.toUtf8();
+			}
+
+			qDebug() << "licenseItemsModelPtr" << licenseItemsModelPtr->toJSON();
+		}
+
+		QByteArrayList productFields;
+
+		productFields << "Id";
+		productFields << "ProductId";
+		productFields << "ProductName";
+
+		imtbase::CTreeItemModel* productItemsModelPtr = GetRemoteCollectionData("ProductsList", productFields);
+		if (productItemsModelPtr != nullptr){
+			for (int i = 0; i < productItemsModelPtr->GetItemsCount(); i++){
+				QByteArray productUuid = productItemsModelPtr->GetData("Id", i).toByteArray();
+				QByteArray productId = productItemsModelPtr->GetData("ProductId", i).toByteArray();
+				QString productName = productItemsModelPtr->GetData("ProductName", i).toString();
+
+				beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
+							.arg(qPrintable(productUuid))
+							.arg(qPrintable(productId))
+							.arg(productName)
+							.toUtf8();
+			}
+
+			qDebug() << "productItemsModelPtr" << productItemsModelPtr->toJSON();
+		}
+
+		QSqlError sqlError;
+		m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
+		if (sqlError.type() != QSqlError::NoError){
+			SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
+
+			qDebug() << "SQL-error" << beforeSelectionQuery;
+
+			return QByteArray();
+		}
+	}
+
+	return BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+}
+
 
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
@@ -54,15 +139,31 @@ QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
 
 QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
-	return QString("SELECT \"Id\", \"%1\", \"Document\", \"OwnerId\", \"RevisionNumber\", \"LastModified\","
-					"(SELECT \"LastModified\" FROM \"%2\" as t1 WHERE \"RevisionNumber\" = 1 AND t2.\"%1\" = t1.\"%1\" LIMIT 1) as \"Added\","
-					"(SELECT \"Document\"->>'OrderId' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'OrderId') as \"OrderId\","
-					" (SELECT jsonb_array_length(\"Document\"->'SoftwareIds')  FROM \"BindingProducts\" as t3 "
-					" WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" ) as \"SoftwareLinksCount\" "
-					" FROM \"%2\""
-					" as t2 WHERE \"IsActive\" = true")
-			.arg(qPrintable(*m_objectIdColumnAttrPtr))
-			.arg(qPrintable(*m_tableNameAttrPtr));
+	QString retVal;
+
+	retVal += R"(
+				SELECT *
+				FROM
+				(
+					SELECT
+						"Id",
+						"DocumentId",
+						"Document",
+						"Document"->>'DeviceType' as "ProductUuid",
+						"Document"->>'ConfigurationType' as "LicenseUuid",
+						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "ConfigurationType",
+						(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = t2."Document"->>'DeviceType') as "DeviceType",
+						"OwnerId",
+						"RevisionNumber",
+						"LastModified",
+						(SELECT "LastModified" FROM "Devices" as t1 WHERE "RevisionNumber" = 1 AND t2."DocumentId" = t1."DocumentId" LIMIT 1) as "Added",
+						(SELECT "Document"->>'OrderId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "OrderId",
+						(SELECT jsonb_array_length("Document"->'SoftwareIds')  FROM "BindingProducts" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."DocumentId" ) as "SoftwareLinksCount",
+						"IsActive"
+					FROM "Devices" as t2 WHERE "IsActive" = true
+				) as t2 WHERE "IsActive" = true )";
+
+	return retVal;
 }
 
 
@@ -88,7 +189,7 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 	}
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
-		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId"){
+		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId" || columnId == "ConfigurationType"|| columnId == "DeviceType"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
@@ -244,11 +345,14 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += " OR ";
 			}
 
-			if (filteringColumnIds[i] == "OrderId"){
-				textFilterQuery += QString("(SELECT \"Document\"->>'%1' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
-						.arg(qPrintable(filteringColumnIds[i]))
-						.arg(textFilter);;
+			if (filteringColumnIds[i] == "OrderId" || filteringColumnIds[i] == "ConfigurationType" || filteringColumnIds[i] == "DeviceType"){
+				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
+//			if (filteringColumnIds[i] == "OrderId"){
+//				textFilterQuery += QString("(SELECT \"Document\"->>'%1' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
+//						.arg(qPrintable(filteringColumnIds[i]))
+//						.arg(textFilter);;
+//			}
 			else{
 				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}

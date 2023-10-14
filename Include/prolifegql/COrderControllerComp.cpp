@@ -333,7 +333,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 						if (productInfoPtr != nullptr){
 							productInfoPtr->SetOrderId("");
 
-							imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object"));
+							imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object from order"));
 							m_softwareInstanceCollectionCompPtr->SetObjectData(id, *productInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 						}
 					}
@@ -472,7 +472,6 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 
 					if (changed){
 						imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object from the order"));
-
 						m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 					}
 				}

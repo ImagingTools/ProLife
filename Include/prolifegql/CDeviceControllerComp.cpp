@@ -20,7 +20,8 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
 	if (!m_objectCollectionCompPtr.IsValid()){
-		errorMessage = QObject::tr("Internal error").toUtf8();
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 		return nullptr;
 	}
@@ -80,8 +81,19 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			}
 
 			QString name = deviceType;
+
+			if (m_productCollectionCompPtr.IsValid()){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_productCollectionCompPtr->GetObjectData(deviceType, dataPtr)){
+					imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+					if (remoteProductInfoPtr != nullptr){
+						name = remoteProductInfoPtr->GetName();
+					}
+				}
+			}
+
 			if (!macAddress.isEmpty()){
-				name = deviceType + " (" + macAddress + ")";
+				name = name + " (" + macAddress + ")";
 			}
 			dataModelPtr->SetData("Name", name);
 		}
@@ -99,14 +111,23 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			QString &errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
 		return nullptr;
 	}
 
 	if (!m_deviceCompPtr.IsValid()){
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
 		return nullptr;
 	}
 
 	if (inputParams.isEmpty()){
+		errorMessage = QString("GQL input params is invalid.").toUtf8();
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
 		return nullptr;
 	}
 
@@ -124,6 +145,9 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 		imtbase::CTreeItemModel itemModel;
 		if (!itemModel.CreateFromJson(itemData)){
+			errorMessage = QString("Unable to create representation model from JSON: %1.").arg(qPrintable(itemData)).toUtf8();
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
 			return nullptr;
 		}
 
@@ -166,6 +190,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 							QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
 							if (currentMacAddress == macAddress.toLower()){
 								errorMessage = QT_TR_NOOP("MAC-Address already exists");
+								SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 								return nullptr;
 							}
@@ -210,6 +235,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 							QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
 							if (currentSerialNumber == serialNumber.toLower()){
 								errorMessage = QT_TR_NOOP("Serial Number already exists");
+								SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 								return nullptr;
 							}
@@ -267,10 +293,23 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 
 		if (deviceType.isEmpty()){
 			errorMessage = QObject::tr("Device type cannot be empty");
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
 			return nullptr;
 		}
 
 		name = deviceType;
+
+		if (m_productCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_productCollectionCompPtr->GetObjectData(deviceType, dataPtr)){
+				imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+				if (remoteProductInfoPtr != nullptr){
+					name = remoteProductInfoPtr->GetName();
+				}
+			}
+		}
+
 		if (!macAddress.isEmpty()){
 			name += " (" + macAddress + ")";
 		}
@@ -279,6 +318,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 	}
 
 	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));
+	SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 	return nullptr;
 }

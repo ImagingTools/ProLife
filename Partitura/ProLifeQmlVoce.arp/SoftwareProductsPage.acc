@@ -76,7 +76,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value></Value>
-                                <Value>Product</Value>
+                                <Value>Product-ID</Value>
                                 <Value>License Name</Value>
                                 <Value>License-ID</Value>
                                 <Value>License Number</Value>
@@ -102,6 +102,7 @@
                                 <Value>Customer</Value>
                                 <Value>LicenseId</Value>
                                 <Value>Project</Value>
+                                <Value>LicenseName</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -215,6 +216,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">

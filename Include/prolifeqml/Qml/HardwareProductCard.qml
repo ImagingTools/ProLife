@@ -20,30 +20,47 @@ Rectangle {
     property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
 
     property Item productCardRoot: null;
+    property CollectionDataProvider productCollection: null;
 
     property bool readOnly: false;
     property bool commmandsVisible: false;
 
     property int contentHeight: contentColumn.height + 20;
 
+    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
+    property bool completed: productCollection != null && productCardRoot != null;
+
     signal clicked();
     signal edited();
 
-    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+    }
+
+    onCompletedChanged: {
+        if (completed){
+            let licensesModel = productCollection.getData(model.ProductId, "Licenses");
+            if (licensesModel){
+                for (let i = 0; i < licensesModel.GetItemsCount(); i++){
+                    let licenseUuid = licensesModel.GetData("Id", i);
+                    if (licenseUuid === model.ModelTypeId){
+                        hardwareCard.modelType = licensesModel.GetData("LicenseName", i);
+
+                        break;
+                    }
+                }
+            }
+
+            hardwareCard.updateElements();
+            Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+        }
+    }
+
     onCheckerChanged: {
         if (checker){
             let message = qsTr("Sensor detection error. Please select a new sensor.");
             hardwareCard.productCardRoot.showErrorMessage(message);
         }
-    }
-
-    Component.onCompleted: {
-        hardwareCard.updateElements();
-        Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
-    }
-
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
     }
 
     function onLocalizationChanged(language){

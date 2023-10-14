@@ -175,11 +175,12 @@ Item {
                 id: productsCB;
                 anchors.left: productLable.right
                 anchors.leftMargin: Style.margin
-                anchors.right: parent.right
+                anchors.right: lockImage.left;
+                anchors.rightMargin: 10;
 
                 height: 25;
                 radius: 3;
-                nameId: "Id";
+                nameId: "ProductName";
 
                 enabled: bindingProductsCollection.table.elementsList.count == 0;
 
@@ -200,14 +201,14 @@ Item {
 
                 CollectionDataProvider {
                     id: productsList;
-                    fields: ["Id", "Name", "CategoryId"];
+                    fields: ["Id", "ProductId", "ProductName", "CategoryId"];
                     commandId: "Products";
 
                     onCollectionModelChanged: {
                         if (productsList.collectionModel != null){
                             productsCB.model = productsList.collectionModel
                             if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
-                                productEditor.productId = bindingProductsCollection.table.elements.GetData("ProductId")
+                                productEditor.productId = bindingProductsCollection.table.elements.GetData("ProductUuid")
                                 for (let i = 0; i < productsList.collectionModel.GetItemsCount(); i++){
                                     let id = productsList.collectionModel.GetData("Id", i);
                                     if (id === productEditor.productId){
@@ -218,6 +219,23 @@ Item {
                         }
                     }
                 }
+            }
+
+            Image {
+                id: lockImage;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: parent.right
+
+                width: 18;
+                height: 18;
+
+                source: "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.Off, Icon.Mode.Normal);
+
+                sourceSize.width: width;
+                sourceSize.height: height;
+
+                visible: !productsCB.enabled;
             }
         }
 
@@ -264,7 +282,6 @@ Item {
                 }
 
                 function selectionItemsChanged(selection){
-                    console.log("DEBUG::60", selection)
                     if (selection.length <= 0){
                         bindButton.enabled = false
                     }
@@ -290,7 +307,6 @@ Item {
                     if (softwareIds != ""){
                         selectedProductIds = softwareIds.split(';')
                     }
-                    console.log("DEBUG::41_1", selectedProductIds)
                     let indexes = softwareProductCollection.table.getCheckedItems();
                     if (indexes.length === 0){
                         return
@@ -385,12 +401,11 @@ Item {
                         }
 
                         if (productEditor.productId != ""){
-                            objectFilter.SetData("ProductId", productEditor.productId);
+                            objectFilter.SetData("ProductUuid", productEditor.productId);
                         }
 
                         softwareProductCollection.commandsId = "SoftwareProducts"
                         softwareProductCollection.commands.itemsInfoModel.updateModel();
-                        console.log("DEBUG::31", softwareProductCollection.modelFilter.toJSON())
                     }
                 }
 
@@ -505,8 +520,8 @@ Item {
                         if (!bindingProductsCollection.commands.fieldsData.includes("CustomerUuid")){
                             bindingProductsCollection.commands.fieldsData.push("CustomerUuid");
                         }
-                        if (!bindingProductsCollection.commands.fieldsData.includes("ProductId")){
-                            bindingProductsCollection.commands.fieldsData.push("ProductId");
+                        if (!bindingProductsCollection.commands.fieldsData.includes("ProductUuid")){
+                            bindingProductsCollection.commands.fieldsData.push("ProductUuid");
                         }
 
                         objectFilter.SetData("HardwareUuid", productEditor.hardwareId);
@@ -520,7 +535,7 @@ Item {
                     objectFilter.SetData("CategoryId", "Software");
 
                     if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
-                        productEditor.startProductId = bindingProductsCollection.table.elements.GetData("ProductId")
+                        productEditor.startProductId = bindingProductsCollection.table.elements.GetData("ProductUuid")
                     }
 
                     productsList.updateModel()
@@ -616,6 +631,8 @@ Item {
             productEditor.bindingModel.SetData("SoftwareIds", products)
             softwareProductCollection.updateData()
 
+            console.log("productEditor.includeIds", productEditor.includeIds);
+
             softwareProductCollection.table.resetSelection();
         }
     }
@@ -680,6 +697,8 @@ Item {
             bindingProductsCollection.table.resetSelection();
 
             softwareProductCollection.updateData()
+
+            console.log("productEditor.includeIds", productEditor.includeIds);
 
             if (id in productEditor.addedLicenseInfo){
                 delete productEditor.addedLicenseInfo[id];

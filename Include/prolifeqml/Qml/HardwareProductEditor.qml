@@ -233,11 +233,11 @@ Item {
         headersModel.Clear();
 
         let index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "Name", index)
+        headersModel.SetData("Id", "LicenseName", index)
         headersModel.SetData("Name", qsTr("Model Name"), index)
 
         index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "Id", index)
+        headersModel.SetData("Id", "LicenseId", index)
         headersModel.SetData("Name", qsTr("Model-ID"), index)
 
         modelsTable.headers = headersModel;

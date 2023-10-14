@@ -82,7 +82,7 @@ Dialog {
                         documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
                     }
 
-                    productEditorDialog.contentItem.includeIds = [];
+                  //  productEditorDialog.contentItem.includeIds = [];
                     productEditorDialog.contentItem.changesApplied = true;
                     productEditorDialog.buttons.setButtonState("Save", false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
@@ -90,6 +90,8 @@ Dialog {
                     productEditorDialog.contentItem.beginBindingModel.Copy(productEditorDialog.contentItem.bindingModel);
 
                     productEditorDialog.saved();
+
+                    productEditorDialog.finished("Cancel");
                 }
                 else if (buttonId == "No"){
                 }

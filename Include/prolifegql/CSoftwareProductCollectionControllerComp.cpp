@@ -27,35 +27,35 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 		return nullptr;
 	}
 
-	imtbase::CTreeItemModel* dataModel = retVal->GetTreeItemModel("data");
-	if (dataModel == nullptr){
-		errorMessage = QString("Representation model is invalid.");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+//	imtbase::CTreeItemModel* dataModel = retVal->GetTreeItemModel("data");
+//	if (dataModel == nullptr){
+//		errorMessage = QString("Representation model is invalid.");
+//		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
-		return nullptr;
-	}
+//		return nullptr;
+//	}
 
-	imtbase::CTreeItemModel* itemsModel = dataModel->GetTreeItemModel("items");
-	if (itemsModel == nullptr){
-		errorMessage = QString("Representation model is invalid.");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+//	imtbase::CTreeItemModel* itemsModel = dataModel->GetTreeItemModel("items");
+//	if (itemsModel == nullptr){
+//		errorMessage = QString("Representation model is invalid.");
+//		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
-		return nullptr;
-	}
+//		return nullptr;
+//	}
 
-	if (m_licenseCollectionCompPtr.IsValid()){
-		for (int i = 0; i < itemsModel->GetItemsCount(); i++){
-			QByteArray licenseUuid = itemsModel->GetData("LicenseId", i).toByteArray();
+//	if (m_licenseCollectionCompPtr.IsValid()){
+//		for (int i = 0; i < itemsModel->GetItemsCount(); i++){
+//			QByteArray licenseUuid = itemsModel->GetData("LicenseId", i).toByteArray();
 
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(licenseUuid, dataPtr)){
-				imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
-				if (licenseDefinitionPtr != nullptr){
-					itemsModel->SetData("LicenseName", licenseDefinitionPtr->GetLicenseName(), i);
-				}
-			}
-		}
-	}
+//			imtbase::IObjectCollection::DataPtr dataPtr;
+//			if (m_licenseCollectionCompPtr->GetObjectData(licenseUuid, dataPtr)){
+//				imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+//				if (licenseDefinitionPtr != nullptr){
+//					itemsModel->SetData("LicenseName", licenseDefinitionPtr->GetLicenseName(), i);
+//				}
+//			}
+//		}
+//	}
 
 	return retVal;
 }
@@ -175,18 +175,10 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = hardwareUuid;
 				}
 				else if (informationId == "ProductId"){
-					elementInformation = productId;
-
-					if (m_productCollectionCompPtr.IsValid()){
-						QByteArray productUuid = productId;
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-							const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
-							if (productInfoPtr != nullptr){
-								elementInformation = productInfoPtr->GetProductId();
-							}
-						}
-					}
+					elementInformation = objectCollectionIterator->GetElementInfo("ProductId").toByteArray();
+				}
+				else if (informationId == "ProductUuid"){
+					elementInformation = objectCollectionIterator->GetElementInfo("ProductUuid").toByteArray();
 				}
 				else if (informationId == "SerialNumber"){
 					elementInformation = serialNumber;
@@ -229,6 +221,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 				else if (informationId == "LicenseId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId").toByteArray();
+				}
+				else if (informationId == "LicenseUuid"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseUuid").toByteArray();
 				}
 				else if (informationId == "CustomerUuid"){
 					elementInformation = objectCollectionIterator->GetElementInfo("CustomerUuid").toByteArray();;
@@ -385,7 +380,7 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		}
 	}
 
-	keys << "HardwareUuid" << "CustomerUuid" << "ProductId";
+	keys << "HardwareUuid" << "CustomerUuid" << "ProductUuid";
 
 	for (QByteArray key: keys){
 		if (objectFilterModel.ContainsKey(key)){

@@ -73,11 +73,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="FeatureInfo" PackageId="ImtLicensePck" ComponentId="FeatureInfo">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
         <Element Id="FeatureRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -93,7 +88,7 @@
                     <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>FeatureInfo</Value>
+                                <Value>IdentifiableFeatureInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -121,7 +116,17 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LicenseInfo" PackageId="ImtLicensePck" ComponentId="LicenseInfo">
+        <Element Id="IdentifiableFeatureInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableFeatureInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="IdentifiableLicenseInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableLicenseInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="IdentifiableProductInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableProductInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
             </Data>
@@ -141,7 +146,7 @@
                     <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LicenseInfo</Value>
+                                <Value>IdentifiableLicenseInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -185,6 +190,7 @@
                                 <Value>ProductsMetaInfo</Value>
                                 <Value>ProductsObjectView</Value>
                                 <Value>LicensesItems</Value>
+                                <Value>LicensesList</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -211,6 +217,9 @@
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaGQLEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LicenseRepository"/>
@@ -252,11 +261,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductInfo" PackageId="ImtLicensePck" ComponentId="ProductInfo">
-            <Data IsEnabled="true" Flags="2">
-                <AttributeInfoMap/>
-            </Data>
-        </Element>
         <Element Id="ProductRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -272,7 +276,7 @@
                     <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProductInfo</Value>
+                                <Value>IdentifiableProductInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

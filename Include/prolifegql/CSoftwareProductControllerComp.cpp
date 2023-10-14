@@ -10,6 +10,7 @@
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInstanceInfo.h>
 #include <imtlic/IHardwareInstanceInfo.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -24,6 +25,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QObject::tr("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
 	}
@@ -36,6 +38,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 
 	if (objectId.isEmpty()){
 		errorMessage = QObject::tr("Unable to get an object").toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
 	}
@@ -48,9 +51,10 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 		if (productOrderInfoPtr != nullptr){
 			QByteArray serialNumber = productOrderInfoPtr->GetSerialNumber();
+			QByteArray productUuid = productOrderInfoPtr->GetProductId();
 
 			dataModelPtr->SetData("Id", objectId);
-			dataModelPtr->SetData("ProductId", productOrderInfoPtr->GetProductId());
+			dataModelPtr->SetData("ProductId", productUuid);
 			dataModelPtr->SetData("CategoryId", productOrderInfoPtr->GetFactoryId());
 			dataModelPtr->SetData("SerialNumber", serialNumber);
 			dataModelPtr->SetData("Project", productOrderInfoPtr->GetProject());
@@ -68,7 +72,17 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 				}
 			}
 
-			QString name = productOrderInfoPtr->GetProductId();
+			QString name = productUuid;
+
+			if (m_productCollectionCompPtr.IsValid()){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+					imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+					if (remoteProductInfoPtr != nullptr){
+						name = remoteProductInfoPtr->GetName();
+					}
+				}
+			}
 
 			if (!serialNumber.isEmpty()){
 				name += " (" + serialNumber + ")";
@@ -102,6 +116,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	if (objectUuid.isEmpty()){
 		errorMessage = QObject::tr("Unable to update an object %1").arg(qPrintable(objectUuid)).toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
 	}
@@ -114,11 +129,15 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	if (productOrderInfoPtr == nullptr){
+		errorMessage = QObject::tr("Unable to get an software product with ID: %1").arg(qPrintable(objectUuid)).toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
 		return nullptr;
 	}
 
 	if (productOrderInfoPtr->IsInUse()){
 		errorMessage = QString("It is not possible to update an product in use");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
 	}
@@ -126,6 +145,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	imtbase::CTreeItemModel itemModel;
 	if (!itemModel.CreateFromJson(itemData)){
 		errorMessage = QObject::tr("Unable to create an item model from json: %1").arg(qPrintable(itemData)).toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
 	}
@@ -222,7 +242,11 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		productOrderInfoPtr->ClearLicenses();
 		productOrderInfoPtr->AddLicense(licenseId, QDateTime::fromString(expiration, "yyyy-MM-dd"));
 
-		if (!m_objectCollectionCompPtr->SetObjectData(objectUuid, *productOrderInfoPtr)){
+		imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object"));
+		if (!m_objectCollectionCompPtr->SetObjectData(objectUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+			errorMessage = QString("Unable to set object by ID: %1.").arg(qPrintable(objectUuid));
+			SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
 			return nullptr;
 		}
 
@@ -235,7 +259,8 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 						imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
 						if (productCollectionPtr != nullptr){
 							if (productCollectionPtr->RemoveElement(objectUuid)){
-								m_orderCollectionCompPtr->SetObjectData(oldOrderUuid, *productOrderInfoPtr);
+								imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+								m_orderCollectionCompPtr->SetObjectData(oldOrderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 							}
 						}
 					}
@@ -257,7 +282,8 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 						if (productCollectionPtr != nullptr){
 							productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectUuid);
 
-							m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr);
+							imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+							m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 						}
 					}
 				}
@@ -270,7 +296,18 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	notificationModelPtr->SetData("Id", objectUuid);
 
-	QString name = productOrderInfoPtr->GetProductId();
+	QString name = productId;
+
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
+			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (remoteProductInfoPtr != nullptr){
+				name = remoteProductInfoPtr->GetName();
+			}
+		}
+	}
+
 	if (!serialNumber.isEmpty()){
 		name += " (" + serialNumber + ")";
 	}
@@ -282,156 +319,176 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 
 istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
-			const QList<imtgql::CGqlObject>& inputParams,
+			const imtgql::CGqlRequest& gqlRequest,
 			QByteArray& objectId,
 			QString& name,
 			QString& /*description*/,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error.");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
 		return nullptr;
 	}
 
 	if (!m_orderCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error.");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
 		return nullptr;
 	}
 
-	if (inputParams.isEmpty()){
+	const imtgql::CGqlObject* gqlParamsPtr = gqlRequest.GetParam("input");
+	if (gqlParamsPtr == nullptr){
+		errorMessage = QString("GQL input params is invalid.").toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
 		return nullptr;
 	}
 
-	objectId = GetObjectIdFromInputParams(inputParams);
+	objectId = gqlParamsPtr->GetFieldArgumentValue("Id").toByteArray();
 	if (objectId.isEmpty()){
 		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 	}
 
-	if (!inputParams.isEmpty()){
-		QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
+	QByteArray itemData = gqlParamsPtr->GetFieldArgumentValue("Item").toByteArray();
 
-		imtbase::CTreeItemModel itemModel;
-		if (!itemModel.CreateFromJson(itemData)){
-			return nullptr;
-		}
+	imtbase::CTreeItemModel itemModel;
+	if (!itemModel.CreateFromJson(itemData)){
+		errorMessage = QString("Unable to create representation model from JSON: %1.").arg(qPrintable(itemData)).toUtf8();
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
-		istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> productOrderInfoPtr;
-		productOrderInfoPtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
-
-		productOrderInfoPtr->SetObjectUuid(objectId);
-
-		QByteArray productId;
-		if (itemModel.ContainsKey("ProductId")){
-			productId = itemModel.GetData("ProductId").toByteArray();
-		}
-
-		if (productId.isEmpty()){
-			errorMessage = QT_TR_NOOP("Product cannot be empty!");
-
-			return nullptr;
-		}
-
-		QByteArray serialNumber;
-		if (itemModel.ContainsKey("SerialNumber")){
-			serialNumber = itemModel.GetData("SerialNumber").toByteArray();
-		}
-
-		if (!serialNumber.isEmpty()){
-			iprm::CTextParam valueParam;
-			valueParam.SetText(serialNumber);
-
-			iprm::CEnableableParam isEqualParam;
-			isEqualParam.SetEnabled(true);
-
-			iprm::CParamsSet valueParamsSet;
-			valueParamsSet.SetEditableParameter("Value", &valueParam);
-			valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
-			iprm::CParamsSet paramsSet;
-			paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
-
-			iprm::CParamsSet filterParam;
-			filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
-
-			imtbase::IObjectCollection::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-			if (!collectionIds.isEmpty()){
-				QByteArray id = collectionIds[0];
-				if (objectId != id){
-					errorMessage = QT_TR_NOOP("Serial Number already exists");
-
-					return nullptr;
-				}
-			}
-		}
-
-		productOrderInfoPtr->SetSerialNumber(serialNumber);
-
-		QByteArray project;
-		if (itemModel.ContainsKey("Project")){
-			project = itemModel.GetData("Project").toByteArray();
-
-			productOrderInfoPtr->SetProject(project);
-		}
-
-		QByteArray orderUuid;
-		if (itemModel.ContainsKey("OrderUuid")){
-			orderUuid = itemModel.GetData("OrderUuid").toByteArray();
-
-			productOrderInfoPtr->SetOrderId(orderUuid);
-		}
-
-		QByteArray customerUuid;
-		imtbase::IObjectCollection::DataPtr orderDataPtr;
-		if (m_orderCollectionCompPtr->GetObjectData(orderUuid, orderDataPtr)){
-			prolifedata::IOrderInfo* productOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-			if (productOrderInfoPtr != nullptr){
-				customerUuid = productOrderInfoPtr->GetCustomerId();
-
-				istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-				objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-
-				objectLinkPtr->SetObjectUuid(objectId);
-				objectLinkPtr->SetFactoryId("SoftwareInfo");
-
-				imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
-				if (productCollectionPtr != nullptr){
-					productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
-
-					m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr);
-				}
-			}
-		}
-
-		if (itemModel.ContainsKey("Project")){
-			QByteArray project = itemModel.GetData("Project").toByteArray();
-
-			productOrderInfoPtr->SetProject(project);
-		}
-
-		productOrderInfoPtr->SetupProductInstance(productId, "", customerUuid);
-
-		QByteArray licenseId;
-		if (itemModel.ContainsKey("LicenseId")){
-			licenseId = itemModel.GetData("LicenseId").toByteArray();
-		}
-
-		QByteArray expiration;
-		if (itemModel.ContainsKey("Expiration")){
-			expiration = itemModel.GetData("Expiration").toByteArray();
-		}
-
-		productOrderInfoPtr->AddLicense(licenseId, QDateTime::fromString(expiration, "yyyy-MM-dd"));
-
-		name = productId;
-
-		if (!serialNumber.isEmpty()){
-			name += " (" + serialNumber + ")";
-		}
-
-		return productOrderInfoPtr.PopPtr();
+		return nullptr;
 	}
 
-	errorMessage = QObject::tr("Can not create product: %1").arg(QString(objectId));
+	istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> productOrderInfoPtr;
+	productOrderInfoPtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
 
-	return nullptr;
+	productOrderInfoPtr->SetObjectUuid(objectId);
+
+	QByteArray productId;
+	if (itemModel.ContainsKey("ProductId")){
+		productId = itemModel.GetData("ProductId").toByteArray();
+	}
+
+	if (productId.isEmpty()){
+		errorMessage = QT_TR_NOOP("Product cannot be empty!");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
+		return nullptr;
+	}
+
+	QByteArray serialNumber;
+	if (itemModel.ContainsKey("SerialNumber")){
+		serialNumber = itemModel.GetData("SerialNumber").toByteArray();
+	}
+
+	if (!serialNumber.isEmpty()){
+		iprm::CTextParam valueParam;
+		valueParam.SetText(serialNumber);
+
+		iprm::CEnableableParam isEqualParam;
+		isEqualParam.SetEnabled(true);
+
+		iprm::CParamsSet valueParamsSet;
+		valueParamsSet.SetEditableParameter("Value", &valueParam);
+		valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+		iprm::CParamsSet paramsSet;
+		paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+		imtbase::IObjectCollection::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		if (!collectionIds.isEmpty()){
+			QByteArray id = collectionIds[0];
+			if (objectId != id){
+				errorMessage = QT_TR_NOOP("Serial Number already exists");
+				SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
+
+				return nullptr;
+			}
+		}
+	}
+
+	productOrderInfoPtr->SetSerialNumber(serialNumber);
+
+	QByteArray project;
+	if (itemModel.ContainsKey("Project")){
+		project = itemModel.GetData("Project").toByteArray();
+
+		productOrderInfoPtr->SetProject(project);
+	}
+
+	QByteArray orderUuid;
+	if (itemModel.ContainsKey("OrderUuid")){
+		orderUuid = itemModel.GetData("OrderUuid").toByteArray();
+
+		productOrderInfoPtr->SetOrderId(orderUuid);
+	}
+
+	QByteArray customerUuid;
+	imtbase::IObjectCollection::DataPtr orderDataPtr;
+	if (m_orderCollectionCompPtr->GetObjectData(orderUuid, orderDataPtr)){
+		prolifedata::IOrderInfo* productOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+		if (productOrderInfoPtr != nullptr){
+			customerUuid = productOrderInfoPtr->GetCustomerId();
+
+			istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+			objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+			objectLinkPtr->SetObjectUuid(objectId);
+			objectLinkPtr->SetFactoryId("SoftwareInfo");
+
+			imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
+			if (productCollectionPtr != nullptr){
+				productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
+
+				imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+				m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
+			}
+		}
+	}
+
+	if (itemModel.ContainsKey("Project")){
+		QByteArray project = itemModel.GetData("Project").toByteArray();
+
+		productOrderInfoPtr->SetProject(project);
+	}
+
+	productOrderInfoPtr->SetupProductInstance(productId, "", customerUuid);
+
+	QByteArray licenseId;
+	if (itemModel.ContainsKey("LicenseId")){
+		licenseId = itemModel.GetData("LicenseId").toByteArray();
+	}
+
+	QByteArray expiration;
+	if (itemModel.ContainsKey("Expiration")){
+		expiration = itemModel.GetData("Expiration").toByteArray();
+	}
+
+	productOrderInfoPtr->AddLicense(licenseId, QDateTime::fromString(expiration, "yyyy-MM-dd"));
+
+	name = productId;
+
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
+			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (remoteProductInfoPtr != nullptr){
+				name = remoteProductInfoPtr->GetName();
+			}
+		}
+	}
+
+	if (!serialNumber.isEmpty()){
+		name += " (" + serialNumber + ")";
+	}
+
+	return productOrderInfoPtr.PopPtr();
 }
 
 

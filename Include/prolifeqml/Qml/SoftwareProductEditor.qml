@@ -115,6 +115,11 @@ Item {
             let ok = PermissionsController.checkPermission("ChangeLicense");
 
             licensesTable.readOnly = !ok;
+
+            let canEditOrder = PermissionsController.checkPermission("EditOrder");
+            if (canEditOrder){
+                licensesTable.readOnly = false;
+            }
         }
 
         delegate: Component {

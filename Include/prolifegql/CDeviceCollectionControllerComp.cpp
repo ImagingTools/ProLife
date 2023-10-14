@@ -395,32 +395,10 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = deviceInfoPtr->GetDescription();
 				}
 				else if(informationId == "DeviceType"){
-					elementInformation = deviceInfoPtr->GetDeviceType();
-
-					if (m_productCollectionCompPtr.IsValid()){
-						QByteArray productUuid = deviceInfoPtr->GetDeviceType();
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-							const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
-							if (productInfoPtr != nullptr){
-								elementInformation = productInfoPtr->GetName();
-							}
-						}
-					}
+					elementInformation = objectCollectionIterator->GetElementInfo("DeviceType");
 				}
 				else if(informationId == "ConfigurationType"){
-					elementInformation = deviceInfoPtr->GetConfigurationType();
-					if (m_licenseCollectionCompPtr.IsValid()){
-						QByteArray licenseUuid = deviceInfoPtr->GetConfigurationType();
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_licenseCollectionCompPtr->GetObjectData(licenseUuid, dataPtr)){
-							const imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
-							if (licenseDefinitionPtr != nullptr){
-								elementInformation = licenseDefinitionPtr->GetLicenseName();
-							}
-						}
-					}
-
+					elementInformation = objectCollectionIterator->GetElementInfo("ConfigurationType");
 				}
 				else if(informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId");
@@ -557,12 +535,13 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 						for (const QByteArray& licenseId : elementsIds){
 							imtbase::IObjectCollection::DataPtr dataPtr;
 							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
-								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(productDataPtr.GetPtr());
+								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
+									QByteArray licenseId = licenseDefinitionPtr->GetLicenseId();
 
 									int childrenIndex = childrenModelPtr->InsertNewItem();
-									childrenModelPtr->SetData("Value", productId + " (" + licenseName + ")", childrenIndex);
+									childrenModelPtr->SetData("Value", licenseName + " (" + licenseId + ")", childrenIndex);
 								}
 							}
 						}

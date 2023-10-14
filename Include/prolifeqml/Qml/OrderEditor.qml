@@ -98,7 +98,7 @@ DocumentBase {
     onWidthChanged: {
         console.log("OrderEditor onWidthChanged", width);
 
-        if (width > bodyColumn.width + productsView.width + productsView.anchors.leftMargin){
+        if (width > bodyColumn.width + productsView.width + productsView.anchors.leftMargin * 2){
             productsTitle.anchors.top = bodyColumn.top;
             productsTitle.anchors.topMargin = 0;
             productsTitle.anchors.left = bodyColumn.right;
@@ -1167,7 +1167,7 @@ DocumentBase {
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 5;
 
-        width: 600;
+        width: bodyColumn.width;
 
         clip: true;
         boundsBehavior: Flickable.StopAtBounds;
@@ -1216,6 +1216,8 @@ DocumentBase {
 
             licensesProvider: orderEditorContainer.licensesProviderLocal;
             orderEditorPtr: orderEditorContainer;
+
+            productCollection: productsList;
 
             Component.onCompleted: {
                 if (model.CategoryId === "Hardware"){

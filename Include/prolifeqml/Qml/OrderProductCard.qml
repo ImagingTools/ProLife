@@ -28,9 +28,12 @@ Rectangle {
 
     property bool selected: false;
     property string categoryId: model.CategoryId ? model.CategoryId : "";
-    property string title: model.ProductId + " (" + root.categoryId + ")";
+//    property string title: model.ProductId + " (" + root.categoryId + ")";
+    property string title;
 
     property TreeItemModel devicesModel: TreeItemModel {};
+
+    property CollectionDataProvider productCollection: null;
 
     property LicensesProvider licensesProvider: null;
     property ListView productsListView: null;
@@ -44,6 +47,14 @@ Rectangle {
     signal unlinked();
 
     signal pairEdited(string categoryId);
+
+    onProductCollectionChanged: {
+        if (productCollection != null){
+            let productName = productCollection.getData(model.ProductId, "ProductName");
+
+            root.title = productName + " (" + root.categoryId + ")"
+        }
+    }
 
     onLicensesProviderChanged: {
         if (root.licensesProvider != null){
@@ -212,38 +223,7 @@ Rectangle {
 
             onLoaded: {
                 cardLoader.item.productCardRoot = root;
-
-                if (root.categoryId === "Pair"){
-                    cardLoader.item.devicesModel = root.devicesModel;
-
-                    let hardwareId = cardLoader.item.hardwareId;
-                    let softwareId = cardLoader.item.softwareId;
-
-                    let softwareProduct = model.SoftwareProduct;
-                    let hardwareProduct = model.HardwareProduct;
-
-                    let softwareProductId = "";
-                    let softwareSerialNumber = "";
-                    if (softwareProduct){
-                        softwareProductId = softwareProduct.GetData("ProductId");
-                        softwareSerialNumber = softwareProduct.GetData("SerialNumber");
-                    }
-
-                    let hardwareProductId = "";
-                    if (hardwareProduct){
-                        hardwareProductId = hardwareProduct.GetData("ProductId");
-                    }
-
-                    if (softwareSerialNumber && softwareSerialNumber != ""){
-                        root.title = softwareProductId + ' (' + softwareSerialNumber +')' + ' & ' + hardwareProductId;
-                    }
-                    else{
-                        root.title = softwareProductId + ' & ' + hardwareProductId;
-                    }
-
-                    cardLoader.item.licensesProvider = root.licensesProvider;
-                }
-                else if (root.categoryId === "Hardware"){
+                if (root.categoryId === "Hardware"){
                 }
                 else if (root.categoryId === "Software"){
                     cardLoader.item.licensesProvider = root.licensesProvider;
@@ -253,6 +233,10 @@ Rectangle {
 
                 if (cardLoader.item.productsView !== undefined){
                     cardLoader.item.productsView = root.productsListView;
+                }
+
+                if (cardLoader.item.productCollection !== undefined){
+                    cardLoader.item.productCollection = root.productCollection;
                 }
             }
         }
