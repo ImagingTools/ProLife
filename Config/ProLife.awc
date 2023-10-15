@@ -13,6 +13,8 @@
         <Dir>../Partitura</Dir>
 		<Dir>../../Puma/Partitura</Dir>
 		<Dir>../../Puma/Bin/$(ConfigurationName)</Dir>
+		<Dir>../../Lisa/Partitura</Dir>
+		<Dir>../../Lisa/Bin/$(ConfigurationName)</Dir>
     </PackageDirs>
     <PackageFiles/>
     <RegistryFiles>

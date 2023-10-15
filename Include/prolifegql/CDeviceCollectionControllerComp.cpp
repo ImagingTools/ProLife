@@ -377,7 +377,7 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					elementInformation = collectionId;
 				}
 				else if(informationId == "Name"){
-					QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+					QByteArray deviceType = objectCollectionIterator->GetElementInfo("DeviceType").toByteArray();
 					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 
 					elementInformation = deviceType;
@@ -396,6 +396,12 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				}
 				else if(informationId == "DeviceType"){
 					elementInformation = objectCollectionIterator->GetElementInfo("DeviceType");
+				}
+				else if(informationId == "ProductUuid"){
+					elementInformation = objectCollectionIterator->GetElementInfo("ProductUuid");
+				}
+				else if(informationId == "LicenseUuid"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseUuid");
 				}
 				else if(informationId == "ConfigurationType"){
 					elementInformation = objectCollectionIterator->GetElementInfo("ConfigurationType");

@@ -109,7 +109,7 @@ DocumentBase {
     }
 
     function updateGui(){
-        console.log("Software updateGui", root.documentModel.toJSON());
+        console.log("Software updateGui start");
 
         root.blockUpdatingModel = true;
 
@@ -249,6 +249,21 @@ DocumentBase {
         anchors.fill: parent;
 
         color: Style.backgroundColor;
+    }
+
+    CustomScrollbar {
+        id: scrollbar;
+        z: 100;
+
+        anchors.left: flickable.right;
+        anchors.leftMargin: 5;
+        anchors.top: parent.top;
+        anchors.bottom: parent.bottom;
+
+        backgroundColor: Style.baseColor;
+
+        secondSize: 10;
+        targetItem: flickable;
     }
 
     Flickable {

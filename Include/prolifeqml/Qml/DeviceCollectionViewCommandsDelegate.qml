@@ -169,6 +169,13 @@ CollectionViewCommandsDelegateBase {
             let indexes = container.tableData.getSelectedIndexes();
             let elementsModel = container.tableData.elements;
 
+            let macAddress = elementsModel.GetData("MacAddress", indexes[0])
+
+            let data = macAddress.split(':');
+            let fileName = data.join('_') + "_" + licenseFileController.defaultName;
+
+            licenseFileController.fileName = fileName;
+
             let hardwareId = elementsModel.GetData("Id", indexes[0]);
             licenseFileController.createLicenseFile(hardwareId);
         }

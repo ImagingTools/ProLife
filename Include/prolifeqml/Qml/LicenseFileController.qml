@@ -32,6 +32,21 @@ Item {
         onFileDownloadFailed: {
             modalDialogManager.openDialog(messageErrorDialog, {"message": qsTr("Error when trying to create a license file.")});
         }
+
+        onStateChanged: {
+            console.log("onStateChanged", state);
+
+            if (state == "Loading"){
+                Events.sendEvent("StartLoading");
+            }
+            else if (state == "Ready"){
+                Events.sendEvent("StopLoading");
+//                modalDialogManager.openDialog(messageErrorDialog, {"title" : qsTr("File successfully created"),"message": qsTr("The file was created successfully")});
+            }
+            else{
+                Events.sendEvent("StopLoading");
+            }
+        }
     }
 
     Component {

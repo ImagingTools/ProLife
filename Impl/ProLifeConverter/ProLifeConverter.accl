@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5105" Description="ACF"/>
-            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5122" Description="ACF"/>
+            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -12,10 +12,14 @@
         <Element ComponentName="BindingProductsRepository" X="450" Y="500" Note=""/>
         <Element ComponentName="ConsoleApplication" X="275" Y="100" Note=""/>
         <Element ComponentName="DatabaseConverter" X="225" Y="400" Note=""/>
-        <Element ComponentName="DatabaseEngine" X="725" Y="675" Note=""/>
+        <Element ComponentName="DatabaseEngine" X="650" Y="625" Note=""/>
         <Element ComponentName="DeviceSqlRepository" X="425" Y="775" Note=""/>
+        <Element ComponentName="LicenseSqlRepository" X="1075" Y="525" Note=""/>
+        <Element ComponentName="LisaDatabaseEngine" X="1073" Y="775" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="1075" Y="250" Note=""/>
         <Element ComponentName="LocalSettings" X="625" Y="250" Note=""/>
         <Element ComponentName="OrderSqlRepository" X="100" Y="575" Note=""/>
+        <Element ComponentName="ProductSqlRepository" X="1075" Y="650" Note=""/>
         <Element ComponentName="SoftwareSqlRepository" X="725" Y="400" Note=""/>
         <Element ComponentName="VersionInfo" X="950" Y="100" Note=""/>
     </PositionMap>

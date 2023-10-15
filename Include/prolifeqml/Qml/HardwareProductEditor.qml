@@ -72,9 +72,9 @@ Item {
                 let deviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
                 root.productModel.SetData("DeviceId", deviceId);
 
-                if (deviceCB.model.ContainsKey("ConfigurationType", deviceCB.currentIndex)){
+                if (deviceCB.model.ContainsKey("LicenseUuid", deviceCB.currentIndex)){
                     console.log("ContainsKey ConfigurationType", deviceCB.currentIndex)
-                    let configurationType = deviceCB.model.GetData("ConfigurationType", deviceCB.currentIndex);
+                    let configurationType = deviceCB.model.GetData("LicenseUuid", deviceCB.currentIndex);
                     console.log("configurationType", configurationType)
 
                     if (configurationType && configurationType != ""){
@@ -176,10 +176,10 @@ Item {
             for (let i = 0; i < deviceModel.GetItemsCount(); i++){
                 let id = deviceModel.GetData("Id", i);
                 if (id === deviceId){
-                    if (deviceModel.ContainsKey("ConfigurationType", i)){
+                    if (deviceModel.ContainsKey("LicenseUuid", i)){
                         console.log("ContainsKey ConfigurationType");
 
-                        let configurationType = deviceModel.GetData("ConfigurationType", i);
+                        let configurationType = deviceModel.GetData("LicenseUuid", i);
                         console.log("configurationType", configurationType);
 
                         if (configurationType && configurationType != ""){

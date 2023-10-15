@@ -261,7 +261,7 @@ DocumentBase {
 
         commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ConfigurationType"];
+        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ConfigurationType", "ProductUuid", "LicenseUuid"];
 
         onModelUpdated: {
             if (devicesList.collectionModel != null){

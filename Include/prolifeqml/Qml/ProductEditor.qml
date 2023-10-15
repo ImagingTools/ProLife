@@ -97,7 +97,7 @@ Item {
             let status = productEditor.devicesModel.GetData("Status", i);
             let orderId = productEditor.devicesModel.GetData("OrderUuid", i);
             let deviceId = productEditor.devicesModel.GetData("Id", i);
-            let deviceType = productEditor.devicesModel.GetData("DeviceType", i);
+            let deviceType = productEditor.devicesModel.GetData("ProductUuid", i);
 
             console.log("DeviceUuid",deviceId);
             console.log("OrderUuid",orderId);

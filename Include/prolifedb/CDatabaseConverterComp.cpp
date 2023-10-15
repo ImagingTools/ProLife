@@ -7,13 +7,14 @@
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
+#include <imtlic/IProductInfo.h>
 #include <imtbase/CObjectCollection.h>
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
-#include <prolifedata/IOrderInfo.h>
-#include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/COrderInfo.h>
+#include <prolifedata/CDeviceInfo.h>
 
 
 namespace prolifedb
@@ -28,169 +29,95 @@ void CDatabaseConverterComp::OnComponentCreated()
 {
 	BaseClass::OnComponentCreated();
 
-	qDebug() << "ProLife convertation has started";
+	qDebug() << "ProLife convertation started!";
 
-	if (m_orderCollectionCompPtr.IsValid()){
-		imtbase::IObjectCollection::Ids orderObjectIds = m_orderCollectionCompPtr->GetElementIds();
-		for (const imtbase::IObjectCollection::Id& orderObjectId : orderObjectIds){
-			if (orderObjectId == "03b38efe-1ec1-44a8-8bf3-4e17c4a50f05"){
-				qDebug() << "Find";
-			}
+	if (m_deviceCollectionCompPtr.IsValid() && m_productCollectionCompPtr.IsValid() && m_licenseCollectionCompPtr.IsValid()){
+		qDebug() << "Device collection converting ...";
 
-			imtbase::IObjectCollection::DataPtr orderDataPtr;
-			if (m_orderCollectionCompPtr->GetObjectData(orderObjectId, orderDataPtr)){
-				prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
-					if (productCollectionPtr != nullptr){
-						QMap<QByteArray, imtlic::CIdentifiableSoftwareInstanceInfo*> mapSoftware;
-						QMap<QByteArray, imtlic::CIdentifiableHardwareInstanceInfo*> mapHardware;
-						QMap<QByteArray, imtlic::CIdentifiableSoftwareInstanceInfo*> mapNewSoftware;
-						imtbase::ICollectionInfo::Ids orderedProductsIds = productCollectionPtr->GetElementIds();
-						for(const QByteArray& productId : orderedProductsIds){
-							imtbase::IObjectCollection::DataPtr productDataPtr;
-							if (productCollectionPtr->GetObjectData(productId, productDataPtr)){
-								imtlic::CIdentifiableSoftwareInstanceInfo* productInstancePtr = dynamic_cast<imtlic::CIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
-								if (productInstancePtr != nullptr){
-									mapSoftware.insert(productId, dynamic_cast<imtlic::CIdentifiableSoftwareInstanceInfo*>(productInstancePtr->CloneMe()));
-								}
-								imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = dynamic_cast<imtlic::CIdentifiableHardwareInstanceInfo*>(productDataPtr.GetPtr());
-								if (hardwareProductPtr != nullptr){
-									mapHardware.insert(productId,  dynamic_cast<imtlic::CIdentifiableHardwareInstanceInfo*>(hardwareProductPtr->CloneMe()));
-								}
-							}
-						}
-						QList<QByteArray> hardwareProductsIds = mapHardware.keys();
-						QList<QByteArray> softwareProductsIds = mapSoftware.keys();
-
-						QByteArray deviceId;
-						for (const QByteArray& productId : softwareProductsIds){
-							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = nullptr;
-							imtlic::CIdentifiableSoftwareInstanceInfo* productInstancePtr = mapSoftware.value(productId);
-							for (const QByteArray& hardwareProductId : hardwareProductsIds){
-								hardwareProductPtr = mapHardware.value(hardwareProductId);
-								if (hardwareProductPtr->GetSoftwareId() == productId){
-									deviceId = hardwareProductPtr->GetDeviceId();
-								}
-							}
-
-							const imtbase::ICollectionInfo& licenseInstances = productInstancePtr->GetLicenseInstances();
-							const imtbase::ICollectionInfo::Ids licenseIds = licenseInstances.GetElementIds();
-							for (int index = 0; index < licenseIds.count(); index++){
-								QByteArray licenseId = licenseIds[index];
-								const imtlic::ILicenseInstance* licenseInstancePtr = productInstancePtr->GetLicenseInstance(licenseId);
-								if (licenseInstancePtr != nullptr && m_productInstanceCollectionCompPtr.IsValid()){
-									istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> orderedProductInstancePtr;
-									orderedProductInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
-
-									QByteArray newProductUuid = productId;
-									if (licenseIds.count() > 1){
-										newProductUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
-									}
-
-									orderedProductInstancePtr->SetupProductInstance(productInstancePtr->GetProductId(),
-																					productInstancePtr->GetProductInstanceId(),
-																					productInstancePtr->GetCustomerId());
-									orderedProductInstancePtr->SetOrderId(orderObjectId);
-									orderedProductInstancePtr->AddLicense(licenseInstancePtr->GetLicenseId(), licenseInstancePtr->GetExpiration());
-									orderedProductInstancePtr->SetObjectUuid(newProductUuid);
-
-									if (!deviceId.isEmpty()){
-										orderedProductInstancePtr->SetInUse(true);
-									}
-
-									QByteArray serialNumber = productInstancePtr->GetSerialNumber();
-									if (!serialNumber.isEmpty() && index > 0){
-										serialNumber += QString("-%1").arg(index).toUtf8();
-									}
-									orderedProductInstancePtr->SetSerialNumber(serialNumber);
-									m_productInstanceCollectionCompPtr->InsertNewObject("", "", "", orderedProductInstancePtr.GetPtr(), newProductUuid);
-									mapNewSoftware.insert(newProductUuid, orderedProductInstancePtr.PopPtr());
-
-									qDebug() << QString("Insert object into productInstance collection: ") << newProductUuid;
-
-									if (m_bindingCollectionCompPtr.IsValid()){
-										imtbase::IObjectCollection::DataPtr bindingDataPtr;
-										if (m_bindingCollectionCompPtr->GetObjectData(deviceId, bindingDataPtr)){
-											prolifedata::CHardwareProductBinding* bindingDataInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(bindingDataPtr.GetPtr());
-											if (bindingDataInfoPtr != nullptr){
-												bindingDataInfoPtr->Bind(newProductUuid);
-
-												m_bindingCollectionCompPtr->SetObjectData(deviceId, *bindingDataInfoPtr);
-											}
-										}
-										else{
-											istd::TDelPtr<prolifedata::CHardwareProductBinding> productBindingPtr;
-											productBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding);
-
-											productBindingPtr->SetHardwareId(deviceId);
-											productBindingPtr->Bind(newProductUuid);
-
-											m_bindingCollectionCompPtr->InsertNewObject("", "", "", productBindingPtr.GetPtr(), deviceId);
-										}
-
-										qDebug() << QString("Insert object into binding collection: ") << deviceId;
-									}
-								}
-							}
-						}
-
-						for (const QByteArray& productId : hardwareProductsIds){
-							imtlic::CIdentifiableHardwareInstanceInfo* hardwareProductPtr = mapHardware.value(productId);
-							QByteArray deviceId = hardwareProductPtr->GetDeviceId();
-
-							QByteArray modelTypeId = hardwareProductPtr->GetModelTypeId();
-
-							imtbase::IObjectCollection::DataPtr deviceDataPtr;
-							if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
-								prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
-								if (deviceInfoPtr != nullptr){
-									deviceInfoPtr->SetConfigurationType(modelTypeId);
-
-									m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr);
-								}
-							}
-
-							productCollectionPtr->RemoveElement(productId);
-
-							istd::TDelPtr<imtbase::CObjectLink> deviceLinkPtr;
-							deviceLinkPtr.SetPtr(new imtbase::CObjectLink);
-
-							deviceLinkPtr->SetFactoryId("HardwareInfo");
-							deviceLinkPtr->SetObjectUuid(hardwareProductPtr->GetDeviceId());
-
-							productCollectionPtr->InsertNewObject(deviceLinkPtr->GetFactoryId(), "", "", deviceLinkPtr.GetPtr(), hardwareProductPtr->GetDeviceId());
-						}
-
-						for (const QByteArray& productId : softwareProductsIds){
-							productCollectionPtr->RemoveElement(productId);
-
-							istd::TDelPtr<imtbase::CObjectLink> softwareLinkPtr;
-							softwareLinkPtr.SetPtr(new imtbase::CObjectLink);
-
-							softwareLinkPtr->SetFactoryId("SoftwareInfo");
-							softwareLinkPtr->SetObjectUuid(productId);
-
-							productCollectionPtr->InsertNewObject(softwareLinkPtr->GetFactoryId(), "", "", softwareLinkPtr.GetPtr(), productId);
-						}
-
-						m_orderCollectionCompPtr->SetObjectData(orderObjectId, *orderInfoPtr);
-						qDebug() << QString("Insert object into order collection: ") << orderObjectId;
-
-						qDeleteAll(mapHardware);
-						qDeleteAll(mapNewSoftware);
-						qDeleteAll(mapSoftware);
+		imtbase::ICollectionInfo::Ids deviceCollectionIds = m_deviceCollectionCompPtr->GetElementIds();
+		for (const imtbase::ICollectionInfo::Id& deviceCollectionId: deviceCollectionIds){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_deviceCollectionCompPtr->GetObjectData(deviceCollectionId, dataPtr)){
+				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+				if (deviceInfoPtr != nullptr){
+					QByteArray productId = deviceInfoPtr->GetDeviceType();
+					QByteArray productUuid = GetProductUuidByProductId(productId);
+					if (!productUuid.isEmpty()){
+						deviceInfoPtr->SetDeviceType(productUuid);
 					}
 					else{
-						qDebug() << QString("OrderInfo is NULL!!!: ") << orderObjectId;
+						qDebug() << QString("Product-ID: %1 not founded.").arg(qPrintable(productId));
+					}
+
+					QByteArray licenseId = deviceInfoPtr->GetConfigurationType();
+					QByteArray licenseUuid = GetLicenseUuidByLicenseId(licenseId);
+					if (!licenseUuid.isEmpty()){
+						deviceInfoPtr->SetConfigurationType(licenseUuid);
+					}
+					else{
+						qDebug() << QString("License-ID: %1 not founded.").arg(qPrintable(licenseId));
+					}
+
+					if (m_deviceCollectionCompPtr->SetObjectData(deviceCollectionId, *deviceInfoPtr)){
+						qDebug() << QString("Device with ID: %1 successfully changed.").arg(qPrintable(deviceCollectionId));
+					}
+					else{
+						qDebug() << QString("Device with ID: %1 change failed.").arg(qPrintable(deviceCollectionId));
 					}
 				}
 			}
-			else{
-				qDebug() << QString("Error for read order: ") << orderObjectId;
-			}
-
 		}
+
+		qDebug() << "Device collection converting finished!";
+	}
+
+	if (m_softwareInstanceCollectionCompPtr.IsValid() && m_productCollectionCompPtr.IsValid() && m_licenseCollectionCompPtr.IsValid()){
+		qDebug() << "Software Instance collection converting ...";
+
+		imtbase::ICollectionInfo::Ids softwareInstanceCollectionIds = m_softwareInstanceCollectionCompPtr->GetElementIds();
+		for (const imtbase::ICollectionInfo::Id& softwareInstanceCollectionId: softwareInstanceCollectionIds){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareInstanceCollectionId, dataPtr)){
+				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInstanceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+				if (softwareInstanceInfoPtr != nullptr){
+					QByteArray productId = softwareInstanceInfoPtr->GetProductId();
+
+					QByteArray productUuid = GetProductUuidByProductId(productId);
+					if (!productUuid.isEmpty()){
+						softwareInstanceInfoPtr->SetupProductInstance(productUuid, softwareInstanceInfoPtr->GetProductInstanceId(), softwareInstanceInfoPtr->GetCustomerId());
+					}
+					else{
+						qDebug() << QString("Product-ID: %1 not founded.").arg(qPrintable(productId));
+					}
+
+					imtbase::ICollectionInfo::Ids licenseIds = softwareInstanceInfoPtr->GetLicenseInstances().GetElementIds();
+					if (!licenseIds.isEmpty()){
+						QByteArray licenseId = licenseIds[0];
+
+						imtlic::ILicenseInstance* licenseInstancePtr = const_cast<imtlic::ILicenseInstance*>(softwareInstanceInfoPtr->GetLicenseInstance(licenseId));
+						if (licenseInstancePtr != nullptr){
+							QDateTime expiration = licenseInstancePtr->GetExpiration();
+							QByteArray licenseUuid = GetLicenseUuidByLicenseId(licenseId);
+							if (!licenseUuid.isEmpty()){
+								licenseInstancePtr->SetLicenseId(licenseUuid);
+							}
+							else{
+								qDebug() << QString("License-ID: %1 not founded.").arg(qPrintable(licenseId));
+							}
+						}
+					}
+
+					if (m_softwareInstanceCollectionCompPtr->SetObjectData(softwareInstanceCollectionId, *softwareInstanceInfoPtr)){
+						qDebug() << QString("Software instance with ID: %1 successfully changed.").arg(qPrintable(softwareInstanceCollectionId));
+					}
+					else{
+						qDebug() << QString("Software instance with ID: %1 change failed.").arg(qPrintable(softwareInstanceCollectionId));
+					}
+				}
+			}
+		}
+
+		qDebug() << "Software Instance collection converting finished!";
 	}
 
 	qDebug() << "ProLife convertation finished!";
@@ -202,6 +129,54 @@ void CDatabaseConverterComp::OnComponentCreated()
 void CDatabaseConverterComp::OnComponentDestroyed()
 {
 	BaseClass::OnComponentDestroyed();
+}
+
+
+QByteArray CDatabaseConverterComp::GetLicenseUuidByLicenseId(const QByteArray& licenseId) const
+{
+	if (!m_licenseCollectionCompPtr.IsValid()){
+		return QByteArray();
+	}
+
+	imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& licenseCollectionId: licenseCollectionIds){
+		imtbase::IObjectCollection::DataPtr licenseDataPtr;
+		if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, licenseDataPtr)){
+			imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+			if (licenseInfoPtr != nullptr){
+				QByteArray currentLicenseId = licenseInfoPtr->GetLicenseId();
+				if (currentLicenseId == licenseId){
+					return licenseCollectionId;
+				}
+			}
+		}
+	} // for
+
+	return QByteArray();
+}
+
+
+QByteArray CDatabaseConverterComp::GetProductUuidByProductId(const QByteArray& productId) const
+{
+	if (!m_productCollectionCompPtr.IsValid()){
+		return QByteArray();
+	}
+
+	imtbase::ICollectionInfo::Ids productCollectionIds = m_productCollectionCompPtr->GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& productCollectionId: productCollectionIds){
+		imtbase::IObjectCollection::DataPtr productDataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productCollectionId, productDataPtr)){
+			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				QByteArray currentProductId = productInfoPtr->GetProductId();
+				if (currentProductId == productId){
+					return productCollectionId;
+				}
+			}
+		}
+	} // for
+
+	return QByteArray();
 }
 
 

@@ -107,16 +107,58 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		}
 	}
 
-	imtlic::IProductInfo* productInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr productInfoDataPtr;
-	if (m_productCollectionCompPtr->GetObjectData(productUuid, productInfoDataPtr)){
-		productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productInfoDataPtr.GetPtr());
+	QByteArrayList productFields;
 
-		productId = productInfoPtr->GetProductId();
+	productFields << "Id";
+	productFields << "ProductId";
+	productFields << "ProductName";
+
+	imtbase::CTreeItemModel* productItemsModelPtr = GetRemoteCollectionData("ProductsList", productFields);
+	if (productItemsModelPtr == nullptr){
+		SendErrorMessage(0, "Unable to get product list from Lisa.", "CKeyDataProviderComp");
+
+		return false;
 	}
 
-	if (productInfoPtr == nullptr){
-		SendErrorMessage(0, QString("Unable to get a product info with ID: %1").arg(qPrintable(productUuid)), "CKeyDataProviderComp");
+	QByteArrayList licenseFields;
+
+	licenseFields << "Id";
+	licenseFields << "LicenseId";
+	licenseFields << "ProductId";
+	licenseFields << "LicenseName";
+	licenseFields << "ParentLicenses";
+	licenseFields << "Features";
+
+	imtbase::CTreeItemModel* licenseItemsModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
+	if (licenseItemsModelPtr == nullptr){
+		SendErrorMessage(0, "Unable to get license list from Lisa.", "CKeyDataProviderComp");
+
+		return false;
+	}
+
+	QByteArrayList featureFields;
+
+	featureFields << "Id";
+	featureFields << "FeatureId";
+	featureFields << "FeatureName";
+
+	imtbase::CTreeItemModel* featureItemsModelPtr = GetRemoteCollectionData("FeaturesList", featureFields);
+	if (featureItemsModelPtr == nullptr){
+		SendErrorMessage(0, "Unable to get feature list from Lisa.", "CKeyDataProviderComp");
+
+		return false;
+	}
+
+	for (int i = 0; i < productItemsModelPtr->GetItemsCount(); i++){
+		QByteArray currentProductUuid = productItemsModelPtr->GetData("Id", i).toByteArray();
+		if (currentProductUuid == productUuid){
+			productId = productItemsModelPtr->GetData("ProductId", i).toByteArray();
+			break;
+		}
+	}
+
+	if (productId.isEmpty()){
+		SendErrorMessage(0, "Unable to create license file with empty product-ID", "CKeyDataProviderComp");
 
 		return false;
 	}
@@ -137,14 +179,8 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 						QByteArray licenseId;
 						QString licenseName;
 
-						imtbase::IObjectCollection::DataPtr licenseDataPtr;
-						if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, licenseDataPtr)){
-							imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-							if (licenseInfoPtr != nullptr){
-								licenseId = licenseInfoPtr->GetLicenseId();
-								licenseName = licenseInfoPtr->GetLicenseName();
-							}
-						}
+						licenseId = GetLicenseId(licenseCollectionId, *licenseItemsModelPtr);
+						licenseName = GetLicenseName(licenseCollectionId, *licenseItemsModelPtr);
 
 						QDateTime expiration = licenseInstancePtr->GetExpiration();
 						productInstancePtr->AddLicense(licenseId, expiration);
@@ -164,20 +200,25 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 						QByteArrayList licenses;
 						licenses << licenseCollectionId;
 
-						licenses += GetAllLicenseDependencies(licenseCollectionId);
+						licenses += GetAllLicenseDependencies(licenseCollectionId, *licenseItemsModelPtr);
 
 						for (const QByteArray& dependencyId : licenses){
-							const imtlic::CLicenseDefinition* licenseInfoPtr = GetLicenseInfo(dependencyId);
-							if (licenseInfoPtr != nullptr){
-								for (const imtlic::ILicenseInstance::FeatureInfo& featureInfo : licenseInfoPtr->GetFeatureInfos()){
-									imtbase::IObjectCollection::DataPtr featureDataPtr;
-									if (m_featureCollectionCompPtr->GetObjectData(featureInfo.id, featureDataPtr)){
-										imtlic::IFeatureInfo* featureInfoPtr = dynamic_cast<imtlic::IFeatureInfo*>(featureDataPtr.GetPtr());
-										if (featureInfoPtr != nullptr){
+							for (int i = 0; i < licenseItemsModelPtr->GetItemsCount(); i++){
+								QByteArray licenseUuid = licenseItemsModelPtr->GetData("Id", i).toByteArray();
+								if (licenseUuid == dependencyId){
+									QByteArray features = licenseItemsModelPtr->GetData("Features", i).toByteArray();
+									if (!features.isEmpty()){
+										QByteArrayList featureUuids = features.split(';');
+
+										for (const QByteArray& featureUuid : featureUuids){
+
+											QByteArray featureId = GetFeatureId(featureUuid, *featureItemsModelPtr);
+											QString featureName = GetFeatureName(featureUuid, *featureItemsModelPtr);
+
 											imtlic::ILicenseInstance::FeatureInfo resultFeatureInfo;
 
-											resultFeatureInfo.id = featureInfoPtr->GetFeatureId();
-											resultFeatureInfo.name = featureInfoPtr->GetFeatureName();
+											resultFeatureInfo.id = featureId;
+											resultFeatureInfo.name = featureName;
 
 											if (!featureInfos.contains(resultFeatureInfo)){
 												featureInfos.append(resultFeatureInfo);
@@ -258,18 +299,26 @@ QByteArray CKeyDataProviderComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvi
 }
 
 
-QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& dependenciesModel) const
+QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray& licenseId, const imtbase::CTreeItemModel& licensesModel) const
 {
 	QByteArrayList retVal;
 
-	if (dependenciesModel.ContainsKey(licenseId)){
-		QByteArray dependencies = dependenciesModel.GetData(licenseId).toByteArray();
-		QByteArrayList dependenciesIDs = dependencies.split(';');
+	for (int i = 0; i < licensesModel.GetItemsCount(); i++){
+		QByteArray licenseUuid = licensesModel.GetData("Id", i).toByteArray();
+		if (licenseUuid == licenseId){
+			QByteArray parentLicenses = licensesModel.GetData("ParentLicenses", i).toByteArray();
 
-		retVal += dependenciesIDs;
+			if (!parentLicenses.isEmpty()){
+				QByteArrayList dependencies = parentLicenses.split(';');
 
-		for (const QByteArray& dependencyId : dependenciesIDs){
-			retVal += GetAllLicenseDependencies(dependencyId, dependenciesModel);
+				retVal += dependencies;
+
+				for (const QByteArray& dependencyId : dependencies){
+					retVal += GetAllLicenseDependencies(dependencyId, licensesModel);
+				}
+			}
+
+			break;
 		}
 	}
 
@@ -323,12 +372,26 @@ QByteArrayList CKeyDataProviderComp::GetAllLicenseDependencies(const QByteArray&
 }
 
 
+QByteArray CKeyDataProviderComp::GetLicenseId(const QByteArray& licenseUuid, const imtbase::CTreeItemModel& licensesModel) const
+{
+	for (int i = 0; i < licensesModel.GetItemsCount(); i++){
+		QByteArray currentLicenseId = licensesModel.GetData("Id", i).toByteArray();
+		if (currentLicenseId == licenseUuid){
+			QByteArray licenseId = licensesModel.GetData("LicenseId", i).toByteArray();
+			return licenseId;
+		}
+	}
+
+	return QByteArray();
+}
+
+
 QString CKeyDataProviderComp::GetLicenseName(const QByteArray& licenseId, const imtbase::CTreeItemModel& licensesModel) const
 {
 	for (int i = 0; i < licensesModel.GetItemsCount(); i++){
 		QByteArray currentLicenseId = licensesModel.GetData("Id", i).toByteArray();
 		if (currentLicenseId == licenseId){
-			QString currentLicenseName = licensesModel.GetData("Name", i).toString();
+			QString currentLicenseName = licensesModel.GetData("LicenseName", i).toString();
 			return 	currentLicenseName;
 		}
 	}
@@ -360,6 +423,68 @@ const imtlic::CLicenseDefinition* CKeyDataProviderComp::GetLicenseInfo(const QBy
 	}
 
 	return nullptr;
+}
+
+
+QByteArray CKeyDataProviderComp::GetFeatureId(const QByteArray& featureUuid, const imtbase::CTreeItemModel& featuresModel) const
+{
+	for (int i = 0; i < featuresModel.GetItemsCount(); i++){
+		QByteArray uuid = featuresModel.GetData("Id", i).toByteArray();
+		if (uuid == featureUuid){
+			return featuresModel.GetData("FeatureId", i).toByteArray();
+		}
+	}
+
+	return QByteArray();
+}
+
+
+QString CKeyDataProviderComp::GetFeatureName(const QByteArray& featureUuid, const imtbase::CTreeItemModel& featuresModel) const
+{
+	for (int i = 0; i < featuresModel.GetItemsCount(); i++){
+		QByteArray uuid = featuresModel.GetData("Id", i).toByteArray();
+		if (uuid == featureUuid){
+			return featuresModel.GetData("FeatureName", i).toString();
+		}
+	}
+
+	return QString();
+}
+
+
+imtbase::CTreeItemModel* CKeyDataProviderComp::GetRemoteCollectionData(const QByteArray& collectionCommandId, QByteArrayList fields) const
+{
+	if (!m_gqlLicenseRequestCompPtr.IsValid()){
+		return nullptr;
+	}
+
+	imtgql::CGqlRequest request(imtgql::CGqlRequest::RT_QUERY, collectionCommandId);
+
+	imtgql::CGqlObject itemsObject("items");
+
+	for (const QByteArray& fieldId : fields){
+		itemsObject.InsertField(fieldId);
+	}
+
+	request.AddField(itemsObject);
+
+	QString errorMessage;
+	imtbase::CTreeItemModel* modelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(request, errorMessage);
+	if (modelPtr == nullptr){
+		return nullptr;
+	}
+
+	imtbase::CTreeItemModel* dataModelPtr = modelPtr->GetTreeItemModel("data");
+	if (dataModelPtr == nullptr){
+		return nullptr;
+	}
+
+	imtbase::CTreeItemModel* itemsModelPtr = dataModelPtr->GetTreeItemModel("items");
+	if (itemsModelPtr == nullptr){
+		return nullptr;
+	}
+
+	return itemsModelPtr;
 }
 
 

@@ -36,7 +36,6 @@ DocumentBase {
     }
 
     onModelsIsLoadedChanged: {
-        console.log("onModelsIsLoadedChanged", deviceEditorContainer.modelsIsLoaded);
         if (deviceEditorContainer.modelsIsLoaded){
             if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
                 let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
@@ -128,8 +127,6 @@ DocumentBase {
         fields: ["Id", "OrderId", "Description"];
 
         onCollectionModelChanged: {
-            console.log("ordersList onCollectionModelChanged");
-
             if (ordersList.collectionModel != null){
                 orderCB.model = ordersList.collectionModel;
             }
@@ -208,6 +205,8 @@ DocumentBase {
     }
 
     function updateGui(){
+        console.log("UpdateGui start");
+
         deviceEditorContainer.blockUpdatingModel = true;
 
         descriptionInput.text = "";
@@ -287,6 +286,8 @@ DocumentBase {
         }
 
         deviceEditorContainer.blockUpdatingModel = false;
+
+        console.log("UpdateGui end");
     }
 
     function updateModel(){
