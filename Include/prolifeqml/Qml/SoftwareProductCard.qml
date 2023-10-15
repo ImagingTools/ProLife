@@ -27,6 +27,7 @@ Rectangle {
     property Item productCardRoot: null;
 
     property LicensesProvider licensesProvider: null;
+    property CollectionDataProvider productCollection: null;
 
     property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
 
@@ -45,7 +46,7 @@ Rectangle {
         softwareCard.updateHeaders();
     }
 
-    property bool ok: productCardRoot != null && productId && licensesModel !== null;
+    property bool ok: productCardRoot != null && productId && licensesModel !== null && productCollection != null;
 
     onOkChanged: {
         if (ok){
@@ -58,9 +59,24 @@ Rectangle {
                     softwareCard.licensesModel.SetData("Expiration", "Unlimited", i);
                 }
 
-//                let licenseName = softwareCard.licensesProvider.getLicenseName(softwareCard.productId, licenseId);
-//                let licenseName = softwareCard.licensesModel.GetData("LicenseName", i);
-//                softwareCard.licensesModel.SetData("Name", licenseName, i);
+                for (let j = 0; j < productCollection.collectionModel.GetItemsCount(); j++){
+                    let productId = productCollection.collectionModel.GetData("Id", j);
+                    if (productId === softwareCard.productId){
+                        let licensesModel = productCollection.collectionModel.GetData("Licenses", j);
+                        if (licensesModel){
+                            for (let k = 0; k < licensesModel.GetItemsCount(); k++){
+                                let licenseUuid = licensesModel.GetData("Id", k);
+                                if (licenseUuid === licenseId){
+                                    let licenseName = licensesModel.GetData("LicenseName", k);
+
+                                    softwareCard.licensesModel.SetData("LicenseName", licenseName, i);
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
             }
 
             productCardRoot.orderEditorPtr.blockUpdatingModel = false
@@ -176,6 +192,8 @@ Rectangle {
     }
 
     function updateElements(){
+        console.log("updateElements");
+
         elementsTableModel.Clear();
 
         let index = elementsTableModel.InsertNewItem();
