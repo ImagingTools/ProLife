@@ -192,6 +192,7 @@
                                 <Value>LicensesItems</Value>
                                 <Value>LicensesList</Value>
                                 <Value>FeaturesList</Value>
+                                <Value>GetFeatureDependencies</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
