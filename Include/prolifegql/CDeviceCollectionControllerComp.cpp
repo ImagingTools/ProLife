@@ -541,6 +541,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
+
 						for (const QByteArray& licenseId : elementsIds){
 							imtbase::IObjectCollection::DataPtr dataPtr;
 							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
