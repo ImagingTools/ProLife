@@ -95,9 +95,9 @@ CollectionView {
                 modelCategogy.SetData("Id", "NotPaired", index);
                 modelCategogy.SetData("Name", qsTr("Show only not paired licenses"), index);
 
-//                    index = modelCategogy.InsertNewItem();
-//                    modelCategogy.SetData("Id", "InUse", index);
-//                    modelCategogy.SetData("Name", qsTr("In-Use"), index);
+                index = modelCategogy.InsertNewItem();
+                modelCategogy.SetData("Id", "InUse", index);
+                modelCategogy.SetData("Name", qsTr("Show the licenses for which the file was created"), index);
 
                 licenseComboBox.model = modelCategogy;
             }
@@ -126,7 +126,7 @@ CollectionView {
                     anchors.bottom: parent.bottom;
                     anchors.left: parent.left;
 
-                    width: 200;
+                    width: 300;
                     height: filtermenu.height;
 
                     backgroundColor: Style.baseColor;
@@ -144,20 +144,14 @@ CollectionView {
                             container.modelFilter.RemoveData("ObjectFilter");
                         }
                         else if (licenseComboBox.currentIndex == 1){
-                            objectFilter.SetData("Key", "DeviceId");
-                            objectFilter.SetData("Value", "");
-                            objectFilter.SetData("IsEqual", false);
+                            objectFilter.SetData("LicenseFilter", "OnlyPaired");
                         }
                         else if (licenseComboBox.currentIndex == 2){
-                            objectFilter.SetData("Key", "DeviceId");
-                            objectFilter.SetData("Value", "");
-                            objectFilter.SetData("IsEqual", true);
+                            objectFilter.SetData("LicenseFilter", "OnlyUnpaired");
                         }
-//                        else if (licenseComboBox.currentIndex == 3){
-//                            objectFilter.SetData("Key", "InUse");
-//                            objectFilter.SetData("Value", "true");
-//                            objectFilter.SetData("IsEqual", true);
-//                        }
+                        else if (licenseComboBox.currentIndex == 3){
+                            objectFilter.SetData("LicenseFilter", "OnlyInUse");
+                        }
 
                         container.updateGui();
                     }

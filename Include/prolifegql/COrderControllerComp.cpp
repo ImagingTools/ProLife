@@ -9,6 +9,7 @@
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
+#include <imtgql/imtgql.h>
 
 // ProLife includes
 #include <prolifedata/TOrderedWrap.h>
@@ -25,7 +26,8 @@ namespace prolifegql
 imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_softwareInstanceCollectionCompPtr.IsValid() || !m_deviceCollectionCompPtr.IsValid()){
-		errorMessage = QObject::tr("Internal error").toUtf8();
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "COrderControllerComp");
 
 		return nullptr;
 	}
@@ -41,7 +43,9 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IOrderInfo* orderPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
 		if (orderPtr == nullptr){
-			errorMessage = QT_TR_NOOP("Unable to get an product instance");
+			errorMessage = QString("Unable to get an product instance");
+			SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
 			return nullptr;
 		}
 
@@ -117,6 +121,8 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 	}
 
 	errorMessage = QT_TR_NOOP("Error when trying to get an order. There is no such order.");
+	SendErrorMessage(0, errorMessage, "COrderControllerComp");
+	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 
 	return nullptr;
 }
@@ -130,10 +136,16 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
 		return nullptr;
 	}
 
 	if (!m_deviceCollectionCompPtr.IsValid()){
+		errorMessage = QString("Internal error").toUtf8();
+		SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
 		return nullptr;
 	}
 
@@ -168,6 +180,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		if (orderId.isEmpty()){
 			errorMessage = QT_TR_NOOP("ERP Order-ID can not be empty");
+			SendErrorMessage(0, errorMessage, "COrderControllerComp");
+			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
+
 			return nullptr;
 		}
 
@@ -204,6 +219,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 						QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
 						if (currentOrderId == orderId.toLower()){
 							errorMessage = QT_TR_NOOP("Order ID already exists");
+							SendErrorMessage(0, errorMessage, "COrderControllerComp");
+							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
+
 							return nullptr;
 						}
 					}
@@ -239,6 +257,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 						QByteArray currentPurchaseId = orderInfoPtr->GetPurchaseOrderId().toLower();
 						if (purchaseOrderId != "" && currentPurchaseId == purchaseOrderId.toLower()){
 							errorMessage = QT_TR_NOOP("Purchase order ID already exists");
+							SendErrorMessage(0, errorMessage, "COrderControllerComp");
+							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
+
 							return nullptr;
 						}
 					}
@@ -253,6 +274,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		if (customerId.isEmpty()){
 			errorMessage = QT_TR_NOOP("Customer can not be empty!");
+			SendErrorMessage(0, errorMessage, "COrderControllerComp");
+			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
+
 			return nullptr;
 		}
 
@@ -293,6 +317,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
+			errorMessage = QString("Unable to create an order object. Product collection is nullptr.");
+			SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
 			return nullptr;
 		}
 
@@ -344,7 +371,10 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		return orderPtr.PopPtr();
 	}
 
-	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));
+	errorMessage = QString(QT_TR_NOOP("Can not create order: %1")).arg(QString(objectId));
+	SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
+	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 
 	return nullptr;
 }
@@ -407,7 +437,9 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 	if (!collectionIds.isEmpty() && !serialNumber.isEmpty()){
 		QByteArray objectId = collectionIds[0];
 		if (objectId != uuidId){
-			errorMessage = QString("Serial number: %1 from %2 already exists.").arg(qPrintable(serialNumber)).arg(qPrintable(productId));
+			errorMessage = QString(QT_TR_NOOP("Serial number: %1 from %2 already exists.")).arg(qPrintable(serialNumber)).arg(qPrintable(productId));
+			SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 
 			return;
 		}

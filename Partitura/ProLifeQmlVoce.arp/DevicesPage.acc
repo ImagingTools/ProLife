@@ -237,6 +237,9 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

@@ -8,6 +8,9 @@ CollectionViewCommandsDelegateBase {
     property bool filterByNewActive: false;
     property string filterLicense: "";
 
+    removeDialogTitle: qsTr("Removing the sensor");
+    removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
+
     Component.onCompleted: {
         console.log("DeviceCollectionViewCommandsDelegate onCompleted");
         Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);

@@ -9,6 +9,9 @@ CollectionViewCommandsDelegateBase {
     property bool onlyUnpaired: false;
     property bool onlyPaired: false;
 
+    removeDialogTitle: qsTr("Removing the software instance");
+    removeMessage: qsTr("Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.");
+
     onOnlyPairedChanged: {
         console.log("onOnlyPairedChanged", onlyPaired);
         if (container.commandsProvider){

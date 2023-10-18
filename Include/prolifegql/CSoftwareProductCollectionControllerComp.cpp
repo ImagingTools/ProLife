@@ -7,6 +7,7 @@
 
 // ImtCore includes
 #include <imtlic/CHardwareInstanceInfo.h>
+#include <imtgql/imtgql.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -26,36 +27,6 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(c
 
 		return nullptr;
 	}
-
-//	imtbase::CTreeItemModel* dataModel = retVal->GetTreeItemModel("data");
-//	if (dataModel == nullptr){
-//		errorMessage = QString("Representation model is invalid.");
-//		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
-//		return nullptr;
-//	}
-
-//	imtbase::CTreeItemModel* itemsModel = dataModel->GetTreeItemModel("items");
-//	if (itemsModel == nullptr){
-//		errorMessage = QString("Representation model is invalid.");
-//		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
-//		return nullptr;
-//	}
-
-//	if (m_licenseCollectionCompPtr.IsValid()){
-//		for (int i = 0; i < itemsModel->GetItemsCount(); i++){
-//			QByteArray licenseUuid = itemsModel->GetData("LicenseId", i).toByteArray();
-
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (m_licenseCollectionCompPtr->GetObjectData(licenseUuid, dataPtr)){
-//				imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
-//				if (licenseDefinitionPtr != nullptr){
-//					itemsModel->SetData("LicenseName", licenseDefinitionPtr->GetLicenseName(), i);
-//				}
-//			}
-//		}
-//	}
 
 	return retVal;
 }
@@ -88,8 +59,10 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		if (productInstanceInfoPtr != nullptr){
 			bool isUse = productInstanceInfoPtr->IsInUse();
 			if (isUse){
-				errorMessage = QString("It is not possible to remove a product that is in use");
+				errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
 				SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+				errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
 
 				return nullptr;
 			}
@@ -108,8 +81,10 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		return rootModelPtr.PopPtr();
 	}
 
-	errorMessage = QObject::tr("Can't remove object: %1").arg(QString(objectId));
+	errorMessage = QString(QT_TR_NOOP("Can't remove object: %1")).arg(QString(objectId));
 	SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
 
 	return nullptr;
 }
@@ -253,6 +228,148 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 }
 
 
+//void CSoftwareProductCollectionControllerComp::SetObjectFilter(
+//			const imtgql::CGqlRequest& gqlRequest,
+//			const imtbase::CTreeItemModel& objectFilterModel,
+//			iprm::CParamsSet& filterParams) const
+//{
+//	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
+
+//	if (!m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
+//		return;
+//	}
+
+//	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+//	if (gqlContextPtr == nullptr){
+//		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
+
+//		return;
+//	}
+
+//	bool filterByGroup = true;
+
+//	QByteArray userId;
+//	QByteArrayList userGroupIds;
+//	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+//	if (userInfoPtr != nullptr){
+//		userGroupIds = userInfoPtr->GetGroups();
+//		userId = userInfoPtr->GetId();
+
+//		if (userInfoPtr->IsAdmin()){
+//			filterByGroup = false;
+//		}
+//		else{
+//			if (m_checkPermissionCompPtr.IsValid()){
+//				QByteArrayList userPermissions = userInfoPtr->GetPermissions();
+
+//				QByteArrayList permissions;
+//				permissions << *m_permissionIdAttrPtr;
+//				filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
+//			}
+//		}
+//	}
+
+//	if (filterByGroup){
+//		iprm::CParamsSet accountFilter;
+
+//		iprm::CParamsSet groupsObjectFilter;
+//		iprm::COptionsManager groupsOptionsManager;
+
+//		for (const QByteArray& groupId : userGroupIds){
+//			groupsOptionsManager.InsertOption("", groupId);
+//		}
+
+//		groupsObjectFilter.SetEditableParameter("Groups", &groupsOptionsManager);
+//		accountFilter.SetEditableParameter("ObjectFilter", &groupsObjectFilter);
+
+//		iprm::COptionsManager accountsOptionsManager;
+//		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
+//		for (const QByteArray& accountId : accountIds){
+//			accountsOptionsManager.InsertOption("", accountId);
+//		}
+
+//		istd::TDelPtr<iprm::COptionsManager> ordersOptionsManagerPtr;
+//		ordersOptionsManagerPtr.SetPtr(new iprm::COptionsManager());
+
+//		iprm::CParamsSet orderFilter;
+
+//		iprm::CParamsSet accountParams;
+//		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
+//		orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
+
+//		imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
+//		for (const QByteArray& orderId : ordersIds){
+//			ordersOptionsManagerPtr->InsertOption(orderId, orderId);
+//		}
+
+//		if (!userId.isEmpty()){
+//			ordersOptionsManagerPtr->InsertOption("", userId);
+//		}
+
+//		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());
+//	}
+
+//	imtbase::CTreeItemModel* licenseFilterPtr = objectFilterModel.GetTreeItemModel("LicenseFilter");
+//	if (licenseFilterPtr != nullptr){
+//		QByteArray key;
+//		if (licenseFilterPtr->ContainsKey("Key")){
+//			key = licenseFilterPtr->GetData("Key").toByteArray();
+//		}
+
+//		istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+//		if (licenseFilterPtr->ContainsKey("Value")){
+//			QString value = licenseFilterPtr->GetData("Value").toString();
+//			textParamPtr->SetText(value);
+//		}
+//		filterParams.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
+//	}
+
+//	QByteArrayList keys;
+
+//	if (objectFilterModel.ContainsKey("FilterIds")){
+//		imtbase::CTreeItemModel* filterIdsModelPtr = objectFilterModel.GetTreeItemModel("FilterIds");
+//		if (filterIdsModelPtr != nullptr){
+//			istd::TDelPtr<iprm::CParamsSet> filterIdsParamsSetPtr(new iprm::CParamsSet);
+
+//			if (filterIdsModelPtr->ContainsKey("ExcludeIds")){
+//				QByteArray filterValue = filterIdsModelPtr->GetData("ExcludeIds").toByteArray();
+//				if (!filterValue.isEmpty()){
+//					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+//					textParamPtr->SetText(filterValue);
+
+//					filterIdsParamsSetPtr->SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
+//				}
+//			}
+
+//			if (filterIdsModelPtr->ContainsKey("IncludeIds")){
+//				QByteArray filterValue = filterIdsModelPtr->GetData("IncludeIds").toByteArray();
+//				if (!filterValue.isEmpty()){
+//					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+//					textParamPtr->SetText(filterValue);
+
+//					filterIdsParamsSetPtr->SetEditableParameter("IncludeIds", textParamPtr.PopPtr());
+//				}
+//			}
+
+//			filterParams.SetEditableParameter("FilterIds", filterIdsParamsSetPtr.PopPtr());
+//		}
+//	}
+
+//	keys << "HardwareUuid" << "CustomerUuid" << "ProductUuid";
+
+//	for (QByteArray key: keys){
+//		if (objectFilterModel.ContainsKey(key)){
+//			QByteArray filterValue = objectFilterModel.GetData(key).toByteArray();
+//			if (!filterValue.isEmpty()){
+//				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+//				textParamPtr->SetText(filterValue);
+//				filterParams.SetEditableParameter(key, textParamPtr.PopPtr());
+//			}
+//		}
+//	}
+//}
+
+
 void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 			const imtgql::CGqlRequest& gqlRequest,
 			const imtbase::CTreeItemModel& objectFilterModel,
@@ -334,63 +451,32 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());
 	}
 
-	imtbase::CTreeItemModel* licenseFilterPtr = objectFilterModel.GetTreeItemModel("LicenseFilter");
-	if (licenseFilterPtr != nullptr){
-		QByteArray key;
-		if (licenseFilterPtr->ContainsKey("Key")){
-			key = licenseFilterPtr->GetData("Key").toByteArray();
+	if (objectFilterModel.ContainsKey("BindingFilter")){
+		imtbase::CTreeItemModel* bindingFilterPtr = objectFilterModel.GetTreeItemModel("BindingFilter");
+		if (bindingFilterPtr != nullptr){
+			istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
+			QStringList keys = bindingFilterPtr->GetKeys(0);
+
+			for (const QString& key : keys){
+				QByteArray value = bindingFilterPtr->GetData(key.toUtf8()).toByteArray();
+
+				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+				textParamPtr->SetText(value);
+
+				paramsSetPtr->SetEditableParameter(key.toUtf8(), textParamPtr.PopPtr());
+			}
+
+			filterParams.SetEditableParameter("BindingFilter", paramsSetPtr.PopPtr());
 		}
+	}
+
+	if (objectFilterModel.ContainsKey("LicenseFilter")){
+		QString licenseFilter = objectFilterModel.GetData("LicenseFilter").toString();
 
 		istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-		if (licenseFilterPtr->ContainsKey("Value")){
-			QString value = licenseFilterPtr->GetData("Value").toString();
-			textParamPtr->SetText(value);
-		}
-		filterParams.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
-	}
+		textParamPtr->SetText(licenseFilter);
 
-	QByteArrayList keys;
-
-	if (objectFilterModel.ContainsKey("FilterIds")){
-		imtbase::CTreeItemModel* filterIdsModelPtr = objectFilterModel.GetTreeItemModel("FilterIds");
-		if (filterIdsModelPtr != nullptr){
-			istd::TDelPtr<iprm::CParamsSet> filterIdsParamsSetPtr(new iprm::CParamsSet);
-
-			if (filterIdsModelPtr->ContainsKey("ExcludeIds")){
-				QByteArray filterValue = filterIdsModelPtr->GetData("ExcludeIds").toByteArray();
-				if (!filterValue.isEmpty()){
-					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-					textParamPtr->SetText(filterValue);
-
-					filterIdsParamsSetPtr->SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
-				}
-			}
-
-			if (filterIdsModelPtr->ContainsKey("IncludeIds")){
-				QByteArray filterValue = filterIdsModelPtr->GetData("IncludeIds").toByteArray();
-				if (!filterValue.isEmpty()){
-					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-					textParamPtr->SetText(filterValue);
-
-					filterIdsParamsSetPtr->SetEditableParameter("IncludeIds", textParamPtr.PopPtr());
-				}
-			}
-
-			filterParams.SetEditableParameter("FilterIds", filterIdsParamsSetPtr.PopPtr());
-		}
-	}
-
-	keys << "HardwareUuid" << "CustomerUuid" << "ProductUuid";
-
-	for (QByteArray key: keys){
-		if (objectFilterModel.ContainsKey(key)){
-			QByteArray filterValue = objectFilterModel.GetData(key).toByteArray();
-			if (!filterValue.isEmpty()){
-				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-				textParamPtr->SetText(filterValue);
-				filterParams.SetEditableParameter(key, textParamPtr.PopPtr());
-			}
-		}
+		filterParams.SetEditableParameter("LicenseFilter", textParamPtr.PopPtr());
 	}
 }
 

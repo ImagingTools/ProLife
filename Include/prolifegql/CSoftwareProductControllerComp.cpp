@@ -186,15 +186,8 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		iprm::CTextParam valueParam;
 		valueParam.SetText(serialNumber);
 
-		iprm::CEnableableParam isEqualParam;
-		isEqualParam.SetEnabled(true);
-
-		iprm::CParamsSet valueParamsSet;
-		valueParamsSet.SetEditableParameter("Value", &valueParam);
-		valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
 		iprm::CParamsSet paramsSet;
-		paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+		paramsSet.SetEditableParameter("SerialNumber", &valueParam);
 
 		iprm::CParamsSet filterParam;
 		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
@@ -388,15 +381,8 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 		iprm::CTextParam valueParam;
 		valueParam.SetText(serialNumber);
 
-		iprm::CEnableableParam isEqualParam;
-		isEqualParam.SetEnabled(true);
-
-		iprm::CParamsSet valueParamsSet;
-		valueParamsSet.SetEditableParameter("Value", &valueParam);
-		valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
 		iprm::CParamsSet paramsSet;
-		paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+		paramsSet.SetEditableParameter("SerialNumber", &valueParam);
 
 		iprm::CParamsSet filterParam;
 		filterParam.SetEditableParameter("ObjectFilter", &paramsSet);

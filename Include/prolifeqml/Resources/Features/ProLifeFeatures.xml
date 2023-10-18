@@ -176,7 +176,15 @@
                             </SubFeatures>
                         </Object>
                         <Object FeatureId="ViewSensors" FeatureName="View Sensors" FeatureDescription="" Optional="false">
-                            <Dependencies/>
+                            <Dependencies>
+                                <Dependency>EditSensor</Dependency>
+                                <Dependency>ChangeSensorDescription</Dependency>
+                                <Dependency>ChangeSerialNumber</Dependency>
+                                <Dependency>ChangeMacAddress</Dependency>
+                                <Dependency>ChangeProductionStatus</Dependency>
+                                <Dependency>RemoveSensor</Dependency>
+                                <Dependency>AddSensor</Dependency>
+                            </Dependencies>
                             <SubFeatures/>
                         </Object>
                     </SubFeatures>
@@ -208,7 +216,12 @@
                             </SubFeatures>
                         </Object>
                         <Object FeatureId="ViewOrders" FeatureName="View Orders" FeatureDescription="" Optional="false">
-                            <Dependencies/>
+                            <Dependencies>
+                                <Dependency>EditOrder</Dependency>
+                                <Dependency>ChangeOrder</Dependency>
+                                <Dependency>RemoveOrder</Dependency>
+                                <Dependency>AddOrder</Dependency>
+                            </Dependencies>
                             <SubFeatures/>
                         </Object>
                     </SubFeatures>
@@ -219,12 +232,7 @@
                     <Dependencies/>
                     <SubFeatures>
                         <Object FeatureId="ViewAllLicenses" FeatureName="View All Licenses" FeatureDescription="" Optional="false">
-                            <Dependencies>
-                                <Dependency>EditLicense</Dependency>
-                                <Dependency>ChangeLicense</Dependency>
-                                <Dependency>RemoveLicense</Dependency>
-                                <Dependency>AddLicense</Dependency>
-                            </Dependencies>
+                            <Dependencies/>
                             <SubFeatures/>
                         </Object>
                         <Object FeatureId="EditLicense" FeatureName="Edit License" FeatureDescription="" Optional="false">
@@ -253,7 +261,7 @@
                         <Object FeatureId="ViewLicenses" FeatureName="View Licenses" FeatureDescription="" Optional="false">
                             <Dependencies>
                                 <Dependency>EditLicense</Dependency>
-                                <Dependency>ChangeLicense</Dependency>
+                                <Dependency>ChangeLicenseNumber</Dependency>
                                 <Dependency>RemoveLicense</Dependency>
                                 <Dependency>AddLicense</Dependency>
                             </Dependencies>

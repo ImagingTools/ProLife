@@ -11,6 +11,7 @@
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtdb/CSqlDatabaseObjectCollectionComp.h>
 #include <imtlic/ILicenseDefinition.h>
+#include <imtgql/imtgql.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -316,8 +317,9 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 					if (productInstanceInfoPtr != nullptr){
 						bool isUse = productInstanceInfoPtr->IsInUse();
 						if (isUse){
-							errorMessage = QString("It is not possible to remove a product that is in use");
+							errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
 							SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
 
 							return nullptr;
 						}
@@ -339,8 +341,10 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		return rootModelPtr.PopPtr();
 	}
 
-	errorMessage = QObject::tr("Can't remove object: %1").arg(QString(objectId));
+	errorMessage = QString(QT_TR_NOOP("Can't remove object: %1")).arg(QString(objectId));
 	SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
 
 	return nullptr;
 }
@@ -476,7 +480,6 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 
 			QVariant  softwareLinksCount = objectCollectionIterator->GetElementInfo("SoftwareLinksCount").toInt();
 			retVal = retVal && model.SetData("SoftwareLinksCount", softwareLinksCount, itemIndex);
-
 
 			return true;
 		}

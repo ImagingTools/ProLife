@@ -572,7 +572,6 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewLicenses</Value>
-                                            <Value>EditLicense</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
