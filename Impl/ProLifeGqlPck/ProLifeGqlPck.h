@@ -11,6 +11,7 @@
 #include <prolifegql/CSoftwareProductControllerComp.h>
 #include <prolifegql/COrderHistoryControllerComp.h>
 #include <prolifegql/CHardwareProductBindingControllerComp.h>
+#include <prolifegql/CDeviceChangeGeneratorComp.h>
 
 
 /**
@@ -29,6 +30,7 @@ typedef prolifegql::CHardwareProductCollectionControllerComp HardwareProductColl
 typedef prolifegql::CSoftwareProductControllerComp SoftwareProductController;
 typedef prolifegql::COrderHistoryControllerComp OrderHistoryController;
 typedef prolifegql::CHardwareProductBindingControllerComp HardwareProductBindingController;
+typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 
 
 } // namespace ImtLicenseGqlPck

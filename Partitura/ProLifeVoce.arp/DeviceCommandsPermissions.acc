@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5102" Description="ACF"/>
-            <Version Id="1" Number="2194" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5122" Description="ACF"/>
+            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -42,23 +42,23 @@
                                 <Value>Close</Value>
                                 <Value>Undo</Value>
                                 <Value>Redo</Value>
-                                <Value>OrderEdit</Value>
+                                <Value>History</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="OrderEdit" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="History" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="OrderEdit"/>
+                        <Data IsEnabled="true" Value="History"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditOrder</Value>
+                                <Value>ViewSensorHistory</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

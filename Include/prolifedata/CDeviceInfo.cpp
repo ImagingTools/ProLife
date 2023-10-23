@@ -197,6 +197,7 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		m_serialNumber = sourcePtr->m_serialNumber;
 		m_macAddress = sourcePtr->m_macAddress;
 		m_deviceType = sourcePtr->m_deviceType;
+		m_configurationType = sourcePtr->m_configurationType;
 		m_description = sourcePtr->m_description;
 		m_status = sourcePtr->m_status;
 
@@ -225,6 +226,7 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 	m_serialNumber.clear();
 	m_macAddress.clear();
 	m_deviceType.clear();
+	m_configurationType.clear();
 	m_description.clear();
 	m_status = DPS_NONE;
 

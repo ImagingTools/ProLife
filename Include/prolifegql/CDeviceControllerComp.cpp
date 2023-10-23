@@ -108,7 +108,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			QByteArray& objectId,
 			QString& name,
 			QString& /*description*/,
-			QString &errorMessage) const
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QString("Internal error").toUtf8();
@@ -317,7 +317,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		return devicePtr.PopPtr();
 	}
 
-	errorMessage = QObject::tr("Can not create order: %1").arg(QString(objectId));
+	errorMessage = QObject::tr("Can not create device: %1").arg(QString(objectId));
 	SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 	return nullptr;

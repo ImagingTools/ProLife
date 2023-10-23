@@ -10,6 +10,7 @@
     <PositionMap>
         <Element ComponentName="CheckPermissionOr" X="150" Y="625" Note=""/>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
+        <Element ComponentName="DeviceChangeGenerator" X="850" Y="675" Note=""/>
         <Element ComponentName="DeviceCollectionCommands" X="475" Y="300" Note=""/>
         <Element ComponentName="DeviceCollectionController" X="150" Y="300" Note=""/>
         <Element ComponentName="DeviceCommands" X="800" Y="300" Note=""/>
@@ -20,10 +21,6 @@
         <Element ComponentName="HardwareProductBindingController" X="750" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -53,15 +50,20 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="775" Y="425" Note=""/>
-                <Element ComponentName="Close" X="428" Y="600" Note=""/>
+                <Element ComponentName="Close" X="425" Y="625" Note=""/>
                 <Element ComponentName="Commands" X="275" Y="275" Note=""/>
                 <Element ComponentName="CommandsRepresentation" X="1050" Y="275" Note=""/>
                 <Element ComponentName="DeviceCommandsController" X="575" Y="75" Note=""/>
                 <Element ComponentName="DeviceCommandsPermissions" X="1050" Y="425" Note=""/>
                 <Element ComponentName="Empty" X="125" Y="725" Note=""/>
+                <Element ComponentName="History" X="425" Y="525" Note=""/>
                 <Element ComponentName="OrderEdit" X="425" Y="725" Note=""/>
                 <Element ComponentName="Redo" X="425" Y="425" Note=""/>
                 <Element ComponentName="Save" X="125" Y="600" Note=""/>

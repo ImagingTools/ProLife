@@ -340,9 +340,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		if (!filterQuery.isEmpty()){
 			filterQuery = "(" + filterQuery + ")";
 		}
-
-		return true;
 	}
+
+	return true;
 }
 
 

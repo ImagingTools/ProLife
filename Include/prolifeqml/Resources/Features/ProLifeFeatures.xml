@@ -82,6 +82,18 @@
                                 <Dependency>AddUser</Dependency>
                             </Dependencies>
                             <SubFeatures>
+                                <Object FeatureId="ViewGroupHistory" FeatureName="View Group History" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="ViewUserHistory" FeatureName="View User History" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
+                                <Object FeatureId="ViewRoleHistory" FeatureName="View Role History" FeatureDescription="" Optional="false">
+                                    <Dependencies/>
+                                    <SubFeatures/>
+                                </Object>
                                 <Object FeatureId="ViewGroups" FeatureName="View Groups" FeatureDescription="" Optional="false">
                                     <Dependencies>
                                         <Dependency>EditGroup</Dependency>
@@ -118,6 +130,10 @@
                 <Data FeatureId="SensorManagement" FeatureName="Sensor Management" FeatureDescription="" Optional="false">
                     <Dependencies/>
                     <SubFeatures>
+                        <Object FeatureId="ViewSensorHistory" FeatureName="View Sensor History" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
                         <Object FeatureId="UnbindSensor" FeatureName="Unbind Sensor" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures/>
@@ -194,6 +210,10 @@
                 <Data FeatureId="OrderManagement" FeatureName="Order Management" FeatureDescription="" Optional="false">
                     <Dependencies/>
                     <SubFeatures>
+                        <Object FeatureId="ViewOrderHistory" FeatureName="View Order History" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
                         <Object FeatureId="ViewAllOrders" FeatureName="View All Orders" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures/>
@@ -231,6 +251,10 @@
                 <Data FeatureId="LicenseManagement" FeatureName="License Management" FeatureDescription="" Optional="false">
                     <Dependencies/>
                     <SubFeatures>
+                        <Object FeatureId="ViewLicenseHistory" FeatureName="View License History" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
                         <Object FeatureId="ViewAllLicenses" FeatureName="View All Licenses" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures/>
@@ -274,6 +298,10 @@
                 <Data FeatureId="AccountManagement" FeatureName="Account Management" FeatureDescription="" Optional="false">
                     <Dependencies/>
                     <SubFeatures>
+                        <Object FeatureId="ViewAccountHistory" FeatureName="View Account History" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
                         <Object FeatureId="EditAccount" FeatureName="Edit Account" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures>

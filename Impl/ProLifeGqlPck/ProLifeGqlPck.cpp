@@ -59,6 +59,11 @@ I_EXPORT_COMPONENT(
 		"Hardware product binding controller",
 		"Hardware Product Binding Controller");
 
+I_EXPORT_COMPONENT(
+		DeviceChangeGenerator,
+		"Change generator for device document",
+		"Device DeviceInfo Change Generator History Document");
+
 
 } // namespace ProLifeGqlPck
 

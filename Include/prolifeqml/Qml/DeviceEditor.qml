@@ -609,8 +609,14 @@ DocumentBase {
                                 }
                             }
 
+                            property int lastLength: 0;
+                            property bool blockSignal: false;;
                             property var regExp: new RegExp(macAddressRegExp.regExp)
                             onTextChanged: {
+                                if(blockSignal){
+                                    return;
+                                }
+
                                 if (macAddressInput.text === ""){
                                     macAddressInput.borderColor = Style.iconColorOnSelected;
                                     macAddresInvalidText.visible = false;
@@ -625,6 +631,36 @@ DocumentBase {
                                     }
 
                                     macAddresInvalidText.visible = !isValid;
+
+//                                    if (macAddressInput.text.length > lastLength){
+
+//                                        blockSignal = true;
+//                                        let result = macAddressInput.text.replace(':', '')
+//                                        console.log("result", result)
+//                                        let data = result.match(/.{1,2}/g)
+//                                        console.log("data", data)
+
+//                                        macAddressInput.text = data.join(':')
+
+//                                        console.log("macAddressInput.text", macAddressInput.text)
+
+//                                        blockSignal = false;
+
+////                                        let data = macAddressInput.text.split(':');
+////                                        let lastElement = data[data.length - 1];
+////                                        if (lastElement.length === 2){
+////                                            blockSignal = true;
+////                                            macAddressInput.text += ':';
+////                                            blockSignal = false;
+////                                        }
+////                                        if (lastElement.length === 3){
+////                                            blockSignal = true;
+////                                            macAddressInput.text += ':';
+////                                            blockSignal = false;
+////                                        }
+//                                    }
+
+//                                    lastLength = macAddressInput.text.length;
                                 }
                             }
 
@@ -833,8 +869,10 @@ DocumentBase {
                             nameId: "OrderId";
 
                             Component.onCompleted: {
-                                let ok = PermissionsController.checkPermission("ChangeSensor");
-                                orderCB.changeable = ok;
+                                let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");
+                                let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+
+                                orderCB.changeable = canChangeSensor && canChangeOrder;
                             }
 
                             onCurrentIndexChanged: {

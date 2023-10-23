@@ -38,6 +38,27 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="DeviceChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="DeviceChangeGenerator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DeviceCollectionCommands" PackageId="" ComponentId="DeviceCollectionCommands">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -128,11 +149,15 @@
                                 <Value>DeviceAdd</Value>
                                 <Value>DeviceUpdate</Value>
                                 <Value>DeviceItem</Value>
+                                <Value>DeviceHistory</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="DeviceInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -808,6 +833,8 @@
                                             <Value>Empty</Value>
                                             <Value>Save</Value>
                                             <Value>Empty</Value>
+                                            <Value>History</Value>
+                                            <Value>Empty</Value>
                                             <Value>Close</Value>
                                             <Value>OrderEdit</Value>
                                         </Values>
@@ -879,6 +906,27 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="History" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/ShownPassword"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
