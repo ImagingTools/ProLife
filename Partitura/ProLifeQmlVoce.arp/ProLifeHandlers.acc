@@ -55,6 +55,9 @@
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DeviceSqlRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/DeviceOperationContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/FeatureRepository"/>
                     </AttributeInfo>
@@ -69,6 +72,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/ProductRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ApplicationController/SoftwareOperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/SoftwareSqlRepository"/>
@@ -200,6 +206,9 @@
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="DeviceOperationContextController">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -216,6 +225,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">

@@ -26,6 +26,8 @@ public:
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareInstanceCollectionCompPtr, "SoftwareInstanceCollection", "Software instance collection", true, "SoftwareInstanceCollection");
+		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
+		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 	I_END_COMPONENT
 
 protected:
@@ -61,6 +63,9 @@ private:
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareInstanceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
+
+	I_REF(imtgql::IOperationContextController, m_deviceOperationContextControllerCompPtr);
+	I_REF(imtgql::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 };
 
 

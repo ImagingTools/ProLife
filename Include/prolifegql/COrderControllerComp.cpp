@@ -17,6 +17,8 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifegql/CDeviceControllerComp.h>
+#include <prolifegql/CSoftwareProductControllerComp.h>
 
 
 namespace prolifegql
@@ -360,7 +362,12 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 						if (productInfoPtr != nullptr){
 							productInfoPtr->SetOrderId("");
 
-							imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object from order"));
+							imtbase::IOperationContext* operationContextPtr = nullptr;
+
+							if (m_softwareOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, id, productInfoPtr);
+							}
+
 							m_softwareInstanceCollectionCompPtr->SetObjectData(id, *productInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 						}
 					}
@@ -420,15 +427,8 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 	iprm::CTextParam valueParam;
 	valueParam.SetText(serialNumber);
 
-	iprm::CEnableableParam isEqualParam;
-	isEqualParam.SetEnabled(true);
-
-	iprm::CParamsSet valueParamsSet;
-	valueParamsSet.SetEditableParameter("Value", &valueParam);
-	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
 	iprm::CParamsSet paramsSet;
-	paramsSet.SetEditableParameter("SerialNumber", &valueParamsSet);
+	paramsSet.SetEditableParameter("SerialNumber", &valueParam);
 
 	iprm::CParamsSet filterParam;
 	filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
@@ -437,7 +437,7 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 	if (!collectionIds.isEmpty() && !serialNumber.isEmpty()){
 		QByteArray objectId = collectionIds[0];
 		if (objectId != uuidId){
-			errorMessage = QString(QT_TR_NOOP("Serial number: %1 from %2 already exists.")).arg(qPrintable(serialNumber)).arg(qPrintable(productId));
+			errorMessage = QString(QT_TR_NOOP("Serial number: %1 already exists.")).arg(qPrintable(serialNumber));
 			SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
 			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 
@@ -503,14 +503,24 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 					}
 
 					if (changed){
-						imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object from the order"));
+						imtbase::IOperationContext* operationContextPtr = nullptr;
+
+						if (m_softwareOperationContextControllerCompPtr.IsValid()){
+							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, uuidId, softwareInstancePtr.GetPtr());
+						}
+
 						m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 					}
 				}
 			}
 		}
 		else{
-			imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Created the object from the order"));
+			imtbase::IOperationContext* operationContextPtr = nullptr;
+
+			if (m_softwareOperationContextControllerCompPtr.IsValid()){
+				operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest);
+			}
+
 			m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId, nullptr, nullptr, operationContextPtr);
 		}
 	}
@@ -547,7 +557,11 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 	deviceInstancePtr->SetObjectUuid(deviceUuid);
 
 	if (hardwareProductModel.ContainsKey("IsNewDevice", modelIndex)){
-		imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Created the object from the order"));
+		imtbase::IOperationContext* operationContextPtr = nullptr;
+
+		if (m_deviceOperationContextControllerCompPtr.IsValid()){
+			m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
+		}
 
 		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), deviceUuid, nullptr, nullptr, operationContextPtr);
 	}
@@ -565,7 +579,11 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 					deviceInfoPtr->SetDeviceType(productId);
 					deviceInfoPtr->SetConfigurationType(modelTypeId);
 
-					imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object from the order"));
+					imtbase::IOperationContext* operationContextPtr = nullptr;
+
+					if (m_deviceOperationContextControllerCompPtr.IsValid()){
+						operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, deviceUuid, deviceInfoPtr);
+					}
 
 					m_deviceCollectionCompPtr->SetObjectData(deviceUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 				}

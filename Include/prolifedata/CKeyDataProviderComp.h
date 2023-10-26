@@ -11,6 +11,7 @@
 #include <imtbase/IObjectCollection.h>
 #include <imtcrypt/IEncryptionKeysProvider.h>
 #include <imtgql/IGqlRequestHandler.h>
+#include <imtgql/IOperationContextController.h>
 #include <imtlic/CProductInstanceInfo.h>
 
 
@@ -41,6 +42,8 @@ public:
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
 		I_ASSIGN(m_featureCollectionCompPtr, "FeatureCollection", "Feature collection", true, "FeatureCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
+		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
+		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 	I_END_COMPONENT;
 
 	enum CommandGroup
@@ -80,6 +83,9 @@ private:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
+
+	I_REF(imtgql::IOperationContextController, m_deviceOperationContextControllerCompPtr);
+	I_REF(imtgql::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 };
 
 

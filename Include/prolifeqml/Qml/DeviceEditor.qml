@@ -184,11 +184,10 @@ DocumentBase {
         if (!saveExists){
             deviceEditorContainer.blockEditing();
         }
-
-        let isOrderEdited = deviceEditorContainer.commandsProvider.commandExists("OrderEdit");
-        if (!isOrderEdited){
-            orderCB.changeable = false;
-        }
+//        let isOrderEdited = deviceEditorContainer.commandsProvider.commandExists("OrderEdit");
+//        if (!isOrderEdited){
+//            orderCB.changeable = false;
+//        }
     }
 
     function blockEditing(){
@@ -491,7 +490,7 @@ DocumentBase {
 
                         Text {
                             id: titleConfigurationName;
-                            text: qsTr("Configuration Type");
+                            text: qsTr("Hardware Configuration");
                             color: Style.textColor;
                             font.family: Style.fontFamily;
                             font.pixelSize: Style.fontSize_common;

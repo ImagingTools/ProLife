@@ -329,7 +329,12 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Removed the object"));
+	imtbase::IOperationContext* operationContextPtr = nullptr;
+
+	if (m_operationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_REMOVE, gqlRequest);
+	}
+
 	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
 		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 

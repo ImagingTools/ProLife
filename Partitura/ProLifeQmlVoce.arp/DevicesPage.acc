@@ -41,6 +41,9 @@
         <Element Id="DeviceChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="DeviceChangeGenerator">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -54,6 +57,12 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -106,6 +115,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DeviceViewDataProvider"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
                         <Data IsEnabled="false"/>
@@ -164,6 +176,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
@@ -250,6 +265,33 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="HardwareBindingChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="HardwareBindingChangeGenerator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="HardwareProductBindingController" PackageId="ProLifeGqlPck" ComponentId="HardwareProductBindingController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -265,16 +307,43 @@
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="DeviceOperationContextController">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareBindingChangeGenerator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OperationContextController" PackageId="ImtGqlPck" ComponentId="OperationContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -836,7 +905,6 @@
                                             <Value>History</Value>
                                             <Value>Empty</Value>
                                             <Value>Close</Value>
-                                            <Value>OrderEdit</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -914,7 +982,7 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/ShownPassword"/>
+                                    <Data IsEnabled="true" Value="Icons/History"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Id" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="History"/>
@@ -1035,5 +1103,8 @@
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="DeviceController" ComponentId="DeviceController"/>
+        <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
+    </ExportedComponents>
 </Acf>

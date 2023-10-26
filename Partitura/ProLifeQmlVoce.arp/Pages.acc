@@ -362,6 +362,9 @@
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DevicesPage/OperationContextController"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -379,6 +382,12 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                                     <Data IsEnabled="false"/>
@@ -426,13 +435,31 @@
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DevicesPage/OperationContextController"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -455,6 +482,12 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
                                     <Data IsEnabled="false"/>
@@ -479,6 +512,7 @@
                     <Component ExportedId="AccountsPageVisualStatus" ComponentId="AccountsPage/AccountsPageVisualStatus"/>
                     <Component ExportedId="AdministrationPageVisualStatus" ComponentId="AdministrationPage/AdministrationPageVisualStatus"/>
                     <Component ExportedId="AdministrationPages" ComponentId="AdministrationPage/AdministrationPages"/>
+                    <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
                     <Component ExportedId="HardwareProductCollectionController" ComponentId="HardwareProductCollectionController"/>
                     <Component ExportedId="InstancesPageVisualStatus" ComponentId="InstancesPage/InstancesPageVisualStatus"/>
@@ -487,6 +521,7 @@
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
                     <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
+                    <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>
                     <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
@@ -757,8 +792,10 @@
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Repositories/BindingProductsRepository"/>
+        <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
+        <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Repositories/SoftwareSqlRepository"/>
     </ExportedComponents>
 </Acf>

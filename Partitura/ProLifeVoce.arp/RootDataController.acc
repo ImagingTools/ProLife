@@ -457,6 +457,7 @@
         <Component ExportedId="BackupParamsSet" ComponentId="SettingsController/BackupParamsSet"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Pages/BindingProductsRepository"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="SettingsController/DatabaseAccessSettings"/>
+        <Component ExportedId="DeviceOperationContextController" ComponentId="Pages/DeviceOperationContextController"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Pages/DeviceSqlRepository"/>
         <Component ExportedId="FeatureRepository" ComponentId="FeatureRepository"/>
         <Component ExportedId="GraphQLClientEngine" ComponentId="LisaGQLEngine"/>
@@ -465,6 +466,7 @@
         <Component ExportedId="ProductRepository" ComponentId="ProductRepository"/>
         <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="ServerPort" ComponentId="SettingsController/ServerPort"/>
+        <Component ExportedId="SoftwareOperationContextController" ComponentId="Pages/SoftwareOperationContextController"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Pages/SoftwareSqlRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="SettingsController/WebSocketServerPort"/>

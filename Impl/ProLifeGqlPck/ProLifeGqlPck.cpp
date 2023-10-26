@@ -64,6 +64,21 @@ I_EXPORT_COMPONENT(
 		"Change generator for device document",
 		"Device DeviceInfo Change Generator History Document");
 
+I_EXPORT_COMPONENT(
+		LicenseChangeGenerator,
+		"Change generator for license document",
+		"License LicenseInfo Change Generator History Document");
+
+I_EXPORT_COMPONENT(
+		OrderChangeGenerator,
+		"Change generator for order document",
+		"Order OrderInfo Change Generator History Document");
+
+I_EXPORT_COMPONENT(
+		HardwareBindingChangeGenerator,
+		"Change generator for hardware binding",
+		"Hardware Binding Bind Change Generator History Document");
+
 
 } // namespace ProLifeGqlPck
 

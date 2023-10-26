@@ -20,6 +20,7 @@ public:
 	I_BEGIN_COMPONENT(CSoftwareProductControllerComp)
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
+		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Order operation context controller", true, "OrderOperationContextController");
 	I_END_COMPONENT
 
 protected:
@@ -30,6 +31,7 @@ protected:
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtgql::IOperationContextController, m_orderOperationContextControllerCompPtr);
 };
 
 

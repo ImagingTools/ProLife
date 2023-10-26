@@ -267,10 +267,28 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 			if (productInstanceInfoPtr != nullptr){
 				productInstanceInfoPtr->SetInUse(true);
 
-				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr)){
-					return false;
+				imtbase::IOperationContext* operationContextPtr =  nullptr;
+
+				if (m_softwareOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1);
+				}
+
+				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+					SendWarningMessage(0, "Error when trying update software instance", "CKeyDataProviderComp");
 				}
 			}
+		}
+	}
+
+	{
+		imtbase::IOperationContext* operationContextPtr =  nullptr;
+
+		if (m_deviceOperationContextControllerCompPtr.IsValid()){
+			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1);
+		}
+
+		if (!m_deviceCollectionCompPtr->SetObjectData(hardwareObjectId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+			SendWarningMessage(0, "Error when trying update hardware product", "CKeyDataProviderComp");
 		}
 	}
 

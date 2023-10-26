@@ -15,6 +15,7 @@
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifegql/COrderControllerComp.h>
 
 
 namespace prolifegql
@@ -235,7 +236,12 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 		productOrderInfoPtr->ClearLicenses();
 		productOrderInfoPtr->AddLicense(licenseId, QDateTime::fromString(expiration, "yyyy-MM-dd"));
 
-		imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object"));
+		imtbase::IOperationContext* operationContextPtr = nullptr;
+
+		if (m_operationContextControllerCompPtr.IsValid()){
+			operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, objectUuid, productOrderInfoPtr);
+		}
+
 		if (!m_objectCollectionCompPtr->SetObjectData(objectUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
 			errorMessage = QString("Unable to set object by ID: %1.").arg(qPrintable(objectUuid));
 			SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
@@ -252,7 +258,12 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 						imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
 						if (productCollectionPtr != nullptr){
 							if (productCollectionPtr->RemoveElement(objectUuid)){
-								imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+								imtbase::IOperationContext* operationContextPtr = nullptr;
+
+								if (m_orderOperationContextControllerCompPtr.IsValid()){
+									operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, oldOrderUuid, productOrderInfoPtr);
+								}
+
 								m_orderCollectionCompPtr->SetObjectData(oldOrderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 							}
 						}
@@ -275,7 +286,12 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 						if (productCollectionPtr != nullptr){
 							productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectUuid);
 
-							imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+							imtbase::IOperationContext* operationContextPtr = nullptr;
+
+							if (m_orderOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderUuid, productOrderInfoPtr);
+							}
+
 							m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 						}
 					}
@@ -432,7 +448,12 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 			if (productCollectionPtr != nullptr){
 				productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
 
-				imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Updated the object after updating the software product"));
+				imtbase::IOperationContext* operationContextPtr = nullptr;
+
+				if (m_orderOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderUuid, productOrderInfoPtr);
+				}
+
 				m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 			}
 		}

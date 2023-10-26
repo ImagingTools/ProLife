@@ -662,6 +662,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductId" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') %1)")
 					.arg(qPrintable(sortOrder));
 		}
+		else if (columnId == "ProductName"){
+			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') %1)")
+					.arg(qPrintable(sortOrder));
+		}
 		else if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer" || columnId == "LastModified" || columnId == "Added"){
 			sortQuery = QString("ORDER BY \"%1\" %2")
 					.arg(qPrintable(columnId))
@@ -711,6 +715,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 			}
 			else if (columnId == "ProductId"){
 				textFilterQuery += QString("(SELECT prod.\"ProductId\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = si.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
+			}
+			else if (columnId == "ProductName"){
+				textFilterQuery += QString("(SELECT prod.\"ProductName\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = si.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
 			}
 			else{
 				textFilterQuery += QString("si.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);

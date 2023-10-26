@@ -69,7 +69,12 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = CreateOperationContext(gqlRequest, QString("Removed the object"));
+	imtbase::IOperationContext* operationContextPtr = nullptr;
+
+	if (m_operationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_REMOVE, gqlRequest);
+	}
+
 	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
 		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
@@ -152,6 +157,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				else if (informationId == "ProductId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("ProductId").toByteArray();
 				}
+				else if (informationId == "ProductName"){
+					elementInformation = objectCollectionIterator->GetElementInfo("ProductName").toByteArray();
+				}
 				else if (informationId == "ProductUuid"){
 					elementInformation = objectCollectionIterator->GetElementInfo("ProductUuid").toByteArray();
 				}
@@ -226,148 +234,6 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 
 	return retVal;
 }
-
-
-//void CSoftwareProductCollectionControllerComp::SetObjectFilter(
-//			const imtgql::CGqlRequest& gqlRequest,
-//			const imtbase::CTreeItemModel& objectFilterModel,
-//			iprm::CParamsSet& filterParams) const
-//{
-//	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
-
-//	if (!m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
-//		return;
-//	}
-
-//	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-//	if (gqlContextPtr == nullptr){
-//		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
-
-//		return;
-//	}
-
-//	bool filterByGroup = true;
-
-//	QByteArray userId;
-//	QByteArrayList userGroupIds;
-//	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-//	if (userInfoPtr != nullptr){
-//		userGroupIds = userInfoPtr->GetGroups();
-//		userId = userInfoPtr->GetId();
-
-//		if (userInfoPtr->IsAdmin()){
-//			filterByGroup = false;
-//		}
-//		else{
-//			if (m_checkPermissionCompPtr.IsValid()){
-//				QByteArrayList userPermissions = userInfoPtr->GetPermissions();
-
-//				QByteArrayList permissions;
-//				permissions << *m_permissionIdAttrPtr;
-//				filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-//			}
-//		}
-//	}
-
-//	if (filterByGroup){
-//		iprm::CParamsSet accountFilter;
-
-//		iprm::CParamsSet groupsObjectFilter;
-//		iprm::COptionsManager groupsOptionsManager;
-
-//		for (const QByteArray& groupId : userGroupIds){
-//			groupsOptionsManager.InsertOption("", groupId);
-//		}
-
-//		groupsObjectFilter.SetEditableParameter("Groups", &groupsOptionsManager);
-//		accountFilter.SetEditableParameter("ObjectFilter", &groupsObjectFilter);
-
-//		iprm::COptionsManager accountsOptionsManager;
-//		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-//		for (const QByteArray& accountId : accountIds){
-//			accountsOptionsManager.InsertOption("", accountId);
-//		}
-
-//		istd::TDelPtr<iprm::COptionsManager> ordersOptionsManagerPtr;
-//		ordersOptionsManagerPtr.SetPtr(new iprm::COptionsManager());
-
-//		iprm::CParamsSet orderFilter;
-
-//		iprm::CParamsSet accountParams;
-//		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-//		orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
-
-//		imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
-//		for (const QByteArray& orderId : ordersIds){
-//			ordersOptionsManagerPtr->InsertOption(orderId, orderId);
-//		}
-
-//		if (!userId.isEmpty()){
-//			ordersOptionsManagerPtr->InsertOption("", userId);
-//		}
-
-//		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());
-//	}
-
-//	imtbase::CTreeItemModel* licenseFilterPtr = objectFilterModel.GetTreeItemModel("LicenseFilter");
-//	if (licenseFilterPtr != nullptr){
-//		QByteArray key;
-//		if (licenseFilterPtr->ContainsKey("Key")){
-//			key = licenseFilterPtr->GetData("Key").toByteArray();
-//		}
-
-//		istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-//		if (licenseFilterPtr->ContainsKey("Value")){
-//			QString value = licenseFilterPtr->GetData("Value").toString();
-//			textParamPtr->SetText(value);
-//		}
-//		filterParams.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
-//	}
-
-//	QByteArrayList keys;
-
-//	if (objectFilterModel.ContainsKey("FilterIds")){
-//		imtbase::CTreeItemModel* filterIdsModelPtr = objectFilterModel.GetTreeItemModel("FilterIds");
-//		if (filterIdsModelPtr != nullptr){
-//			istd::TDelPtr<iprm::CParamsSet> filterIdsParamsSetPtr(new iprm::CParamsSet);
-
-//			if (filterIdsModelPtr->ContainsKey("ExcludeIds")){
-//				QByteArray filterValue = filterIdsModelPtr->GetData("ExcludeIds").toByteArray();
-//				if (!filterValue.isEmpty()){
-//					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-//					textParamPtr->SetText(filterValue);
-
-//					filterIdsParamsSetPtr->SetEditableParameter("ExcludeIds", textParamPtr.PopPtr());
-//				}
-//			}
-
-//			if (filterIdsModelPtr->ContainsKey("IncludeIds")){
-//				QByteArray filterValue = filterIdsModelPtr->GetData("IncludeIds").toByteArray();
-//				if (!filterValue.isEmpty()){
-//					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-//					textParamPtr->SetText(filterValue);
-
-//					filterIdsParamsSetPtr->SetEditableParameter("IncludeIds", textParamPtr.PopPtr());
-//				}
-//			}
-
-//			filterParams.SetEditableParameter("FilterIds", filterIdsParamsSetPtr.PopPtr());
-//		}
-//	}
-
-//	keys << "HardwareUuid" << "CustomerUuid" << "ProductUuid";
-
-//	for (QByteArray key: keys){
-//		if (objectFilterModel.ContainsKey(key)){
-//			QByteArray filterValue = objectFilterModel.GetData(key).toByteArray();
-//			if (!filterValue.isEmpty()){
-//				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-//				textParamPtr->SetText(filterValue);
-//				filterParams.SetEditableParameter(key, textParamPtr.PopPtr());
-//			}
-//		}
-//	}
-//}
 
 
 void CSoftwareProductCollectionControllerComp::SetObjectFilter(

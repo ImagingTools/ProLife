@@ -56,7 +56,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Status</Value>
-                                <Value>ProductId</Value>
+                                <Value>ProductName</Value>
                                 <Value>LicenseName</Value>
                                 <Value>LicenseId</Value>
                                 <Value>SerialNumber</Value>
@@ -76,7 +76,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value></Value>
-                                <Value>Product-ID</Value>
+                                <Value>Product</Value>
                                 <Value>License Name</Value>
                                 <Value>License-ID</Value>
                                 <Value>License Number</Value>
@@ -95,7 +95,7 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProductId</Value>
+                                <Value>ProductName</Value>
                                 <Value>OrderId</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>DeviceId</Value>
@@ -108,6 +108,30 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LicenseChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="LicenseChangeGenerator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -140,6 +164,18 @@
                         <Data IsEnabled="true" Value="../../ProLife/SoftwareEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OperationContextController" PackageId="ImtGqlPck" ComponentId="OperationContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -179,6 +215,9 @@
                     <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ObjectViewDataProvider"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -206,8 +245,12 @@
                                 <Value>SoftwareProductItem</Value>
                                 <Value>SoftwareProductUpdate</Value>
                                 <Value>SoftwareProductAdd</Value>
+                                <Value>SoftwareProductHistory</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -215,7 +258,13 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="OrderOperationContextController">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
@@ -665,6 +714,7 @@
                                             <Value>UndoPermissions</Value>
                                             <Value>RedoPermissions</Value>
                                             <Value>ClosePermissions</Value>
+                                            <Value>HistoryPermissions</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -681,6 +731,8 @@
                                             <Value>Redo</Value>
                                             <Value>Empty</Value>
                                             <Value>Save</Value>
+                                            <Value>Empty</Value>
+                                            <Value>History</Value>
                                             <Value>Empty</Value>
                                             <Value>Close</Value>
                                         </Values>
@@ -743,6 +795,49 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="History" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="HistoryPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewLicenseHistory</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -896,5 +991,8 @@
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
+        <Component ExportedId="SoftwareProductController" ComponentId="SoftwareProductController"/>
+    </ExportedComponents>
 </Acf>

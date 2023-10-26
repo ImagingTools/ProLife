@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5105" Description="ACF"/>
-            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5122" Description="ACF"/>
+            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -30,6 +30,51 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OperationContextController" PackageId="ImtGqlPck" ComponentId="OperationContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderChangeGenerator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="OrderChangeGenerator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -79,6 +124,9 @@
                     <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderViewDataProvider"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
@@ -115,11 +163,18 @@
                                 <Value>OrderAdd</Value>
                                 <Value>OrderUpdate</Value>
                                 <Value>OrderItem</Value>
+                                <Value>OrderHistory</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="DeviceOperationContextController">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -127,10 +182,16 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="OrderInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -586,6 +647,8 @@
                                             <Value>Empty</Value>
                                             <Value>Save</Value>
                                             <Value>Empty</Value>
+                                            <Value>History</Value>
+                                            <Value>Empty</Value>
                                             <Value>Close</Value>
                                             <Value>LicenseEdit</Value>
                                         </Values>
@@ -641,6 +704,27 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="History" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="History"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -781,5 +865,8 @@
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
+        <Component ExportedId="OrderController" ComponentId="OrderController"/>
+    </ExportedComponents>
 </Acf>

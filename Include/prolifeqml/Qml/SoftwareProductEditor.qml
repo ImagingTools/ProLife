@@ -109,7 +109,10 @@ Item {
         canSelectAll: false;
         isMultiCheckable: false;
 
+        isMultiSelect: false;
         readOnly: root.readOnly;
+
+        canMoveColumns: true;
 
         Component.onCompleted: {
             let ok = PermissionsController.checkPermission("ChangeLicense");
@@ -121,7 +124,6 @@ Item {
                 licensesTable.readOnly = false;
             }
         }
-
         delegate: Component {
             LicenseInstanceItemDelegate {
                 width: licensesTable.width;
