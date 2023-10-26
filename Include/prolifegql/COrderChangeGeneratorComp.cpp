@@ -192,17 +192,23 @@ QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColle
 					if (typeId == QByteArray("AddProduct")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Added the product %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("Added the product %1")).toUtf8(),
 									languageId,
 									"prolifegql::COrderChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 					else if (typeId == QByteArray("RemoveProduct")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Removed the product %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("Removed the product %1")).toUtf8(),
 									languageId,
 									"prolifegql::COrderChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 				}

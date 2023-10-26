@@ -228,17 +228,23 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 					if (typeId == QByteArray("AddLicense")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Added the license %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("Added the license %1")).toUtf8(),
 									languageId,
 									"prolifegql::CDeviceChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 					else if (typeId == QByteArray("RemoveLicense")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Removed the license %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("Removed the license %1")).toUtf8(),
 									languageId,
 									"prolifegql::CDeviceChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 					else if (typeId == QByteArray("CreateLicenseFile")){

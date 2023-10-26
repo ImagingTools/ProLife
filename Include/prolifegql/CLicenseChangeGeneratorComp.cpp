@@ -212,17 +212,23 @@ QString CLicenseChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCol
 					if (typeId == QByteArray("AddHardware")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("License binded to hardware %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("License binded to hardware %1")).toUtf8(),
 									languageId,
 									"prolifegql::CLicenseChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 					else if (typeId == QByteArray("RemoveHardware")){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("License unbinded from hardware %1")).arg(keyName).toUtf8(),
+									QString(QT_TR_NOOP("License unbinded from hardware %1")).toUtf8(),
 									languageId,
 									"prolifegql::CLicenseChangeGeneratorComp");
+
+						change = change.arg(keyName);
+
 						retVal += change + "\n";
 					}
 					else if (typeId == QByteArray("CreateLicenseFile")){
