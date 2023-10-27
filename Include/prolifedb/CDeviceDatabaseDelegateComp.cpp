@@ -39,7 +39,7 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 				.arg(qPrintable(objectId)).toUtf8();
 	}
 
-	if (m_licenseCollectionCompPtr.IsValid() && m_productCollectionCompPtr.IsValid() && m_databaseEngineCompPtr.IsValid()){
+	if (m_databaseEngineCompPtr.IsValid()){
 		QByteArray beforeSelectionQuery;
 
 		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";

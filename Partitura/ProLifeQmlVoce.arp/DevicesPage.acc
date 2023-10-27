@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5122" Description="ACF"/>
-            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5125" Description="ACF"/>
+            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -664,7 +664,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
-                                            <Value>EditOrder</Value>
+                                            <Value>ChangeOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -752,6 +752,7 @@
                                         <Values>
                                             <Value>ViewSensors</Value>
                                             <Value>EditSensor</Value>
+                                            <Value>ChangeSensor</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

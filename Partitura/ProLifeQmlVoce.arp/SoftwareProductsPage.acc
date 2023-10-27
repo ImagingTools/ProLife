@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5122" Description="ACF"/>
-            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5125" Description="ACF"/>
+            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -118,6 +118,9 @@
         <Element Id="LicenseChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="LicenseChangeGenerator">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -400,9 +403,8 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditLicense</Value>
+                                            <Value>ViewLicenses</Value>
                                             <Value>ChangeLicense</Value>
-                                            <Value>ChangeLisenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -588,7 +590,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
-                                            <Value>EditOrder</Value>
+                                            <Value>ChangeOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -874,7 +876,7 @@
                                         <Values>
                                             <Value>EditLicense</Value>
                                             <Value>ChangeLicense</Value>
-                                            <Value>ChangeLisenseNumber</Value>
+                                            <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -919,7 +921,7 @@
                                         <Values>
                                             <Value>EditLicense</Value>
                                             <Value>ChangeLicense</Value>
-                                            <Value>ChangeLisenseNumber</Value>
+                                            <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -964,7 +966,7 @@
                                         <Values>
                                             <Value>EditLicense</Value>
                                             <Value>ChangeLicense</Value>
-                                            <Value>ChangeLisenseNumber</Value>
+                                            <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

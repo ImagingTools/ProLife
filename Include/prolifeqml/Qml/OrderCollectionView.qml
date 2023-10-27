@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtqml 1.0
 
 CollectionView {
@@ -21,8 +22,16 @@ CollectionView {
     function fillContextMenuModel(){
         contextMenuModel.clear();
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
-        contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
-        contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
+
+        let canRemoveOrder = PermissionsController.checkPermission("RemoveOrder");
+        if (canRemoveOrder){
+            contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
+        }
+
+        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+        if (canChangeOrder){
+            contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
+        }
     }
 
     Component {

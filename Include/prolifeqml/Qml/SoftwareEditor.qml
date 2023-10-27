@@ -146,13 +146,11 @@ DocumentBase {
             expiration = root.documentModel.GetData("Expiration");
         }
 
-        if (root.documentModel.ContainsKey("LicenseId")){
-            let licenseId = root.documentModel.GetData("LicenseId");
+        if (root.documentModel.ContainsKey("LicenseUuid")){
+            let licenseId = root.documentModel.GetData("LicenseUuid");
 
-            let activeLicenses = softwareProductEditor.productModel.AddTreeModel("ActiveLicenses");
-            activeLicenses.InsertNewItem();
-            activeLicenses.SetData("Id", licenseId);
-            activeLicenses.SetData("Expiration", expiration);
+            softwareProductEditor.productModel.SetData("LicenseUuid", licenseId);
+            softwareProductEditor.productModel.SetData("Expiration", expiration);
         }
 
         productCB.currentIndex = -1;
@@ -191,25 +189,23 @@ DocumentBase {
 
         root.documentModel.SetData("Project", projectInput.text);
 
-        if (ordersCB.model){
-            if (ordersCB.currentIndex >= 0){
-                let orderUuid = ordersCB.model.GetData("Id", ordersCB.currentIndex);
-                root.documentModel.SetData("OrderUuid", orderUuid);
-            }
-            else{
-                root.documentModel.SetData("OrderUuid", "");
+        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+        if (canChangeOrder){
+            if (ordersCB.model){
+                if (ordersCB.currentIndex >= 0){
+                    let orderUuid = ordersCB.model.GetData("Id", ordersCB.currentIndex);
+                    root.documentModel.SetData("OrderUuid", orderUuid);
+                }
+                else{
+                    root.documentModel.SetData("OrderUuid", "");
+                }
             }
         }
 
-        let licenseId = "";
-        let expiration = "";
-        let activeLicensesModel = softwareProductEditor.productModel.GetData("ActiveLicenses");
-        if (activeLicensesModel){
-            licenseId =  activeLicensesModel.GetData("Id");
-            expiration =  activeLicensesModel.GetData("Expiration");
-        }
+        let licenseId = softwareProductEditor.productModel.GetData("LicenseUuid")
+        let expiration = softwareProductEditor.productModel.GetData("Expiration")
 
-        root.documentModel.SetData("LicenseId", licenseId);
+        root.documentModel.SetData("LicenseUuid", licenseId);
         root.documentModel.SetData("Expiration", expiration);
 
         let serialNumber = "";
@@ -251,251 +247,224 @@ DocumentBase {
         color: Style.backgroundColor;
     }
 
-    CustomScrollbar {
-        id: scrollbar;
-        z: 100;
+    Column {
+        id: bodyColumn;
 
-        anchors.left: flickable.right;
-        anchors.leftMargin: 5;
         anchors.top: parent.top;
-        anchors.bottom: parent.bottom;
-
-        backgroundColor: Style.baseColor;
-
-        secondSize: 10;
-        targetItem: flickable;
-    }
-
-    Flickable {
-        id: flickable;
-        anchors.top: parent.top;
-        anchors.bottom: parent.bottom;
         anchors.left: parent.left;
         anchors.leftMargin: 20;
 
         width: 500;
 
-        contentWidth: bodyColumn.width;
-        contentHeight: bodyColumn.height;
+        spacing: 7;
 
-        boundsBehavior: Flickable.StopAtBounds;
+        Text {
+            id: titleProject;
 
-        Column {
-            id: bodyColumn;
+            color: Style.textColor;
+            font.family: Style.fontFamilyBold;
+            font.pixelSize: Style.fontSize_common;
 
-            width: flickable.width;
+            text: qsTr("Project");
+        }
 
-            spacing: 7;
+        CustomTextField {
+            id: projectInput;
 
-            Text {
-                id: titleProject;
+            height: 30;
+            width: bodyColumn.width;
 
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
+            placeHolderText: qsTr("Enter the project");
 
-                text: qsTr("Project");
+            Component.onCompleted: {
+                let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                projectInput.readOnly = !ok;
             }
 
-            CustomTextField {
-                id: projectInput;
-
-                height: 30;
-                width: bodyColumn.width;
-
-                placeHolderText: qsTr("Enter the project");
-
-                Component.onCompleted: {
-                    let ok = PermissionsController.checkPermission("ChangeLicense");
-
-                    projectInput.readOnly = !ok;
-                }
-
-                onEditingFinished: {
-                    let oldText = root.documentModel.GetData("Project");
-                    if (oldText && oldText !== projectInput.text || !oldText && projectInput.text !== ""){
-                        root.updateModel();
-                    }
+            onEditingFinished: {
+                let oldText = root.documentModel.GetData("Project");
+                if (oldText && oldText !== projectInput.text || !oldText && projectInput.text !== ""){
+                    root.updateModel();
                 }
             }
+        }
 
-            Text {
-                id: titleOrder;
+        Text {
+            id: titleOrder;
 
-                text: qsTr("Order");
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-            }
+            text: qsTr("Order");
+            color: Style.textColor;
+            font.family: Style.fontFamilyBold;
+            font.pixelSize: Style.fontSize_common;
+        }
 
-            Item {
-                width: parent.width;
-                height: 23;
-
-                ComboBox {
-                    id: ordersCB;
-
-                    anchors.left: parent.left;
-
-                    width: parent.width - buttonContainer.width - 10;
-                    height: 23;
-
-                    radius: 3;
-
-                    nameId: "OrderId";
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeLicense");
-
-                        ordersCB.changeable = ok;
-                    }
-
-                    onCurrentIndexChanged: {
-                        console.log("onCurrentIndexChanged", ordersCB.currentIndex);
-                        if (root.blockUpdatingModel){
-                            return;
-                        }
-
-                        root.updateModel();
-                    }
-                }
-
-                BaseButton{
-                    id: buttonContainer;
-
-                    anchors.right: parent.right;
-
-                    text: qsTr("Clear");
-
-                    decorator: defaultButtonDecorator;
-
-                    enabled: ordersCB.changeable;
-
-                    onClicked: {
-                        if(root.documentModel.ContainsKey("OrderUuid")){
-                            let orderUuid = root.documentModel.GetData("OrderUuid")
-                            if (ordersCB.currentIndex != -1){
-                                ordersCB.currentIndex = -1;
-                            }
-                        }
-                    }
-
-                    Component{
-                        id: defaultButtonDecorator;
-                        CommonButtonDecorator{
-                            width: 70;
-                            height: 23;
-                        }
-                    }
-                }
-            }
-
-            Text {
-                id: titleProduct;
-
-                text: qsTr("Product");
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-            }
+        Item {
+            width: parent.width;
+            height: 23;
 
             ComboBox {
-                id: productCB;
+                id: ordersCB;
 
-                width: parent.width;
+                anchors.left: parent.left;
+
+                width: parent.width - buttonContainer.width - 10;
                 height: 23;
 
                 radius: 3;
 
-                nameId: "ProductName";
+                nameId: "OrderId";
 
                 Component.onCompleted: {
                     let ok = PermissionsController.checkPermission("ChangeLicense");
 
-                    productCB.changeable = ok;
+                    ordersCB.changeable = ok;
                 }
 
                 onCurrentIndexChanged: {
+                    console.log("onCurrentIndexChanged", ordersCB.currentIndex);
                     if (root.blockUpdatingModel){
                         return;
                     }
 
-                    if (productCB.currentIndex >= 0){
-                        let oldProductId = root.documentModel.GetData("ProductId");
-                        let productId = productCB.model.GetData("Id", productCB.currentIndex);
-                        root.documentModel.SetData("ProductId", productId);
-
-                        if (oldProductId != productId){
-                            root.documentModel.SetData("Expiration", "");
-                            root.documentModel.SetData("LicenseId", "");
-                        }
-
-                        let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-                        if (!licensesModel){
-                            licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
-                        }
-
-                        let expiration = "";
-                        if (root.documentModel.ContainsKey("Expiration")){
-                            expiration = root.documentModel.GetData("Expiration");
-                        }
-
-                        if (root.documentModel.ContainsKey("LicenseId")){
-                            let licenseId = root.documentModel.GetData("LicenseId");
-
-                            let activeLicenses = softwareProductEditor.productModel.AddTreeModel("ActiveLicenses");
-                            activeLicenses.InsertNewItem();
-                            activeLicenses.SetData("Id", licenseId);
-                            activeLicenses.SetData("Expiration", expiration);
-                        }
-
-                        softwareProductEditor.productLicensesModel = licensesModel;
-
-                        softwareProductEditor.updateGui()
-                    }
+                    root.updateModel();
                 }
             }
 
-            SoftwareProductEditor {
-                id: softwareProductEditor;
+            BaseButton{
+                id: buttonContainer;
 
-                width: bodyColumn.width;
-                height: 400;
+                anchors.right: parent.right;
 
-                Component.onCompleted: {
-                    softwareProductEditor.productModel.dataChanged.connect(softwareProductEditor.onModelChanged);
+                text: qsTr("Clear");
+
+                decorator: defaultButtonDecorator;
+
+                enabled: ordersCB.changeable && ordersCB.currentIndex >= 0;
+
+                onClicked: {
+                    if(root.documentModel.ContainsKey("OrderUuid")){
+                        let orderUuid = root.documentModel.GetData("OrderUuid")
+                        if (ordersCB.currentIndex != -1){
+                            ordersCB.currentIndex = -1;
+                        }
+                    }
                 }
 
-                function onModelChanged(){
-                    let currentLicenseId = root.documentModel.GetData("LicenseId");
-                    let currentExpiration = root.documentModel.GetData("Expiration");
-                    let currentSerialNumber = root.documentModel.GetData("SerialNumber");
-
-                    console.log("currentLicenseId", currentLicenseId);
-                    console.log("currentExpiration", currentExpiration);
-                    console.log("currentSerialNumber", currentSerialNumber);
-
-                    let licenseId = "";
-                    let expiration = "";
-                    let activeLicensesModel = softwareProductEditor.productModel.GetData("ActiveLicenses");
-                    if (activeLicensesModel){
-                        licenseId =  activeLicensesModel.GetData("Id");
-                        expiration =  activeLicensesModel.GetData("Expiration");
-                    }
-
-                    let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
-
-                    console.log("licenseId", licenseId);
-                    console.log("expiration", expiration);
-                    console.log("serialNumber", serialNumber);
-
-                    if (currentLicenseId !== licenseId || currentExpiration !== expiration || currentSerialNumber !== serialNumber){
-                        root.updateModel();
+                Component{
+                    id: defaultButtonDecorator;
+                    CommonButtonDecorator{
+                        width: 70;
+                        height: 23;
                     }
                 }
             }
         }
+
+        Text {
+            id: titleProduct;
+
+            text: qsTr("Product");
+            color: Style.textColor;
+            font.family: Style.fontFamilyBold;
+            font.pixelSize: Style.fontSize_common;
+        }
+
+        ComboBox {
+            id: productCB;
+
+            width: parent.width;
+            height: 23;
+
+            radius: 3;
+
+            nameId: "ProductName";
+
+            Component.onCompleted: {
+                let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                productCB.changeable = ok;
+            }
+
+            onCurrentIndexChanged: {
+                if (root.blockUpdatingModel){
+                    return;
+                }
+
+                if (productCB.currentIndex >= 0){
+                    let oldProductId = root.documentModel.GetData("ProductId");
+                    let productId = productCB.model.GetData("Id", productCB.currentIndex);
+                    root.documentModel.SetData("ProductId", productId);
+
+                    if (oldProductId != productId){
+                        root.documentModel.SetData("Expiration", "");
+                        root.documentModel.SetData("LicenseUuid", "");
+                    }
+
+                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+                    if (!licensesModel){
+                        licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+                    }
+
+                    let expiration = "";
+                    if (root.documentModel.ContainsKey("Expiration")){
+                        expiration = root.documentModel.GetData("Expiration");
+                    }
+
+                    if (root.documentModel.ContainsKey("LicenseUuid")){
+                        let licenseId = root.documentModel.GetData("LicenseUuid");
+
+                        softwareProductEditor.productModel.SetData("LicenseUuid", licenseId)
+                        softwareProductEditor.productModel.SetData("Expiration", expiration)
+                    }
+
+                    softwareProductEditor.productLicensesModel = licensesModel;
+
+                    softwareProductEditor.updateGui()
+                }
+            }
+        }
     }
+
+    SoftwareProductEditor {
+        id: softwareProductEditor;
+
+        anchors.top: bodyColumn.bottom;
+        anchors.left: parent.left;
+        anchors.leftMargin: 20;
+        anchors.topMargin: bodyColumn.spacing;
+        anchors.bottom: root.bottom;
+
+        width: bodyColumn.width;
+
+        Component.onCompleted: {
+            softwareProductEditor.productModel.dataChanged.connect(softwareProductEditor.onModelChanged);
+        }
+
+        function onModelChanged(){
+            let currentLicenseId = root.documentModel.GetData("LicenseUuid");
+            let currentExpiration = root.documentModel.GetData("Expiration");
+            let currentSerialNumber = root.documentModel.GetData("SerialNumber");
+
+            console.log("currentLicenseId", currentLicenseId);
+            console.log("currentExpiration", currentExpiration);
+            console.log("currentSerialNumber", currentSerialNumber);
+
+            let licenseUuid = softwareProductEditor.productModel.GetData("LicenseUuid");
+            let licenseExpiration = softwareProductEditor.productModel.GetData("Expiration");
+
+            let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
+
+            console.log("licenseId", licenseUuid);
+            console.log("expiration", licenseExpiration);
+            console.log("serialNumber", serialNumber);
+
+            if (currentLicenseId !== licenseUuid || currentExpiration !== licenseExpiration || currentSerialNumber !== serialNumber){
+                root.updateModel();
+            }
+        }
+    }
+    //    }
 }//Container
 
 

@@ -19,6 +19,7 @@ public:
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
+		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 	I_END_COMPONENT
 
 protected:
@@ -36,6 +37,7 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 };
 
 

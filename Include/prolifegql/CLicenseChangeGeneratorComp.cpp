@@ -13,6 +13,7 @@
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/IDeviceInfo.h>
 
 
 namespace prolifegql
@@ -37,14 +38,38 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 			if (addedParamPtr.IsValid()){
 				QString hardwareId = addedParamPtr->GetText();
 
-				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddHardware", "Hardware", hardwareId, hardwareId.toUtf8(), ""));
+				QString name = hardwareId;
+
+				if (m_deviceCollectionCompPtr.IsValid()){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_deviceCollectionCompPtr->GetObjectData(hardwareId.toUtf8(), dataPtr)){
+						const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+						if (deviceInfoPtr != nullptr){
+							name = deviceInfoPtr->GetMacAddress();
+						}
+					}
+				}
+
+				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddHardware", "Hardware", name, hardwareId.toUtf8(), ""));
 			}
 
 			iprm::TParamsPtr<iprm::ITextParam> removedParamPtr(paramsPtr, "RemovedHardwareId");
 			if (removedParamPtr.IsValid()){
 				QString hardwareId = removedParamPtr->GetText();
 
-				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveHardware", "Hardware", hardwareId, hardwareId.toUtf8(), ""));
+				QString name = hardwareId;
+
+				if (m_deviceCollectionCompPtr.IsValid()){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_deviceCollectionCompPtr->GetObjectData(hardwareId.toUtf8(), dataPtr)){
+						const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+						if (deviceInfoPtr != nullptr){
+							name = deviceInfoPtr->GetMacAddress();
+						}
+					}
+				}
+
+				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveHardware", "Hardware", name, hardwareId.toUtf8(), ""));
 			}
 
 			retVal = true;

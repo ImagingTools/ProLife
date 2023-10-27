@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtqml 1.0
 
 CollectionView {
@@ -181,11 +182,19 @@ CollectionView {
             contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
         }
 
-        if (container.commandsProvider.commandExists("Remove")){
+        let canRemoveSensor = PermissionsController.checkPermission("RemoveSensor");
+        if (canRemoveSensor){
             contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../"  + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
         }
 
-        contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
+        let ok = PermissionsController.checkPermission("ChangeSensor");
+        if (!ok){
+            ok = PermissionsController.checkPermission("ChangeSensorDescription");
+        }
+
+        if (ok){
+            contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
+        }
     }
 
     function collectionUpdated(){

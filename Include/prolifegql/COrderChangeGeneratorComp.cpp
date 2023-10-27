@@ -103,12 +103,14 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 
 	for (const QByteArray& productObjectId : qAsConst(addedProducts)){
 		QByteArray productUuid;
+		QByteArray internalId;
 
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (m_softwareCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
 			const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
 				productUuid = productInfoPtr->GetProductId();
+				internalId = productInfoPtr->GetSerialNumber();
 			}
 		}
 		else{
@@ -116,6 +118,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
 					productUuid = deviceInfoPtr->GetDeviceType();
+					internalId = deviceInfoPtr->GetMacAddress();
 				}
 			}
 		}
@@ -131,17 +134,25 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddProduct", "ProductId", productId, "", productId));
+		QString name = productId;
+		if (!internalId.isEmpty()){
+			name = name + " (" + internalId + ")";
+		}
+
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddProduct", "ProductId", name, "", productId));
 	}
 
 	for (const QByteArray& productObjectId : qAsConst(removedProducts)){
 		QByteArray productId;
+		QByteArray internalId;
 
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (m_softwareCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
 			const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
 				productId = productInfoPtr->GetProductId();
+
+				internalId = productInfoPtr->GetSerialNumber();
 			}
 		}
 		else{
@@ -149,6 +160,8 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
 					productId = deviceInfoPtr->GetDeviceType();
+
+					internalId = deviceInfoPtr->GetMacAddress();
 				}
 			}
 		}
@@ -163,7 +176,12 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveProduct", "ProductId", productId, productId, ""));
+		QString name = productId;
+		if (!internalId.isEmpty()){
+			name = name + " (" + internalId + ")";
+		}
+
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveProduct", "ProductId", name, productId, ""));
 	}
 
 	return true;
@@ -264,111 +282,6 @@ void COrderChangeGeneratorComp::GenerateDifferences(
 			removedProducts << productId;
 		}
 	}
-
-//	for (const imtbase::ICollectionInfo::Id& productId : oldProductUuids){
-//		if (newProductUuids.contains(productId)){
-//			bool isUpdated = false;
-//			const imtbase::IIdentifiable* prevProductIdentifiablePtr = nullptr;
-//			imtbase::IObjectCollection::DataPtr prevDataPtr;
-//			if (prevOrderProducts.GetObjectData(productId, prevDataPtr)){
-//				prevProductIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(prevDataPtr.GetPtr());
-//			}
-
-//			const imtbase::IIdentifiable* currentProductIdentifiablePtr = nullptr;
-//			imtbase::IObjectCollection::DataPtr currentDataPtr;
-//			if (currentOrderProducts.GetObjectData(productId, currentDataPtr)){
-//				currentProductIdentifiablePtr = dynamic_cast<const imtbase::IIdentifiable*>(currentDataPtr.GetPtr());
-//			}
-
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (currentOrderProducts.GetObjectData(productId, dataPtr)){
-//				const imtbase::CObjectLink* objectLinkPtr = dynamic_cast<const imtbase::CObjectLink*>(dataPtr.GetPtr());
-//				if (objectLinkPtr != nullptr){
-//					QByteArray objectUuid = objectLinkPtr->GetObjectUuid();
-
-//					imtbase::IObjectCollection::DataPtr productDataPtr;
-//					if (m_softwareCollectionCompPtr->GetObjectData(objectUuid, productDataPtr)){
-//						const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-//						if (productInfoPtr != nullptr){
-//						}
-//					}
-//					else{
-//						if (m_deviceCollectionCompPtr->GetObjectData(objectUuid, productDataPtr)){
-//							const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
-//							if (deviceInfoPtr != nullptr){
-//							}
-//						}
-//					}
-//				}
-//			}
-
-//			if (prevProductIdentifiablePtr != nullptr && currentProductIdentifiablePtr != nullptr){
-//				const imtlic::IProductInstanceInfo* prevSoftwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(prevProductIdentifiablePtr);
-//				if (prevSoftwareProductPtr != nullptr){
-//					const imtlic::IProductInstanceInfo* currentSoftwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(currentProductIdentifiablePtr);
-//					if (currentSoftwareProductPtr != nullptr){
-//						QByteArray prevProductId = prevSoftwareProductPtr->GetProductId();
-//						QByteArray currentProductId = currentSoftwareProductPtr->GetProductId();
-//						if (prevProductId != currentProductId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevProductInstanceId = prevSoftwareProductPtr->GetProductInstanceId();
-//						QByteArray currentProductInstanceId = currentSoftwareProductPtr->GetProductInstanceId();
-//						if (prevProductInstanceId != currentProductInstanceId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevCustomerId = prevSoftwareProductPtr->GetCustomerId();
-//						QByteArray currentCustomerId = currentSoftwareProductPtr->GetCustomerId();
-//						if (prevCustomerId != currentCustomerId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevSerialNumber = prevSoftwareProductPtr->GetSerialNumber();
-//						QByteArray currentSerialNumber = currentSoftwareProductPtr->GetSerialNumber();
-//						if (prevSerialNumber != currentSerialNumber){
-//							isUpdated = true;
-//						}
-//					}
-//				}
-
-//				const imtlic::CIdentifiableHardwareInstanceInfo* prevHardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(prevProductIdentifiablePtr);
-//				if (prevHardwareProductPtr != nullptr){
-//					const imtlic::CIdentifiableHardwareInstanceInfo* currentHardwareProductPtr = dynamic_cast<const imtlic::CIdentifiableHardwareInstanceInfo*>(currentProductIdentifiablePtr);
-//					if (currentHardwareProductPtr != nullptr){
-//						QByteArray prevProductId = prevHardwareProductPtr->GetProductId();
-//						QByteArray currentProductId = currentHardwareProductPtr->GetProductId();
-//						if (prevProductId != currentProductId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevDeviceId = prevHardwareProductPtr->GetObjectUuid();
-//						QByteArray currentDeviceId = currentHardwareProductPtr->GetObjectUuid();
-//						if (prevDeviceId != currentDeviceId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevModelTypeId = prevHardwareProductPtr->GetModelTypeId();
-//						QByteArray currentModelTypeId = currentHardwareProductPtr->GetModelTypeId();
-//						if (prevModelTypeId != currentModelTypeId){
-//							isUpdated = true;
-//						}
-
-//						QByteArray prevSoftwareId = prevHardwareProductPtr->GetSoftwareId();
-//						QByteArray currentSoftwareId = currentHardwareProductPtr->GetSoftwareId();
-//						if (prevSoftwareId != currentSoftwareId){
-//							isUpdated = true;
-//						}
-//					}
-//				}
-//			}
-
-//			if (isUpdated){
-//				updatedProducts << productId;
-//			}
-//		}
-//	}
 }
 
 

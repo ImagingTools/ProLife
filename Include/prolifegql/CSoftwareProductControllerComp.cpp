@@ -68,7 +68,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 
 				const imtlic::ILicenseInstance* licenseInstancePtr = productOrderInfoPtr->GetLicenseInstance(licenseId);
 				if (licenseInstancePtr != nullptr){
-					dataModelPtr->SetData("LicenseId", licenseInstancePtr->GetLicenseId());
+					dataModelPtr->SetData("LicenseUuid", licenseInstancePtr->GetLicenseId());
 					dataModelPtr->SetData("Expiration", licenseInstancePtr->GetExpiration().toString("yyyy-MM-dd"));
 				}
 			}
@@ -172,8 +172,8 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	QByteArray licenseId;
-	if (itemModel.ContainsKey("LicenseId")){
-		licenseId = itemModel.GetData("LicenseId").toByteArray();
+	if (itemModel.ContainsKey("LicenseUuid")){
+		licenseId = itemModel.GetData("LicenseUuid").toByteArray();
 	}
 
 	QByteArray expiration;
@@ -468,8 +468,8 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 	productOrderInfoPtr->SetupProductInstance(productId, "", customerUuid);
 
 	QByteArray licenseId;
-	if (itemModel.ContainsKey("LicenseId")){
-		licenseId = itemModel.GetData("LicenseId").toByteArray();
+	if (itemModel.ContainsKey("LicenseUuid")){
+		licenseId = itemModel.GetData("LicenseUuid").toByteArray();
 	}
 
 	QByteArray expiration;

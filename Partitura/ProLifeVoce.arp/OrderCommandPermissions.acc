@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5122" Description="ACF"/>
-            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5125" Description="ACF"/>
+            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -21,6 +21,7 @@
                             <Values>
                                 <Value>EditOrder</Value>
                                 <Value>ViewOrders</Value>
+                                <Value>ChangeOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -127,7 +128,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditOrder</Value>
+                                <Value>ChangeOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -149,7 +150,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditOrder</Value>
+                                <Value>ChangeOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -171,7 +172,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditOrder</Value>
+                                <Value>ChangeOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

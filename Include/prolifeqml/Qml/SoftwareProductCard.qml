@@ -16,10 +16,13 @@ Rectangle {
     property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
     property bool inUse: model.InUse ? model.InUse : "";
 
-    property string licenseName;
     property int margin: 10;
 
-    property var licensesModel: model.ActiveLicenses ? model.ActiveLicenses : null;
+    property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
+    property string licenseId: "";
+    property string licenseName: "";
+
+    property string expiration: model.Expiration ? model.Expiration : "";
 
     property bool readOnly: false;
     property bool commmandsVisible: false;
@@ -46,36 +49,32 @@ Rectangle {
         softwareCard.updateHeaders();
     }
 
-    property bool ok: productCardRoot != null && productId && licensesModel !== null && productCollection != null;
+    property bool ok: productCardRoot != null && productId && productCollection != null;
 
     onOkChanged: {
         if (ok){
             productCardRoot.orderEditorPtr.blockUpdatingModel = true
-            for (let i = 0; i < softwareCard.licensesModel.GetItemsCount(); i++){
-                let licenseId = softwareCard.licensesModel.GetData("Id", i);
-                let expiration = softwareCard.licensesModel.GetData("Expiration", i);
 
-                if (expiration === ""){
-                    softwareCard.licensesModel.SetData("Expiration", "Unlimited", i);
-                }
+            for (let j = 0; j < productCollection.collectionModel.GetItemsCount(); j++){
+                let productId = productCollection.collectionModel.GetData("Id", j);
+                if (productId === softwareCard.productId){
+                    let licensesModel = productCollection.collectionModel.GetData("Licenses", j);
+                    if (licensesModel){
+                        for (let k = 0; k < licensesModel.GetItemsCount(); k++){
+                            let licenseUuid = licensesModel.GetData("Id", k);
+                            if (softwareCard.licenseUuid === licenseUuid){
+                                let licenseId = licensesModel.GetData("LicenseId", k);
+                                let licenseName = licensesModel.GetData("LicenseName", k);
 
-                for (let j = 0; j < productCollection.collectionModel.GetItemsCount(); j++){
-                    let productId = productCollection.collectionModel.GetData("Id", j);
-                    if (productId === softwareCard.productId){
-                        let licensesModel = productCollection.collectionModel.GetData("Licenses", j);
-                        if (licensesModel){
-                            for (let k = 0; k < licensesModel.GetItemsCount(); k++){
-                                let licenseUuid = licensesModel.GetData("Id", k);
-                                if (licenseUuid === licenseId){
-                                    let licenseName = licensesModel.GetData("LicenseName", k);
+                                softwareCard.licenseId = licenseId;
+                                softwareCard.licenseName = licenseName;
 
-                                    softwareCard.licensesModel.SetData("LicenseName", licenseName, i);
-                                }
+                                break;
                             }
                         }
-
-                        break;
                     }
+
+                    break;
                 }
             }
 
@@ -200,24 +199,23 @@ Rectangle {
         elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
         elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
 
-        let licenseId = softwareCard.licensesModel.GetData("LicenseId");
-        let licenseName = softwareCard.licensesModel.GetData("LicenseName");
+        let licenseId = softwareCard.licenseId;
+        let licenseName = softwareCard.licenseName;
 
-        let name = "";
-
-        if (licenseName){
-            name = licenseName;
+        let name = licenseName;
+        if (licenseId !== ""){
+            name += "(" + licenseId + ")";
         }
-
-//        if (licenseId){
-//            name += " (" + licenseId + ")";
-//        }
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("License"), index)
         elementsTableModel.SetData("Value", name, index);
 
-        let expiration = softwareCard.licensesModel.GetData("Expiration");
+        let expiration = qsTr("Unlimited");
+
+        if (softwareCard.expiration !== ""){
+            expiration = softwareCard.expiration;
+        }
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("Expiration"), index)

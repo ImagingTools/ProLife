@@ -127,6 +127,7 @@ Item {
 
         resultModel.SetData("Id", deviceId, newIndex);
         resultModel.SetData("Name", "New Sensor", newIndex);
+        resultModel.SetData("DeviceId", deviceId, newIndex);
         resultModel.SetData("IsNew", true, newIndex);
 
         return resultModel;
@@ -138,16 +139,8 @@ Item {
 
             if (contentLoader.item){
                 let index = contentLoader.item.deviceIndex;
-                console.log("deviceIndex", index);
-
                 productEditor.rootItem.buttons.setButtonState("Save", index >= 0);
             }
-
-//            if (productEditor.productModel.ContainsKey("DeviceId")){
-//                let deviceId = productEditor.productModel.GetData("DeviceId");
-//                console.log("deviceId", deviceId);
-//                productEditor.rootItem.buttons.setButtonState("Save", deviceId !== "");
-//            }
         }
         else{
             productEditor.rootItem.buttons.setButtonState("Save", true);
@@ -269,32 +262,6 @@ Item {
         }
     }
 
-    function onLink(pairId){
-        productEditor.productModel.SetData("PairId", pairId);
-
-        let orderProductId = productEditor.productModel.GetData("Id");
-        for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
-            let id = productEditor.orderProductsModel.GetData("Id", i);
-            if (id === pairId){
-                productEditor.orderProductsModel.SetData("PairId", orderProductId, i);
-                break;
-            }
-        }
-    }
-
-    function onUnlink(){
-        let pairId = productEditor.productModel.GetData("PairId");
-        productEditor.productModel.SetData("PairId", "");
-
-        for (let i = 0; i < productEditor.orderProductsModel.GetItemsCount(); i++){
-            let id = productEditor.orderProductsModel.GetData("Id", i);
-            if (id === pairId){
-                productEditor.orderProductsModel.SetData("PairId", "", i);
-                break;
-            }
-        }
-    }
-
     Loader {
         id: contentLoader;
 
@@ -332,15 +299,13 @@ Item {
             productEditor.productModel.SetData("MacAddress", "");
             productEditor.productModel.SetData("SerialNumber", "");
 
-            if (productEditor.productModel.ContainsKey("ActiveLicenses")){
-                productEditor.productModel.RemoveData("ActiveLicenses");
-            }
         }
         else if (productEditor.productCategory === "Software"){
             productEditor.productModel.SetData("CategoryId", "Software");
 
-            productEditor.productModel.AddTreeModel("ActiveLicenses")
             productEditor.productModel.SetData("SerialNumber", "");
+            productEditor.productModel.SetData("LicenseUuid", "");
+            productEditor.productModel.SetData("Expiration", "");
 
             if (productEditor.productModel.ContainsKey("DeviceId")){
                 productEditor.productModel.RemoveData("DeviceId");

@@ -29,13 +29,10 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 		const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
-		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
-
-		QByteArray selectionQuery = QString(" AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
-
-		selectionQuery = baseQuery + selectionQuery;
-
-		return selectionQuery;
+		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
+					.arg(qPrintable(*m_tableNameAttrPtr))
+					.arg(qPrintable(*m_objectIdColumnAttrPtr))
+					.arg(qPrintable(objectId)).toUtf8();
 	}
 
 	if (m_databaseEngineCompPtr.IsValid()){
@@ -97,6 +94,16 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 			return QByteArray();
 		}
 	}
+
+//	if (!objectId.isEmpty()){
+//		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
+
+//		QByteArray selectionQuery = QString(" AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
+
+//		selectionQuery = baseQuery + selectionQuery;
+
+//		return selectionQuery;
+//	}
 
 	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
 

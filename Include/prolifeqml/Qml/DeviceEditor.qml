@@ -71,11 +71,15 @@ DocumentBase {
     }
 
     onSaved: {
+        console.log("onSaved");
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             let statusModel = stateMachine.getAvailableModel(status);
 
-            statusCB.model = statusModel;
+            if (statusModel){
+                statusCB.model = statusModel;
+            }
 
             deviceEditorContainer.updateGui();
         }
@@ -318,12 +322,15 @@ DocumentBase {
             deviceEditorContainer.documentModel.SetData("ConfigurationType", "");
         }
 
-        if (orderCB.currentIndex >= 0){
-            let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
-            deviceEditorContainer.documentModel.SetData("OrderId", selectedOrderId);
-        }
-        else{
-            deviceEditorContainer.documentModel.SetData("OrderId", "");
+        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+        if (canChangeOrder){
+            if (orderCB.currentIndex >= 0){
+                let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
+                deviceEditorContainer.documentModel.SetData("OrderId", selectedOrderId);
+            }
+            else{
+                deviceEditorContainer.documentModel.SetData("OrderId", "");
+            }
         }
 
         let description = descriptionInput.text;

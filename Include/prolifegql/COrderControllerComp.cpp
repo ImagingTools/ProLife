@@ -445,25 +445,18 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 		}
 	}
 
-	if (softwareProductModel.ContainsKey("ActiveLicenses", modelIndex)){
-		imtbase::CTreeItemModel* activeLicenses = softwareProductModel.GetTreeItemModel("ActiveLicenses", modelIndex);
-		if (activeLicenses != nullptr){
-			for (int i = 0; i < activeLicenses->GetItemsCount(); i++){
-				QByteArray licenseId;
-				if (activeLicenses->ContainsKey("Id", i)){
-					licenseId = activeLicenses->GetData("Id", i).toByteArray();
-				}
-
-				QDateTime expirationDate;
-				if (activeLicenses->ContainsKey("Expiration", i)){
-					QString dateExpirationStr = activeLicenses->GetData("Expiration", i).toString();
-					expirationDate = QDateTime::fromString(dateExpirationStr, "yyyy-MM-dd");
-				}
-
-				softwareInstancePtr->AddLicense(licenseId, expirationDate);
-			}
-		}
+	QByteArray licenseUuid;
+	if (softwareProductModel.ContainsKey("LicenseUuid", modelIndex)){
+		licenseUuid = softwareProductModel.GetData("LicenseUuid", modelIndex).toByteArray();
 	}
+
+	QString expiration;
+	if (softwareProductModel.ContainsKey("Expiration", modelIndex)){
+		expiration = softwareProductModel.GetData("Expiration", modelIndex).toString();
+	}
+
+	QDateTime expirationDate = QDateTime::fromString(expiration, "yyyy-MM-dd");
+	softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
 
 	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
@@ -518,7 +511,7 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 			imtbase::IOperationContext* operationContextPtr = nullptr;
 
 			if (m_softwareOperationContextControllerCompPtr.IsValid()){
-				operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest);
+				operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
 			}
 
 			m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), uuidId, nullptr, nullptr, operationContextPtr);
@@ -560,7 +553,7 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 		imtbase::IOperationContext* operationContextPtr = nullptr;
 
 		if (m_deviceOperationContextControllerCompPtr.IsValid()){
-			m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
+			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
 		}
 
 		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), deviceUuid, nullptr, nullptr, operationContextPtr);
@@ -615,22 +608,21 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 		softwareProductModel.SetData("SerialNumber", softwareProductPtr->GetSerialNumber(), modelIndex);
 		softwareProductModel.SetData("InUse", softwareProductPtr->IsInUse(), modelIndex);
 
-		imtbase::CTreeItemModel* activeLicenses = softwareProductModel.AddTreeModel("ActiveLicenses", modelIndex);
 		const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();
 		imtbase::ICollectionInfo::Ids activeLicenseIds = licenseInstances.GetElementIds();
-		for (const QByteArray& activeLicenseId : activeLicenseIds){
+
+		if (!activeLicenseIds.isEmpty()){
+			QByteArray activeLicenseId = activeLicenseIds[0];
 			const imtlic::ILicenseInstance* licenseInstancePtr = softwareProductPtr->GetLicenseInstance(activeLicenseId);
 			if (licenseInstancePtr != nullptr){
-				int productIndex = activeLicenses->InsertNewItem();
+				softwareProductModel.SetData("LicenseUuid", activeLicenseId, modelIndex);
 
 				QString licenseName = licenseInstancePtr->GetLicenseName();
-
-				activeLicenses->SetData("Id", activeLicenseId, productIndex);
-				activeLicenses->SetData("LicenseName", licenseName, productIndex);
+				softwareProductModel.SetData("LicenseName", licenseName, modelIndex);
 
 				QDate date = licenseInstancePtr->GetExpiration().date();
 				QString licenseExpiration = date.toString("yyyy-MM-dd");
-				activeLicenses->SetData("Expiration", licenseExpiration, productIndex);
+				softwareProductModel.SetData("Expiration", licenseExpiration, modelIndex);
 			}
 		}
 	}
