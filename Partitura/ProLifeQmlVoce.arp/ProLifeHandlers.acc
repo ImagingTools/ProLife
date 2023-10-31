@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5125" Description="ACF"/>
+            <Version Id="0" Number="5126" Description="ACF"/>
             <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -275,7 +275,11 @@
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
+        <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="RemoteContextGQLServerFramework"/>
         <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="RemoteContextGQLServerFramework"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="ApplicationController" ComponentId="ApplicationController"/>
+        <Component ExportedId="DeviceSqlRepository" ComponentId="ApplicationController/DeviceSqlRepository"/>
+    </ExportedComponents>
 </Acf>

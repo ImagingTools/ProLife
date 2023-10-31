@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5125" Description="ACF"/>
+            <Version Id="0" Number="5126" Description="ACF"/>
             <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -778,6 +778,7 @@
                 <ExportedComponents>
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
                     <Component ExportedId="BindingProductsRepository" ComponentId="BindingProductsRepository"/>
+                    <Component ExportedId="DeviceSqlCollection" ComponentId="DeviceSqlRepository/DeviceSqlCollection"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
                     <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
@@ -793,6 +794,7 @@
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Repositories/BindingProductsRepository"/>
         <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
+        <Component ExportedId="DeviceSqlCollection" ComponentId="Repositories/DeviceSqlCollection"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
         <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController"/>

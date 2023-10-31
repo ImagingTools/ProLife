@@ -14,6 +14,8 @@
 #include <imtlic/ILicenseInstance.h>
 #include <imtlic/CProductInfo.h>
 #include <imtlic/CFeatureInfo.h>
+#include <imtgql/IGqlRequestProvider.h>
+#include <imtgql/IGqlRequest.h>
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
@@ -260,6 +262,16 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 
 	file.close();
 
+	imtgql::CGqlRequest gqlRequest;
+	imtgql::IGqlRequestProvider* gqlRequestProviderPtr = QueryInterface<imtgql::IGqlRequestProvider>(dynamic_cast<istd::IPolymorphic*>(const_cast<CKeyDataProviderComp*>(this)));
+	if (gqlRequestProviderPtr != nullptr){
+		const imtgql::IGqlRequest* gqlRequestPtr = gqlRequestProviderPtr->GetGqlRequest();
+		if (gqlRequestPtr != nullptr){
+			if (!gqlRequest.CopyFrom(*gqlRequestPtr)){
+			}
+		}
+	}
+
 	for (const QByteArray& softwareId : softwareIds){
 		imtbase::IObjectCollection::DataPtr softwareProductDataPtr;
 		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareProductDataPtr)){
@@ -270,7 +282,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 				imtbase::IOperationContext* operationContextPtr =  nullptr;
 
 				if (m_softwareOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1);
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1, gqlRequest);
 				}
 
 				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
@@ -284,7 +296,7 @@ bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) c
 		imtbase::IOperationContext* operationContextPtr =  nullptr;
 
 		if (m_deviceOperationContextControllerCompPtr.IsValid()){
-			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1);
+			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1, gqlRequest);
 		}
 
 		if (!m_deviceCollectionCompPtr->SetObjectData(hardwareObjectId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){

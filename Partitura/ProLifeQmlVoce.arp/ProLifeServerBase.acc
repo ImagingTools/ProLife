@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5105" Description="ACF"/>
-            <Version Id="1" Number="2195" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5126" Description="ACF"/>
+            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -40,9 +40,47 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="DeviceCollectionSubscriberController" PackageId="ImtGqlPck" ComponentId="ObjectCollectionSubscriberController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OnDeviceCollectionChanged</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlRequestHandler" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeSubscriptionsHandlers/ApplicationController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeSubscriptionsHandlers/DeviceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RequestHandlerCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="DevicesList"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="HttpServerFramework" PackageId="ImtHttpServerVoce" ComponentId="HttpServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DeviceCollectionSubscriberController</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -134,6 +172,51 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="ProLifeSubscriptionsHandlers" PackageId="ProLifeQmlVoce" ComponentId="ProLifeHandlers">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/DatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine/PgSqlDatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaUrlConnection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/LisaUrlConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogPath" Type="Reference" ExportId="LogPath">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaUrlConnection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/PumaUrlConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ServerSettings" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -172,6 +255,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketServerPort" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="8888"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

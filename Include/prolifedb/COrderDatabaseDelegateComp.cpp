@@ -88,7 +88,7 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 					.arg(qPrintable(*m_tableNameAttrPtr))
 					.arg(qPrintable(objectId))
 					.arg(SqlEncode(documentContent))
-					.arg(QDateTime::currentDateTime().toString(Qt::ISODate))
+					.arg(QDateTime::currentDateTimeUtc().toString(Qt::ISODate))
 					.arg(checksum)
 					.toUtf8();
 
