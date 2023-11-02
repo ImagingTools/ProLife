@@ -52,7 +52,7 @@ public:
 	};
 
 	// reimplemented (imtbase::IBinaryDataProvider)
-	virtual bool GetDataGetData(
+	virtual bool GetData(
 				QByteArray& data,
 				const QByteArray& dataId,
 				qint64 readFromPosition = 0,
