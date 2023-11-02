@@ -32,7 +32,11 @@ namespace prolifedata
 
 // reimplemented (imtbase::IBinaryDataProvider)
 
-bool CKeyDataProviderComp::GetData(QByteArray& data, const QByteArray& dataId) const
+bool CKeyDataProviderComp::GetData(
+			QByteArray& data,
+			const QByteArray& dataId,
+			qint64 /*readFromPosition*/,
+			qint64 /*readMaxLength*/) const
 {
 	if (!m_bindingCollectionCompPtr.IsValid()){
 		SendCriticalMessage(0, "m_bindingCollectionCompPtr is not valid", "CKeyDataProviderComp");

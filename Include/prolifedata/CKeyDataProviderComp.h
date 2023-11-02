@@ -52,7 +52,11 @@ public:
 	};
 
 	// reimplemented (imtbase::IBinaryDataProvider)
-	virtual bool GetData(QByteArray& data, const QByteArray& dataId) const override;
+	virtual bool GetDataGetData(
+				QByteArray& data,
+				const QByteArray& dataId,
+				qint64 readFromPosition = 0,
+				qint64 readMaxLength = -1) const override;
 
 	// reimplemented (imtcrypt::IEncryptionKeysProvider)
 	virtual QByteArray GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const override;
