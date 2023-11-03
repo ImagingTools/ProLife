@@ -133,7 +133,7 @@
                     <AttributeInfo Id="BinaryDataProviders" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoteContextGQLServerFramework/LogFileDataProvider</Value>
+                                <Value>RemoteContextGQLServerFramework/ServerLogDataProvider</Value>
                                 <Value>RemoteContextGQLServerFramework/RestoringDatabaseController</Value>
                                 <Value>KeyDataProviders</Value>
                             </Values>
