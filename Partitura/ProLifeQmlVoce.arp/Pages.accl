@@ -20,7 +20,7 @@
         <Element ComponentName="PagesPermissions" X="675" Y="474" Note=""/>
         <Element ComponentName="PagesRepresentation" X="700" Y="350" Note=""/>
         <Element ComponentName="PagesVisualStatusController" X="425" Y="225" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="1075" Y="700" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="1025" Y="675" Note=""/>
         <Element ComponentName="RemotePermissionChecker" X="675" Y="800" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
         <Element ComponentName="SoftwareProductsPage" X="400" Y="475" Note=""/>
@@ -28,11 +28,17 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="575" Y="200" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="575" Y="650" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="875" Y="350" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="250" Y="350" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="575" Y="500" Note=""/>
+                <Element ComponentName="AccountSqlRepository" X="225" Y="100" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="975" Y="100" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="575" Y="325" Note=""/>
+                <Element ComponentName="FeatureRepository" X="550" Y="500" Note=""/>
+                <Element ComponentName="IdentifiableFeatureInfo" X="550" Y="625" Note=""/>
+                <Element ComponentName="IdentifiableLicenseInfo" X="975" Y="625" Note=""/>
+                <Element ComponentName="IdentifiableProductInfo" X="175" Y="625" Note=""/>
+                <Element ComponentName="LicenseRepository" X="975" Y="500" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="575" Y="225" Note=""/>
+                <Element ComponentName="ProductRepository" X="175" Y="500" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="575" Y="100" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

@@ -28,7 +28,7 @@ CollectionView {
 
     onVisibleChanged: {
         if (container.visible){
-            container.updateGui();
+//            container.updateGui();
         }
     }
 

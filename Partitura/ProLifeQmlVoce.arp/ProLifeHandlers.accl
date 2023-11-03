@@ -8,11 +8,21 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="ApplicationController" X="600" Y="425" Note=""/>
-        <Element ComponentName="KeyDataProviders" X="250" Y="425" Note=""/>
+        <Element ComponentName="ApplicationController" X="624" Y="425" Note=""/>
+        <Element ComponentName="KeyDataProviders" X="200" Y="425" Note=""/>
+        <Element ComponentName="Observers" X="625" Y="650" Note=""/>
         <Element ComponentName="RemoteContextGQLServerFramework" X="600" Y="200" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Observers">
+            <PositionMap>
+                <Element ComponentName="AccountCollectionObserver" X="575" Y="450" Note=""/>
+                <Element ComponentName="DeviceCollectionObserver" X="575" Y="75" Note=""/>
+                <Element ComponentName="LicenseCollectionObserver" X="575" Y="200" Note=""/>
+                <Element ComponentName="OrderCollectionObserver" X="575" Y="325" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
                 <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>

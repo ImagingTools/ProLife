@@ -2,26 +2,20 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5122" Description="ACF"/>
-            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5126" Description="ACF"/>
+            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationController" X="575" Y="325" Note=""/>
-        <Element ComponentName="AuthorizationOptionsController" X="1000" Y="575" Note=""/>
+        <Element ComponentName="AuthorizationOptionsController" X="1000" Y="650" Note=""/>
         <Element ComponentName="DatabaseServerConnectionController" X="950" Y="75" Note=""/>
-        <Element ComponentName="FeatureRepository" X="450" Y="700" Note=""/>
-        <Element ComponentName="IdentifiableFeatureInfo" X="450" Y="775" Note=""/>
-        <Element ComponentName="IdentifiableLicenseInfo" X="775" Y="775" Note=""/>
-        <Element ComponentName="IdentifiableProductInfo" X="125" Y="775" Note=""/>
-        <Element ComponentName="LicenseRepository" X="775" Y="700" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="125" Y="575" Note=""/>
-        <Element ComponentName="Pages" X="925" Y="200" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="700" Y="650" Note=""/>
+        <Element ComponentName="Pages" X="575" Y="475" Note=""/>
         <Element ComponentName="PermissionController" X="300" Y="200" Note=""/>
-        <Element ComponentName="ProductRepository" X="125" Y="700" Note=""/>
-        <Element ComponentName="PumaGQLClientEngine" X="675" Y="575" Note=""/>
-        <Element ComponentName="SettingsController" X="400" Y="575" Note=""/>
+        <Element ComponentName="PumaGQLClientEngine" X="400" Y="650" Note=""/>
+        <Element ComponentName="SettingsController" X="125" Y="650" Note=""/>
         <Element ComponentName="SingleProductPermission" X="300" Y="75" Note=""/>
         <Element ComponentName="TestConnectionController" X="600" Y="75" Note=""/>
     </PositionMap>
