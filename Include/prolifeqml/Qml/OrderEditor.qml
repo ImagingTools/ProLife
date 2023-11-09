@@ -143,7 +143,7 @@ DocumentBase {
 
             if (hardwareModel){
                 if (hardwareModel.ContainsKey("DeviceNotExists", index)){
-                    ok = false;
+                   // ok = false;
                     break;
                 }
             }

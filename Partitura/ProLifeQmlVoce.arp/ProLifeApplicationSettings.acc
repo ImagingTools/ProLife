@@ -23,9 +23,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>UserSettingsController</Value>
-                                <Value>ServerSettingsController/ServerSettingsController</Value>
-                                <Value>ServerSettingsController/BackupSettingsController</Value>
-                                <Value>ServerSettingsController/DatabaseSettingsController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

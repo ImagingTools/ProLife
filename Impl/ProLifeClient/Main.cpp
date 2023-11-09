@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtguiTheme);
 	Q_INIT_RESOURCE(imtlicguiTheme);
 
+	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
 	CProLifeClient instance;
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
