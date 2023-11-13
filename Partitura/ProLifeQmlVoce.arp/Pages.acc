@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5126" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -288,10 +288,10 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaApiClient" Type="Reference" ExportId="LisaApiClient">
+                    <AttributeInfo Id="LisaGqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaGqlRequest" Type="Reference" ExportId="LisaGqlRequest">
+                    <AttributeInfo Id="LisaServerUrlParam" Type="Reference" ExportId="LisaServerUrlParam">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -688,6 +688,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="CachedLicenseCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="LicenseRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedProductCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ProductRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="DeviceSqlRepository" PackageId="ProLifeVoce" ComponentId="DeviceSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -701,7 +719,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LicenseRepository"/>
+                                    <Data IsEnabled="true" Value="CachedLicenseCollection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
@@ -713,7 +731,7 @@
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductRepository"/>
+                                    <Data IsEnabled="true" Value="CachedProductCollection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
@@ -724,9 +742,6 @@
                     <Element Id="FeatureRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="ApiClient" Type="Reference" ExportId="LisaApiClient">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Id" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="LisaFeature"/>
                                 </AttributeInfo>
@@ -746,6 +761,12 @@
                                             <Value>FeatureInfo</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="/Lisa"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
@@ -782,9 +803,6 @@
                     <Element Id="LicenseRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="ApiClient" Type="Reference" ExportId="LisaApiClient">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Id" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="LisaLicense"/>
                                 </AttributeInfo>
@@ -804,6 +822,12 @@
                                             <Value>LicenseInfo</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="/Lisa"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
@@ -849,9 +873,6 @@
                     <Element Id="ProductRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="ApiClient" Type="Reference" ExportId="LisaApiClient">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Id" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="LisaProduct"/>
                                 </AttributeInfo>
@@ -871,6 +892,12 @@
                                             <Value>ProductInfo</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="/Lisa"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">

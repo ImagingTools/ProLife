@@ -2,28 +2,28 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5126" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountsPage" X="175" Y="625" Note=""/>
-        <Element ComponentName="AdministrationPage" X="175" Y="700" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="675" Y="700" Note=""/>
-        <Element ComponentName="DevicesPage" X="175" Y="475" Note=""/>
-        <Element ComponentName="OrdersPage" X="175" Y="550" Note=""/>
+        <Element ComponentName="AccountsPage" X="125" Y="675" Note=""/>
+        <Element ComponentName="AdministrationPage" X="150" Y="775" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="675" Y="575" Note=""/>
+        <Element ComponentName="DevicesPage" X="125" Y="475" Note=""/>
+        <Element ComponentName="OrdersPage" X="125" Y="575" Note=""/>
         <Element ComponentName="PageData" X="1025" Y="350" Note=""/>
         <Element ComponentName="PageDataControllers" X="1026" Y="229" Note=""/>
-        <Element ComponentName="Pages" X="175" Y="350" Note=""/>
+        <Element ComponentName="Pages" X="125" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
-        <Element ComponentName="PagesPermissions" X="675" Y="474" Note=""/>
-        <Element ComponentName="PagesRepresentation" X="700" Y="350" Note=""/>
-        <Element ComponentName="PagesVisualStatusController" X="425" Y="225" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="1025" Y="675" Note=""/>
-        <Element ComponentName="RemotePermissionChecker" X="675" Y="800" Note=""/>
+        <Element ComponentName="PagesPermissions" X="675" Y="475" Note=""/>
+        <Element ComponentName="PagesRepresentation" X="675" Y="350" Note=""/>
+        <Element ComponentName="PagesVisualStatusController" X="400" Y="225" Note=""/>
+        <Element ComponentName="PermissionsChecker" X="1025" Y="575" Note=""/>
+        <Element ComponentName="RemotePermissionChecker" X="675" Y="675" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
-        <Element ComponentName="SoftwareProductsPage" X="400" Y="475" Note=""/>
+        <Element ComponentName="SoftwareProductsPage" X="400" Y="476" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PageData">
@@ -38,15 +38,17 @@
         </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="225" Y="100" Note=""/>
+                <Element ComponentName="AccountSqlRepository" X="175" Y="100" Note=""/>
                 <Element ComponentName="BindingProductsRepository" X="975" Y="100" Note=""/>
+                <Element ComponentName="CachedLicenseCollection" X="975" Y="325" Note=""/>
+                <Element ComponentName="CachedProductCollection" X="175" Y="325" Note=""/>
                 <Element ComponentName="DeviceSqlRepository" X="575" Y="325" Note=""/>
-                <Element ComponentName="FeatureRepository" X="550" Y="500" Note=""/>
-                <Element ComponentName="IdentifiableFeatureInfo" X="550" Y="625" Note=""/>
+                <Element ComponentName="FeatureRepository" X="575" Y="500" Note=""/>
+                <Element ComponentName="IdentifiableFeatureInfo" X="575" Y="625" Note=""/>
                 <Element ComponentName="IdentifiableLicenseInfo" X="975" Y="625" Note=""/>
                 <Element ComponentName="IdentifiableProductInfo" X="175" Y="625" Note=""/>
                 <Element ComponentName="LicenseRepository" X="975" Y="500" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="575" Y="225" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="575" Y="200" Note=""/>
                 <Element ComponentName="ProductRepository" X="175" Y="500" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="575" Y="100" Note=""/>
             </PositionMap>

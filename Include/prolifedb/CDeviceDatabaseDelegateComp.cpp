@@ -10,6 +10,7 @@
 // ImtCore includes
 #include <imtlic/IHardwareInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
+#include <imtlic/ILicenseDefinition.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -25,7 +26,6 @@ namespace prolifedb
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
-
 QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 			const QByteArray& objectId,
 			int offset,
@@ -34,10 +34,66 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
-				.arg(qPrintable(*m_tableNameAttrPtr))
-				.arg(qPrintable(*m_objectIdColumnAttrPtr))
-				.arg(qPrintable(objectId)).toUtf8();
+					.arg(qPrintable(*m_tableNameAttrPtr))
+					.arg(qPrintable(*m_objectIdColumnAttrPtr))
+					.arg(qPrintable(objectId)).toUtf8();
 	}
+
+//	QByteArray beforeSelectionQuery;
+
+//	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
+//	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
+
+//	beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
+//	beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
+
+//	if (m_licenseCollectionCompPtr.IsValid()){
+//		imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
+
+//		for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
+//			imtbase::IObjectCollection::DataPtr dataPtr;
+//			if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, dataPtr)){
+//				const imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+//				if (licenseDefinitionPtr != nullptr){
+//					beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
+//								.arg(qPrintable(licenseCollectionId))
+//								.arg(qPrintable(licenseDefinitionPtr->GetLicenseId()))
+//								.arg(licenseDefinitionPtr->GetLicenseName())
+//								.toUtf8();
+//				}
+//			}
+//		}
+//	}
+
+//	if (m_productCollectionCompPtr.IsValid()){
+//		imtbase::ICollectionInfo::Ids productCollectionIds = m_productCollectionCompPtr->GetElementIds();
+
+//		for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
+//			imtbase::IObjectCollection::DataPtr dataPtr;
+//			if (m_productCollectionCompPtr->GetObjectData(productCollectionId, dataPtr)){
+//				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
+//				if (productInfoPtr != nullptr){
+//					beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
+//								.arg(qPrintable(productCollectionId))
+//								.arg(qPrintable(productInfoPtr->GetProductId()))
+//								.arg(productInfoPtr->GetName())
+//								.toUtf8();
+//				}
+//			}
+//		}
+//	}
+
+//	if (m_databaseEngineCompPtr.IsValid()){
+//		QSqlError sqlError;
+//		m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
+//		if (sqlError.type() != QSqlError::NoError){
+//			SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
+
+//			qDebug() << "SQL-error" << beforeSelectionQuery;
+
+//			return QByteArray();
+//		}
+//	}
 
 	if (m_databaseEngineCompPtr.IsValid()){
 		QByteArray beforeSelectionQuery;
@@ -67,8 +123,6 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 							.arg(licenseName)
 							.toUtf8();
 			}
-
-			qDebug() << "licenseItemsModelPtr" << licenseItemsModelPtr->toJSON();
 		}
 
 		QByteArrayList productFields;
@@ -90,8 +144,6 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 							.arg(productName)
 							.toUtf8();
 			}
-
-			qDebug() << "productItemsModelPtr" << productItemsModelPtr->toJSON();
 		}
 
 		QSqlError sqlError;

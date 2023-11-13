@@ -6,15 +6,10 @@ import imtqml 1.0
 ApplicationMain{
     id: window;
 
+    useWebSocketSubscription: true;
+
     property InstanceMaskProvider instanceMaskProvider :InstanceMaskProvider {
         settingsProvider: window.settingsProvider;
     }
-
-//    SubscriptionManager {
-//        id: subscriptionManager
-//        Component.onCompleted: {
-//            url = "ws://127.0.0.1:7778"
-//        }
-//    }
 }
 

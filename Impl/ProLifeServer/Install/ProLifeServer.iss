@@ -23,6 +23,7 @@ OutputBaseFilename=ProLifeServerInstall
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+CloseApplications=true
 
 [Components]
 Name: "server"; Description: "ProLife server"; Types: full compact custom; Flags: fixed
@@ -42,6 +43,7 @@ Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest";  DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 //Source: "postgresql.exe"; DestDir: "{app}"; Flags: deleteafterinstall; Components: postgresql
 Source: "{#BasePath}\ProLifeServerConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -49,13 +51,16 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 //Filename: "{app}\postgresql.exe"; Flags: runascurrentuser; Parameters:  --mode unattended --unattendedmodeui minimal --superpassword root; Components: postgresql
-Filename: "{app}\ProLifeServerConfigurator.exe"
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-t"
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-u"
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-i"
+Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
+Filename: "{app}\nginx\startNginx.bat"; Flags: runascurrentuser
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-t"; Flags: runascurrentuser
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-u"; Flags: runascurrentuser
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-i"; Flags: runascurrentuser
 
 [UninstallRun]
-Filename: "{app}\{#MyAppExeName}"; Parameters: "-t -u"
+Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
+Filename: "{app}\{#MyAppExeName}"; Parameters: "-t"; Flags: runascurrentuser
+Filename: "{app}\{#MyAppExeName}"; Parameters: "-u"; Flags: runascurrentuser
 
 //[Registry]
 //Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
@@ -77,16 +82,5 @@ begin
     { look for the path with leading and trailing semicolon }
     { Pos() returns 0 if not found }
     Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
-end;
-
-procedure ExecConfigurator();
-var
-    ResultCode: integer;
-begin
-  Exec('{pf64}\ImagingTools\{#MyAppName}\ProLifeServerConfigurator.exe','', '', SW_SHOW, ewWaitUntilTerminated, ResultCode)
-  {if ResultCode = ERROR_SUCCESS_REBOOT_REQUIRED then
-    RebootRequired := true
-  else if ResultCode <> ERROR_SUCCESS then
-    RaiseException(CustomMessage('MsiInstallationError')); }
 end;
 

@@ -9,6 +9,10 @@
                 <Data FeatureId="Administration" FeatureName="Administration" FeatureDescription="" Optional="false">
                     <Dependencies/>
                     <SubFeatures>
+                        <Object FeatureId="ShowServerLog" FeatureName="Show Server Log" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
                         <Object FeatureId="EditAdministration" FeatureName="Edit Administration" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures>
