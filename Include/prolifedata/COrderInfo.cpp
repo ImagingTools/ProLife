@@ -159,7 +159,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	const iser::IVersionInfo& versionInfo = archive.GetVersionInfo();
 	quint32 prolifeVersion;
 	if (!versionInfo.GetVersionNumber(prolife::VI_PROLIFE, prolifeVersion)){
-		prolifeVersion = 0;
+		prolifeVersion = 5902;
 	}
 
 	quint32 imtCoreVersion;
