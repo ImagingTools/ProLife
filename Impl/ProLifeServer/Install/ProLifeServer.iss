@@ -43,7 +43,7 @@ Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest";  DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 //Source: "postgresql.exe"; DestDir: "{app}"; Flags: deleteafterinstall; Components: postgresql
 Source: "{#BasePath}\ProLifeServerConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
+Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs confirmoverwrite
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -52,6 +52,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 //Filename: "{app}\postgresql.exe"; Flags: runascurrentuser; Parameters:  --mode unattended --unattendedmodeui minimal --superpassword root; Components: postgresql
 Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
+Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
 Filename: "{app}\nginx\startNginx.bat"; Flags: runascurrentuser
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-t"; Flags: runascurrentuser
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-u"; Flags: runascurrentuser
