@@ -23,10 +23,10 @@ namespace prolifedb
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
 QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
-		const QByteArray& objectId,
-		int offset,
-		int count,
-		const iprm::IParamsSet* paramsPtr) const
+			const QByteArray& objectId,
+			int offset,
+			int count,
+			const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
@@ -35,75 +35,58 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 					.arg(qPrintable(objectId)).toUtf8();
 	}
 
-	if (m_databaseEngineCompPtr.IsValid()){
-		QByteArray beforeSelectionQuery;
+	QByteArray beforeSelectionQuery;
 
-		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
-		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
+	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
+	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
 
-		beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
-		beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
+	beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
+	beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
 
-		QByteArrayList licenseFields;
+	if (m_licenseCollectionCompPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
 
-		licenseFields << "Id";
-		licenseFields << "LicenseId";
-		licenseFields << "LicenseName";
+		for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
+			idoc::MetaInfoPtr dataMetaInfo = m_licenseCollectionCompPtr->GetDataMetaInfo(licenseCollectionId);
+			QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
+			QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
 
-		imtbase::CTreeItemModel* licenseItemsModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
-		if (licenseItemsModelPtr != nullptr){
-			for (int i = 0; i < licenseItemsModelPtr->GetItemsCount(); i++){
-				QByteArray licenseUuid = licenseItemsModelPtr->GetData("Id", i).toByteArray();
-				QByteArray licenseId = licenseItemsModelPtr->GetData("LicenseId", i).toByteArray();
-				QString licenseName = licenseItemsModelPtr->GetData("LicenseName", i).toString();
-
-				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
-						.arg(qPrintable(licenseUuid))
+			beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
+						.arg(qPrintable(licenseCollectionId))
 						.arg(qPrintable(licenseId))
 						.arg(licenseName)
 						.toUtf8();
-			}
 		}
+	}
 
-		QByteArrayList productFields;
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids productCollectionIds = m_productCollectionCompPtr->GetElementIds();
 
-		productFields << "Id";
-		productFields << "ProductId";
-		productFields << "ProductName";
+		for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
+			idoc::MetaInfoPtr dataMetaInfo = m_productCollectionCompPtr->GetDataMetaInfo(productCollectionId);
 
-		imtbase::CTreeItemModel* productItemsModelPtr = GetRemoteCollectionData("ProductsList", productFields);
-		if (productItemsModelPtr != nullptr){
-			for (int i = 0; i < productItemsModelPtr->GetItemsCount(); i++){
-				QByteArray productUuid = productItemsModelPtr->GetData("Id", i).toByteArray();
-				QByteArray productId = productItemsModelPtr->GetData("ProductId", i).toByteArray();
-				QString productName = productItemsModelPtr->GetData("ProductName", i).toString();
+			QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
+			QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
 
-				beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-						.arg(qPrintable(productUuid))
-						.arg(qPrintable(productId))
-						.arg(productName)
-						.toUtf8();
-			}
+			beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
+					.arg(qPrintable(productCollectionId))
+					.arg(qPrintable(productId))
+					.arg(productName)
+					.toUtf8();
 		}
+	}
 
+	if (m_databaseEngineCompPtr.IsValid()){
 		QSqlError sqlError;
 		m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
 		if (sqlError.type() != QSqlError::NoError){
-			SendErrorMessage(0, sqlError.text(), "CSoftwareProductDatabaseDelegateComp");
+			SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
+
+			qDebug() << "SQL-error" << beforeSelectionQuery;
 
 			return QByteArray();
 		}
 	}
-
-//	if (!objectId.isEmpty()){
-//		QByteArray baseQuery = GetBaseSelectionQuery().toUtf8();
-
-//		QByteArray selectionQuery = QString(" AND si.\"DocumentId\" = '%1' ").arg(qPrintable(objectId)).toUtf8();
-
-//		selectionQuery = baseQuery + selectionQuery;
-
-//		return selectionQuery;
-//	}
 
 	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
 
@@ -163,8 +146,8 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
-		const iprm::IParamsSet& filterParams,
-		QString& filterQuery) const
+			const iprm::IParamsSet& filterParams,
+			QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 
@@ -353,293 +336,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 }
 
 
-//bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
-//			const iprm::IParamsSet& filterParams,
-//			QString& filterQuery) const
-//{
-//	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
-
-//	if (!paramIds.isEmpty()){
-//#if QT_VERSION >= 0x051500
-//		QByteArrayList paramIdsList(paramIds.cbegin(), paramIds.cend());
-//#else
-//		QByteArrayList paramIdsList = paramIds.toList();
-//#endif
-
-//		for (const QByteArray& key : qAsConst(paramIdsList)){
-//			QByteArray operation = " AND ";
-
-//			if (key.contains('/')){
-//				continue;
-//			}
-
-//			QString elementFilter;
-//			if (key == "LicenseStatus"){
-//				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-//				if (textParamPtr == nullptr){
-//					return false;
-//				}
-
-//				QString value = textParamPtr->GetText();
-
-//				if (value == "None"){
-//					continue;
-//				}
-
-//				elementFilter += "bp.\"Document\"->'SoftwareIds'->>0";
-
-//				if (value == "WithoutLicense"){
-//					elementFilter += " is null";
-//				}
-//				else{
-//					elementFilter += " != ''";
-//				}
-//			}
-//			else if (key == "OrderId"){
-//				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-//				if (textParamPtr == nullptr){
-//					return false;
-//				}
-
-//				QString value = textParamPtr->GetText();
-//				if (!value.isEmpty()){
-//					elementFilter += "si.\"Document\"->>'OrderId' = '";
-//					elementFilter += value.toUtf8();
-//					elementFilter += "'";
-//				}
-//			}
-//			else if (key == "CustomerUuid"){
-//				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-//				if (textParamPtr == nullptr){
-//					return false;
-//				}
-
-//				QString value = textParamPtr->GetText();
-//				if (!value.isEmpty()){
-//					elementFilter += "acc.\"DocumentId\" = '";
-//					elementFilter += value.toUtf8();
-//					elementFilter += "'";
-//				}
-//			}
-//			else if (key == "HardwareUuid"){
-//				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-//				if (textParamPtr == nullptr){
-//					return false;
-//				}
-
-//				QString value = textParamPtr->GetText();
-//				if (!value.isEmpty()){
-//					elementFilter += "bp.\"Document\"->>'HardwareId' = '";
-//					elementFilter += value.toUtf8();
-//					elementFilter += "'";
-//				}
-//			}
-//			else if (key == "ProductUuid"){
-//				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-//				if (textParamPtr == nullptr){
-//					return false;
-//				}
-
-//				QString value = textParamPtr->GetText();
-//				if (!value.isEmpty()){
-//					elementFilter += "si.\"Document\"->>'ProductId' = '";
-//					elementFilter += value.toUtf8();
-//					elementFilter += "'";
-//				}
-//			}
-//			else if (key == "FilterIds"){
-//				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
-//				if (filterParamPtr.IsValid()){
-//					QString excludeText;
-//					iprm::TParamsPtr<iprm::ITextParam> excludeTextParamPtr(filterParamPtr.GetPtr(), "ExcludeIds");
-//					if (excludeTextParamPtr.IsValid()){
-//						excludeText = excludeTextParamPtr->GetText();
-//					}
-
-//					QString includeText;
-//					iprm::TParamsPtr<iprm::ITextParam> includeTextParamPtr(filterParamPtr.GetPtr(), "IncludeIds");
-//					if (includeTextParamPtr.IsValid()){
-//						includeText = includeTextParamPtr->GetText();
-//					}
-
-//					QStringList excludeIds;
-//					if (!excludeText.isEmpty()){
-//						elementFilter += "si.\"DocumentId\" NOT IN (";
-//						QStringList keys = excludeText.split(';');
-//						excludeIds = keys;
-//						for (int index = 0; index < keys.count(); index++){
-//							QString key = keys[index];
-//							if (index > 0){
-//								elementFilter += ",";
-//							}
-//							elementFilter += "'" + key.toUtf8() + "'";
-//						}
-//						elementFilter += ")";
-
-//						QString deviceFilter = QString(" AND (dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)");
-//						elementFilter += deviceFilter;
-//					}
-
-//					QStringList includeIds;
-//					if (!includeText.isEmpty()){
-
-//						QString suffixFilter;
-//						if (!elementFilter.isEmpty()){
-//							elementFilter += " OR ";
-//						}
-
-//						elementFilter += "si.\"DocumentId\" IN (";
-//						QStringList keys = includeText.split(';');
-//						includeIds = keys;
-
-//						for (int index = 0; index < keys.count(); index++){
-//							QString key = keys[index];
-//							if (index > 0){
-//								elementFilter += ",";
-//							}
-//							elementFilter += "'" + key.toUtf8() + "'";
-//						}
-
-////						if (excludeIds.isEmpty()){
-////							elementFilter += R"(, si."DocumentId")";
-////						}
-
-//						elementFilter += ")";
-//					}
-
-//					elementFilter = "(" + elementFilter + ")";
-
-//					if (excludeIds.isEmpty() && !includeIds.isEmpty()){
-//						operation = " OR ";
-//					}
-//				}
-//			}
-//			else if (key == "Orders"){
-//				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(key));
-//				if (selectionPtr != nullptr){
-//					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-//					if (optionsListPtr != nullptr){
-//						QString ordersFilterQuery;
-//						if (optionsListPtr->GetOptionsCount() > 0){
-//							ordersFilterQuery += "(";
-//						}
-
-//						for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-//							if (i > 0){
-//								ordersFilterQuery += " OR ";
-//							}
-//							QByteArray optionId = optionsListPtr->GetOptionId(i);
-//							QString optionName = optionsListPtr->GetOptionName(i);
-
-//							if (!optionName.isEmpty()){
-//								ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(optionName);
-//							}
-//							else{
-//								ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND %1 = '%2')")
-//											.arg("(SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1)")
-//											.arg(qPrintable(optionId));
-//							}
-//						}
-
-//						if (!ordersFilterQuery.isEmpty()){
-//							ordersFilterQuery += ')';
-//						}
-
-//						elementFilter += ordersFilterQuery;
-//					}
-//				}
-//			}
-//			else if (key == "SerialNumber"){
-//				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
-//				if (filterParamPtr.IsValid()){
-//					QString value;
-//					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
-//					if (valueParamPtr.IsValid()){
-//						value = valueParamPtr->GetText();
-//					}
-
-//					bool isEqual = true;
-//					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
-//					if (enableableParamPtr.IsValid()){
-//						isEqual = enableableParamPtr->IsEnabled();
-//					}
-
-//					if (isEqual){
-//						elementFilter += QString("(si.\"Document\"->>'SerialNumber' = '%1')").arg(value);
-//					}
-//					else{
-//						elementFilter += QString("si.\"Document\"->>'SerialNumber' != '%1'").arg(value);
-//					}
-//				}
-//			}
-//			else if (key == "DeviceId"){
-//				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
-//				if (filterParamPtr.IsValid()){
-//					QString value;
-//					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
-//					if (valueParamPtr.IsValid()){
-//						value = valueParamPtr->GetText();
-//					}
-
-//					bool isEqual = true;
-//					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
-//					if (enableableParamPtr.IsValid()){
-//						isEqual = enableableParamPtr->IsEnabled();
-//					}
-
-//					if (isEqual){
-//						elementFilter += "(dev.\"Document\"->>'MacAddress' = '' OR dev.\"Document\"->>'MacAddress' IS NULL)";
-//					}
-//					else{
-//						elementFilter += "dev.\"Document\"->>'MacAddress' != ''";
-//					}
-//				}
-//			}
-
-//			else if (key == "InUse"){
-//				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
-//				if (filterParamPtr.IsValid()){
-//					QString value;
-//					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
-//					if (valueParamPtr.IsValid()){
-//						value = valueParamPtr->GetText();
-//					}
-
-//					bool isEqual = true;
-//					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
-//					if (enableableParamPtr.IsValid()){
-//						isEqual = enableableParamPtr->IsEnabled();
-//					}
-
-//					if (isEqual){
-//						elementFilter += "si.\"Document\"->>'InUse' = true";
-//					}
-//					else{
-//						elementFilter += "si.\"Document\"->>'InUse' = false";
-//					}
-//				}
-//			}
-
-//			if (filterQuery.isEmpty()){
-//				filterQuery = elementFilter;
-//			}
-//			else{
-//				filterQuery += operation + elementFilter;
-//			}
-//		}
-//	}
-
-//	if (!filterQuery.isEmpty()){
-//		filterQuery = "(" + filterQuery + ")";
-//	}
-
-//	return true;
-//}
-
-
 bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& sortQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& sortQuery) const
 {
 	QByteArray columnId;
 	QByteArray sortOrder;
@@ -688,8 +387,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& textFilterQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

@@ -39,121 +39,62 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 					.arg(qPrintable(objectId)).toUtf8();
 	}
 
-//	QByteArray beforeSelectionQuery;
+	QByteArray beforeSelectionQuery;
 
-//	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
-//	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
-
-//	beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
-//	beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
-
-//	if (m_licenseCollectionCompPtr.IsValid()){
-//		imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
-
-//		for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (m_licenseCollectionCompPtr->GetObjectData(licenseCollectionId, dataPtr)){
-//				const imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
-//				if (licenseDefinitionPtr != nullptr){
-//					beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
-//								.arg(qPrintable(licenseCollectionId))
-//								.arg(qPrintable(licenseDefinitionPtr->GetLicenseId()))
-//								.arg(licenseDefinitionPtr->GetLicenseName())
-//								.toUtf8();
-//				}
-//			}
-//		}
-//	}
-
-//	if (m_productCollectionCompPtr.IsValid()){
-//		imtbase::ICollectionInfo::Ids productCollectionIds = m_productCollectionCompPtr->GetElementIds();
-
-//		for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
-//			imtbase::IObjectCollection::DataPtr dataPtr;
-//			if (m_productCollectionCompPtr->GetObjectData(productCollectionId, dataPtr)){
-//				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
-//				if (productInfoPtr != nullptr){
-//					beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-//								.arg(qPrintable(productCollectionId))
-//								.arg(qPrintable(productInfoPtr->GetProductId()))
-//								.arg(productInfoPtr->GetName())
-//								.toUtf8();
-//				}
-//			}
-//		}
-//	}
-
-//	if (m_databaseEngineCompPtr.IsValid()){
-//		QSqlError sqlError;
-//		m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
-//		if (sqlError.type() != QSqlError::NoError){
-//			SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
-
-//			qDebug() << "SQL-error" << beforeSelectionQuery;
-
-//			return QByteArray();
-//		}
-//	}
-
-	if (m_databaseEngineCompPtr.IsValid()){
-		QByteArray beforeSelectionQuery;
-
+	if (!TableIsExists("LicensesTemp")){
 		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
-		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
-
 		beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
-		beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
 
-		QByteArrayList licenseFields;
+		if (m_licenseCollectionCompPtr.IsValid()){
+			imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
 
-		licenseFields << "Id";
-		licenseFields << "LicenseId";
-		licenseFields << "LicenseName";
-
-		imtbase::CTreeItemModel* licenseItemsModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
-		if (licenseItemsModelPtr != nullptr){
-			for (int i = 0; i < licenseItemsModelPtr->GetItemsCount(); i++){
-				QByteArray licenseUuid = licenseItemsModelPtr->GetData("Id", i).toByteArray();
-				QByteArray licenseId = licenseItemsModelPtr->GetData("LicenseId", i).toByteArray();
-				QString licenseName = licenseItemsModelPtr->GetData("LicenseName", i).toString();
+			for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
+				idoc::MetaInfoPtr dataMetaInfo = m_licenseCollectionCompPtr->GetDataMetaInfo(licenseCollectionId);
+				QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
+				QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
 
 				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
-							.arg(qPrintable(licenseUuid))
+							.arg(qPrintable(licenseCollectionId))
 							.arg(qPrintable(licenseId))
 							.arg(licenseName)
 							.toUtf8();
 			}
 		}
+	}
 
-		QByteArrayList productFields;
+	if (!TableIsExists("ProductsTemp")){
+		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
+		beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
 
-		productFields << "Id";
-		productFields << "ProductId";
-		productFields << "ProductName";
+		if (m_productCollectionCompPtr.IsValid()){
+			imtbase::ICollectionInfo::Ids productCollectionIds = m_productCollectionCompPtr->GetElementIds();
 
-		imtbase::CTreeItemModel* productItemsModelPtr = GetRemoteCollectionData("ProductsList", productFields);
-		if (productItemsModelPtr != nullptr){
-			for (int i = 0; i < productItemsModelPtr->GetItemsCount(); i++){
-				QByteArray productUuid = productItemsModelPtr->GetData("Id", i).toByteArray();
-				QByteArray productId = productItemsModelPtr->GetData("ProductId", i).toByteArray();
-				QString productName = productItemsModelPtr->GetData("ProductName", i).toString();
+			for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
+				idoc::MetaInfoPtr dataMetaInfo = m_productCollectionCompPtr->GetDataMetaInfo(productCollectionId);
+
+				QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
+				QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
 
 				beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-							.arg(qPrintable(productUuid))
+							.arg(qPrintable(productCollectionId))
 							.arg(qPrintable(productId))
 							.arg(productName)
 							.toUtf8();
 			}
 		}
+	}
 
-		QSqlError sqlError;
-		m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
-		if (sqlError.type() != QSqlError::NoError){
-			SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
+	if (m_databaseEngineCompPtr.IsValid()){
+		if (!beforeSelectionQuery.isEmpty()){
+			QSqlError sqlError;
+			m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
+			if (sqlError.type() != QSqlError::NoError){
+				SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
 
-			qDebug() << "SQL-error" << beforeSelectionQuery;
+				qDebug() << "SQL-error" << beforeSelectionQuery;
 
-			return QByteArray();
+				return QByteArray();
+			}
 		}
 	}
 
@@ -400,11 +341,7 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 			if (filteringColumnIds[i] == "OrderId" || filteringColumnIds[i] == "ConfigurationType" || filteringColumnIds[i] == "DeviceType"){
 				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
-//			if (filteringColumnIds[i] == "OrderId"){
-//				textFilterQuery += QString("(SELECT \"Document\"->>'%1' FROM \"Orders\" as t3 WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"Document\"->>'%1' LIMIT 1) ILIKE '%%2%'")
-//						.arg(qPrintable(filteringColumnIds[i]))
-//						.arg(textFilter);;
-//			}
+
 			else{
 				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}

@@ -925,8 +925,14 @@
                                 <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="CachedLicenseCollection"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="CachedProductCollection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>

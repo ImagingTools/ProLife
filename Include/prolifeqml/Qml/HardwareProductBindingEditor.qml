@@ -413,8 +413,8 @@ Item {
 
                         bindingFilterModel.SetData("HardwareUuidFilter", productEditor.hardwareId);
 
-                        softwareProductCollection.commandsId = "SoftwareProducts"
-                        softwareProductCollection.commands.itemsInfoModel.updateModel();
+                        softwareProductCollection.commandId = "SoftwareProducts"
+                        softwareProductCollection.updateModels();
                     }
                 }
             }
@@ -536,7 +536,7 @@ Item {
                         }
 
                         bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
-                        bindingProductsCollection.commandsId = "SoftwareProducts"
+                        bindingProductsCollection.commandId = "SoftwareProducts"
                         bindingProductsCollection.commands.itemsInfoModel.updateModel();
                     }
                 }

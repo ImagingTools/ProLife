@@ -157,21 +157,25 @@ DocumentBase {
         if (root.documentModel.ContainsKey("ProductId")){
             let productId = root.documentModel.GetData("ProductId");
 
-            for (let i = 0; i < productCB.model.GetItemsCount(); i++){
-                let id = productCB.model.GetData("Id", i);
-                if (id == productId){
-                    productCB.currentIndex = i;
-                    break;
+            if (productCB.model){
+                for (let i = 0; i < productCB.model.GetItemsCount(); i++){
+                    let id = productCB.model.GetData("Id", i);
+                    if (id == productId){
+                        productCB.currentIndex = i;
+                        break;
+                    }
                 }
             }
         }
 
-        if (productCB.currentIndex >= 0){
-            let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-            if (!licensesModel){
-                licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+        if (productCB.model){
+            if (productCB.currentIndex >= 0){
+                let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+                if (!licensesModel){
+                    licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+                }
+                softwareProductEditor.productLicensesModel = licensesModel;
             }
-            softwareProductEditor.productLicensesModel = licensesModel;
         }
 
         softwareProductEditor.updateGui();

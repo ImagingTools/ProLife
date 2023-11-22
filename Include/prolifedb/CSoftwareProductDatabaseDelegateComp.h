@@ -15,6 +15,8 @@ public:
 	typedef imtdb::CSqlJsonDatabaseDelegateComp BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductDatabaseDelegateComp)
+		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
+		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 	I_END_COMPONENT
 
 	// reimplemented (imtdb::ISqlDatabaseObjectDelegate)
@@ -30,6 +32,10 @@ public:
 	virtual bool CreateObjectFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const override;
 	virtual bool CreateSortQuery(const imtbase::ICollectionFilter& collectionFilter, QString& sortQuery) const override;
 	virtual bool CreateTextFilterQuery(const imtbase::ICollectionFilter& collectionFilter, QString& textFilterQuery) const override;
+
+private:
+	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 };
 
 
