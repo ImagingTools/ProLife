@@ -69,7 +69,7 @@
                         <Data IsEnabled="true" Value="ServerSettings/ServerPort"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8112"/>
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerPortParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/WebSocketServerPort"/>
@@ -198,11 +198,14 @@
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerPort" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerPort" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="8890"/>
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
