@@ -19,6 +19,8 @@ Item {
     property alias tableElements: licenseCB.model;
     property bool readOnly: false;
 
+    property bool blockUpdatingModel: false;
+
     onReadOnlyChanged: {
         serialNumberInput.readOnly = root.readOnly;
 
@@ -27,16 +29,81 @@ Item {
         licenseCB.changeable = !root.readOnly
     }
 
-    Component.onCompleted: {
-        Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
+    function updateGui(){
+        blockUpdatingModel = true;
+
+        if (productModel.ContainsKey("SerialNumber")){
+            serialNumberInput.text = productModel.GetData("SerialNumber")
+        }
+        else{
+            serialNumberInput.text = "";
+        }
+
+        let licenseFound = false;
+
+        let licenseUuid = root.productModel.GetData("LicenseUuid");
+        if (licenseCB.model){
+            for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
+                let licenseId = licenseCB.model.GetData("Id", i);
+                if (licenseId == licenseUuid){
+                    licenseCB.currentIndex = i;
+
+                    licenseFound = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (!licenseFound){
+            licenseCB.currentIndex = -1;
+        }
+
+        if (root.productModel.ContainsKey("Expiration")){
+            let expiration = root.productModel.GetData("Expiration");
+
+            if (expiration && expiration !== "" ){
+                checkBox.checkState = Qt.Checked;
+            }
+            else{
+                checkBox.checkState = Qt.Unchecked;
+            }
+
+            if (expiration){
+                let currentDate = datePicker.getDate();
+
+                if (expiration !== "" && expiration !== currentDate){
+                    let date = expiration;
+                    let data = date.split("-");
+                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                }
+            }
+        }
+
+        blockUpdatingModel = false;
     }
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
-    }
+    function updateModel(){
+        if (blockUpdatingModel){
+            return;
+        }
 
-    function onLocalizationChanged(language){
-//        root.updateHeaders();
+        productModel.SetData("SerialNumber", serialNumberInput.text)
+
+        if (checkBox.checkState == Qt.Checked){
+            productModel.SetData("Expiration", datePicker.getDate());
+        }
+        else{
+            productModel.SetData("Expiration", "");
+        }
+
+        if (licenseCB.currentIndex >= 0 && licenseCB.model){
+            let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
+            productModel.SetData("LicenseUuid", selectedId);
+        }
+        else{
+            productModel.SetData("LicenseUuid", "");
+        }
     }
 
     Text {
@@ -79,8 +146,8 @@ Item {
             serialNumberInput.readOnly = !ok;
         }
 
-        onTextChanged: {
-            root.productModel.SetData("SerialNumber", serialNumberInput.text);
+        onEditingFinished: {
+            updateModel();
         }
     }
 
@@ -123,11 +190,7 @@ Item {
         }
 
         onCurrentIndexChanged: {
-            if (currentIndex >= 0){
-                let selectedLicenseUuid = licenseCB.model.GetData("Id", currentIndex);
-
-                root.productModel.SetData("LicenseUuid", selectedLicenseUuid)
-            }
+            updateModel();
         }
     }
 
@@ -163,16 +226,7 @@ Item {
             isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable;
 
             onCheckStateChanged: {
-                if (blockUpdatingModel){
-                    return;
-                }
-
-                if (checkBox.checkState == Qt.Checked){
-                    productModel.SetData("Expiration", datePicker.getDate());
-                }
-                else{
-                    productModel.SetData("Expiration", "");
-                }
+                updateModel();
             }
         }
 
@@ -218,12 +272,7 @@ Item {
             }
 
             onDateChanged: {
-                if (blockUpdatingModel){
-                    return;
-                }
-
-                console.log("onDateChanged", datePicker.getDate());
-                productModel.SetData("Expiration", datePicker.getDate());
+                updateModel()
             }
 
 //            property string expirationDate: model.Expiration;
@@ -248,69 +297,67 @@ Item {
         }
     }
 
-    property bool blockUpdatingModel: false;
+//    function updateModel(){
+//        if (root.blockUpdatingModel){
+//            return;
+//        }
 
-    function updateModel(){
-        if (root.blockUpdatingModel){
-            return;
-        }
+//        root.productModel.SetData("SerialNumber", serialNumberInput.text);
+//    }
 
-        root.productModel.SetData("SerialNumber", serialNumberInput.text);
-    }
+//    function updateGui(){
+//        console.log("updateGui", root.productModel.toJSON());
+//        blockUpdatingModel = true;
 
-    function updateGui(){
-        console.log("updateGui", root.productModel.toJSON());
-        blockUpdatingModel = true;
+//        licenseCB.currentIndex = -1;
 
-        licenseCB.currentIndex = -1;
+//        let licenseUuid = root.productModel.GetData("LicenseUuid");
+//        if (licenseCB.model){
+//            for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
+//                let licenseId = licenseCB.model.GetData("Id", i);
+//                let licenseName = licenseCB.model.GetData("LicenseName", i);
 
-        let licenseUuid = root.productModel.GetData("LicenseUuid");
-        if (licenseCB.model){
-            for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
-                let licenseId = licenseCB.model.GetData("Id", i);
-                let licenseName = licenseCB.model.GetData("LicenseName", i);
+//                if (licenseId == licenseUuid){
+//                    licenseCB.currentIndex = i;
 
-                if (licenseId == licenseUuid){
-                    licenseCB.currentIndex = i;
+//                    break;
+//                }
+//            }
+//        }
 
-                    break;
-                }
-            }
-        }
+//        if (root.productModel.ContainsKey("Expiration")){
+//            let expiration = root.productModel.GetData("Expiration");
 
-        if (root.productModel.ContainsKey("Expiration")){
-            let expiration = root.productModel.GetData("Expiration");
+//            if (expiration && expiration !== "" ){
+//                checkBox.checkState = Qt.Checked;
+//            }
+//            else{
+//                checkBox.checkState = Qt.Unchecked;
+//            }
 
-            if (expiration && expiration !== "" ){
-                checkBox.checkState = Qt.Checked;
-            }
-            else{
-                checkBox.checkState = Qt.Unchecked;
-            }
+//            if (expiration){
+//                let currentDate = datePicker.getDate();
 
-            if (expiration){
-                let currentDate = datePicker.getDate();
+//                if (expiration !== "" && expiration !== currentDate){
+//                    let date = expiration;
+//                    let data = date.split("-");
+//                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+//                }
+//            }
+//        }
 
-                if (expiration !== "" && expiration !== currentDate){
-                    let date = expiration;
-                    let data = date.split("-");
-                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-                }
-            }
-        }
+//        if (root.productModel.ContainsKey("SerialNumber")){
+//            let serialNumber = root.productModel.GetData("SerialNumber");
+//            if (serialNumber){
+//                serialNumberInput.text = serialNumber;
+//            }
+//            else{
+//                serialNumberInput.text = "";
+//            }
+//        }
 
-        if (root.productModel.ContainsKey("SerialNumber")){
-            let serialNumber = root.productModel.GetData("SerialNumber");
-            if (serialNumber){
-                serialNumberInput.text = serialNumber;
-            }
-            else{
-                serialNumberInput.text = "";
-            }
-        }
-
-        blockUpdatingModel = false;
-    }
+//        blockUpdatingModel = false;
+//    }
 
 
 }//Container

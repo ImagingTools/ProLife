@@ -23,10 +23,10 @@
                         <Data IsEnabled="true" Value="Customers"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtauthgui/AccountCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../imtauthgui/AccountCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -44,10 +44,10 @@
                         <Data IsEnabled="true" Value="Administration"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/SingleDocumentWorkspaceView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/SingleDocumentWorkspaceView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtauthgui/AdministrationView.qml"/>
+                        <Data IsEnabled="true" Value="../imtauthgui/AdministrationView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -70,10 +70,10 @@
                         <Data IsEnabled="true" Value="Sensors"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/DeviceCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../ProLife/DeviceCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -91,10 +91,10 @@
                         <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/OrderCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../ProLife/OrderCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -316,10 +316,10 @@
                         <Data IsEnabled="true" Value="Licenses"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtgui/AuxComponents/MultiDocWorkspacePageView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/SoftwareProductCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="../ProLife/SoftwareProductCollectionView.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

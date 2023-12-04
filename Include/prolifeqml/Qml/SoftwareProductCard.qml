@@ -12,33 +12,29 @@ Rectangle {
 
     color: Style.baseColor;
 
-    property string productId: model.ProductId ? model.ProductId : "";
-    property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
-    property bool inUse: model.InUse ? model.InUse : "";
-
     property int margin: 10;
+    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
 
     property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
-    property string licenseId: "";
-    property string licenseName: "";
-
+    property string licenseId: model.LicenseId;
+    property string licenseName: model.LicenseName;
     property string expiration: model.Expiration ? model.Expiration : "";
+    property string productId: model.ProductUuid ? model.ProductUuid : "";
+    property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
 
     property bool readOnly: false;
     property bool commmandsVisible: false;
+    property bool inUse: model.InUse ? model.InUse : "";
 
     property Item productCardRoot: null;
-
-    property LicensesProvider licensesProvider: null;
-    property CollectionDataProvider productCollection: null;
-
-    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
 
     signal clicked();
     signal edited();
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", softwareCard.onLocalizationChanged);
+
+        softwareCard.updateElements();
     }
 
     Component.onDestruction: {
@@ -47,41 +43,6 @@ Rectangle {
 
     function onLocalizationChanged(language){
         softwareCard.updateHeaders();
-    }
-
-    property bool ok: productCardRoot != null && productId && productCollection != null;
-
-    onOkChanged: {
-        if (ok){
-            productCardRoot.orderEditorPtr.blockUpdatingModel = true
-
-            for (let j = 0; j < productCollection.collectionModel.GetItemsCount(); j++){
-                let productId = productCollection.collectionModel.GetData("Id", j);
-                if (productId === softwareCard.productId){
-                    let licensesModel = productCollection.collectionModel.GetData("Licenses", j);
-                    if (licensesModel){
-                        for (let k = 0; k < licensesModel.GetItemsCount(); k++){
-                            let licenseUuid = licensesModel.GetData("Id", k);
-                            if (softwareCard.licenseUuid === licenseUuid){
-                                let licenseId = licensesModel.GetData("LicenseId", k);
-                                let licenseName = licensesModel.GetData("LicenseName", k);
-
-                                softwareCard.licenseId = licenseId;
-                                softwareCard.licenseName = licenseName;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            productCardRoot.orderEditorPtr.blockUpdatingModel = false
-
-            softwareCard.updateElements();
-        }
     }
 
     Item {

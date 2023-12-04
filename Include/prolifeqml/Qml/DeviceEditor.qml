@@ -1,11 +1,12 @@
 import QtQuick 2.12
+import Acf 1.0
 import imtgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
 import imtauthgui 1.0
-import Acf 1.0
+import imtdocgui 1.0
 
-DocumentBase {
+DocumentData {
     id: deviceEditorContainer;
 
     property TreeItemModel accountsModel: TreeItemModel {}
@@ -14,7 +15,7 @@ DocumentBase {
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
-    property bool modelsIsLoaded: ordersList.completed && productsList.completed && deviceEditorContainer.modelIsReady;
+    documentCompleted: ordersList.completed && productsList.completed;
 
     property int radius: 3;
     property int spacing: 20;
@@ -26,47 +27,26 @@ DocumentBase {
 
     onVisibleChanged: {
         if (visible){
-            if (deviceEditorContainer.errorMessage !== ""){
-                deviceEditorContainer.documentManager.showAlertMessage(deviceEditorContainer.errorMessage);
-            }
-        }
-        else{
-            deviceEditorContainer.documentManager.hideAlertMessage();
+//            if (deviceEditorContainer.errorMessage !== ""){
+//                deviceEditorContainer.documentManager.showAlertMessage(deviceEditorContainer.errorMessage);
+//            }
+//        }
+//        else{
+//            deviceEditorContainer.documentManager.hideAlertMessage();
         }
     }
 
-    onModelsIsLoadedChanged: {
-        if (deviceEditorContainer.modelsIsLoaded){
-            if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
-                let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
-                let productModel = productCB.model;
-                for (let i = 0; i < productModel.GetItemsCount(); i++){
-                    let id = productModel.GetData("Id", i);
-                    if (id === productId){
-                        let licensesModel = productModel.GetData("Licenses", i);
-                        if (licensesModel){
-                            configurationCB.model = licensesModel;
-                        }
-
-                        break;
-                    }
-                }
+    function beginDocumentModelChanged(){
+        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+            if (status !== ""){
+                let statusModel = stateMachine.getAvailableModel(status);
+                statusCB.model = statusModel;
             }
+        }
 
-            if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-                let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                if (status !== ""){
-                    let statusModel = stateMachine.getAvailableModel(status);
-                    statusCB.model = statusModel;
-                }
-            }
-
-            if (!statusCB.model){
-                statusCB.model = productionStatus.statusModel;
-            }
-
-            deviceEditorContainer.updateGui();
-            undoRedoManager.registerModel(documentModel);
+        if (!statusCB.model){
+            statusCB.model = productionStatus.statusModel;
         }
     }
 
@@ -80,14 +60,12 @@ DocumentBase {
             if (statusModel){
                 statusCB.model = statusModel;
             }
-
-            deviceEditorContainer.updateGui();
         }
     }
 
     function documentCanBeSaved(){
         let ok = deviceEditorContainer.macAddressIsValid();
-        if (!ok){
+        if (!ok && deviceEditorContainer.documentManager){
             deviceEditorContainer.documentManager.openErrorDialog("MAC-Address invalid");
         }
 
@@ -165,16 +143,6 @@ DocumentBase {
         }
     }
 
-    UndoRedoManager {
-        id: undoRedoManager;
-
-        documentBase: deviceEditorContainer;
-
-        onModelStateChanged: {
-            deviceEditorContainer.updateGui();
-        }
-    }
-
     MouseArea {
         anchors.fill: parent;
 
@@ -188,10 +156,6 @@ DocumentBase {
         if (!saveExists){
             deviceEditorContainer.blockEditing();
         }
-//        let isOrderEdited = deviceEditorContainer.commandsProvider.commandExists("OrderEdit");
-//        if (!isOrderEdited){
-//            orderCB.changeable = false;
-//        }
     }
 
     function blockEditing(){
@@ -210,28 +174,31 @@ DocumentBase {
     function updateGui(){
         console.log("UpdateGui start");
 
-        deviceEditorContainer.blockUpdatingModel = true;
-
-        descriptionInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
             descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
         }
+        else{
+            descriptionInput.text = "";
+        }
 
-        serialNumberInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
             serialNumberInput.text = deviceEditorContainer.documentModel.GetData("SerialNumber");
         }
+        else{
+            serialNumberInput.text = "";
+        }
 
-        macAddressInput.text = "";
         if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
             macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
         }
+        else{
+            macAddressInput.text = "";
+        }
 
-        statusCB.currentIndex = -1;
+        let statusFound = false;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             let statusModel = stateMachine.getAvailableModel(status);
-//            let statusModel = statusCB.model;
             if (statusModel){
                 statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -239,13 +206,19 @@ DocumentBase {
                     if (id === status){
                         statusCB.updateIcon(status);
                         statusCB.currentIndex = i;
+
+                        statusFound = true;
                         break;
                     }
                 }
             }
         }
 
-        productCB.currentIndex = -1;
+        if (!statusFound){
+            statusCB.currentIndex = -1;
+        }
+
+        let deviceTypeFound = false;
         if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
             let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
             let productModel = productCB.model;
@@ -253,27 +226,40 @@ DocumentBase {
                 let id = productModel.GetData("Id", i);
                 if (id === productId){
                     productCB.currentIndex = i;
+
+                    deviceTypeFound = true;
                     break;
                 }
             }
         }
 
-        configurationCB.currentIndex = -1;
-        if (deviceEditorContainer.documentModel.ContainsKey("ConfigurationType")){
-            let productId = deviceEditorContainer.documentModel.GetData("ConfigurationType");
+        if (!deviceTypeFound){
+            productCB.currentIndex = -1;
+        }
+
+        let configurationTypeFound = false;
+        if (deviceEditorContainer.documentModel.ContainsKey("LicenseName")){
+            let productId = deviceEditorContainer.documentModel.GetData("LicenseName");
             let model = configurationCB.model;
             if (model){
                 for (let i = 0; i < model.GetItemsCount(); i++){
                     let id = model.GetData("Id", i);
                     if (id === productId){
                         configurationCB.currentIndex = i;
+
+                        configurationTypeFound = true;
                         break;
                     }
                 }
             }
         }
 
-        orderCB.currentIndex = -1;
+        if (!configurationTypeFound){
+            configurationCB.currentIndex = -1;
+        }
+
+        let orderIdFound = false;
+
         if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
             let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
             let ordersModel = orderCB.model;
@@ -282,25 +268,21 @@ DocumentBase {
                     let id = ordersModel.GetData("Id", i);
                     if (id === orderId){
                         orderCB.currentIndex = i;
+                        orderIdFound = true;
                         break;
                     }
                 }
             }
         }
 
-        deviceEditorContainer.blockUpdatingModel = false;
-
+        if (!orderIdFound){
+            orderCB.currentIndex = -1;
+        }
         console.log("UpdateGui end");
     }
 
     function updateModel(){
-        if (deviceEditorContainer.blockUpdatingModel){
-            return;
-        }
-
-        undoRedoManager.beginChanges();
-
-        if (productCB.currentIndex >= 0){
+        if (productCB.currentIndex >= 0 && productCB.model){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
             deviceEditorContainer.documentModel.SetData("DeviceType", selectedProductId);
         }
@@ -312,14 +294,14 @@ DocumentBase {
         if (configurationCB.model){
             if (configurationCB.currentIndex >= 0){
                 let configurationType = configurationCB.model.GetData("Id", configurationCB.currentIndex);
-                deviceEditorContainer.documentModel.SetData("ConfigurationType", configurationType);
+                deviceEditorContainer.documentModel.SetData("LicenseName", configurationType);
 
                 configurationExists = true;
             }
         }
 
         if (!configurationExists){
-            deviceEditorContainer.documentModel.SetData("ConfigurationType", "");
+            deviceEditorContainer.documentModel.SetData("LicenseName", "");
         }
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
@@ -333,26 +315,17 @@ DocumentBase {
             }
         }
 
-        let description = descriptionInput.text;
-        deviceEditorContainer.documentModel.SetData("Description", description);
+        deviceEditorContainer.documentModel.SetData("Description", descriptionInput.text);
+        deviceEditorContainer.documentModel.SetData("SerialNumber", serialNumberInput.text);
+        deviceEditorContainer.documentModel.SetData("MacAddress", macAddressInput.text);
 
-        let serialNumber = serialNumberInput.text;
-        deviceEditorContainer.documentModel.SetData("SerialNumber", serialNumber);
-
-        if (macAddressInput.acceptableInput){
-            let macAddress = macAddressInput.text;
-            deviceEditorContainer.documentModel.SetData("MacAddress", macAddress);
-        }
-
-        if (statusCB.currentIndex >= 0){
+        if (statusCB.currentIndex >= 0 && statusCB.model){
             let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
             deviceEditorContainer.documentModel.SetData("ProductionStatus", selectedStatus);
         }
         else{
             deviceEditorContainer.documentModel.SetData("ProductionStatus", "");
         }
-
-        undoRedoManager.endChanges();
     }
 
     Rectangle {
@@ -375,7 +348,6 @@ DocumentBase {
 
     CustomScrollbar {
         id: scrollbar;
-        z: 100;
 
         anchors.left: flickable.right;
         anchors.leftMargin: 5;
@@ -419,7 +391,7 @@ DocumentBase {
                 font.pixelSize: Style.fontSize_common;
             }
 
-            Rectangle { ////////////////////
+            Rectangle {
                 id: deviceInformationBlockBorders;
 
                 width: parent.width;
@@ -474,19 +446,21 @@ DocumentBase {
                             }
 
                             onCurrentIndexChanged: {
+                                let ok = false;
                                 if (productCB.currentIndex >= 0){
                                     let model = productCB.model.GetData("Licenses", productCB.currentIndex);
                                     if (model){
                                         configurationCB.model = model;
-                                    }
-                                    else{
-                                        configurationCB.model = 0;
-                                    }
 
-                                    configurationCB.currentIndex = -1;
+                                        ok = true;
+                                    }
                                 }
 
-                                deviceEditorContainer.updateModel();
+                                if (!ok){
+                                    configurationCB.model = 0;
+                                }
+
+                                deviceEditorContainer.doUpdateModel();
                             }
                         }
                     }
@@ -522,7 +496,7 @@ DocumentBase {
                             }
 
                             onCurrentIndexChanged: {
-                                deviceEditorContainer.updateModel();
+                                deviceEditorContainer.doUpdateModel();
                             }
                         }
                     }
@@ -545,10 +519,7 @@ DocumentBase {
                         }
 
                         onEditingFinished: {
-                            let oldText = deviceEditorContainer.documentModel.GetData("Description");
-                            if (oldText && oldText !== descriptionInput.text || !oldText && descriptionInput.text !== ""){
-                                deviceEditorContainer.updateModel();
-                            }
+                            deviceEditorContainer.doUpdateModel();
                         }
 
                         KeyNavigation.tab: serialNumberInput;
@@ -572,11 +543,7 @@ DocumentBase {
                         }
 
                         onEditingFinished: {
-                            console.log("onEditingFinished", serialNumberInput.text);
-                            let oldText = deviceEditorContainer.documentModel.GetData("SerialNumber");
-                            if (!oldText && serialNumberInput.text !== "" || oldText && oldText !== serialNumberInput.text){
-                                deviceEditorContainer.updateModel();
-                            }
+                            deviceEditorContainer.doUpdateModel();
                         }
 
                         KeyNavigation.tab: macAddressInput;
@@ -609,10 +576,7 @@ DocumentBase {
                             }
 
                             onEditingFinished: {
-                                let oldText = deviceEditorContainer.documentModel.GetData("MacAddress");
-                                if (oldText && oldText !== macAddressInput.text || !oldText && macAddressInput.text !== ""){
-                                    deviceEditorContainer.updateModel();
-                                }
+                                deviceEditorContainer.doUpdateModel();
                             }
 
                             property int lastLength: 0;
@@ -637,36 +601,6 @@ DocumentBase {
                                     }
 
                                     macAddresInvalidText.visible = !isValid;
-
-//                                    if (macAddressInput.text.length > lastLength){
-
-//                                        blockSignal = true;
-//                                        let result = macAddressInput.text.replace(':', '')
-//                                        console.log("result", result)
-//                                        let data = result.match(/.{1,2}/g)
-//                                        console.log("data", data)
-
-//                                        macAddressInput.text = data.join(':')
-
-//                                        console.log("macAddressInput.text", macAddressInput.text)
-
-//                                        blockSignal = false;
-
-////                                        let data = macAddressInput.text.split(':');
-////                                        let lastElement = data[data.length - 1];
-////                                        if (lastElement.length === 2){
-////                                            blockSignal = true;
-////                                            macAddressInput.text += ':';
-////                                            blockSignal = false;
-////                                        }
-////                                        if (lastElement.length === 3){
-////                                            blockSignal = true;
-////                                            macAddressInput.text += ':';
-////                                            blockSignal = false;
-////                                        }
-//                                    }
-
-//                                    lastLength = macAddressInput.text.length;
                                 }
                             }
 
@@ -788,18 +722,19 @@ DocumentBase {
                                 }
 
                                 onCurrentIndexChanged: {
-                                    deviceEditorContainer.updateModel();
+                                    deviceEditorContainer.doUpdateModel();
+                                    //                                    deviceEditorContainer.updateModel();
 
-                                    if (statusCB.currentIndex >= 0){
-                                        if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-                                            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                            statusCB.updateIcon(status);
-                                        }
-                                    }
-                                    else{
-                                        iconStatus.source = "";
-                                        statusCB.model = productionStatus.statusModel;
-                                    }
+                                    //                                    if (statusCB.currentIndex >= 0){
+                                    //                                        if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                                    //                                            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                    //                                            statusCB.updateIcon(status);
+                                    //                                        }
+                                    //                                    }
+                                    //                                    else{
+                                    //                                        iconStatus.source = "";
+                                    //                                        statusCB.model = productionStatus.statusModel;
+                                    //                                    }
                                 }
                             }
 
@@ -882,7 +817,7 @@ DocumentBase {
                             }
 
                             onCurrentIndexChanged: {
-                                deviceEditorContainer.updateModel();
+                                deviceEditorContainer.doUpdateModel();
                             }
                         }
 

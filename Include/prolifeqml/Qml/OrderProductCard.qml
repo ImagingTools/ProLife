@@ -17,52 +17,30 @@ Rectangle {
 
     radius: 3;
 
+    property int margin: 10;
+    property int productIndex: -1;
+
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
-
     property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
-
     property bool inUse: model.InUse ? model.InUse : false;
-
-    property int margin: 10;
-
     property bool selected: false;
+
     property string categoryId: model.CategoryId ? model.CategoryId : "";
-//    property string title: model.ProductId + " (" + root.categoryId + ")";
-    property string title;
+    property string title: model.ProductName + " (" + model.CategoryId + ")";
 
-    property TreeItemModel devicesModel: TreeItemModel {};
-
-    property CollectionDataProvider productCollection: null;
-
-    property LicensesProvider licensesProvider: null;
     property ListView productsListView: null;
     property Item orderEditorPtr: null;
 
-    property int productIndex: -1;
-
     signal removed();
     signal edited();
-    signal createLicenseFile();
-    signal unlinked();
 
-    signal pairEdited(string categoryId);
-
-    onProductCollectionChanged: {
-        if (productCollection != null){
-            let productName = productCollection.getData(model.ProductId, "ProductName");
-
-            root.title = productName + " (" + root.categoryId + ")"
+    onCategoryIdChanged: {
+        if (root.categoryId == "Software"){
+            cardLoader.sourceComponent = softwareProductCard;
         }
-    }
-
-    onLicensesProviderChanged: {
-        if (root.licensesProvider != null){
-            if (root.categoryId !== "Hardware"){
-                if (cardLoader.item){
-                    cardLoader.item.licensesProvider = root.licensesProvider;
-                }
-            }
+        else if (root.categoryId == "Hardware"){
+            cardLoader.sourceComponent = hardwareProductCard;
         }
     }
 
@@ -96,11 +74,7 @@ Rectangle {
             cardLoader.item.readOnly = root.readOnly;
         }
 
-        if (root.categoryId === "Pair"){
-            root.setIsEnabledCommand(pairCommandsModel, "Unlink", !root.readOnly);
-            root.setIsEnabledCommand(pairCommandsModel, "Remove", !root.readOnly);
-        }
-        else if (root.categoryId === "Hardware"){
+        if (root.categoryId === "Hardware"){
             root.setIsEnabledCommand(hardwareCommandsModel, "Edit", !root.readOnly);
             root.setIsEnabledCommand(hardwareCommandsModel, "Remove", !root.readOnly);
         }
@@ -127,18 +101,6 @@ Rectangle {
                 commandsModel.SetData(commandKey, commandValue, i);
                 break;
             }
-        }
-    }
-
-    onCategoryIdChanged: {
-        if (root.categoryId == "Pair"){
-            cardLoader.sourceComponent = productPairCard;
-        }
-        else if (root.categoryId == "Software"){
-            cardLoader.sourceComponent = softwareProductCard;
-        }
-        else if (root.categoryId == "Hardware"){
-            cardLoader.sourceComponent = hardwareProductCard;
         }
     }
 
@@ -197,12 +159,6 @@ Rectangle {
                 else if (commandId == "Edit"){
                     root.edited();
                 }
-                else if (commandId == "CreateLicenseFile"){
-                    root.createLicenseFile();
-                }
-                else if (commandId == "Unlink"){
-                    root.unlinked();
-                }
             }
         }
     }
@@ -223,20 +179,10 @@ Rectangle {
 
             onLoaded: {
                 cardLoader.item.productCardRoot = root;
-                if (root.categoryId === "Hardware"){
-                }
-                else if (root.categoryId === "Software"){
-                    cardLoader.item.licensesProvider = root.licensesProvider;
-                }
-
                 cardLoader.item.readOnly = root.readOnly;
 
                 if (cardLoader.item.productsView !== undefined){
                     cardLoader.item.productsView = root.productsListView;
-                }
-
-                if (cardLoader.item.productCollection !== undefined){
-                    cardLoader.item.productCollection = root.productCollection;
                 }
             }
         }
@@ -271,49 +217,15 @@ Rectangle {
     }
 
     Component {
-        id: productPairCard;
-
-        ProductPairCard {
-            onSoftwareEdited: {
-                root.pairEdited("Software");
-            }
-
-            onHardwareEdited: {
-                root.pairEdited("Hardware");
-            }
-        }
-    }
-
-    Component {
         id: softwareProductCard;
 
-        SoftwareProductCard {
-        }
+        SoftwareProductCard {}
     }
 
     Component {
         id: hardwareProductCard;
 
-        HardwareProductCard {
-        }
-    }
-
-    TreeItemModel {
-        id: pairCommandsModel;
-
-        Component.onCompleted: {
-            let index = pairCommandsModel.InsertNewItem();
-
-            pairCommandsModel.SetData("Id", "Remove", index);
-            pairCommandsModel.SetData("Name", "Remove", index);
-            pairCommandsModel.SetData("Icon", "Icons/Delete", index);
-            pairCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            pairCommandsModel.SetData("Visible", true, index);
-
-            if (root.categoryId == "Pair"){
-                commands.commandModel = pairCommandsModel;
-            }
-        }
+        HardwareProductCard {}
     }
 
     TreeItemModel {

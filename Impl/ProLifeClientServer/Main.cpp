@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtstyle);
 	Q_INIT_RESOURCE(imtstyleqml);
 	Q_INIT_RESOURCE(imtgui);
+	Q_INIT_RESOURCE(imtdocgui);
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(ImtCoreLoc);
 	Q_INIT_RESOURCE(ProLifeLoc);

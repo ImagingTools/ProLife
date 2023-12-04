@@ -29,7 +29,6 @@ CollectionViewCommandsDelegateBase {
     onOnlyUnpairedChanged: {
         console.log("onOnlyUnpairedChanged", onlyUnpaired);
         if (container.commandsProvider){
-//            commandsProvider.setCommandIsEnabled("OnlyPaired", !container.onlyUnpaired);
             let unpairedIndex = commandsProvider.getCommandIndex("OnlyUnpaired");
             let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
 
@@ -86,15 +85,15 @@ CollectionViewCommandsDelegateBase {
         let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
 
         if (commandId === "Pair"){
-            console.log("Pair");
-            let indexes = container.tableData.getSelectedIndexes();
-            if (indexes.length === 1){
-                let elementsModel = container.tableData.elements;
-                let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
-                let id = elementsModel.GetData("Id", indexes[0]);
+//            console.log("Pair");
+//            let indexes = container.tableData.getSelectedIndexes();
+//            if (indexes.length === 1){
+//                let elementsModel = container.tableData.elements;
+//                let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
+//                let id = elementsModel.GetData("Id", indexes[0]);
 
-                modalDialogManager.openDialog(productPairEditorDialog, {"orderId" : orderUuid, "softwareId" : id});
-            }
+//                modalDialogManager.openDialog(productPairEditorDialog, {"orderId" : orderUuid, "softwareId" : id});
+//            }
         }
         else if (commandId === "OnlyPaired"){
             let filterModel = container.collectionViewBase.modelFilter;
@@ -155,65 +154,68 @@ CollectionViewCommandsDelegateBase {
             let elementsModel = container.tableData.elements;
             let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
             if (orderUuid !== ""){
-                if (container.collectionViewBase.mainDocumentManager){
-                    container.collectionViewBase.mainDocumentManager.openDocument("Orders", orderUuid);
-                }
+                let parameters = {}
+                parameters["TypeId"] = "Orders";
+                parameters["DocumentId"] = orderUuid;
+                parameters["DocumentTypeId"] = "Order";
+
+                Events.sendEvent("OpenDocument", parameters);
             }
         }
     }
 
-    LicenseFileController {
-        id: licenseFileController;
-    }
+//    LicenseFileController {
+//        id: licenseFileController;
+//    }
 
-    Component {
-        id: productPairEditorDialog;
+//    Component {
+//        id: productPairEditorDialog;
 
-        ProductPairEditorDialog {
-            id: dialog;
-            onFinished: {
-                if (buttonId === "Link"){
-                    if (dialog.bodyItem){
-                        let productId = dialog.bodyItem.selectedProductId;
-                        if (productId !== ""){
-                            console.log("selectedProductId", productId);
-                            productModel.Clear();
+//        ProductPairEditorDialog {
+//            id: dialog;
+//            onFinished: {
+//                if (buttonId === "Link"){
+//                    if (dialog.bodyItem){
+//                        let productId = dialog.bodyItem.selectedProductId;
+//                        if (productId !== ""){
+//                            console.log("selectedProductId", productId);
+//                            productModel.Clear();
 
-                            let indexes = container.tableData.getSelectedIndexes();
-                            if (indexes.length === 1){
-                                let elementsModel = container.tableData.elements;
+//                            let indexes = container.tableData.getSelectedIndexes();
+//                            if (indexes.length === 1){
+//                                let elementsModel = container.tableData.elements;
 
-                                let id = elementsModel.GetData("Id", indexes[0]);
-                                let serialNumber = elementsModel.GetData("SerialNumber", indexes[0]);
+//                                let id = elementsModel.GetData("Id", indexes[0]);
+//                                let serialNumber = elementsModel.GetData("SerialNumber", indexes[0]);
 
-                                productModel.SetData("Id", id)
-                                productModel.SetData("SerialNumber", serialNumber)
-                                productModel.SetData("PairId", productId)
+//                                productModel.SetData("Id", id)
+//                                productModel.SetData("SerialNumber", serialNumber)
+//                                productModel.SetData("PairId", productId)
 
-                                documentController.updateData(dialog.softwareId, productModel)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//                                documentController.updateData(dialog.softwareId, productModel)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    TreeItemModel {
-        id: productModel;
-    }
+//    TreeItemModel {
+//        id: productModel;
+//    }
 
-    GqlDocumentDataController {
-        id: documentController;
+//    GqlDocumentDataController {
+//        id: documentController;
 
-        documentTypeId: "SoftwareProduct";
+//        documentTypeId: "SoftwareProduct";
 
-        onDocumentUpdated: {
-            container.collectionViewBase.updateGui();
-        }
+//        onDocumentUpdated: {
+//            container.collectionViewBase.updateGui();
+//        }
 
-        onError: {
+//        onError: {
 
-        }
-    }
+//        }
+//    }
 }

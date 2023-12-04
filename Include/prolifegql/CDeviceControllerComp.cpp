@@ -57,7 +57,7 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			dataModelPtr->SetData("Description", description);
 			dataModelPtr->SetData("DeviceType", deviceType);
 			dataModelPtr->SetData("OrderId", orderId);
-			dataModelPtr->SetData("ConfigurationType", configurationType);
+			dataModelPtr->SetData("LicenseName", configurationType);
 
 			switch (status){
 			case prolifedata::IDeviceInfo::DPS_NONE:
@@ -95,6 +95,7 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			if (!macAddress.isEmpty()){
 				name = name + " (" + macAddress + ")";
 			}
+
 			dataModelPtr->SetData("Name", name);
 		}
 	}
@@ -285,8 +286,8 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		}
 
 		QByteArray configurationType;
-		if (itemModel.ContainsKey("ConfigurationType")){
-			configurationType = itemModel.GetData("ConfigurationType").toByteArray();
+		if (itemModel.ContainsKey("LicenseName")){
+			configurationType = itemModel.GetData("LicenseName").toByteArray();
 
 			devicePtr->SetConfigurationType(configurationType);
 		}

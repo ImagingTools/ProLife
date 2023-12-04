@@ -1,10 +1,11 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtdocgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
 
-DocumentBase {
+DocumentData {
     id: orderEditorContainer;
 
     property TreeItemModel accountsModel: TreeItemModel {}
@@ -16,73 +17,53 @@ DocumentBase {
 
     property alias licensesProviderLocal: licensesProvider;
 
-    property bool creatingLicenseFileFlag: false;
-
     property bool serialNumberEdit: true;
 
     property int radius: 3;
     property int spacing: 25;
 
-    property bool modelsIsLoaded: accountsList.completed && productsList.completed && devicesList.completed && licenseCollection.completed && orderEditorContainer.modelIsReady;
-
-    onModelsIsLoadedChanged: {
-        console.log("onModelsIsLoadedChanged", modelsIsLoaded);
-        if (orderEditorContainer.modelsIsLoaded){
-            orderEditorContainer.blockUpdatingModel = true;
-
-            if (!documentModel.ContainsKey("OrderProducts")){
-                documentModel.AddTreeModel("OrderProducts")
-            }
-
-            if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
-                let status = orderEditorContainer.documentModel.GetData("OrderStatus");
-                if (status !== ""){
-                    let statusModel = stateMachine.getAvailableModel(status);
-                    orderStatusCB.model = statusModel;
-                }
-            }
-
-            if (!orderStatusCB.model){
-                orderStatusCB.model = orderStatus.statusModel;
-            }
-
-            orderEditorContainer.updateGui();
-            undoRedoManager.registerModel(documentModel);
-        }
-    }
+    documentCompleted: accountsList.completed && productsList.completed && devicesList.completed && licenseCollection.completed;
 
     Component.onCompleted: {
-//        licensesProvider.updateModel();
-
         licenseCollection.updateModel();
+        accountsList.updateModel();
+        devicesList.updateModel();
+        productsList.updateModel();
 
-        accountsList.updateModel({});
-        devicesList.updateModel({});
-        productsList.updateModel({});
+        orderEditorContainer.undoManagerPtr.modelChanged.connect(beginDocumentModelChanged);
+    }
+
+    function beginDocumentModelChanged(){
+        if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+            let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+            if (status !== ""){
+                let statusModel = stateMachine.getAvailableModel(status);
+                orderStatusCB.model = statusModel;
+            }
+        }
+
+        if (!orderStatusCB.model){
+            orderStatusCB.model = orderStatus.statusModel;
+        }
+
+        if (!documentModel.ContainsKey("OrderProducts")){
+            documentModel.AddTreeModel("OrderProducts")
+        }
+
+        if (documentModel.ContainsKey("OrderProducts")){
+            productsView.model = documentModel.GetData("OrderProducts");
+        }
     }
 
     onSaved: {
         console.log("saved");
-        if (orderEditorContainer.creatingLicenseFileFlag){
-            let result = orderEditorContainer.createLicenseFile(productsView.activeProductIndex);
-            if (result){
-                orderEditorContainer.creatingLicenseFileFlag = false;
-            }
-        }
 
-        orderEditorContainer.blockUpdatingModel = true;
         if (documentModel.ContainsKey("OrderProducts")){
             let orderProductsModel = documentModel.GetData("OrderProducts");
 
             for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
                 let categoryId = orderProductsModel.GetData("CategoryId", i);
-                if (categoryId === "Pair"){
-                    let hardwareModel = orderProductsModel.GetData("HardwareProduct", i);
-                    if (hardwareModel.ContainsKey("IsNewDevice")){
-                        hardwareModel.RemoveData("IsNewDevice");
-                    }
-                }
-                else if (categoryId === "Hardware"){
+                if (categoryId === "Hardware"){
                     if (orderProductsModel.ContainsKey("IsNewDevice", i)){
                         orderProductsModel.RemoveData("IsNewDevice", i);
                     }
@@ -91,8 +72,6 @@ DocumentBase {
         }
 
         devicesList.updateModel();
-
-        orderEditorContainer.blockUpdatingModel = false;
     }
 
     onWidthChanged: {
@@ -112,51 +91,44 @@ DocumentBase {
         }
     }
 
-    onVisibleChanged: {
-        if (visible){
-            if (orderEditorContainer.errorMessage !== ""){
-                orderEditorContainer.documentManager.showAlertMessage(orderEditorContainer.errorMessage);
-            }
-        }
-        else{
-            orderEditorContainer.documentManager.hideAlertMessage();
-        }
-    }
+//    onVisibleChanged: {
+//        if (visible){
+//            if (orderEditorContainer.errorMessage !== ""){
+//                orderEditorContainer.documentManager.showAlertMessage(orderEditorContainer.errorMessage);
+//            }
+//        }
+//        else{
+//            orderEditorContainer.documentManager.hideAlertMessage();
+//        }
+//    }
 
     function documentCanBeSaved(){
         let ok = true;
 
-        let orderProductsModel = documentModel.GetData("OrderProducts");
-        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
-            let categoryId = orderProductsModel.GetData("CategoryId", j);
+//        let orderProductsModel = documentModel.GetData("OrderProducts");
+//        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
+//            let categoryId = orderProductsModel.GetData("CategoryId", j);
 
-            let hardwareModel = undefined;
-            let index = j;
-            if (categoryId === "Pair"){
-                hardwareModel = orderProductsModel.GetData("HardwareProduct", j);
-                index = 0;
-            }
-            else if (categoryId === "Hardware"){
-                hardwareModel = orderProductsModel;
-                index = j;
-            }
+//            let hardwareModel = undefined;
+//            let index = j;
 
-            if (hardwareModel){
-                if (hardwareModel.ContainsKey("DeviceNotExists", index)){
-                   // ok = false;
-                    break;
-                }
-            }
-        }
+//            if (categoryId === "Hardware"){
+//                hardwareModel = orderProductsModel;
+//                index = j;
+//            }
 
-        if (!ok){
-            let message = qsTr("Sensor detection error. Please select a new sensor.");
-            orderEditorContainer.documentManager.openErrorDialog(message);
+//            if (hardwareModel){
+//                if (hardwareModel.ContainsKey("DeviceNotExists", index)){
+//                   // ok = false;
+//                    break;
+//                }
+//            }
+//        }
 
-            if (orderEditorContainer.creatingLicenseFileFlag){
-                orderEditorContainer.creatingLicenseFileFlag = false;
-            }
-        }
+//        if (!ok){
+//            let message = qsTr("Sensor detection error. Please select a new sensor.");
+//            orderEditorContainer.documentManager.openErrorDialog(message);
+//        }
 
         return ok;
     }
@@ -168,11 +140,8 @@ DocumentBase {
 
             let hardwareModel = undefined;
             let index = j;
-            if (categoryId === "Pair"){
-                hardwareModel = orderProductsModel.GetData("HardwareProduct", j);
-                index = 0;
-            }
-            else if (categoryId === "Hardware"){
+
+            if (categoryId === "Hardware"){
                 hardwareModel = orderProductsModel;
                 index = j;
             }
@@ -261,7 +230,7 @@ DocumentBase {
 
         commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ConfigurationType", "ProductUuid", "LicenseUuid"];
+        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ProductUuid", "LicenseUuid", "LicenseId", "LicenseName"];
 
         onModelUpdated: {
             if (devicesList.collectionModel != null){
@@ -327,16 +296,6 @@ DocumentBase {
         }
     }
 
-    UndoRedoManager {
-        id: undoRedoManager;
-
-        documentBase: orderEditorContainer;
-
-        onModelStateChanged: {
-            updateGui();
-        }
-    }
-
     CollectionDataProvider{
         id: licenseCollection;
 
@@ -375,7 +334,7 @@ DocumentBase {
         addProduct.visible = false;
     }
 
-    function onUpdateGui(){
+    function updateGui(){
         console.log("updateGui");
 
         if (documentModel.ContainsKey("OrderId")){
@@ -399,7 +358,7 @@ DocumentBase {
             descriptionInput.text = "";
         }
 
-        customerCB.currentIndex = -1;
+        let customerFound = false;
         if (documentModel.ContainsKey("CustomerId")){
             let customerId = documentModel.GetData("CustomerId");
             let customerModel = customerCB.model;
@@ -407,12 +366,17 @@ DocumentBase {
                 let id = customerModel.GetData("Id", i);
                 if (id === customerId){
                     customerCB.currentIndex = i;
+                    customerFound = true;
                     break;
                 }
             }
         }
 
-        orderStatusCB.currentIndex = -1;
+        if (!customerFound){
+            customerCB.currentIndex = -1;
+        }
+
+        let statusFound = false;
         if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.documentModel.GetData("OrderStatus");
             let statusModel = stateMachine.getAvailableModel(status);
@@ -422,35 +386,41 @@ DocumentBase {
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
                         orderStatusCB.currentIndex = i;
+                        statusFound = true;
                         break;
                     }
                 }
             }
         }
 
-        productsView.deviceIds = []
-        if (documentModel.ContainsKey("OrderProducts")){
+        if (!statusFound){
+            orderStatusCB.currentIndex = -1;
+        }
 
-            orderEditorContainer.updateOrderProductsModel();
-            productsView.model = 0
-            productsView.model = documentModel.GetData("OrderProducts");
-        }
-        else{
-            productsView.model = 0;
-        }
+        productsView.deviceIds = []
+//        if (documentModel.ContainsKey("OrderProducts")){
+
+//            orderEditorContainer.updateOrderProductsModel();
+
+//            productsView.model = 0
+//            productsView.model = documentModel.GetData("OrderProducts");
+//        }
+//        else{
+//            productsView.model = 0;
+//        }
     }
 
-    function onUpdateModel(){
-        undoRedoManager.beginChanges();
+    function updateModel(){
+        console.log("OrderEditor updateModel", documentModel.toJSON());
 
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("PurchaseId", purchaseIdInput.text)
-        documentModel.SetData("Name", instanceIdInput.text);
 
         let selectedAccountId = "";
-        if (customerCB.currentIndex >= 0){
+        if (customerCB.currentIndex >= 0 && customerCB.model){
             selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
         }
+
         documentModel.SetData("CustomerId", selectedAccountId);
 
         if (orderStatusCB.currentIndex >= 0){
@@ -467,7 +437,7 @@ DocumentBase {
             documentModel.AddTreeModel("OrderProducts")
         }
 
-        undoRedoManager.endChanges();
+        console.log("OrderEditor end updateModel", documentModel.toJSON());
     }
 
     OrderStatus {
@@ -549,10 +519,7 @@ DocumentBase {
                 borderColor: Style.iconColorOnSelected;
 
                 onEditingFinished: {
-                    let currentId = documentModel.GetData("OrderId");
-                    if (currentId && currentId !== instanceIdInput.text || !currentId && instanceIdInput.text !== ""){
-                        orderEditorContainer.updateModel();
-                    }
+                    orderEditorContainer.doUpdateModel();
                 }
 
                 KeyNavigation.tab: purchaseIdInput;
@@ -601,10 +568,7 @@ DocumentBase {
                 borderColor: Style.iconColorOnSelected;
 
                 onEditingFinished: {
-                    let currentId = documentModel.GetData("PurchaseId");
-                    if (currentId && currentId !== purchaseIdInput.text || !currentId && purchaseIdInput.text !== ""){
-                        orderEditorContainer.updateModel();
-                    }
+                    orderEditorContainer.doUpdateModel();
                 }
 
                 KeyNavigation.tab: descriptionInput;
@@ -639,10 +603,7 @@ DocumentBase {
                 borderColor: Style.iconColorOnSelected;
 
                 onEditingFinished: {
-                    let oldText = orderEditorContainer.documentModel.GetData("Description");
-                    if (oldText !== descriptionInput.text && descriptionInput.text !== ""){
-                        orderEditorContainer.updateModel();
-                    }
+                    orderEditorContainer.doUpdateModel();
                 }
 
                 KeyNavigation.tab: instanceIdInput;
@@ -674,7 +635,7 @@ DocumentBase {
                 radius: orderEditorContainer.radius;
 
                 onCurrentIndexChanged: {
-                    orderEditorContainer.updateModel();
+                    orderEditorContainer.doUpdateModel();
                 }
             }
         }
@@ -704,10 +665,8 @@ DocumentBase {
 
                 radius: orderEditorContainer.radius;
 
-                property bool blockingIndexChanged: false;
-
                 onCurrentIndexChanged: {
-                    orderEditorContainer.updateModel();
+                    orderEditorContainer.doUpdateModel();
 
                     if (orderStatusCB.currentIndex < 0){
                         orderStatusCB.model = orderStatus.statusModel;
@@ -744,31 +703,6 @@ DocumentBase {
         }
     }//Column bodyColumn
 
-    function unlinkProducts(pairIndex){
-        if (orderEditorContainer.documentModel.ContainsKey("OrderProducts")){
-            let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-            if (pairIndex >= 0){
-                let categoryId = orderProductsModel.GetData("CategoryId", pairIndex);
-                if (categoryId === "Pair"){
-                    let softwareProductModel = orderProductsModel.GetData("SoftwareProduct", pairIndex);
-                    softwareProductModel.SetData("PairId", "");
-                    let index = orderProductsModel.InsertNewItem();
-                    orderProductsModel.CopyItemDataFromModel(index, softwareProductModel);
-
-                    let hardwareProductModel = orderProductsModel.GetData("HardwareProduct", pairIndex);
-                    hardwareProductModel.SetData("PairId", "");
-                    index = orderProductsModel.InsertNewItem();
-                    orderProductsModel.CopyItemDataFromModel(index, hardwareProductModel);
-
-                    orderProductsModel.RemoveItem(pairIndex);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     UuidGenerator {
         id: uuidGenerator;
     }
@@ -781,12 +715,12 @@ DocumentBase {
 
             onStarted: {
                 productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
-                productsDialog.bodyItem.excludeDeviceIds = productsView.deviceIds;
+                productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
                 productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
-                productsDialog.bodyItem.orderUuid = orderEditorContainer.itemId;
-                productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
 
-                productsDialog.isPairEditing = false;
+                productsDialog.bodyItem.excludeDeviceIds = productsView.deviceIds;
+                productsDialog.bodyItem.orderUuid = orderEditorContainer.documentId;
+                productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
                 productsDialog.activeProductIndex = productsView.activeProductIndex;
 
                 if (orderEditorContainer.documentModel.ContainsKey("OrderId")){
@@ -794,64 +728,41 @@ DocumentBase {
                 }
 
                 let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
-                productsDialog.bodyItem.orderProductsModel.Copy(orderProductsModel);
                 if (productsView.activeProductIndex >= 0){
                     let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-                    if (productModel){
-                        let category = productModel.GetData("CategoryId");
-                        if (category === "Pair"){
-                            productsDialog.isPairEditing = true;
-                            productsDialog.unlink(productsView.activeProductIndex);
-                            if (productsView.softwareEditing){
-                                productModel = productModel.GetData("SoftwareProduct")
-                            }
-                            else{
-                                productModel = productModel.GetData("HardwareProduct")
-                            }
-                        }
-                    }
-
-                    productsDialog.bodyItem.productModel.Copy(productModel);
+                    productsDialog.bodyItem.productModel = productModel;
                 }
-
-                productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
 
                 productsDialog.bodyItem.started();
             }
 
             onFinished: {
                 if (buttonId == "Save"){
-                    let orderProductsModel = productsDialog.bodyItem.orderProductsModel;
                     let productModel = productsDialog.bodyItem.productModel;
+                    let actualOrderProducts = orderEditorContainer.documentModel.GetData("OrderProducts");
 
                     let index = productsView.activeProductIndex;
                     if (index < 0){
-                        index = orderProductsModel.InsertNewItem();
+                        if (actualOrderProducts){
+                            orderEditorContainer.undoManagerPtr.beginChanges();
+                            index = actualOrderProducts.InsertNewItem();
+                            actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                            orderEditorContainer.undoManagerPtr.endChanges();
+                        }
                     }
-
-                    orderProductsModel.CopyItemDataFromModel(index, productModel);
-                    let id = productModel.GetData("Id");
-                    let pairId = productModel.GetData("PairId");
-                    if (pairId && pairId !== ""){
-                        for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
-                            let externId = orderProductsModel.GetData("Id", i);
-                            if (pairId === externId){
-                                let secondPairId = orderProductsModel.GetData("PairId", i);
-                                if (secondPairId === id){
-                                    productsDialog.createPair(id, externId);
-                                }
+                    else{
+                        if (actualOrderProducts){
+                            let actualProductModel = actualOrderProducts.GetModelFromItem(index);
+                            let isEqual = actualProductModel.IsEqualWithModel(productModel);
+                            if (!isEqual){
+                                orderEditorContainer.undoManagerPtr.beginChanges();
+                                actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                                orderEditorContainer.undoManagerPtr.endChanges();
                             }
                         }
                     }
 
-                    let actualOrderProducts = orderEditorContainer.documentModel.GetData("OrderProducts");
-                    let isEqual = orderProductsModel.IsEqualWithModel(actualOrderProducts);
-                    if (!isEqual){
-                        actualOrderProducts.Copy(orderProductsModel);
-                        undoRedoManager.makeChanges();
-                        orderEditorContainer.modelChanged();
-                        updateGui();
-                    }
+                    actualOrderProducts.Refresh();
                 }
             }
         }
@@ -859,7 +770,6 @@ DocumentBase {
 
     CustomScrollbar {
         id: scrollbar;
-        z: 100;
 
         anchors.left: productsView.right;
         anchors.leftMargin: 5;
@@ -955,22 +865,6 @@ DocumentBase {
 
         property var deviceIds: []
 
-        function getMacAddressFromCurrentPair(){
-            if (productsView.activeProductIndex >= 0){
-                let categoryId = productsView.model.GetData("CategoryId", productsView.activeProductIndex);
-                if (categoryId === "Pair"){
-                    let hardwareProductModel = productsView.model.GetData("HardwareProduct", productsView.activeProductIndex);
-                    if (hardwareProductModel){
-                        let deviceId = hardwareProductModel.GetData("DeviceId");
-                        let macAddress = devicesList.getMacAddress(deviceId);
-                        return macAddress;
-                    }
-                }
-            }
-
-            return null;
-        }
-
         delegate: OrderProductCard {
             id: orderProductDelegate;
 
@@ -979,15 +873,11 @@ DocumentBase {
             productsListView: productsView;
 
             productIndex: model.index;
-            devicesModel: orderEditorContainer.devicesModel;
 
             readOnly: productsView.readOnly;
             isLicenseConsuming: productsView.isLicenseConsuming;
 
-            licensesProvider: orderEditorContainer.licensesProviderLocal;
             orderEditorPtr: orderEditorContainer;
-
-            productCollection: productsList;
 
             Component.onCompleted: {
                 if (model.CategoryId === "Hardware"){
@@ -1007,86 +897,6 @@ DocumentBase {
 
                 modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
             }
-
-            onUnlinked: {
-                let linkId = model.Id;
-                undoRedoManager.beginChanges();
-                orderEditorContainer.unlinkProducts(model.index);
-                undoRedoManager.endChanges();
-
-                updateGui();
-            }
-
-            onCreateLicenseFile: {
-                productsView.activeProductIndex = model.index;
-
-                orderEditorContainer.createLicenseFile(model.index);
-            }
-
-            onPairEdited: {
-                productsView.activeProductIndex = model.index;
-
-                if (categoryId === "Software"){
-                    productsView.softwareEditing = true;
-                }
-                else{
-                    productsView.softwareEditing = false;
-                }
-
-                modalDialogManager.openDialog(productEditorDialog, {});
-            }
-        }
-    }
-
-    LicenseFileController {
-        id: licenseFileController;
-    }
-
-    function createLicenseFile(pairIndex){
-        if (pairIndex >= 0){
-            let categoryId = productsView.model.GetData("CategoryId", pairIndex);
-            if (categoryId === "Pair"){
-                let orderUuid = orderEditorContainer.itemId;
-                if (orderUuid === "" || orderEditorContainer.isDirty){
-                    modalDialogManager.openDialog(errorDialog, {"message": qsTr("To create a license, you need to save the current order. Save the order ?")});
-                }
-                else{
-                    let productId = "";
-                    if (productsView.model.ContainsKey("HardwareProduct", pairIndex)){
-                        let hardwareProductModel = productsView.model.GetData("HardwareProduct", pairIndex);
-                        productId = hardwareProductModel.GetData("Id");
-                    }
-
-                    let macAddress = productsView.getMacAddressFromCurrentPair();
-                    if (macAddress !== null && macAddress !== ""){
-                        let splitData = macAddress.split(':');
-                        licenseFileController.fileName = splitData.join('_') + '_' + licenseFileController.defaultName;
-                    }
-
-                    if (productId !== ""){
-                        licenseFileController.createLicenseFile(orderUuid + "/" + productId);
-
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    Component {
-        id: errorDialog;
-
-        MessageDialog {
-            title: qsTr("Save Order");
-            onFinished: {
-                if (buttonId == "Yes"){
-                    Events.sendEvent(orderEditorContainer.documentUuid + "CommandActivated", "Save");
-
-                    orderEditorContainer.creatingLicenseFileFlag = true;
-                }
-            }
         }
     }
 
@@ -1105,9 +915,9 @@ DocumentBase {
                         }
                     }
 
+                    orderEditorContainer.undoManagerPtr.beginChanges();
                     productsView.model.RemoveItem(productsView.activeProductIndex);
-
-                    orderEditorContainer.updateModel();
+                    orderEditorContainer.undoManagerPtr.endChanges();
                 }
             }
         }

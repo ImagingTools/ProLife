@@ -11,7 +11,7 @@ CollectionView {
     visibleMetaInfo: false;
     filterMenuVisible: true;
 
-    property MainDocumentManager mainDocumentManager: null;
+    documentName: qsTr("Licenses");
 
     function fillContextMenuModel(){
         contextMenuModel.clear();
@@ -24,12 +24,8 @@ CollectionView {
         baseCollectionView.commands.fieldsData.push("OrderUuid");
         baseCollectionView.commands.fieldsData.push("HardwareUuid");
         baseCollectionView.commands.fieldsData.push("InUse");
-    }
 
-    onVisibleChanged: {
-        if (container.visible){
-//            container.updateGui();
-        }
+        container.commandId = "SoftwareProducts";
     }
 
     onHeadersChanged: {
@@ -39,6 +35,20 @@ CollectionView {
         container.table.setColumnContentComponent(orderIndex, orderColumnContentComp);
 
         container.table.tableDecorator = tableDecoratorModel;
+    }
+
+    onDocumentManagerPtrChanged: {
+        if (documentManagerPtr){
+//            documentManagerPtr.setDocumentTitle(0, title);
+            documentManagerPtr.registerDocument("SoftwareProduct", softwareEditorComp);
+        }
+    }
+
+    Component {
+        id: softwareEditorComp;
+
+        SoftwareEditor {
+        }
     }
 
     function onCommandsModelChanged(){

@@ -290,8 +290,6 @@ Item {
                     }
                 }
 
-                property MainDocumentManager mainDocumentManager: null;
-
                 Component.onCompleted: {
                     console.log("DEBUG::29")
                     softwareProductCollection.pagination.countElements = 9
@@ -460,8 +458,6 @@ Item {
                 hasFilter: false
                 hasPagination: false
                 hasSort: false
-
-                property MainDocumentManager mainDocumentManager: null;
 
                 commands.headerInfoModel: headerInfoBindingModel
 

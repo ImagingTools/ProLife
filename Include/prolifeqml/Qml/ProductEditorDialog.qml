@@ -13,13 +13,11 @@ Dialog {
     property TreeItemModel documentModel: TreeItemModel{}
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
-    property TreeItemModel orderProductsModel: TreeItemModel{}
     property int activeProductIndex: -1;
 
     property string orderId;
     property string orderUuid;
 
-    property bool isPairEditing: false;
     property bool serialNumberEdit: true;
 
     Component.onCompleted: {

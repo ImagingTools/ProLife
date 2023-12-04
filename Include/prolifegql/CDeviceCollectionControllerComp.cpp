@@ -412,8 +412,11 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "LicenseUuid"){
 					elementInformation = objectCollectionIterator->GetElementInfo("LicenseUuid");
 				}
-				else if(informationId == "ConfigurationType"){
-					elementInformation = objectCollectionIterator->GetElementInfo("ConfigurationType");
+				else if(informationId == "LicenseId"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId");
+				}
+				else if(informationId == "LicenseName"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseName");
 				}
 				else if(informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId");

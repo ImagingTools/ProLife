@@ -73,13 +73,18 @@ Item {
                 root.productModel.SetData("DeviceId", deviceId);
 
                 if (deviceCB.model.ContainsKey("LicenseUuid", deviceCB.currentIndex)){
-                    console.log("ContainsKey ConfigurationType", deviceCB.currentIndex)
                     let configurationType = deviceCB.model.GetData("LicenseUuid", deviceCB.currentIndex);
-                    console.log("configurationType", configurationType)
+                    root.productModel.SetData("LicenseUuid", configurationType);
+                }
 
-                    if (configurationType && configurationType != ""){
-                        root.productModel.SetData("ModelTypeId", configurationType);
-                    }
+                if (deviceCB.model.ContainsKey("LicenseId", deviceCB.currentIndex)){
+                    let licenseId = deviceCB.model.GetData("LicenseId", deviceCB.currentIndex);
+                    root.productModel.SetData("LicenseId", licenseId);
+                }
+
+                if (deviceCB.model.ContainsKey("LicenseName", deviceCB.currentIndex)){
+                    let licenseName = deviceCB.model.GetData("LicenseName", deviceCB.currentIndex);
+                    root.productModel.SetData("LicenseName", licenseName);
                 }
 
                 root.updateModelsGui();
@@ -142,17 +147,22 @@ Item {
                 return;
             }
 
+            let uuid = "";
+            let licenseId = "";
+            let licenseName = "";
+
             let checkedIndexes = modelsTable.getCheckedItems();
             if (checkedIndexes.length > 0){
                 let index = checkedIndexes[0];
-                let id = root.productLicensesModel.GetData("Id", index);
-                root.productModel.SetData("ModelTypeId", id);
+
+                uuid = root.productLicensesModel.GetData("Id", index);
+                licenseId = root.productLicensesModel.GetData("LicenseId", index);
+                licenseName = root.productLicensesModel.GetData("LicenseName", index);
             }
-            else{
-                if (root.productModel.ContainsKey("ModelTypeId")){
-                    root.productModel.RemoveData("ModelTypeId");
-                }
-            }
+
+            root.productModel.SetData("LicenseUuid", uuid);
+            root.productModel.SetData("LicenseId", licenseId);
+            root.productModel.SetData("LicenseName", licenseName);
         }
     }
 
@@ -177,17 +187,11 @@ Item {
                 let id = deviceModel.GetData("Id", i);
                 if (id === deviceId){
                     if (deviceModel.ContainsKey("LicenseUuid", i)){
-                        console.log("ContainsKey ConfigurationType");
-
                         let configurationType = deviceModel.GetData("LicenseUuid", i);
-                        console.log("configurationType", configurationType);
-
                         if (configurationType && configurationType != ""){
-                            root.productModel.SetData("ModelTypeId", configurationType);
+                            root.productModel.SetData("LicenseUuid", configurationType);
                         }
                     }
-
-                    console.log("root.productModel", root.productModel.toJSON());
 
                     deviceCB.currentIndex = i;
                     break;
@@ -206,8 +210,8 @@ Item {
         modelsTable.uncheckAll();
 
         if (root.productLicensesModel){
-            if (root.productModel.ContainsKey("ModelTypeId")){
-                let modelTypeId = root.productModel.GetData("ModelTypeId");
+            if (root.productModel.ContainsKey("LicenseUuid")){
+                let modelTypeId = root.productModel.GetData("LicenseUuid");
 
                 for (let i = 0; i < root.productLicensesModel.GetItemsCount(); i++){
                     let id = root.productLicensesModel.GetData("Id", i);

@@ -2,14 +2,15 @@ import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
 import imtauthgui 1.0
+import imtdocgui 1.0
 
-DocumentBase {
+DocumentData {
     id: root;
 
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
 
-    property bool documentReady: modelIsReady && productsList.completed && ordersList.completed;
+    documentCompleted: productsList.completed && ordersList.completed;
 
     property string alertMessage: "";
 
@@ -20,30 +21,38 @@ DocumentBase {
 
     onVisibleChanged: {
         if (visible){
-            if (root.alertMessage !== ""){
-                root.documentManager.showAlertMessage(root.alertMessage);
-            }
+            checkInIse();
         }
         else{
-            root.documentManager.hideAlertMessage();
+            root.documentManagerPtr.setAlertPanel(null);
         }
     }
 
-    onDocumentReadyChanged: {
-        if (root.documentReady){
-            if (root.documentModel.ContainsKey("InUse")){
-                let inUse = root.documentModel.GetData("InUse")
-                if (inUse){
-                    root.alertMessage = qsTr("The product cannot be edited as it is in use.");
-                    root.documentManager.showAlertMessage(root.alertMessage);
-
-                    root.blockEditing();
-                }
-            }
-
-            root.updateGui();
-            undoRedoManager.registerModel(root.documentModel);
+    Component {
+        id: alertComp;
+        AlertMessage {
+            message: qsTr("The product cannot be edited as it is in use.");
         }
+    }
+
+    function checkInIse(){
+        if (root.documentModel.ContainsKey("InUse")){
+            let inUse = root.documentModel.GetData("InUse")
+            if (inUse){
+                root.documentManagerPtr.setAlertPanel(alertComp);
+                root.blockEditing();
+
+                return;
+            }
+        }
+
+        root.documentManagerPtr.setAlertPanel(null);
+    }
+
+    function beginDocumentModelChanged(){
+        checkInIse();
+
+        softwareProductEditor.productModel = root.documentModel;
     }
 
     CollectionDataProvider {
@@ -82,11 +91,11 @@ DocumentBase {
         }
 
         onFailed: {
-            if (root.documentManager){
+            if (root.documentManagerPtr){
                 let message = qsTr("Error loading products. Please check Lisa connection.");
 
-                root.documentManager.openErrorDialog(message);
-                root.documentManager.showAlertMessage(message);
+                root.documentManagerPtr.openErrorDialog(message);
+                root.documentManagerPtr.showAlertMessage(message);
 
                 root.errorMessage = message;
             }
@@ -104,92 +113,61 @@ DocumentBase {
         softwareProductEditor.readOnly = true;
     }
 
-    function documentCanBeSaved(){
-        return true;
-    }
-
     function updateGui(){
         console.log("Software updateGui start");
-
-        root.blockUpdatingModel = true;
-
-        if (root.documentModel.ContainsKey("SerialNumber")){
-            let serialNumber = root.documentModel.GetData("SerialNumber");
-            softwareProductEditor.productModel.SetData("SerialNumber", serialNumber);
-        }
-        else{
-            softwareProductEditor.productModel.SetData("SerialNumber", "")
-        }
 
         if (root.documentModel.ContainsKey("Project")){
             projectInput.text = root.documentModel.GetData("Project");
         }
+        else{
+            projectInput.text = "";
+        }
 
-        ordersCB.currentIndex = -1;
-
+        let orderFound = false;
         if (root.documentModel.ContainsKey("OrderUuid")){
             let orderUuid = root.documentModel.GetData("OrderUuid");
-
             if (ordersCB.model){
                 for (let i = 0; i < ordersCB.model.GetItemsCount(); i++){
                     let id = ordersCB.model.GetData("Id", i);
-                    if (id == orderUuid){
+                    if (id === orderUuid){
                         ordersCB.currentIndex = i;
+
+                        orderFound = true;
                         break;
                     }
                 }
             }
         }
 
-        let expiration = "";
-        if (root.documentModel.ContainsKey("Expiration")){
-            expiration = root.documentModel.GetData("Expiration");
+        if (!orderFound){
+            ordersCB.currentIndex = -1;
         }
 
-        if (root.documentModel.ContainsKey("LicenseUuid")){
-            let licenseId = root.documentModel.GetData("LicenseUuid");
-
-            softwareProductEditor.productModel.SetData("LicenseUuid", licenseId);
-            softwareProductEditor.productModel.SetData("Expiration", expiration);
-        }
-
-        productCB.currentIndex = -1;
+        let productFound = false;
         if (root.documentModel.ContainsKey("ProductId")){
             let productId = root.documentModel.GetData("ProductId");
 
             if (productCB.model){
                 for (let i = 0; i < productCB.model.GetItemsCount(); i++){
                     let id = productCB.model.GetData("Id", i);
-                    if (id == productId){
+                    if (id === productId){
                         productCB.currentIndex = i;
+                        productFound = true;
                         break;
                     }
                 }
             }
         }
 
-        if (productCB.model){
-            if (productCB.currentIndex >= 0){
-                let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-                if (!licensesModel){
-                    licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
-                }
-                softwareProductEditor.productLicensesModel = licensesModel;
-            }
+        if (!productFound){
+            productCB.currentIndex = -1;
         }
 
         softwareProductEditor.updateGui();
-
-        root.blockUpdatingModel = false;
     }
 
     function updateModel(){
         console.log("updateModel");
-        if (root.blockUpdatingModel){
-            return;
-        }
-
-        undoRedoManager.beginChanges();
 
         root.documentModel.SetData("Project", projectInput.text);
 
@@ -206,20 +184,15 @@ DocumentBase {
             }
         }
 
-        let licenseId = softwareProductEditor.productModel.GetData("LicenseUuid")
-        let expiration = softwareProductEditor.productModel.GetData("Expiration")
-
-        root.documentModel.SetData("LicenseUuid", licenseId);
-        root.documentModel.SetData("Expiration", expiration);
-
-        let serialNumber = "";
-        if (softwareProductEditor.productModel.ContainsKey("SerialNumber")){
-            serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
+        if (productCB.currentIndex >= 0 && productCB.model){
+            let selectedId = productCB.model.GetData("Id", productCB.currentIndex);
+            root.documentModel.SetData("ProductId", selectedId);
+        }
+        else{
+            root.documentModel.SetData("ProductId", "");
         }
 
-        root.documentModel.SetData("SerialNumber", serialNumber);
-
-        undoRedoManager.endChanges();
+        softwareProductEditor.updateModel();
     }
 
     function getProductLicensesModel(){
@@ -233,16 +206,6 @@ DocumentBase {
         }
 
         return null;
-    }
-
-    UndoRedoManager {
-        id: undoRedoManager;
-
-        documentBase: root;
-
-        onModelStateChanged: {
-            root.updateGui();
-        }
     }
 
     Rectangle {
@@ -287,10 +250,7 @@ DocumentBase {
             }
 
             onEditingFinished: {
-                let oldText = root.documentModel.GetData("Project");
-                if (oldText && oldText !== projectInput.text || !oldText && projectInput.text !== ""){
-                    root.updateModel();
-                }
+                root.doUpdateModel();
             }
         }
 
@@ -327,11 +287,7 @@ DocumentBase {
 
                 onCurrentIndexChanged: {
                     console.log("onCurrentIndexChanged", ordersCB.currentIndex);
-                    if (root.blockUpdatingModel){
-                        return;
-                    }
-
-                    root.updateModel();
+                    root.doUpdateModel();
                 }
             }
 
@@ -391,41 +347,50 @@ DocumentBase {
             }
 
             onCurrentIndexChanged: {
-                if (root.blockUpdatingModel){
-                    return;
-                }
-
                 if (productCB.currentIndex >= 0){
-                    let oldProductId = root.documentModel.GetData("ProductId");
-                    let productId = productCB.model.GetData("Id", productCB.currentIndex);
-                    root.documentModel.SetData("ProductId", productId);
-
-                    if (oldProductId != productId){
-                        root.documentModel.SetData("Expiration", "");
-                        root.documentModel.SetData("LicenseUuid", "");
-                    }
-
                     let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
                     if (!licensesModel){
                         licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
                     }
 
-                    let expiration = "";
-                    if (root.documentModel.ContainsKey("Expiration")){
-                        expiration = root.documentModel.GetData("Expiration");
-                    }
-
-                    if (root.documentModel.ContainsKey("LicenseUuid")){
-                        let licenseId = root.documentModel.GetData("LicenseUuid");
-
-                        softwareProductEditor.productModel.SetData("LicenseUuid", licenseId)
-                        softwareProductEditor.productModel.SetData("Expiration", expiration)
-                    }
-
                     softwareProductEditor.productLicensesModel = licensesModel;
-
-                    softwareProductEditor.updateGui()
                 }
+                else{
+                    softwareProductEditor.productLicensesModel = 0;
+                }
+
+                root.doUpdateModel();
+                //                if (productCB.currentIndex >= 0){
+                //                    let oldProductId = root.documentModel.GetData("ProductId");
+                //                    let productId = productCB.model.GetData("Id", productCB.currentIndex);
+                //                    root.documentModel.SetData("ProductId", productId);
+
+                //                    if (oldProductId != productId){
+                //                        root.documentModel.SetData("Expiration", "");
+                //                        root.documentModel.SetData("LicenseUuid", "");
+                //                    }
+
+                //                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+                //                    if (!licensesModel){
+                //                        licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+                //                    }
+
+                //                    let expiration = "";
+                //                    if (root.documentModel.ContainsKey("Expiration")){
+                //                        expiration = root.documentModel.GetData("Expiration");
+                //                    }
+
+                //                    if (root.documentModel.ContainsKey("LicenseUuid")){
+                //                        let licenseId = root.documentModel.GetData("LicenseUuid");
+
+                //                        softwareProductEditor.productModel.SetData("LicenseUuid", licenseId)
+                //                        softwareProductEditor.productModel.SetData("Expiration", expiration)
+                //                    }
+
+                //                    softwareProductEditor.productLicensesModel = licensesModel;
+
+                //                    softwareProductEditor.updateGui()
+                //                }
             }
         }
     }
@@ -442,30 +407,25 @@ DocumentBase {
         width: bodyColumn.width;
 
         Component.onCompleted: {
-            softwareProductEditor.productModel.dataChanged.connect(softwareProductEditor.onModelChanged);
+//            softwareProductEditor.productModel.dataChanged.connect(softwareProductEditor.onModelChanged);
         }
 
         function onModelChanged(){
-            let currentLicenseId = root.documentModel.GetData("LicenseUuid");
-            let currentExpiration = root.documentModel.GetData("Expiration");
-            let currentSerialNumber = root.documentModel.GetData("SerialNumber");
+            //            let currentLicenseId = root.documentModel.GetData("LicenseUuid");
+            //            let currentExpiration = root.documentModel.GetData("Expiration");
+            //            let currentSerialNumber = root.documentModel.GetData("SerialNumber");
 
-            console.log("currentLicenseId", currentLicenseId);
-            console.log("currentExpiration", currentExpiration);
-            console.log("currentSerialNumber", currentSerialNumber);
+            //            let licenseUuid = softwareProductEditor.productModel.GetData("LicenseUuid");
+            //            let licenseExpiration = softwareProductEditor.productModel.GetData("Expiration");
 
-            let licenseUuid = softwareProductEditor.productModel.GetData("LicenseUuid");
-            let licenseExpiration = softwareProductEditor.productModel.GetData("Expiration");
+            //            let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
 
-            let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
 
-            console.log("licenseId", licenseUuid);
-            console.log("expiration", licenseExpiration);
-            console.log("serialNumber", serialNumber);
+            //            if (currentLicenseId !== licenseUuid || currentExpiration !== licenseExpiration || currentSerialNumber !== serialNumber){
+            //                root.updateModel();
+            //            }
 
-            if (currentLicenseId !== licenseUuid || currentExpiration !== licenseExpiration || currentSerialNumber !== serialNumber){
-                root.updateModel();
-            }
+            root.doUpdateModel();
         }
     }
     //    }

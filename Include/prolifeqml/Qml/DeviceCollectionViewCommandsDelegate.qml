@@ -69,6 +69,8 @@ CollectionViewCommandsDelegateBase {
     }
 
     onCommandActivated: {
+        console.log('onCommandActivated', commandId)
+
         let filterModel = container.collectionViewBase.modelFilter;
         let licenseFilter = filterModel.GetData("LicenseFilter");
         if (!licenseFilter){
@@ -87,9 +89,12 @@ CollectionViewCommandsDelegateBase {
             let elementsModel = container.tableData.elements;
             let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
             if (orderId !== ""){
-                if (container.collectionViewBase.mainDocumentManager){
-                    container.collectionViewBase.mainDocumentManager.openDocument("Orders", orderId);
-                }
+                let parameters = {}
+                parameters["TypeId"] = "Orders";
+                parameters["DocumentId"] = orderId;
+                parameters["DocumentTypeId"] = "Order";
+
+                Events.sendEvent("OpenDocument", parameters);
             }
         }
         else if (commandId === "ShowNew"){

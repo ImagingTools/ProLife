@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5125" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -176,6 +176,9 @@
                     <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderChangeGenerator"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="LicenseDefinitionCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -187,6 +190,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="OrderInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
                         <Data IsEnabled="false"/>

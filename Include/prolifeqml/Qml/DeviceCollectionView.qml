@@ -11,24 +11,28 @@ CollectionView {
     defaultOrderType: "DESC";
     filterMenuVisible: true;
 
-    property MainDocumentManager mainDocumentManager: null;
+    documentName: qsTr("Sensors");
 
     Component.onCompleted: {
+        console.log("DeviceCollectionView onCompleted");
+
         Events.subscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
         container.commandsDelegatePath = "qrc:/qml/ProLife/DeviceCollectionViewCommandsDelegate.qml";
 
         baseCollectionView.commands.fieldsData.push("OrderUuid");
         baseCollectionView.commands.fieldsData.push("StatusId");
         baseCollectionView.commands.fieldsData.push("Licenses");
+
+        container.commandId = "Devices";
     }
 
     Component.onDestruction: {
         Events.unSubscribeEvent("DevicesCollectionUpdated", container.collectionUpdated);
     }
 
-    onVisibleChanged: {
-        if (container.visible){
-//            container.updateGui();
+    onDocumentManagerPtrChanged: {
+        if (documentManagerPtr){
+            documentManagerPtr.registerDocument("Device", deviceEditorComp);
         }
     }
 
@@ -175,7 +179,6 @@ CollectionView {
     }
 
     function fillContextMenuModel(){
-        console.log("fillContextMenuModel")
         contextMenuModel.clear();
 
         if (container.commandsProvider.commandExists("Edit")){
@@ -240,6 +243,13 @@ CollectionView {
 
     onHeadersChanged: {
         container.baseCollectionView.table.setColumnContentComponent(0, pairComp);
+    }
+
+    Component {
+        id: deviceEditorComp;
+
+        DeviceEditor {
+        }
     }
 
     DeviceProductionStatus {

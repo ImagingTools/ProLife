@@ -17,7 +17,11 @@ Dialog {
     signal saved();
 
     onHardwareIdChanged: {
-        documentController.getData(hardwareId, {}, "HardwareProductBinding")
+        let onResult = function(documentModel){
+            productEditorDialog.contentItem.bindingModel = documentModel;
+        }
+
+        documentController.getData("HardwareProductBinding", hardwareId, onResult)
     }
 
     Component.onCompleted: {
@@ -74,12 +78,25 @@ Dialog {
             onFinished: {
                 if (buttonId == "Yes"){
                     if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
-                        documentController.updateData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
+                        let onResult = function(id, name){}
+
+                        documentController.updateData(
+                                                      "HardwareProductBinding",
+                                                      productEditorDialog.hardwareId,
+                                                      productEditorDialog.contentItem.bindingModel,
+                                                      onResult
+                                                     )
                     }
                     else{
                         productEditorDialog.contentItem.bindingModel.SetData("Id", productEditorDialog.hardwareId);
 
-                        documentController.setData(productEditorDialog.hardwareId, productEditorDialog.contentItem.bindingModel)
+                        let onResult = function(id, name){}
+                        documentController.setData(
+                                                   "HardwareProductBinding",
+                                                   productEditorDialog.hardwareId,
+                                                   productEditorDialog.contentItem.bindingModel,
+                                                   onResult
+                                                   )
                     }
 
                   //  productEditorDialog.contentItem.includeIds = [];
@@ -101,16 +118,15 @@ Dialog {
 
     GqlDocumentDataController {
         id: documentController;
+//        documentTypeId: "HardwareProductBinding";
 
-        documentTypeId: "HardwareProductBinding";
+//        onDocumentModelChanged: {
+//            productEditorDialog.contentItem.bindingModel = documentModel;
+//        }
 
-        onDocumentModelChanged: {
-            productEditorDialog.contentItem.bindingModel = documentModel;
-        }
-
-        onError: {
-            productEditorDialog.contentItem.bindingModelReady = true;
-        }
+//        onError: {
+//            productEditorDialog.contentItem.bindingModelReady = true;
+//        }
     }
 }//Container
 

@@ -176,9 +176,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			orderId = itemModel.GetData("OrderId").toByteArray().trimmed();
 		}
 
-		if (itemModel.ContainsKey("Name")){
-			name = itemModel.GetData("Name").toString();
-		}
+//		if (itemModel.ContainsKey("Name")){
+//			name = itemModel.GetData("Name").toString();
+//		}
+
+		name = orderId;
 
 		if (orderId.isEmpty()){
 			errorMessage = QT_TR_NOOP("ERP Order-ID can not be empty");
@@ -411,8 +413,8 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 	}
 
 	QByteArray productId;
-	if (softwareProductModel.ContainsKey("ProductId", modelIndex)){
-		productId = softwareProductModel.GetData("ProductId", modelIndex).toByteArray();
+	if (softwareProductModel.ContainsKey("ProductUuid", modelIndex)){
+		productId = softwareProductModel.GetData("ProductUuid", modelIndex).toByteArray();
 
 		softwareInstancePtr->SetupProductInstance(productId, "", "");
 	}
@@ -533,15 +535,15 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 	deviceInstancePtr->SetOrderId(orderUuid);
 
 	QByteArray productId;
-	if (hardwareProductModel.ContainsKey("ProductId", modelIndex)){
-		productId = hardwareProductModel.GetData("ProductId", modelIndex).toByteArray();
+	if (hardwareProductModel.ContainsKey("ProductUuid", modelIndex)){
+		productId = hardwareProductModel.GetData("ProductUuid", modelIndex).toByteArray();
 
 		deviceInstancePtr->SetDeviceType(productId);
 	}
 
 	QByteArray modelTypeId;
-	if (hardwareProductModel.ContainsKey("ModelTypeId", modelIndex)){
-		modelTypeId = hardwareProductModel.GetData("ModelTypeId", modelIndex).toByteArray();
+	if (hardwareProductModel.ContainsKey("LicenseUuid", modelIndex)){
+		modelTypeId = hardwareProductModel.GetData("LicenseUuid", modelIndex).toByteArray();
 
 		deviceInstancePtr->SetConfigurationType(modelTypeId);
 	}
@@ -602,11 +604,23 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 	if (softwareProductPtr != nullptr){
 		int modelIndex = softwareProductModel.InsertNewItem();
 
+		QByteArray productUuid = softwareProductPtr->GetProductId();
+
 		softwareProductModel.SetData("Id", identifiable.GetObjectUuid(), modelIndex);
-		softwareProductModel.SetData("ProductId", softwareProductPtr->GetProductId(), modelIndex);
+		softwareProductModel.SetData("ProductUuid", productUuid, modelIndex);
 		softwareProductModel.SetData("CategoryId", softwareProductPtr->GetFactoryId(), modelIndex);
 		softwareProductModel.SetData("SerialNumber", softwareProductPtr->GetSerialNumber(), modelIndex);
 		softwareProductModel.SetData("InUse", softwareProductPtr->IsInUse(), modelIndex);
+
+		if (m_productCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+				if (productInfoPtr != nullptr){
+					softwareProductModel.SetData("ProductName", productInfoPtr->GetName(), modelIndex);
+				}
+			}
+		}
 
 		const imtbase::ICollectionInfo& licenseInstances = softwareProductPtr->GetLicenseInstances();
 		imtbase::ICollectionInfo::Ids activeLicenseIds = licenseInstances.GetElementIds();
@@ -617,8 +631,19 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 			if (licenseInstancePtr != nullptr){
 				softwareProductModel.SetData("LicenseUuid", activeLicenseId, modelIndex);
 
-				QString licenseName = licenseInstancePtr->GetLicenseName();
-				softwareProductModel.SetData("LicenseName", licenseName, modelIndex);
+				if (m_licenseDefinitionCollectionCompPtr.IsValid()){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_licenseDefinitionCollectionCompPtr->GetObjectData(activeLicenseId, dataPtr)){
+						const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+						if (licenseInfoPtr != nullptr){
+							softwareProductModel.SetData("LicenseName", licenseInfoPtr->GetLicenseName(), modelIndex);
+							softwareProductModel.SetData("LicenseId", licenseInfoPtr->GetLicenseId(), modelIndex);
+						}
+					}
+				}
+
+//				QString licenseName = licenseInstancePtr->GetLicenseName();
+//				softwareProductModel.SetData("LicenseName", licenseName, modelIndex);
 
 				QDate date = licenseInstancePtr->GetExpiration().date();
 				QString licenseExpiration = date.toString("yyyy-MM-dd");
@@ -638,12 +663,49 @@ void COrderControllerComp::InsertHardwareProductToModel(
 		int modelIndex = hardwareProductModel.InsertNewItem();
 
 		QByteArray objectUuid = deviceInfoPtr->GetObjectUuid();
+		QByteArray productUuid = deviceInfoPtr->GetDeviceType();
+		QByteArray licenseDefinitionUuid = deviceInfoPtr->GetConfigurationType();
 
 		hardwareProductModel.SetData("Id", objectUuid, modelIndex);
-		hardwareProductModel.SetData("ProductId", deviceInfoPtr->GetDeviceType(), modelIndex);
+		hardwareProductModel.SetData("ProductUuid", productUuid, modelIndex);
 		hardwareProductModel.SetData("CategoryId", QByteArray("Hardware"), modelIndex);
-		hardwareProductModel.SetData("ModelTypeId", deviceInfoPtr->GetConfigurationType(), modelIndex);
-		hardwareProductModel.SetData("DeviceId", deviceInfoPtr->GetObjectUuid(), modelIndex);
+		hardwareProductModel.SetData("LicenseUuid", licenseDefinitionUuid, modelIndex);
+		hardwareProductModel.SetData("DeviceId", objectUuid, modelIndex);
+
+		if (m_productCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+				if (productInfoPtr != nullptr){
+					hardwareProductModel.SetData("ProductName", productInfoPtr->GetName(), modelIndex);
+				}
+			}
+		}
+
+		if (m_licenseDefinitionCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_licenseDefinitionCollectionCompPtr->GetObjectData(licenseDefinitionUuid, dataPtr)){
+				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+				if (licenseInfoPtr != nullptr){
+					hardwareProductModel.SetData("LicenseName", licenseInfoPtr->GetLicenseName(), modelIndex);
+					hardwareProductModel.SetData("LicenseId", licenseInfoPtr->GetLicenseId(), modelIndex);
+				}
+			}
+		}
+
+		if (m_deviceCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_deviceCollectionCompPtr->GetObjectData(objectUuid, dataPtr)){
+				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+				if (deviceInfoPtr != nullptr){
+					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
+					QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+
+					hardwareProductModel.SetData("MacAddress", macAddress, modelIndex);
+					hardwareProductModel.SetData("SerialNumber", serialNumber, modelIndex);
+				}
+			}
+		}
 
 		if (m_bindingCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr dataPtr;

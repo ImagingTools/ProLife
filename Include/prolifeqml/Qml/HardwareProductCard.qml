@@ -10,50 +10,32 @@ Rectangle {
 
     color: Style.baseColor;
 
-    property string productId: model.ProductId ? model.ProductId : "";
     property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
-
-    property string macAddress: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.MacAddress ? model.MacAddress : "";
-    property string serialNumber: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.SerialNumber ? model.SerialNumber : "";
-    property string modelType: model.ModelTypeId ? model.ModelTypeId : "";
-
     property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
-
-    property Item productCardRoot: null;
-    property CollectionDataProvider productCollection: null;
-
+    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
     property bool readOnly: false;
     property bool commmandsVisible: false;
 
-    property int contentHeight: contentColumn.height + 20;
+    property string productId: model.ProductUuid ? model.ProductUuid : "";
+    property string macAddress: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.MacAddress ? model.MacAddress : "";
+    property string serialNumber: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.SerialNumber ? model.SerialNumber : "";
+    property string modelType: model.LicenseUuid ? model.LicenseUuid : "";
 
-    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
-    property bool completed: productCollection != null && productCardRoot != null;
+    property Item productCardRoot: null;
+
+    property int contentHeight: contentColumn.height + 20
 
     signal clicked();
     signal edited();
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+    Component.onCompleted: {
+        Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
+
+        hardwareCard.updateElements();
     }
 
-    onCompletedChanged: {
-        if (completed){
-            let licensesModel = productCollection.getData(model.ProductId, "Licenses");
-            if (licensesModel){
-                for (let i = 0; i < licensesModel.GetItemsCount(); i++){
-                    let licenseUuid = licensesModel.GetData("Id", i);
-                    if (licenseUuid === model.ModelTypeId){
-                        hardwareCard.modelType = licensesModel.GetData("LicenseName", i);
-
-                        break;
-                    }
-                }
-            }
-
-            hardwareCard.updateElements();
-            Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
-        }
+    Component.onDestruction: {
+        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
     }
 
     onCheckerChanged: {
@@ -82,7 +64,7 @@ Rectangle {
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("Model Type"), index)
-        elementsTableModel.SetData("Value", hardwareCard.modelType, index)
+        elementsTableModel.SetData("Value", model.LicenseName, index)
 
         table.elements = elementsTableModel;
     }

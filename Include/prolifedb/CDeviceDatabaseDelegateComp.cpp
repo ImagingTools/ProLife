@@ -144,7 +144,8 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"Document",
 						"Document"->>'DeviceType' as "ProductUuid",
 						"Document"->>'ConfigurationType' as "LicenseUuid",
-						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "ConfigurationType",
+						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "LicenseName",
+						(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "LicenseId",
 						(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = t2."Document"->>'DeviceType') as "DeviceType",
 						"OwnerId",
 						"RevisionNumber",
@@ -182,7 +183,7 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 	}
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
-		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId" || columnId == "ConfigurationType"|| columnId == "DeviceType"){
+		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId" || columnId == "LicenseName"|| columnId == "DeviceType"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else{
@@ -338,7 +339,7 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += " OR ";
 			}
 
-			if (filteringColumnIds[i] == "OrderId" || filteringColumnIds[i] == "ConfigurationType" || filteringColumnIds[i] == "DeviceType"){
+			if (filteringColumnIds[i] == "OrderId" || filteringColumnIds[i] == "LicenseName" || filteringColumnIds[i] == "DeviceType"){
 				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
 

@@ -13,6 +13,23 @@ CollectionView {
     defaultOrderType: "DESC";
     filterMenuVisible: true;
 
+    documentName: qsTr("Orders");
+    commandId: "Orders";
+
+    onDocumentManagerPtrChanged: {
+        if (documentManagerPtr){
+//            documentManagerPtr.setDocumentTitle(0, title);
+            documentManagerPtr.registerDocument("Order", orderEditorComp);
+        }
+    }
+
+    Component {
+        id: orderEditorComp;
+
+        OrderEditor {
+        }
+    }
+
     function fillContextMenuModel(){
         contextMenuModel.clear();
         contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
