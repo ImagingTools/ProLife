@@ -45,6 +45,10 @@ Rectangle {
         }
     }
 
+    onMacAddressChanged: {
+        console.log("onMacAddressChanged", macAddress);
+    }
+
     function onLocalizationChanged(language){
         hardwareCard.updateHeaders();
 
@@ -157,6 +161,24 @@ Rectangle {
             clip: true;
 
             showHeaders: false;
+
+            onHeadersChanged: {
+                table.tableDecorator = tableDecoratorModel;
+            }
+        }
+    }
+
+    TreeItemModel {
+        id: tableDecoratorModel;
+
+        Component.onCompleted: {
+            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+
+            let index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", 150, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
         }
     }
 } //Card

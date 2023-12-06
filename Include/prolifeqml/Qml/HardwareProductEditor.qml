@@ -87,6 +87,16 @@ Item {
                     root.productModel.SetData("LicenseName", licenseName);
                 }
 
+                if (deviceCB.model.ContainsKey("MacAddress", deviceCB.currentIndex)){
+                    let macAddress = deviceCB.model.GetData("MacAddress", deviceCB.currentIndex);
+                    root.productModel.SetData("MacAddress", macAddress);
+                }
+
+                if (deviceCB.model.ContainsKey("SerialNumber", deviceCB.currentIndex)){
+                    let serialNumber = deviceCB.model.GetData("SerialNumber", deviceCB.currentIndex);
+                    root.productModel.SetData("SerialNumber", serialNumber);
+                }
+
                 root.updateModelsGui();
             }
         }

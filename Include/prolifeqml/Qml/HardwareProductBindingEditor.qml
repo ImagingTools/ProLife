@@ -292,14 +292,14 @@ Item {
 
                 Component.onCompleted: {
                     console.log("DEBUG::29")
-                    softwareProductCollection.pagination.countElements = 9
                     softwareProductCollection.loadData = false;
                     bindingProductsCollection.table.canSelectAll = true;
                     softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
-                    softwareProductCollection.table.selectionChanged.connect(selectionItemsChanged);
                 }
 
-                function selectionItemsChanged(selection){
+                onSelectionChanged: {
+                    console.log("softwareProductCollection onSelectionChanged", selection)
+
                     if (selection.length <= 0){
                         bindButton.enabled = false
                     }
@@ -310,7 +310,7 @@ Item {
                         let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
 
                         let inUse = softwareProductCollection.table.elements.GetData("InUse", index);
-                        if (inUse){
+                        if (inUse && !unbindButton.userCanUnbind){
                             bindButton.enabled = false;
 
                             return;
@@ -468,24 +468,7 @@ Item {
                     }
                 }
 
-                onHeadersChanged: {
-                    bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
-
-                    bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
-                }
-
-                Component.onCompleted: {
-                    console.log("DEBUG::29")
-                    bindingProductsCollection.pagination.countElements = 1000
-                    bindingProductsCollection.loadData = false;
-                    bindingProductsCollection.table.canSelectAll = false;
-                    bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
-                    bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
-
-                    bindingProductsCollection.commands.fieldsData.push("InUse");
-                }
-
-                function selectionItemsChanged(selection){
+                onSelectionChanged: {
                     console.log("selectionItemsChanged", selection);
                     if (selection.length === 0){
                         unbindButton.enabled = false
@@ -505,6 +488,23 @@ Item {
                             unbindButton.enabled = !inUse;
                         }
                     }
+                }
+
+                onHeadersChanged: {
+                    bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
+
+                    bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
+                }
+
+                Component.onCompleted: {
+                    console.log("DEBUG::29")
+                    bindingProductsCollection.pagination.countElements = 1000
+                    bindingProductsCollection.loadData = false;
+                    bindingProductsCollection.table.canSelectAll = false;
+                    bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
+//                    bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
+
+                    bindingProductsCollection.commands.fieldsData.push("InUse");
                 }
 
                 onVisibleChanged: {
@@ -671,6 +671,7 @@ Item {
         }
 
         onClicked: {
+            console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
             let selectedProductIds = []
             selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
             let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5126" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -19,15 +19,15 @@
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ClientApplication/ClientMainWindowQml</Value>
+                                <Value>ProLifeServerBase</Value>
+                                <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
+                                <Value>ProLifeServerBase/DatabaseAutomaticBackup</Value>
                                 <Value>ClientApplication/ObserverQml</Value>
+                                <Value>ClientApplication/ClientMainWindowQml</Value>
                                 <Value>ClientApplication/TextFileLog</Value>
                                 <Value>ProLifeServerBase/ProLifeLocalization</Value>
                                 <Value>ProLifeServerBase/AutoPersistence</Value>
-                                <Value>ProLifeServerBase</Value>
                                 <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
-                                <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
-                                <Value>ProLifeServerBase/DatabaseAutomaticBackup</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

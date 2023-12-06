@@ -25,17 +25,6 @@ DocumentData {
         productsList.updateModel();
     }
 
-    onVisibleChanged: {
-        if (visible){
-//            if (deviceEditorContainer.errorMessage !== ""){
-//                deviceEditorContainer.documentManager.showAlertMessage(deviceEditorContainer.errorMessage);
-//            }
-//        }
-//        else{
-//            deviceEditorContainer.documentManager.hideAlertMessage();
-        }
-    }
-
     function beginDocumentModelChanged(){
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
@@ -95,8 +84,6 @@ DocumentData {
             if (deviceEditorContainer.documentManager){
                 let message = qsTr("Error loading products. Please check Lisa connection.");
                 deviceEditorContainer.documentManager.openErrorDialog(message);
-                deviceEditorContainer.documentManager.showAlertMessage(message);
-                deviceEditorContainer.errorMessage = message;
             }
         }
     }
@@ -199,6 +186,7 @@ DocumentData {
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
             let statusModel = stateMachine.getAvailableModel(status);
+//            let statusModel = statusCB.model;
             if (statusModel){
                 statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -725,16 +713,16 @@ DocumentData {
                                     deviceEditorContainer.doUpdateModel();
                                     //                                    deviceEditorContainer.updateModel();
 
-                                    //                                    if (statusCB.currentIndex >= 0){
-                                    //                                        if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-                                    //                                            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-                                    //                                            statusCB.updateIcon(status);
-                                    //                                        }
-                                    //                                    }
-                                    //                                    else{
-                                    //                                        iconStatus.source = "";
-                                    //                                        statusCB.model = productionStatus.statusModel;
-                                    //                                    }
+                                    if (statusCB.currentIndex >= 0){
+                                        if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                                            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                            statusCB.updateIcon(status);
+                                        }
+                                    }
+                                    else{
+                                        iconStatus.source = "";
+                                        statusCB.model = productionStatus.statusModel;
+                                    }
                                 }
                             }
 

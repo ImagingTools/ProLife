@@ -25,10 +25,7 @@
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProLifeServerBase/AutoPersistence</Value>
                                 <Value>ProLifeServerBase</Value>
-                                <Value>ProLifeServerBase/ProLifeLocalization</Value>
-                                <Value>ProLifeServerBase/DatabaseAccessSettings</Value>
                                 <Value>ProLifeServerBase/PgSqlDatabaseEngine</Value>
                                 <Value>ProLifeServerBase/DatabaseAutomaticBackup</Value>
                             </Values>

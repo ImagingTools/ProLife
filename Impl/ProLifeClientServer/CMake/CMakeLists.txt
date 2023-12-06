@@ -66,6 +66,7 @@ list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtauthgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtlicgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtguigql/Qml")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml/imtdocgui")
 
 list(APPEND QML_IMPORT_DIRS "qrc:/qml")
 list(APPEND QML_IMPORT_DIRS ":/qml")

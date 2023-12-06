@@ -49,6 +49,38 @@ DocumentData {
         root.documentManagerPtr.setAlertPanel(null);
     }
 
+    function documentCanBeSaved(){
+        console.log("documentCanBeSaved", root.documentModel.toJSON());
+
+        let ok = false;
+
+        if (root.documentModel.ContainsKey("ProductId")){
+            let productId = root.documentModel.GetData("ProductId");
+            if (String(productId) !== ""){
+                ok = true;
+            }
+        }
+
+        if (!ok){
+            root.documentManagerPtr.openErrorDialog(qsTr("Please select a product"));
+        }
+
+        ok = false;
+
+        if (root.documentModel.ContainsKey("LicenseUuid")){
+            let licenseUuid = root.documentModel.GetData("LicenseUuid");
+            if (String(licenseUuid) !== ""){
+                ok = true;
+            }
+        }
+
+        if (!ok){
+            root.documentManagerPtr.openErrorDialog(qsTr("Please select a license"));
+        }
+
+        return ok;
+    }
+
     function beginDocumentModelChanged(){
         checkInIse();
 

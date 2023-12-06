@@ -136,6 +136,10 @@ Rectangle {
 
             clip: true;
             showHeaders: false;
+
+            onHeadersChanged: {
+                licensesView.tableDecorator = tableDecoratorModel;
+            }
         }
     } // Column
 
@@ -208,10 +212,10 @@ Rectangle {
             var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
 
             let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            cellWidthModel.SetData("Width", 150, index);
 
             index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 75, index);
+            cellWidthModel.SetData("Width", -1, index);
         }
     }
 } //Card

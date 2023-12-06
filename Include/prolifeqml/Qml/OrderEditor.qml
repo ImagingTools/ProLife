@@ -4,6 +4,7 @@ import imtgui 1.0
 import imtdocgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
+import imtauthgui 1.0
 
 DocumentData {
     id: orderEditorContainer;
@@ -58,6 +59,8 @@ DocumentData {
     onSaved: {
         console.log("saved");
 
+        setBlockingUpdateModel(true);
+
         if (documentModel.ContainsKey("OrderProducts")){
             let orderProductsModel = documentModel.GetData("OrderProducts");
 
@@ -70,6 +73,8 @@ DocumentData {
                 }
             }
         }
+
+        setBlockingUpdateModel(false);
 
         devicesList.updateModel();
     }
@@ -91,19 +96,14 @@ DocumentData {
         }
     }
 
-//    onVisibleChanged: {
-//        if (visible){
-//            if (orderEditorContainer.errorMessage !== ""){
-//                orderEditorContainer.documentManager.showAlertMessage(orderEditorContainer.errorMessage);
-//            }
-//        }
-//        else{
-//            orderEditorContainer.documentManager.hideAlertMessage();
-//        }
-//    }
-
     function documentCanBeSaved(){
         let ok = true;
+
+        if (!instanceIdInput.acceptableInput){
+            ok = false;
+
+            orderEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please enter a valid ERP Order-ID"));
+        }
 
 //        let orderProductsModel = documentModel.GetData("OrderProducts");
 //        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
@@ -195,9 +195,6 @@ DocumentData {
             if (orderEditorContainer.documentManager){
                 let message = qsTr("Error loading accounts.");
                 orderEditorContainer.documentManager.openErrorDialog(message);
-                orderEditorContainer.documentManager.showAlertMessage(message);
-
-                orderEditorContainer.errorMessage = message;
             }
         }
     }
@@ -216,11 +213,7 @@ DocumentData {
         onFailed: {
             if (orderEditorContainer.documentManager){
                 let message = qsTr("Error loading products. Please check Lisa connection.");
-
                 orderEditorContainer.documentManager.openErrorDialog(message);
-                orderEditorContainer.documentManager.showAlertMessage(message);
-
-                orderEditorContainer.errorMessage = message;
             }
         }
     }
@@ -253,11 +246,7 @@ DocumentData {
         onFailed: {
             if (orderEditorContainer.documentManager){
                 let message = qsTr("Error loading sensors.");
-
                 orderEditorContainer.documentManager.openErrorDialog(message);
-                orderEditorContainer.documentManager.showAlertMessage(message);
-
-                orderEditorContainer.errorMessage = message;
             }
         }
 
@@ -396,18 +385,6 @@ DocumentData {
         if (!statusFound){
             orderStatusCB.currentIndex = -1;
         }
-
-        productsView.deviceIds = []
-//        if (documentModel.ContainsKey("OrderProducts")){
-
-//            orderEditorContainer.updateOrderProductsModel();
-
-//            productsView.model = 0
-//            productsView.model = documentModel.GetData("OrderProducts");
-//        }
-//        else{
-//            productsView.model = 0;
-//        }
     }
 
     function updateModel(){
@@ -523,6 +500,11 @@ DocumentData {
                 }
 
                 KeyNavigation.tab: purchaseIdInput;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+                    instanceIdInput.readOnly = !ok;
+                }
             }
 
             Text {
@@ -572,6 +554,11 @@ DocumentData {
                 }
 
                 KeyNavigation.tab: descriptionInput;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+                    purchaseIdInput.readOnly = !ok;
+                }
             }
         }
 
@@ -607,6 +594,11 @@ DocumentData {
                 }
 
                 KeyNavigation.tab: instanceIdInput;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+                    descriptionInput.readOnly = !ok;
+                }
             }
         }
 
@@ -636,6 +628,12 @@ DocumentData {
 
                 onCurrentIndexChanged: {
                     orderEditorContainer.doUpdateModel();
+                }
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                    customerCB.changeable = ok;
                 }
             }
         }
@@ -672,6 +670,12 @@ DocumentData {
                         orderStatusCB.model = orderStatus.statusModel;
                     }
                 }
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                    orderStatusCB.changeable = ok;
+                }
             }
 
             BaseButton{
@@ -683,6 +687,8 @@ DocumentData {
                 text: qsTr("Clear");
 
                 decorator: defaultButtonDecorator;
+
+                enabled: orderStatusCB.changeable;
 
                 onClicked: {
                     if(orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
@@ -718,7 +724,6 @@ DocumentData {
                 productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
                 productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
 
-                productsDialog.bodyItem.excludeDeviceIds = productsView.deviceIds;
                 productsDialog.bodyItem.orderUuid = orderEditorContainer.documentId;
                 productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
                 productsDialog.activeProductIndex = productsView.activeProductIndex;
@@ -728,6 +733,7 @@ DocumentData {
                 }
 
                 let orderProductsModel = orderEditorContainer.documentModel.GetData("OrderProducts");
+                productsDialog.bodyItem.orderProductsModel = orderProductsModel;
                 if (productsView.activeProductIndex >= 0){
                     let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
                     productsDialog.bodyItem.productModel = productModel;
@@ -821,6 +827,12 @@ DocumentData {
                 productsView.activeProductIndex = -1;
                 modalDialogManager.openDialog(productEditorDialog, {});
             }
+
+            Component.onCompleted: {
+                let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                addProduct.visible = ok;
+            }
         }
 
         Text {
@@ -863,7 +875,11 @@ DocumentData {
         property bool isLicenseConsuming: false;
         property bool softwareEditing: true;
 
-        property var deviceIds: []
+        Component.onCompleted: {
+            let ok = PermissionsController.checkPermission("ChangeOrder");
+
+            productsView.readOnly = !ok;
+        }
 
         delegate: OrderProductCard {
             id: orderProductDelegate;
@@ -878,13 +894,6 @@ DocumentData {
             isLicenseConsuming: productsView.isLicenseConsuming;
 
             orderEditorPtr: orderEditorContainer;
-
-            Component.onCompleted: {
-                if (model.CategoryId === "Hardware"){
-                    console.log("deviceIds.push", model.DeviceId);
-                    productsView.deviceIds.push(model.DeviceId);
-                }
-            }
 
             onEdited: {
                 productsView.activeProductIndex = model.index;
@@ -906,15 +915,6 @@ DocumentData {
         MessageDialog {
             onFinished: {
                 if (buttonId == "Yes"){
-                    let categoryId = productsView.model.GetData("CategoryId", productsView.activeProductIndex)
-                    if (categoryId === "Hardware"){
-                        let deviceId = productsView.model.GetData("DeviceId", productsView.activeProductIndex)
-                        let index = productsView.deviceIds.indexOf(deviceId);
-                        if (index >= 0){
-                            productsView.deviceIds.splice(index, 1);
-                        }
-                    }
-
                     orderEditorContainer.undoManagerPtr.beginChanges();
                     productsView.model.RemoveItem(productsView.activeProductIndex);
                     orderEditorContainer.undoManagerPtr.endChanges();

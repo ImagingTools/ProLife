@@ -24,7 +24,7 @@ Item {
     property string orderId;
     property string orderUuid;
 
-    property var excludeDeviceIds: [];
+//    property var excludeDeviceIds: [];
 
     property string productCategory: "";
     property string productId: "";
@@ -46,9 +46,9 @@ Item {
         productEditor.productModel.SetData("CategoryId", productEditor.productCategory);
     }
 
-    onExcludeDeviceIdsChanged: {
-        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
-    }
+//    onExcludeDeviceIdsChanged: {
+//        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
+//    }
 
     property TreeItemModel hardwareProductsModel: TreeItemModel {}
     property TreeItemModel softwareProductsModel: TreeItemModel {}
@@ -73,18 +73,27 @@ Item {
     function getDevicesModel(){
         console.log("getDevicesModel");
 
+        let excludeDeviceIds = []
+        for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+            let categoryId = orderProductsModel.GetData("CategoryId", i);
+            if (categoryId === "Hardware"){
+                let deviceID = orderProductsModel.GetData("DeviceId", i);
+                if (deviceID !== ""){
+                    excludeDeviceIds.push(deviceID)
+                }
+            }
+        }
+
         let resultModel = treeItemModelComp.createObject(null);
         let selectedProductId = productEditor.productModel.GetData("ProductUuid");
         let selectedDeviceId = productEditor.productModel.GetData("DeviceId");
 
-        let index = productEditor.excludeDeviceIds.indexOf(selectedDeviceId);
-        console.log("index", index);
-
+        let index = excludeDeviceIds.indexOf(selectedDeviceId);
         if (index >= 0){
-            productEditor.excludeDeviceIds.splice(index, 1)
+            excludeDeviceIds.splice(index, 1)
         }
 
-        console.log("productEditor.excludeDeviceIds2", productEditor.excludeDeviceIds);
+        console.log("productEditor.excludeDeviceIds2", excludeDeviceIds);
 
         for (let i = 0; i < productEditor.devicesModel.GetItemsCount(); i++){
             let status = productEditor.devicesModel.GetData("Status", i);
@@ -97,7 +106,15 @@ Item {
             console.log("ProductUuid",deviceType);
             console.log("status",status);
 
-            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
+//            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
+//                console.log("deviceId", deviceId);
+//                console.log("continue");
+
+//                continue;
+//            }
+
+
+            if (excludeDeviceIds.includes(deviceId)){
                 console.log("deviceId", deviceId);
                 console.log("continue");
 

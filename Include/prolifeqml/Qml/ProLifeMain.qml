@@ -8,6 +8,10 @@ ApplicationMain{
 
     useWebSocketSubscription: true;
 
+    Component.onCompleted: {
+        context.application = 'ProLife';
+    }
+
     property InstanceMaskProvider instanceMaskProvider :InstanceMaskProvider {
         settingsProvider: window.settingsProvider;
     }

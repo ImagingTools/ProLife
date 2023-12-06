@@ -85,15 +85,6 @@ CollectionViewCommandsDelegateBase {
         let pairedIndex = commandsProvider.getCommandIndex("OnlyPaired");
 
         if (commandId === "Pair"){
-//            console.log("Pair");
-//            let indexes = container.tableData.getSelectedIndexes();
-//            if (indexes.length === 1){
-//                let elementsModel = container.tableData.elements;
-//                let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
-//                let id = elementsModel.GetData("Id", indexes[0]);
-
-//                modalDialogManager.openDialog(productPairEditorDialog, {"orderId" : orderUuid, "softwareId" : id});
-//            }
         }
         else if (commandId === "OnlyPaired"){
             let filterModel = container.collectionViewBase.modelFilter;
@@ -163,59 +154,4 @@ CollectionViewCommandsDelegateBase {
             }
         }
     }
-
-//    LicenseFileController {
-//        id: licenseFileController;
-//    }
-
-//    Component {
-//        id: productPairEditorDialog;
-
-//        ProductPairEditorDialog {
-//            id: dialog;
-//            onFinished: {
-//                if (buttonId === "Link"){
-//                    if (dialog.bodyItem){
-//                        let productId = dialog.bodyItem.selectedProductId;
-//                        if (productId !== ""){
-//                            console.log("selectedProductId", productId);
-//                            productModel.Clear();
-
-//                            let indexes = container.tableData.getSelectedIndexes();
-//                            if (indexes.length === 1){
-//                                let elementsModel = container.tableData.elements;
-
-//                                let id = elementsModel.GetData("Id", indexes[0]);
-//                                let serialNumber = elementsModel.GetData("SerialNumber", indexes[0]);
-
-//                                productModel.SetData("Id", id)
-//                                productModel.SetData("SerialNumber", serialNumber)
-//                                productModel.SetData("PairId", productId)
-
-//                                documentController.updateData(dialog.softwareId, productModel)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//    TreeItemModel {
-//        id: productModel;
-//    }
-
-//    GqlDocumentDataController {
-//        id: documentController;
-
-//        documentTypeId: "SoftwareProduct";
-
-//        onDocumentUpdated: {
-//            container.collectionViewBase.updateGui();
-//        }
-
-//        onError: {
-
-//        }
-//    }
 }

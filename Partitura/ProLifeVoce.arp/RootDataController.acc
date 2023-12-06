@@ -22,7 +22,6 @@
                                 <Value>AuthorizationOptionsController</Value>
                                 <Value>PermissionController</Value>
                                 <Value>DatabaseServerConnectionController</Value>
-                                <Value>PumaGQLClientEngine</Value>
                                 <Value>LisaGQLEngine</Value>
                             </Values>
                         </Data>
@@ -45,8 +44,8 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
+                    <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="PumaGqlRequest">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -165,71 +164,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaGQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="PumaGQLClientEngine">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>GetUserInfo</Value>
-                                <Value>GetRoleInfo</Value>
-                                <Value>GetSessionInfo</Value>
-                                <Value>GetUserGroupInfo</Value>
-                                <Value>UserToken</Value>
-                                <Value>SessionItem</Value>
-                                <Value>UsersObjectView</Value>
-                                <Value>UsersInfo</Value>
-                                <Value>UsersList</Value>
-                                <Value>UserItem</Value>
-                                <Value>UserAdd</Value>
-                                <Value>UserUpdate</Value>
-                                <Value>UsersRemove</Value>
-                                <Value>UsersCommands</Value>
-                                <Value>UserCommands</Value>
-                                <Value>RolesList</Value>
-                                <Value>RoleItem</Value>
-                                <Value>RoleAdd</Value>
-                                <Value>RoleUpdate</Value>
-                                <Value>RolesRemove</Value>
-                                <Value>RolesObjectView</Value>
-                                <Value>RolesInfo</Value>
-                                <Value>RolesCommands</Value>
-                                <Value>RoleCommands</Value>
-                                <Value>GroupsList</Value>
-                                <Value>GroupsInfo</Value>
-                                <Value>GroupsObjectView</Value>
-                                <Value>GroupItem</Value>
-                                <Value>GroupAdd</Value>
-                                <Value>GroupUpdate</Value>
-                                <Value>GroupsRemove</Value>
-                                <Value>GroupsCommands</Value>
-                                <Value>GroupCommands</Value>
-                                <Value>RolesMetaInfo</Value>
-                                <Value>UsersMetaInfo</Value>
-                                <Value>GroupsMetaInfo</Value>
-                                <Value>PumaTestConnection</Value>
-                                <Value>PumaGetDatabaseStatus</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="/Puma"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="PumaUrlParam">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="SettingsController" PackageId="ProLifeQmlVoce" ComponentId="ProLifeApplicationSettings">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -331,7 +265,6 @@
         <Component ExportedId="LisaGQLEngine" ComponentId="LisaGQLEngine"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Pages/OrderSqlRepository"/>
         <Component ExportedId="ProductRepository" ComponentId="Pages/ProductRepository"/>
-        <Component ExportedId="PumaGQLClientEngine" ComponentId="PumaGQLClientEngine"/>
         <Component ExportedId="SoftwareOperationContextController" ComponentId="Pages/SoftwareOperationContextController"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Pages/SoftwareSqlRepository"/>
         <Component ExportedId="UserSettingsRepository" ComponentId="SettingsController/UserSettingsRepository"/>

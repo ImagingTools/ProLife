@@ -43,7 +43,7 @@ Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest";  DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 //Source: "postgresql.exe"; DestDir: "{app}"; Flags: deleteafterinstall; Components: postgresql
 Source: "{#BasePath}\ProLifeServerConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs confirmoverwrite
+Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -84,4 +84,25 @@ begin
     { Pos() returns 0 if not found }
     Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
 end;
+
+function InitializeSetup(): boolean;
+var
+  ResultCode: integer;
+begin
+
+  // Launch Notepad and wait for it to terminate
+  if Exec(ExpandConstant('{pf64}\ImagingTools\ProLifeServer\nginx\stopNginx.bat'), '', '', SW_SHOW,
+     ewWaitUntilTerminated, ResultCode) then
+  begin
+    // handle success if necessary; ResultCode contains the exit code
+  end
+  else begin
+    // handle failure if necessary; ResultCode contains the error code
+  end;
+
+  // Proceed Setup
+  Result := True;
+
+end;
+
 

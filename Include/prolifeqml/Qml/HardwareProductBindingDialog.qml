@@ -21,7 +21,7 @@ Dialog {
             productEditorDialog.contentItem.bindingModel = documentModel;
         }
 
-        documentController.getData("HardwareProductBinding", hardwareId, onResult)
+        documentController.getData("HardwareProductBinding", hardwareId, {}, onResult)
     }
 
     Component.onCompleted: {
@@ -42,12 +42,6 @@ Dialog {
 
     onFinished: {
         if (buttonId === "Save"){
-//            let newLicensesInfo = productEditorDialog.contentItem.newLicensesInfo;
-//            let keys = Object.keys(newLicensesInfo);
-//            for (let key of keys){
-//                newLicensesInfo[key];
-//            }
-
             modalDialogManager.openDialog(messageDialog, {});
         }
     }
@@ -118,15 +112,10 @@ Dialog {
 
     GqlDocumentDataController {
         id: documentController;
-//        documentTypeId: "HardwareProductBinding";
 
-//        onDocumentModelChanged: {
-//            productEditorDialog.contentItem.bindingModel = documentModel;
-//        }
-
-//        onError: {
-//            productEditorDialog.contentItem.bindingModelReady = true;
-//        }
+        onError: {
+            productEditorDialog.contentItem.bindingModelReady = true;
+        }
     }
 }//Container
 
