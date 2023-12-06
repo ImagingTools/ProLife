@@ -7,6 +7,7 @@ ApplicationMain{
     id: window;
 
     useWebSocketSubscription: true;
+    loadPageByClick: false;
 
     Component.onCompleted: {
         context.application = 'ProLife';
