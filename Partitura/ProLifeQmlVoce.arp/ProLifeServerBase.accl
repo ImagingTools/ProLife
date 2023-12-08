@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="0" Number="5134" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -19,15 +19,6 @@
         <Element ComponentName="Subscriptions" X="1000" Y="425" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountsSubscriberController" X="525" Y="375" Note=""/>
-                <Element ComponentName="DevicesSubscriberController" X="525" Y="75" Note=""/>
-                <Element ComponentName="OrdersSubscriberController" X="525" Y="175" Note=""/>
-                <Element ComponentName="SoftwareProductsSubscriberController" X="525" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="550" Y="225" Note=""/>
@@ -41,6 +32,15 @@
                 <Element ComponentName="OrderSqlRepository" X="175" Y="75" Note=""/>
                 <Element ComponentName="ProductRepository" X="175" Y="500" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="550" Y="75" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountsSubscriberController" X="525" Y="375" Note=""/>
+                <Element ComponentName="DevicesSubscriberController" X="525" Y="75" Note=""/>
+                <Element ComponentName="OrdersSubscriberController" X="525" Y="175" Note=""/>
+                <Element ComponentName="SoftwareProductsSubscriberController" X="525" Y="275" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

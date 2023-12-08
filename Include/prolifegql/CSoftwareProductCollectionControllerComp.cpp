@@ -314,8 +314,12 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 			ordersOptionsManagerPtr->InsertOption(orderId, orderId);
 		}
 
+//		if (!userId.isEmpty()){
+//			ordersOptionsManagerPtr->InsertOption("", userId);
+//		}
+
 		if (!userId.isEmpty()){
-			ordersOptionsManagerPtr->InsertOption("", userId);
+			ordersOptionsManagerPtr->InsertOption("", userGroupIds.join(';'));
 		}
 
 		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());

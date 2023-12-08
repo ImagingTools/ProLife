@@ -23,6 +23,7 @@ public:
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
+		I_ASSIGN(m_userCollectionCompPtr, "UserCollection", "Remote user collection", true, "UserCollection");
 		I_ASSIGN(m_gqlRequestHandlerCompPtr, "GqlRequest", "GraphQL request handler", true, "GqlRequest");
 	I_END_COMPONENT
 
@@ -54,6 +55,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_userCollectionCompPtr);
 };
 
 

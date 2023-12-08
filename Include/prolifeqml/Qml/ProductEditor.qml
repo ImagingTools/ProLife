@@ -24,10 +24,11 @@ Item {
     property string orderId;
     property string orderUuid;
 
-//    property var excludeDeviceIds: [];
+    //    property var excludeDeviceIds: [];
 
     property string productCategory: "";
     property string productId: "";
+    property string uuid: "";
 
     property bool serialNumberEdit: true;
 
@@ -46,9 +47,9 @@ Item {
         productEditor.productModel.SetData("CategoryId", productEditor.productCategory);
     }
 
-//    onExcludeDeviceIdsChanged: {
-//        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
-//    }
+    //    onExcludeDeviceIdsChanged: {
+    //        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
+    //    }
 
     property TreeItemModel hardwareProductsModel: TreeItemModel {}
     property TreeItemModel softwareProductsModel: TreeItemModel {}
@@ -106,12 +107,12 @@ Item {
             console.log("ProductUuid",deviceType);
             console.log("status",status);
 
-//            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
-//                console.log("deviceId", deviceId);
-//                console.log("continue");
+            //            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
+            //                console.log("deviceId", deviceId);
+            //                console.log("continue");
 
-//                continue;
-//            }
+            //                continue;
+            //            }
 
 
             if (excludeDeviceIds.includes(deviceId)){
@@ -136,9 +137,14 @@ Item {
         }
 
         resultModel.SetData("Id", deviceId, newIndex);
-        resultModel.SetData("Name", "New Sensor", newIndex);
+        resultModel.SetData("Name", qsTr("New Sensor"), newIndex);
         resultModel.SetData("DeviceId", deviceId, newIndex);
-        resultModel.SetData("IsNew", true, newIndex);
+        resultModel.SetData("MacAddress", "", newIndex);
+        resultModel.SetData("SerialNumber", "", newIndex);
+        resultModel.SetData("LicenseUuid", "", newIndex);
+        resultModel.SetData("LicenseId", "", newIndex);
+        resultModel.SetData("LicenseName", "", newIndex);
+//        resultModel.SetData("IsNew", true, newIndex);
 
         return resultModel;
     }
@@ -150,16 +156,27 @@ Item {
 
         productEditor.blockUpdatingModel = true;
 
-        console.log("onModelChanged");
+        let ok = false;
+
+        if (productModel.ContainsKey("LicenseUuid")){
+            let licenseUuid = productModel.GetData("LicenseUuid");
+            if (licenseUuid !== ""){
+                ok = true;
+            }
+        }
+
         if (productEditor.productCategory === "Hardware"){
-            if (contentLoader.item){
-                let index = contentLoader.item.deviceIndex;
-                productEditor.rootItem.buttons.setButtonState("Save", index >= 0);
+            if (ok){
+                ok = false;
+                if (productModel.ContainsKey("DeviceId")){
+                    let deviceId = productModel.GetData("DeviceId");
+                    if (deviceId !== ""){
+                        ok = true;
+                    }
+                }
             }
         }
         else{
-            productEditor.rootItem.buttons.setButtonState("Save", true);
-
             if (productModel.ContainsKey("LicenseUuid")){
                 let licenseUuid = productModel.GetData("LicenseUuid");
                 if (licenseUuid !== ""){
@@ -178,6 +195,8 @@ Item {
                 }
             }
         }
+
+        productEditor.rootItem.buttons.setButtonState("Save", ok);
 
         productEditor.blockUpdatingModel = false;
     }
@@ -225,6 +244,7 @@ Item {
                         productEditor.clearProduct();
                     }
 
+                    productEditor.productModel.SetData("Id", productEditor.uuid);
                     productEditor.productModel.SetData("CategoryId", categoryId);
                     productEditor.productModel.SetData("ProductUuid", productEditor.productId);
 
@@ -377,10 +397,15 @@ Item {
 
         console.log("started", productEditor.productModel.toJSON());
 
-        if (!productEditor.productModel.ContainsKey("Id")){
-            let uuid = uuidGenerator.generateUUID();
-            productEditor.productModel.SetData("Id", uuid);
+        let uuid;
+        if (productEditor.productModel.ContainsKey("Id")){
+            uuid = productEditor.productModel.GetData("Id");
         }
+        else{
+            uuid = uuidGenerator.generateUUID();
+        }
+
+        productEditor.uuid = uuid;
 
         if (productEditor.productModel.ContainsKey("CategoryId")){
             productEditor.productCategory = productEditor.productModel.GetData("CategoryId")

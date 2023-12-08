@@ -37,6 +37,27 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 
 	QByteArray beforeSelectionQuery;
 
+//	if (!TableIsExists("UsersTemp")){
+		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
+		beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
+
+		if (m_userCollectionCompPtr.IsValid()){
+			imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
+
+			for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
+				idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
+				if (dataMetaInfo.IsValid()){
+					QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
+					QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
+
+					beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
+								.arg(userId)
+								.arg(groups).toUtf8();
+				}
+			}
+		}
+//	}
+
 	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
 	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
 
@@ -306,9 +327,13 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(optionName);
 						}
 						else{
-							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND %1 = '%2')")
-									.arg("(SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1)")
-									.arg(qPrintable(optionId));
+//							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND %1 = '%2')")
+//									.arg("(SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1)")
+//									.arg(qPrintable(optionId));
+							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND (SELECT string_to_array('%1', ';') && string_to_array(%2, ';')))")
+										.arg(qPrintable(optionId))
+										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1))");
+
 						}
 					}
 

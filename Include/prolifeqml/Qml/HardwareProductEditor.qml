@@ -57,7 +57,7 @@ Item {
             }
 
             if (deviceCB.currentIndex >= 0){
-                let isNew = deviceCB.model.ContainsKey("IsNew", deviceCB.currentIndex);
+                let isNew = deviceCB.currentIndex === 0;
                 if (isNew){
                     root.productModel.SetData("IsNewDevice", true);
                 }

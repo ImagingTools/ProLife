@@ -42,7 +42,7 @@ Rectangle {
     }
 
     function onLocalizationChanged(language){
-        softwareCard.updateHeaders();
+        softwareCard.updateElements();
     }
 
     Item {

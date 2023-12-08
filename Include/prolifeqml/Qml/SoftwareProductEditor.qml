@@ -147,7 +147,7 @@ Item {
         }
 
         onEditingFinished: {
-            updateModel();
+            root.updateModel();
         }
     }
 
@@ -190,7 +190,7 @@ Item {
         }
 
         onCurrentIndexChanged: {
-            updateModel();
+            root.updateModel();
         }
     }
 
@@ -226,7 +226,7 @@ Item {
             isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable;
 
             onCheckStateChanged: {
-                updateModel();
+                root.updateModel();
             }
         }
 
@@ -272,94 +272,27 @@ Item {
             }
 
             onDateChanged: {
-                updateModel()
+                root.updateModel()
             }
 
-//            property string expirationDate: model.Expiration;
+            onCompletedChanged: {
 
-//            onExpirationDateChanged: {
-//                console.log("onExpirationDateChanged", datePicker.expirationDate);
+                root.blockUpdatingModel = true;
 
-//                let currentDate = datePicker.getDate();
-//                if (expirationDate !== "" && expirationDate !== currentDate){
-//                    let date = model.Expiration;
-//                    let data = date.split("-");
-//                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-//                }
-//            }
+                if (completed){
+                    var date_ = new Date();
 
-//            onDateChanged: {
-//                console.log("onDateChanged", datePicker.getDate());
-//                model.Expiration = datePicker.getDate();
+                    let day = date_.getDay();
+                    let year = date_.getFullYear() + 1;
+                    let month = date_.getMonth();
 
-//                root.dateChanged();
-//            }
+                    datePicker.setDate(year, month, day)
+                }
+
+                root.blockUpdatingModel = false;
+            }
         }
     }
-
-//    function updateModel(){
-//        if (root.blockUpdatingModel){
-//            return;
-//        }
-
-//        root.productModel.SetData("SerialNumber", serialNumberInput.text);
-//    }
-
-//    function updateGui(){
-//        console.log("updateGui", root.productModel.toJSON());
-//        blockUpdatingModel = true;
-
-//        licenseCB.currentIndex = -1;
-
-//        let licenseUuid = root.productModel.GetData("LicenseUuid");
-//        if (licenseCB.model){
-//            for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
-//                let licenseId = licenseCB.model.GetData("Id", i);
-//                let licenseName = licenseCB.model.GetData("LicenseName", i);
-
-//                if (licenseId == licenseUuid){
-//                    licenseCB.currentIndex = i;
-
-//                    break;
-//                }
-//            }
-//        }
-
-//        if (root.productModel.ContainsKey("Expiration")){
-//            let expiration = root.productModel.GetData("Expiration");
-
-//            if (expiration && expiration !== "" ){
-//                checkBox.checkState = Qt.Checked;
-//            }
-//            else{
-//                checkBox.checkState = Qt.Unchecked;
-//            }
-
-//            if (expiration){
-//                let currentDate = datePicker.getDate();
-
-//                if (expiration !== "" && expiration !== currentDate){
-//                    let date = expiration;
-//                    let data = date.split("-");
-//                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-//                }
-//            }
-//        }
-
-//        if (root.productModel.ContainsKey("SerialNumber")){
-//            let serialNumber = root.productModel.GetData("SerialNumber");
-//            if (serialNumber){
-//                serialNumberInput.text = serialNumber;
-//            }
-//            else{
-//                serialNumberInput.text = "";
-//            }
-//        }
-
-//        blockUpdatingModel = false;
-//    }
-
-
 }//Container
 
 

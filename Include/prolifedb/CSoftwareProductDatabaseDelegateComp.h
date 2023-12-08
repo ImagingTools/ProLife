@@ -17,6 +17,7 @@ public:
 	I_BEGIN_COMPONENT(CSoftwareProductDatabaseDelegateComp)
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
+		I_ASSIGN(m_userCollectionCompPtr, "UserCollection", "Remote user collection", true, "UserCollection");
 	I_END_COMPONENT
 
 	// reimplemented (imtdb::ISqlDatabaseObjectDelegate)
@@ -36,6 +37,7 @@ public:
 private:
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_userCollectionCompPtr);
 };
 
 

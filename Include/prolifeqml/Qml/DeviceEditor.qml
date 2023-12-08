@@ -54,8 +54,24 @@ DocumentData {
 
     function documentCanBeSaved(){
         let ok = deviceEditorContainer.macAddressIsValid();
-        if (!ok && deviceEditorContainer.documentManager){
-            deviceEditorContainer.documentManager.openErrorDialog("MAC-Address invalid");
+        if (!ok && deviceEditorContainer.documentManagerPtr){
+            deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("MAC-Address invalid"));
+        }
+
+        if (ok){
+            if (productCB.currentIndex < 0){
+                deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please select a device type"));
+
+                ok = false;
+            }
+        }
+
+        if (ok){
+            if (configurationCB.currentIndex < 0){
+                deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please select a device configuration"));
+
+                ok = false;
+            }
         }
 
         return ok;
@@ -81,9 +97,9 @@ DocumentData {
         }
 
         onFailed: {
-            if (deviceEditorContainer.documentManager){
+            if (deviceEditorContainer.documentManagerPtr){
                 let message = qsTr("Error loading products. Please check Lisa connection.");
-                deviceEditorContainer.documentManager.openErrorDialog(message);
+                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
             }
         }
     }
@@ -102,11 +118,9 @@ DocumentData {
         }
 
         onFailed: {
-            if (deviceEditorContainer.documentManager){
-                let message = qsTr("Error loading orders");
-                deviceEditorContainer.documentManager.openErrorDialog(message);
-                deviceEditorContainer.documentManager.showAlertMessage(message);
-                deviceEditorContainer.errorMessage = message;
+            if (deviceEditorContainer.documentManagerPtr){
+                let message = qsTr("Error loading orders.");
+                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
             }
         }
     }

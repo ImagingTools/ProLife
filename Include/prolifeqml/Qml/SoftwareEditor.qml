@@ -65,17 +65,19 @@ DocumentData {
             root.documentManagerPtr.openErrorDialog(qsTr("Please select a product"));
         }
 
-        ok = false;
+        if (ok){
+            ok = false;
 
-        if (root.documentModel.ContainsKey("LicenseUuid")){
-            let licenseUuid = root.documentModel.GetData("LicenseUuid");
-            if (String(licenseUuid) !== ""){
-                ok = true;
+            if (root.documentModel.ContainsKey("LicenseUuid")){
+                let licenseUuid = root.documentModel.GetData("LicenseUuid");
+                if (String(licenseUuid) !== ""){
+                    ok = true;
+                }
             }
-        }
 
-        if (!ok){
-            root.documentManagerPtr.openErrorDialog(qsTr("Please select a license"));
+            if (!ok){
+                root.documentManagerPtr.openErrorDialog(qsTr("Please select a license"));
+            }
         }
 
         return ok;
@@ -392,37 +394,6 @@ DocumentData {
                 }
 
                 root.doUpdateModel();
-                //                if (productCB.currentIndex >= 0){
-                //                    let oldProductId = root.documentModel.GetData("ProductId");
-                //                    let productId = productCB.model.GetData("Id", productCB.currentIndex);
-                //                    root.documentModel.SetData("ProductId", productId);
-
-                //                    if (oldProductId != productId){
-                //                        root.documentModel.SetData("Expiration", "");
-                //                        root.documentModel.SetData("LicenseUuid", "");
-                //                    }
-
-                //                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-                //                    if (!licensesModel){
-                //                        licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
-                //                    }
-
-                //                    let expiration = "";
-                //                    if (root.documentModel.ContainsKey("Expiration")){
-                //                        expiration = root.documentModel.GetData("Expiration");
-                //                    }
-
-                //                    if (root.documentModel.ContainsKey("LicenseUuid")){
-                //                        let licenseId = root.documentModel.GetData("LicenseUuid");
-
-                //                        softwareProductEditor.productModel.SetData("LicenseUuid", licenseId)
-                //                        softwareProductEditor.productModel.SetData("Expiration", expiration)
-                //                    }
-
-                //                    softwareProductEditor.productLicensesModel = licensesModel;
-
-                //                    softwareProductEditor.updateGui()
-                //                }
             }
         }
     }
@@ -443,20 +414,6 @@ DocumentData {
         }
 
         function onModelChanged(){
-            //            let currentLicenseId = root.documentModel.GetData("LicenseUuid");
-            //            let currentExpiration = root.documentModel.GetData("Expiration");
-            //            let currentSerialNumber = root.documentModel.GetData("SerialNumber");
-
-            //            let licenseUuid = softwareProductEditor.productModel.GetData("LicenseUuid");
-            //            let licenseExpiration = softwareProductEditor.productModel.GetData("Expiration");
-
-            //            let serialNumber = softwareProductEditor.productModel.GetData("SerialNumber");
-
-
-            //            if (currentLicenseId !== licenseUuid || currentExpiration !== licenseExpiration || currentSerialNumber !== serialNumber){
-            //                root.updateModel();
-            //            }
-
             root.doUpdateModel();
         }
     }

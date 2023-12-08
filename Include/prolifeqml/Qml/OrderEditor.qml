@@ -105,31 +105,6 @@ DocumentData {
             orderEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please enter a valid ERP Order-ID"));
         }
 
-//        let orderProductsModel = documentModel.GetData("OrderProducts");
-//        for (let j = 0; j < orderProductsModel.GetItemsCount(); j++){
-//            let categoryId = orderProductsModel.GetData("CategoryId", j);
-
-//            let hardwareModel = undefined;
-//            let index = j;
-
-//            if (categoryId === "Hardware"){
-//                hardwareModel = orderProductsModel;
-//                index = j;
-//            }
-
-//            if (hardwareModel){
-//                if (hardwareModel.ContainsKey("DeviceNotExists", index)){
-//                   // ok = false;
-//                    break;
-//                }
-//            }
-//        }
-
-//        if (!ok){
-//            let message = qsTr("Sensor detection error. Please select a new sensor.");
-//            orderEditorContainer.documentManager.openErrorDialog(message);
-//        }
-
         return ok;
     }
 
@@ -192,9 +167,9 @@ DocumentData {
         }
 
         onFailed: {
-            if (orderEditorContainer.documentManager){
+            if (orderEditorContainer.documentManagerPtr){
                 let message = qsTr("Error loading accounts.");
-                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
             }
         }
     }
@@ -211,9 +186,9 @@ DocumentData {
         }
 
         onFailed: {
-            if (orderEditorContainer.documentManager){
+            if (orderEditorContainer.documentManagerPtr){
                 let message = qsTr("Error loading products. Please check Lisa connection.");
-                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
             }
         }
     }
@@ -244,9 +219,9 @@ DocumentData {
         }
 
         onFailed: {
-            if (orderEditorContainer.documentManager){
+            if (orderEditorContainer.documentManagerPtr){
                 let message = qsTr("Error loading sensors.");
-                orderEditorContainer.documentManager.openErrorDialog(message);
+                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
             }
         }
 
@@ -915,8 +890,18 @@ DocumentData {
         MessageDialog {
             onFinished: {
                 if (buttonId == "Yes"){
+                    if (productsView.activeProductIndex < 0){
+                        return;
+                    }
+
+                    let orderProducts = documentModel.GetData("OrderProducts")
+
                     orderEditorContainer.undoManagerPtr.beginChanges();
-                    productsView.model.RemoveItem(productsView.activeProductIndex);
+
+                    orderProducts.SetUpdateEnabled(true);
+                    orderProducts.RemoveItem(productsView.activeProductIndex);
+                    orderProducts.SetUpdateEnabled(false);
+
                     orderEditorContainer.undoManagerPtr.endChanges();
                 }
             }
