@@ -8,6 +8,7 @@
 
 //ImtCore includes
 #include <imtlic/CProductInstanceInfo.h>
+#include <imtauth/IUserInfo.h>
 
 //ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -179,8 +180,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		QByteArrayList paramIdsList = paramIds.toList();
 #endif
 
-		qDebug() << "paramIdsList" << paramIdsList;
-
 		if (paramIdsList.contains("BindingFilter")){
 			iprm::TParamsPtr<iprm::IParamsSet> bindingFilterParamPtr(&filterParams, "BindingFilter");
 			if (bindingFilterParamPtr.IsValid()){
@@ -280,8 +279,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				QString value = filterParamPtr->GetText();
 
 				filterQuery += QString(R"((acc."DocumentId" = '%1'))").arg(value);
-
-				qDebug() << "filterQuery" << filterQuery;
 			}
 		}
 
@@ -344,13 +341,10 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(optionName);
 						}
 						else{
-//							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND %1 = '%2')")
-//									.arg("(SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1)")
-//									.arg(qPrintable(optionId));
-							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND (SELECT string_to_array('%1', ';') && string_to_array(%2, ';')))")
+							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND ((SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3))")
 										.arg(qPrintable(optionId))
-										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1))");
-
+										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1))")
+										.arg("((SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1) = 'su')");
 						}
 					}
 

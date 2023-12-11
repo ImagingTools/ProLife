@@ -11,6 +11,7 @@
 #include <imtlic/IHardwareInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
+#include <imtauth/IUserInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -41,26 +42,24 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 	QByteArray beforeSelectionQuery;
 
-//	if (!TableIsExists("UsersTemp")){
-		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
-		beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
+	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
+	beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
 
-		if (m_userCollectionCompPtr.IsValid()){
-			imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
+	if (m_userCollectionCompPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
 
-			for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
-				idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
-				if (dataMetaInfo.IsValid()){
-					QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
-					QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
+		for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
+			idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
+			if (dataMetaInfo.IsValid()){
+				QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
+				QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
 
-					beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
-								.arg(userId)
-								.arg(groups).toUtf8();
-				}
+				beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
+						.arg(userId)
+						.arg(groups).toUtf8();
 			}
 		}
-//	}
+	}
 
 	if (!TableIsExists("LicensesTemp")){
 		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
@@ -293,15 +292,10 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 								ordersFilterQuery += QString("\"Document\"->>'OrderId' = '%1'").arg(qPrintable(optionName));
 							}
 							else{
-//								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND %1 = '%2')")
-//											.arg("(SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1)")
-//											.arg(qPrintable(optionId));
-
-								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND (SELECT string_to_array('%1', ';') && string_to_array(%2, ';')))")
+								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND ( ( SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3 ) )")
 											.arg(qPrintable(optionId))
-											.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1))");
-
-//								SELECT string_to_array('1;2;3;4;5', ';') && string_to_array(';6;7;8', ';');
+											.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1))")
+											.arg("((SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
 							}
 						}
 
