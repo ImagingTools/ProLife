@@ -221,6 +221,15 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 					objectFilter.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
 				}
 
+				imtbase::CTreeItemModel* accountFilterPtr = generalModel.GetTreeItemModel("AccountFilter");
+				if (accountFilterPtr != nullptr){
+					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+					if (accountFilterPtr->ContainsKey("Id")){
+						QString value = accountFilterPtr->GetData("Id").toString();
+						textParamPtr->SetText(value);
+					}
+					objectFilter.SetEditableParameter("CustomerUuid", textParamPtr.PopPtr());
+				}
 			}
 
 			filterParams.SetEditableParameter("Filter", &m_filter);

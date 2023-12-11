@@ -179,6 +179,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		QByteArrayList paramIdsList = paramIds.toList();
 #endif
 
+		qDebug() << "paramIdsList" << paramIdsList;
+
 		if (paramIdsList.contains("BindingFilter")){
 			iprm::TParamsPtr<iprm::IParamsSet> bindingFilterParamPtr(&filterParams, "BindingFilter");
 			if (bindingFilterParamPtr.IsValid()){
@@ -265,6 +267,21 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 						filterQuery += excludeFilter;
 					}
 				}
+			}
+		}
+
+		if (paramIdsList.contains("CustomerUuid")){
+			iprm::TParamsPtr<iprm::ITextParam> filterParamPtr(&filterParams, "CustomerUuid");
+			if (filterParamPtr.IsValid()){
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
+				}
+
+				QString value = filterParamPtr->GetText();
+
+				filterQuery += QString(R"((acc."DocumentId" = '%1'))").arg(value);
+
+				qDebug() << "filterQuery" << filterQuery;
 			}
 		}
 

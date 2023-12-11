@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtqml 1.0
 
 CollectionView {
@@ -84,10 +85,21 @@ CollectionView {
                 Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
             }
 
+            onWidthChanged: {
+                console.log("Filter onWidthChanged", width);
+                if (width - filtermenu.width <= licenseFilterBlock.width + accountFilterBlock.width){
+                    accountFilterBlock.visible = false;
+                }
+                else{
+                    if (accountFilterBlock.canViewAccountFilter){
+                        accountFilterBlock.visible = true;
+                    }
+                }
+            }
+
             function onLocalizationChanged(language){
-                console.log("Filter onLocalizationChanged", language);
-                console.log("context.language", context.language);
                 mainItem.updateModel();
+                accountFilterBlock.updateModel();
             }
 
             function updateModel(){
@@ -151,7 +163,7 @@ CollectionView {
                         }
 
                         if (licenseComboBox.currentIndex == 0){
-                            container.modelFilter.RemoveData("ObjectFilter");
+                            objectFilter.SetData("LicenseFilter", "");
                         }
                         else if (licenseComboBox.currentIndex == 1){
                             objectFilter.SetData("LicenseFilter", "OnlyPaired");
@@ -161,6 +173,83 @@ CollectionView {
                         }
                         else if (licenseComboBox.currentIndex == 3){
                             objectFilter.SetData("LicenseFilter", "OnlyInUse");
+                        }
+
+                        container.updateGui();
+                    }
+                }
+            }
+
+            Item {
+                id: accountFilterBlock;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: licenseFilterBlock.right;
+                anchors.leftMargin: 10;
+
+                width: accountComboBox.width;
+                height: filtermenu.height;
+
+                property bool canViewAccountFilter: false;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ViewAllLicenses")
+                    accountFilterBlock.canViewAccountFilter = ok;
+                    accountFilterBlock.visible = ok;
+
+                    if (ok){
+                        accountsList.updateModel();
+                    }
+                }
+
+
+                CollectionDataProvider {
+                    id: accountsList;
+
+                    commandId: "Accounts";
+
+                    fields: ["Id", "Name"];
+
+                    onCollectionModelChanged: {
+                        accountsList.collectionModel.InsertNewItem(0);
+
+                        accountFilterBlock.updateModel();
+                    }
+                }
+
+                function updateModel(){
+                    accountsList.collectionModel.SetData("Id", "All");
+                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+
+                    accountComboBox.model = accountsList.collectionModel;
+                }
+
+                ComboBox {
+                    id: accountComboBox;
+
+                    anchors.bottom: parent.bottom;
+                    anchors.left: parent.left;
+
+                    height: filtermenu.height;
+                    width: 200;
+
+                    backgroundColor: Style.baseColor;
+                    currentIndex: 0;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        let objectFilter = container.modelFilter.GetData("ObjectFilter");
+                        if (!objectFilter){
+                            objectFilter = container.modelFilter.AddTreeModel("ObjectFilter")
+                        }
+
+                        if (accountComboBox.currentIndex > 0){
+                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+                            objectFilter.SetData("AccountFilter", value);
+                        }
+                        else{
+                            objectFilter.SetData("AccountFilter", "");
                         }
 
                         container.updateGui();

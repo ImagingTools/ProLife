@@ -163,6 +163,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"Id",
 						"DocumentId",
 						"Document",
+						"Document"->>'OrderId' as "OrderUuid",
 						"Document"->>'DeviceType' as "ProductUuid",
 						"Document"->>'ConfigurationType' as "LicenseUuid",
 						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "LicenseName",
@@ -172,6 +173,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"RevisionNumber",
 						"LastModified",
 						(SELECT "LastModified" FROM "Devices" as t1 WHERE "RevisionNumber" = 1 AND t2."DocumentId" = t1."DocumentId" LIMIT 1) as "Added",
+						(SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId') as "CustomerUuid",
 						(SELECT "Document"->>'OrderId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "OrderId",
 						(SELECT jsonb_array_length("Document"->'SoftwareIds')  FROM "BindingProducts" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."DocumentId" ) as "SoftwareLinksCount",
 						"IsActive"
@@ -230,7 +232,21 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
 
-			if (key == "LicenseStatus"){
+			if (key == "CustomerUuid"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += QString(R"((t2."CustomerUuid" = '%1'))").arg(value);
+			}
+			else if (key == "LicenseStatus"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;

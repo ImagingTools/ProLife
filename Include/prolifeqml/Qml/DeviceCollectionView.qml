@@ -53,6 +53,8 @@ CollectionView {
 
             function onLocalizationChanged(language){
                 mainItem.updateModel();
+
+                accountFilterBlock.updateModel();
             }
 
             function updateModel(){
@@ -78,11 +80,16 @@ CollectionView {
 
             onWidthChanged: {
                 console.log("Filter onWidthChanged", width);
-                if (width - filtermenu.width <= licenseFilterBlock.width){
+                if (width - filtermenu.width <= licenseFilterBlock.width + accountFilterBlock.width){
                     licenseFilterBlock.visible = false;
+                    accountFilterBlock.visible = false;
                 }
                 else{
                     licenseFilterBlock.visible = true;
+
+                    if (accountFilterBlock.canViewAccountFilter){
+                        accountFilterBlock.visible = true;
+                    }
                 }
             }
 
@@ -132,6 +139,81 @@ CollectionView {
 
                             container.updateGui();
                         }
+                    }
+                }
+            }
+
+            Item {
+                id: accountFilterBlock;
+
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: licenseFilterBlock.right;
+                anchors.leftMargin: 10;
+
+                width: canViewAccountFilter ? accountComboBox.width : 0;
+                height: canViewAccountFilter ? filtermenu.height : 0;
+
+                property bool canViewAccountFilter: false;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ViewAllSensors")
+                    accountFilterBlock.canViewAccountFilter = ok;
+                    accountFilterBlock.visible = ok;
+
+                    if (ok){
+                        accountsList.updateModel();
+                    }
+                }
+
+                CollectionDataProvider {
+                    id: accountsList;
+
+                    commandId: "Accounts";
+
+                    fields: ["Id", "Name"];
+
+                    onCollectionModelChanged: {
+                        accountsList.collectionModel.InsertNewItem(0);
+
+                        accountFilterBlock.updateModel();
+                    }
+                }
+
+                function updateModel(){
+                    accountsList.collectionModel.SetData("Id", "All");
+                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+
+                    accountComboBox.model = accountsList.collectionModel;
+                }
+
+                ComboBox {
+                    id: accountComboBox;
+
+                    anchors.bottom: parent.bottom;
+                    anchors.left: parent.left;
+
+                    height: filtermenu.height;
+                    width: 200;
+
+                    backgroundColor: Style.baseColor;
+                    currentIndex: 0;
+
+                    radius: 3;
+
+                    onCurrentIndexChanged: {
+                        if (container.modelFilter.ContainsKey("AccountFilter")){
+                            container.modelFilter.RemoveData("AccountFilter")
+                        }
+
+                        if (accountComboBox.currentIndex > 0){
+                            let objectFilter = container.modelFilter.AddTreeModel("AccountFilter")
+
+                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+
+                            objectFilter.SetData("Id", value);
+                        }
+
+                        container.updateGui();
                     }
                 }
             }

@@ -346,11 +346,22 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 	if (objectFilterModel.ContainsKey("LicenseFilter")){
 		QString licenseFilter = objectFilterModel.GetData("LicenseFilter").toString();
+		if (!licenseFilter.isEmpty()){
+			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			textParamPtr->SetText(licenseFilter);
 
-		istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-		textParamPtr->SetText(licenseFilter);
+			filterParams.SetEditableParameter("LicenseFilter", textParamPtr.PopPtr());
+		}
+	}
 
-		filterParams.SetEditableParameter("LicenseFilter", textParamPtr.PopPtr());
+	if (objectFilterModel.ContainsKey("AccountFilter")){
+		QString filter = objectFilterModel.GetData("AccountFilter").toString();
+		if (!filter.isEmpty()){
+			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			textParamPtr->SetText(filter);
+
+			filterParams.SetEditableParameter("CustomerUuid", textParamPtr.PopPtr());
+		}
 	}
 }
 
