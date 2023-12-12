@@ -148,6 +148,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 	}
 
 	iprm::CParamsSet filterParams;
+	QByteArray customerUuid;
 
 	imtbase::CCollectionFilter m_filter;
 	int offset = 0, count = -1;
@@ -187,6 +188,13 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 					m_filter.SetSortingInfoIds(QByteArrayList() << headerId);
 				}
 			}
+
+			imtbase::CTreeItemModel* objectFilterPtr = generalModel.GetTreeItemModel("ObjectFilter");
+			if (objectFilterPtr != nullptr){
+				if (objectFilterPtr->ContainsKey("AccountFilter")){
+					customerUuid = objectFilterPtr->GetData("AccountFilter").toByteArray();
+				}
+			}
 		}
 
 		filterParams.SetEditableParameter("Filter", &m_filter);
@@ -220,9 +228,16 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 	iprm::COptionsManager accountsOptionsManager;
 
 	iprm::CParamsSet accountFilter;
+	iprm::CParamsSet objectFilter;
+
 	iprm::CParamsSet groups;
 	iprm::CParamsSet orderParams;
-	iprm::CParamsSet accountParams;
+
+	iprm::CTextParam customerParam;
+	if (!customerUuid.isEmpty()){
+		customerParam.SetText(customerUuid);
+		objectFilter.SetEditableParameter("CustomerUuid", &customerParam);
+	}
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
@@ -252,9 +267,10 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 			return rootModelPtr.PopPtr();
 		}
 
-		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-		filterParams.SetEditableParameter("ObjectFilter", &accountParams);
+		objectFilter.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
 	}
+
+	filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
 
 	imtbase::CTreeItemModel* notificationModel = dataModel->AddTreeModel("notification");
 

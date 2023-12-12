@@ -225,7 +225,9 @@ CollectionView {
                 anchors.right: filtermenu.left;
                 anchors.rightMargin: 10;
 
-                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+//                visible: container.commandsDelegate ? container.commandsDelegate.filterByNewActive : false;
+
+                visible: false;
 
                 text: qsTr("Only new sensors!");
 
@@ -249,6 +251,7 @@ CollectionView {
                 }
 
                 onClosed: {
+                    accountComboBox.currentIndex = 0;
                     licenseComboBox.currentIndex = 0;
 
                     parent.closed();

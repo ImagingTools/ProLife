@@ -273,6 +273,7 @@ CollectionView {
 
                 onClosed: {
                     licenseComboBox.currentIndex = 0;
+                    accountComboBox.currentIndex = 0;
 
                     parent.closed();
                 }

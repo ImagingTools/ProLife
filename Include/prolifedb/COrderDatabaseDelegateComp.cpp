@@ -173,23 +173,47 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 #else
 		QByteArrayList ids = paramIds.toList();
 #endif
+		qDebug() << "ids" << ids;
 		for (const QByteArray& id : ids){
-			if (id == "OrderCustomers"){
+			if (id == "CustomerUuid"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(id));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += QString("(\"Document\"->>'OrderCustomer' = '%1')").arg(value);
+			}
+			else if (id == "OrderCustomers"){
 				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
 				if (selectionPtr != nullptr){
 					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
 					if (optionsListPtr != nullptr){
+
+						QString filter;
+
 						for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
 							if (i > 0){
-								filterQuery += " OR ";
+								filter += " OR ";
 							}
 							QByteArray accountId = optionsListPtr->GetOptionId(i);
-							filterQuery += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(qPrintable(accountId));
+							filter += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(qPrintable(accountId));
 						}
 
-						if (!filterQuery.isEmpty()){
-							filterQuery = '(' + filterQuery + ')';
+						if (!filter.isEmpty()){
+							if (!filterQuery.isEmpty()){
+								filterQuery += " AND ";
+							}
 						}
+
+						filter = "(" + filter + ")";
+
+						filterQuery += filter;
 					}
 				}
 			}
@@ -217,9 +241,11 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 				}
 			}
 		}
+
+		qDebug() << "filterQuery" << filterQuery;
 	}
 
-	return !filterQuery.isEmpty();
+	return true;
 }
 
 
