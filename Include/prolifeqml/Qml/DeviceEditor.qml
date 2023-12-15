@@ -112,6 +112,8 @@ DocumentData {
         fields: ["Id", "OrderId", "Description"];
 
         onCollectionModelChanged: {
+            console.log("ordersList onCollectionModelChanged");
+
             if (ordersList.collectionModel != null){
                 orderCB.model = ordersList.collectionModel;
             }

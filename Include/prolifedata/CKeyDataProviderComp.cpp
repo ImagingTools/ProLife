@@ -169,7 +169,8 @@ bool CKeyDataProviderComp::GetData(
 		return false;
 	}
 
-	imtlic::CProductInstanceInfo* productInstancePtr = new imtlic::CProductInstanceInfo();
+	istd::TDelPtr<imtlic::CProductInstanceInfo> productInstancePtr;
+	productInstancePtr.SetPtr(new imtlic::CProductInstanceInfo);
 
 	productInstancePtr->SetupProductInstance(productId, instanceId, customerId);
 
