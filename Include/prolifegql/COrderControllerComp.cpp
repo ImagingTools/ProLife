@@ -756,7 +756,7 @@ void COrderControllerComp::GenerateDifferences(
 		}
 	}
 
-	for (const QByteArray& id : qAsConst(currentCollectionIds)){
+	for (const QByteArray& id : std::as_const(currentCollectionIds)){
 		if (!newCollectionIds.contains(id)){
 			removedProducts.push_back(id);
 		}

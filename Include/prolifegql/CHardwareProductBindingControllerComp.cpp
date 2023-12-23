@@ -169,7 +169,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 
 	if (m_softwareProductCollectionCompPtr.IsValid()){
 		QByteArrayList softwareIds = hardwareBindingObjectPtr->GetSoftwareIds();
-		for (const QByteArray& id : qAsConst(softwareIds)){
+		for (const QByteArray& id : std::as_const(softwareIds)){
 			imtbase::IObjectCollection::DataPtr dataPtr;
 			if (m_softwareProductCollectionCompPtr->GetObjectData(id, dataPtr)){
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());

@@ -101,7 +101,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 		GenerateDifferences(*oldProductCollectionPtr, *newProductCollectionPtr, addedProducts, removedProducts, updatedProducts);
 	}
 
-	for (const QByteArray& productObjectId : qAsConst(addedProducts)){
+	for (const QByteArray& productObjectId : std::as_const(addedProducts)){
 		QByteArray productUuid;
 		QByteArray internalId;
 
@@ -142,7 +142,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddProduct", "ProductId", name, "", productId));
 	}
 
-	for (const QByteArray& productObjectId : qAsConst(removedProducts)){
+	for (const QByteArray& productObjectId : std::as_const(removedProducts)){
 		QByteArray productId;
 		QByteArray internalId;
 
