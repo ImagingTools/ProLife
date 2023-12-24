@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5134" Description="ACF"/>
+            <Version Id="0" Number="5137" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="394753" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -301,6 +301,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -788,6 +791,9 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -848,6 +854,9 @@
                                             <Value>License Info</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -918,6 +927,9 @@
                                             <Value>Product Info</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

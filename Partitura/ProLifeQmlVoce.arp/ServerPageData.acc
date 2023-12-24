@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5126" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5137" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="394753" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -64,9 +64,6 @@
                     <AttributeInfo Id="DbName" Type="Id" ExportId="DefaultDatabaseName">
                         <Data IsEnabled="true" Value="prolife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DbPath" Type="Id" ExportId="DefaultDatabasePath">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="HostName" Type="Id" ExportId="DefaultDatabaseHost">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -121,11 +118,14 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaUrlConnection" PackageId="BasePck" ComponentId="TextParam">
+        <Element Id="LisaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7776"/>
+                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7776"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -166,11 +166,14 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaUrlConnection" PackageId="BasePck" ComponentId="TextParam">
+        <Element Id="PumaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7788"/>
+                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7788"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -191,8 +194,8 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Mask</Value>
-                                <Value>LisaUrlConnection</Value>
-                                <Value>PumaUrlConnection</Value>
+                                <Value>LisaUrl</Value>
+                                <Value>PumaUrl</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                             </Values>
@@ -215,19 +218,19 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ServerPort" PackageId="BasePck" ComponentId="TextParam">
+        <Element Id="ServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="ServerPort">
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="ServerPort">
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="WebSocketServerPort" PackageId="BasePck" ComponentId="TextParam">
+        <Element Id="WebSocketServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="WebSocketServerPort">
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="DefaultWebSocketPort">
                         <Data IsEnabled="true" Value="8888"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -246,8 +249,8 @@
         <Component ExportedId="BackupParamsSet" ComponentId="Backup"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseParam" ComponentId="Database"/>
-        <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrlConnection"/>
-        <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrlConnection"/>
+        <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrl"/>
+        <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrl"/>
         <Component ExportedId="ServerParam" ComponentId="Server"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="WebSocketServerPort"/>

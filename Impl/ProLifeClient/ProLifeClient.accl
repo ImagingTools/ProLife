@@ -2,17 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="0" Number="5137" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="394753" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Application" X="625" Y="375" Note=""/>
-        <Element ComponentName="LocalSettings" X="200" Y="375" Note=""/>
-        <Element ComponentName="PumaSystemStatusController" X="925" Y="700" Note=""/>
-        <Element ComponentName="SystemStatusController" X="350" Y="700" Note=""/>
-        <Element ComponentName="VersionInfo" X="627" Y="150" Note=""/>
+        <Element ComponentName="Application" X="625" Y="75" Note=""/>
+        <Element ComponentName="LocalSettings" X="125" Y="375" Note=""/>
+        <Element ComponentName="PumaSystemStatusController" X="1025" Y="600" Note=""/>
+        <Element ComponentName="SystemStatusController" X="1025" Y="375" Note=""/>
+        <Element ComponentName="VersionInfo" X="350" Y="175" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
