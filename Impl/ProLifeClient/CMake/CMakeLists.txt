@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtqml/Resources/qml")
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtgui/Qml2/imtgui")
+	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtgui/Qml/imtgui")
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtqml/Qml/imtqml")
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml/imtgui")
 	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
@@ -57,7 +57,7 @@ endif()
 
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtqml/Qml")
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml2")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml")
 
 # Prevent adding duplicate values at each run of CMake.
