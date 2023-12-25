@@ -154,28 +154,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="InstanceMaskRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="InstanceMask"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Instance Mask"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LisaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+        <Element Id="LisaUrlRepresentation" PackageId="ImtCorePck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -188,7 +167,7 @@
                         <Data IsEnabled="true" Value="Lisa URL"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/UrlParamEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -201,7 +180,7 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="PumaUrlRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+        <Element Id="PumaUrlRepresentation" PackageId="ImtCorePck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -214,7 +193,7 @@
                         <Data IsEnabled="true" Value="Puma URL"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/UrlParamEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -243,7 +222,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ServerPortRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+        <Element Id="ServerPortRepresentation" PackageId="ImtCorePck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -256,7 +235,7 @@
                         <Data IsEnabled="true" Value="Server Port"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/UrlParamEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -301,7 +280,6 @@
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>InstanceMaskRepresentation</Value>
                                 <Value>LisaUrlRepresentation</Value>
                                 <Value>PumaUrlRepresentation</Value>
                                 <Value>ServerPortRepresentation</Value>
@@ -346,7 +324,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="WebSocketServerPortRepresentation" PackageId="ImtCorePck" ComponentId="TextParamRepresentationController">
+        <Element Id="WebSocketServerPortRepresentation" PackageId="ImtCorePck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -359,7 +337,7 @@
                         <Data IsEnabled="true" Value="Web Socket Server Port"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/UrlParamEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>

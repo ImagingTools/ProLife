@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5137" Description="ACF"/>
+            <Version Id="0" Number="5136" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -130,15 +130,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Mask" PackageId="BasePck" ComponentId="TextParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultText" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="Preferences" PackageId="BasePck" ComponentId="ComposedParamsSet">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -193,7 +184,6 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Mask</Value>
                                 <Value>LisaUrl</Value>
                                 <Value>PumaUrl</Value>
                                 <Value>ServerPort</Value>
@@ -204,7 +194,6 @@
                     <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>InstanceMask</Value>
                                 <Value>LisaUrl</Value>
                                 <Value>PumaUrl</Value>
                                 <Value>ServerPort</Value>
@@ -221,7 +210,7 @@
         <Element Id="ServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="ServerPort">
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -230,8 +219,8 @@
         <Element Id="WebSocketServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="DefaultWebSocketPort">
-                        <Data IsEnabled="true" Value="8888"/>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

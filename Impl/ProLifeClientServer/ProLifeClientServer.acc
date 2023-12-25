@@ -63,6 +63,9 @@
                     <AttributeInfo Id="TranslationFilePrefix" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LocalSettings/ServerUrl"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
@@ -75,8 +78,17 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultServerUrl" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7778"/>
+                    <AttributeInfo Id="DefaultServerHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultServerPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultWebSocketServerHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultWebSocketServerPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationLocalization"/>
