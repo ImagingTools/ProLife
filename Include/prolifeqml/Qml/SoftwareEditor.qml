@@ -3,6 +3,7 @@ import Acf 1.0
 import imtgui 1.0
 import imtauthgui 1.0
 import imtdocgui 1.0
+import imtcolqml 1.0
 
 DocumentData {
     id: root;

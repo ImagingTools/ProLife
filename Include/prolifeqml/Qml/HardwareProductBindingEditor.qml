@@ -3,6 +3,7 @@ import Acf 1.0
 import imtgui 1.0
 import imtqml 1.0
 import imtauthgui 1.0
+import imtcolqml 1.0
 
 Item {
     id: productEditor;

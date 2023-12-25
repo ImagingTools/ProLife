@@ -37,18 +37,17 @@ include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
 message("PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
-target_link_libraries(${PROJECT_NAME} iauth)
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtwidgets imtzip imtrest imtcrypt imt3dgui imtrepo imtstyle imtqml imtstyleqml imtdb imtdocgui)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom)
+target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtrest imtrepo imtstyle imtqml imtstyleqml imtdb imtdocgui)
+target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolqml)
 target_link_libraries(${PROJECT_NAME} prolifeqml ImtCoreLoc ProLifeLoc)
 target_link_libraries(${PROJECT_NAME} iqtgui)
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${QT_VERSION_MAJOR}::WebSockets)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtqml/Resources/qml")
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtgui/Qml/imtgui")
+	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtgui/Qml2/imtgui")
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtqml/Qml/imtqml")
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtlicgui/Qml/imtlicgui")
+	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml/imtgui")
 	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
 	set(files  \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
 
@@ -58,11 +57,8 @@ endif()
 
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtqml/Qml")
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtauthgui/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtlicgui/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtguigql/Qml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml/imtdocgui")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtgui/Qml2")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml")
 
 # Prevent adding duplicate values at each run of CMake.
 list(REMOVE_DUPLICATES QML_IMPORT_DIRS)
