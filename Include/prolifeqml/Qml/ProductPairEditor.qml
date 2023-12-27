@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
-import imtcolqml 1.0
+import imtcolgui 1.0
 
 Item {
     id: productEditor;

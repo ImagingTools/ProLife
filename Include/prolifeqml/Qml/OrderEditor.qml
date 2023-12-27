@@ -5,7 +5,7 @@ import imtdocgui 1.0
 import imtqml 1.0
 import imtlicgui 1.0
 import imtauthgui 1.0
-import imtcolqml 1.0
+import imtcolgui 1.0
 
 DocumentData {
     id: orderEditorContainer;
