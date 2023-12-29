@@ -25,12 +25,12 @@ public:
 
 protected:
 	virtual bool GenerateDocumentChanges(
-					 int operationType,
-					 const QByteArray& documentId,
-					 const istd::IChangeable* documentPtr,
-					 imtbase::CObjectCollection& documentChangeCollection,
-					 QString& errorMessage,
-					 const iprm::IParamsSet* paramsPtr) override;
+					int operationType,
+					const QByteArray& documentId,
+					const istd::IChangeable* documentPtr,
+					imtbase::CObjectCollection& documentChangeCollection,
+					QString& errorMessage,
+					const iprm::IParamsSet* paramsPtr) override;
 	virtual bool CompareDocuments(const istd::IChangeable* oldDocumentPtr, const istd::IChangeable* newDocumentPtr, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
 	virtual QString GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId = QByteArray()) override;
 

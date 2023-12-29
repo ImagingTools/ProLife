@@ -6,14 +6,16 @@ import imtqml 1.0
 import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
+import prolifeqml 1.0
+import lisaqml 1.0
 
 DocumentData {
     id: orderEditorContainer;
 
-    property TreeItemModel accountsModel: TreeItemModel {}
-    property TreeItemModel productsModel: TreeItemModel {}
-    property TreeItemModel devicesModel: TreeItemModel {}
-    property TreeItemModel licensesModel: TreeItemModel {}
+    property TreeItemModel accountsModel: CachedAccountCollection.collectionModel;
+    property TreeItemModel productsModel: CachedProductCollection.collectionModel;
+    property TreeItemModel devicesModel: CachedDeviceCollection.collectionModel;
+    property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
 
     property string orderUuid: "";
 
@@ -24,13 +26,13 @@ DocumentData {
     property int radius: 3;
     property int spacing: 25;
 
-    documentCompleted: accountsList.completed && productsList.completed && devicesList.completed && licenseCollection.completed;
+    documentCompleted: CachedAccountCollection.completed && CachedProductCollection.completed && CachedDeviceCollection.completed && CachedLicenseCollection.completed;
 
     Component.onCompleted: {
-        licenseCollection.updateModel();
-        accountsList.updateModel();
-        devicesList.updateModel();
-        productsList.updateModel();
+        CachedAccountCollection.updateModel();
+        CachedLicenseCollection.updateModel();
+        CachedDeviceCollection.updateModel();
+        CachedProductCollection.updateModel();
 
         orderEditorContainer.undoManagerPtr.modelChanged.connect(beginDocumentModelChanged);
     }
@@ -58,8 +60,6 @@ DocumentData {
     }
 
     onSaved: {
-        console.log("saved");
-
         setBlockingUpdateModel(true);
 
         if (documentModel.ContainsKey("OrderProducts")){
@@ -77,12 +77,10 @@ DocumentData {
 
         setBlockingUpdateModel(false);
 
-        devicesList.updateModel();
+//        devicesList.updateModel();
     }
 
     onWidthChanged: {
-        console.log("OrderEditor onWidthChanged", width);
-
         if (width > bodyColumn.width + productsView.width + productsView.anchors.leftMargin * 2){
             productsTitle.anchors.top = bodyColumn.top;
             productsTitle.anchors.topMargin = 0;
@@ -156,124 +154,124 @@ DocumentData {
         }
     }
 
-    CollectionDataProvider {
-        id: accountsList;
-        fields: ["Id", "Name"];
-        commandId: "Accounts";
+//    CollectionDataProvider {
+//        id: accountsList;
+//        fields: ["Id", "Name"];
+//        commandId: "Accounts";
 
-        onCollectionModelChanged: {
-            if (accountsList.collectionModel != null){
-                customerCB.model = accountsList.collectionModel;
-            }
-        }
+//        onCollectionModelChanged: {
+//            if (accountsList.collectionModel != null){
+//                customerCB.model = accountsList.collectionModel;
+//            }
+//        }
 
-        onFailed: {
-            if (orderEditorContainer.documentManagerPtr){
-                let message = qsTr("Error loading accounts.");
-                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
-            }
-        }
-    }
+//        onFailed: {
+//            if (orderEditorContainer.documentManagerPtr){
+//                let message = qsTr("Error loading accounts.");
+//                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
+//            }
+//        }
+//    }
 
-    CollectionDataProvider {
-        id: productsList;
-        fields: ["Id", "ProductId", "ProductName", "CategoryId", "Licenses"];
-        commandId: "Products";
+//    CollectionDataProvider {
+//        id: productsList;
+//        fields: ["Id", "ProductId", "ProductName", "CategoryId", "Licenses"];
+//        commandId: "Products";
 
-        onCollectionModelChanged: {
-            if (productsList.collectionModel != null){
-                orderEditorContainer.productsModel = productsList.collectionModel;
-            }
-        }
+//        onCollectionModelChanged: {
+//            if (productsList.collectionModel != null){
+//                orderEditorContainer.productsModel = productsList.collectionModel;
+//            }
+//        }
 
-        onFailed: {
-            if (orderEditorContainer.documentManagerPtr){
-                let message = qsTr("Error loading products. Please check Lisa connection.");
-                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
-            }
-        }
-    }
+//        onFailed: {
+//            if (orderEditorContainer.documentManagerPtr){
+//                let message = qsTr("Error loading products. Please check Lisa connection.");
+//                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
+//            }
+//        }
+//    }
 
-    CollectionDataProvider {
-        id: devicesList;
+//    CollectionDataProvider {
+//        id: devicesList;
 
-        commandId: "Devices";
+//        commandId: "Devices";
 
-        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ProductUuid", "LicenseUuid", "LicenseId", "LicenseName"];
+//        fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ProductUuid", "LicenseUuid", "LicenseId", "LicenseName"];
 
-        onModelUpdated: {
-            if (devicesList.collectionModel != null){
-                orderEditorContainer.devicesModel = devicesList.collectionModel;
+//        onModelUpdated: {
+//            if (devicesList.collectionModel != null){
+//                orderEditorContainer.devicesModel = devicesList.collectionModel;
 
-                if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
-                    let status = orderEditorContainer.documentModel.GetData("OrderStatus");
-                    if (status !== ""){
-                        let statusModel = stateMachine.getAvailableModel(status);
-                        orderStatusCB.model = statusModel;
+//                if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
+//                    let status = orderEditorContainer.documentModel.GetData("OrderStatus");
+//                    if (status !== ""){
+//                        let statusModel = stateMachine.getAvailableModel(status);
+//                        orderStatusCB.model = statusModel;
 
-                        return;
-                    }
-                }
+//                        return;
+//                    }
+//                }
 
-                orderStatusCB.model = orderStatus.statusModel;
-            }
-        }
+//                orderStatusCB.model = orderStatus.statusModel;
+//            }
+//        }
 
-        onFailed: {
-            if (orderEditorContainer.documentManagerPtr){
-                let message = qsTr("Error loading sensors.");
-                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
-            }
-        }
+//        onFailed: {
+//            if (orderEditorContainer.documentManagerPtr){
+//                let message = qsTr("Error loading sensors.");
+//                orderEditorContainer.documentManagerPtr.openErrorDialog(message);
+//            }
+//        }
 
-        function getMacAddress(deviceId){
-            if (!deviceId){
-                return null;
-            }
+//        function getMacAddress(deviceId){
+//            if (!deviceId){
+//                return null;
+//            }
 
-            if (devicesList.collectionModel != null){
-                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
-                    let id = devicesList.collectionModel.GetData("Id", i);
-                    if (id === deviceId){
-                        let macAddress = devicesList.collectionModel.GetData("MacAddress", i);
+//            if (devicesList.collectionModel != null){
+//                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+//                    let id = devicesList.collectionModel.GetData("Id", i);
+//                    if (id === deviceId){
+//                        let macAddress = devicesList.collectionModel.GetData("MacAddress", i);
 
-                        return macAddress;
-                    }
-                }
-            }
+//                        return macAddress;
+//                    }
+//                }
+//            }
 
-            return "";
-        }
+//            return "";
+//        }
 
-        function getSerialNumber(deviceId){
-            if (devicesList.collectionModel != null){
-                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
-                    let id = devicesList.collectionModel.GetData("Id", i);
-                    if (id === deviceId){
-                        let serialNumber = devicesList.collectionModel.GetData("SerialNumber", i);
+//        function getSerialNumber(deviceId){
+//            if (devicesList.collectionModel != null){
+//                for (let i = 0; i < devicesList.collectionModel.GetItemsCount(); i++){
+//                    let id = devicesList.collectionModel.GetData("Id", i);
+//                    if (id === deviceId){
+//                        let serialNumber = devicesList.collectionModel.GetData("SerialNumber", i);
 
-                        return serialNumber;
-                    }
-                }
-            }
+//                        return serialNumber;
+//                    }
+//                }
+//            }
 
-            return "";
-        }
-    }
+//            return "";
+//        }
+//    }
 
-    CollectionDataProvider{
-        id: licenseCollection;
+//    CollectionDataProvider{
+//        id: licenseCollection;
 
-        commandId: "Licenses";
+//        commandId: "Licenses";
 
-        fields: ["Id", "LicenseId", "LicenseName", "ProductId"]
+//        fields: ["Id", "LicenseId", "LicenseName", "ProductId"]
 
-        onCollectionModelChanged: {
-            if (licenseCollection.collectionModel != null){
-                orderEditorContainer.licensesModel = licenseCollection.collectionModel;
-            }
-        }
-    }
+//        onCollectionModelChanged: {
+//            if (licenseCollection.collectionModel != null){
+//                orderEditorContainer.licensesModel = licenseCollection.collectionModel;
+//            }
+//        }
+//    }
 
     LicensesProvider {
         id: licensesProvider;
@@ -300,8 +298,6 @@ DocumentData {
     }
 
     function updateGui(){
-        console.log("updateGui");
-
         if (documentModel.ContainsKey("OrderId")){
             instanceIdInput.text = documentModel.GetData("OrderId");
         }
@@ -364,8 +360,6 @@ DocumentData {
     }
 
     function updateModel(){
-        console.log("OrderEditor updateModel", documentModel.toJSON());
-
         documentModel.SetData("OrderId", instanceIdInput.text)
         documentModel.SetData("PurchaseId", purchaseIdInput.text)
 
@@ -389,8 +383,6 @@ DocumentData {
         if (!documentModel.ContainsKey("OrderProducts")){
             documentModel.AddTreeModel("OrderProducts")
         }
-
-        console.log("OrderEditor end updateModel", documentModel.toJSON());
     }
 
     OrderStatus {
@@ -601,6 +593,8 @@ DocumentData {
                 height: 23;
 
                 radius: orderEditorContainer.radius;
+
+                model: orderEditorContainer.accountsModel;
 
                 onCurrentIndexChanged: {
                     orderEditorContainer.doUpdateModel();

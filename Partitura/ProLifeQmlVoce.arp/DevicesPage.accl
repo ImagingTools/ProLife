@@ -2,13 +2,12 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5127" Description="ACF"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CheckPermissionOr" X="150" Y="625" Note=""/>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
         <Element ComponentName="DeviceChangeGenerator" X="850" Y="675" Note=""/>
         <Element ComponentName="DeviceCollectionCommands" X="475" Y="300" Note=""/>
@@ -23,10 +22,6 @@
         <Element ComponentName="OperationContextController" X="500" Y="675" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -54,6 +49,10 @@
                 <Element ComponentName="WithoutLicense" X="250" Y="450" Note=""/>
                 <Element ComponentName="WithoutLicensePermissions" X="725" Y="600" Note=""/>
             </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">

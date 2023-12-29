@@ -6,6 +6,8 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtdocgui 1.0
 import imtcolgui 1.0
+import prolifeqml 1.0
+import lisaqml 1.0
 
 DocumentData {
     id: deviceEditorContainer;
@@ -16,14 +18,15 @@ DocumentData {
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
-    documentCompleted: ordersList.completed && productsList.completed;
+//    documentCompleted: ordersList.completed && productsList.completed;
+    documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
 
     property int radius: 3;
     property int spacing: 20;
 
     Component.onCompleted: {
-        ordersList.updateModel();
-        productsList.updateModel();
+        CachedOrderCollection.updateModel();
+        CachedProductCollection.updateModel();
     }
 
     function beginDocumentModelChanged(){
@@ -78,55 +81,58 @@ DocumentData {
         return ok;
     }
 
-    CollectionDataProvider {
-        id: productsList;
+//    CollectionDataProvider {
+//        id: productsList;
 
-        commandId: "Products";
+//        commandId: "Products";
 
-        fields: ["Id", "ProductName", "Description", "CategoryId", "Licenses"];
+//        fields: ["Id", "ProductName", "Description", "CategoryId", "Licenses"];
+//        sortByField: "ProductName";
 
-        Component.onCompleted: {
-            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-            objectFilter.SetData("CategoryId", "Hardware");
-        }
+//        Component.onCompleted: {
+//            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+//            objectFilter.SetData("CategoryId", "Hardware");
+//        }
 
-        onCollectionModelChanged: {
-            console.log("productsList onCollectionModelChanged");
-            if (productsList.collectionModel != null){
-                productCB.model = productsList.collectionModel;
-            }
-        }
+//        onCollectionModelChanged: {
+//            console.log("productsList onCollectionModelChanged");
+//            if (productsList.collectionModel != null){
+//                productCB.model = productsList.collectionModel;
+//            }
+//        }
 
-        onFailed: {
-            if (deviceEditorContainer.documentManagerPtr){
-                let message = qsTr("Error loading products. Please check Lisa connection.");
-                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
-            }
-        }
-    }
+//        onFailed: {
+//            if (deviceEditorContainer.documentManagerPtr){
+//                let message = qsTr("Error loading products. Please check Lisa connection.");
+//                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
+//            }
+//        }
+//    }
 
-    CollectionDataProvider {
-        id: ordersList;
+//    CollectionDataProvider {
+//        id: ordersList;
 
-        commandId: "Orders";
+//        commandId: "Orders";
 
-        fields: ["Id", "OrderId", "Description"];
+//        sortByField: "OrderId";
 
-        onCollectionModelChanged: {
-            console.log("ordersList onCollectionModelChanged");
+//        fields: ["Id", "OrderId", "Description"];
 
-            if (ordersList.collectionModel != null){
-                orderCB.model = ordersList.collectionModel;
-            }
-        }
+//        onCollectionModelChanged: {
+//            console.log("ordersList onCollectionModelChanged");
 
-        onFailed: {
-            if (deviceEditorContainer.documentManagerPtr){
-                let message = qsTr("Error loading orders.");
-                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
-            }
-        }
-    }
+//            if (ordersList.collectionModel != null){
+//                orderCB.model = ordersList.collectionModel;
+//            }
+//        }
+
+//        onFailed: {
+//            if (deviceEditorContainer.documentManagerPtr){
+//                let message = qsTr("Error loading orders.");
+//                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
+//            }
+//        }
+//    }
 
     DeviceProductionStatus {
         id: productionStatus;
@@ -441,7 +447,7 @@ DocumentData {
 
                             radius: deviceEditorContainer.radius;
 
-                            model: deviceEditorContainer.productsModel;
+                            model: CachedProductCollection.hardwareProductsModel;
 
                             nameId: "ProductName";
 
@@ -800,7 +806,7 @@ DocumentData {
                             font.pixelSize: Style.fontSize_common;
                         }
 
-                        ComboBox {
+                        FilterableComboBox {
                             id: orderCB;
 
                             anchors.left: parent.left;
@@ -813,6 +819,8 @@ DocumentData {
                             radius: deviceEditorContainer.radius;
 
                             nameId: "OrderId";
+
+                            model: CachedOrderCollection.collectionModel;
 
                             Component.onCompleted: {
                                 let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");

@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5137" Description="ACF"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -109,7 +109,7 @@
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/DeviceSqlCollection"/>
+                        <Data IsEnabled="true" Value="Repositories/CachedDeviceRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
@@ -118,19 +118,19 @@
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/LicenseRepository"/>
+                        <Data IsEnabled="true" Value="Repositories/CachedLicenseCollection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
+                        <Data IsEnabled="true" Value="Repositories/CachedOrderRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/ProductRepository"/>
+                        <Data IsEnabled="true" Value="Repositories/CachedProductCollection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
@@ -694,6 +694,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="CachedAccountRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedDeviceRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DeviceSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="CachedLicenseCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -703,11 +721,29 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="CachedOrderRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="CachedProductCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="ProductRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedSoftwareRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareSqlRepository"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -967,6 +1003,12 @@
                 <ExportedComponents>
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
                     <Component ExportedId="BindingProductsRepository" ComponentId="BindingProductsRepository"/>
+                    <Component ExportedId="CachedAccountRepository" ComponentId="CachedAccountRepository"/>
+                    <Component ExportedId="CachedDeviceRepository" ComponentId="CachedDeviceRepository"/>
+                    <Component ExportedId="CachedLicenseCollection" ComponentId="CachedLicenseCollection"/>
+                    <Component ExportedId="CachedOrderRepository" ComponentId="CachedOrderRepository"/>
+                    <Component ExportedId="CachedProductCollection" ComponentId="CachedProductCollection"/>
+                    <Component ExportedId="CachedSoftwareRepository" ComponentId="CachedSoftwareRepository"/>
                     <Component ExportedId="DeviceSqlCollection" ComponentId="DeviceSqlRepository/DeviceSqlCollection"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
                     <Component ExportedId="FeatureRepository" ComponentId="FeatureRepository"/>

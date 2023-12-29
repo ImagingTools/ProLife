@@ -40,6 +40,9 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(ImtCoreLoc);
 	Q_INIT_RESOURCE(ProLifeLoc);
 
+	Q_INIT_RESOURCE(prolifeqml);
+	Q_INIT_RESOURCE(lisaqml);
+
 	Q_INIT_RESOURCE(imtresthtml);
 
 	Q_INIT_RESOURCE(imtauthguiTheme);

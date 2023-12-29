@@ -104,6 +104,8 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 		}
 	}
 
+	qDebug() << "beforeSelectionQuery" << beforeSelectionQuery;
+
 	if (m_databaseEngineCompPtr.IsValid()){
 		if (!beforeSelectionQuery.isEmpty()){
 			QSqlError sqlError;

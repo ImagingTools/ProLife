@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5134" Description="ACF"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
             <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
@@ -12,6 +12,7 @@
         <Element ComponentName="DeviceInfo" X="950" Y="200" Note=""/>
         <Element ComponentName="Devices" X="600" Y="450" Note=""/>
         <Element ComponentName="JsonSerializer" X="225" Y="200" Note=""/>
+        <Element ComponentName="ObjectCollection" X="250" Y="450" Note=""/>
         <Element ComponentName="Types" X="600" Y="50" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

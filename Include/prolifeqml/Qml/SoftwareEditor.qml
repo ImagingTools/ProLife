@@ -96,6 +96,7 @@ DocumentData {
         commandId: "Orders";
 
         fields: ["Id", "OrderId", "Description"];
+        sortByField: "OrderId";
 
         onCollectionModelChanged: {
             console.log("ordersList onCollectionModelChanged");
@@ -111,6 +112,7 @@ DocumentData {
 
         fields: ["Id", "ProductName", "CategoryId", "Licenses"];
         commandId: "Products";
+        sortByField: "ProductName";
 
         Component.onCompleted: {
             let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")

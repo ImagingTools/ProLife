@@ -38,10 +38,10 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
 
 	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::CIdentifiableOrderInfo* orderInfoPtr = nullptr;
+		prolifedata::IOrderInfo* orderInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
 		if (objectCollectionIterator->GetObjectData(orderDataPtr)){
-			orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderDataPtr.GetPtr());
+			orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
 		}
 
 		if (orderInfoPtr != nullptr){
@@ -53,13 +53,7 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
 				}
 				else if(informationId == "Id"){
-					QByteArray objectUuid = orderInfoPtr->GetObjectUuid();
-					if (objectUuid.isEmpty()){
-						elementInformation = orderInfoPtr->GetOrderId();
-					}
-					else{
-						elementInformation = objectUuid;
-					}
+					elementInformation = objectCollectionIterator->GetObjectId();
 				}
 				else if(informationId == "Name"){
 					elementInformation = orderInfoPtr->GetOrderId();

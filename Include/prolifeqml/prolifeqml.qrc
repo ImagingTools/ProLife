@@ -8,6 +8,7 @@
     <qresource prefix="/Palette"/>
     <qresource prefix="/"/>
     <qresource prefix="/qml">
+	<file alias="prolifeqml/qmldir">Qml/qmldir</file>
         <file alias="ProLife/ProLifeMain.qml">Qml/ProLifeMain.qml</file>
         <file alias="ProLife/ProLifeWeb.qml">Qml/ProLifeWeb.qml</file>
         <file alias="ProLife/ProLifeServerConfigurator.qml">Qml/ProLifeServerConfigurator.qml</file>
@@ -39,6 +40,8 @@
         <file alias="ProLife/ProductPairEditor.qml">Qml/ProductPairEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingEditor.qml">Qml/HardwareProductBindingEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingDialog.qml">Qml/HardwareProductBindingDialog.qml</file>
+	<file alias="prolifeqml/CachedOrderCollection.qml">Qml/CachedOrderCollection.qml</file>
+	<file alias="prolifeqml/CachedDeviceCollection.qml">Qml/CachedDeviceCollection.qml</file>
     </qresource>
     <qresource prefix="/Style">
         <file alias="prolife_dark.theme">prolife_dark.theme</file>

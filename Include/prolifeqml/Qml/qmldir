@@ -1,0 +1,4 @@
+module prolifeqml
+
+singleton CachedOrderCollection 1.0 CachedOrderCollection.qml
+singleton CachedDeviceCollection 1.0 CachedDeviceCollection.qml
