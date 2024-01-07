@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
 import imtdocgui 1.0
-import imtqml 1.0
+import imtcontrols 1.0
 import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
@@ -542,7 +542,7 @@ DocumentData {
                 font.pixelSize: Style.fontSize_common;
             }
 
-            CustomTextEdit {
+            TextEditCustom {
                 id: descriptionInput;
 
                 anchors.top: titleComment.bottom;
