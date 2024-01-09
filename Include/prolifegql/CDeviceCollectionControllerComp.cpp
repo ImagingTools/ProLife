@@ -252,9 +252,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 			offset -= count;
 		}
 
-//		imtdb::CSqlDatabaseObjectCollectionComp* objectCollectionCompPtr = dynamic_cast<imtdb::CSqlDatabaseObjectCollectionComp*>(m_objectCollectionCompPtr.GetPtr());
-//		istd::TDelPtr<imtbase::IObjectCollectionIterator> objectCollectionIterator(objectCollectionCompPtr->CreateObjectCollectionIterator(offset, count, &filterParams));
-
 		istd::TDelPtr<imtbase::IObjectCollectionIterator> objectCollectionIterator;
 		objectCollectionIterator.SetPtr(m_objectCollectionCompPtr->CreateObjectCollectionIterator(offset, count, &filterParams));
 
