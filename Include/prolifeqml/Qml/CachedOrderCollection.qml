@@ -12,12 +12,6 @@ CollectionDataProvider {
     sortByField: "OrderId";
 
     fields: ["Id", "OrderId", "Description"];
-
-    function updateModel(){
-        if (container.collectionModel.GetItemsCount() === 0){
-            container.itemsInfoModel.updateModel({}, container.fields);
-        }
-    }
 }
 
 

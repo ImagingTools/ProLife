@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import Acf 1.0
 import imtgui 1.0
 import imtdocgui 1.0
@@ -426,7 +426,7 @@ DocumentData {
                         titleInstanceId.height + instanceIdInput.height + errorInstanceId.height + errorInstanceId.anchors.topMargin
                              : titleInstanceId.height + instanceIdInput.height;
 
-            RegExpValidator {
+            RegularExpressionValidator {
                 id: regexValid;
 
                 Component.onCompleted: {
@@ -434,7 +434,7 @@ DocumentData {
 
                     let re = new RegExp(regex)
                     if (re){
-                        regexValid.regExp = re;
+                        regexValid.regularExpression = re;
                         instanceIdInput.textInputValidator = regexValid;
                     }
                 }
@@ -648,15 +648,13 @@ DocumentData {
                 }
             }
 
-            BaseButton{
+            Button{
                 id: buttonContainer;
 
                 anchors.top: orderStatusCB.top;
                 anchors.right: parent.right;
 
                 text: qsTr("Clear");
-
-                decorator: defaultButtonDecorator;
 
                 enabled: orderStatusCB.changeable;
 
@@ -665,14 +663,6 @@ DocumentData {
                         if (orderStatusCB.currentIndex != -1){
                             orderStatusCB.currentIndex = -1;
                         }
-                    }
-                }
-
-                Component{
-                    id: defaultButtonDecorator;
-                    CommonButtonDecorator{
-                        width: 70;
-                        height: 23;
                     }
                 }
             }
@@ -713,7 +703,7 @@ DocumentData {
             }
 
             onFinished: {
-                if (buttonId == "Save"){
+                if (buttonId == Enums.ButtonType.Ok){
                     let productModel = productsDialog.bodyItem.productModel;
                     let actualOrderProducts = orderEditorContainer.documentModel.GetData("OrderProducts");
 
@@ -775,7 +765,7 @@ DocumentData {
 
         radius: 3;
 
-        AuxButton {
+        Button {
             id: addProduct;
 
             anchors.verticalCenter: parent.verticalCenter;
@@ -787,12 +777,12 @@ DocumentData {
 
             iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
-                GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
-                GradientStop { position: 0.98; color: Style.imagingToolsGradient3; }
-                GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
-            }
+//            gradient: Gradient {
+//                GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
+//                GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
+//                GradientStop { position: 0.98; color: Style.imagingToolsGradient3; }
+//                GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
+//            }
             onClicked: {
                 productsView.activeProductIndex = -1;
                 modalDialogManager.openDialog(productEditorDialog, {});
@@ -884,7 +874,7 @@ DocumentData {
 
         MessageDialog {
             onFinished: {
-                if (buttonId == "Yes"){
+                if (buttonId == Enums.ButtonType.Yes){
                     if (productsView.activeProductIndex < 0){
                         return;
                     }

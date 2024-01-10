@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.15
 import Acf 1.0
 import imtgui 1.0
 import imtlicgui 1.0
@@ -592,7 +592,7 @@ DocumentData {
 
                             property int lastLength: 0;
                             property bool blockSignal: false;;
-                            property var regExp: new RegExp(macAddressRegExp.regExp)
+                            property var regExp: new RegExp(macAddressRegExp.regularExpression)
                             onTextChanged: {
                                 if(blockSignal){
                                     return;
@@ -632,10 +632,10 @@ DocumentData {
                             visible: false;
                         }
 
-                        RegExpValidator {
+                        RegularExpressionValidator {
                             id: macAddressRegExp;
 
-                            regExp: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+                            regularExpression: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
                         }
                     }
                 }
@@ -763,15 +763,13 @@ DocumentData {
                                 sourceSize.width: width;
                             }
 
-                            BaseButton{
+                            Button{
                                 id: buttonContainer;
 
                                 anchors.verticalCenter: parent.verticalCenter;
                                 anchors.right: parent.right;
 
                                 text: qsTr("Clear");
-
-                                decorator: defaultButtonDecorator;
 
                                 enabled: statusCB.changeable;
 
@@ -780,14 +778,6 @@ DocumentData {
                                         if (statusCB.currentIndex != -1){
                                             statusCB.currentIndex = -1;
                                         }
-                                    }
-                                }
-
-                                Component{
-                                    id: defaultButtonDecorator;
-                                    CommonButtonDecorator{
-                                        width: 70;
-                                        height: 23;
                                     }
                                 }
                             }
@@ -834,15 +824,13 @@ DocumentData {
                             }
                         }
 
-                        BaseButton {
+                        Button {
                             id: orderClearButton;
 
                             anchors.top: orderCB.top;
                             anchors.right: parent.right;
 
                             text: qsTr("Clear");
-
-                            decorator: defaultButtonDecorator;
 
                             enabled: orderCB.changeable;
 

@@ -26,7 +26,9 @@ DocumentData {
             checkInIse();
         }
         else{
-            root.documentManagerPtr.setAlertPanel(null);
+            if (root.documentManagerPtr){
+                root.documentManagerPtr.setAlertPanel(null);
+            }
         }
     }
 
@@ -329,14 +331,12 @@ DocumentData {
                 }
             }
 
-            BaseButton{
+            Button{
                 id: buttonContainer;
 
                 anchors.right: parent.right;
 
                 text: qsTr("Clear");
-
-                decorator: defaultButtonDecorator;
 
                 enabled: ordersCB.changeable && ordersCB.currentIndex >= 0;
 
@@ -346,14 +346,6 @@ DocumentData {
                         if (ordersCB.currentIndex != -1){
                             ordersCB.currentIndex = -1;
                         }
-                    }
-                }
-
-                Component{
-                    id: defaultButtonDecorator;
-                    CommonButtonDecorator{
-                        width: 70;
-                        height: 23;
                     }
                 }
             }

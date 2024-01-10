@@ -12,12 +12,6 @@ CollectionDataProvider {
     sortByField: "Name";
 
     fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ProductUuid", "LicenseUuid", "LicenseId", "LicenseName"];
-
-    function updateModel(){
-        if (container.collectionModel.GetItemsCount() === 0){
-            container.itemsInfoModel.updateModel({}, container.fields);
-        }
-    }
 }
 
 

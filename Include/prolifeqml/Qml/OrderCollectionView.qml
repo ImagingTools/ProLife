@@ -19,7 +19,6 @@ CollectionView {
 
     onDocumentManagerPtrChanged: {
         if (documentManagerPtr){
-//            documentManagerPtr.setDocumentTitle(0, title);
             documentManagerPtr.registerDocument("Order", orderEditorComp);
         }
     }

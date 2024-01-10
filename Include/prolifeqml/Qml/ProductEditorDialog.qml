@@ -21,17 +21,14 @@ Dialog {
     property bool serialNumberEdit: true;
 
     Component.onCompleted: {
-        productEditorDialog.buttons.addButton({"Id": "Save", "Name": "OK", "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
+        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Ok, "Name": "OK", "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Cancel, "Name": "Cancel", "Enabled": true});
 
         productEditorDialog.title = qsTr("Product editor");
     }
 
     contentComp: Component {
-        id: installationEditor;
-
         ProductEditor {
-
             width: productEditorDialog.width - 100;
             height: 400;
 

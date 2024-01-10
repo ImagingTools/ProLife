@@ -17,7 +17,7 @@ import imtgui 1.0
 //@using { src.imtgui.AuxComponents.MenuPanel }
 //@using { src.imtgui.AuxComponents.TabPanel }
 //@using { src.imtgui.AuxComponents.AuxTable }
-//@using { src.imtgui.AuxComponents.AuxButton }
+//@using { src.imtgui.AuxComponents.Button }
 //@using { src.imtgui.AuxComponents.TreeView }
 //@using { src.imtgui.AuxComponents.TreeItemDelegate }
 //@using { src.imtgui.AuxComponents.Preference }

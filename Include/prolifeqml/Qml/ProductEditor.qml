@@ -47,10 +47,6 @@ Item {
         productEditor.productModel.SetData("CategoryId", productEditor.productCategory);
     }
 
-    //    onExcludeDeviceIdsChanged: {
-    //        console.log("onExcludeDeviceIdsChanged", excludeDeviceIds);
-    //    }
-
     property TreeItemModel hardwareProductsModel: TreeItemModel {}
     property TreeItemModel softwareProductsModel: TreeItemModel {}
 
@@ -94,31 +90,13 @@ Item {
             excludeDeviceIds.splice(index, 1)
         }
 
-        console.log("productEditor.excludeDeviceIds2", excludeDeviceIds);
-
         for (let i = 0; i < productEditor.devicesModel.GetItemsCount(); i++){
             let status = productEditor.devicesModel.GetData("Status", i);
             let orderId = productEditor.devicesModel.GetData("OrderUuid", i);
             let deviceId = productEditor.devicesModel.GetData("Id", i);
             let deviceType = productEditor.devicesModel.GetData("ProductUuid", i);
 
-            console.log("DeviceUuid",deviceId);
-            console.log("OrderUuid",orderId);
-            console.log("ProductUuid",deviceType);
-            console.log("status",status);
-
-            //            if (deviceId != selectedDeviceId && productEditor.excludeDeviceIds.includes(deviceId)){
-            //                console.log("deviceId", deviceId);
-            //                console.log("continue");
-
-            //                continue;
-            //            }
-
-
             if (excludeDeviceIds.includes(deviceId)){
-                console.log("deviceId", deviceId);
-                console.log("continue");
-
                 continue;
             }
 

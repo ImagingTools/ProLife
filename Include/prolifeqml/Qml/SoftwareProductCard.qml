@@ -56,7 +56,7 @@ Rectangle {
 
         visible: editButton.visible;
 
-        AuxButton {
+        Button {
             id: editButton;
 
             anchors.horizontalCenter: parent.horizontalCenter;

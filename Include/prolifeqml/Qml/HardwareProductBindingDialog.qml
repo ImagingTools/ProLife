@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
 import imtguigql 1.0
@@ -9,10 +9,15 @@ Dialog {
 
     width: root.width - 100;
 
+//    buttonsModel: ListModel{
+//        ListElement{Id: Enums.ButtonType.Ok; Name:qsTr("Save"); Enabled: true}
+//        ListElement{Id: Enums.ButtonType.Cancel; Name:qsTr("Cancel"); Enabled: true}
+//    }
+
     property var softwareIds: [];
     property string hardwareId: "";
 
-    notClosingButtons: "Save";
+//    notClosingButtons: "Save";
 
     signal saved();
 
@@ -36,12 +41,12 @@ Dialog {
 
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
-        productEditorDialog.buttons.addButton({"Id": "Save", "Name": qsTr("Apply"), "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Close"), "Enabled": true});
+        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Ok, "Name": qsTr("Apply"), "Enabled": false});
+        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Cancel, "Name": qsTr("Close"), "Enabled": true});
     }
 
     onFinished: {
-        if (buttonId === "Save"){
+        if (buttonId == Enums.ButtonType.Ok){
             modalDialogManager.openDialog(messageDialog, {});
         }
     }
@@ -52,12 +57,13 @@ Dialog {
         HardwareProductBindingEditor {
             id: productBinding;
 
+            width: productEditorDialog.width;
             height: contentHeight + 40;
 
             hardwareId: productEditorDialog.hardwareId
 
             onModelChanged: {
-                productEditorDialog.buttons.setButtonState("Save", true);
+                productEditorDialog.buttons.setButtonState(Enums.ButtonType.Ok, true);
                 productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Cancel"));
             }
         }
@@ -70,14 +76,15 @@ Dialog {
             title: qsTr("Apply Changes");
             message: qsTr("Please check the data before saving. Save changes ?")
             onFinished: {
-                if (buttonId == "Yes"){
+                if (buttonId == Enums.ButtonType.Yes){
                     if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
                         let onResult = function(id, name){}
 
                         documentController.updateData(
-                                                      "HardwareProductBinding",
+                                                      "HardwareProductBindingUpdate",
                                                       productEditorDialog.hardwareId,
                                                       productEditorDialog.contentItem.bindingModel,
+                                                      {},
                                                       onResult
                                                      )
                     }
@@ -86,16 +93,17 @@ Dialog {
 
                         let onResult = function(id, name){}
                         documentController.setData(
-                                                   "HardwareProductBinding",
+                                                   "HardwareProductBindingAdd",
                                                    productEditorDialog.hardwareId,
                                                    productEditorDialog.contentItem.bindingModel,
+                                                   {},
                                                    onResult
                                                    )
                     }
 
                   //  productEditorDialog.contentItem.includeIds = [];
                     productEditorDialog.contentItem.changesApplied = true;
-                    productEditorDialog.buttons.setButtonState("Save", false);
+                    productEditorDialog.buttons.setButtonState(Enums.ButtonType.Ok, false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
 
                     productEditorDialog.contentItem.beginBindingModel.Copy(productEditorDialog.contentItem.bindingModel);
