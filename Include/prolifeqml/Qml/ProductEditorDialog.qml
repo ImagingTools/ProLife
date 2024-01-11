@@ -29,7 +29,7 @@ Dialog {
 
     contentComp: Component {
         ProductEditor {
-            width: productEditorDialog.width - 100;
+            width: productEditorDialog.width;
             height: 400;
 
             rootItem: productEditorDialog;

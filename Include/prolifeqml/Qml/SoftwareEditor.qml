@@ -348,6 +348,12 @@ DocumentData {
                         }
                     }
                 }
+
+                decorator: ButtonDecorator{
+                    width: 70;
+                    height: 23;
+                    radius: deviceEditorContainer.radius;
+                }
             }
         }
 

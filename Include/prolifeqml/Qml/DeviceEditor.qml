@@ -22,7 +22,7 @@ DocumentData {
     documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
 
     property int radius: 3;
-    property int spacing: 20;
+    property int spacing: Style.size_mainMargin;
 
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
@@ -361,7 +361,7 @@ DocumentData {
         id: scrollbar;
 
         anchors.left: flickable.right;
-        anchors.leftMargin: 5;
+        anchors.leftMargin: Style.size_mainMargin;
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
 
@@ -392,7 +392,7 @@ DocumentData {
             width: 500;
             height: childrenRect.height;
 
-            spacing: 7;
+            spacing: Style.size_mainMargin;
 
             Text {
                 id: titleDeviceInformationBlock;
@@ -622,7 +622,7 @@ DocumentData {
                             id: macAddresInvalidText;
 
                             anchors.top: macAddressInput.bottom;
-                            anchors.topMargin: 5;
+                            anchors.topMargin: Style.size_mainMargin;
 
                             text: qsTr("MAC-Address invalid");
                             color: Style.errorTextColor;
@@ -754,7 +754,7 @@ DocumentData {
 
                                 anchors.verticalCenter: parent.verticalCenter;
                                 anchors.left: statusCB.right;
-                                anchors.leftMargin: 10;
+                                anchors.leftMargin: Style.size_mainMargin;
 
                                 width: 20;
                                 height: width;
@@ -779,6 +779,12 @@ DocumentData {
                                             statusCB.currentIndex = -1;
                                         }
                                     }
+                                }
+
+                                decorator: ButtonDecorator{
+                                    width: 70;
+                                    height: 23;
+                                    radius: deviceEditorContainer.radius;
                                 }
                             }
                         }
@@ -841,6 +847,12 @@ DocumentData {
                                     }
                                 }
                             }
+
+                            decorator: ButtonDecorator{
+                                width: 70;
+                                height: 23;
+                                radius: deviceEditorContainer.radius;
+                            }
                         }
                     }
                 }
@@ -848,7 +860,7 @@ DocumentData {
         }
     }
 
-    property int heightBetweenTitleAndComp: 5;
+    property int heightBetweenTitleAndComp: Style.size_mainMargin;
 }
 
 

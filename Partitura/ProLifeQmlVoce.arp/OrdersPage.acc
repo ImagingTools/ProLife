@@ -449,14 +449,14 @@
                                 <AttributeInfo Id="NewCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditOrder</Value>
+                                            <Value>AddOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RemoveCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditOrder</Value>
+                                            <Value>RemoveOrder</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

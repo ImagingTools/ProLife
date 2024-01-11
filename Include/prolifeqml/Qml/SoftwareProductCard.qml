@@ -13,7 +13,7 @@ Rectangle {
     color: Style.baseColor;
 
     property int margin: 10;
-    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 20;
+    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 10;
 
     property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
     property string licenseId: model.LicenseId;
@@ -70,6 +70,11 @@ Rectangle {
                                   "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.Off, Icon.Mode.Disabled);
             visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
 
+            ButtonDecorator {
+                color: parent.hovered ? Style.buttonHoverColor : "transparent";
+                border.width: 0;
+            }
+
             onClicked: {
                 softwareCard.edited();
             }
@@ -119,7 +124,7 @@ Rectangle {
             id: licensesView;
 
             width: contentColumn.width;
-            height: contentHeight;
+            height: contentHeight + 15;
 
             enableAlternating: false;
 

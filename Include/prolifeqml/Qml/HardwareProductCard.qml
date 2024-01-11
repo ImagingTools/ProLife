@@ -23,7 +23,7 @@ Rectangle {
 
     property Item productCardRoot: null;
 
-    property int contentHeight: contentColumn.height + 20
+    property int contentHeight: contentColumn.height + 10;
 
     signal clicked();
     signal edited();
@@ -129,6 +129,11 @@ Rectangle {
             onClicked: {
                 hardwareCard.edited();
             }
+
+            decorator: ButtonDecorator {
+                color: parent.hovered ? Style.buttonHoverColor : "transparent";
+                border.width: 0;
+            }
         }
     }
 
@@ -146,7 +151,7 @@ Rectangle {
             id: table;
 
             width: contentColumn.width;
-            height: contentHeight;
+            height: contentHeight + 15;
 
             radius: 0;
 

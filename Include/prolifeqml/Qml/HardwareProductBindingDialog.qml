@@ -7,17 +7,16 @@ import imtcontrols 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: root.width - 100;
+    property int rootWidth: root ? root.width - 100 : 0;
 
-//    buttonsModel: ListModel{
-//        ListElement{Id: Enums.ButtonType.Ok; Name:qsTr("Save"); Enabled: true}
-//        ListElement{Id: Enums.ButtonType.Cancel; Name:qsTr("Cancel"); Enabled: true}
-//    }
+    onRootWidthChanged: {
+        width = rootWidth
+    }
 
     property var softwareIds: [];
     property string hardwareId: "";
 
-//    notClosingButtons: "Save";
+    notClosingButtons: Enums.ButtonType.Ok;
 
     signal saved();
 
@@ -110,9 +109,7 @@ Dialog {
 
                     productEditorDialog.saved();
 
-                    productEditorDialog.finished("Cancel");
-                }
-                else if (buttonId == "No"){
+                    productEditorDialog.finished(Enums.ButtonType.Cancel);
                 }
             }
         }

@@ -59,6 +59,10 @@ DocumentData {
         }
     }
 
+//    function endDocumentModelChanged(){
+//        CachedDeviceCollection.modelUpdated.connect(updateGui);
+//    }
+
     onSaved: {
         setBlockingUpdateModel(true);
 
@@ -665,6 +669,12 @@ DocumentData {
                         }
                     }
                 }
+
+                decorator: ButtonDecorator{
+                    width: 70;
+                    height: 23;
+                    radius: deviceEditorContainer.radius;
+                }
             }
         }
     }//Column bodyColumn
@@ -777,12 +787,11 @@ DocumentData {
 
             iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
-//            gradient: Gradient {
-//                GradientStop { position: 0.0; color: Style.imagingToolsGradient1; }
-//                GradientStop { position: 0.97; color: Style.imagingToolsGradient2; }
-//                GradientStop { position: 0.98; color: Style.imagingToolsGradient3; }
-//                GradientStop { position: 1.0; color: Style.imagingToolsGradient4; }
-//            }
+            decorator: ButtonDecorator {
+                color: parent.hovered ? Style.buttonHoverColor : "transparent";
+                border.width: 0;
+            }
+
             onClicked: {
                 productsView.activeProductIndex = -1;
                 modalDialogManager.openDialog(productEditorDialog, {});
