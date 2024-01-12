@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtcontrols 1.0
 
 Rectangle {
     id: window;
@@ -11,7 +12,6 @@ Rectangle {
 
     property var localSettings;
 
-//    property alias localSettings: preferenceDialog.settingsModel;
     signal settingsUpdate();
 
     onSettingsUpdate: {
@@ -27,6 +27,14 @@ Rectangle {
     Component.onCompleted: {
         Events.subscribeEvent("StartLoading", loading.start);
         Events.subscribeEvent("StopLoading", loading.stop);
+
+        Style.setDecorators(decorators)
+    }
+
+    property Decorators decorators: decorators_
+
+    Decorators {
+        id: decorators_
     }
 
     Component.onDestruction: {
@@ -51,7 +59,7 @@ Rectangle {
         anchors.bottom: buttons.top;
 
         onModelIsDirtyChanged: {
-            buttons.setButtonState("Apply", preferenceDialog.modelIsDirty);
+            buttons.setButtonState(Enums.ButtonType.Apply, preferenceDialog.modelIsDirty);
         }
     }
 
@@ -64,18 +72,18 @@ Rectangle {
         anchors.bottomMargin: 10;
 
         Component.onCompleted: {
-            buttons.addButton({"Id":"Apply", "Name": qsTr("Apply"), "Enabled": false});
-            buttons.addButton({"Id":"Close", "Name": qsTr("Close"), "Enabled": true});
+            buttons.addButton({"Id":Enums.ButtonType.Apply, "Name": qsTr("Apply"), "Enabled": false});
+            buttons.addButton({"Id":Enums.ButtonType.Close, "Name": qsTr("Close"), "Enabled": true});
         }
 
         onButtonClicked: {
-            if (buttonId === "Apply"){
+            if (buttonId == Enums.ButtonType.Apply){
                 window.settingsUpdate();
                 preferenceDialog.modelIsDirty = false;
 
                 //                buttons.setButtonState("Apply", false);
             }
-            else if (buttonId === "Close"){
+            else if (buttonId == Enums.ButtonType.Close){
                 if (preferenceDialog.modelIsDirty){
                     modalDialogManager.openDialog(saveDialog, {"message": qsTr("Save all changes ?")});
                 }
@@ -108,19 +116,20 @@ Rectangle {
         id: saveDialog;
 
         MessageDialog {
-            Component.onCompleted: {
-                console.log("saveDialog onCompleted");
-                buttons.addButton({"Id":"Cancel", "Name":"Cancel", "Enabled": true});
+            buttonsModel: ListModel{
+                ListElement{Id: Enums.ButtonType.Yes; Name:qsTr("Yes"); Enabled: true}
+                ListElement{Id: Enums.ButtonType.No; Name:qsTr("No"); Enabled: true}
+                ListElement{Id: Enums.ButtonType.Cancel; Name:qsTr("Cancel"); Enabled: true}
             }
 
             onFinished: {
                 console.log("saveDialog onFinished", buttonId);
-                if (buttonId == "Yes"){
+                if (buttonId == Enums.ButtonType.Yes){
                     window.settingsUpdate();
 
                     Qt.quit();
                 }
-                else if (buttonId == "No"){
+                else if (buttonId == Enums.ButtonType.No){
                     Qt.quit();
                 }
             }

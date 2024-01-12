@@ -5,6 +5,8 @@ import imtauthgui 1.0
 import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
+import prolifeqml 1.0
+import lisaqml 1.0
 
 DocumentData {
     id: root;
@@ -12,13 +14,13 @@ DocumentData {
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
 
-    documentCompleted: productsList.completed && ordersList.completed;
+    documentCompleted: CachedProductCollection.completed && CachedOrderCollection.completed;
 
     property string alertMessage: "";
 
     Component.onCompleted: {
-        productsList.updateModel();
-        ordersList.updateModel();
+        CachedProductCollection.updateModel();
+        CachedOrderCollection.updateModel();
     }
 
     onVisibleChanged: {
@@ -93,54 +95,54 @@ DocumentData {
         softwareProductEditor.productModel = root.documentModel;
     }
 
-    CollectionDataProvider {
-        id: ordersList;
+//    CollectionDataProvider {
+//        id: ordersList;
 
-        commandId: "Orders";
+//        commandId: "Orders";
 
-        fields: ["Id", "OrderId", "Description"];
-        sortByField: "OrderId";
+//        fields: ["Id", "OrderId", "Description"];
+//        sortByField: "OrderId";
 
-        onCollectionModelChanged: {
-            console.log("ordersList onCollectionModelChanged");
+//        onCollectionModelChanged: {
+//            console.log("ordersList onCollectionModelChanged");
 
-            if (ordersList.collectionModel != null){
-                ordersCB.model = ordersList.collectionModel;
-            }
-        }
-    }
+//            if (ordersList.collectionModel != null){
+//                ordersCB.model = ordersList.collectionModel;
+//            }
+//        }
+//    }
 
-    CollectionDataProvider {
-        id: productsList;
+//    CollectionDataProvider {
+//        id: productsList;
 
-        fields: ["Id", "ProductName", "CategoryId", "Licenses"];
-        commandId: "Products";
-        sortByField: "ProductName";
+//        fields: ["Id", "ProductName", "CategoryId", "Licenses"];
+//        commandId: "Products";
+//        sortByField: "ProductName";
 
-        Component.onCompleted: {
-            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-            objectFilter.SetData("CategoryId", "Software");
-        }
+//        Component.onCompleted: {
+//            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
+//            objectFilter.SetData("CategoryId", "Software");
+//        }
 
-        onCollectionModelChanged: {
-            if (productsList.collectionModel != null){
-                root.productsModel = productsList.collectionModel;
+//        onCollectionModelChanged: {
+//            if (productsList.collectionModel != null){
+//                root.productsModel = productsList.collectionModel;
 
-                productCB.model = root.productsModel;
-            }
-        }
+//                productCB.model = root.productsModel;
+//            }
+//        }
 
-        onFailed: {
-            if (root.documentManagerPtr){
-                let message = qsTr("Error loading products. Please check Lisa connection.");
+//        onFailed: {
+//            if (root.documentManagerPtr){
+//                let message = qsTr("Error loading products. Please check Lisa connection.");
 
-                root.documentManagerPtr.openErrorDialog(message);
-                root.documentManagerPtr.showAlertMessage(message);
+//                root.documentManagerPtr.openErrorDialog(message);
+//                root.documentManagerPtr.showAlertMessage(message);
 
-                root.errorMessage = message;
-            }
-        }
-    }
+//                root.errorMessage = message;
+//            }
+//        }
+//    }
 
     function blockEditing(){
         projectInput.readOnly = true;
@@ -187,10 +189,15 @@ DocumentData {
         if (root.documentModel.ContainsKey("ProductId")){
             let productId = root.documentModel.GetData("ProductId");
 
+            console.log("productId", productId);
+
             if (productCB.model){
                 for (let i = 0; i < productCB.model.GetItemsCount(); i++){
                     let id = productCB.model.GetData("Id", i);
-                    if (id === productId){
+                    console.log("id", id);
+
+                    if (id == productId){
+                        console.log("==", id);
                         productCB.currentIndex = i;
                         productFound = true;
                         break;
@@ -198,6 +205,8 @@ DocumentData {
                 }
             }
         }
+
+        console.log("productFound", productFound);
 
         if (!productFound){
             productCB.currentIndex = -1;
@@ -319,6 +328,8 @@ DocumentData {
 
                 nameId: "OrderId";
 
+                model: CachedOrderCollection.collectionModel;
+
                 Component.onCompleted: {
                     let ok = PermissionsController.checkPermission("ChangeLicense");
 
@@ -326,7 +337,6 @@ DocumentData {
                 }
 
                 onCurrentIndexChanged: {
-                    console.log("onCurrentIndexChanged", ordersCB.currentIndex);
                     root.doUpdateModel();
                 }
             }
@@ -352,7 +362,7 @@ DocumentData {
                 decorator: ButtonDecorator{
                     width: 70;
                     height: 23;
-                    radius: deviceEditorContainer.radius;
+                    radius: 3;
                 }
             }
         }
@@ -376,6 +386,8 @@ DocumentData {
 
             nameId: "ProductName";
 
+            model: CachedProductCollection.softwareProductsModel;
+
             Component.onCompleted: {
                 let ok = PermissionsController.checkPermission("ChangeLicense");
 
@@ -383,6 +395,8 @@ DocumentData {
             }
 
             onCurrentIndexChanged: {
+                console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
+
                 if (productCB.currentIndex >= 0){
                     let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
                     if (!licensesModel){
@@ -410,10 +424,6 @@ DocumentData {
         anchors.bottom: root.bottom;
 
         width: bodyColumn.width;
-
-        Component.onCompleted: {
-//            softwareProductEditor.productModel.dataChanged.connect(softwareProductEditor.onModelChanged);
-        }
 
         function onModelChanged(){
             root.doUpdateModel();
