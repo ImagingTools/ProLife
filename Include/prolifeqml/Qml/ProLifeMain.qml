@@ -9,6 +9,8 @@ ApplicationMain{
     useWebSocketSubscription: true;
     loadPageByClick: false;
 
+    systemStatus: "UNKNOWN";
+
     Component.onCompleted: {
         context.application = 'ProLife';
     }

@@ -117,8 +117,8 @@
                     <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/CachedLicenseCollection"/>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -129,8 +129,8 @@
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/CachedProductCollection"/>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
@@ -160,9 +160,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -288,22 +285,22 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LisaGqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaServerUrlParam" Type="Reference" ExportId="LisaServerUrlParam">
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -760,8 +757,8 @@
                                 <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CachedLicenseCollection"/>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
@@ -772,8 +769,8 @@
                                 <AttributeInfo Id="OrderDatabaseSqlDelegate" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CachedProductCollection"/>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
                                     <Data IsEnabled="false"/>
@@ -810,9 +807,6 @@
                                 <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="/Lisa"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -826,9 +820,6 @@
                                             <Value>Feature Info</Value>
                                         </Values>
                                     </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
-                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -874,9 +865,6 @@
                                 <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="/Lisa"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -890,9 +878,6 @@
                                             <Value>License Info</Value>
                                         </Values>
                                     </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
-                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -947,9 +932,6 @@
                                 <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="/Lisa"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -964,9 +946,6 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -979,14 +958,14 @@
                                 <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CachedLicenseCollection"/>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CachedProductCollection"/>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
                                     <Data IsEnabled="false"/>
@@ -1005,16 +984,11 @@
                     <Component ExportedId="BindingProductsRepository" ComponentId="BindingProductsRepository"/>
                     <Component ExportedId="CachedAccountRepository" ComponentId="CachedAccountRepository"/>
                     <Component ExportedId="CachedDeviceRepository" ComponentId="CachedDeviceRepository"/>
-                    <Component ExportedId="CachedLicenseCollection" ComponentId="CachedLicenseCollection"/>
                     <Component ExportedId="CachedOrderRepository" ComponentId="CachedOrderRepository"/>
-                    <Component ExportedId="CachedProductCollection" ComponentId="CachedProductCollection"/>
                     <Component ExportedId="CachedSoftwareRepository" ComponentId="CachedSoftwareRepository"/>
                     <Component ExportedId="DeviceSqlCollection" ComponentId="DeviceSqlRepository/DeviceSqlCollection"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
-                    <Component ExportedId="FeatureRepository" ComponentId="FeatureRepository"/>
-                    <Component ExportedId="LicenseRepository" ComponentId="LicenseRepository"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
-                    <Component ExportedId="ProductRepository" ComponentId="ProductRepository"/>
                     <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
                 </ExportedComponents>
             </Data>

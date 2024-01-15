@@ -52,6 +52,8 @@ DocumentData {
 
             if (statusModel){
                 statusCB.model = statusModel;
+
+                doUpdateGui();
             }
         }
     }
@@ -80,59 +82,6 @@ DocumentData {
 
         return ok;
     }
-
-//    CollectionDataProvider {
-//        id: productsList;
-
-//        commandId: "Products";
-
-//        fields: ["Id", "ProductName", "Description", "CategoryId", "Licenses"];
-//        sortByField: "ProductName";
-
-//        Component.onCompleted: {
-//            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-//            objectFilter.SetData("CategoryId", "Hardware");
-//        }
-
-//        onCollectionModelChanged: {
-//            console.log("productsList onCollectionModelChanged");
-//            if (productsList.collectionModel != null){
-//                productCB.model = productsList.collectionModel;
-//            }
-//        }
-
-//        onFailed: {
-//            if (deviceEditorContainer.documentManagerPtr){
-//                let message = qsTr("Error loading products. Please check Lisa connection.");
-//                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
-//            }
-//        }
-//    }
-
-//    CollectionDataProvider {
-//        id: ordersList;
-
-//        commandId: "Orders";
-
-//        sortByField: "OrderId";
-
-//        fields: ["Id", "OrderId", "Description"];
-
-//        onCollectionModelChanged: {
-//            console.log("ordersList onCollectionModelChanged");
-
-//            if (ordersList.collectionModel != null){
-//                orderCB.model = ordersList.collectionModel;
-//            }
-//        }
-
-//        onFailed: {
-//            if (deviceEditorContainer.documentManagerPtr){
-//                let message = qsTr("Error loading orders.");
-//                deviceEditorContainer.documentManagerPtr.openErrorDialog(message);
-//            }
-//        }
-//    }
 
     DeviceProductionStatus {
         id: productionStatus;
@@ -208,10 +157,10 @@ DocumentData {
         let statusFound = false;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-            let statusModel = stateMachine.getAvailableModel(status);
-//            let statusModel = statusCB.model;
+//            let statusModel = stateMachine.getAvailableModel(status);
+            let statusModel = statusCB.model;
             if (statusModel){
-                statusCB.model = statusModel;
+//                statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
@@ -802,7 +751,7 @@ DocumentData {
                             font.pixelSize: Style.fontSize_common;
                         }
 
-                        FilterableComboBox {
+                        ComboBox {
                             id: orderCB;
 
                             anchors.left: parent.left;
@@ -827,6 +776,11 @@ DocumentData {
 
                             onCurrentIndexChanged: {
                                 deviceEditorContainer.doUpdateModel();
+                            }
+
+
+                            onModelChanged: {
+                                deviceEditorContainer.doUpdateGui();
                             }
                         }
 

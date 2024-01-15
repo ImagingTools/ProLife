@@ -339,6 +339,10 @@ DocumentData {
                 onCurrentIndexChanged: {
                     root.doUpdateModel();
                 }
+
+                onModelChanged: {
+                    root.doUpdateGui();
+                }
             }
 
             Button{

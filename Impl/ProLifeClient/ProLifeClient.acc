@@ -91,12 +91,6 @@
                     <AttributeInfo Id="DefaultServerPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultWebSocketServerHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultWebSocketServerPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8778"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/ApplicationLocalization"/>
                     </AttributeInfo>
@@ -124,9 +118,6 @@
         <Element Id="PumaSystemStatusController" PackageId="ImtCoreVoce" ComponentId="SystemStatusController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaTestConnection"/>
                     </AttributeInfo>
@@ -154,9 +145,6 @@
         <Element Id="SystemStatusController" PackageId="ImtCoreVoce" ComponentId="SystemStatusController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AutoCheckStatus" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="CheckCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeTestConnection"/>
                     </AttributeInfo>

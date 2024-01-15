@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5137" Description="ACF"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="1023" Number="331522" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -31,13 +31,16 @@
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="LanguageConstraints">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaServerUrlParam" Type="Reference" ExportId="LisaServerUrlParam">
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaUrlParam" Type="Reference" ExportId="LisaUrlParam">
+                    <AttributeInfo Id="LisaGqlEngine" Type="Reference" ExportId="LisaGqlEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="PumaGqlRequest">
@@ -56,9 +59,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="WebSocketServerAddress">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -88,20 +88,20 @@
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/DeviceOperationContextController"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/FeatureRepository"/>
+                    <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/LisaGQLEngine"/>
+                    <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="LisaGqlEngine">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/LicenseRepository"/>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/ProductRepository"/>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ApplicationController/SoftwareOperationContextController"/>
