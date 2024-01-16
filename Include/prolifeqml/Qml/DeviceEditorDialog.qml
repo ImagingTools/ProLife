@@ -11,8 +11,8 @@ Dialog {
     property TreeItemModel documentModel: TreeItemModel {}
 
     Component.onCompleted: {
-        root.buttons.addButton({"Id": "Save", "Name": "Save", "Enabled": true});
-        root.buttons.addButton({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
+        root.buttonsModel.append({"Id": "Save", "Name": "Save", "Enabled": true});
+        root.buttonsModel.append({"Id": "Cancel", "Name": "Cancel", "Enabled": true});
 
         root.title = qsTr("Device editor");
     }

@@ -22,8 +22,8 @@ Dialog {
 
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
-        productEditorDialog.buttons.addButton({"Id": "Link", "Name": qsTr("Link"), "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": "Cancel", "Name": qsTr("Cancel"), "Enabled": true});
+        productEditorDialog.buttonsModel.append({"Id": "Link", "Name": qsTr("Link"), "Enabled": false});
+        productEditorDialog.buttonsModel.append({"Id": "Cancel", "Name": qsTr("Cancel"), "Enabled": true});
     }
 
     contentComp: Component {

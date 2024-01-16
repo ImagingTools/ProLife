@@ -21,8 +21,8 @@ Dialog {
     property bool serialNumberEdit: true;
 
     Component.onCompleted: {
-        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Ok, "Name": "OK", "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Cancel, "Name": "Cancel", "Enabled": true});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Ok, "Name": "OK", "Enabled": false});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Cancel, "Name": "Cancel", "Enabled": true});
 
         productEditorDialog.title = qsTr("Product editor");
     }

@@ -40,8 +40,8 @@ Dialog {
 
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
-        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Ok, "Name": qsTr("Apply"), "Enabled": false});
-        productEditorDialog.buttons.addButton({"Id": Enums.ButtonType.Cancel, "Name": qsTr("Close"), "Enabled": true});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Ok, "Name": qsTr("Apply"), "Enabled": false});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Cancel, "Name": qsTr("Close"), "Enabled": true});
     }
 
     onFinished: {
