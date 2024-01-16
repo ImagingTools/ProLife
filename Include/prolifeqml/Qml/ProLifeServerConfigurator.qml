@@ -63,7 +63,7 @@ Rectangle {
         }
     }
 
-    ButtonsDialog {
+    DialogButtons {
         id: buttons;
 
         anchors.bottom: parent.bottom;
