@@ -6,7 +6,7 @@
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QtQml>
-#include <QQuickStyle>
+#include <QtQuickControls2/QQuickStyle>
 
 // ACF includes
 #include <ibase/IApplication.h>

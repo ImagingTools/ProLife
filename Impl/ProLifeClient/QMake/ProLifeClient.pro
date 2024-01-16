@@ -6,7 +6,8 @@ include($(IMTCOREDIR)/Config/QMake/OpenSSL.pri)
 include($(PROLIFEDIR)/Config/QMake/ProLife.pri)
 
 HEADERS =
-QT += xml network sql quick qml
+
+QT += xml network sql quick qml quickcontrols2
 
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
