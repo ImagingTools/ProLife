@@ -142,34 +142,34 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 
 	bool retVal = true;
 
-	static iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag serialNumberTag("SerialNumber", "Serial number", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(serialNumberTag);
 	retVal = retVal && archive.Process(m_serialNumber);
 	retVal = retVal && archive.EndTag(serialNumberTag);
 
-	static iser::CArchiveTag macAddressTag("MacAddress", "Mac address", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag macAddressTag("MacAddress", "Mac address", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(macAddressTag);
 	retVal = retVal && archive.Process(m_macAddress);
 	retVal = retVal && archive.EndTag(macAddressTag);
 
-	static iser::CArchiveTag deviceTypeTag("DeviceType", "Device type", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag deviceTypeTag("DeviceType", "Device type", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(deviceTypeTag);
 	retVal = retVal && archive.Process(m_deviceType);
 	retVal = retVal && archive.EndTag(deviceTypeTag);
 
 	if (imtCoreVersion >= 7386){
-		static iser::CArchiveTag configurationTypeTag("ConfigurationType", "Configuration type", iser::CArchiveTag::TT_LEAF);
+		iser::CArchiveTag configurationTypeTag("ConfigurationType", "Configuration type", iser::CArchiveTag::TT_LEAF);
 		retVal = retVal && archive.BeginTag(configurationTypeTag);
 		retVal = retVal && archive.Process(m_configurationType);
 		retVal = retVal && archive.EndTag(configurationTypeTag);
 	}
 
-	static iser::CArchiveTag descriptionTag("Description", "Description of the device", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag descriptionTag("Description", "Description of the device", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(descriptionTag);
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(descriptionTag);
 
-	static iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(statusTag);
 	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
 	retVal = retVal && archive.EndTag(statusTag);

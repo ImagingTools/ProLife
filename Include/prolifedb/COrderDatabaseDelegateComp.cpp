@@ -173,7 +173,6 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 #else
 		QByteArrayList ids = paramIds.toList();
 #endif
-		qDebug() << "ids" << ids;
 		for (const QByteArray& id : ids){
 			if (id == "CustomerUuid"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(id));
@@ -270,6 +269,18 @@ bool COrderDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilte
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
 		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderCustomer"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+		}
+		else if (columnId == "Status"){
+			sortQuery = QString(R"(ORDER BY CASE
+						WHEN "Document"->>'Status' = 'none' THEN 0
+						WHEN "Document"->>'Status' = 'created' THEN 1
+						WHEN "Document"->>'Status' = 'inProgress' THEN 2
+						WHEN "Document"->>'Status' = 'canceled' THEN 3
+						WHEN "Document"->>'Status' = 'onHold' THEN 4
+						WHEN "Document"->>'Status' = 'finished' THEN 5
+						WHEN "Document"->>'Status' = 'closed' THEN 6
+						ELSE 7 END %1)")
+					.arg(qPrintable(sortOrder));
 		}
 		else{
 			sortQuery = QString("ORDER BY \"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));

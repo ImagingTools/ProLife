@@ -6,6 +6,7 @@
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QtQml>
+#include <QQuickStyle>
 
 // ACF includes
 #include <ibase/IApplication.h>
@@ -55,6 +56,8 @@ int main(int argc, char *argv[])
 	qmlRegisterModule("QtQuick.Dialogs", 6, 2);
 	qmlRegisterModule("Qt5Compat.GraphicalEffects", 6, 0);
 #endif
+
+	QQuickStyle::setStyle("Fusion");
 
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
 	qmlRegisterType<imtqml::CGqlModel>("Acf", 1, 0, "GqlModel");

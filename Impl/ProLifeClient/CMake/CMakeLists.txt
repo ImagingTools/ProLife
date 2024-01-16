@@ -22,7 +22,7 @@ if(APPLE)
 endif()
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS WebSockets QuickWidgets)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Quick Qml REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Quick QuickControls2 Qml REQUIRED)
 
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 
@@ -42,6 +42,7 @@ target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql im
 target_link_libraries(${PROJECT_NAME} prolifeqml lisaqml ImtCoreLoc ProLifeLoc)
 target_link_libraries(${PROJECT_NAME} iqtgui)
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${QT_VERSION_MAJOR}::WebSockets)
+target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickControls2)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")

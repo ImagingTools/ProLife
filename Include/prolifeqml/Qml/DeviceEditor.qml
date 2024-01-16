@@ -422,6 +422,10 @@ DocumentData {
 
                                 deviceEditorContainer.doUpdateModel();
                             }
+
+                            onModelChanged: {
+                                deviceEditorContainer.doUpdateGui();
+                            }
                         }
                     }
 

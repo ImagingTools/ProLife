@@ -210,6 +210,17 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId" || columnId == "LicenseName"|| columnId == "DeviceType"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
+		else if (columnId == "Status"){
+			sortQuery = QString(R"(ORDER BY CASE
+						WHEN "Document"->>'Status' = 'none' THEN 0
+						WHEN "Document"->>'Status' = 'accepted' THEN 1
+						WHEN "Document"->>'Status' = 'inProgress' THEN 2
+						WHEN "Document"->>'Status' = 'canceled' THEN 3
+						WHEN "Document"->>'Status' = 'onHold' THEN 4
+						WHEN "Document"->>'Status' = 'finished' THEN 5
+						ELSE 6 END %1)")
+					.arg(qPrintable(sortOrder));
+		}
 		else{
 			sortQuery = QString("ORDER BY \"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}

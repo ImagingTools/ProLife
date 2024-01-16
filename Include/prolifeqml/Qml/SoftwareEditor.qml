@@ -398,6 +398,10 @@ DocumentData {
                 productCB.changeable = ok;
             }
 
+            onModelChanged: {
+                root.doUpdateGui();
+            }
+
             onCurrentIndexChanged: {
                 console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
 
