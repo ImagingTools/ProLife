@@ -28,6 +28,8 @@ Item {
     property var addedLicenseInfo: ({});
     property var removedLicenseInfo: ({});
 
+    property Item rootItem: null
+
     signal checkedItemsChanged();
     signal modelChanged();
 
@@ -579,7 +581,7 @@ Item {
         }
     }
 
-    Button {
+    ToolButton {
         id: bindButton;
 
         anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
@@ -594,10 +596,7 @@ Item {
         iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
                               "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
 
-//        iconWidth: 15;
-//        iconHeight: iconWidth;
-
-//        tooltipText: qsTr("Bind to the sensor");
+        tooltipText: qsTr("Bind to the sensor");
 
         property bool userCanBind: false;
 
@@ -643,7 +642,7 @@ Item {
         }
     }
 
-    Button {
+    ToolButton {
         id: unbindButton;
 
         anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
@@ -658,12 +657,9 @@ Item {
         iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
                               "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
 
-//        iconWidth: 15;
-//        iconHeight: iconWidth;
-
         property bool userCanUnbind: false;
 
-//        tooltipText: qsTr("Unbind from the sensor");
+        tooltipText: qsTr("Unbind from the sensor");
 
         Component.onCompleted: {
             unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");

@@ -10,7 +10,8 @@ Dialog {
     property int rootWidth: root ? root.width - 100 : 0;
 
     onRootWidthChanged: {
-        width = rootWidth
+        console.log("Dialog onRootWidthChanged", rootWidth);
+        width = rootWidth;
     }
 
     property var softwareIds: [];

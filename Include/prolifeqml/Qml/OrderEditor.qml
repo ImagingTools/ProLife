@@ -59,9 +59,9 @@ DocumentData {
         }
     }
 
-//    function endDocumentModelChanged(){
-//        CachedDeviceCollection.modelUpdated.connect(updateGui);
-//    }
+    function endDocumentModelChanged(){
+//        CachedDeviceCollection.modelUpdated.connect(doUpdateGui());
+    }
 
     onSaved: {
         setBlockingUpdateModel(true);
@@ -80,8 +80,6 @@ DocumentData {
         }
 
         setBlockingUpdateModel(false);
-
-//        devicesList.updateModel();
     }
 
     onWidthChanged: {
@@ -226,7 +224,6 @@ DocumentData {
         if (orderEditorContainer.documentModel.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.documentModel.GetData("OrderStatus");
             let statusModel = stateMachine.getAvailableModel(status);
-//            let statusModel = orderStatusCB.model;
             if (statusModel){
                 orderStatusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -661,7 +658,7 @@ DocumentData {
 
         radius: 3;
 
-        Button {
+        ToolButton {
             id: addProduct;
 
             anchors.verticalCenter: parent.verticalCenter;
@@ -672,11 +669,6 @@ DocumentData {
             width: height;
 
             iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
-
-            decorator: ButtonDecorator {
-                color: parent.hovered ? Style.buttonHoverColor : "transparent";
-                border.width: 0;
-            }
 
             onClicked: {
                 productsView.activeProductIndex = -1;
