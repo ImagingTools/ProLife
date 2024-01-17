@@ -4,7 +4,7 @@
         <VersionInfos>
             <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
@@ -26,14 +26,13 @@
         <Element ComponentName="SoftwareProductsPage" X="400" Y="476" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="PagesPermissions">
+        <EmbededRegistry Id="PageData">
             <PositionMap>
-                <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
-                <Element ComponentName="AdministrationPermissions" X="1050" Y="400" Note=""/>
-                <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
-                <Element ComponentName="LicensesPermissions" X="150" Y="550" Note=""/>
-                <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
-                <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
+                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
+                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
+                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
+                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
+                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -43,29 +42,22 @@
                 <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
                 <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
                 <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedLicenseCollection" X="975" Y="600" Note=""/>
                 <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedProductCollection" X="225" Y="600" Note=""/>
                 <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
                 <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
-                <Element ComponentName="FeatureRepository" X="600" Y="675" Note=""/>
-                <Element ComponentName="IdentifiableFeatureInfo" X="600" Y="775" Note=""/>
-                <Element ComponentName="IdentifiableLicenseInfo" X="975" Y="775" Note=""/>
-                <Element ComponentName="IdentifiableProductInfo" X="225" Y="775" Note=""/>
-                <Element ComponentName="LicenseRepository" X="975" Y="675" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="ProductRepository" X="225" Y="700" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="PageData">
+        <EmbededRegistry Id="PagesPermissions">
             <PositionMap>
-                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
-                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
-                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
-                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
-                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
+                <Element ComponentName="AccountsPermissions" X="750" Y="400" Note=""/>
+                <Element ComponentName="AdministrationPermissions" X="1050" Y="400" Note=""/>
+                <Element ComponentName="DevicesPermissions" X="150" Y="400" Note=""/>
+                <Element ComponentName="LicensesPermissions" X="150" Y="550" Note=""/>
+                <Element ComponentName="OrdersPermissions" X="450" Y="400" Note=""/>
+                <Element ComponentName="PagePermissions" X="575" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

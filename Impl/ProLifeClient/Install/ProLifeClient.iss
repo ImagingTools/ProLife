@@ -48,3 +48,13 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+function InitializeSetup(): boolean;
+var
+  ResultCode: integer;
+begin
+  DelTree(ExpandConstant('{pf64}\ImagingTools\ProLife'), True, True, True);
+  // Proceed Setup
+  Result := True;
+
+end;

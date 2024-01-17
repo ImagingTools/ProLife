@@ -4,10 +4,11 @@
         <VersionInfos>
             <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="CheckPermissionOr" X="125" Y="75" Note=""/>
         <Element ComponentName="Demultiplexer" X="625" Y="75" Note=""/>
         <Element ComponentName="DeviceChangeGenerator" X="850" Y="675" Note=""/>
         <Element ComponentName="DeviceCollectionCommands" X="475" Y="300" Note=""/>

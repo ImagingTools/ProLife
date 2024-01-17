@@ -16,7 +16,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf64}\ImagingTools\{#MyAppName}
+DefaultDirName={pf64}\ImagingTools\ProLifeServer
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 OutputBaseFilename=ProLifeServerInstall
@@ -89,20 +89,24 @@ function InitializeSetup(): boolean;
 var
   ResultCode: integer;
 begin
-
-  // Launch Notepad and wait for it to terminate
-  if Exec(ExpandConstant('{pf64}\ImagingTools\ProLifeServer\nginx\stopNginx.bat'), '', '', SW_SHOW,
-     ewWaitUntilTerminated, ResultCode) then
+  if DirExists(ExpandConstant('{pf64}\ImagingTools\ProLifeServer')) then
   begin
-    // handle success if necessary; ResultCode contains the exit code
-  end
-  else begin
-    // handle failure if necessary; ResultCode contains the error code
-  end;
+    if Exec(ExpandConstant('{pf64}\ImagingTools\ProLifeServer\nginx\stopNginx.bat'), '', '', SW_SHOW,
+       ewWaitUntilTerminated, ResultCode) then
+    begin
+      // Exec(ExpandConstant('{pf64}\ImagingTools\ProLifeServer\unins000.exe'), '', '', SW_SHOW,ewWaitUntilTerminated, ResultCode);
+    end
+    else begin
+      // handle failure if necessary; ResultCode contains the error code
+    end;
 
+    DelTree(ExpandConstant('{pf64}\ImagingTools\ProLifeServer'), True, True, True);
+  end;
   // Proceed Setup
   Result := True;
 
 end;
+
+
 
 

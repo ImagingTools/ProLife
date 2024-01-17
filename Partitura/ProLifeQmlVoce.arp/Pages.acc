@@ -4,7 +4,7 @@
         <VersionInfos>
             <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -109,7 +109,7 @@
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/CachedDeviceRepository"/>
+                        <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
@@ -124,7 +124,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/CachedOrderRepository"/>
+                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
@@ -709,29 +709,11 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CachedLicenseCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LicenseRepository"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="CachedOrderRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CachedProductCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductRepository"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -781,107 +763,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="FeatureRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaFeature"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableFeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>FeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>FeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Feature Info</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableFeatureInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableFeatureInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableLicenseInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableLicenseInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableProductInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableProductInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="LicenseRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaLicense"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableLicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>LicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>LicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>License Info</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -902,49 +783,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaProduct"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Product Info</Value>
-                                        </Values>
-                                    </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

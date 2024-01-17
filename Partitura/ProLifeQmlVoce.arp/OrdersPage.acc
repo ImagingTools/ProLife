@@ -4,7 +4,7 @@
         <VersionInfos>
             <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -127,6 +127,9 @@
                     <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ViewAllOrders"/>
                     </AttributeInfo>
@@ -187,6 +190,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="OrderInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
