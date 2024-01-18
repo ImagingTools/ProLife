@@ -20,10 +20,7 @@ win32-msvc*{
         QMAKE_CXXFLAGS += /wd4264
 
         # copying all Qt DLLs to destination directory
-        greaterThan(QT_MAJOR_VERSION, 4): QMAKE_POST_LINK = set path=$(QTDIR)\bin;%path% && $(QTDIR)\bin\windeployqt
-        --qmldir=$(PROLIFEDIR)/Impl/ProLifeClient
-        --qmldir=$(IMTCOREDIR)/Qml
-        --qmldir=$(PROLIFEDIR)/Include/prolifeqml/Qml  $$DESTDIR
+        greaterThan(QT_MAJOR_VERSION, 4): QMAKE_POST_LINK = set path=$(QTDIR)\bin;%path% && $(QTDIR)\bin\windeployqt --qmldir=$(PROLIFEDIR)/Impl/ProLifeClient --qmldir=$(IMTCOREDIR)/Qml --qmldir=$(PROLIFEDIR)/Include/prolifeqml/Qml $$DESTDIR
 }
 
 # Set configuration of custom builds:
