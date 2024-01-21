@@ -24,7 +24,6 @@ public:
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_userCollectionCompPtr, "UserCollection", "Remote user collection", true, "UserCollection");
-		I_ASSIGN(m_gqlRequestHandlerCompPtr, "GqlRequest", "GraphQL request handler", true, "GqlRequest");
 	I_END_COMPONENT
 
 	// reimplemented (imtdb::ISqlDatabaseObjectDelegate)
