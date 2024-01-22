@@ -1,22 +1,36 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtlicgui 1.0
+import imtauthgui 1.0
 import imtcontrols 1.0
+import prolifeqml 1.0
 
 ApplicationMain{
     id: window;
 
     useWebSocketSubscription: true;
     loadPageByClick: false;
+    canRecoveryPassword: false;
 
     systemStatus: "UNKNOWN";
 
     Component.onCompleted: {
         context.application = 'ProLife';
+
+        Events.subscribeEvent("Login", loginSuccesful);
     }
 
-    property InstanceMaskProvider instanceMaskProvider :InstanceMaskProvider {
-        settingsProvider: window.settingsProvider;
+    Component.onDestruction: {
+         Events.unSubscribeEvent("Login", loginSuccesful);
+    }
+
+    function loginSuccesful(){
+        CachedProductCollection.updateModel();
+        CachedLicenseCollection.updateModel();
+        CachedAccountCollection.updateModel();
+        CachedOrderCollection.updateModel();
+        CachedDeviceCollection.updateModel();
     }
 }
 

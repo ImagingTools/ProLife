@@ -7,7 +7,6 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
-import lisaqml 1.0
 
 DocumentData {
     id: orderEditorContainer;
@@ -25,6 +24,8 @@ DocumentData {
 
     property int radius: 3;
     property int spacing: 25;
+
+    property int comboBoxHeight: 27;
 
     documentCompleted: CachedAccountCollection.completed && CachedProductCollection.completed && CachedDeviceCollection.completed && CachedLicenseCollection.completed;
 
@@ -473,7 +474,7 @@ DocumentData {
                 anchors.topMargin: 5;
 
                 width: parent.width;
-                height: 23;
+                height: orderEditorContainer.comboBoxHeight;
 
                 radius: orderEditorContainer.radius;
 
@@ -516,7 +517,7 @@ DocumentData {
                 anchors.left: parent.left;
 
                 width: parent.width - buttonContainer.width - 10;
-                height: 23;
+                height: orderEditorContainer.comboBoxHeight;
 
                 radius: orderEditorContainer.radius;
 
@@ -555,7 +556,7 @@ DocumentData {
 
                 decorator: ButtonDecorator{
                     width: 70;
-                    height: 23;
+                    height: orderStatusCB.height;
                     radius: orderEditorContainer.radius;
                 }
             }
@@ -634,8 +635,6 @@ DocumentData {
         anchors.leftMargin: 5;
         anchors.top: productsView.top;
         anchors.bottom: productsView.bottom;
-
-        backgroundColor: Style.baseColor;
 
         secondSize: 10;
         targetItem: productsView;

@@ -7,7 +7,6 @@ import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
 import prolifeqml 1.0
-import lisaqml 1.0
 
 DocumentData {
     id: deviceEditorContainer;
@@ -18,11 +17,63 @@ DocumentData {
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
-//    documentCompleted: ordersList.completed && productsList.completed;
+    //    documentCompleted: ordersList.completed && productsList.completed;
     documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
 
     property int radius: 3;
     property int spacing: Style.size_mainMargin;
+
+    property int comboBoxHeight: 27;
+
+    commandsDelegate: DocumentWorkspaceCommandsDelegateBase {
+        documentPtr: deviceEditorContainer;
+
+        onCommandActivated: {
+            if (commandId == "Bind"){
+                if (deviceEditorContainer.isDirty){
+                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first.")});
+
+                    return;
+                }
+
+                let hardwareUuid = deviceEditorContainer.documentId;
+                let macAddress = "";
+
+                if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
+                    macAddress = deviceEditorContainer.documentModel.GetData("MacAddress");
+                }
+
+                if (hardwareUuid === "" || macAddress === ""){
+                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter the MAC-Address then save the document.")});
+
+                    return;
+                }
+
+                modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid});
+            }
+        }
+    }
+
+    Component {
+        id: saveDialogComp;
+
+        MessageDialog {
+            width: 300;
+
+            title: qsTr("Save document");
+
+            buttonsModel: ListModel{
+                ListElement{Id: Enums.ButtonType.Yes; Name:qsTr("OK"); Enabled: true}
+            }
+        }
+    }
+
+    Component {
+        id: productPairEditorDialog;
+
+        HardwareProductBindingDialog {
+        }
+    }
 
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
@@ -44,7 +95,6 @@ DocumentData {
     }
 
     onSaved: {
-        console.log("onSaved");
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
 
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
@@ -131,8 +181,6 @@ DocumentData {
     }
 
     function updateGui(){
-        console.log("UpdateGui start");
-
         if (deviceEditorContainer.documentModel.ContainsKey("Description")){
             descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
         }
@@ -157,10 +205,10 @@ DocumentData {
         let statusFound = false;
         if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-//            let statusModel = stateMachine.getAvailableModel(status);
+            //            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = statusCB.model;
             if (statusModel){
-//                statusCB.model = statusModel;
+                //                statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
@@ -238,7 +286,6 @@ DocumentData {
         if (!orderIdFound){
             orderCB.currentIndex = -1;
         }
-        console.log("UpdateGui end");
     }
 
     function updateModel(){
@@ -313,8 +360,6 @@ DocumentData {
         anchors.leftMargin: Style.size_mainMargin;
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
-
-        backgroundColor: Style.baseColor;
 
         secondSize: 10;
         targetItem: flickable;
@@ -392,7 +437,7 @@ DocumentData {
                             anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
                             width: parent.width;
-                            height: 23;
+                            height: deviceEditorContainer.comboBoxHeight;
 
                             radius: deviceEditorContainer.radius;
 
@@ -448,7 +493,7 @@ DocumentData {
                             anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
                             width: parent.width;
-                            height: 23;
+                            height: deviceEditorContainer.comboBoxHeight;
 
                             radius: deviceEditorContainer.radius;
 
@@ -644,7 +689,7 @@ DocumentData {
                             anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
                             width: parent.width;
-                            height: 23;
+                            height: 30;
 
                             ComboBox {
                                 id: statusCB;
@@ -652,7 +697,7 @@ DocumentData {
                                 anchors.left: parent.left;
 
                                 width: parent.width - iconStatus.width - 2*iconStatus.anchors.leftMargin - buttonContainer.width;
-                                height: 23;
+                                height: deviceEditorContainer.comboBoxHeight;
 
                                 radius: deviceEditorContainer.radius;
 
@@ -709,7 +754,7 @@ DocumentData {
                                 anchors.left: statusCB.right;
                                 anchors.leftMargin: Style.size_mainMargin;
 
-                                width: 20;
+                                width: 25;
                                 height: width;
 
                                 sourceSize.height: height;
@@ -736,7 +781,7 @@ DocumentData {
 
                                 decorator: ButtonDecorator{
                                     width: 70;
-                                    height: 23;
+                                    height: statusCB.height;
                                     radius: deviceEditorContainer.radius;
                                 }
                             }
@@ -755,7 +800,7 @@ DocumentData {
                             font.pixelSize: Style.fontSize_common;
                         }
 
-                        ComboBox {
+                        FilterableComboBox {
                             id: orderCB;
 
                             anchors.left: parent.left;
@@ -763,7 +808,7 @@ DocumentData {
                             anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
 
                             width: parent.width - orderClearButton.width - 10;
-                            height: 23;
+                            height: deviceEditorContainer.comboBoxHeight;
 
                             radius: deviceEditorContainer.radius;
 
@@ -781,7 +826,6 @@ DocumentData {
                             onCurrentIndexChanged: {
                                 deviceEditorContainer.doUpdateModel();
                             }
-
 
                             onModelChanged: {
                                 deviceEditorContainer.doUpdateGui();
@@ -808,7 +852,7 @@ DocumentData {
 
                             decorator: ButtonDecorator{
                                 width: 70;
-                                height: 23;
+                                height: orderCB.height;
                                 radius: deviceEditorContainer.radius;
                             }
                         }

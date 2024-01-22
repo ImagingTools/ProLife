@@ -43,8 +43,8 @@ Item {
         anchors.top: deviceText.bottom;
         anchors.topMargin: root.margin;
 
-        height: root.itemHeight;
         width: parent.width;
+        height: Style.comboBoxHeight;
 
         radius: 3;
 

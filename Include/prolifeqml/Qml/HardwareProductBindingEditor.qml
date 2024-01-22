@@ -500,7 +500,6 @@ Item {
 
                 Component.onCompleted: {
                     console.log("DEBUG::29")
-                    bindingProductsCollection.pagination.countElements = 1000
                     bindingProductsCollection.table.canSelectAll = false;
                     bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
 //                    bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
@@ -715,6 +714,8 @@ Item {
         anchors.fill: parent;
 
         visible: false;
+
+        color: Style.baseColor;
     }
 
     TreeItemModel {

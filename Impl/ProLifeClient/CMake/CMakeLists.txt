@@ -39,7 +39,7 @@ message("PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
 target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml)
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml)
-target_link_libraries(${PROJECT_NAME} prolifeqml lisaqml ImtCoreLoc ProLifeLoc)
+target_link_libraries(${PROJECT_NAME} prolifeqml ImtCoreLoc ProLifeLoc)
 target_link_libraries(${PROJECT_NAME} iqtgui)
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${QT_VERSION_MAJOR}::WebSockets)
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickControls2)

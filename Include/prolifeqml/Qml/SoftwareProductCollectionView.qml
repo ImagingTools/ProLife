@@ -152,7 +152,6 @@ CollectionView {
                     width: 300;
                     height: filtermenu.height;
 
-                    backgroundColor: Style.baseColor;
                     currentIndex: 0;
 
                     radius: 3;
@@ -234,10 +233,11 @@ CollectionView {
                     height: filtermenu.height;
                     width: 200;
 
-                    backgroundColor: Style.baseColor;
                     currentIndex: 0;
 
                     radius: 3;
+
+                    shownItemsCount: 15;
 
                     onCurrentIndexChanged: {
                         let objectFilter = container.modelFilter.GetData("ObjectFilter");

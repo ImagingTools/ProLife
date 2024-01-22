@@ -204,7 +204,7 @@ Item {
             id: productCB;
 
             width: parent.width;
-            height: 23;
+            height: Style.comboBoxHeight;
 
             radius: 3;
 

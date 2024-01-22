@@ -5,8 +5,8 @@ import imtauthgui 1.0
 import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
+import imtlicgui 1.0
 import prolifeqml 1.0
-import lisaqml 1.0
 
 DocumentData {
     id: root;
@@ -17,6 +17,7 @@ DocumentData {
     documentCompleted: CachedProductCollection.completed && CachedOrderCollection.completed;
 
     property string alertMessage: "";
+    property int comboBoxHeight: 27;
 
     Component.onCompleted: {
         CachedProductCollection.updateModel();
@@ -316,13 +317,13 @@ DocumentData {
             width: parent.width;
             height: 23;
 
-            ComboBox {
+            FilterableComboBox {
                 id: ordersCB;
 
                 anchors.left: parent.left;
 
                 width: parent.width - buttonContainer.width - 10;
-                height: 23;
+                height: root.comboBoxHeight;
 
                 radius: 3;
 
@@ -365,7 +366,8 @@ DocumentData {
 
                 decorator: ButtonDecorator{
                     width: 70;
-                    height: 23;
+                    height: ordersCB.height;
+
                     radius: 3;
                 }
             }
@@ -384,7 +386,7 @@ DocumentData {
             id: productCB;
 
             width: parent.width;
-            height: 23;
+            height: root.comboBoxHeight;
 
             radius: 3;
 

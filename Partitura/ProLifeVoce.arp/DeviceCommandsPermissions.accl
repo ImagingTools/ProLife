@@ -2,12 +2,13 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5122" Description="ACF"/>
-            <Version Id="1" Number="2196" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
+            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="Bind" X="600" Y="400" Note=""/>
         <Element ComponentName="Close" X="1000" Y="400" Note=""/>
         <Element ComponentName="CommandPermissions" X="600" Y="300" Note=""/>
         <Element ComponentName="History" X="600" Y="200" Note=""/>

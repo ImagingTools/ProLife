@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5136" Description="ACF"/>
+            <Version Id="0" Number="5147" Description="ACF"/>
             <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
@@ -13,16 +13,6 @@
         <Element ComponentName="UserSettingsController" X="225" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="UserSettingsController">
-            <PositionMap>
-                <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
-                <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
-                <Element ComponentName="UserSettingsController" X="625" Y="75" Note=""/>
-                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
-                <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="ServerSettingsController">
             <PositionMap>
                 <Element ComponentName="BackupSettingsController" X="575" Y="525" Note=""/>
@@ -32,6 +22,16 @@
                 <Element ComponentName="ServerSettingsController" X="575" Y="650" Note=""/>
                 <Element ComponentName="SettingsController" X="575" Y="275" Note=""/>
                 <Element ComponentName="SettingsRepresentation" X="975" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="UserSettingsController">
+            <PositionMap>
+                <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
+                <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
+                <Element ComponentName="UserSettingsController" X="625" Y="75" Note=""/>
+                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
+                <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

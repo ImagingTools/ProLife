@@ -44,7 +44,6 @@ target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtauthdb imtcom imtapp)
 target_link_libraries(${PROJECT_NAME} imtqml imtcontrolsqml imtguiqml imtstylecontrolsqml imtdocguiqml imtguigqlqml imtauthguiqml imtlicguiqml imtcolguiqml)
 target_link_libraries(${PROJECT_NAME} prolifeqml ImtCoreLoc ProLifeLoc prolifedata prolifedb prolifegql prolifeqml)
-target_link_libraries(${PROJECT_NAME} lisaqml)
 target_link_libraries(${PROJECT_NAME} iqtgui)
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${QT_VERSION_MAJOR}::WebSockets)
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)

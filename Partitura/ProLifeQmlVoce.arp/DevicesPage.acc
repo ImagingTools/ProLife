@@ -416,6 +416,7 @@
                                             <Value>Empty</Value>
                                             <Value>Edit</Value>
                                             <Value>Bind</Value>
+                                            <Value>Empty</Value>
                                             <Value>CreateLicenseFile</Value>
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
@@ -869,6 +870,27 @@
         <EmbeddedRegistry Id="DeviceCommands">
             <Data Description="" Keywords="">
                 <ElementsList>
+                    <Element Id="Bind" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/Link"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Id" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Bind"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Bind"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap/>
@@ -905,6 +927,8 @@
                                             <Value>Redo</Value>
                                             <Value>Empty</Value>
                                             <Value>Save</Value>
+                                            <Value>Empty</Value>
+                                            <Value>Bind</Value>
                                             <Value>Empty</Value>
                                             <Value>History</Value>
                                             <Value>Empty</Value>
@@ -999,24 +1023,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="History"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrderEdit" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OrderEdit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="OrderEdit"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

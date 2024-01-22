@@ -22,6 +22,8 @@ Item {
 
     property bool blockUpdatingModel: false;
 
+    property int comboBoxHeight: 27;
+
     onReadOnlyChanged: {
         serialNumberInput.readOnly = root.readOnly;
 
@@ -171,7 +173,7 @@ Item {
         anchors.topMargin: root.margin;
 
         width: parent.width;
-        height: 23;
+        height: root.comboBoxHeight;
 
         nameId: "LicenseName";
 
