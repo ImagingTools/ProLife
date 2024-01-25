@@ -24,7 +24,6 @@ public:
 
 protected:
 	virtual bool CompareDocuments(const istd::IChangeable* oldDocumentPtr, const istd::IChangeable* newDocumentPtr, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
-
 	virtual QString GetLicenseName(const QByteArray& productUuid) const;
 
 protected:

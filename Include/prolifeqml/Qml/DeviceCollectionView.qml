@@ -199,7 +199,7 @@ CollectionView {
 
                     radius: 3;
 
-                    shownItemsCount: 15;
+//                    shownItemsCount: 15;
 
                     onCurrentIndexChanged: {
                         if (container.modelFilter.ContainsKey("AccountFilter")){
@@ -352,7 +352,7 @@ CollectionView {
                 anchors.left: parent.left;
                 anchors.leftMargin: 5;
 
-                width: 18;
+                width: 20;
                 height: width;
 
                 sourceSize.width: width;

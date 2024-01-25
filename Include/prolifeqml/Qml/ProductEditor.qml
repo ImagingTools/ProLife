@@ -174,7 +174,7 @@ Item {
             }
         }
 
-        productEditor.rootItem.buttons.setButtonState(Enums.ButtonType.Ok, ok);
+        productEditor.rootItem.buttons.setButtonState(Enums.ok, ok);
 
         productEditor.blockUpdatingModel = false;
     }

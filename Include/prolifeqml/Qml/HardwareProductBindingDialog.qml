@@ -17,7 +17,7 @@ Dialog {
     property var softwareIds: [];
     property string hardwareId: "";
 
-    notClosingButtons: Enums.ButtonType.Ok;
+    notClosingButtons: Enums.ok;
 
     signal saved();
 
@@ -41,12 +41,12 @@ Dialog {
 
     function fillButtons(){
         productEditorDialog.buttonsModel.clear();
-        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Ok, "Name": qsTr("Apply"), "Enabled": false});
-        productEditorDialog.buttonsModel.append({"Id": Enums.ButtonType.Cancel, "Name": qsTr("Close"), "Enabled": true});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ok, "Name": qsTr("Apply"), "Enabled": false});
+        productEditorDialog.buttonsModel.append({"Id": Enums.cancel, "Name": qsTr("Close"), "Enabled": true});
     }
 
     onFinished: {
-        if (buttonId == Enums.ButtonType.Ok){
+        if (buttonId == Enums.ok){
             modalDialogManager.openDialog(messageDialog, {});
         }
     }
@@ -63,7 +63,7 @@ Dialog {
             hardwareId: productEditorDialog.hardwareId
 
             onModelChanged: {
-                productEditorDialog.buttons.setButtonState(Enums.ButtonType.Ok, true);
+                productEditorDialog.buttons.setButtonState(Enums.ok, true);
                 productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Cancel"));
             }
         }
@@ -76,7 +76,7 @@ Dialog {
             title: qsTr("Apply Changes");
             message: qsTr("Please check the data before saving. Save changes ?")
             onFinished: {
-                if (buttonId == Enums.ButtonType.Yes){
+                if (buttonId == Enums.yes){
                     if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
                         let onResult = function(id, name){}
 
@@ -103,14 +103,14 @@ Dialog {
 
                   //  productEditorDialog.contentItem.includeIds = [];
                     productEditorDialog.contentItem.changesApplied = true;
-                    productEditorDialog.buttons.setButtonState(Enums.ButtonType.Ok, false);
+                    productEditorDialog.buttons.setButtonState(Enums.ok, false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
 
                     productEditorDialog.contentItem.beginBindingModel.Copy(productEditorDialog.contentItem.bindingModel);
 
                     productEditorDialog.saved();
 
-                    productEditorDialog.finished(Enums.ButtonType.Cancel);
+                    productEditorDialog.finished(Enums.cancel);
                 }
             }
         }

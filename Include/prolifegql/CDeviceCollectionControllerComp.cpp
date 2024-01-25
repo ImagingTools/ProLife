@@ -119,10 +119,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 				ordersOptionsManager.InsertOption("", "");
 			}
 
-//			if (!userId.isEmpty()){
-//				ordersOptionsManager.InsertOption("", userId);
-//			}
-
 			if (!userId.isEmpty()){
 				ordersOptionsManager.InsertOption("", userGroupIds.join(';'));
 			}

@@ -34,28 +34,17 @@ list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/html)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
 # copy base qml sources from to
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtgui/Qml/Acf)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/Acf)
-list(APPEND webdirs ${buildwebdir}/src/Acf)
-
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtgui/Qml/imtgui)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtgui)
 list(APPEND webdirs ${buildwebdir}/src/imtgui)
-
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Qml/imtqml)
-list(APPEND webdirs ${buildwebdir}/src/imtqml)
 
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtqml/Resources/dist)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtauthgui/Qml/imtauthgui)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtauthgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtauthgui)
 list(APPEND webdirs ${buildwebdir}/src/imtauthgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Include/imtlicgui/Qml/imtlicgui)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/src/imtlicgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtlicgui)
 list(APPEND webdirs ${buildwebdir}/src/imtlicgui)
-
 
 message("PROLIFEDIR ${PROLIFEDIR}")
 

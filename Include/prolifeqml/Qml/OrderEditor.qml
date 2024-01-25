@@ -597,7 +597,7 @@ DocumentData {
             }
 
             onFinished: {
-                if (buttonId == Enums.ButtonType.Ok){
+                if (buttonId == Enums.ok){
                     let productModel = productsDialog.bodyItem.productModel;
                     let actualOrderProducts = orderEditorContainer.documentModel.GetData("OrderProducts");
 
@@ -760,7 +760,7 @@ DocumentData {
 
         MessageDialog {
             onFinished: {
-                if (buttonId == Enums.ButtonType.Yes){
+                if (buttonId == Enums.yes){
                     if (productsView.activeProductIndex < 0){
                         return;
                     }

@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	qmlRegisterModule("Qt5Compat.GraphicalEffects", 6, 0);
 #endif
 
-	QQuickStyle::setStyle("Fusion");
+//	QQuickStyle::setStyle("Material");
 
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
 	qmlRegisterType<imtqml::CGqlModel>("Acf", 1, 0, "GqlModel");

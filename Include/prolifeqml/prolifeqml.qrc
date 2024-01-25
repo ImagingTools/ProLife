@@ -17,7 +17,6 @@
         <file alias="ProLife/DeviceEditor.qml">Qml/DeviceEditor.qml</file>
         <file alias="ProLife/LicenseFileController.qml">Qml/LicenseFileController.qml</file>
         <file alias="ProLife/ProductEditorDialog.qml">Qml/ProductEditorDialog.qml</file>
-        <file alias="ProLife/DeviceEditorDialog.qml">Qml/DeviceEditorDialog.qml</file>
         <file alias="ProLife/OrderEditorCommandsDelegate.qml">Qml/OrderEditorCommandsDelegate.qml</file>
         <file alias="ProLife/OrderProductView.qml">Qml/OrderProductView.qml</file>
         <file alias="ProLife/DeviceCollectionView.qml">Qml/DeviceCollectionView.qml</file>
@@ -34,7 +33,6 @@
         <file alias="ProLife/SoftwareEditor.qml">Qml/SoftwareEditor.qml</file>
         <file alias="ProLife/SoftwareProductCollectionView.qml">Qml/SoftwareProductCollectionView.qml</file>
         <file alias="ProLife/SoftwareProductsCollectionViewCommandsDelegate.qml">Qml/SoftwareProductsCollectionViewCommandsDelegate.qml</file>
-        <file alias="ProLife/ProductPairEditorDialog.qml">Qml/ProductPairEditorDialog.qml</file>
         <file alias="ProLife/ProductPairEditor.qml">Qml/ProductPairEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingEditor.qml">Qml/HardwareProductBindingEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingDialog.qml">Qml/HardwareProductBindingDialog.qml</file>

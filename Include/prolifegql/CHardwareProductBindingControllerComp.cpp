@@ -94,7 +94,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IHardwareProductBinding* productBindingPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
 		if (productBindingPtr != nullptr){
-			QByteArray hardwareId = productBindingPtr->GetHardwareId();
+			const QByteArray hardwareId = productBindingPtr->GetHardwareId();
 			QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
 
 			dataModelPtr->SetData("Id", objectId);

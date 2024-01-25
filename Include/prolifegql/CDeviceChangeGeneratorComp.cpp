@@ -218,9 +218,6 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
 				if (operationDescriptionPtr != nullptr){
 					QByteArray typeId = operationDescriptionPtr->GetOperationTypeId();
-					QByteArray key = operationDescriptionPtr->GetKey();
-					QByteArray oldValue = operationDescriptionPtr->GetOldValue();
-					QByteArray newValue = operationDescriptionPtr->GetNewValue();
 
 					QString keyName = operationDescriptionPtr->GetKeyName();
 					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");

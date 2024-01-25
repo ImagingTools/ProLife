@@ -57,14 +57,10 @@ DocumentData {
     Component {
         id: saveDialogComp;
 
-        MessageDialog {
+        ErrorDialog {
             width: 300;
 
             title: qsTr("Save document");
-
-            buttonsModel: ListModel{
-                ListElement{Id: Enums.ButtonType.Yes; Name:qsTr("OK"); Enabled: true}
-            }
         }
     }
 
@@ -769,7 +765,7 @@ DocumentData {
 
                                 text: qsTr("Clear");
 
-                                enabled: statusCB.changeable;
+                                enabled: statusCB.changeable && statusCB.currentIndex >= 0;
 
                                 onClicked: {
                                     if(deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
@@ -840,7 +836,7 @@ DocumentData {
 
                             text: qsTr("Clear");
 
-                            enabled: orderCB.changeable;
+                            enabled: orderCB.changeable && orderCB.currentIndex >= 0;
 
                             onClicked: {
                                 if(deviceEditorContainer.documentModel.ContainsKey("OrderId")){
