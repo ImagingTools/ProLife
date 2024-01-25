@@ -199,7 +199,7 @@ CollectionView {
 
                     radius: 3;
 
-//                    shownItemsCount: 15;
+                    shownItemsCount: 15;
 
                     onCurrentIndexChanged: {
                         if (container.modelFilter.ContainsKey("AccountFilter")){

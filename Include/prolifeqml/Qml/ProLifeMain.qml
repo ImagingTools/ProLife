@@ -25,6 +25,14 @@ ApplicationMain{
          Events.unSubscribeEvent("Login", loginSuccesful);
     }
 
+    ModalDialogManager {
+        id: modalDialogManager;
+
+        z: 30;
+
+        anchors.fill: parent;
+    }
+
     function loginSuccesful(){
         CachedProductCollection.updateModel();
         CachedLicenseCollection.updateModel();
