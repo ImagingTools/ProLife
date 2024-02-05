@@ -1,4 +1,4 @@
-project(prolifestyle LANGUAGES CXX)
+project(prolifeqml LANGUAGES CXX)
 
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/StaticConfig.cmake)

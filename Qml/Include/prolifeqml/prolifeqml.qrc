@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/qml">
+	    <file alias="prolifeqml/qmldir">qmldir</file>
+		<file alias="ProLife/ProLifeMain.qml">ProLifeMain.qml</file>
+		<file alias="ProLife/ProLifeWeb.qml">ProLifeWeb.qml</file>
+		<file alias="ProLife/ProLifeServerConfigurator.qml">ProLifeServerConfigurator.qml</file>
+		<file alias="ProLife/OrderCollectionView.qml">OrderCollectionView.qml</file>
+		<file alias="ProLife/OrderEditor.qml">OrderEditor.qml</file>
+		<file alias="ProLife/DeviceEditor.qml">DeviceEditor.qml</file>
+		<file alias="ProLife/LicenseFileController.qml">LicenseFileController.qml</file>
+		<file alias="ProLife/ProductEditorDialog.qml">ProductEditorDialog.qml</file>
+		<file alias="ProLife/OrderEditorCommandsDelegate.qml">OrderEditorCommandsDelegate.qml</file>
+		<file alias="ProLife/OrderProductView.qml">OrderProductView.qml</file>
+		<file alias="ProLife/DeviceCollectionView.qml">DeviceCollectionView.qml</file>
+		<file alias="ProLife/DeviceCollectionViewCommandsDelegate.qml">DeviceCollectionViewCommandsDelegate.qml</file>
+		<file alias="ProLife/DeviceProductionStatus.qml">DeviceProductionStatus.qml</file>
+		<file alias="ProLife/OrderStatus.qml">OrderStatus.qml</file>
+		<file alias="ProLife/ProductPairCard.qml">ProductPairCard.qml</file>
+		<file alias="ProLife/SoftwareProductCard.qml">SoftwareProductCard.qml</file>
+		<file alias="ProLife/HardwareProductCard.qml">HardwareProductCard.qml</file>
+		<file alias="ProLife/OrderProductCard.qml">OrderProductCard.qml</file>
+		<file alias="ProLife/ProductEditor.qml">ProductEditor.qml</file>
+		<file alias="ProLife/SoftwareProductEditor.qml">SoftwareProductEditor.qml</file>
+		<file alias="ProLife/HardwareProductEditor.qml">HardwareProductEditor.qml</file>
+		<file alias="ProLife/SoftwareEditor.qml">SoftwareEditor.qml</file>
+		<file alias="ProLife/SoftwareProductCollectionView.qml">SoftwareProductCollectionView.qml</file>
+		<file alias="ProLife/SoftwareProductsCollectionViewCommandsDelegate.qml">SoftwareProductsCollectionViewCommandsDelegate.qml</file>
+		<file alias="ProLife/ProductPairEditor.qml">ProductPairEditor.qml</file>
+		<file alias="ProLife/HardwareProductBindingEditor.qml">HardwareProductBindingEditor.qml</file>
+		<file alias="ProLife/HardwareProductBindingDialog.qml">HardwareProductBindingDialog.qml</file>
+		<file alias="ProLife/CachedOrderCollection.qml">CachedOrderCollection.qml</file>
+		<file alias="ProLife/CachedDeviceCollection.qml">CachedDeviceCollection.qml</file>
+		<file alias="ProLife/DeviceDocumentCommandsDelegate.qml">DeviceDocumentCommandsDelegate.qml</file>
+		<file alias="ProLife/ProductEditorCommandsDelegate.qml">ProductEditorCommandsDelegate.qml</file>
+		<file alias="ProLife/ProductCollectionView.qml">ProductCollectionView.qml</file>
+    </qresource>
+</RCC>

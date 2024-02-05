@@ -160,17 +160,26 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 				imtbase::CTreeItemModel generalModel;
 				generalModel.CreateFromJson(filterBA);
 
-				imtbase::CTreeItemModel* filterModel = generalModel.GetTreeItemModel("FilterIds");
-				if (filterModel != nullptr){
-					QByteArrayList filteringInfoIds;
-					for (int i = 0; i < filterModel->GetItemsCount(); i++){
-						QByteArray headerId = filterModel->GetData("Id", i).toByteArray();
-						if (!headerId.isEmpty()){
-							filteringInfoIds << headerId;
-						}
+				if (generalModel.ContainsKey("FilterIds")){
+					QByteArray filterIdsBA = generalModel.GetData("FilterIds").toByteArray();
+					if (!filterIdsBA.isEmpty()){
+						QByteArrayList filteringInfoIds = filterIdsBA.split(';');
+
+						m_filter.SetFilteringInfoIds(filteringInfoIds);
 					}
-					m_filter.SetFilteringInfoIds(filteringInfoIds);
 				}
+
+//				imtbase::CTreeItemModel* filterModel = generalModel.GetTreeItemModel("FilterIds");
+//				if (filterModel != nullptr){
+//					QByteArrayList filteringInfoIds;
+//					for (int i = 0; i < filterModel->GetItemsCount(); i++){
+//						QByteArray headerId = filterModel->GetData("Id", i).toByteArray();
+//						if (!headerId.isEmpty()){
+//							filteringInfoIds << headerId;
+//						}
+//					}
+//					m_filter.SetFilteringInfoIds(filteringInfoIds);
+//				}
 
 				QString filterText = generalModel.GetData("TextFilter").toString();
 				if (!filterText.isEmpty()){

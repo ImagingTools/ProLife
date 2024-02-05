@@ -284,7 +284,7 @@ Item {
 
                 defaultSortHeaderIndex: 2;
 
-                commands.headerInfoModel: headerInfoModel
+//                commands.headerInfoModel: headerInfoModel
 
                 GqlModel {
                     id: headerInfoModel
@@ -461,7 +461,7 @@ Item {
                 hasPagination: false
                 hasSort: false
 
-                commands.headerInfoModel: headerInfoBindingModel
+//                commands.headerInfoModel: headerInfoBindingModel
 
                 GqlModel {
                     id: headerInfoBindingModel

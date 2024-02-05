@@ -8,8 +8,10 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import prolifeqml 1.0
 
-DocumentData {
+ViewBase {
     id: deviceEditorContainer;
+
+    anchors.fill: parent;
 
     property TreeItemModel accountsModel: TreeItemModel {}
     property TreeItemModel productsModel: TreeItemModel {}
@@ -18,7 +20,7 @@ DocumentData {
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
     //    documentCompleted: ordersList.completed && productsList.completed;
-    documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
+//    documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
 
     property int radius: 3;
     property int spacing: Style.size_mainMargin;
@@ -26,21 +28,27 @@ DocumentData {
     property int comboBoxHeight: 27;
 
     commandsDelegate: DocumentWorkspaceCommandsDelegateBase {
-        documentPtr: deviceEditorContainer;
-
         onCommandActivated: {
             if (commandId == "Bind"){
-                if (deviceEditorContainer.isDirty){
-                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first.")});
+//                if (deviceEditorContainer.isDirty){
+//                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first.")});
 
+//                    return;
+//                }
+
+                let hardwareUuid = "";
+                if (deviceEditorContainer.model.ContainsKey("Id")){
+                    hardwareUuid = deviceEditorContainer.model.GetData("Id")
+                }
+
+                if (hardwareUuid === ""){
                     return;
                 }
 
-                let hardwareUuid = deviceEditorContainer.documentId;
                 let macAddress = "";
 
-                if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
-                    macAddress = deviceEditorContainer.documentModel.GetData("MacAddress");
+                if (deviceEditorContainer.model.ContainsKey("MacAddress")){
+                    macAddress = deviceEditorContainer.model.GetData("MacAddress");
                 }
 
                 if (hardwareUuid === "" || macAddress === ""){
@@ -52,6 +60,12 @@ DocumentData {
                 modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid});
             }
         }
+    }
+
+    Component.onCompleted: {
+        console.log("DeviceEditor onCompleted");
+        CachedOrderCollection.updateModel();
+        CachedProductCollection.updateModel();
     }
 
     Component {
@@ -71,14 +85,9 @@ DocumentData {
         }
     }
 
-    Component.onCompleted: {
-        CachedOrderCollection.updateModel();
-        CachedProductCollection.updateModel();
-    }
-
     function beginDocumentModelChanged(){
-        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+        if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
+            let status = deviceEditorContainer.model.GetData("ProductionStatus");
             if (status !== ""){
                 let statusModel = stateMachine.getAvailableModel(status);
                 statusCB.model = statusModel;
@@ -87,20 +96,6 @@ DocumentData {
 
         if (!statusCB.model){
             statusCB.model = productionStatus.statusModel;
-        }
-    }
-
-    onSaved: {
-        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-
-            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
-            let statusModel = stateMachine.getAvailableModel(status);
-
-            if (statusModel){
-                statusCB.model = statusModel;
-
-                doUpdateGui();
-            }
         }
     }
 
@@ -177,30 +172,31 @@ DocumentData {
     }
 
     function updateGui(){
-        if (deviceEditorContainer.documentModel.ContainsKey("Description")){
-            descriptionInput.text = deviceEditorContainer.documentModel.GetData("Description");
+        console.log("DeviceEditor updateGui");
+        if (deviceEditorContainer.model.ContainsKey("Description")){
+            descriptionInput.text = deviceEditorContainer.model.GetData("Description");
         }
         else{
             descriptionInput.text = "";
         }
 
-        if (deviceEditorContainer.documentModel.ContainsKey("SerialNumber")){
-            serialNumberInput.text = deviceEditorContainer.documentModel.GetData("SerialNumber");
+        if (deviceEditorContainer.model.ContainsKey("SerialNumber")){
+            serialNumberInput.text = deviceEditorContainer.model.GetData("SerialNumber");
         }
         else{
             serialNumberInput.text = "";
         }
 
-        if (deviceEditorContainer.documentModel.ContainsKey("MacAddress")){
-            macAddressInput.text = deviceEditorContainer.documentModel.GetData("MacAddress");
+        if (deviceEditorContainer.model.ContainsKey("MacAddress")){
+            macAddressInput.text = deviceEditorContainer.model.GetData("MacAddress");
         }
         else{
             macAddressInput.text = "";
         }
 
         let statusFound = false;
-        if (deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+        if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
+            let status = deviceEditorContainer.model.GetData("ProductionStatus");
             //            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = statusCB.model;
             if (statusModel){
@@ -223,8 +219,8 @@ DocumentData {
         }
 
         let deviceTypeFound = false;
-        if (deviceEditorContainer.documentModel.ContainsKey("DeviceType")){
-            let productId = deviceEditorContainer.documentModel.GetData("DeviceType");
+        if (deviceEditorContainer.model.ContainsKey("DeviceType")){
+            let productId = deviceEditorContainer.model.GetData("DeviceType");
             let productModel = productCB.model;
             for (let i = 0; i < productModel.GetItemsCount(); i++){
                 let id = productModel.GetData("Id", i);
@@ -242,8 +238,8 @@ DocumentData {
         }
 
         let configurationTypeFound = false;
-        if (deviceEditorContainer.documentModel.ContainsKey("LicenseName")){
-            let productId = deviceEditorContainer.documentModel.GetData("LicenseName");
+        if (deviceEditorContainer.model.ContainsKey("LicenseName")){
+            let productId = deviceEditorContainer.model.GetData("LicenseName");
             let model = configurationCB.model;
             if (model){
                 for (let i = 0; i < model.GetItemsCount(); i++){
@@ -264,8 +260,8 @@ DocumentData {
 
         let orderIdFound = false;
 
-        if (deviceEditorContainer.documentModel.ContainsKey("OrderId")){
-            let orderId = deviceEditorContainer.documentModel.GetData("OrderId");
+        if (deviceEditorContainer.model.ContainsKey("OrderId")){
+            let orderId = deviceEditorContainer.model.GetData("OrderId");
             let ordersModel = orderCB.model;
             if (ordersModel){
                 for (let i = 0; i < ordersModel.GetItemsCount(); i++){
@@ -287,47 +283,47 @@ DocumentData {
     function updateModel(){
         if (productCB.currentIndex >= 0 && productCB.model){
             let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-            deviceEditorContainer.documentModel.SetData("DeviceType", selectedProductId);
+            deviceEditorContainer.model.SetData("DeviceType", selectedProductId);
         }
         else{
-            deviceEditorContainer.documentModel.SetData("DeviceType", "");
+            deviceEditorContainer.model.SetData("DeviceType", "");
         }
 
         let configurationExists = false;
         if (configurationCB.model){
             if (configurationCB.currentIndex >= 0){
                 let configurationType = configurationCB.model.GetData("Id", configurationCB.currentIndex);
-                deviceEditorContainer.documentModel.SetData("LicenseName", configurationType);
+                deviceEditorContainer.model.SetData("LicenseName", configurationType);
 
                 configurationExists = true;
             }
         }
 
         if (!configurationExists){
-            deviceEditorContainer.documentModel.SetData("LicenseName", "");
+            deviceEditorContainer.model.SetData("LicenseName", "");
         }
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
                 let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
-                deviceEditorContainer.documentModel.SetData("OrderId", selectedOrderId);
+                deviceEditorContainer.model.SetData("OrderId", selectedOrderId);
             }
             else{
-                deviceEditorContainer.documentModel.SetData("OrderId", "");
+                deviceEditorContainer.model.SetData("OrderId", "");
             }
         }
 
-        deviceEditorContainer.documentModel.SetData("Description", descriptionInput.text);
-        deviceEditorContainer.documentModel.SetData("SerialNumber", serialNumberInput.text);
-        deviceEditorContainer.documentModel.SetData("MacAddress", macAddressInput.text);
+        deviceEditorContainer.model.SetData("Description", descriptionInput.text);
+        deviceEditorContainer.model.SetData("SerialNumber", serialNumberInput.text);
+        deviceEditorContainer.model.SetData("MacAddress", macAddressInput.text);
 
         if (statusCB.currentIndex >= 0 && statusCB.model){
             let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
-            deviceEditorContainer.documentModel.SetData("ProductionStatus", selectedStatus);
+            deviceEditorContainer.model.SetData("ProductionStatus", selectedStatus);
         }
         else{
-            deviceEditorContainer.documentModel.SetData("ProductionStatus", "");
+            deviceEditorContainer.model.SetData("ProductionStatus", "");
         }
     }
 
@@ -697,6 +693,8 @@ DocumentData {
 
                                 radius: deviceEditorContainer.radius;
 
+                                model: productionStatus.statusModel;
+
                                 function updateIcon(statusId){
                                     if (statusId === "None"){
                                         iconStatus.source = "../../../" + Style.getIconPath("Icons/StateUnknown", Icon.State.On, Icon.Mode.Normal);
@@ -731,8 +729,8 @@ DocumentData {
                                     //                                    deviceEditorContainer.updateModel();
 
                                     if (statusCB.currentIndex >= 0){
-                                        if ( deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
-                                            let status = deviceEditorContainer.documentModel.GetData("ProductionStatus");
+                                        if ( deviceEditorContainer.model.ContainsKey("ProductionStatus")){
+                                            let status = deviceEditorContainer.model.GetData("ProductionStatus");
                                             statusCB.updateIcon(status);
                                         }
                                     }
@@ -768,7 +766,7 @@ DocumentData {
                                 enabled: statusCB.changeable && statusCB.currentIndex >= 0;
 
                                 onClicked: {
-                                    if(deviceEditorContainer.documentModel.ContainsKey("ProductionStatus")){
+                                    if(deviceEditorContainer.model.ContainsKey("ProductionStatus")){
                                         if (statusCB.currentIndex != -1){
                                             statusCB.currentIndex = -1;
                                         }
@@ -839,7 +837,7 @@ DocumentData {
                             enabled: orderCB.changeable && orderCB.currentIndex >= 0;
 
                             onClicked: {
-                                if(deviceEditorContainer.documentModel.ContainsKey("OrderId")){
+                                if(deviceEditorContainer.model.ContainsKey("OrderId")){
                                     if (orderCB.currentIndex != -1){
                                         orderCB.currentIndex = -1;
                                     }

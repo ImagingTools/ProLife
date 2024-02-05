@@ -119,9 +119,9 @@ Dialog {
     GqlDocumentDataController {
         id: documentController;
 
-        onError: {
-            productEditorDialog.contentItem.bindingModelReady = true;
-        }
+//        onError: {
+//            productEditorDialog.contentItem.bindingModelReady = true;
+//        }
     }
 }//Container
 

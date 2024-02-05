@@ -2,13 +2,17 @@ import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
 import imtcolgui 1.0
+import imtdocgui 1.0
 import imtcontrols 1.0
 
-CollectionViewCommandsDelegateBase {
+DocumentCollectionViewDelegate {
     id: container;
 
     property bool filterByNewActive: false;
     property string filterLicense: "";
+
+    documentTypeId: "Device";
+    viewTypeId: "DeviceEditor";
 
     removeDialogTitle: qsTr("Removing the sensor");
     removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
@@ -23,72 +27,69 @@ CollectionViewCommandsDelegateBase {
     }
 
     function onLocalizationChanged(languageId){
-        let filterModel = container.collectionViewBase.modelFilter;
-        if (filterModel.ContainsKey("ObjectFilter")){
-            filterModel.RemoveData("ObjectFilter");
-        }
+//        let filterModel = container.collectionViewBase.modelFilter;
+//        if (filterModel.ContainsKey("ObjectFilter")){
+//            filterModel.RemoveData("ObjectFilter");
+//        }
     }
 
-    onSelectionChanged: {
-        console.log("DeviceCollection onSelectionChanged");
-        let elementsModel = container.tableData.elements;
-        if (!elementsModel){
-            return;
-        }
+    function updateItemSelection(selectedItems){
+        if (container.collectionView && container.collectionView.commandsController){
+            let elementsModel = container.collectionView.table.elements;
+            if (!elementsModel){
+                return;
+            }
 
-        console.log("elementsModel", elementsModel);
+            let macAddress = elementsModel.GetData("MacAddress", selectedItems[0]);
 
-        let indexes = container.tableData.getSelectedIndexes();
+            let isEnabled = selectedItems.length === 1;
 
-        let macAddress = elementsModel.GetData("MacAddress", indexes[0]);
+            let isOpenOrderEnabled = isEnabled;
+            if (isOpenOrderEnabled){
+                let orderId = elementsModel.GetData("OrderId", selectedItems[0]);
+                isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
+            }
 
-        let isEnabled = indexes.length === 1;
+            let isBindEnabled = isEnabled;
+            if (isBindEnabled){
+                isBindEnabled = isBindEnabled && macAddress !== "";
+            }
 
-        let isOpenOrderEnabled = isEnabled;
-        if (isOpenOrderEnabled){
-            let orderId = elementsModel.GetData("OrderId", indexes[0]);
-            isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
-        }
+            let createLicenseFileEnabled = selectedItems.length === 1;
+            if (createLicenseFileEnabled){
+                let count = elementsModel.GetData("SoftwareLinksCount", selectedItems[0]);
+                createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
+            }
 
-        let isBindEnabled = isEnabled;
-        if (isBindEnabled){
-            isBindEnabled = isBindEnabled && macAddress !== "";
-        }
-
-        let createLicenseFileEnabled = indexes.length === 1;
-        if (createLicenseFileEnabled){
-            let count = elementsModel.GetData("SoftwareLinksCount", indexes[0]);
-            createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
-        }
-
-        console.log("container.commandsProvider", container.commandsProvider);
-
-        if (container.commandsProvider){
-            commandsProvider.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
-            commandsProvider.setCommandIsEnabled("Bind", isBindEnabled);
-            commandsProvider.setCommandIsEnabled("CreateLicenseFile", createLicenseFileEnabled);
+            let commandsController = container.collectionView.commandsController;
+            if(commandsController){
+                commandsController.setCommandIsEnabled("Remove", isEnabled);
+                commandsController.setCommandIsEnabled("Edit", isEnabled);
+                commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
+                commandsController.setCommandIsEnabled("Bind", isBindEnabled);
+                commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileEnabled);
+            }
         }
     }
 
     onCommandActivated: {
         console.log('onCommandActivated', commandId)
 
-        let filterModel = container.collectionViewBase.modelFilter;
-        let licenseFilter = filterModel.GetData("LicenseFilter");
-        if (!licenseFilter){
-            licenseFilter = filterModel.AddTreeModel("LicenseFilter")
-        }
+//        let filterModel = container.collectionViewBase.modelFilter;
+//        let licenseFilter = filterModel.GetData("LicenseFilter");
+//        if (!licenseFilter){
+//            licenseFilter = filterModel.AddTreeModel("LicenseFilter")
+//        }
+
+        let indexes = container.collectionView.table.getSelectedIndexes();
+        let elementsModel = container.collectionView.table.elements;
 
         if (commandId === "Bind"){
-            let indexes = container.tableData.getSelectedIndexes();
-            let elementsModel = container.tableData.elements;
             let hardwareId = elementsModel.GetData("Id", indexes[0]);
 
             modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId});
         }
         else if (commandId === "OpenOrder"){
-            let indexes = container.tableData.getSelectedIndexes();
-            let elementsModel = container.tableData.elements;
             let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
             if (orderId !== ""){
                 let parameters = {}
@@ -176,9 +177,6 @@ CollectionViewCommandsDelegateBase {
         }
 
         else if (commandId === "CreateLicenseFile"){
-            let indexes = container.tableData.getSelectedIndexes();
-            let elementsModel = container.tableData.elements;
-
             let macAddress = elementsModel.GetData("MacAddress", indexes[0])
 
             let data = macAddress.split(':');
@@ -202,7 +200,7 @@ CollectionViewCommandsDelegateBase {
             id: dialog;
 
             onSaved: {
-                container.collectionViewBase.updateGui();
+                container.collectionView.doUpdateGui();
             }
         }
     }

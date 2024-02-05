@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file alias="ProLifeSplashScreen">Resources/Images/ProLifeSplashScreen.svg</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file alias="ProLifeIcon">Resources/Icons/ProLifeIcon.svg</file>
+    </qresource>
+    <qresource prefix="/Palette"/>
+    <qresource prefix="/"/>
+    <qresource prefix="/qml"/>
+    <qresource prefix="/Style">
+        <file alias="prolife_dark.theme">prolife_dark.theme</file>
+        <file alias="prolife_light.theme">prolife_light.theme</file>
+    </qresource>
+    <qresource prefix="/Decorators"/>
+    <qresource prefix="/Features">
+        <file alias="ProLifeFeatures">Resources/Features/ProLifeFeatures.xml</file>
+    </qresource>
+    <qresource prefix="/ProLife"/>
+</RCC>

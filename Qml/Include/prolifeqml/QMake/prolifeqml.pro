@@ -1,4 +1,4 @@
-TARGET = prolifestyle
+TARGET = prolifeqml
 
 include($(ACFDIR)/Config/QMake/StaticConfig.pri)
 include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
