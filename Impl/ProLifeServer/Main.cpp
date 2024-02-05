@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(prolifeqmlWeb);
 #endif
 
+	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(ImtCoreLoc);
 	Q_INIT_RESOURCE(ProLifeLoc);
