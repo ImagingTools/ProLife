@@ -109,7 +109,7 @@ Item {
 
         let newIndex = resultModel.InsertNewItem(0);
 
-        let deviceId = uuidGenerator.generateUUID();
+        let deviceId = UuidGenerator.generateUUID();
         if (productEditor.productModel.ContainsKey("IsNewDevice")){
             deviceId = productEditor.productModel.GetData("DeviceId");
         }
@@ -288,8 +288,8 @@ Item {
                 contentLoader.item.productLicensesModel = productLicensesModel;
             }
 
-            contentLoader.item.productModel = productEditor.productModel;
-            contentLoader.item.updateGui();
+            contentLoader.item.model = productEditor.productModel;
+            contentLoader.item.doUpdateGui();
         }
     }
 
@@ -366,10 +366,6 @@ Item {
         return retVal;
     }
 
-    UuidGenerator {
-        id: uuidGenerator;
-    }
-
     function started(){
         productEditor.blockUpdatingModel = true;
 
@@ -380,7 +376,7 @@ Item {
             uuid = productEditor.productModel.GetData("Id");
         }
         else{
-            uuid = uuidGenerator.generateUUID();
+            uuid = UuidGenerator.generateUUID();
         }
 
         productEditor.uuid = uuid;

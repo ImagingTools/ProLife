@@ -39,6 +39,9 @@ ApplicationMain{
         CachedAccountCollection.updateModel();
         CachedOrderCollection.updateModel();
         CachedDeviceCollection.updateModel();
+//        CachedGroupCollection.updateModel();
+//        CachedUserCollection.updateModel();
+//        CachedRoleCollection.updateModel();
     }
 }
 

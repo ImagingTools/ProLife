@@ -4,6 +4,7 @@ import imtgui 1.0
 import imtcontrols 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
+import imtguigql 1.0
 
 Item {
     id: productEditor;
@@ -14,23 +15,11 @@ Item {
 
     property TreeItemModel bindingModel: TreeItemModel {}
 
-    // Binding model before changes
-    property TreeItemModel beginBindingModel: TreeItemModel {}
-
     property string productId: ""
 
     property string hardwareId: "";
 
-    property var includeIds: [];
-
-    property bool changesApplied: false;
-
-    property var addedLicenseInfo: ({});
-    property var removedLicenseInfo: ({});
-
     property Item rootItem: null
-
-    signal checkedItemsChanged();
     signal modelChanged();
 
     Component.onCompleted: {
@@ -43,7 +32,7 @@ Item {
     }
 
     function onLocalizationChanged(language){
-        productEditor.updateHeaders();
+//        productEditor.updateHeaders();
     }
 
     property bool bindingModelReady: false;
@@ -51,8 +40,6 @@ Item {
     property string startProductId: "";
 
     onBindingModelChanged: {
-        beginBindingModel.Copy(bindingModel);
-
         bindingModel.dataChanged.connect(productEditor.modelChanged);
 
         productEditor.bindingModelReady = true;
@@ -67,6 +54,15 @@ Item {
     property bool blockUpdatingModel: false;
     onBlockUpdatingModelChanged: {
         loading.visible = blockUpdatingModel;
+    }
+
+    onHardwareIdChanged: {
+        let filterModel = bindingProductsCollection.collectionFilter.filterModel;
+        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
+        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
+        bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
+
+        bindingProductsCollection.doUpdateGui();
     }
 
     function updateGui(){
@@ -184,12 +180,14 @@ Item {
 
             ComboBox {
                 id: productsCB;
+
                 anchors.left: productLable.right
                 anchors.leftMargin: Style.margin
                 anchors.right: lockImage.left;
                 anchors.rightMargin: 10;
 
-                height: 25;
+                height: 30;
+
                 radius: 3;
                 nameId: "ProductName";
 
@@ -216,6 +214,7 @@ Item {
                     if (productsCB.currentIndex > -1){
                         productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
                     }
+
                     softwareProductCollection.updateData();
                 }
 
@@ -276,32 +275,29 @@ Item {
             width: parent.width;
             height: 400;
 
-            CollectionViewBase {
+            SoftwareProductCollectionView {
                 id: softwareProductCollection;
+
                 anchors.fill: parent
 
-                isMultiCheckable: false;
+                commandsController: null;
 
-                defaultSortHeaderIndex: 2;
+                dataController: CollectionRepresentation {
+                    collectionId: "SoftwareProducts";
 
-//                commands.headerInfoModel: headerInfoModel
+                    Component.onCompleted: {
+                        additionalFieldIds.push("OrderUuid");
+                        additionalFieldIds.push("HardwareUuid");
+                        additionalFieldIds.push("InUse");
+                        additionalFieldIds.push("ProductUuid");
+                        additionalFieldIds.push("CustomerUuid");
+                    }
 
-                GqlModel {
-                    id: headerInfoModel
                     function updateModel(){
-                        softwareProductCollection.commands.itemsInfoModel.updateModel();
                     }
                 }
 
-                Component.onCompleted: {
-                    console.log("DEBUG::29")
-                    bindingProductsCollection.table.canSelectAll = true;
-                    softwareProductCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
-                }
-
                 onSelectionChanged: {
-                    console.log("softwareProductCollection onSelectionChanged", selection)
-
                     if (selection.length <= 0){
                         bindButton.enabled = false
                     }
@@ -323,33 +319,8 @@ Item {
                     }
                 }
 
-                function checkedItemsChanged(){
-                    let selectedProductIds = []
-                    let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
-                    if (softwareIds != ""){
-                        selectedProductIds = softwareIds.split(';')
-                    }
-                    let indexes = softwareProductCollection.table.getCheckedItems();
-                    if (indexes.length === 0){
-                        return
-                    }
-                    for (let index of indexes){
-                        let id = softwareProductCollection.table.elements.GetData("Id", index);
-                        if (!selectedProductIds.includes(id)){
-                            selectedProductIds.push(id)
-                            let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-                            bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
-                        }
-                    }
-                    let products = selectedProductIds.join(';');
-                    productEditor.bindingModel.SetData("SoftwareIds", products)
-                    updateData()
-                    softwareProductCollection.table.properties.clearCheckedItems()
-                }
-
                 onHeadersChanged: {
                     softwareProductCollection.table.setColumnContentComponent(0, pairComp);
-
                     softwareProductCollection.table.tableDecorator = tableDecoratorModel;
                 }
 
@@ -357,14 +328,6 @@ Item {
                     if (visible){
                         if (productEditor.productId === ""){
                             return;
-                        }
-
-                        if (!softwareProductCollection.commands.fieldsData.includes("CustomerUuid")){
-                            softwareProductCollection.commands.fieldsData.push("CustomerUuid");
-                        }
-
-                        if (!softwareProductCollection.commands.fieldsData.includes("InUse")){
-                            softwareProductCollection.commands.fieldsData.push("InUse");
                         }
 
                         let elementsModel = bindingProductsCollection.table.elements;
@@ -382,27 +345,11 @@ Item {
                             products += id
                         }
 
-                        let filterIdsModel = softwareProductCollection.modelFilter.GetData("FilterIds")
-                        filterIdsModel.Clear();
+                        let filterModel = softwareProductCollection.collectionFilter.filterModel;
 
-                        for(var i = 0; i < softwareProductCollection.commands.headers.GetItemsCount(); i++){
-                            let headerId = softwareProductCollection.commands.headers.GetData("Id", i);
-                            if (!softwareProductCollection.commands.fieldsData.includes(headerId)){
-                                softwareProductCollection.commands.fieldsData.push(headerId);
-                            }
-                            filterIdsModel.InsertNewItem()
-                            filterIdsModel.SetData("Id", headerId, i);
-                        }
-
-                        let objectFilter =  softwareProductCollection.modelFilter.AddTreeModel("ObjectFilter")
+                        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
 
                         let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
-//                        bindingFilterModel.SetData("DeviceId", "");
-
-//                        if (customerUuid != ""){
-//                            bindingFilterModel.SetData("CustomerUuid", customerUuid);
-//                        }
-
                         if (productEditor.productId != ""){
                             bindingFilterModel.SetData("ProductUuid", productEditor.productId);
                         }
@@ -413,8 +360,7 @@ Item {
 
                         bindingFilterModel.SetData("HardwareUuidFilter", productEditor.hardwareId);
 
-                        softwareProductCollection.commandId = "SoftwareProducts"
-                        softwareProductCollection.updateModels();
+                        softwareProductCollection.doUpdateGui();
                     }
                 }
             }
@@ -439,39 +385,44 @@ Item {
 
     Column {
         id: bindingLicensesColumn
+
         anchors.bottom: availableLicensesColumn.bottom;
         anchors.right: parent.right;
+        anchors.rightMargin: productEditor.margin;
         anchors.left: parent.horizontalCenter;
         anchors.leftMargin: 20;
-        anchors.rightMargin: productEditor.margin;
-        //        anchors.leftMargin: productEditor.margin;
 
         Rectangle{
             width: parent.width;
             height: 400;
 
-            CollectionViewBase {
+            SoftwareProductCollectionView {
                 id: bindingProductsCollection;
+
                 anchors.fill: parent
 
-                //                defaultSortHeaderIndex: 2;
-                isMultiCheckable: false;
+                commandsController: null;
 
-                hasFilter: false
-                hasPagination: false
-                hasSort: false
+//                hasPagination: false;
+                hasSort: false;
+                hasFilter: false;
 
-//                commands.headerInfoModel: headerInfoBindingModel
+                dataController: CollectionRepresentation {
+                    collectionId: "SoftwareProducts";
 
-                GqlModel {
-                    id: headerInfoBindingModel
+                    Component.onCompleted: {
+                        additionalFieldIds.push("OrderUuid");
+                        additionalFieldIds.push("HardwareUuid");
+                        additionalFieldIds.push("InUse");
+                        additionalFieldIds.push("ProductUuid");
+                        additionalFieldIds.push("CustomerUuid");
+                    }
+
                     function updateModel(){
-                        bindingProductsCollection.commands.itemsInfoModel.updateModel();
                     }
                 }
 
                 onSelectionChanged: {
-                    console.log("selectionItemsChanged", selection);
                     if (selection.length === 0){
                         unbindButton.enabled = false
                     }
@@ -494,48 +445,21 @@ Item {
 
                 onHeadersChanged: {
                     bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
-
                     bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                 }
 
-                Component.onCompleted: {
-                    console.log("DEBUG::29")
-                    bindingProductsCollection.table.canSelectAll = false;
-                    bindingProductsCollection.table.checkedItemsChanged.connect(checkedItemsChanged);
-//                    bindingProductsCollection.table.selectionChanged.connect(selectionItemsChanged);
+//                onVisibleChanged: {
+//                    if (visible){
+//                        let filterModel = bindingProductsCollection.collectionFilter.filterModel;
 
-                    bindingProductsCollection.commands.fieldsData.push("InUse");
-                }
+//                        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
+//                        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
 
-                onVisibleChanged: {
-                    if (visible){
-                        let objectFilter =  bindingProductsCollection.modelFilter.AddTreeModel("ObjectFilter")
-                        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
+//                        bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
 
-                        let filterIdsModel = bindingProductsCollection.modelFilter.GetData("FilterIds")
-                        filterIdsModel.Clear();
-
-                        for(let i = 0; i < bindingProductsCollection.commands.headers.GetItemsCount(); i++){
-                            let headerId = bindingProductsCollection.commands.headers.GetData("Id", i);
-                            if (!bindingProductsCollection.commands.fieldsData.includes(headerId)){
-                                bindingProductsCollection.commands.fieldsData.push(headerId);
-                            }
-                            filterIdsModel.InsertNewItem()
-                            filterIdsModel.SetData("Id", headerId, i);
-                        }
-
-                        if (!bindingProductsCollection.commands.fieldsData.includes("CustomerUuid")){
-                            bindingProductsCollection.commands.fieldsData.push("CustomerUuid");
-                        }
-                        if (!bindingProductsCollection.commands.fieldsData.includes("ProductUuid")){
-                            bindingProductsCollection.commands.fieldsData.push("ProductUuid");
-                        }
-
-                        bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
-                        bindingProductsCollection.commandId = "SoftwareProducts"
-                        bindingProductsCollection.commands.itemsInfoModel.updateModel();
-                    }
-                }
+//                        bindingProductsCollection.doUpdateGui();
+//                    }
+//                }
 
                 onElementsChanged: {
                     let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
@@ -546,35 +470,6 @@ Item {
                     }
 
                     productsList.updateModel()
-                }
-
-                function checkedItemsChanged(){
-                    let selectedProductIds = []
-                    selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
-                    let indexes = bindingProductsCollection.table.getCheckedItems();
-                    if (indexes.length === 0){
-                        return
-                    }
-                    for (let i = indexes.length - 1; i > -1; i--){
-                        let index = indexes[i]
-                        let id = bindingProductsCollection.table.elements.GetData("Id", index);
-                        if (selectedProductIds.indexOf(id) > -1){
-                            bindingProductsCollection.table.elements.RemoveItem(index)
-                            selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-                        }
-                    }
-                    let products = selectedProductIds.join(';');
-                    productEditor.bindingModel.SetData("SoftwareIds", products)
-
-                    bindingProductsCollection.table.properties.clearCheckedItems()
-                    if (bindingProductsCollection.table.elements.GetItemsCount() == 0){
-                        productEditor.productId = ""
-                        productsCB.enabled = true
-                        productsCB.currentIndex = -1
-                    }
-                    else{
-                        softwareProductCollection.updateData()
-                    }
                 }
             }
         }
@@ -621,21 +516,12 @@ Item {
                     let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
                     bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
                 }
-
-                if (productEditor.includeIds.includes(id)){
-                    productEditor.includeIds.splice(productEditor.includeIds.indexOf(id), 1);
-                }
-
-                let licenseName = softwareProductCollection.table.elements.GetData("LicenseName", index);
-                let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
-
-                productEditor.addedLicenseInfo[id] = licenseName + " (" + licenseId + ")";
             }
             let products = selectedProductIds.join(';');
             productEditor.bindingModel.SetData("SoftwareIds", products)
-            softwareProductCollection.updateData()
 
-            console.log("productEditor.includeIds", productEditor.includeIds);
+            console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
+            softwareProductCollection.updateData()
 
             softwareProductCollection.table.resetSelection();
         }
@@ -689,8 +575,6 @@ Item {
             if (selectedProductIds.indexOf(id) > -1){
                 elementsModel.RemoveItem(index)
                 selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-
-                productEditor.includeIds.push(id)
             }
 
             let products = selectedProductIds.join(';');
@@ -699,12 +583,6 @@ Item {
             bindingProductsCollection.table.resetSelection();
 
             softwareProductCollection.updateData()
-
-            console.log("productEditor.includeIds", productEditor.includeIds);
-
-            if (id in productEditor.addedLicenseInfo){
-                delete productEditor.addedLicenseInfo[id];
-            }
         }
     }
 
@@ -719,7 +597,7 @@ Item {
     }
 
     TreeItemModel {
-        id: headersModel;
+        id: collectionHeadersModel;
 
         Component.onCompleted: {
             productEditor.updateHeaders();
@@ -727,34 +605,34 @@ Item {
     }
 
     function updateHeaders(){
-        headersModel.Clear();
+        collectionHeadersModel.Clear();
 
-        let index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "InUse", index);
-        headersModel.SetData("Name", "", index);
+        let index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "InUse", index);
+        collectionHeadersModel.SetData("Name", "", index);
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "LicenseName", index);
-        headersModel.SetData("Name", qsTr("License name"), index);
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "LicenseName", index);
+        collectionHeadersModel.SetData("Name", qsTr("License name"), index);
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "LicenseId", index);
-        headersModel.SetData("Name", qsTr("License-ID"), index);
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "LicenseId", index);
+        collectionHeadersModel.SetData("Name", qsTr("License-ID"), index);
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "OrderId", index);
-        headersModel.SetData("Name", qsTr("Order-ID"), index);
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "OrderId", index);
+        collectionHeadersModel.SetData("Name", qsTr("Order-ID"), index);
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "SerialNumber", index);
-        headersModel.SetData("Name", qsTr("Serial Number"), index);
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "SerialNumber", index);
+        collectionHeadersModel.SetData("Name", qsTr("Serial Number"), index);
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "Customer", index);
-        headersModel.SetData("Name", qsTr("Customer"), index);
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "Customer", index);
+        collectionHeadersModel.SetData("Name", qsTr("Customer"), index);
 
-        softwareProductCollection.commands.headers  = headersModel;
-        bindingProductsCollection.commands.headers = headersModel;
+        softwareProductCollection.dataController.headersModel  = collectionHeadersModel;
+        bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
     }
 
     TreeItemModel {

@@ -5,13 +5,12 @@ import imtauthgui 1.0
 import imtlicgui 1.0
 import imtcontrols 1.0
 
-Item {
+ViewBase {
     id: root;
 
     property int itemHeight: 30;
     property int margin: 10;
 
-    property TreeItemModel productModel: TreeItemModel {}
     property var productLicensesModel: TreeItemModel{}
 
     property bool serialNumberEdit: true;
@@ -19,8 +18,6 @@ Item {
 //    property alias tableElements: licensesTable.elements;
     property alias tableElements: licenseCB.model;
     property bool readOnly: false;
-
-    property bool blockUpdatingModel: false;
 
     property int comboBoxHeight: 27;
 
@@ -33,10 +30,8 @@ Item {
     }
 
     function updateGui(){
-        blockUpdatingModel = true;
-
-        if (productModel.ContainsKey("SerialNumber")){
-            serialNumberInput.text = productModel.GetData("SerialNumber")
+        if (model.ContainsKey("SerialNumber")){
+            serialNumberInput.text = model.GetData("SerialNumber")
         }
         else{
             serialNumberInput.text = "";
@@ -44,7 +39,7 @@ Item {
 
         let licenseFound = false;
 
-        let licenseUuid = root.productModel.GetData("LicenseUuid");
+        let licenseUuid = root.model.GetData("LicenseUuid");
         if (licenseCB.model){
             for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
                 let licenseId = licenseCB.model.GetData("Id", i);
@@ -62,8 +57,8 @@ Item {
             licenseCB.currentIndex = -1;
         }
 
-        if (root.productModel.ContainsKey("Expiration")){
-            let expiration = root.productModel.GetData("Expiration");
+        if (root.model.ContainsKey("Expiration")){
+            let expiration = root.model.GetData("Expiration");
 
             if (expiration && expiration !== "" ){
                 checkBox.checkState = Qt.Checked;
@@ -82,30 +77,24 @@ Item {
                 }
             }
         }
-
-        blockUpdatingModel = false;
     }
 
     function updateModel(){
-        if (blockUpdatingModel){
-            return;
-        }
-
-        productModel.SetData("SerialNumber", serialNumberInput.text)
+        model.SetData("SerialNumber", serialNumberInput.text)
 
         if (checkBox.checkState == Qt.Checked){
-            productModel.SetData("Expiration", datePicker.getDate());
+            model.SetData("Expiration", datePicker.getDate());
         }
         else{
-            productModel.SetData("Expiration", "");
+            model.SetData("Expiration", "");
         }
 
         if (licenseCB.currentIndex >= 0 && licenseCB.model){
             let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
-            productModel.SetData("LicenseUuid", selectedId);
+            model.SetData("LicenseUuid", selectedId);
         }
         else{
-            productModel.SetData("LicenseUuid", "");
+            model.SetData("LicenseUuid", "");
         }
     }
 
@@ -134,6 +123,7 @@ Item {
         placeHolderText: qsTr("Enter the license number");
 
         radius: 3;
+        readOnly: root.readOnly;
 
         Component.onCompleted: {
             let ok = PermissionsController.checkPermission("ChangeLicense");
@@ -150,7 +140,7 @@ Item {
         }
 
         onEditingFinished: {
-            root.updateModel();
+            root.doUpdateModel();
         }
     }
 
@@ -181,6 +171,8 @@ Item {
 
         radius: 3;
 
+        changeable: !root.readOnly;
+
         Component.onCompleted: {
             let ok = PermissionsController.checkPermission("ChangeLicense");
 
@@ -193,7 +185,7 @@ Item {
         }
 
         onCurrentIndexChanged: {
-            root.updateModel();
+            root.doUpdateModel();
         }
     }
 
@@ -226,10 +218,10 @@ Item {
                 checkBox.checkState = Qt.Checked - checkBox.checkState;
             }
 
-            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable;
+            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && root.readOnly;
 
             onCheckStateChanged: {
-                root.updateModel();
+                root.doUpdateModel();
             }
         }
 
@@ -264,6 +256,8 @@ Item {
             currentDayButtonVisible: false;
             startWithCurrentDay: true;
 
+            readOnly: root.readOnly;
+
             Component.onCompleted: {
                 let ok = PermissionsController.checkPermission("ChangeLicense");
                 let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
@@ -275,13 +269,10 @@ Item {
             }
 
             onDateChanged: {
-                root.updateModel()
+                root.doUpdateModel()
             }
 
             onCompletedChanged: {
-
-                root.blockUpdatingModel = true;
-
                 if (completed){
                     var date_ = new Date();
 
@@ -291,8 +282,6 @@ Item {
 
                     datePicker.setDate(year, month, day)
                 }
-
-                root.blockUpdatingModel = false;
             }
         }
     }

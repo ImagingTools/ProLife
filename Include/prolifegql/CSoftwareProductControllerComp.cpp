@@ -25,7 +25,7 @@ namespace prolifegql
 imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
-		errorMessage = QObject::tr("Internal error").toUtf8();
+		errorMessage = QString("Internal error").toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
@@ -38,7 +38,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 	}
 
 	if (objectId.isEmpty()){
-		errorMessage = QObject::tr("Unable to get an object").toUtf8();
+		errorMessage = QString("Unable to get an object").toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
@@ -116,7 +116,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	if (objectUuid.isEmpty()){
-		errorMessage = QObject::tr("Unable to update an object %1").arg(qPrintable(objectUuid)).toUtf8();
+		errorMessage = QString("Unable to update an object %1").arg(qPrintable(objectUuid)).toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
@@ -130,7 +130,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	if (productOrderInfoPtr == nullptr){
-		errorMessage = QObject::tr("Unable to get an software product with ID: %1").arg(qPrintable(objectUuid)).toUtf8();
+		errorMessage = QString("Unable to get an software product with ID: %1").arg(qPrintable(objectUuid)).toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;
@@ -145,7 +145,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	imtbase::CTreeItemModel itemModel;
 	if (!itemModel.CreateFromJson(itemData)){
-		errorMessage = QObject::tr("Unable to create an item model from json: %1").arg(qPrintable(itemData)).toUtf8();
+		errorMessage = QString("Unable to create an item model from json: %1").arg(qPrintable(itemData)).toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;

@@ -32,9 +32,6 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -421,7 +418,6 @@
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
                                             <Value>Empty</Value>
-                                            <Value>ShowNew</Value>
                                             <Value>Rename</Value>
                                             <Value>SetDescription</Value>
                                         </Values>
@@ -440,7 +436,6 @@
                                             <Value>EditPermissions</Value>
                                             <Value>RemovePermissions</Value>
                                             <Value>OpenOrderPermissions</Value>
-                                            <Value>ShowNewPermissions</Value>
                                             <Value>CreateLicenseFilePermissions</Value>
                                             <Value>BindPermissions</Value>
                                             <Value>WithLicensePermissions</Value>

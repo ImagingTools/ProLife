@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickWidgets  Qt${
 target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::QuickControls2)
 
 if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml/Include")
+	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
 	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
 	set(files  \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
 
@@ -55,7 +55,7 @@ endif()
 
 set(QML_IMPORT_DIRS ${QML_IMPORT_PATH})
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml/Include")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml")
 
 # Prevent adding duplicate values at each run of CMake.
 list(REMOVE_DUPLICATES QML_IMPORT_DIRS)

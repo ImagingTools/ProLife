@@ -10,6 +10,10 @@ if(NOT DEFINED PUMADIR)
 	set(PUMADIR "$ENV{PUMADIR}")
 endif()
 
+if(NOT DEFINED PROLIFEDIR)
+	set(PROLIFEDIR "$ENV{PROLIFEDIR}")
+endif()
+
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
 
 set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include")

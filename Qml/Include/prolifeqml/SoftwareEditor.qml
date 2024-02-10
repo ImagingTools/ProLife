@@ -8,13 +8,11 @@ import imtcontrols 1.0
 import imtlicgui 1.0
 import prolifeqml 1.0
 
-DocumentData {
+ViewBase {
     id: root;
 
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
-
-    documentCompleted: CachedProductCollection.completed && CachedOrderCollection.completed;
 
     property string alertMessage: "";
     property int comboBoxHeight: 27;
@@ -24,15 +22,15 @@ DocumentData {
         CachedOrderCollection.updateModel();
     }
 
-    onVisibleChanged: {
-        if (visible){
-            checkInIse();
-        }
-        else{
-            if (root.documentManagerPtr){
-                root.documentManagerPtr.setAlertPanel(null);
+    onModelChanged: {
+        if (root.model.ContainsKey("InUse")){
+            let inUse = root.model.GetData("InUse");
+            if (inUse){
+                root.readOnly = true;
             }
         }
+
+        softwareProductEditor.model = root.model;
     }
 
     Component {
@@ -42,133 +40,19 @@ DocumentData {
         }
     }
 
-    function checkInIse(){
-        if (root.documentModel.ContainsKey("InUse")){
-            let inUse = root.documentModel.GetData("InUse")
-            if (inUse){
-                root.documentManagerPtr.setAlertPanel(alertComp);
-                root.blockEditing();
-
-                return;
-            }
-        }
-
-        root.documentManagerPtr.setAlertPanel(null);
-    }
-
-    function documentCanBeSaved(){
-        console.log("documentCanBeSaved", root.documentModel.toJSON());
-
-        let ok = false;
-
-        if (root.documentModel.ContainsKey("ProductId")){
-            let productId = root.documentModel.GetData("ProductId");
-            if (String(productId) !== ""){
-                ok = true;
-            }
-        }
-
-        if (!ok){
-            root.documentManagerPtr.openErrorDialog(qsTr("Please select a product"));
-        }
-
-        if (ok){
-            ok = false;
-
-            if (root.documentModel.ContainsKey("LicenseUuid")){
-                let licenseUuid = root.documentModel.GetData("LicenseUuid");
-                if (String(licenseUuid) !== ""){
-                    ok = true;
-                }
-            }
-
-            if (!ok){
-                root.documentManagerPtr.openErrorDialog(qsTr("Please select a license"));
-            }
-        }
-
-        return ok;
-    }
-
-    function beginDocumentModelChanged(){
-        checkInIse();
-
-        softwareProductEditor.productModel = root.documentModel;
-    }
-
-//    CollectionDataProvider {
-//        id: ordersList;
-
-//        commandId: "Orders";
-
-//        fields: ["Id", "OrderId", "Description"];
-//        sortByField: "OrderId";
-
-//        onCollectionModelChanged: {
-//            console.log("ordersList onCollectionModelChanged");
-
-//            if (ordersList.collectionModel != null){
-//                ordersCB.model = ordersList.collectionModel;
-//            }
-//        }
-//    }
-
-//    CollectionDataProvider {
-//        id: productsList;
-
-//        fields: ["Id", "ProductName", "CategoryId", "Licenses"];
-//        commandId: "Products";
-//        sortByField: "ProductName";
-
-//        Component.onCompleted: {
-//            let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-//            objectFilter.SetData("CategoryId", "Software");
-//        }
-
-//        onCollectionModelChanged: {
-//            if (productsList.collectionModel != null){
-//                root.productsModel = productsList.collectionModel;
-
-//                productCB.model = root.productsModel;
-//            }
-//        }
-
-//        onFailed: {
-//            if (root.documentManagerPtr){
-//                let message = qsTr("Error loading products. Please check Lisa connection.");
-
-//                root.documentManagerPtr.openErrorDialog(message);
-//                root.documentManagerPtr.showAlertMessage(message);
-
-//                root.errorMessage = message;
-//            }
-//        }
-//    }
-
-    function blockEditing(){
-        projectInput.readOnly = true;
-
-        ordersCB.enabled = false;
-        productCB.enabled = false;
-
-        buttonContainer.enabled = false;
-
-        softwareProductEditor.readOnly = true;
-    }
-
     function updateGui(){
         console.log("Software updateGui start");
 
-        if (root.documentModel.ContainsKey("Project")){
-            projectInput.text = root.documentModel.GetData("Project");
+        if (root.model.ContainsKey("Project")){
+            projectInput.text = root.model.GetData("Project");
         }
         else{
             projectInput.text = "";
         }
 
         let orderFound = false;
-        if (root.documentModel.ContainsKey("OrderUuid")){
-            let orderUuid = root.documentModel.GetData("OrderUuid");
+        if (root.model.ContainsKey("OrderUuid")){
+            let orderUuid = root.model.GetData("OrderUuid");
             if (ordersCB.model){
                 for (let i = 0; i < ordersCB.model.GetItemsCount(); i++){
                     let id = ordersCB.model.GetData("Id", i);
@@ -187,18 +71,14 @@ DocumentData {
         }
 
         let productFound = false;
-        if (root.documentModel.ContainsKey("ProductId")){
-            let productId = root.documentModel.GetData("ProductId");
-
-            console.log("productId", productId);
+        if (root.model.ContainsKey("ProductId")){
+            let productId = root.model.GetData("ProductId");
 
             if (productCB.model){
                 for (let i = 0; i < productCB.model.GetItemsCount(); i++){
                     let id = productCB.model.GetData("Id", i);
-                    console.log("id", id);
 
                     if (id == productId){
-                        console.log("==", id);
                         productCB.currentIndex = i;
                         productFound = true;
                         break;
@@ -207,42 +87,40 @@ DocumentData {
             }
         }
 
-        console.log("productFound", productFound);
-
         if (!productFound){
             productCB.currentIndex = -1;
         }
 
-        softwareProductEditor.updateGui();
+        softwareProductEditor.doUpdateGui();
     }
 
     function updateModel(){
         console.log("updateModel");
 
-        root.documentModel.SetData("Project", projectInput.text);
+        root.model.SetData("Project", projectInput.text);
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
         if (canChangeOrder){
             if (ordersCB.model){
                 if (ordersCB.currentIndex >= 0){
                     let orderUuid = ordersCB.model.GetData("Id", ordersCB.currentIndex);
-                    root.documentModel.SetData("OrderUuid", orderUuid);
+                    root.model.SetData("OrderUuid", orderUuid);
                 }
                 else{
-                    root.documentModel.SetData("OrderUuid", "");
+                    root.model.SetData("OrderUuid", "");
                 }
             }
         }
 
         if (productCB.currentIndex >= 0 && productCB.model){
             let selectedId = productCB.model.GetData("Id", productCB.currentIndex);
-            root.documentModel.SetData("ProductId", selectedId);
+            root.model.SetData("ProductId", selectedId);
         }
         else{
-            root.documentModel.SetData("ProductId", "");
+            root.model.SetData("ProductId", "");
         }
 
-        softwareProductEditor.updateModel();
+        softwareProductEditor.doUpdateModel();
     }
 
     function getProductLicensesModel(){
@@ -293,10 +171,13 @@ DocumentData {
 
             placeHolderText: qsTr("Enter the project");
 
-            Component.onCompleted: {
-                let ok = PermissionsController.checkPermission("ChangeLicense");
+            readOnly: root.readOnly;
 
-                projectInput.readOnly = !ok;
+            Component.onCompleted: {
+                if (!root.readOnly){
+                    let ok = PermissionsController.checkPermission("ChangeLicense");
+                    projectInput.readOnly = !ok;
+                }
             }
 
             onEditingFinished: {
@@ -331,10 +212,14 @@ DocumentData {
 
                 model: CachedOrderCollection.collectionModel;
 
-                Component.onCompleted: {
-                    let ok = PermissionsController.checkPermission("ChangeLicense");
+                changeable: !root.readOnly;
 
-                    ordersCB.changeable = ok;
+                Component.onCompleted: {
+                    if (!root.readOnly){
+                        let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                        ordersCB.changeable = ok;
+                    }
                 }
 
                 onCurrentIndexChanged: {
@@ -356,8 +241,8 @@ DocumentData {
                 enabled: ordersCB.changeable && ordersCB.currentIndex >= 0;
 
                 onClicked: {
-                    if(root.documentModel.ContainsKey("OrderUuid")){
-                        let orderUuid = root.documentModel.GetData("OrderUuid")
+                    if(root.model.ContainsKey("OrderUuid")){
+                        let orderUuid = root.model.GetData("OrderUuid")
                         if (ordersCB.currentIndex != -1){
                             ordersCB.currentIndex = -1;
                         }
@@ -394,10 +279,14 @@ DocumentData {
 
             model: CachedProductCollection.softwareProductsModel;
 
-            Component.onCompleted: {
-                let ok = PermissionsController.checkPermission("ChangeLicense");
+            changeable: !root.readOnly
 
-                productCB.changeable = ok;
+            Component.onCompleted: {
+                if (!root.readOnly){
+                    let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                    productCB.changeable = ok;
+                }
             }
 
             onModelChanged: {
@@ -434,6 +323,10 @@ DocumentData {
         anchors.bottom: root.bottom;
 
         width: bodyColumn.width;
+
+        model: root.model;
+
+        readOnly: root.readOnly;
 
         function onModelChanged(){
             root.doUpdateModel();

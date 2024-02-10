@@ -151,13 +151,6 @@ ViewBase {
         }
     }
 
-    function onCommandsModelLoaded(){
-        let saveExists = deviceEditorContainer.commandsProvider.commandExists("Save");
-        if (!saveExists){
-            deviceEditorContainer.blockEditing();
-        }
-    }
-
     function blockEditing(){
         descriptionInput.readOnly = true;
         serialNumberInput.readOnly = true;

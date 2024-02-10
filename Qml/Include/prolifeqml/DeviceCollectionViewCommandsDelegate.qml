@@ -73,14 +73,6 @@ DocumentCollectionViewDelegate {
     }
 
     onCommandActivated: {
-        console.log('onCommandActivated', commandId)
-
-//        let filterModel = container.collectionViewBase.modelFilter;
-//        let licenseFilter = filterModel.GetData("LicenseFilter");
-//        if (!licenseFilter){
-//            licenseFilter = filterModel.AddTreeModel("LicenseFilter")
-//        }
-
         let indexes = container.collectionView.table.getSelectedIndexes();
         let elementsModel = container.collectionView.table.elements;
 
@@ -96,86 +88,11 @@ DocumentCollectionViewDelegate {
                 parameters["TypeId"] = "Orders";
                 parameters["DocumentId"] = orderId;
                 parameters["DocumentTypeId"] = "Order";
+                parameters["ViewTypeId"] = "OrderEditor";
 
                 Events.sendEvent("OpenDocument", parameters);
             }
         }
-        else if (commandId === "ShowNew"){
-            let showNewStr = qsTr("New Sensors");
-            let showAllStr = qsTr("All Sensors");
-
-            let index = commandsProvider.getCommandIndex("ShowNew");
-            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
-
-            commandsProvider.commandsModel.SetData("IsToggled", !isToggled, index);
-
-            let filterModel = container.collectionViewBase.modelFilter;
-            if (isToggled){
-                if (filterModel.ContainsKey("ObjectFilter")){
-                    filterModel.RemoveData("ObjectFilter");
-                }
-            }
-            else{
-                let objectFilter = filterModel.GetData("ObjectFilter");
-                if (!objectFilter){
-                    objectFilter = filterModel.AddTreeModel("ObjectFilter")
-                }
-
-                objectFilter.SetData("Key", "Status");
-                objectFilter.SetData("Value", "none");
-            }
-
-            container.filterByNewActive = !container.filterByNewActive;
-            container.collectionViewBase.updateGui();
-        }
-
-        else if (commandId === "WithLicense"){
-            let index = commandsProvider.getCommandIndex("WithLicense");
-            let withoutLicenseindex = commandsProvider.getCommandIndex("WithoutLicense");
-            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
-
-            isToggled = !isToggled
-
-            commandsProvider.commandsModel.SetData("IsToggled", isToggled, index);
-
-            if (isToggled){
-                licenseFilter.SetData("Key", "Status");
-                licenseFilter.SetData("Value", "WithLicense");
-                commandsProvider.commandsModel.SetData("IsToggled", false, withoutLicenseindex);
-                container.filterLicense = commandsProvider.commandsModel.GetData("Name", index);
-            }
-            else{
-                licenseFilter.SetData("Key", "Status");
-                licenseFilter.SetData("Value", "None");
-                container.filterLicense = ""
-            }
-
-            container.collectionViewBase.updateGui();
-        }
-
-        else if (commandId === "WithoutLicense"){
-            let index = commandsProvider.getCommandIndex("WithoutLicense");
-            let withLicenseindex = commandsProvider.getCommandIndex("WithLicense");
-            let isToggled = commandsProvider.commandsModel.GetData("IsToggled", index);
-
-            isToggled = !isToggled
-            commandsProvider.commandsModel.SetData("IsToggled", isToggled, index);
-
-            if (isToggled){
-                licenseFilter.SetData("Key", "Status");
-                licenseFilter.SetData("Value", "WithoutLicense");
-                commandsProvider.commandsModel.SetData("IsToggled", false, withLicenseindex);
-                container.filterLicense = commandsProvider.commandsModel.GetData("Name", index);
-            }
-            else{
-                licenseFilter.SetData("Key", "Status");
-                licenseFilter.SetData("Value", "None");
-                container.filterLicense = ""
-            }
-
-            container.collectionViewBase.updateGui();
-        }
-
         else if (commandId === "CreateLicenseFile"){
             let macAddress = elementsModel.GetData("MacAddress", indexes[0])
 

@@ -10,7 +10,6 @@ Dialog {
     property int rootWidth: root ? root.width - 100 : 0;
 
     onRootWidthChanged: {
-        console.log("Dialog onRootWidthChanged", rootWidth);
         width = rootWidth;
     }
 
@@ -22,11 +21,9 @@ Dialog {
     signal saved();
 
     onHardwareIdChanged: {
-        let onResult = function(documentModel){
-            productEditorDialog.contentItem.bindingModel = documentModel;
-        }
-
-        documentController.getData("HardwareProductBinding", hardwareId, {}, onResult)
+        console.log("onHardwareIdChanged", hardwareId);
+        documentController.documentId = hardwareId;
+        documentController.updateDocumentModel();
     }
 
     Component.onCompleted: {
@@ -77,39 +74,21 @@ Dialog {
             message: qsTr("Please check the data before saving. Save changes ?")
             onFinished: {
                 if (buttonId == Enums.yes){
-                    if (productEditorDialog.contentItem.bindingModel.ContainsKey("Id")){
-                        let onResult = function(id, name){}
+                    let bindingModel = productEditorDialog.contentItem.bindingModel;
+                    documentController.documentModel = bindingModel;
 
-                        documentController.updateData(
-                                                      "HardwareProductBindingUpdate",
-                                                      productEditorDialog.hardwareId,
-                                                      productEditorDialog.contentItem.bindingModel,
-                                                      {},
-                                                      onResult
-                                                     )
+                    if (bindingModel.ContainsKey("Id")){
+                        documentController.saveDocument();
                     }
                     else{
-                        productEditorDialog.contentItem.bindingModel.SetData("Id", productEditorDialog.hardwareId);
-
-                        let onResult = function(id, name){}
-                        documentController.setData(
-                                                   "HardwareProductBindingAdd",
-                                                   productEditorDialog.hardwareId,
-                                                   productEditorDialog.contentItem.bindingModel,
-                                                   {},
-                                                   onResult
-                                                   )
+                        bindingModel.SetData("Id", productEditorDialog.hardwareId);
+                        documentController.insertDocument();
                     }
 
-                  //  productEditorDialog.contentItem.includeIds = [];
-                    productEditorDialog.contentItem.changesApplied = true;
                     productEditorDialog.buttons.setButtonState(Enums.ok, false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
 
-                    productEditorDialog.contentItem.beginBindingModel.Copy(productEditorDialog.contentItem.bindingModel);
-
                     productEditorDialog.saved();
-
                     productEditorDialog.finished(Enums.cancel);
                 }
             }
@@ -119,9 +98,14 @@ Dialog {
     GqlDocumentDataController {
         id: documentController;
 
-//        onError: {
-//            productEditorDialog.contentItem.bindingModelReady = true;
-//        }
+        gqlGetCommandId: "HardwareProductBindingItem";
+        gqlUpdateCommandId: "HardwareProductBindingUpdate";
+        gqlAddCommandId: "HardwareProductBindingAdd";
+
+        onDocumentModelChanged: {
+            console.log("documentController onDocumentModelChanged", documentModel.toJSON());
+            productEditorDialog.contentItem.bindingModel = documentModel;
+        }
     }
 }//Container
 

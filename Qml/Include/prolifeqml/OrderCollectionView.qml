@@ -2,179 +2,208 @@ import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
 import imtauthgui 1.0
-import imtcontrols 1.0
 import imtcolgui 1.0
+import imtcontrols 1.0
+import imtguigql 1.0
+import imtdocgui 1.0
 
 CollectionView {
     id: container;
 
     visibleMetaInfo: false;
 
-    defaultSortHeaderIndex: 6;
-    defaultOrderType: "DESC";
-    filterMenuVisible: true;
 
-    documentName: qsTr("Orders");
-    commandId: "Orders";
+    dataController: CollectionRepresentation {
+        collectionId: "Orders";
+    }
 
-    onDocumentManagerPtrChanged: {
-        if (documentManagerPtr){
-            documentManagerPtr.registerDocument("Order", orderEditorComp);
+    commandsController: CommandsRepresentationProvider {
+        commandId: "Orders";
+        uuid: container.viewId;
+    }
+
+    commandsDelegate: DocumentCollectionViewDelegate {
+        collectionView: container;
+
+        documentTypeId: "Order";
+        viewTypeId: "OrderEditor";
+    }
+
+    Component.onCompleted: {
+        collectionFilter.setSortingOrder("DESC");
+        collectionFilter.setSortingInfoId("LastModified");
+
+        let documentManager = MainDocumentManager.getDocumentManager("Orders");
+        if (documentManager){
+            container.commandsDelegate.documentManager = documentManager;
+
+            documentManager.registerDocumentView("Order", "OrderEditor", orderEditorComp);
+            documentManager.registerDocumentDataController("Order", dataControllerComp);
+            documentManager.registerDocumentValidator("Order", orderValidatorComp);
         }
     }
-    filterMenu: Component {
-        Item {
-            id: mainItem;
 
-            width: parent.width;
-            height: 40;
+//    filterMenu: Component {
+//        Item {
+//            id: mainItem;
 
-            Component.onCompleted: {
-                Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
-            }
+//            width: parent.width;
+//            height: 40;
 
-            Component.onDestruction: {
-                Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
-            }
+//            Component.onCompleted: {
+//                Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+//            }
 
-            function onLocalizationChanged(language){
-                accountFilterBlock.updateModel();
-            }
+//            Component.onDestruction: {
+//                Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+//            }
 
-            onWidthChanged: {
-                console.log("Filter onWidthChanged", width);
-                if (width - filtermenu.width <= accountFilterBlock.width){
-                    accountFilterBlock.visible = false;
-                }
-                else{
-                    if (accountFilterBlock.canViewAccountFilter){
-                        accountFilterBlock.visible = true;
-                    }
-                }
-            }
+//            function onLocalizationChanged(language){
+//                accountFilterBlock.updateModel();
+//            }
 
-            Item {
-                id: accountFilterBlock;
+//            onWidthChanged: {
+//                console.log("Filter onWidthChanged", width);
+//                if (width - filtermenu.width <= accountFilterBlock.width){
+//                    accountFilterBlock.visible = false;
+//                }
+//                else{
+//                    if (accountFilterBlock.canViewAccountFilter){
+//                        accountFilterBlock.visible = true;
+//                    }
+//                }
+//            }
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: 10;
+//            Item {
+//                id: accountFilterBlock;
 
-                width: canViewAccountFilter ? accountComboBox.width : 0;
-                height: canViewAccountFilter ? filtermenu.height : 0;
+//                anchors.verticalCenter: parent.verticalCenter;
+//                anchors.left: parent.left;
+//                anchors.leftMargin: 10;
 
-                property bool canViewAccountFilter: false;
+//                width: canViewAccountFilter ? accountComboBox.width : 0;
+//                height: canViewAccountFilter ? filtermenu.height : 0;
 
-                Component.onCompleted: {
-                    let ok = PermissionsController.checkPermission("ViewAllOrders")
-                    accountFilterBlock.canViewAccountFilter = ok;
-                    accountFilterBlock.visible = ok;
+//                property bool canViewAccountFilter: false;
 
-                    if (ok){
-                        accountsList.updateModel();
-                    }
-                }
+//                Component.onCompleted: {
+//                    let ok = PermissionsController.checkPermission("ViewAllOrders")
+//                    accountFilterBlock.canViewAccountFilter = ok;
+//                    accountFilterBlock.visible = ok;
 
-                CollectionDataProvider {
-                    id: accountsList;
+//                    if (ok){
+//                        accountsList.updateModel();
+//                    }
+//                }
 
-                    commandId: "Accounts";
+//                CollectionDataProvider {
+//                    id: accountsList;
 
-                    fields: ["Id", "Name"];
+//                    commandId: "Accounts";
 
-                    onCollectionModelChanged: {
-                        accountsList.collectionModel.InsertNewItem(0);
+//                    fields: ["Id", "Name"];
 
-                        accountFilterBlock.updateModel();
-                    }
-                }
+//                    onCollectionModelChanged: {
+//                        accountsList.collectionModel.InsertNewItem(0);
 
-                function updateModel(){
-                    accountsList.collectionModel.SetData("Id", "All");
-                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+//                        accountFilterBlock.updateModel();
+//                    }
+//                }
 
-                    accountComboBox.model = accountsList.collectionModel;
-                }
+//                function updateModel(){
+//                    accountsList.collectionModel.SetData("Id", "All");
+//                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
 
-                ComboBox {
-                    id: accountComboBox;
+//                    accountComboBox.model = accountsList.collectionModel;
+//                }
 
-                    anchors.bottom: parent.bottom;
-                    anchors.left: parent.left;
+//                ComboBox {
+//                    id: accountComboBox;
 
-                    height: filtermenu.height;
-                    width: 200;
+//                    anchors.bottom: parent.bottom;
+//                    anchors.left: parent.left;
 
-                    currentIndex: 0;
+//                    height: filtermenu.height;
+//                    width: 200;
 
-                    radius: 3;
+//                    currentIndex: 0;
 
-                    shownItemsCount: 15;
+//                    radius: 3;
 
-                    onCurrentIndexChanged: {
-                        let objectFilter = container.modelFilter.GetData("ObjectFilter");
-                        if (!objectFilter){
-                            objectFilter = container.modelFilter.AddTreeModel("ObjectFilter")
-                        }
+//                    shownItemsCount: 15;
 
-                        if (accountComboBox.currentIndex > 0){
-                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
-                            objectFilter.SetData("AccountFilter", value);
-                        }
-                        else{
-                            objectFilter.SetData("AccountFilter", "");
-                        }
+//                    onCurrentIndexChanged: {
+//                        let objectFilter = container.modelFilter.GetData("ObjectFilter");
+//                        if (!objectFilter){
+//                            objectFilter = container.modelFilter.AddTreeModel("ObjectFilter")
+//                        }
 
-                        container.updateGui();
-                    }
-                }
-            }
+//                        if (accountComboBox.currentIndex > 0){
+//                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+//                            objectFilter.SetData("AccountFilter", value);
+//                        }
+//                        else{
+//                            objectFilter.SetData("AccountFilter", "");
+//                        }
 
-            FilterMenu {
-                id: filtermenu
+//                        container.updateGui();
+//                    }
+//                }
+//            }
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right;
+//            FilterMenu {
+//                id: filtermenu
 
-                width: 325;
+//                anchors.verticalCenter: parent.verticalCenter;
+//                anchors.right: parent.right;
 
-                decoratorSource: Style.filterPanelDecoratorPath;
+//                width: 325;
 
-                onTextFilterChanged: {
-                    parent.textFilterChanged(index, text);
-                }
+//                decoratorSource: Style.filterPanelDecoratorPath;
 
-                onClosed: {
-                    accountComboBox.currentIndex = 0;
+//                onTextFilterChanged: {
+//                    parent.textFilterChanged(index, text);
+//                }
 
-                    parent.closed();
-                }
-            }
+//                onClosed: {
+//                    accountComboBox.currentIndex = 0;
 
-            signal textFilterChanged(int index, string text);
-            signal closed();
-        }
-    }
+//                    parent.closed();
+//                }
+//            }
+
+//            signal textFilterChanged(int index, string text);
+//            signal closed();
+//        }
+//    }
 
     Component {
         id: orderEditorComp;
 
         OrderEditor {
+            id: orderEditor;
+
+            commandsController: CommandsRepresentationProvider {
+                commandId: "Order";
+                uuid: orderEditor.viewId;
+            }
         }
     }
 
-    function fillContextMenuModel(){
-        contextMenuModel.clear();
-        contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
+    Component {
+        id: orderValidatorComp;
 
-        let canRemoveOrder = PermissionsController.checkPermission("RemoveOrder");
-        if (canRemoveOrder){
-            contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
+        OrderValidator {
         }
+    }
 
-        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
-        if (canChangeOrder){
-            contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
+    Component {
+        id: dataControllerComp;
+
+        GqlDocumentDataController {
+            gqlGetCommandId: "OrderItem";
+            gqlUpdateCommandId: "OrderUpdate";
+            gqlAddCommandId: "OrderAdd";
         }
     }
 }
