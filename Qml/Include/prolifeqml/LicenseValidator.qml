@@ -12,6 +12,12 @@ DocumentValidator {
     }
 
     function isValid(data){
+        if (!documentModel){
+            data.message = "Unknown error. Model is invalid.";
+
+            return false;
+        }
+
         let productId = "";
         if (documentModel.ContainsKey("ProductId")){
             productId = documentModel.GetData("ProductId");
