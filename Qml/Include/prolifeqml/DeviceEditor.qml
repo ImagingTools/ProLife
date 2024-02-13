@@ -19,9 +19,6 @@ ViewBase {
     property alias orderComboBoxEnabled: orderCB.enabled;
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
-    //    documentCompleted: ordersList.completed && productsList.completed;
-//    documentCompleted: CachedOrderCollection.completed && CachedProductCollection.completed;
-
     property int radius: 3;
     property int spacing: Style.size_mainMargin;
 
@@ -30,12 +27,6 @@ ViewBase {
     commandsDelegate: DocumentWorkspaceCommandsDelegateBase {
         onCommandActivated: {
             if (commandId == "Bind"){
-//                if (deviceEditorContainer.isDirty){
-//                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first.")});
-
-//                    return;
-//                }
-
                 let hardwareUuid = "";
                 if (deviceEditorContainer.model.ContainsKey("Id")){
                     hardwareUuid = deviceEditorContainer.model.GetData("Id")

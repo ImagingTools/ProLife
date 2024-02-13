@@ -31,8 +31,8 @@ RemoteCollectionView {
             container.commandsDelegate.documentManager = documentManager;
 
             documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
-//            documentManager.registerDocumentDataController("Device", dataControllerComp);
-//            documentManager.registerDocumentValidator("Device", deviceValidatorComp);
+            documentManager.registerDocumentDataController("Device", dataControllerComp);
+            documentManager.registerDocumentValidator("Device", deviceValidatorComp);
         }
     }
 
@@ -100,26 +100,26 @@ RemoteCollectionView {
         container.table.setColumnContentComponent(0, pairComp);
     }
 
-    Component {
-        id: deviceEditorComp;
-
-        SoftwareProductCollectionView {
-
-        }
-    }
-
 //    Component {
 //        id: deviceEditorComp;
 
-//        DeviceEditor {
-//            id: deviceEditor;
+//        SoftwareProductCollectionView {
 
-//            commandsController: CommandsRepresentationProvider {
-//                commandId: "Device";
-//                uuid: deviceEditor.viewId;
-//            }
 //        }
 //    }
+
+    Component {
+        id: deviceEditorComp;
+
+        DeviceEditor {
+            id: deviceEditor;
+
+            commandsController: CommandsRepresentationProvider {
+                commandId: "Device";
+                uuid: deviceEditor.viewId;
+            }
+        }
+    }
 
     Component {
         id: dataControllerComp;

@@ -27,10 +27,6 @@ DocumentCollectionViewDelegate {
     }
 
     function onLocalizationChanged(languageId){
-//        let filterModel = container.collectionViewBase.modelFilter;
-//        if (filterModel.ContainsKey("ObjectFilter")){
-//            filterModel.RemoveData("ObjectFilter");
-//        }
     }
 
     function updateItemSelection(selectedItems){

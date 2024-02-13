@@ -25,32 +25,32 @@ list(APPEND webdirs ${buildwebdir}/Resources)
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml/Fonts)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/web)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/web)
 list(APPEND webdirs ${buildwebdir}/Resources)
 
 list(APPEND webdirs ${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml/Acf)
 list(APPEND webdirs ${buildwebdir}/src/Acf)
 
 # copy base qml sources from to
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtgui)
 list(APPEND webdirs ${buildwebdir}/src/imtgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtguigql)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtguigql)
 list(APPEND webdirs ${buildwebdir}/src/imtguigql)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtauthgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtauthgui)
 list(APPEND webdirs ${buildwebdir}/src/imtauthgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtlicgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtlicgui)
 list(APPEND webdirs ${buildwebdir}/src/imtlicgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtcolgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcolgui)
 list(APPEND webdirs ${buildwebdir}/src/imtcolgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtdocgui)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtdocgui)
 list(APPEND webdirs ${buildwebdir}/src/imtdocgui)
 
-list(APPEND webdirs ${IMTCOREDIR}/Qml/Include/imtcontrols)
+list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcontrols)
 list(APPEND webdirs ${buildwebdir}/src/imtcontrols)
 
 message("PROLIFEDIR ${PROLIFEDIR}")

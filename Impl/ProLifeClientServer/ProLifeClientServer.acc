@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5181" Description="ACF"/>
+            <Version Id="1" Number="2199" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -54,9 +54,6 @@
                     <AttributeInfo Id="SettingsRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LocalSettings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SystemStatus" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SystemStatusController"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="TranslationFilePath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value=":/Translations"/>
                     </AttributeInfo>
@@ -83,12 +80,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultServerPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7778"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultWebSocketServerHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultWebSocketServerPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ClientApplication/ApplicationLocalization"/>

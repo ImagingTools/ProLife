@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5181" Description="ACF"/>
+            <Version Id="1" Number="2199" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
@@ -12,7 +12,7 @@
         <Element ComponentName="LocalSettings" X="1025" Y="400" Note=""/>
         <Element ComponentName="ProLifeServerBase" X="475" Y="150" Note=""/>
         <Element ComponentName="PumaSystemStatusController" X="475" Y="750" Note=""/>
-        <Element ComponentName="SystemStatusController" X="900" Y="750" Note=""/>
+        <Element ComponentName="SystemStatusController" X="950" Y="750" Note=""/>
         <Element ComponentName="VersionInfo" X="975" Y="150" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
