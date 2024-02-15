@@ -70,14 +70,16 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 
 		for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
 			idoc::MetaInfoPtr dataMetaInfo = m_licenseCollectionCompPtr->GetDataMetaInfo(licenseCollectionId);
-			QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
-			QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
+			if (dataMetaInfo.IsValid()){
+				QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
+				QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
 
-			beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
-						.arg(qPrintable(licenseCollectionId))
-						.arg(qPrintable(licenseId))
-						.arg(licenseName)
-						.toUtf8();
+				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
+							.arg(qPrintable(licenseCollectionId))
+							.arg(qPrintable(licenseId))
+							.arg(licenseName)
+							.toUtf8();
+			}
 		}
 	}
 
@@ -86,15 +88,16 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 
 		for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
 			idoc::MetaInfoPtr dataMetaInfo = m_productCollectionCompPtr->GetDataMetaInfo(productCollectionId);
+			if (dataMetaInfo.IsValid()){
+				QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
+				QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
 
-			QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
-			QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
-
-			beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-					.arg(qPrintable(productCollectionId))
-					.arg(qPrintable(productId))
-					.arg(productName)
-					.toUtf8();
+				beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
+						.arg(qPrintable(productCollectionId))
+						.arg(qPrintable(productId))
+						.arg(productName)
+						.toUtf8();
+			}
 		}
 	}
 

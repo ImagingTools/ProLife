@@ -12,6 +12,8 @@ RemoteCollectionView {
 
     collectionId: "Devices";
 
+//    visibleMetaInfo: true;
+
     additionalFieldIds: ["OrderUuid", "StatusId", "Licenses"]
 
     collectionFilter: DeviceCollectionFilter {}
@@ -57,56 +59,9 @@ RemoteCollectionView {
         }
     }
 
-    function fillContextMenuModel(){
-        contextMenuModel.clear();
-
-        if (container.commandsProvider.commandExists("Edit")){
-            contextMenuModel.append({"Id": "Edit", "Name": qsTr("Edit"), "IconSource": "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal)});
-        }
-
-        let canRemoveSensor = PermissionsController.checkPermission("RemoveSensor");
-        if (canRemoveSensor){
-            contextMenuModel.append({"Id": "Remove", "Name": qsTr("Remove"), "IconSource": "../../../../"  + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal)});
-        }
-
-        let ok = PermissionsController.checkPermission("ChangeSensor");
-        if (!ok){
-            ok = PermissionsController.checkPermission("ChangeSensorDescription");
-        }
-
-        if (ok){
-            contextMenuModel.append({"Id": "SetDescription", "Name": qsTr("Set Description"), "IconSource": ""});
-        }
-    }
-
-//    function collectionUpdated(){
-//        let notificationModel = container.baseCollectionView.commands.notificationModel;
-//        if (notificationModel){
-//            let counter = notificationModel.GetData("NewCount");
-//            if (counter > 0){
-//                if (counter > 99){
-//                    counter = '99+'
-//                }
-
-//                container.commandsProvider.setCommandNotification("ShowNew", counter);
-//            }
-//            else{
-//                container.commandsProvider.setCommandNotification("ShowNew", "");
-//            }
-//        }
-//    }
-
     onHeadersChanged: {
         container.table.setColumnContentComponent(0, pairComp);
     }
-
-//    Component {
-//        id: deviceEditorComp;
-
-//        SoftwareProductCollectionView {
-
-//        }
-//    }
 
     Component {
         id: deviceEditorComp;
@@ -118,6 +73,27 @@ RemoteCollectionView {
                 commandId: "Device";
                 uuid: deviceEditor.viewId;
             }
+        }
+    }
+
+    onSelectionChanged: {
+        if (selection.length == 1){
+            let index = selection[0];
+
+            let objectId = table.elements.GetData("Id", index);
+
+            metaInfoProvider.getMetaInfo(objectId);
+        }
+        else{
+            container.setMetaInfoModel(0);
+        }
+    }
+
+    MetaInfoProvider {
+        id: metaInfoProvider;
+
+        onMetaInfoModelChanged: {
+            container.setMetaInfoModel(metaInfoModel);
         }
     }
 

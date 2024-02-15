@@ -128,6 +128,7 @@ Item {
     }
 
     function onModelChanged(){
+        console.log("onModelChanged", productEditor.blockUpdatingModel);
         if (productEditor.blockUpdatingModel){
             return;
         }
@@ -236,19 +237,6 @@ Item {
                     else if (categoryId === "Software"){
                         contentLoader.sourceComponent = softwareProductComponent;
                     }
-
-                    contentLoader.item.productLicensesModel = 0;
-
-                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-                    if (licensesModel){
-                        contentLoader.item.productLicensesModel = licensesModel;
-                    }
-
-                    if (contentLoader.item.productLicensesModel){
-                        contentLoader.item.productLicensesModel.Refresh()
-                    }
-
-                    contentLoader.item.updateGui();
                 }
             }
         }
@@ -279,6 +267,17 @@ Item {
         width: parent.width;
 
         onLoaded: {
+            contentLoader.item.productLicensesModel = 0;
+
+            let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+            if (licensesModel){
+                contentLoader.item.productLicensesModel = licensesModel;
+            }
+
+            if (contentLoader.item.productLicensesModel){
+                contentLoader.item.productLicensesModel.Refresh()
+            }
+
             if (productEditor.productCategory === "Hardware"){
                 contentLoader.item.devicesModel = productEditor.getDevicesModel();
             }
@@ -289,6 +288,7 @@ Item {
             }
 
             contentLoader.item.model = productEditor.productModel;
+
             contentLoader.item.doUpdateGui();
         }
     }
@@ -313,7 +313,8 @@ Item {
 
     Component {
         id: hardwareProductComponent;
-        HardwareProductEditor {}
+        HardwareProductEditor {
+        }
     }
 
     Component {

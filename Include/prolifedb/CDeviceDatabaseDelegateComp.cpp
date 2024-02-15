@@ -28,16 +28,16 @@ namespace prolifedb
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
 QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
-			const QByteArray& objectId,
-			int offset,
-			int count,
-			const iprm::IParamsSet* paramsPtr) const
+		const QByteArray& objectId,
+		int offset,
+		int count,
+		const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
-					.arg(qPrintable(*m_tableNameAttrPtr))
-					.arg(qPrintable(*m_objectIdColumnAttrPtr))
-					.arg(qPrintable(objectId)).toUtf8();
+				.arg(qPrintable(*m_tableNameAttrPtr))
+				.arg(qPrintable(*m_objectIdColumnAttrPtr))
+				.arg(qPrintable(objectId)).toUtf8();
 	}
 
 	QByteArray beforeSelectionQuery;
@@ -70,14 +70,16 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 			for (const imtbase::ICollectionInfo::Id& licenseCollectionId : licenseCollectionIds){
 				idoc::MetaInfoPtr dataMetaInfo = m_licenseCollectionCompPtr->GetDataMetaInfo(licenseCollectionId);
-				QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
-				QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
+				if (dataMetaInfo.IsValid()){
+					QByteArray licenseId = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_ID).toByteArray();
+					QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
 
-				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
+					beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
 							.arg(qPrintable(licenseCollectionId))
 							.arg(qPrintable(licenseId))
 							.arg(licenseName)
 							.toUtf8();
+				}
 			}
 		}
 	}
@@ -91,15 +93,16 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 			for (const imtbase::ICollectionInfo::Id& productCollectionId : productCollectionIds){
 				idoc::MetaInfoPtr dataMetaInfo = m_productCollectionCompPtr->GetDataMetaInfo(productCollectionId);
+				if (dataMetaInfo.IsValid()){
+					QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
+					QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
 
-				QByteArray productId = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_ID).toByteArray();
-				QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
-
-				beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-							.arg(qPrintable(productCollectionId))
-							.arg(qPrintable(productId))
-							.arg(productName)
-							.toUtf8();
+					beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
+								.arg(qPrintable(productCollectionId))
+								.arg(qPrintable(productId))
+								.arg(productName)
+								.toUtf8();
+				}
 			}
 		}
 	}
@@ -123,11 +126,11 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
-			const imtbase::IObjectCollection& collection,
-			const QByteArray& objectId,
-			const istd::IChangeable& object,
-			const imtbase::IOperationContext* operationContextPtr,
-			bool /*useExternDelegate*/) const
+		const imtbase::IObjectCollection& collection,
+		const QByteArray& objectId,
+		const istd::IChangeable& object,
+		const imtbase::IOperationContext* operationContextPtr,
+		bool /*useExternDelegate*/) const
 {
 	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
@@ -136,9 +139,9 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-			const imtbase::IObjectCollection& /*collection*/,
-			const QByteArray& objectId,
-			const imtbase::IOperationContext* /*operationContextPtr*/) const
+		const imtbase::IObjectCollection& /*collection*/,
+		const QByteArray& objectId,
+		const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	QByteArray retVal;
 
@@ -229,8 +232,8 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 
 
 bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
-			const iprm::IParamsSet& filterParams,
-			QString& filterQuery) const
+		const iprm::IParamsSet& filterParams,
+		QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 	if (!paramIds.isEmpty()){
@@ -304,9 +307,9 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							}
 							else{
 								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND ( ( SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3 ) )")
-											.arg(qPrintable(optionId))
-											.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1))")
-											.arg("((SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
+										.arg(qPrintable(optionId))
+										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1))")
+										.arg("((SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
 							}
 						}
 
@@ -371,8 +374,8 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
-			const imtbase::ICollectionFilter& collectionFilter,
-			QString& textFilterQuery) const
+		const imtbase::ICollectionFilter& collectionFilter,
+		QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

@@ -53,18 +53,6 @@ ViewBase {
         id: licensesProvider;
     }
 
-    function blockEditing(){
-        instanceIdInput.readOnly = true;
-        purchaseIdInput.readOnly = true;
-        descriptionInput.readOnly = true;
-        customerCB.changeable = false;
-        orderStatusCB.changeable = false;
-        productsView.readOnly = true;
-        buttonContainer.enabled = false;
-
-        addProduct.visible = false;
-    }
-
     function updateGui(){
         if (model.ContainsKey("OrderId")){
             instanceIdInput.text = model.GetData("OrderId");
@@ -126,12 +114,18 @@ ViewBase {
             orderStatusCB.currentIndex = -1;
         }
 
+        console.log("Order updateGui", model.toJSON());
+
         if (model.ContainsKey("OrderProducts")){
             productsView.model = model.GetTreeItemModel("OrderProducts");
+
+            console.log("productsView.model", productsView.model.GetItemsCount());
         }
     }
 
     function updateModel(){
+        console.log("Order updateModel");
+
         model.SetData("OrderId", instanceIdInput.text)
         model.SetData("PurchaseId", purchaseIdInput.text)
 
@@ -334,7 +328,7 @@ ViewBase {
                 readOnly: orderEditorContainer.readOnly;
 
                 onEditingFinished: {
-                    orderEditorContainer.doUpdateModel();
+//                    orderEditorContainer.doUpdateModel();
                 }
 
                 KeyNavigation.tab: instanceIdInput;
@@ -495,6 +489,7 @@ ViewBase {
                     let productModel = productsDialog.bodyItem.productModel;
                     let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
 
+                    console.log("productModel", productModel.toJSON());
 
                     let index = productsView.activeProductIndex;
                     if (index < 0){
@@ -513,8 +508,7 @@ ViewBase {
                         }
                     }
 
-//                    actualOrderProducts.dataChanged();
-//                    actualOrderProducts.Refresh();
+                    actualOrderProducts.Refresh();
                 }
             }
         }
@@ -659,13 +653,9 @@ ViewBase {
 
                     let orderProducts = orderEditorContainer.model.GetData("OrderProducts")
 
-//                    orderEditorContainer.undoManagerPtr.beginChanges();
-
                     orderProducts.SetUpdateEnabled(true);
                     orderProducts.RemoveItem(productsView.activeProductIndex);
                     orderProducts.SetUpdateEnabled(false);
-
-//                    orderEditorContainer.undoManagerPtr.endChanges();
                 }
             }
         }

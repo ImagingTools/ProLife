@@ -218,7 +218,7 @@ ViewBase {
                 checkBox.checkState = Qt.Checked - checkBox.checkState;
             }
 
-            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && root.readOnly;
+            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
 
             onCheckStateChanged: {
                 root.doUpdateModel();

@@ -17,14 +17,14 @@ namespace prolifegql
 
 imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QString("Internal error").toUtf8();
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 		return nullptr;
 	}
+
+	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
 	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
 
