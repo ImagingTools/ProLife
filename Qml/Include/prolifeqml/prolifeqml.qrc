@@ -38,5 +38,7 @@
 		<file alias="ProLife/OrderValidator.qml">OrderValidator.qml</file>
 		<file alias="ProLife/DeviceCollectionFilter.qml">DeviceCollectionFilter.qml</file>
 		<file alias="ProLife/DeviceCollectionFilterDecorator.qml">DeviceCollectionFilterDecorator.qml</file>
+		<file alias="ProLife/LicenseCollectionFilter.qml">LicenseCollectionFilter.qml</file>
+		<file alias="ProLife/OrderCollectionFilter.qml">OrderCollectionFilter.qml</file>
     </qresource>
 </RCC>

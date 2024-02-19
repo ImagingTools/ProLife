@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5181" Description="ACF"/>
-            <Version Id="1" Number="2199" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -48,11 +48,13 @@
                 <Element ComponentName="Remove" X="75" Y="375" Note=""/>
                 <Element ComponentName="RemovePermissions" X="1025" Y="525" Note=""/>
                 <Element ComponentName="Rename" X="375" Y="650" Note=""/>
+                <Element ComponentName="RenamePermissions" X="725" Y="725" Note=""/>
                 <Element ComponentName="SetDescription" X="375" Y="750" Note=""/>
+                <Element ComponentName="SetDescriptionPermissions" X="725" Y="800" Note=""/>
                 <Element ComponentName="ShowNew" X="75" Y="725" Note=""/>
                 <Element ComponentName="ShowNewPermissions" X="1025" Y="800" Note=""/>
                 <Element ComponentName="WithLicensePermissions" X="725" Y="525" Note=""/>
-                <Element ComponentName="WithoutLicensePermissions" X="725" Y="600" Note=""/>
+                <Element ComponentName="WithoutLicensePermissions" X="725" Y="575" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

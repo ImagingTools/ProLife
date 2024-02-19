@@ -53,6 +53,16 @@ ViewBase {
         id: licensesProvider;
     }
 
+    function setReadOnly(readOnly){
+        instanceIdInput.readOnly = readOnly;
+        purchaseIdInput.readOnly = readOnly;
+        descriptionInput.readOnly = readOnly;
+        productsView.readOnly = readOnly;
+
+        customerCB.changeable = !readOnly;
+        orderStatusCB.changeable = !readOnly;
+    }
+
     function updateGui(){
         if (model.ContainsKey("OrderId")){
             instanceIdInput.text = model.GetData("OrderId");
@@ -96,7 +106,8 @@ ViewBase {
         let statusFound = false;
         if (orderEditorContainer.model.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.model.GetData("OrderStatus");
-            let statusModel = stateMachine.getAvailableModel(status);
+//            let statusModel = stateMachine.getAvailableModel(status);
+            let statusModel = stateMachine.stateModel;
             if (statusModel){
                 orderStatusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -119,8 +130,13 @@ ViewBase {
         if (model.ContainsKey("OrderProducts")){
             productsView.model = model.GetTreeItemModel("OrderProducts");
 
-            console.log("productsView.model", productsView.model.GetItemsCount());
+            productsView.model.Refresh();
         }
+        else{
+            productsView.model = 0;
+        }
+
+        model.Refresh();
     }
 
     function updateModel(){
@@ -410,6 +426,8 @@ ViewBase {
 
                 changeable: !orderEditorContainer.readOnly;
 
+                model: orderStatus.statusModel;
+
                 onCurrentIndexChanged: {
                     orderEditorContainer.doUpdateModel();
 
@@ -493,10 +511,14 @@ ViewBase {
 
                     let index = productsView.activeProductIndex;
                     if (index < 0){
+                        console.log("actualOrderProducts1", actualOrderProducts.toJSON());
+
                         if (actualOrderProducts){
-                            index = actualOrderProducts.InsertNewItem();
+                            index = actualOrderProducts.GetItemsCount();
                             actualOrderProducts.CopyItemDataFromModel(index, productModel);
                         }
+
+                        console.log("actualOrderProducts2", actualOrderProducts.toJSON());
                     }
                     else{
                         if (actualOrderProducts){
@@ -651,11 +673,12 @@ ViewBase {
                         return;
                     }
 
-                    let orderProducts = orderEditorContainer.model.GetData("OrderProducts")
-
-                    orderProducts.SetUpdateEnabled(true);
-                    orderProducts.RemoveItem(productsView.activeProductIndex);
-                    orderProducts.SetUpdateEnabled(false);
+                    if (orderEditorContainer.model.ContainsKey("OrderProducts")){
+                        let orderProducts = orderEditorContainer.model.GetTreeItemModel("OrderProducts")
+                        if (orderProducts){
+                            orderProducts.RemoveItem(productsView.activeProductIndex);
+                        }
+                    }
                 }
             }
         }

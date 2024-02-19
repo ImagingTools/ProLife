@@ -76,45 +76,6 @@ ViewBase {
         }
     }
 
-    function beginDocumentModelChanged(){
-        if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
-            let status = deviceEditorContainer.model.GetData("ProductionStatus");
-            if (status !== ""){
-                let statusModel = stateMachine.getAvailableModel(status);
-                statusCB.model = statusModel;
-            }
-        }
-
-        if (!statusCB.model){
-            statusCB.model = productionStatus.statusModel;
-        }
-    }
-
-    function documentCanBeSaved(){
-        let ok = deviceEditorContainer.macAddressIsValid();
-        if (!ok && deviceEditorContainer.documentManagerPtr){
-            deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("MAC-Address invalid"));
-        }
-
-        if (ok){
-            if (productCB.currentIndex < 0){
-                deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please select a device type"));
-
-                ok = false;
-            }
-        }
-
-        if (ok){
-            if (configurationCB.currentIndex < 0){
-                deviceEditorContainer.documentManagerPtr.openErrorDialog(qsTr("Please select a device configuration"));
-
-                ok = false;
-            }
-        }
-
-        return ok;
-    }
-
     DeviceProductionStatus {
         id: productionStatus;
     }
@@ -142,18 +103,19 @@ ViewBase {
         }
     }
 
-    function blockEditing(){
-        descriptionInput.readOnly = true;
-        serialNumberInput.readOnly = true;
-        macAddressInput.readOnly = true;
-        statusCB.changeable = false;
-        productCB.changeable = false;
-        orderCB.changeable = false;
-        orderClearButton.enabled = false
-        buttonContainer.enabled = false;
+    function setReadOnly(readOnly){
+        descriptionInput.readOnly = readOnly;
+        serialNumberInput.readOnly = readOnly;
+        macAddressInput.readOnly = readOnly;
+        statusCB.changeable = !readOnly;
+        productCB.changeable = !readOnly;
+        orderCB.changeable = !readOnly;
+        orderClearButton.enabled = !readOnly
+        buttonContainer.enabled = !readOnly;
 
-        configurationCB.changeable = false;
+        configurationCB.changeable = !readOnly;
     }
+
 
     function updateGui(){
         console.log("DeviceEditor updateGui");

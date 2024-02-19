@@ -209,8 +209,6 @@ ViewBase {
     }
 
     function updateTableGui(){
-        console.log("updateTableGui");
-        console.log("root.productLicensesModel", root.productLicensesModel);
         modelsTable.uncheckAll();
 
         if (root.productLicensesModel){

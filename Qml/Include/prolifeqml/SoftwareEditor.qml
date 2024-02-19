@@ -22,7 +22,16 @@ ViewBase {
         CachedOrderCollection.updateModel();
     }
 
+    onReadOnlyChanged: {
+        console.log("SE onReadOnlyChanged", root.readOnly);
+
+        projectInput.readOnly = root.readOnly;
+
+    }
+
     onModelChanged: {
+        console.log("SE onModelChanged", root.model.toJSON());
+
         if (root.model.ContainsKey("InUse")){
             let inUse = root.model.GetData("InUse");
             if (inUse){
@@ -38,6 +47,15 @@ ViewBase {
         AlertMessage {
             message: qsTr("The product cannot be edited as it is in use.");
         }
+    }
+
+    function setReadOnly(readOnly){
+        projectInput.readOnly = readOnly;
+
+        ordersCB.changeable = !readOnly;
+        productCB.changeable = !readOnly;
+
+        softwareProductEditor.setReadOnly(readOnly);
     }
 
     function updateGui(){
@@ -174,8 +192,11 @@ ViewBase {
             readOnly: root.readOnly;
 
             Component.onCompleted: {
+                console.log("project onCompleted", root.readOnly);
+
                 if (!root.readOnly){
                     let ok = PermissionsController.checkPermission("ChangeLicense");
+                    console.log("ok", ok);
                     projectInput.readOnly = !ok;
                 }
             }
@@ -215,8 +236,11 @@ ViewBase {
                 changeable: !root.readOnly;
 
                 Component.onCompleted: {
+                    console.log("ordersCB onCompleted");
+                    console.log("root.readOnly", root.readOnly);
                     if (!root.readOnly){
                         let ok = PermissionsController.checkPermission("ChangeLicense");
+                        console.log("ok", ok);
 
                         ordersCB.changeable = ok;
                     }

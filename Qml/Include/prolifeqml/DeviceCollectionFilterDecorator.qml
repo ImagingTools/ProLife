@@ -19,6 +19,12 @@ DecoratorBase {
         Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
     }
 
+    Rectangle{
+        anchors.fill: parent;
+
+        color: Style.backgroundColor;
+    }
+
     CollectionDataProvider {
         id: accountsList;
 
@@ -73,20 +79,6 @@ DecoratorBase {
 
         licenseComboBox.model = modelCategogy;
     }
-
-//    onWidthChanged: {
-//        if (width - filtermenu.width <= licenseFilterBlock.width + accountFilterBlock.width){
-//            licenseFilterBlock.visible = false;
-//            accountFilterBlock.visible = false;
-//        }
-//        else{
-//            licenseFilterBlock.visible = true;
-
-//            if (accountFilterBlock.canViewAccountFilter){
-//                accountFilterBlock.visible = true;
-//            }
-//        }
-//    }
 
     TreeItemModel {
         id: modelCategogy;
@@ -183,147 +175,6 @@ DecoratorBase {
             }
         }
     }
-
-//    Item {
-//        id: licenseFilterBlock;
-
-//        anchors.verticalCenter: parent.verticalCenter;
-//        anchors.left: parent.left;
-//        anchors.leftMargin: 10;
-
-//        width: licenseComboBox.width;
-//        height: filtermenu.height;
-
-//        ComboBox {
-//            id: licenseComboBox;
-
-//            height: filtermenu.height;
-//            width: 200;
-
-//            currentIndex: 0;
-
-//            radius: 3;
-
-//            onCurrentIndexChanged: {
-//                if (licenseComboBox.currentIndex >= 0){
-//                    let value = licenseComboBox.model.GetData("Id", licenseComboBox.currentIndex);
-
-//                    mainItem.baseElement.filterChanged("LicenseFilter", value);
-//                }
-//            }
-//        }
-
-//        ComboBox {
-//            id: accountComboBox;
-
-//            height: filtermenu.height;
-//            width: 200;
-
-//            currentIndex: 0;
-
-//            radius: 3;
-
-//            shownItemsCount: 15;
-
-//            onCurrentIndexChanged: {
-//                if (accountComboBox.currentIndex > 0){
-//                    let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
-
-//                    mainItem.baseElement.filterChanged("AccountFilter", value);
-//                }
-//                else{
-//                    mainItem.baseElement.filterChanged("AccountFilter", "");
-//                }
-//            }
-//        }
-//    }
-
-//    Item {
-//        id: accountFilterBlock;
-
-//        anchors.verticalCenter: parent.verticalCenter;
-//        anchors.left: licenseFilterBlock.right;
-//        anchors.leftMargin: 10;
-
-//        width: canViewAccountFilter ? accountComboBox.width : 0;
-//        height: canViewAccountFilter ? filtermenu.height : 0;
-
-//        property bool canViewAccountFilter: false;
-
-//        Component.onCompleted: {
-//            let ok = PermissionsController.checkPermission("ViewAllSensors")
-//            accountFilterBlock.canViewAccountFilter = ok;
-//            accountFilterBlock.visible = ok;
-
-//            if (ok){
-//                accountsList.updateModel();
-//            }
-//        }
-
-//        CollectionDataProvider {
-//            id: accountsList;
-
-//            commandId: "Accounts";
-
-//            fields: ["Id", "Name"];
-
-//            onCollectionModelChanged: {
-//                accountsList.collectionModel.InsertNewItem(0);
-
-//                accountFilterBlock.updateModel();
-//            }
-//        }
-
-//        function updateModel(){
-//            accountsList.collectionModel.SetData("Id", "All");
-//            accountsList.collectionModel.SetData("Name", qsTr("All customers"))
-
-//            accountComboBox.model = accountsList.collectionModel;
-//        }
-
-//        ComboBox {
-//            id: accountComboBox;
-
-//            anchors.bottom: parent.bottom;
-//            anchors.left: parent.left;
-
-//            height: filtermenu.height;
-//            width: 200;
-
-//            currentIndex: 0;
-
-//            radius: 3;
-
-//            shownItemsCount: 15;
-
-//            onCurrentIndexChanged: {
-//                if (accountComboBox.currentIndex > 0){
-//                    let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
-
-//                    mainItem.baseElement.filterChanged("AccountFilter", value);
-//                }
-//                else{
-//                    mainItem.baseElement.filterChanged("AccountFilter", "");
-//                }
-//            }
-//        }
-//    }
-
-//    Text {
-//        id: titleInstanceId;
-
-//        anchors.verticalCenter: parent.verticalCenter;
-//        anchors.right: filtermenu.left;
-//        anchors.rightMargin: 10;
-
-//        visible: false;
-
-//        text: qsTr("Only new sensors!");
-
-//        color: Style.errorTextColor;
-//        font.family: Style.fontFamily;
-//        font.pixelSize: Style.fontSize_common;
-//    }
 
     FilterPanelDecorator {
         id: filtermenu

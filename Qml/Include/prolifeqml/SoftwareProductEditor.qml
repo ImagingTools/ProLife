@@ -21,12 +21,10 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
-    onReadOnlyChanged: {
-        serialNumberInput.readOnly = root.readOnly;
-
-        datePicker.readOnly = root.readOnly;
-
-        licenseCB.changeable = !root.readOnly
+    function setReadOnly(readOnly){
+        serialNumberInput.readOnly = readOnly;
+        datePicker.readOnly = readOnly;
+        licenseCB.changeable = !readOnly
     }
 
     function updateGui(){
@@ -126,17 +124,19 @@ ViewBase {
         readOnly: root.readOnly;
 
         Component.onCompleted: {
-            let ok = PermissionsController.checkPermission("ChangeLicense");
-            if (!ok){
-                ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-            }
+            if (!root.readOnly){
+                let ok = PermissionsController.checkPermission("ChangeLicense");
+                if (!ok){
+                    ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+                }
 
-            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-            if (canEditOrder){
-                ok = true;
-            }
+                let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                if (canEditOrder){
+                    ok = true;
+                }
 
-            serialNumberInput.readOnly = !ok;
+                serialNumberInput.readOnly = !ok;
+            }
         }
 
         onEditingFinished: {
@@ -174,14 +174,16 @@ ViewBase {
         changeable: !root.readOnly;
 
         Component.onCompleted: {
-            let ok = PermissionsController.checkPermission("ChangeLicense");
+            if (!root.readOnly){
+                let ok = PermissionsController.checkPermission("ChangeLicense");
 
-            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-            if (canEditOrder){
-                ok = true;
+                let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                if (canEditOrder){
+                    ok = true;
+                }
+
+                licenseCB.changeable = ok;
             }
-
-            licenseCB.changeable = ok;
         }
 
         onCurrentIndexChanged: {
@@ -259,13 +261,15 @@ ViewBase {
             readOnly: root.readOnly;
 
             Component.onCompleted: {
-                let ok = PermissionsController.checkPermission("ChangeLicense");
-                let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                if (canEditOrder){
-                    ok = true;
-                }
+                if (!root.readOnly){
+                    let ok = PermissionsController.checkPermission("ChangeLicense");
+                    let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                    if (canEditOrder){
+                        ok = true;
+                    }
 
-                datePicker.readOnly = !ok;
+                    datePicker.readOnly = !ok;
+                }
             }
 
             onDateChanged: {

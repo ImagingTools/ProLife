@@ -23,16 +23,7 @@ Item {
     signal modelChanged();
 
     Component.onCompleted: {
-        Events.subscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
         bindingModel.dataChanged.connect(productEditor.modelChanged);
-    }
-
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", productEditor.onLocalizationChanged);
-    }
-
-    function onLocalizationChanged(language){
-//        productEditor.updateHeaders();
     }
 
     property bool bindingModelReady: false;
@@ -280,6 +271,8 @@ Item {
 
                 anchors.fill: parent
 
+                filterMenu.decorator: Style.filterPanelDecorator;
+
                 commandsController: null;
 
                 dataController: CollectionRepresentation {
@@ -296,6 +289,8 @@ Item {
                     function updateModel(){
                     }
                 }
+
+                function registerDocumentInfo(){}
 
                 onSelectionChanged: {
                     if (selection.length <= 0){
@@ -403,9 +398,12 @@ Item {
 
                 commandsController: null;
 
+                filterMenu.decorator: Style.filterPanelDecorator;
+
 //                hasPagination: false;
                 hasSort: false;
                 hasFilter: false;
+                filterMenuVisible: false;
 
                 dataController: CollectionRepresentation {
                     collectionId: "SoftwareProducts";
@@ -421,6 +419,8 @@ Item {
                     function updateModel(){
                     }
                 }
+
+                function registerDocumentInfo(){}
 
                 onSelectionChanged: {
                     if (selection.length === 0){
@@ -447,19 +447,6 @@ Item {
                     bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
                     bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                 }
-
-//                onVisibleChanged: {
-//                    if (visible){
-//                        let filterModel = bindingProductsCollection.collectionFilter.filterModel;
-
-//                        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
-//                        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
-
-//                        bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
-
-//                        bindingProductsCollection.doUpdateGui();
-//                    }
-//                }
 
                 onElementsChanged: {
                     let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
