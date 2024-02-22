@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="394753" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -31,6 +31,67 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ConnectionCollection" PackageId="ImtServicePck" ComponentId="ConnectionCollection">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ConnectionDescriptions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Server tcp port to be listened</Value>
+                                <Value>Server websocket port to be listened</Value>
+                                <Value>Server tcp port to be connected to Puma</Value>
+                                <Value>Server websocket port to be connected to Puma</Value>
+                                <Value>Server websocket port to be connected to Lisa</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLifeUrlTcp</Value>
+                                <Value>ProLifeUrlWs</Value>
+                                <Value>PumaUrlTcp</Value>
+                                <Value>PumaUrlWs</Value>
+                                <Value>LisaUrlTcp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionTypes" Type="Integer[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>0</Value>
+                                <Value>0</Value>
+                                <Value>1</Value>
+                                <Value>1</Value>
+                                <Value>1</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionUrlListCompPtr" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ServerPort</Value>
+                                <Value>WebSocketServerPort</Value>
+                                <Value>PumaUrl</Value>
+                                <Value>PumaUrl</Value>
+                                <Value>LisaUrl</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServiceNames" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                                <Value>ProLife</Value>
+                                <Value>Puma</Value>
+                                <Value>Puma</Value>
+                                <Value>Lisa</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -235,6 +296,7 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="imod::IModel" ComponentId="Preferences"/>
+        <Interface InterfaceId="imtservice::IConnectionCollection" ComponentId="ConnectionCollection"/>
         <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
         <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Preferences"/>
