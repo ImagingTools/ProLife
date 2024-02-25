@@ -16,8 +16,8 @@ RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui -liservice
 LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicdb -limtlic -limtlicgui -lImtCoreLoc -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtfile
-LIBS += -limtlicgql -limtguigql -limtgql -limtauthgql -limtauthdb -limtcom -limtapp -limtclientgql
-LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc -lprolifedata -lprolifedb -lprolifegql
+LIBS += -limtlicgql -limtguigql -limtgql -limtauthgql -limtauthdb -limtcom -limtapp -limtclientgql -limtservice
+LIBS += -lprolifeqml -lprolifestyle -lImtCoreLoc -lProLifeLoc -lprolifedata -lprolifedb -lprolifegql
 
 # Set OS-specific build options:
 win32-msvc*{

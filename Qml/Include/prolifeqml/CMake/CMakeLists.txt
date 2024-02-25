@@ -69,6 +69,6 @@ message("PROLIFEDIR ${PROLIFEDIR}")
 if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
-	jqml_compile_web("${webdirs}", "${buildwebdir}", "${resname}")
+	jqml_compile_web2("${webdirs}", "${buildwebdir}", "${resname}")
 endif()
 

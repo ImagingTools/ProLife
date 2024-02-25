@@ -11,7 +11,7 @@ QT += quick qml
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
-LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql -limtclientgql
+LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql -limtclientgql -limtservice
 LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml
 LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc
 

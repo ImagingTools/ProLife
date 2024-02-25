@@ -15,7 +15,7 @@ LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
 LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlic -limtlicgui -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtcom
 LIBS += -limtlicgql -limtguigql -limtgql -limtauthgql -limtclientgql
 LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml
-LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc
+LIBS += -lprolifeqml -lprolifestyle -lImtCoreLoc -lProLifeLoc
 
 # Set OS-specific build options:
 win32-msvc*{

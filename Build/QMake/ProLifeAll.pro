@@ -11,8 +11,8 @@ prolifedb.file = ../../Include/prolifedb/QMake/prolifedb.pro
 SUBDIRS += prolifegql
 prolifegql.file = ../../Include/prolifegql/QMake/prolifegql.pro
 
-SUBDIRS += prolifeqml
-prolifeqml.file = ../../Include/prolifeqml/QMake/prolifeqml.pro
+SUBDIRS += prolifestyle
+prolifestyle.file = ../../Include/prolifestyle/QMake/prolifestyle.pro
 
 SUBDIRS += ProLifeLoc
 ProLifeLoc.file = ../../Impl/ProLifeLoc/QMake/ProLifeLoc.pro
@@ -33,18 +33,22 @@ ProLifeGqlPck.depends = prolifegql
 # Application
 SUBDIRS += ProLifeClient
 ProLifeClient.file = ../../Impl/ProLifeClient/QMake/ProLifeClient.pro
-ProLifeClient.depends = ProLifeLoc
+ProLifeClient.depends = ProLifeLoc prolifestyle
 
 SUBDIRS += ProLifeServer
 ProLifeServer.file = ../../Impl/ProLifeServer/QMake/ProLifeServer.pro
-ProLifeServer.depends = ProLifeLoc
+ProLifeServer.depends = ProLifeLoc prolifestyle
 
 SUBDIRS += ProLifeClientServer
 ProLifeClientServer.file = ../../Impl/ProLifeClientServer/QMake/ProLifeClientServer.pro
-ProLifeClientServer.depends = ProLifeLoc
+ProLifeClientServer.depends = ProLifeLoc prolifestyle
 
 SUBDIRS += ProLifeServerConfigurator
 ProLifeServerConfigurator.file = ../../Impl/ProLifeServerConfigurator/QMake/ProLifeServerConfigurator.pro
 ProLifeServerConfigurator.depends = ProLifeLoc
+
+# Plug-ins
+SUBDIRS += ProLifeSettingsPlugin
+ProLifeSettingsPlugin.file = ../../Impl/Plugins/ProLifeSettingsPlugin/QMake/ProLifeSettingsPlugin.pro
 
 
