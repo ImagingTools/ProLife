@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Application" X="625" Y="75" Note=""/>
         <Element ComponentName="LocalSettings" X="125" Y="375" Note=""/>
-        <Element ComponentName="PumaSystemStatusController" X="1025" Y="600" Note=""/>
+        <Element ComponentName="PumaSystemStatusController" X="1025" Y="600" Note="Check connection with authorizable server"/>
         <Element ComponentName="SystemStatusController" X="1025" Y="375" Note=""/>
         <Element ComponentName="VersionInfo" X="350" Y="175" Note=""/>
     </PositionMap>
