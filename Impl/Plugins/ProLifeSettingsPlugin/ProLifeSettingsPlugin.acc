@@ -41,7 +41,7 @@
                         <Data IsEnabled="true" Value="ServerPageData"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TypeId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ConnactionCollection"/>
+                        <Data IsEnabled="true" Value="ConnectionCollection"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
