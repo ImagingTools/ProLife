@@ -49,14 +49,25 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="ConnectionNames" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLifeUrl(Tcp)</Value>
+                                <Value>ProLifeUrl(Ws)</Value>
+                                <Value>PumaUrl(Tcp)</Value>
+                                <Value>PumaUrl(Ws)</Value>
+                                <Value>LisaUrl(Tcp)</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="ConnectionServiceTypeNames" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProLifeUrlTcp</Value>
-                                <Value>ProLifeUrlWs</Value>
-                                <Value>PumaUrlTcp</Value>
-                                <Value>PumaUrlWs</Value>
-                                <Value>LisaUrlTcp</Value>
+                                <Value>ProLife</Value>
+                                <Value>ProLife</Value>
+                                <Value>Puma</Value>
+                                <Value>Puma</Value>
+                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -85,11 +96,11 @@
                     <AttributeInfo Id="ConnectionUsageIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProLife</Value>
-                                <Value>ProLife</Value>
-                                <Value>Puma</Value>
-                                <Value>Puma</Value>
-                                <Value>Lisa</Value>
+                                <Value>ProLifeUrlTcp</Value>
+                                <Value>ProLifeUrlWs</Value>
+                                <Value>PumaUrlTcp</Value>
+                                <Value>PumaUrlWs</Value>
+                                <Value>LisaUrlTcp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
