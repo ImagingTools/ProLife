@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5200" Description="ACF"/>
-            <Version Id="1" Number="2203" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -294,6 +294,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="WebSocketPumaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="8788"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ws"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="WebSocketServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -324,6 +339,7 @@
         <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrl"/>
         <Component ExportedId="ServerParam" ComponentId="Server"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>
+        <Component ExportedId="WebSocketPumaUrl" ComponentId="WebSocketPumaUrl"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="WebSocketServerPort"/>
     </ExportedComponents>
 </Acf>

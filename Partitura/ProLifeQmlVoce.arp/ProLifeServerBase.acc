@@ -314,7 +314,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/PumaWebSocketUrlParam"/>
+                        <Data IsEnabled="true" Value="ServerSettings/WebSocketPumaUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
