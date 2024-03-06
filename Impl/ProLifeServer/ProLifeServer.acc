@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5200" Description="ACF"/>
-            <Version Id="1" Number="2203" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -43,12 +43,6 @@
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SeriviceDescription" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife server"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServiceName" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServer"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
@@ -73,6 +67,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SingletonDocApplication" PackageId="QtGuiPck" ComponentId="SingletonDocApplication">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Application" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -85,7 +94,8 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="ibase::IApplication" ComponentId="Application"/>
+        <Interface InterfaceId="ibase::IApplication" ComponentId="SingletonDocApplication"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="SingletonDocApplication"/>
     </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>

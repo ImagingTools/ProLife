@@ -2,14 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5200" Description="ACF"/>
-            <Version Id="1" Number="2203" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="394753" Description="Qt Framework"/>
+            <Version Id="0" Number="5191" Description="ACF"/>
+            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Application" X="600" Y="125" Note=""/>
+        <Element ComponentName="Application" X="600" Y="175" Note=""/>
         <Element ComponentName="ProLifeServerBase" X="200" Y="400" Note=""/>
+        <Element ComponentName="SingletonDocApplication" X="600" Y="50" Note=""/>
         <Element ComponentName="VersionInfo" X="1000" Y="400" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
