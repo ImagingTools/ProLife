@@ -88,7 +88,7 @@
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                                 <Value>PumaUrl</Value>
-                                <Value>PumaUrl</Value>
+                                <Value>WebSocketPumaUrl</Value>
                                 <Value>LisaUrl</Value>
                             </Values>
                         </Data>
