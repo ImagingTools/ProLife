@@ -51,17 +51,13 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 //Filename: "{app}\postgresql.exe"; Flags: runascurrentuser; Parameters:  --mode unattended --unattendedmodeui minimal --superpassword root; Components: postgresql
-Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
-Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
-Filename: "{app}\nginx\startNginx.bat"; Flags: runascurrentuser
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-t"; Flags: runascurrentuser
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-u"; Flags: runascurrentuser
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Parameters: "-i"; Flags: runascurrentuser
+// Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
+//Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser postinstall
+//Filename: "{app}\nginx\startNginx.bat"; Flags: runascurrentuser postinstall
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent;
 
 [UninstallRun]
-Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
-Filename: "{app}\{#MyAppExeName}"; Parameters: "-t"; Flags: runascurrentuser
-Filename: "{app}\{#MyAppExeName}"; Parameters: "-u"; Flags: runascurrentuser
+//Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
 
 //[Registry]
 //Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
@@ -100,7 +96,7 @@ begin
       // handle failure if necessary; ResultCode contains the error code
     end;
 
-    DelTree(ExpandConstant('{pf64}\ImagingTools\ProLifeServer'), True, True, True);
+    // DelTree(ExpandConstant('{pf64}\ImagingTools\ProLifeServer'), True, True, True);
   end;
   // Proceed Setup
   Result := True;
