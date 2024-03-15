@@ -2,6 +2,9 @@
 TEMPLATE = subdirs
 
 # Libraries
+SUBDIRS += prolifeqml
+prolifeqml.file = ../../Qml/Include/prolifeqml/QMake/prolifeqml.pro
+
 SUBDIRS += prolifedata
 prolifedata.file = ../../Include/prolifedata/QMake/prolifedata.pro
 
