@@ -36,11 +36,11 @@ ProLifeGqlPck.depends = prolifegql
 # Application
 SUBDIRS += ProLifeClient
 ProLifeClient.file = ../../Impl/ProLifeClient/QMake/ProLifeClient.pro
-ProLifeClient.depends = ProLifeLoc prolifestyle
+ProLifeClient.depends = ProLifeLoc prolifestyle prolifeqml
 
 SUBDIRS += ProLifeServer
 ProLifeServer.file = ../../Impl/ProLifeServer/QMake/ProLifeServer.pro
-ProLifeServer.depends = ProLifeLoc prolifestyle
+ProLifeServer.depends = ProLifeLoc prolifestyle prolifeqml
 
 SUBDIRS += ProLifeClientServer
 ProLifeClientServer.file = ../../Impl/ProLifeClientServer/QMake/ProLifeClientServer.pro

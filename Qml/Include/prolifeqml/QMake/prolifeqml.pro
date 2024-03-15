@@ -5,12 +5,12 @@ include($(IMTCOREDIR)/Config/QMake/QmlControls.pri)
 buildwebdir = $$PWD/../../../../Bin/web
 
 imtcoredir = $(IMTCOREDIR)
+prolifedir = $(PROLIFEDIR)
 
 prepareWebQml($$buildwebdir)
 
-
 copyToWebDir($$PWD/../, $$buildwebdir/src)
-copyToWebDir(${PROLIFEDIR}/Include/prolifestyle/Resources/html/, $$buildwebdir/Resources)
+copyToWebDir($$prolifedir/Include/prolifestyle/Resources/html/, $$buildwebdir/Resources)
 copyToWebDir($$imtcoredir/Include/imtstylecontrolsqml/Qml/Fonts/, $$buildwebdir/Resources)
 copyToWebDir($$imtcoredir/Include/imtstylecontrolsqml/Qml/Acf/, $$buildwebdir/src/Acf)
 
