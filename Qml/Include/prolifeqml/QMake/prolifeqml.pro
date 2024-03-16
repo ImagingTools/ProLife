@@ -9,6 +9,7 @@ prolifedir = $(PROLIFEDIR)
 
 prepareWebQml($$buildwebdir)
 
+# copy project qml from to
 copyToWebDir($$PWD/../, $$buildwebdir/src)
 copyToWebDir($$prolifedir/Include/prolifestyle/Resources/html/, $$buildwebdir/Resources)
 copyToWebDir($$imtcoredir/Include/imtstylecontrolsqml/Qml/Fonts/, $$buildwebdir/Resources)
