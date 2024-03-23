@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5191" Description="ACF"/>
-            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -202,6 +202,9 @@
                     <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7776"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="http"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -240,6 +243,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7788"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="http"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -291,6 +297,9 @@
                     <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="http"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -317,6 +326,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="8778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ws"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

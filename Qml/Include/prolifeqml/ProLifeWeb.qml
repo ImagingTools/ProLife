@@ -10,12 +10,11 @@ Item {
         id: application;
 
         anchors.fill: parent;
+
+        serverReady: true;
 		
-		systemStatus: "NO_ERROR";
         Component.onCompleted: {
             designProvider.applyDesignSchema("Light");
-
-            application.firstModelsInit();
         }
     }
 }

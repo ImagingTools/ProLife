@@ -15,25 +15,30 @@ RemoteCollectionView {
 
     filterMenu.decorator: licenseCollectionFilterComp;
 
-    dataController: CollectionRepresentation {
-        collectionId: "SoftwareProducts";
+    dataControllerComp:
+        Component {
+        CollectionRepresentation {
+            collectionId: "SoftwareProducts";
 
-        Component.onCompleted: {
-            additionalFieldIds.push("OrderUuid");
-            additionalFieldIds.push("HardwareUuid");
-            additionalFieldIds.push("InUse");
-            additionalFieldIds.push("ProductUuid");
-            additionalFieldIds.push("CustomerUuid");
+            Component.onCompleted: {
+                additionalFieldIds.push("OrderUuid");
+                additionalFieldIds.push("HardwareUuid");
+                additionalFieldIds.push("InUse");
+                additionalFieldIds.push("ProductUuid");
+                additionalFieldIds.push("CustomerUuid");
+            }
         }
     }
 
-    commandsController: CommandsRepresentationProvider {
-        commandId: "SoftwareProducts";
-        uuid: container.viewId;
+    commandsControllerComp: Component {CommandsRepresentationProvider {
+            commandId: "SoftwareProducts";
+            uuid: container.viewId;
+        }
     }
 
-    commandsDelegate: SoftwareProductsCollectionViewCommandsDelegate {
-        collectionView: container;
+    commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
+            collectionView: container;
+        }
     }
 
     visibleMetaInfo: false;
@@ -71,9 +76,16 @@ RemoteCollectionView {
         SoftwareEditor {
             id: softwareEditor;
 
-            commandsController: CommandsRepresentationProvider {
-                commandId: "SoftwareProduct";
-                uuid: softwareEditor.viewId;
+            commandsDelegateComp: Component {ViewCommandsDelegateBase {
+                view: softwareEditor;
+            }
+            }
+
+            commandsControllerComp:
+                Component {CommandsRepresentationProvider {
+                    commandId: "SoftwareProduct";
+                    uuid: softwareEditor.viewId;
+                }
             }
         }
     }

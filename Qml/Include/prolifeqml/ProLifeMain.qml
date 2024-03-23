@@ -4,6 +4,7 @@ import imtgui 1.0
 import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcontrols 1.0
+import imtguigql 1.0
 import prolifeqml 1.0
 
 ApplicationMain{
@@ -16,7 +17,7 @@ ApplicationMain{
 //    systemStatus: "UNKNOWN";
 
     Component.onCompleted: {
-        context.application = 'ProLife';
+        context.appName = 'ProLife';
 
         Events.subscribeEvent("Login", loginSuccesful);
     }
@@ -42,6 +43,26 @@ ApplicationMain{
 //        CachedGroupCollection.updateModel();
 //        CachedUserCollection.updateModel();
 //        CachedRoleCollection.updateModel();
+    }
+
+    function startSystemStatusChecking(){
+        console.log("startSystemStatusChecking")
+
+        systemStatusController.serverStatusGqlCommandId = "ProLifeTestConnection"
+        systemStatusController.databaseStatusGqlCommandId = "ProLifeGetDatabaseStatus"
+        systemStatusController.serverName = "ProLife"
+        systemStatusController.slaveSystemStatusController = pumaSystemStatusController;
+
+        systemStatusController.updateSystemStatus();
+    }
+
+    SystemStatusController {
+        id: pumaSystemStatusController;
+
+        serverStatusGqlCommandId: "PumaTestConnection";
+        databaseStatusGqlCommandId: "PumaGetDatabaseStatus";
+
+        serverName: "Puma";
     }
 }
 

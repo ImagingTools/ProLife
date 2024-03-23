@@ -75,7 +75,7 @@ istd::IChangeable* CHardwareProductBindingControllerComp::CreateObject(
 imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
-		errorMessage = QObject::tr("Internal error").toUtf8();
+		errorMessage = QString("'m_objectCollectionCompPtr' is invalid").toUtf8();
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
 		return nullptr;
@@ -89,6 +89,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
+	dataModelPtr->SetData("Id", objectId);
+	dataModelPtr->SetData("SoftwareIds", "");
+	dataModelPtr->SetData("ProductUuid", "");
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
@@ -97,14 +100,28 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 			const QByteArray hardwareId = productBindingPtr->GetHardwareId();
 			QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
 
-			dataModelPtr->SetData("Id", objectId);
-			dataModelPtr->SetData("SoftwareIds", softwareIds.join(';'));
+			if (!softwareIds.isEmpty()){
+				dataModelPtr->SetData("SoftwareIds", softwareIds.join(';'));
 
-			return rootModelPtr.PopPtr();
+				// Get Product-ID from first software ID
+				if (m_softwareProductCollectionCompPtr.IsValid()){
+					QByteArray softwareId = softwareIds[0];
+
+					imtbase::IObjectCollection::DataPtr softwareDataPtr;
+					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+						imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+						if (productInstanceInfoPtr != nullptr){
+							QByteArray productId = productInstanceInfoPtr->GetProductId();
+
+							dataModelPtr->SetData("ProductUuid", productId);
+						}
+					}
+				}
+			}
 		}
 	}
 
-	return nullptr;
+	return rootModelPtr.PopPtr();
 }
 
 
@@ -253,6 +270,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		hardwareBindingObjectPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+	}
+	else{
+		return InsertObject(gqlRequest, errorMessage);
 	}
 
 	if (hardwareBindingObjectPtr == nullptr){

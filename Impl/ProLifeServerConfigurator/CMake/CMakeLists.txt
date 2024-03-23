@@ -37,7 +37,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} imtbase imtgui)
 target_link_libraries(${PROJECT_NAME} imtapp imtauth imtdb imtfile imtservice)
 target_link_libraries(${PROJECT_NAME} imtqml imtguiqml)
-target_link_libraries(${PROJECT_NAME} imtstylecontrolsqml imtcontrolsqml imtguigqlqml imtauthguiqml imtcolguiqml)
+target_link_libraries(${PROJECT_NAME} imtstylecontrolsqml imtcontrolsqml imtguigqlqml imtauthguiqml imtcolguiqml imtdocguiqml)
 
 target_link_libraries(${PROJECT_NAME} prolifeqml ImtCoreLoc ProLifeLoc)
 target_link_libraries(${PROJECT_NAME} iqtgui)

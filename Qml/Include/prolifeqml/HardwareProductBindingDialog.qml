@@ -57,8 +57,6 @@ Dialog {
             width: productEditorDialog.width;
             height: contentHeight + 40;
 
-            hardwareId: productEditorDialog.hardwareId
-
             onModelChanged: {
                 productEditorDialog.buttons.setButtonState(Enums.ok, true);
                 productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Cancel"));
@@ -75,15 +73,11 @@ Dialog {
             onFinished: {
                 if (buttonId == Enums.yes){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
+
+                    bindingModel.SetData("Id", productEditorDialog.hardwareId);
                     documentController.documentModel = bindingModel;
 
-                    if (bindingModel.ContainsKey("Id")){
-                        documentController.saveDocument();
-                    }
-                    else{
-                        bindingModel.SetData("Id", productEditorDialog.hardwareId);
-                        documentController.insertDocument();
-                    }
+                    documentController.saveDocument();
 
                     productEditorDialog.buttons.setButtonState(Enums.ok, false);
                     productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));

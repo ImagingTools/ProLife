@@ -26,18 +26,21 @@ ViewBase {
         console.log("SE onReadOnlyChanged", root.readOnly);
 
         projectInput.readOnly = root.readOnly;
+    }
 
+    onVisibleChanged: {
+        if (visible){
+            checkInUse()
+        }
+        else{
+            Events.sendEvent("SetAlertPanel", undefined);
+        }
     }
 
     onModelChanged: {
         console.log("SE onModelChanged", root.model.toJSON());
 
-        if (root.model.ContainsKey("InUse")){
-            let inUse = root.model.GetData("InUse");
-            if (inUse){
-                root.readOnly = true;
-            }
-        }
+        checkInUse();
 
         softwareProductEditor.model = root.model;
     }
@@ -46,6 +49,18 @@ ViewBase {
         id: alertComp;
         AlertMessage {
             message: qsTr("The product cannot be edited as it is in use.");
+        }
+    }
+
+    function checkInUse(){
+        let inUse = root.model.GetData("InUse");
+        if (inUse){
+            root.readOnly = true;
+            Events.sendEvent("SetAlertPanel", alertComp);
+        }
+        else{
+            root.readOnly = false;
+            Events.sendEvent("SetAlertPanel", undefined);
         }
     }
 

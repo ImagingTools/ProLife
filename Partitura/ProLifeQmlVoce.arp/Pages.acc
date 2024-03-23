@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -67,7 +67,7 @@
                         <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Sensors"/>
+                        <Data IsEnabled="true" Value="Hardware"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
@@ -316,7 +316,7 @@
                         <Data IsEnabled="true" Value="SoftwareProducts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Licenses"/>
+                        <Data IsEnabled="true" Value="Software"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>

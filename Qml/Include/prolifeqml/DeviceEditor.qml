@@ -24,31 +24,33 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
-    commandsDelegate: DocumentWorkspaceCommandsDelegateBase {
-        onCommandActivated: {
-            if (commandId == "Bind"){
-                let hardwareUuid = "";
-                if (deviceEditorContainer.model.ContainsKey("Id")){
-                    hardwareUuid = deviceEditorContainer.model.GetData("Id")
+    commandsDelegateComp: Component {ViewCommandsDelegateBase {
+            view: deviceEditorContainer;
+            onCommandActivated: {
+                if (commandId == "Bind"){
+                    let hardwareUuid = "";
+                    if (deviceEditorContainer.model.ContainsKey("Id")){
+                        hardwareUuid = deviceEditorContainer.model.GetData("Id")
+                    }
+
+                    if (hardwareUuid === ""){
+                        return;
+                    }
+
+                    let macAddress = "";
+
+                    if (deviceEditorContainer.model.ContainsKey("MacAddress")){
+                        macAddress = deviceEditorContainer.model.GetData("MacAddress");
+                    }
+
+                    if (hardwareUuid === "" || macAddress === ""){
+                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter the MAC-Address then save the document.")});
+
+                        return;
+                    }
+
+                    modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid});
                 }
-
-                if (hardwareUuid === ""){
-                    return;
-                }
-
-                let macAddress = "";
-
-                if (deviceEditorContainer.model.ContainsKey("MacAddress")){
-                    macAddress = deviceEditorContainer.model.GetData("MacAddress");
-                }
-
-                if (hardwareUuid === "" || macAddress === ""){
-                    modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter the MAC-Address then save the document.")});
-
-                    return;
-                }
-
-                modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid});
             }
         }
     }
@@ -168,13 +170,15 @@ ViewBase {
         if (deviceEditorContainer.model.ContainsKey("DeviceType")){
             let productId = deviceEditorContainer.model.GetData("DeviceType");
             let productModel = productCB.model;
-            for (let i = 0; i < productModel.GetItemsCount(); i++){
-                let id = productModel.GetData("Id", i);
-                if (id === productId){
-                    productCB.currentIndex = i;
+            if (productModel){
+                for (let i = 0; i < productModel.GetItemsCount(); i++){
+                    let id = productModel.GetData("Id", i);
+                    if (id === productId){
+                        productCB.currentIndex = i;
 
-                    deviceTypeFound = true;
-                    break;
+                        deviceTypeFound = true;
+                        break;
+                    }
                 }
             }
         }

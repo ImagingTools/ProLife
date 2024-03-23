@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtguigqlqml);
 	Q_INIT_RESOURCE(imtauthguiqml);
 	Q_INIT_RESOURCE(imtcolguiqml);
+	Q_INIT_RESOURCE(imtdocguiqml);
 
 	Q_INIT_RESOURCE(prolifeqml);
 

@@ -5,6 +5,7 @@ import imtcontrols 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import imtguigql 1.0
+import imtlicgui 1.0
 
 Item {
     id: productEditor;
@@ -16,30 +17,34 @@ Item {
     property TreeItemModel bindingModel: TreeItemModel {}
 
     property string productId: ""
-
     property string hardwareId: "";
 
-    property Item rootItem: null
     signal modelChanged();
 
     Component.onCompleted: {
         bindingModel.dataChanged.connect(productEditor.modelChanged);
+
+        CachedProductCollection.updateModel();
     }
 
-    property bool bindingModelReady: false;
-    property string startSoftwareIds: "";
-    property string startProductId: "";
-
     onBindingModelChanged: {
+        console.log("onBindingModelChanged", productEditor.bindingModel.toJSON());
+
+        if (productEditor.bindingModel.ContainsKey("Id")){
+            let id = productEditor.bindingModel.GetData("Id")
+
+            productEditor.hardwareId = id;
+        }
+
+        if (productEditor.bindingModel.ContainsKey("ProductUuid")){
+            let productId = productEditor.bindingModel.GetData("ProductUuid")
+
+            productEditor.productId = productId;
+        }
+
         bindingModel.dataChanged.connect(productEditor.modelChanged);
 
-        productEditor.bindingModelReady = true;
-
-        if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
-            let softwareIds = productEditor.bindingModel.GetData("SoftwareIds");
-
-            productEditor.startSoftwareIds = softwareIds;
-        }
+        updateGui();
     }
 
     property bool blockUpdatingModel: false;
@@ -47,25 +52,20 @@ Item {
         loading.visible = blockUpdatingModel;
     }
 
-    onHardwareIdChanged: {
-        let filterModel = bindingProductsCollection.collectionFilter.filterModel;
-        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
-        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
-        bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
-
-        bindingProductsCollection.doUpdateGui();
-    }
-
     function updateGui(){
-        console.log("updateGui", productEditor.productId);
+        console.log("updateGui");
+        console.log("productsCB.model", productsCB.model.toJSON());
 
         blockUpdatingModel = true;
 
         productsCB.currentIndex = -1;
-        for (let i = 0; i < productsModel.GetItemsCount(); i++){
-            let id = productsModel.GetData("Id", i);
-            if (id === productEditor.productId){
-                productsCB.currentIndex = i;
+        if (productsCB.model){
+            for (let i = 0; i < productsCB.model.GetItemsCount(); i++){
+                let id = productsCB.model.GetData("Id", i);
+                if (id === productEditor.productId){
+                    productsCB.currentIndex = i;
+                    break;
+                }
             }
         }
 
@@ -73,28 +73,9 @@ Item {
             productEditor.setError(0);
         }
 
-        if (productEditor.bindingModel.ContainsKey("SoftwareIds")){
-            let software = productEditor.bindingModel.GetData("SoftwareIds");
-            let softwareIds = software.split(';')
-        }
+        bindingProductsCollection.updateData();
 
         blockUpdatingModel = false;
-    }
-
-    function updateModel(){
-        if (productEditor.blockUpdatingModel){
-            return;
-        }
-
-        let selectedProductIds = []
-        let indexes = softwareProductCollection.table.getCheckedItems();
-        for (let index of indexes){
-            let id = softwareProductCollection.table.elements.GetData("Id", index);
-            selectedProductIds.push(id)
-        }
-
-        let products = selectedProductIds.join(';');
-        productEditor.bindingModel.SetData("SoftwareIds", products)
     }
 
     function checkLicenseId(licenseId){
@@ -182,12 +163,18 @@ Item {
                 radius: 3;
                 nameId: "ProductName";
 
+                model: CachedProductCollection.softwareProductsModel;
+
                 enabled: bindingProductsCollection.table.elementsList.count == 0;
 
                 Component.onCompleted: {
                     if (productsCB.currentIndex < 0){
                         productEditor.setError(0);
                     }
+                }
+
+                onModelChanged: {
+                    productEditor.updateGui();
                 }
 
                 onCurrentIndexChanged: {
@@ -207,27 +194,6 @@ Item {
                     }
 
                     softwareProductCollection.updateData();
-                }
-
-                CollectionDataProvider {
-                    id: productsList;
-                    fields: ["Id", "ProductId", "ProductName", "CategoryId"];
-                    commandId: "Products";
-
-                    onCollectionModelChanged: {
-                        if (productsList.collectionModel != null){
-                            productsCB.model = productsList.collectionModel
-                            if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
-                                productEditor.productId = bindingProductsCollection.table.elements.GetData("ProductUuid")
-                                for (let i = 0; i < productsList.collectionModel.GetItemsCount(); i++){
-                                    let id = productsList.collectionModel.GetData("Id", i);
-                                    if (id === productEditor.productId){
-                                        productsCB.currentIndex = i;
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -273,20 +239,22 @@ Item {
 
                 filterMenu.decorator: Style.filterPanelDecorator;
 
-                commandsController: null;
+                commandsControllerComp: null;
 
-                dataController: CollectionRepresentation {
-                    collectionId: "SoftwareProducts";
+                dataControllerComp:
+                    Component {
+                    CollectionRepresentation {
+                        id: softwareDataController;
 
-                    Component.onCompleted: {
-                        additionalFieldIds.push("OrderUuid");
-                        additionalFieldIds.push("HardwareUuid");
-                        additionalFieldIds.push("InUse");
-                        additionalFieldIds.push("ProductUuid");
-                        additionalFieldIds.push("CustomerUuid");
-                    }
+                        Component.onCompleted: {
+                            additionalFieldIds.push("OrderUuid");
+                            additionalFieldIds.push("HardwareUuid");
+                            additionalFieldIds.push("InUse");
+                            additionalFieldIds.push("ProductUuid");
+                            additionalFieldIds.push("CustomerUuid");
+                        }
 
-                    function updateModel(){
+                        function updateModel(){}
                     }
                 }
 
@@ -320,10 +288,17 @@ Item {
                 }
 
                 function updateData() {
+                    if (!dataController){
+                        return;
+                    }
+
                     if (visible){
                         if (productEditor.productId === ""){
                             return;
                         }
+                        console.log("softwareProductCollection updateData");
+
+                        dataController.collectionId = "SoftwareProducts"
 
                         let elementsModel = bindingProductsCollection.table.elements;
                         let products = ""
@@ -396,31 +371,49 @@ Item {
 
                 anchors.fill: parent
 
-                commandsController: null;
+                commandsControllerComp: null;
 
                 filterMenu.decorator: Style.filterPanelDecorator;
 
-//                hasPagination: false;
                 hasSort: false;
                 hasFilter: false;
                 filterMenuVisible: false;
 
-                dataController: CollectionRepresentation {
-                    collectionId: "SoftwareProducts";
+                dataControllerComp:
+                    Component {CollectionRepresentation {
+                        id: bindingDataController;
+                        //                    collectionId: "SoftwareProducts";
 
-                    Component.onCompleted: {
-                        additionalFieldIds.push("OrderUuid");
-                        additionalFieldIds.push("HardwareUuid");
-                        additionalFieldIds.push("InUse");
-                        additionalFieldIds.push("ProductUuid");
-                        additionalFieldIds.push("CustomerUuid");
-                    }
+                        Component.onCompleted: {
+                            additionalFieldIds.push("OrderUuid");
+                            additionalFieldIds.push("HardwareUuid");
+                            additionalFieldIds.push("InUse");
+                            additionalFieldIds.push("ProductUuid");
+                            additionalFieldIds.push("CustomerUuid");
+                        }
 
-                    function updateModel(){
+                        function updateModel(){}
                     }
                 }
 
                 function registerDocumentInfo(){}
+
+                function updateData(){
+                    if (!dataController){
+                        return;
+                    }
+
+                    console.log("bindingProductsCollection updateData", dataController);
+
+                    dataController.collectionId = "SoftwareProducts";
+
+                    let filterModel = bindingProductsCollection.collectionFilter.filterModel;
+                    let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
+                    let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
+                    bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
+
+                    bindingProductsCollection.doUpdateGui();
+                }
 
                 onSelectionChanged: {
                     if (selection.length === 0){
@@ -443,20 +436,13 @@ Item {
                     }
                 }
 
+                onElementsChanged: {
+                    softwareProductCollection.updateData();
+                }
+
                 onHeadersChanged: {
                     bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
                     bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
-                }
-
-                onElementsChanged: {
-                    let objectFilter =  productsList.filterModel.AddTreeModel("ObjectFilter")
-                    objectFilter.SetData("CategoryId", "Software");
-
-                    if (bindingProductsCollection.table.elements.GetItemsCount() > 0){
-                        productEditor.startProductId = bindingProductsCollection.table.elements.GetData("ProductUuid")
-                    }
-
-                    productsList.updateModel()
                 }
             }
         }
@@ -507,7 +493,6 @@ Item {
             let products = selectedProductIds.join(';');
             productEditor.bindingModel.SetData("SoftwareIds", products)
 
-            console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
             softwareProductCollection.updateData()
 
             softwareProductCollection.table.resetSelection();

@@ -89,12 +89,14 @@ ViewBase {
         if (model.ContainsKey("CustomerId")){
             let customerId = model.GetData("CustomerId");
             let customerModel = customerCB.model;
-            for (let i = 0; i < customerModel.GetItemsCount(); i++){
-                let id = customerModel.GetData("Id", i);
-                if (id === customerId){
-                    customerCB.currentIndex = i;
-                    customerFound = true;
-                    break;
+            if (customerModel){
+                for (let i = 0; i < customerModel.GetItemsCount(); i++){
+                    let id = customerModel.GetData("Id", i);
+                    if (id === customerId){
+                        customerCB.currentIndex = i;
+                        customerFound = true;
+                        break;
+                    }
                 }
             }
         }

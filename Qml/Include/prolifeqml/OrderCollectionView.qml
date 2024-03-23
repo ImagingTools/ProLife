@@ -14,24 +14,27 @@ RemoteCollectionView {
 
     collectionId: "Orders";
 
-    dataController: CollectionRepresentation {
-        collectionId: "Orders";
+    dataControllerComp: Component {CollectionRepresentation {
+            collectionId: "Orders";
+        }
     }
 
     filterMenu.decorator: orderCollectionFilterComp;
 
     collectionFilter: OrderCollectionFilter {}
 
-    commandsController: CommandsRepresentationProvider {
-        commandId: "Orders";
-        uuid: container.viewId;
+    commandsControllerComp: Component {CommandsRepresentationProvider {
+            commandId: "Orders";
+            uuid: container.viewId;
+        }
     }
 
-    commandsDelegate: DocumentCollectionViewDelegate {
-        collectionView: container;
+    commandsDelegateComp: Component {DocumentCollectionViewDelegate {
+            collectionView: container;
 
-        documentTypeId: "Order";
-        viewTypeId: "OrderEditor";
+            documentTypeId: "Order";
+            viewTypeId: "OrderEditor";
+        }
     }
 
     Component.onCompleted: {
@@ -48,149 +51,21 @@ RemoteCollectionView {
         }
     }
 
-//    filterMenu: Component {
-//        Item {
-//            id: mainItem;
-
-//            width: parent.width;
-//            height: 40;
-
-//            Component.onCompleted: {
-//                Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
-//            }
-
-//            Component.onDestruction: {
-//                Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
-//            }
-
-//            function onLocalizationChanged(language){
-//                accountFilterBlock.updateModel();
-//            }
-
-//            onWidthChanged: {
-//                console.log("Filter onWidthChanged", width);
-//                if (width - filtermenu.width <= accountFilterBlock.width){
-//                    accountFilterBlock.visible = false;
-//                }
-//                else{
-//                    if (accountFilterBlock.canViewAccountFilter){
-//                        accountFilterBlock.visible = true;
-//                    }
-//                }
-//            }
-
-//            Item {
-//                id: accountFilterBlock;
-
-//                anchors.verticalCenter: parent.verticalCenter;
-//                anchors.left: parent.left;
-//                anchors.leftMargin: 10;
-
-//                width: canViewAccountFilter ? accountComboBox.width : 0;
-//                height: canViewAccountFilter ? filtermenu.height : 0;
-
-//                property bool canViewAccountFilter: false;
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ViewAllOrders")
-//                    accountFilterBlock.canViewAccountFilter = ok;
-//                    accountFilterBlock.visible = ok;
-
-//                    if (ok){
-//                        accountsList.updateModel();
-//                    }
-//                }
-
-//                CollectionDataProvider {
-//                    id: accountsList;
-
-//                    commandId: "Accounts";
-
-//                    fields: ["Id", "Name"];
-
-//                    onCollectionModelChanged: {
-//                        accountsList.collectionModel.InsertNewItem(0);
-
-//                        accountFilterBlock.updateModel();
-//                    }
-//                }
-
-//                function updateModel(){
-//                    accountsList.collectionModel.SetData("Id", "All");
-//                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
-
-//                    accountComboBox.model = accountsList.collectionModel;
-//                }
-
-//                ComboBox {
-//                    id: accountComboBox;
-
-//                    anchors.bottom: parent.bottom;
-//                    anchors.left: parent.left;
-
-//                    height: filtermenu.height;
-//                    width: 200;
-
-//                    currentIndex: 0;
-
-//                    radius: 3;
-
-//                    shownItemsCount: 15;
-
-//                    onCurrentIndexChanged: {
-//                        let objectFilter = container.modelFilter.GetData("ObjectFilter");
-//                        if (!objectFilter){
-//                            objectFilter = container.modelFilter.AddTreeModel("ObjectFilter")
-//                        }
-
-//                        if (accountComboBox.currentIndex > 0){
-//                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
-//                            objectFilter.SetData("AccountFilter", value);
-//                        }
-//                        else{
-//                            objectFilter.SetData("AccountFilter", "");
-//                        }
-
-//                        container.updateGui();
-//                    }
-//                }
-//            }
-
-//            FilterMenu {
-//                id: filtermenu
-
-//                anchors.verticalCenter: parent.verticalCenter;
-//                anchors.right: parent.right;
-
-//                width: 325;
-
-//                decoratorSource: Style.filterPanelDecoratorPath;
-
-//                onTextFilterChanged: {
-//                    parent.textFilterChanged(index, text);
-//                }
-
-//                onClosed: {
-//                    accountComboBox.currentIndex = 0;
-
-//                    parent.closed();
-//                }
-//            }
-
-//            signal textFilterChanged(int index, string text);
-//            signal closed();
-//        }
-//    }
-
     Component {
         id: orderEditorComp;
 
         OrderEditor {
             id: orderEditor;
 
-            commandsController: CommandsRepresentationProvider {
-                commandId: "Order";
-                uuid: orderEditor.viewId;
+            commandsDelegateComp: Component {ViewCommandsDelegateBase {
+                view: orderEditor;
+            }
+            }
+
+            commandsControllerComp: Component {CommandsRepresentationProvider {
+                    commandId: "Order";
+                    uuid: orderEditor.viewId;
+                }
             }
         }
     }

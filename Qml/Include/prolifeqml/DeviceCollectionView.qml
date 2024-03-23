@@ -18,8 +18,9 @@ RemoteCollectionView {
 
     collectionFilter: DeviceCollectionFilter {}
 
-    commandsDelegate: DeviceCollectionViewCommandsDelegate {
+    commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
         collectionView: container;
+    }
     }
 
     filterMenu.decorator: deviceCollectionFilterComp;
@@ -69,10 +70,11 @@ RemoteCollectionView {
         DeviceEditor {
             id: deviceEditor;
 
-            commandsController: CommandsRepresentationProvider {
+            commandsControllerComp:
+                Component {CommandsRepresentationProvider {
                 commandId: "Device";
                 uuid: deviceEditor.viewId;
-            }
+            }}
         }
     }
 

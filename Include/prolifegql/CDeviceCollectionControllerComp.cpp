@@ -403,6 +403,15 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 						elementInformation = deviceType + " (" + macAddress + ")";
 					}
 				}
+				else if(informationId == "PurchaseOrderId"){
+					elementInformation = objectCollectionIterator->GetElementInfo("PurchaseOrderId");
+				}
+				else if(informationId == "Article"){
+					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId");
+				}
+				else if(informationId == "Customer"){
+					elementInformation = objectCollectionIterator->GetElementInfo("Customer");
+				}
 				else if(informationId == "MacAddress"){
 					elementInformation = deviceInfoPtr->GetMacAddress();
 				}

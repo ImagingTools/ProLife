@@ -176,12 +176,13 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"LastModified",
 						(SELECT "LastModified" FROM "Devices" as t1 WHERE "RevisionNumber" = 1 AND t2."DocumentId" = t1."DocumentId" LIMIT 1) as "Added",
 						(SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId') as "CustomerUuid",
+						(SELECT "Document"->>'Name' FROM "Accounts" as acc WHERE acc."IsActive" = true AND acc."DocumentId" = ((SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId' LIMIT 1))) as "Customer",
 						(SELECT "Document"->>'OrderId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "OrderId",
+						(SELECT "Document"->>'PurchaseId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "PurchaseOrderId",
 						(SELECT jsonb_array_length("Document"->'SoftwareIds')  FROM "BindingProducts" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."DocumentId" ) as "SoftwareLinksCount",
 						"IsActive"
 					FROM "Devices" as t2 WHERE "IsActive" = true
 				) as t2 WHERE "IsActive" = true )";
-
 	return retVal;
 }
 
@@ -208,7 +209,14 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 	}
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
-		if (columnId == "LastModified" || columnId == "Added" || columnId == "OrderId" || columnId == "LicenseName"|| columnId == "DeviceType"){
+		if (	columnId == "LastModified" ||
+				columnId == "Added" ||
+				columnId == "OrderId" ||
+				columnId == "LicenseId" ||
+				columnId == "LicenseName" ||
+				columnId == "DeviceType" ||
+				columnId == "Customer" ||
+				columnId == "PurchaseOrderId"){
 			sortQuery = QString("ORDER BY \"%1\" %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 		else if (columnId == "Status"){
@@ -390,7 +398,12 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += " OR ";
 			}
 
-			if (filteringColumnIds[i] == "OrderId" || filteringColumnIds[i] == "LicenseName" || filteringColumnIds[i] == "DeviceType"){
+			if (	filteringColumnIds[i] == "OrderId" ||
+					filteringColumnIds[i] == "LicenseId" ||
+					filteringColumnIds[i] == "PurchaseOrderId" ||
+					filteringColumnIds[i] == "Customer" ||
+					filteringColumnIds[i] == "LicenseName" ||
+					filteringColumnIds[i] == "DeviceType"){
 				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
 

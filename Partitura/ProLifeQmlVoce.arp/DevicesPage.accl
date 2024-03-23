@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5191" Description="ACF"/>
-            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -23,10 +23,6 @@
         <Element ComponentName="OperationContextController" X="500" Y="675" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -56,6 +52,10 @@
                 <Element ComponentName="WithLicensePermissions" X="725" Y="525" Note=""/>
                 <Element ComponentName="WithoutLicensePermissions" X="725" Y="575" Note=""/>
             </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">

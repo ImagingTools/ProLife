@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5191" Description="ACF"/>
-            <Version Id="1" Number="2202" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -197,10 +197,13 @@
                             <Values>
                                 <Value>Status</Value>
                                 <Value>DeviceType</Value>
+                                <Value>LicenseId</Value>
                                 <Value>LicenseName</Value>
                                 <Value>MacAddress</Value>
                                 <Value>OrderId</Value>
+                                <Value>PurchaseOrderId</Value>
                                 <Value>Description</Value>
+                                <Value>Customer</Value>
                                 <Value>Added</Value>
                                 <Value>LastModified</Value>
                             </Values>
@@ -209,12 +212,15 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Production Status</Value>
-                                <Value>Device Type</Value>
-                                <Value>Configuration Type</Value>
-                                <Value>MAC-Address</Value>
-                                <Value>Order-ID</Value>
+                                <Value>Status</Value>
+                                <Value>Product</Value>
+                                <Value>Article</Value>
+                                <Value>Name</Value>
+                                <Value>Hardware-ID</Value>
+                                <Value>Delivery-ID</Value>
+                                <Value>Purchase Order-ID</Value>
                                 <Value>Description</Value>
+                                <Value>Customer</Value>
                                 <Value>Added</Value>
                                 <Value>Last Modified</Value>
                             </Values>
@@ -233,6 +239,9 @@
                                 <Value>Description</Value>
                                 <Value>OrderId</Value>
                                 <Value>LicenseName</Value>
+                                <Value>LicenseId</Value>
+                                <Value>Customer</Value>
+                                <Value>PurchaseOrderId</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

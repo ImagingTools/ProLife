@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import Acf 1.0
 import imtdocgui 1.0
+import imtauthgui 1.0
 
 DocumentValidator {
     id: root;
@@ -16,6 +17,22 @@ DocumentValidator {
             data.message = "Unknown error. Model is invalid.";
 
             return false;
+        }
+
+        let canChange = PermissionsController.checkPermission("ChangeLicense");
+        if (!canChange){
+            data.message = qsTr("Permission denied")
+
+            return false;
+        }
+
+        if (documentModel.ContainsKey("InUse")){
+            let inUse = documentModel.GetData("InUse");
+            if (inUse){
+                data.message = qsTr("The product cannot be edited as it is in use");
+
+                return false;
+            }
         }
 
         let productId = "";
