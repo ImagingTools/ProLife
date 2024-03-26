@@ -13,8 +13,7 @@ ApplicationMain{
     useWebSocketSubscription: true;
     loadPageByClick: false;
     canRecoveryPassword: false;
-
-//    systemStatus: "UNKNOWN";
+    authorizationServerConnected: pumaConnected;
 
     Component.onCompleted: {
         context.appName = 'ProLife';
@@ -45,24 +44,110 @@ ApplicationMain{
 //        CachedRoleCollection.updateModel();
     }
 
-    function startSystemStatusChecking(){
-        console.log("startSystemStatusChecking")
+    property bool pumaConnected: false;
+    SubscriptionClient {
+        id: pumaSub;
 
-        systemStatusController.serverStatusGqlCommandId = "ProLifeTestConnection"
-        systemStatusController.databaseStatusGqlCommandId = "ProLifeGetDatabaseStatus"
-        systemStatusController.serverName = "ProLife"
-        systemStatusController.slaveSystemStatusController = pumaSystemStatusController;
+        property bool ok: window.subscriptionManager.status === 1;
+        onOkChanged: {
+            let subscriptionRequestId = "PumaWsConnection"
+            var query = Gql.GqlRequest("subscription", subscriptionRequestId);
+            var queryFields = Gql.GqlObject("notification");
+            queryFields.InsertField("Id");
+            query.AddField(queryFields);
 
-        systemStatusController.updateSystemStatus();
+            window.subscriptionManager.registerSubscription(query, pumaSub)
+        }
+
+        onStateChanged: {
+            console.log("PumaWsConnection onStateChanged", state);
+
+            if (state === "Ready"){
+                if (pumaSub.ContainsKey("data")){
+                    let localModel = pumaSub.GetData("data")
+
+                    if (localModel.ContainsKey("PumaWsConnection")){
+                        localModel = localModel.GetData("PumaWsConnection")
+
+                        if (localModel.ContainsKey("status")){
+                            let status = localModel.GetData("status")
+                            if (status === "Disconnected"){
+                                window.pumaConnected = false;
+
+                            }
+                            else if (status === "Connected"){
+                                window.pumaConnected = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    SystemStatusController {
-        id: pumaSystemStatusController;
+    property bool lisaConnected: false;
+    SubscriptionClient {
+        id: lisaSub;
 
-        serverStatusGqlCommandId: "PumaTestConnection";
-        databaseStatusGqlCommandId: "PumaGetDatabaseStatus";
+        property bool ok: window.subscriptionManager.status === 1;
+        onOkChanged: {
+            let subscriptionRequestId = "LisaWsConnection"
+            var query = Gql.GqlRequest("subscription", subscriptionRequestId);
+            var queryFields = Gql.GqlObject("notification");
+            queryFields.InsertField("Id");
+            query.AddField(queryFields);
 
-        serverName: "Puma";
+            window.subscriptionManager.registerSubscription(query, lisaSub)
+        }
+
+        onStateChanged: {
+            console.log("LisaWsConnection onStateChanged", state);
+
+            if (state === "Ready"){
+                console.log("data", lisaSub.toJSON());
+
+                if (lisaSub.ContainsKey("data")){
+                    let localModel = lisaSub.GetData("data")
+
+                    if (localModel.ContainsKey("LisaWsConnection")){
+                        localModel = localModel.GetData("LisaWsConnection")
+
+                        if (localModel.ContainsKey("status")){
+                            let status = localModel.GetData("status")
+                            if (status === "Disconnected"){
+                                window.lisaConnected = false;
+
+                                if (!window.errorVisible){
+                                    modalDialogManager.openDialog(errorDialog, {});
+                                }
+                            }
+                            else if (status === "Connected"){
+                                window.lisaConnected = true;
+
+                                window.errorVisible = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    property bool errorVisible: false;
+
+    Component {
+        id: errorDialog;
+
+        ErrorDialog {
+            title: qsTr("Warning Message");
+            message: qsTr("Lisa server connection error");
+
+            Component.onCompleted: {
+                window.errorVisible = true;
+            }
+
+            onFinished: {}
+        }
     }
 }
 

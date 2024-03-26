@@ -55,6 +55,8 @@
                                 <Value>RemoteRepositories/UserGroupsSubscriberController</Value>
                                 <Value>LisaRepositories/LicensesSubscriberController</Value>
                                 <Value>LisaRepositories/ProductsSubscriberController</Value>
+                                <Value>Subscriptions/PumaLoginStatusSubscriberController</Value>
+                                <Value>Subscriptions/LoginStatusSubscriberController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -364,8 +366,14 @@
         <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="LisaWebSocketServerAddress" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/LisaWebSocketUrl"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaWebSocketServerAddress" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/WebSocketPumaUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
@@ -709,6 +717,52 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="LisaLoginStatusSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="LoginStatusSubscriberController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>LisaWsConnection</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LoginStatusProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="LisaSubscription/WebSocketClient"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="LisaSubscription" PackageId="ImtClientVoce" ComponentId="SubscriptionManager">
+                        <Data IsEnabled="true" Flags="1">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="LisaWebSocketServerAddress">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerLoginParam" Type="Id" ExportId="WebSocketServerLoginParam">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerPasswordParam" Type="Id" ExportId="WebSocketServerPasswordParam">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="OrdersSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -726,6 +780,52 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PumaLoginStatusSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="LoginStatusSubscriberController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>PumaWsConnection</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LoginStatusProvider" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="PumaSubscription/WebSocketClient"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PumaSubscription" PackageId="ImtClientVoce" ComponentId="SubscriptionManager">
+                        <Data IsEnabled="true" Flags="1">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="PumaWebSocketServerAddress">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerLoginParam" Type="Id" ExportId="WebSocketServerLoginParam">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketServerPasswordParam" Type="Id" ExportId="WebSocketServerPasswordParam">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -759,7 +859,9 @@
                 <ExportedComponents>
                     <Component ExportedId="AccountsSubscriberController" ComponentId="AccountsSubscriberController"/>
                     <Component ExportedId="DevicesSubscriberController" ComponentId="DevicesSubscriberController"/>
+                    <Component ExportedId="LoginStatusSubscriberController" ComponentId="LisaLoginStatusSubscriberController"/>
                     <Component ExportedId="OrdersSubscriberController" ComponentId="OrdersSubscriberController"/>
+                    <Component ExportedId="PumaLoginStatusSubscriberController" ComponentId="PumaLoginStatusSubscriberController"/>
                     <Component ExportedId="SoftwareProductsSubscriberController" ComponentId="SoftwareProductsSubscriberController"/>
                 </ExportedComponents>
             </Data>

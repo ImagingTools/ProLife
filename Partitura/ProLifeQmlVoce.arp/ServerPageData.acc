@@ -208,6 +208,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LisaWebSocketUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="8776"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ws"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Preferences" PackageId="BasePck" ComponentId="ComposedParamsSet">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -348,6 +363,7 @@
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseParam" ComponentId="Database"/>
         <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrl"/>
+        <Component ExportedId="LisaWebSocketUrl" ComponentId="LisaWebSocketUrl"/>
         <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrl"/>
         <Component ExportedId="ServerParam" ComponentId="Server"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>

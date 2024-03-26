@@ -16,5 +16,9 @@ Item {
         Component.onCompleted: {
             designProvider.applyDesignSchema("Light");
         }
+
+        function getServerUrl(){
+            return context.location;
+        }
     }
 }

@@ -21,15 +21,6 @@
         <Element ComponentName="Subscriptions" X="1000" Y="425" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountsSubscriberController" X="525" Y="375" Note=""/>
-                <Element ComponentName="DevicesSubscriberController" X="525" Y="75" Note=""/>
-                <Element ComponentName="OrdersSubscriberController" X="525" Y="175" Note=""/>
-                <Element ComponentName="SoftwareProductsSubscriberController" X="525" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="LisaRepositories">
             <PositionMap>
                 <Element ComponentName="CachedLicenseCollection" X="975" Y="575" Note=""/>
@@ -45,6 +36,19 @@
                 <Element ComponentName="ProductCollectionObserver" X="225" Y="225" Note=""/>
                 <Element ComponentName="ProductRepository" X="225" Y="400" Note=""/>
                 <Element ComponentName="ProductsSubscriberController" X="225" Y="75" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountsSubscriberController" X="525" Y="375" Note=""/>
+                <Element ComponentName="DevicesSubscriberController" X="525" Y="75" Note=""/>
+                <Element ComponentName="LisaLoginStatusSubscriberController" X="925" Y="575" Note=""/>
+                <Element ComponentName="LisaSubscription" X="500" Y="575" Note=""/>
+                <Element ComponentName="OrdersSubscriberController" X="525" Y="175" Note=""/>
+                <Element ComponentName="PumaLoginStatusSubscriberController" X="950" Y="700" Note=""/>
+                <Element ComponentName="PumaSubscription" X="500" Y="700" Note=""/>
+                <Element ComponentName="SoftwareProductsSubscriberController" X="525" Y="275" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

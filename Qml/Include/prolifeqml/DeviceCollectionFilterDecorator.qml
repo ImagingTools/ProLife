@@ -13,10 +13,24 @@ DecoratorBase {
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+        checkWidth();
     }
 
     Component.onDestruction: {
         Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+    }
+
+    onWidthChanged: {
+        checkWidth();
+    }
+
+    function checkWidth(){
+        if (width - filtermenu.width <= content.width + 2 * content.spacing){
+            content.visible = false;
+        }
+        else{
+            content.visible = true;
+        }
     }
 
     Rectangle{

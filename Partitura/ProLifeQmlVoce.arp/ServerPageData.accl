@@ -15,6 +15,7 @@
         <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
         <Element ComponentName="FileNameParam" X="1100" Y="525" Note=""/>
         <Element ComponentName="LisaUrl" X="775" Y="575" Note=""/>
+        <Element ComponentName="LisaWebSocketUrl" X="200" Y="725" Note=""/>
         <Element ComponentName="Preferences" X="575" Y="200" Note=""/>
         <Element ComponentName="PumaUrl" X="650" Y="575" Note=""/>
         <Element ComponentName="SchedulerParams" X="950" Y="525" Note=""/>

@@ -25,6 +25,8 @@ RemoteCollectionView {
 
     filterMenu.decorator: deviceCollectionFilterComp;
 
+    visibleMetaInfo: true;
+
     Component.onCompleted: {
         collectionFilter.setSortingOrder("DESC");
         collectionFilter.setSortingInfoId("LastModified");

@@ -155,10 +155,15 @@ RemoteCollectionView {
 
             Component.onCompleted: {
                 Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+                checkWidth();
             }
 
             Component.onDestruction: {
                 Events.unSubscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+            }
+
+            onWidthChanged: {
+                checkWidth();
             }
 
             CollectionDataProvider {
@@ -196,6 +201,15 @@ RemoteCollectionView {
                 mainItem.updateModel();
 
                 accountsList.updateComboBoxModel();
+            }
+
+            function checkWidth(){
+                if (width - filtermenu.width <= content.width + 2 * content.spacing){
+                    content.visible = false;
+                }
+                else{
+                    content.visible = true;
+                }
             }
 
             function updateModel(){
