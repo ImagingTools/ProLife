@@ -4,6 +4,7 @@
 // ImtCore includes
 #include <imtbase/PluginInterface.h>
 #include <imtservice/TConnectionCollectionPluginComponentImpl.h>
+#include <imtservice/TObjectCollectionPluginComponentImpl.h>
 
 // Local includes
 #include <GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.h>
@@ -15,4 +16,10 @@ IMT_REGISTER_PLUGIN(
 			ServiceSettings,
 			ProLifeSettings);
 
+
+		IMT_REGISTER_PLUGIN(
+			imtservice::IObjectCollectionPlugin,
+			imtservice::TObjectCollectionPluginComponentImpl<CProLifeSettingsPlugin>,
+			ServiceLog,
+			ProLifeSettings);
 
