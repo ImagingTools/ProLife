@@ -9,6 +9,9 @@ Dialog {
 
     property int rootWidth: root ? root.width - 100 : 0;
 
+//    width: 800;
+//    height: 500;
+
     onRootWidthChanged: {
         width = rootWidth;
     }

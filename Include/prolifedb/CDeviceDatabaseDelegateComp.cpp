@@ -28,10 +28,10 @@ namespace prolifedb
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
 QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
-		const QByteArray& objectId,
-		int offset,
-		int count,
-		const iprm::IParamsSet* paramsPtr) const
+			const QByteArray& objectId,
+			int offset,
+			int count,
+			const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
@@ -121,16 +121,18 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 		}
 	}
 
-	return BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+
+	return selectionQuery;
 }
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
-		const imtbase::IObjectCollection& collection,
-		const QByteArray& objectId,
-		const istd::IChangeable& object,
-		const imtbase::IOperationContext* operationContextPtr,
-		bool /*useExternDelegate*/) const
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId,
+			const istd::IChangeable& object,
+			const imtbase::IOperationContext* operationContextPtr,
+			bool /*useExternDelegate*/) const
 {
 	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
@@ -139,9 +141,9 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-		const imtbase::IObjectCollection& /*collection*/,
-		const QByteArray& objectId,
-		const imtbase::IOperationContext* /*operationContextPtr*/) const
+			const imtbase::IObjectCollection& /*collection*/,
+			const QByteArray& objectId,
+			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	QByteArray retVal;
 
@@ -240,8 +242,8 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 
 
 bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
-		const iprm::IParamsSet& filterParams,
-		QString& filterQuery) const
+			const iprm::IParamsSet& filterParams,
+			QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 	if (!paramIds.isEmpty()){

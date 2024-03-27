@@ -68,6 +68,42 @@ DocumentCollectionViewDelegate {
         }
     }
 
+//    function setupContextMenu(){
+//        let commandsController = collectionView.commandsController;
+//        if (commandsController){
+//            container.contextMenuModel.Clear();
+
+//            let canEdit = commandsController.commandExists("Edit");
+//            let canRemove = commandsController.commandExists("Remove");
+
+//            if (canEdit){
+//                let index = container.contextMenuModel.InsertNewItem();
+
+//                container.contextMenuModel.SetData("Id", "Edit", index);
+//                container.contextMenuModel.SetData("Name", qsTr("Edit"), index);
+//                container.contextMenuModel.SetData("Icon", "Icons/Edit", index);
+//            }
+
+//            if (canRemove){
+//                let index = container.contextMenuModel.InsertNewItem();
+
+//                container.contextMenuModel.SetData("Id", "Remove", index);
+//                container.contextMenuModel.SetData("Name", qsTr("Remove"), index);
+//                container.contextMenuModel.SetData("Icon", "Icons/Delete", index);
+//            }
+
+//            if (canEdit){
+//                index = container.contextMenuModel.InsertNewItem();
+
+//                container.contextMenuModel.SetData("Id", "SetDescription", index);
+//                container.contextMenuModel.SetData("Name", qsTr("Set Description"), index);
+//                container.contextMenuModel.SetData("Icon", "", index);
+//            }
+
+//            container.contextMenuModel.Refresh();
+//        }
+//    }
+
     onCommandActivated: {
         let indexes = container.collectionView.table.getSelectedIndexes();
         let elementsModel = container.collectionView.table.elements;

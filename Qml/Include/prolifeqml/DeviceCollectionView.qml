@@ -12,8 +12,6 @@ RemoteCollectionView {
 
     collectionId: "Devices";
 
-//    visibleMetaInfo: true;
-
     additionalFieldIds: ["OrderUuid", "StatusId", "Licenses"]
 
     collectionFilter: DeviceCollectionFilter {}

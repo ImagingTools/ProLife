@@ -106,9 +106,11 @@ Item {
 
     BaseText {
         id: titleLable
+
         anchors.top: parent.top
         anchors.topMargin: Style.margin
         anchors.horizontalCenter: availableLicensesColumn.horizontalCenter
+
         text: qsTr("Available licenses");
         font.family: Style.fontFamilyBold;
     }

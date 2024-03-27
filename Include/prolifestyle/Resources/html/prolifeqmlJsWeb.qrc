@@ -2,7 +2,10 @@
     <qresource prefix="/html">
         <file alias="index.html">index.html</file>
 	<file alias="Times New Roman.ttf">Times New Roman.ttf</file>
+	<file alias="Ubuntu-Light.ttf">Ubuntu-Light.ttf</file>
+	<file alias="Ubuntu-Medium.ttf">Ubuntu-Medium.ttf</file>
         <file alias="GraphQLRequest.js">GraphQLRequest.js</file>
+	<file alias="Icon.js">Icon.js</file>
         <file alias="main.js">main.js</file>
         <file alias="jqml.prolife.js">jqml.prolife.js</file>
     </qresource>
