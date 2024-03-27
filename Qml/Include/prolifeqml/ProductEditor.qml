@@ -36,7 +36,7 @@ Item {
     property Item rootItem: null;
 
     Component.onDestruction: {
-        productEditor.productModel.onDataChanged.disconnect(productEditor.onModelChanged);
+        productEditor.productModel.dataChanged.disconnect(productEditor.onModelChanged);
     }
 
     onProductIdChanged: {
@@ -410,7 +410,7 @@ Item {
             }
         }
 
-        productEditor.productModel.onDataChanged.connect(productEditor.onModelChanged);
+        productEditor.productModel.dataChanged.connect(productEditor.onModelChanged);
 
         productEditor.blockUpdatingModel = false;
     }

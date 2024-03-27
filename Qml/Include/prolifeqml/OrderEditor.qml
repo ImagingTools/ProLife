@@ -463,10 +463,12 @@ ViewBase {
                     }
                 }
 
-                decorator: ButtonDecorator{
-                    width: 70;
-                    height: orderStatusCB.height;
-                    radius: orderEditorContainer.radius;
+                decorator: Component {
+                    ButtonDecorator {
+                        width: 70;
+                        height: orderStatusCB.height;
+                        radius: orderEditorContainer.radius;
+                    }
                 }
             }
         }

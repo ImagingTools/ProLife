@@ -130,9 +130,11 @@ Rectangle {
                 hardwareCard.edited();
             }
 
-            decorator: ButtonDecorator {
-                color: parent.hovered ? Style.buttonHoverColor : "transparent";
-                border.width: 0;
+            decorator: Component {
+                ButtonDecorator {
+                    color: parent.hovered ? Style.buttonHoverColor : "transparent";
+                    border.width: 0;
+                }
             }
         }
     }

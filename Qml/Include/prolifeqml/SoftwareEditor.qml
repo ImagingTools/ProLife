@@ -286,11 +286,13 @@ ViewBase {
                     }
                 }
 
-                decorator: ButtonDecorator{
-                    width: 70;
-                    height: ordersCB.height;
+                decorator: Component {
+                    ButtonDecorator{
+                        width: 70;
+                        height: ordersCB.height;
 
-                    radius: 3;
+                        radius: 3;
+                    }
                 }
             }
         }

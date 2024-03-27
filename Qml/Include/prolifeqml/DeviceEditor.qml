@@ -723,10 +723,12 @@ ViewBase {
                                     }
                                 }
 
-                                decorator: ButtonDecorator{
-                                    width: 70;
-                                    height: statusCB.height;
-                                    radius: deviceEditorContainer.radius;
+                                decorator: Component {
+                                    ButtonDecorator {
+                                        width: 70;
+                                        height: statusCB.height;
+                                        radius: deviceEditorContainer.radius;
+                                    }
                                 }
                             }
                         }
@@ -794,10 +796,12 @@ ViewBase {
                                 }
                             }
 
-                            decorator: ButtonDecorator{
-                                width: 70;
-                                height: orderCB.height;
-                                radius: deviceEditorContainer.radius;
+                            decorator: Component {
+                                ButtonDecorator {
+                                    width: 70;
+                                    height: orderCB.height;
+                                    radius: deviceEditorContainer.radius;
+                                }
                             }
                         }
                     }
