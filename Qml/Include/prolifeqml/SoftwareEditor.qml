@@ -251,8 +251,6 @@ ViewBase {
                 changeable: !root.readOnly;
 
                 Component.onCompleted: {
-                    console.log("ordersCB onCompleted");
-                    console.log("root.readOnly", root.readOnly);
                     if (!root.readOnly){
                         let ok = PermissionsController.checkPermission("ChangeLicense");
                         console.log("ok", ok);

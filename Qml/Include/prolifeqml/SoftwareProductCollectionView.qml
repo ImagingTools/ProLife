@@ -231,6 +231,8 @@ RemoteCollectionView {
                 modelCategogy.SetData("Id", "InUse", index);
                 modelCategogy.SetData("Name", qsTr("Show the licenses for which the file was created"), index);
 
+                modelCategogy.Refresh();
+
                 licenseComboBox.model = modelCategogy;
             }
 

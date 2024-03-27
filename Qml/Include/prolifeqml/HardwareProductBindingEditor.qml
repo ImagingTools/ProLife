@@ -72,6 +72,9 @@ Item {
         if (productsCB.currentIndex < 0){
             productEditor.setError(0);
         }
+        else{
+            productEditor.setError(-1)
+        }
 
         bindingProductsCollection.updateData();
 

@@ -180,6 +180,20 @@ RemoteCollectionView {
             gqlGetCommandId: "OrderItem";
             gqlUpdateCommandId: "OrderUpdate";
             gqlAddCommandId: "OrderAdd";
+
+            onSaved: {
+                if (documentModel.ContainsKey("OrderProducts")){
+                    let orderProductsModel = documentModel.GetData("OrderProducts");
+                    for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+                        let categoryId = orderProductsModel.GetData("CategoryId", i);
+                        if (categoryId === "Hardware"){
+                            if (orderProductsModel.ContainsKey("IsNewDevice", i)){
+                                orderProductsModel.RemoveData("IsNewDevice", i);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ DecoratorBase {
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
         checkWidth();
+        updateText()
     }
 
     Component.onDestruction: {
@@ -31,6 +32,10 @@ DecoratorBase {
         else{
             content.visible = true;
         }
+    }
+
+    function updateText(){
+        onlyNewSensorsText.text = qsTr("Only new sensors");
     }
 
     Rectangle{
@@ -66,6 +71,8 @@ DecoratorBase {
             accountsList.collectionModel.SetData("Id", "All");
             accountsList.collectionModel.SetData("Name", qsTr("All customers"))
 
+            accountsList.collectionModel.Refresh();
+
             accountComboBox.model = accountsList.collectionModel;
         }
     }
@@ -74,6 +81,8 @@ DecoratorBase {
         mainItem.updateModel();
 
         accountsList.updateComboBoxModel();
+
+        updateText()
     }
 
     function updateModel(){
@@ -90,6 +99,8 @@ DecoratorBase {
         index = modelCategogy.InsertNewItem();
         modelCategogy.SetData("Id", "WithLicense", index);
         modelCategogy.SetData("Name", qsTr("Sensors with license"), index);
+
+        modelCategogy.Refresh();
 
         licenseComboBox.model = modelCategogy;
     }
@@ -154,6 +165,8 @@ DecoratorBase {
         }
 
         Row {
+            id: row;
+
             height: content.height;
 
             anchors.verticalCenter: parent.verticalCenter;
@@ -161,9 +174,9 @@ DecoratorBase {
             spacing: Style.size_mainMargin;
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter;
+                id: onlyNewSensorsText;
 
-                text: qsTr("Only new sensors");
+                anchors.verticalCenter: parent.verticalCenter;
 
                 color: Style.textColor;
                 font.family: Style.fontFamily;
