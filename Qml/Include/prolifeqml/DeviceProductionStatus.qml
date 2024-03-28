@@ -1,6 +1,7 @@
 import QtQuick 2.12
-import imtgui 1.0
 import Acf 1.0
+import imtcontrols 1.0
+import imtgui 1.0
 
 QtObject {
     id: root;
@@ -50,19 +51,19 @@ QtObject {
 
     function getIconPath(statusId){
         if (statusId === "None"){
-            return "qrc:/Light/Icons/StateUnknown_On_Active";
+            return "../../../../" + Style.getIconPath("Icons/StateUnknown", Icon.State.On, Icon.Mode.Active);
         }
         else if (statusId === "Canceled"){
-            return  "qrc:/Light/Icons/Cancel_On_Active";
+            return "../../../../" + Style.getIconPath("Icons/Cancel", Icon.State.On, Icon.Mode.Active);
         }
         else if (statusId === "Accepted" || statusId === "InProgress"){
-            return  "qrc:/Light/Icons/Timeline_On_Active";
+            return "../../../../" + Style.getIconPath("Icons/Timeline", Icon.State.On, Icon.Mode.Active);
         }
         else if (statusId === "OnHold"){
-            return  "qrc:/Light/Icons/Pause_On_Active";
+            return "../../../../" + Style.getIconPath("Icons/Pause", Icon.State.On, Icon.Mode.Active);
         }
         else{
-            return  "qrc:/Light/Icons/StateOk_On_Active";
+            return "../../../../" + Style.getIconPath("Icons/StateOk", Icon.State.On, Icon.Mode.Active);
         }
     }
 }
