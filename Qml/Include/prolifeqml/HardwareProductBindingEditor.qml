@@ -265,6 +265,10 @@ Item {
 
                 function registerDocumentInfo(){}
 
+                onElementsChanged: {
+                    console.log("onElementsChanged", table.elements.toJSON());
+                }
+
                 onSelectionChanged: {
                     if (selection.length <= 0){
                         bindButton.enabled = false
@@ -301,7 +305,6 @@ Item {
                         if (productEditor.productId === ""){
                             return;
                         }
-                        console.log("softwareProductCollection updateData");
 
                         dataController.collectionId = "SoftwareProducts"
 
@@ -453,113 +456,119 @@ Item {
         }
     }
 
-    ToolButton {
-        id: bindButton;
+    Column {
+        id: buttonsColumn;
 
-        anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.verticalCenterOffset: - 25;
+        anchors.centerIn: parent;
 
-        enabled: false;
+        spacing: 25;
 
-        width: 18;
-        height: 25;
+        width: 20;
 
-        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
-                              "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
+        ToolButton {
+            id: bindButton;
 
-        tooltipText: qsTr("Bind to the sensor");
+            anchors.horizontalCenter: parent.horizontalCenter;
 
-        property bool userCanBind: false;
+            enabled: false;
 
-        Component.onCompleted: {
-            bindButton.userCanBind = PermissionsController.checkPermission("BindSensor");
-        }
+            width: 18;
+            height: 25;
 
-        onClicked: {
-            let selectedProductIds = []
-            let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
-            if (softwareIds && softwareIds != ""){
-                selectedProductIds = softwareIds.split(';')
-            }
-            let indexes = softwareProductCollection.table.tableSelection.selectedIndexes;
-            if (indexes.length === 0){
-                return
+            iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
+                                  "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
+
+            tooltipText: qsTr("Bind to the sensor");
+
+            property bool userCanBind: false;
+
+            Component.onCompleted: {
+                bindButton.userCanBind = PermissionsController.checkPermission("BindSensor");
             }
 
-            for (let index of indexes){
-                let id = softwareProductCollection.table.elements.GetData("Id", index);
-                if (!selectedProductIds.includes(id)){
-                    selectedProductIds.push(id)
-                    let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-                    bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+            onClicked: {
+                let selectedProductIds = []
+                let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
+                if (softwareIds && softwareIds != ""){
+                    selectedProductIds = softwareIds.split(';')
                 }
-            }
-            let products = selectedProductIds.join(';');
-            productEditor.bindingModel.SetData("SoftwareIds", products)
+                let indexes = softwareProductCollection.table.tableSelection.selectedIndexes;
+                if (indexes.length === 0){
+                    return
+                }
 
-            softwareProductCollection.updateData()
-
-            softwareProductCollection.table.resetSelection();
-        }
-    }
-
-    ToolButton {
-        id: unbindButton;
-
-        anchors.verticalCenter: bindingLicensesColumn.verticalCenter;
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.verticalCenterOffset: 25;
-
-        enabled: false;
-
-        width: 18;
-        height: 25;
-
-        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
-                              "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
-
-        property bool userCanUnbind: false;
-
-        tooltipText: qsTr("Unbind from the sensor");
-
-        Component.onCompleted: {
-            unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");
-        }
-
-        onClicked: {
-            console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
-            let selectedProductIds = []
-            selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
-            let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
-            if (indexes.length === 0){
-                return
-            }
-
-            let index = indexes[0];
-            let elementsModel = bindingProductsCollection.table.elements;
-
-            if (!unbindButton.userCanUnbind){
-                if (elementsModel.ContainsKey("InUse", index)){
-                    let inUse = elementsModel.GetData("InUse", index);
-                    if (inUse){
-                        return;
+                for (let index of indexes){
+                    let id = softwareProductCollection.table.elements.GetData("Id", index);
+                    if (!selectedProductIds.includes(id)){
+                        selectedProductIds.push(id)
+                        let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
+                        bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
                     }
                 }
+                let products = selectedProductIds.join(';');
+                productEditor.bindingModel.SetData("SoftwareIds", products)
+
+                softwareProductCollection.updateData()
+
+                softwareProductCollection.table.resetSelection();
+            }
+        }
+
+        ToolButton {
+            id: unbindButton;
+
+            anchors.horizontalCenter: parent.horizontalCenter;
+
+            enabled: false;
+
+            width: 18;
+            height: 25;
+
+            iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
+                                  "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
+
+            property bool userCanUnbind: false;
+
+            tooltipText: qsTr("Unbind from the sensor");
+
+            Component.onCompleted: {
+                unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");
             }
 
-            let id = elementsModel.GetData("Id", index);
-            if (selectedProductIds.indexOf(id) > -1){
-                elementsModel.RemoveItem(index)
-                selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+            onClicked: {
+                console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
+                let selectedProductIds = []
+                selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
+                let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
+                if (indexes.length === 0){
+                    return
+                }
+
+                let index = indexes[0];
+                let elementsModel = bindingProductsCollection.table.elements;
+
+                if (!unbindButton.userCanUnbind){
+                    if (elementsModel.ContainsKey("InUse", index)){
+                        let inUse = elementsModel.GetData("InUse", index);
+                        if (inUse){
+                            return;
+                        }
+                    }
+                }
+
+                let id = elementsModel.GetData("Id", index);
+                if (selectedProductIds.indexOf(id) > -1){
+                    elementsModel.RemoveItem(index)
+                    selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+                }
+
+                let products = selectedProductIds.join(';');
+                productEditor.bindingModel.SetData("SoftwareIds", products)
+
+                bindingProductsCollection.table.resetSelection();
+
+                softwareProductCollection.updateData()
             }
-
-            let products = selectedProductIds.join(';');
-            productEditor.bindingModel.SetData("SoftwareIds", products)
-
-            bindingProductsCollection.table.resetSelection();
-
-            softwareProductCollection.updateData()
         }
     }
 
