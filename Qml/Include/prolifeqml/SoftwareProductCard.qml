@@ -13,7 +13,7 @@ Rectangle {
     color: Style.baseColor;
 
     property int margin: 10;
-    property int contentHeight: noLicensesView.visible ? noLicensesView.height + 20 : contentColumn.height + 10;
+    property int contentHeight: contentColumn.height + 10;
 
     property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
     property string licenseId: model.LicenseId;
@@ -70,43 +70,16 @@ Rectangle {
                                   "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.Off, Icon.Mode.Disabled);
             visible: !softwareCard.readOnly && softwareCard.commmandsVisible;
 
-            ButtonDecorator {
-                color: parent.hovered ? Style.buttonHoverColor : "transparent";
-                border.width: 0;
+            decorator: Component {
+                ButtonDecorator {
+                    color: parent.hovered ? Style.buttonHoverColor : "transparent";
+                    border.width: 0;
+                }
             }
 
             onClicked: {
                 softwareCard.edited();
             }
-        }
-    }
-
-    Item {
-        id: noLicensesView;
-
-        width: parent.width;
-        height: visible ? 40 : 0;
-
-        visible: false;
-
-        Text {
-            id: licenceText;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: parent.left;
-            anchors.leftMargin: 20;
-            anchors.right: parent.right;
-            anchors.rightMargin: 20;
-
-            text: qsTr("No Licenses");
-            color: Style.textColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-
-            elide: Text.ElideRight;
-            wrapMode: Text.NoWrap;
-
-            visible: licensesView.elementsList.count === 0;
         }
     }
 
@@ -132,9 +105,14 @@ Rectangle {
             backgroundElementsColor: Style.baseColor;
             backgroundHeadersColor: Style.alternateBaseColor;
 
-            visible: licensesView.elementsList.count !== 0;
+//            visible: elementsCount !== 0;
             selectable: false;
             separatorVisible: false;
+
+            onElementsCountChanged: {
+                console.log("onElementsCountChanged", elementsCount);
+                licensesView.visible = elementsCount !== 0;
+            }
 
             itemHeight: 25;
             headerHeight: 20;

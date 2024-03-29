@@ -53,9 +53,6 @@ Item {
     }
 
     function updateGui(){
-        console.log("updateGui");
-        console.log("productsCB.model", productsCB.model.toJSON());
-
         blockUpdatingModel = true;
 
         productsCB.currentIndex = -1;
@@ -116,7 +113,6 @@ Item {
     }
 
     function setError(errorType){
-        console.log("setError", errorType);
         if (errorType === 0){
             console.log("errorType === 0");
 
@@ -126,7 +122,6 @@ Item {
             errorText.text = qsTr("A license with this ID has already been added");
         }
         else{
-            console.log("else");
             errorText.text = "";
         }
     }
@@ -170,7 +165,7 @@ Item {
 
                 model: CachedProductCollection.softwareProductsModel;
 
-                enabled: bindingProductsCollection.table.elementsList.count == 0;
+                changeable: bindingProductsCollection.table.elementsList.count === 0;
 
                 Component.onCompleted: {
                     if (productsCB.currentIndex < 0){
@@ -216,7 +211,7 @@ Item {
                 sourceSize.width: width;
                 sourceSize.height: height;
 
-                visible: !productsCB.enabled;
+                visible: !productsCB.changeable;
             }
         }
 
@@ -387,10 +382,13 @@ Item {
                 hasFilter: false;
                 filterMenuVisible: false;
 
+                onElementsCountChanged: {
+                    console.log("onElementsCountChanged", elementsCount)
+                }
+
                 dataControllerComp:
                     Component {CollectionRepresentation {
                         id: bindingDataController;
-                        //                    collectionId: "SoftwareProducts";
 
                         Component.onCompleted: {
                             additionalFieldIds.push("OrderUuid");
@@ -536,7 +534,6 @@ Item {
             }
 
             onClicked: {
-                console.log("productEditor.bindingModel", productEditor.bindingModel.toJSON());
                 let selectedProductIds = []
                 selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
                 let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
@@ -659,8 +656,6 @@ Item {
 
                 width: 18;
                 height: width;
-
-                source: "../../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
 
                 sourceSize.width: width;
                 sourceSize.height: height;

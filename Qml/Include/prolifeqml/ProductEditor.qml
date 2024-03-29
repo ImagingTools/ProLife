@@ -122,13 +122,12 @@ Item {
         resultModel.SetData("LicenseUuid", "", newIndex);
         resultModel.SetData("LicenseId", "", newIndex);
         resultModel.SetData("LicenseName", "", newIndex);
-//        resultModel.SetData("IsNew", true, newIndex);
 
         return resultModel;
     }
 
     function onModelChanged(){
-        console.log("onModelChanged", productEditor.blockUpdatingModel);
+        console.log("onModelChanged", productModel.toJSON());
         if (productEditor.blockUpdatingModel){
             return;
         }
@@ -313,8 +312,7 @@ Item {
 
     Component {
         id: hardwareProductComponent;
-        HardwareProductEditor {
-        }
+        HardwareProductEditor {}
     }
 
     Component {
@@ -341,7 +339,6 @@ Item {
 
         return null;
     }
-
 
     function getProductName(productId){
         let retVal = "";

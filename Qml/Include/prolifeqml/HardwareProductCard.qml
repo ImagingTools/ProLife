@@ -166,7 +166,6 @@ Rectangle {
             enableAlternating: false;
 
             clip: true;
-
             showHeaders: false;
 
             onHeadersChanged: {

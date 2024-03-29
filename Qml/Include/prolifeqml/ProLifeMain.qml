@@ -39,9 +39,9 @@ ApplicationMain{
         CachedAccountCollection.updateModel();
         CachedOrderCollection.updateModel();
         CachedDeviceCollection.updateModel();
-//        CachedGroupCollection.updateModel();
-//        CachedUserCollection.updateModel();
-//        CachedRoleCollection.updateModel();
+        CachedGroupCollection.updateModel();
+        CachedUserCollection.updateModel();
+        CachedRoleCollection.updateModel();
     }
 
     property bool pumaConnected: false;
