@@ -42,7 +42,6 @@ Item {
             }
             else if (state == "Ready"){
                 Events.sendEvent("StopLoading");
-//                modalDialogManager.openDialog(messageErrorDialog, {"title" : qsTr("File successfully created"),"message": qsTr("The file was created successfully")});
             }
             else{
                 Events.sendEvent("StopLoading");
@@ -75,8 +74,7 @@ Item {
             let id = _private.dataId;
 
             if (fileName == ""){
-                fileName = {};
-                fileName["name"] = id + ".lic";
+                fileName= controller.defaultName;
             }
 
             remoteFileController.GetFile(id, fileName);

@@ -17,8 +17,6 @@ int main(int argc, char *argv[])
 
 	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeqml);
-	Q_INIT_RESOURCE(ImtCoreLoc);
-	Q_INIT_RESOURCE(ProLifeLoc);
 
 	Q_INIT_RESOURCE(imtstyle);
 	Q_INIT_RESOURCE(imtstylecontrolsqml);
@@ -29,6 +27,9 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtauthguiTheme);
 	Q_INIT_RESOURCE(imtguiTheme);
 	Q_INIT_RESOURCE(imtlicguiTheme);
+
+	Q_INIT_RESOURCE(ImtCoreLoc);
+	Q_INIT_RESOURCE(ProLifeLoc);
 
 	CProLifeServer instance;
 

@@ -45,9 +45,9 @@ RemoteCollectionView {
         if (documentManager){
             container.commandsDelegate.documentManager = documentManager;
 
-            documentManager.registerDocumentView("Order", "OrderEditor", orderEditorComp);
-            documentManager.registerDocumentDataController("Order", dataControllerComp);
-            documentManager.registerDocumentValidator("Order", orderValidatorComp);
+//            documentManager.registerDocumentView("Order", "OrderEditor", orderEditorComp);
+//            documentManager.registerDocumentDataController("Order", dataControllerComp);
+//            documentManager.registerDocumentValidator("Order", orderValidatorComp);
         }
     }
 

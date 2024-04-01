@@ -53,18 +53,11 @@ list(APPEND webdirs ${buildwebdir}/src/imtdocgui)
 list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcontrols)
 list(APPEND webdirs ${buildwebdir}/src/imtcontrols)
 
-message("PROLIFEDIR ${PROLIFEDIR}")
+list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
+list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 
-# copy dist from to
-#list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/dist)
-#list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../Resources/dist)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/dist)
-#list(APPEND webdirs ${buildwebdir}/Resources)
-
-# copy result from to
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/build.web)
-#list(APPEND webdirs ${IMTCOREDIR}/Bin/web/Resources)
-#list(APPEND webdirs ${buildwebdir}/Resources)
+list(APPEND webdirs ${IMTCOREDIR}/Impl/ImtCoreLoc/Translations)
+list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 
 if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
