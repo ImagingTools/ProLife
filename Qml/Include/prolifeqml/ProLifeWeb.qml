@@ -15,6 +15,7 @@ Item {
 		
         Component.onCompleted: {
             designProvider.applyDesignSchema("Light");
+            context.application = ["ImtCore", "ProLife"];
         }
 
         function getServerUrl(){
