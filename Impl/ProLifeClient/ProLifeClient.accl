@@ -8,11 +8,9 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Application" X="625" Y="75" Note=""/>
-        <Element ComponentName="LocalSettings" X="125" Y="375" Note=""/>
-        <Element ComponentName="PumaSystemStatusController" X="1025" Y="600" Note="Check connection with authorizable server"/>
-        <Element ComponentName="SystemStatusController" X="1025" Y="375" Note=""/>
-        <Element ComponentName="VersionInfo" X="350" Y="175" Note=""/>
+        <Element ComponentName="Application" X="625" Y="325" Note=""/>
+        <Element ComponentName="LocalSettings" X="875" Y="525" Note=""/>
+        <Element ComponentName="VersionInfo" X="175" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

@@ -91,7 +91,7 @@
                         <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtdocgui/MultiDocWorkspacePageView.qml"/>
+                        <Data IsEnabled="true" Value="../../ProLife/OrdersMultiDocWorkspacePageView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../ProLife/OrderCollectionView.qml"/>
