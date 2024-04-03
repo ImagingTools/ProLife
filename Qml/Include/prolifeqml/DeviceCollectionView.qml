@@ -123,7 +123,8 @@ RemoteCollectionView {
 
     Component {
         id: pairComp;
-        Item {
+        TableCellDelegateBase {
+            id: cellDelegate
             Image {
                 id: image;
 
@@ -153,17 +154,16 @@ RemoteCollectionView {
                 elide: Text.ElideRight;
             }
 
-            Component.onCompleted: {
-                let loader = parent;
-                let tableCellDelegate = loader.parent;
-
-                let rowIndex = tableCellDelegate.rowIndex;
-                if (rowIndex >= 0){
-                    let statusId = container.table.elements.GetData("StatusId", rowIndex);
-                    image.source = deviceProductionStatus.getIconPath(statusId);
+            onRowIndexChanged: {
+                if (!rowDelegate){
+                    return
                 }
 
-                statusLable.text = tableCellDelegate.getValue();
+                if (rowIndex >= 0){
+                    let statusId = cellDelegate.rowDelegate.table.elements.GetData("StatusId", rowIndex);
+                    image.source = deviceProductionStatus.getIconPath(statusId);
+                    statusLable.text = cellDelegate.getValue();
+                }
             }
         }
     }
