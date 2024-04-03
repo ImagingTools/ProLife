@@ -309,6 +309,49 @@ ViewBase {
         radius: 2;
     }
 
+    //    Item {
+    //        id: card;
+
+    //        width: parent.width;
+    //        height: content.height + header.height;
+
+    //        property string title: qsTr("Additional information");
+
+    //        Rectangle {
+    //            id: header;
+
+    //            width: parent.width;
+    //            height: 30;
+
+    //            color: Style.alternateBaseColor;
+
+    //            Text {
+    //                id: title;
+
+    //                anchors.verticalCenter: parent.verticalCenter;
+    //                anchors.left: parent.left;
+    //                anchors.leftMargin: Style.size_mainMargin;
+    //                anchors.right: parent.right;
+    //                anchors.rightMargin: Style.size_mainMargin;
+
+    //                text: card.title;
+
+    //                color: Style.textColor;
+    //                font.family: Style.fontFamilyBold;
+    //                font.pixelSize: Style.fontSize_common;
+
+    //                elide: Text.ElideRight;
+    //                wrapMode: Text.NoWrap;
+    //            }
+    //        }
+
+    //        Column {
+    //            id: content;
+
+    //            width: parent.width;
+    //        }
+    //    }
+
     Flickable {
         id: flickable;
 

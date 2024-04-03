@@ -426,9 +426,6 @@
                                             <Value>CreateLicenseFile</Value>
                                             <Value>Empty</Value>
                                             <Value>OpenOrder</Value>
-                                            <Value>Empty</Value>
-                                            <Value>Rename</Value>
-                                            <Value>SetDescription</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

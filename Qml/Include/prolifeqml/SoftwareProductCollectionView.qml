@@ -109,7 +109,9 @@ RemoteCollectionView {
 
     Component {
         id: pairComp;
-        Item {
+        TableCellDelegateBase {
+            id: cellDelegate
+
             Image {
                 id: image;
 
@@ -126,10 +128,12 @@ RemoteCollectionView {
                 sourceSize.height: height;
             }
 
-            Component.onCompleted: {
-                let loader = parent;
-                let tableCellDelegate = loader.cellDelegate;
-                let value = tableCellDelegate.getValue();
+            onRowIndexChanged: {
+                if (!rowDelegate){
+                    return
+                }
+
+                let value = cellDelegate.getValue();
 
                 if (value === "NotPaired"){
                     image.source = "../../../../" + Style.getIconPath("Icons/Unlink", Icon.State.On, Icon.Mode.Normal);
@@ -317,7 +321,10 @@ RemoteCollectionView {
 
     Component {
         id: orderColumnContentComp;
-        Item {
+
+        TableCellDelegateBase {
+            id: cellDelegate
+
             Image {
                 id: image;
 
@@ -350,22 +357,20 @@ RemoteCollectionView {
                 elide: Text.ElideRight;
             }
 
-            Component.onCompleted: {
-                let loader = parent;
-                let tableCellDelegate = loader.parent;
-
-                let value = tableCellDelegate.getValue();
-                let rowIndex = tableCellDelegate.rowIndex;
+            onRowIndexChanged: {
+                if (!rowDelegate){
+                    return
+                }
 
                 if (rowIndex >= 0){
-                    let orderUuid = container.table.elements.GetData("OrderUuid", rowIndex);
+                    let orderUuid = cellDelegate.rowDelegate.table.elements.GetData("OrderUuid", rowIndex);
                     if (orderUuid === "undefined"){
                         image.visible = true;
                         lable.visible = false;
                     }
                     else{
                         lable.visible = true;
-                        lable.text = value;
+                        lable.text = cellDelegate.getValue();
                     }
                 }
             }

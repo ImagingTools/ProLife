@@ -346,7 +346,7 @@ ViewBase {
                 readOnly: orderEditorContainer.readOnly;
 
                 onEditingFinished: {
-//                    orderEditorContainer.doUpdateModel();
+                    orderEditorContainer.doUpdateModel();
                 }
 
                 KeyNavigation.tab: instanceIdInput;

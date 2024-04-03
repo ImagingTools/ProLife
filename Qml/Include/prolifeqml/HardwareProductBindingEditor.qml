@@ -381,10 +381,7 @@ Item {
                 hasSort: false;
                 hasFilter: false;
                 filterMenuVisible: false;
-
-                onElementsCountChanged: {
-                    console.log("onElementsCountChanged", elementsCount)
-                }
+                hasPagination: false;
 
                 dataControllerComp:
                     Component {CollectionRepresentation {
@@ -580,6 +577,29 @@ Item {
     }
 
     TreeItemModel {
+        id: filterHeadersModel;
+
+        Component.onCompleted: {
+            let index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "LicenseName", index);
+
+            index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "LicenseId", index);
+
+            index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "OrderId", index);
+
+            index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "SerialNumber", index);
+
+            index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "Customer", index);
+
+            softwareProductCollection.collectionFilter.setFilteringInfoIds(filterHeadersModel);
+        }
+    }
+
+    TreeItemModel {
         id: collectionHeadersModel;
 
         Component.onCompleted: {
@@ -646,7 +666,9 @@ Item {
 
     Component {
         id: pairComp;
-        Item {
+
+        TableCellDelegateBase {
+            id: cellDelegate
             Image {
                 id: image;
 
@@ -661,11 +683,12 @@ Item {
                 sourceSize.height: height;
             }
 
-            Component.onCompleted: {
-                let loader = parent;
-                let tableCellDelegate = loader.parent;
+            onRowIndexChanged: {
+                if (!rowDelegate){
+                    return
+                }
 
-                let value = tableCellDelegate.getValue();
+                let value = cellDelegate.getValue();
                 if (value){
                     image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
                 }

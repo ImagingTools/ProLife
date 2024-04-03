@@ -44,36 +44,7 @@ RemoteCollectionView {
         let documentManager = MainDocumentManager.getDocumentManager("Orders");
         if (documentManager){
             container.commandsDelegate.documentManager = documentManager;
-
-//            documentManager.registerDocumentView("Order", "OrderEditor", orderEditorComp);
-//            documentManager.registerDocumentDataController("Order", dataControllerComp);
-//            documentManager.registerDocumentValidator("Order", orderValidatorComp);
         }
-    }
-
-    Component {
-        id: orderEditorComp;
-
-        OrderEditor {
-            id: orderEditor;
-
-            commandsDelegateComp: Component {ViewCommandsDelegateBase {
-                view: orderEditor;
-            }
-            }
-
-            commandsControllerComp: Component {CommandsRepresentationProvider {
-                    commandId: "Order";
-                    uuid: orderEditor.viewId;
-                }
-            }
-        }
-    }
-
-    Component {
-        id: orderValidatorComp;
-
-        OrderValidator {}
     }
 
     Component {
@@ -169,30 +140,6 @@ RemoteCollectionView {
                 baseElement: mainItem.baseElement;
 
                 width: 325;
-            }
-        }
-    }
-
-    Component {
-        id: dataControllerComp;
-
-        GqlDocumentDataController {
-            gqlGetCommandId: "OrderItem";
-            gqlUpdateCommandId: "OrderUpdate";
-            gqlAddCommandId: "OrderAdd";
-
-            onSaved: {
-                if (documentModel.ContainsKey("OrderProducts")){
-                    let orderProductsModel = documentModel.GetData("OrderProducts");
-                    for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
-                        let categoryId = orderProductsModel.GetData("CategoryId", i);
-                        if (categoryId === "Hardware"){
-                            if (orderProductsModel.ContainsKey("IsNewDevice", i)){
-                                orderProductsModel.RemoveData("IsNewDevice", i);
-                            }
-                        }
-                    }
-                }
             }
         }
     }

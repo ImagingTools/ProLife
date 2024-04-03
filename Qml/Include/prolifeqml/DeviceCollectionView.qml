@@ -21,7 +21,7 @@ RemoteCollectionView {
     }
     }
 
-    filterMenu.decorator: deviceCollectionFilterComp;
+//    filterMenu.decorator: deviceCollectionFilterComp;
 
     visibleMetaInfo: true;
 
@@ -37,6 +37,8 @@ RemoteCollectionView {
             documentManager.registerDocumentDataController("Device", dataControllerComp);
             documentManager.registerDocumentValidator("Device", deviceValidatorComp);
         }
+
+        filterMenu.decorator = deviceCollectionFilterComp;
     }
 
     Component {
