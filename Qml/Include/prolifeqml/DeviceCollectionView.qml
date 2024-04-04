@@ -81,18 +81,18 @@ RemoteCollectionView {
         }
     }
 
-    onSelectionChanged: {
-        if (selection.length == 1){
-            let index = selection[0];
+//    onSelectionChanged: {
+//        if (selection.length == 1){
+//            let index = selection[0];
 
-            let objectId = table.elements.GetData("Id", index);
+//            let objectId = table.elements.GetData("Id", index);
 
-            metaInfoProvider.getMetaInfo(objectId);
-        }
-        else{
-            container.setMetaInfoModel(0);
-        }
-    }
+//            metaInfoProvider.getMetaInfo(objectId);
+//        }
+//        else{
+//            container.setMetaInfoModel(0);
+//        }
+//    }
 
     MetaInfoProvider {
         id: metaInfoProvider;

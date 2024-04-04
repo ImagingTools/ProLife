@@ -15,12 +15,12 @@ DocumentValidator {
             orderId = documentModel.GetData("OrderId");
         }
 
-        let regExp = new RegExp(regularExpressionValidator.regularExpression);
-        if (!regExp.test(orderId)){
-            data.message = qsTr("ERP Order-ID invalid")
+//        let regExp = new RegExp(regularExpressionValidator.regularExpression);
+//        if (!regExp.test(orderId)){
+//            data.message = qsTr("ERP Order-ID invalid")
 
-            return false;
-        }
+//            return false;
+//        }
 
         let purchaseId = "";
         if (documentModel.ContainsKey("PurchaseId")){
