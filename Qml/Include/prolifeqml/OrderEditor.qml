@@ -7,8 +7,6 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
-//import QtGraphicalEffects 1.0
-//import Qt5Compat.GraphicalEffects 6.0
 
 ViewBase {
     id: orderEditorContainer;
@@ -110,7 +108,6 @@ ViewBase {
         let statusFound = false;
         if (orderEditorContainer.model.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.model.GetData("OrderStatus");
-//            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = stateMachine.stateModel;
             if (statusModel){
                 orderStatusCB.model = statusModel;
@@ -197,20 +194,6 @@ ViewBase {
         color: Style.backgroundColor;
     }
 
-//    DropShadow {
-//       id: dropShadow;
-
-//       anchors.fill: bodyColumn;
-
-//       verticalOffset: 2;
-//       horizontalOffset: 2;
-
-//       radius: 5;
-//       color: Style.shadowColor;
-
-//       source: bodyColumn;
-//    }
-
     Item {
         id: bodyColumn;
 
@@ -271,8 +254,6 @@ ViewBase {
                 anchors.leftMargin: Style.size_mainMargin;
                 anchors.right: parent.right;
                 anchors.rightMargin: Style.size_mainMargin;
-
-//                width: parent.width;
 
                 spacing: 15;
 
@@ -547,285 +528,6 @@ ViewBase {
             }
         }
     }
-
-//    Column {
-//        id: bodyColumn;
-
-//        anchors.top: parent.top;
-
-//        width: 500;
-
-//        spacing: orderEditorContainer.spacing;
-
-//        Item {
-//            width: parent.width;
-//            height: errorInstanceId.visible ?
-//                        titleInstanceId.height + instanceIdInput.height + errorInstanceId.height + errorInstanceId.anchors.topMargin
-//                             : titleInstanceId.height + instanceIdInput.height;
-
-//            RegularExpressionValidator {
-//                id: regexValid;
-
-//                Component.onCompleted: {
-//                    let regex = "\\d{5}";
-
-//                    let re = new RegExp(regex)
-//                    if (re){
-//                        regexValid.regularExpression = re;
-//                        instanceIdInput.textInputValidator = regexValid;
-//                    }
-//                }
-//            }
-
-//            Text {
-//                id: titleInstanceId;
-//                text: qsTr("ERP Order-ID");
-//                color: Style.textColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-
-//            CustomTextField {
-//                id: instanceIdInput;
-
-//                anchors.top: titleInstanceId.bottom;
-//                anchors.topMargin: 5;
-
-//                width: parent.width;
-//                height: 30;
-
-//                placeHolderText: qsTr("Enter the ERP Order-ID");
-
-//                radius: orderEditorContainer.radius;
-
-//                borderColor: Style.iconColorOnSelected;
-
-//                onEditingFinished: {
-//                    orderEditorContainer.doUpdateModel();
-//                }
-
-//                readOnly: orderEditorContainer.readOnly;
-
-//                KeyNavigation.tab: purchaseIdInput;
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ChangeOrder");
-//                    instanceIdInput.readOnly = !ok;
-//                }
-//            }
-
-//            Text {
-//                id: errorInstanceId;
-
-//                anchors.top: instanceIdInput.bottom;
-//                anchors.topMargin: 5;
-
-//                text: qsTr("Enter a five-digit number");
-
-//                visible: !instanceIdInput.acceptableInput;
-//                color: Style.errorTextColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-//        }
-
-//        Item {
-//            width: parent.width;
-//            height: titleInstanceId.height + instanceIdInput.height;
-
-//            Text {
-//                id: titlePurchaseId;
-//                text: qsTr("Purchase Order-ID");
-//                color: Style.textColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-
-//            CustomTextField {
-//                id: purchaseIdInput;
-
-//                anchors.top: titlePurchaseId.bottom;
-//                anchors.topMargin: 5;
-
-//                width: parent.width;
-//                height: 30;
-
-//                radius: orderEditorContainer.radius;
-
-//                placeHolderText: qsTr("Enter the Purchase-ID");
-
-//                borderColor: Style.iconColorOnSelected;
-//                readOnly: orderEditorContainer.readOnly;
-
-//                onEditingFinished: {
-//                    orderEditorContainer.doUpdateModel();
-//                }
-
-//                KeyNavigation.tab: descriptionInput;
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ChangeOrder");
-//                    purchaseIdInput.readOnly = !ok;
-//                }
-//            }
-//        }
-
-//        Item {
-//            width: parent.width;
-//            height: titleComment.height + descriptionInput.height;
-
-//            Text {
-//                id: titleComment;
-//                text: qsTr("Description");
-//                color: Style.textColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-
-//            TextEditCustom {
-//                id: descriptionInput;
-
-//                anchors.top: titleComment.bottom;
-//                anchors.topMargin: 5;
-
-//                width: parent.width;
-//                height: 60;
-
-//                radius: orderEditorContainer.radius;
-
-//                placeHolderText: qsTr("Enter the comment");
-
-//                borderColor: Style.iconColorOnSelected;
-//                readOnly: orderEditorContainer.readOnly;
-
-//                onEditingFinished: {
-//                    orderEditorContainer.doUpdateModel();
-//                }
-
-//                KeyNavigation.tab: instanceIdInput;
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ChangeOrder");
-//                    descriptionInput.readOnly = !ok;
-//                }
-//            }
-//        }
-
-//        Item {
-//            width: parent.width;
-//            height: titleCustomer.height + customerCB.height;
-
-//            Text {
-//                id: titleCustomer;
-
-//                text: qsTr("Customer");
-//                color: Style.textColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-
-//            ComboBox {
-//                id: customerCB;
-
-//                anchors.top: titleCustomer.bottom;
-//                anchors.topMargin: 5;
-
-//                width: parent.width;
-//                height: orderEditorContainer.comboBoxHeight;
-
-//                radius: orderEditorContainer.radius;
-
-//                model: orderEditorContainer.accountsModel;
-//                changeable: !orderEditorContainer.readOnly;
-
-//                onCurrentIndexChanged: {
-//                    orderEditorContainer.doUpdateModel();
-//                }
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ChangeOrder");
-
-//                    customerCB.changeable = ok;
-//                }
-
-//                onModelChanged: {
-//                    orderEditorContainer.doUpdateGui();
-//                }
-//            }
-//        }
-
-//        Item {
-//            width: parent.width;
-//            height: titleOrderStatus.height + orderStatusCB.height;
-
-//            Text {
-//                id: titleOrderStatus;
-
-//                text: qsTr("Order Status");
-//                color: Style.textColor;
-//                font.family: Style.fontFamily;
-//                font.pixelSize: Style.fontSize_common;
-//            }
-
-//            ComboBox {
-//                id: orderStatusCB;
-
-//                anchors.top: titleOrderStatus.bottom;
-//                anchors.topMargin: 5;
-//                anchors.left: parent.left;
-
-//                width: parent.width - buttonContainer.width - 10;
-//                height: orderEditorContainer.comboBoxHeight;
-
-//                radius: orderEditorContainer.radius;
-
-//                changeable: !orderEditorContainer.readOnly;
-
-//                model: orderStatus.statusModel;
-
-//                onCurrentIndexChanged: {
-//                    orderEditorContainer.doUpdateModel();
-
-//                    if (orderStatusCB.currentIndex < 0){
-//                        orderStatusCB.model = orderStatus.statusModel;
-//                    }
-//                }
-
-//                Component.onCompleted: {
-//                    let ok = PermissionsController.checkPermission("ChangeOrder");
-
-//                    orderStatusCB.changeable = ok;
-//                }
-//            }
-
-//            Button{
-//                id: buttonContainer;
-
-//                anchors.top: orderStatusCB.top;
-//                anchors.right: parent.right;
-
-//                text: qsTr("Clear");
-
-//                enabled: orderStatusCB.changeable;
-
-//                onClicked: {
-//                    if(orderEditorContainer.model.ContainsKey("OrderStatus")){
-//                        if (orderStatusCB.currentIndex != -1){
-//                            orderStatusCB.currentIndex = -1;
-//                        }
-//                    }
-//                }
-
-//                decorator: Component {
-//                    ButtonDecorator {
-//                        width: 70;
-//                        height: orderStatusCB.height;
-//                        radius: orderEditorContainer.radius;
-//                    }
-//                }
-//            }
-//        }
-//    }//Column bodyColumn
 
     Component {
         id: productEditorDialog;
