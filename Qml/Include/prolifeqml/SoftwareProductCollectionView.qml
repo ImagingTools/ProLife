@@ -363,7 +363,7 @@ RemoteCollectionView {
                 }
 
                 if (rowIndex >= 0){
-                    let orderUuid = cellDelegate.rowDelegate.table.elements.GetData("OrderUuid", rowIndex);
+                    let orderUuid = cellDelegate.rowDelegate.tableItem.elements.GetData("OrderUuid", rowIndex);
                     if (orderUuid === "undefined"){
                         image.visible = true;
                         lable.visible = false;

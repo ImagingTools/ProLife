@@ -183,7 +183,7 @@ ViewBase {
         font.pixelSize: Style.fontSize_common;
     }
 
-    AuxTable {
+    Table {
         id: modelsTable;
 
         anchors.top: licensesText.bottom;

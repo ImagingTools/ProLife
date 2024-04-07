@@ -23,7 +23,7 @@ Rectangle {
 
     property Item productCardRoot: null;
 
-    property int contentHeight: contentColumn.height + 10;
+    property int contentHeight: contentColumn.height;
 
     signal clicked();
     signal edited();
@@ -43,10 +43,6 @@ Rectangle {
             let message = qsTr("Sensor detection error. Please select a new sensor.");
             hardwareCard.productCardRoot.showErrorMessage(message);
         }
-    }
-
-    onMacAddressChanged: {
-        console.log("onMacAddressChanged", macAddress);
     }
 
     function onLocalizationChanged(language){
@@ -101,55 +97,14 @@ Rectangle {
         id: elementsTableModel;
     }
 
-    Item {
-        id: rightPanel;
-
-        anchors.top: parent.top;
-        anchors.right: parent.right;
-
-        width: visible ? 30 : 0;
-        height: parent.height;
-
-        visible: editButton.visible;
-
-        Button {
-            id: editButton;
-
-            anchors.horizontalCenter: parent.horizontalCenter;
-            anchors.top: parent.top;
-            anchors.topMargin: 10;
-
-            width: 18;
-            height: width;
-
-            iconSource: enabled ? "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.On, Icon.Mode.Normal) :
-                                  "../../../../" + Style.getIconPath("Icons/Edit", Icon.State.Off, Icon.Mode.Disabled);
-            visible: !hardwareCard.readOnly && hardwareCard.commmandsVisible;
-
-            onClicked: {
-                hardwareCard.edited();
-            }
-
-            decorator: Component {
-                ButtonDecorator {
-                    color: parent.hovered ? Style.buttonHoverColor : "transparent";
-                    border.width: 0;
-                }
-            }
-        }
-    }
-
     Column {
         id: contentColumn;
 
-        anchors.top: parent.top;
-        anchors.topMargin: 10;
+        anchors.verticalCenter: parent.verticalCenter;
         anchors.left: parent.left;
-        anchors.leftMargin: 10;
-        anchors.right: rightPanel.left;
-        anchors.rightMargin: rightPanel.visible ? 0 : 10;
+        anchors.right: parent.right;
 
-        AuxTable {
+        Table {
             id: table;
 
             width: contentColumn.width;
@@ -161,8 +116,6 @@ Rectangle {
             separatorVisible: false;
 
             itemHeight: 25;
-            headerHeight: 20;
-
             enableAlternating: false;
 
             clip: true;

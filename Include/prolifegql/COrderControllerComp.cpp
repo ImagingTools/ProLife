@@ -176,10 +176,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			orderId = itemModel.GetData("OrderId").toByteArray().trimmed();
 		}
 
-//		if (itemModel.ContainsKey("Name")){
-//			name = itemModel.GetData("Name").toString();
-//		}
-
 		name = orderId;
 
 		if (orderId.isEmpty()){

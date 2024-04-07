@@ -101,7 +101,7 @@ Item {
 
         spacing: 10;
 
-        AuxTable {
+        Table {
             id: hardwareProductsTable;
 
             width: parent.width;

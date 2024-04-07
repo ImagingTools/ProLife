@@ -13,7 +13,7 @@ Rectangle {
     color: Style.baseColor;
 
     property int margin: 10;
-    property int contentHeight: contentColumn.height + 10;
+    property int contentHeight: contentColumn.height;
 
     property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
     property string licenseId: model.LicenseId;
@@ -87,13 +87,10 @@ Rectangle {
         id: contentColumn;
 
         anchors.top: parent.top;
-        anchors.topMargin: 10;
         anchors.left: parent.left;
-        anchors.leftMargin: 10;
         anchors.right: rightPanel.left;
-        anchors.rightMargin: rightPanel.visible ? 0 : 10;
 
-        AuxTable {
+        Table {
             id: licensesView;
 
             width: contentColumn.width;
@@ -105,17 +102,14 @@ Rectangle {
             backgroundElementsColor: Style.baseColor;
             backgroundHeadersColor: Style.alternateBaseColor;
 
-//            visible: elementsCount !== 0;
             selectable: false;
             separatorVisible: false;
 
             onElementsCountChanged: {
-                console.log("onElementsCountChanged", elementsCount);
                 licensesView.visible = elementsCount !== 0;
             }
 
             itemHeight: 25;
-            headerHeight: 20;
 
             clip: true;
             showHeaders: false;

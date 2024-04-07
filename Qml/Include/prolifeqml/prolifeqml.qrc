@@ -41,5 +41,6 @@
 		<file alias="ProLife/LicenseCollectionFilter.qml">LicenseCollectionFilter.qml</file>
 		<file alias="ProLife/OrderCollectionFilter.qml">OrderCollectionFilter.qml</file>
 		<file alias="ProLife/OrdersMultiDocWorkspacePageView.qml">OrdersMultiDocWorkspacePageView.qml</file>
+		<file alias="ProLife/OrderProductDelegate.qml">OrderProductDelegate.qml</file>
     </qresource>
 </RCC>

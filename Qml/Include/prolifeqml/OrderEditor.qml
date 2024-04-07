@@ -7,6 +7,8 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
+import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects 6.0
 
 ViewBase {
     id: orderEditorContainer;
@@ -32,25 +34,25 @@ ViewBase {
         CachedLicenseCollection.updateModel();
         CachedDeviceCollection.updateModel();
         CachedProductCollection.updateModel();
+
+        checkWidth();
     }
 
     onWidthChanged: {
-        if (width > bodyColumn.width + productsView.width + productsView.anchors.leftMargin * 2){
-            productsTitle.anchors.top = bodyColumn.top;
-            productsTitle.anchors.topMargin = 0;
-            productsTitle.anchors.left = bodyColumn.right;
-            productsTitle.anchors.leftMargin = 25;
-        }
-        else{
-            productsTitle.anchors.top = bodyColumn.bottom;
-            productsTitle.anchors.topMargin = 15;
-            productsTitle.anchors.left = orderEditorContainer.left;
-            productsTitle.anchors.leftMargin = 0;
-        }
+        checkWidth();
     }
 
     LicensesProvider {
         id: licensesProvider;
+    }
+
+    function checkWidth(){
+        if (width < content.width + scrollbar.width + 50){
+            content.width = width - 50;
+        }
+        else{
+            content.width = 700;
+        }
     }
 
     function setReadOnly(readOnly){
@@ -108,6 +110,7 @@ ViewBase {
         let statusFound = false;
         if (orderEditorContainer.model.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.model.GetData("OrderStatus");
+//            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = stateMachine.stateModel;
             if (statusModel){
                 orderStatusCB.model = statusModel;
@@ -191,535 +194,407 @@ ViewBase {
     Rectangle {
         anchors.fill: parent;
 
-        color: Style.backgroundColor;
-    }
-
-    Item {
-        id: bodyColumn;
-
-        width: 500;
-        height: body.height + header.height;
-
-        property string title: qsTr("Order Information");
-
-        Rectangle {
-            id: header;
-
-            width: parent.width;
-            height: 30;
-
-            color: Style.alternateBaseColor;
-
-            border.width: 1;
-            border.color: Style.borderColor;
-
-            Text {
-                id: title;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: Style.size_mainMargin;
-                anchors.right: parent.right;
-                anchors.rightMargin: Style.size_mainMargin;
-
-                text: bodyColumn.title;
-
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-
-                elide: Text.ElideRight;
-                wrapMode: Text.NoWrap;
-            }
-        }
-
-        Rectangle {
-            id: body;
-
-            anchors.top: header.bottom;
-
-            color: Style.baseColor;
-
-            width: parent.width;
-            height: content.height + 3* Style.size_mainMargin;
-
-            border.width: 1;
-            border.color: Style.borderColor;
-
-            Column {
-                id: content;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: Style.size_mainMargin;
-                anchors.right: parent.right;
-                anchors.rightMargin: Style.size_mainMargin;
-
-                spacing: 15;
-
-                Item {
-                    width: parent.width;
-                    height: errorInstanceId.visible ?
-                                titleInstanceId.height + instanceIdInput.height + errorInstanceId.height + errorInstanceId.anchors.topMargin
-                                     : titleInstanceId.height + instanceIdInput.height;
-
-                    RegularExpressionValidator {
-                        id: regexValid;
-
-                        Component.onCompleted: {
-                            let regex = "\\d{5}";
-
-                            let re = new RegExp(regex)
-                            if (re){
-                                regexValid.regularExpression = re;
-                                instanceIdInput.textInputValidator = regexValid;
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: titleInstanceId;
-                        text: qsTr("ERP Order-ID");
-                        color: Style.textColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-
-                    CustomTextField {
-                        id: instanceIdInput;
-
-                        anchors.top: titleInstanceId.bottom;
-                        anchors.topMargin: 5;
-
-                        width: parent.width;
-                        height: 30;
-
-                        placeHolderText: qsTr("Enter the ERP Order-ID");
-
-                        radius: orderEditorContainer.radius;
-
-                        borderColor: Style.iconColorOnSelected;
-
-                        onEditingFinished: {
-                            orderEditorContainer.doUpdateModel();
-                        }
-
-                        readOnly: orderEditorContainer.readOnly;
-
-                        KeyNavigation.tab: purchaseIdInput;
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
-                            instanceIdInput.readOnly = !ok;
-                        }
-                    }
-
-                    Text {
-                        id: errorInstanceId;
-
-                        anchors.top: instanceIdInput.bottom;
-                        anchors.topMargin: 5;
-
-                        text: qsTr("Enter a five-digit number");
-
-                        visible: !instanceIdInput.acceptableInput;
-                        color: Style.errorTextColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-                }
-
-                Item {
-                    width: parent.width;
-                    height: titleInstanceId.height + instanceIdInput.height;
-
-                    Text {
-                        id: titlePurchaseId;
-                        text: qsTr("Purchase Order-ID");
-                        color: Style.textColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-
-                    CustomTextField {
-                        id: purchaseIdInput;
-
-                        anchors.top: titlePurchaseId.bottom;
-                        anchors.topMargin: 5;
-
-                        width: parent.width;
-                        height: 30;
-
-                        radius: orderEditorContainer.radius;
-
-                        placeHolderText: qsTr("Enter the Purchase-ID");
-
-                        borderColor: Style.iconColorOnSelected;
-                        readOnly: orderEditorContainer.readOnly;
-
-                        onEditingFinished: {
-                            orderEditorContainer.doUpdateModel();
-                        }
-
-                        KeyNavigation.tab: descriptionInput;
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
-                            purchaseIdInput.readOnly = !ok;
-                        }
-                    }
-                }
-
-                Item {
-                    width: parent.width;
-                    height: titleComment.height + descriptionInput.height;
-
-                    Text {
-                        id: titleComment;
-                        text: qsTr("Description");
-                        color: Style.textColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-
-                    TextEditCustom {
-                        id: descriptionInput;
-
-                        anchors.top: titleComment.bottom;
-                        anchors.topMargin: 5;
-
-                        width: parent.width;
-                        height: 60;
-
-                        radius: orderEditorContainer.radius;
-
-                        placeHolderText: qsTr("Enter the comment");
-
-                        borderColor: Style.iconColorOnSelected;
-                        readOnly: orderEditorContainer.readOnly;
-
-                        onEditingFinished: {
-                            orderEditorContainer.doUpdateModel();
-                        }
-
-                        KeyNavigation.tab: instanceIdInput;
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
-                            descriptionInput.readOnly = !ok;
-                        }
-                    }
-                }
-
-                Item {
-                    width: parent.width;
-                    height: titleCustomer.height + customerCB.height;
-
-                    Text {
-                        id: titleCustomer;
-
-                        text: qsTr("Customer");
-                        color: Style.textColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-
-                    ComboBox {
-                        id: customerCB;
-
-                        anchors.top: titleCustomer.bottom;
-                        anchors.topMargin: 5;
-
-                        width: parent.width;
-                        height: orderEditorContainer.comboBoxHeight;
-
-                        radius: orderEditorContainer.radius;
-
-                        model: orderEditorContainer.accountsModel;
-                        changeable: !orderEditorContainer.readOnly;
-
-                        onCurrentIndexChanged: {
-                            orderEditorContainer.doUpdateModel();
-                        }
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
-
-                            customerCB.changeable = ok;
-                        }
-
-                        onModelChanged: {
-                            orderEditorContainer.doUpdateGui();
-                        }
-                    }
-                }
-
-                Item {
-                    width: parent.width;
-                    height: titleOrderStatus.height + orderStatusCB.height;
-
-                    Text {
-                        id: titleOrderStatus;
-
-                        text: qsTr("Order Status");
-                        color: Style.textColor;
-                        font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
-                    }
-
-                    ComboBox {
-                        id: orderStatusCB;
-
-                        anchors.top: titleOrderStatus.bottom;
-                        anchors.topMargin: 5;
-                        anchors.left: parent.left;
-
-                        width: parent.width - buttonContainer.width - 10;
-                        height: orderEditorContainer.comboBoxHeight;
-
-                        radius: orderEditorContainer.radius;
-
-                        changeable: !orderEditorContainer.readOnly;
-
-                        model: orderStatus.statusModel;
-
-                        onCurrentIndexChanged: {
-                            orderEditorContainer.doUpdateModel();
-
-                            if (orderStatusCB.currentIndex < 0){
-                                orderStatusCB.model = orderStatus.statusModel;
-                            }
-                        }
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
-
-                            orderStatusCB.changeable = ok;
-                        }
-                    }
-
-                    Button{
-                        id: buttonContainer;
-
-                        anchors.top: orderStatusCB.top;
-                        anchors.right: parent.right;
-
-                        text: qsTr("Clear");
-
-                        enabled: orderStatusCB.changeable;
-
-                        onClicked: {
-                            if(orderEditorContainer.model.ContainsKey("OrderStatus")){
-                                if (orderStatusCB.currentIndex != -1){
-                                    orderStatusCB.currentIndex = -1;
-                                }
-                            }
-                        }
-
-                        decorator: Component {
-                            ButtonDecorator {
-                                width: 70;
-                                height: orderStatusCB.height;
-                                radius: orderEditorContainer.radius;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Component {
-        id: productEditorDialog;
-
-        ProductEditorDialog {
-            id: productsDialog;
-
-            onStarted: {
-                productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
-                productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
-                productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
-
-                if (orderEditorContainer.model.ContainsKey("Id")){
-                    productsDialog.bodyItem.orderUuid = orderEditorContainer.model.GetData("Id");
-                }
-
-                productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
-                productsDialog.activeProductIndex = productsView.activeProductIndex;
-
-                if (orderEditorContainer.model.ContainsKey("OrderId")){
-                    productsDialog.bodyItem.orderId = orderEditorContainer.model.GetData("OrderId");
-                }
-
-                let orderProductsModel = orderEditorContainer.model.GetData("OrderProducts");
-                productsDialog.bodyItem.orderProductsModel = orderProductsModel;
-                if (productsView.activeProductIndex >= 0){
-                    let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
-                    productsDialog.bodyItem.productModel = productModel;
-                }
-
-                productsDialog.bodyItem.started();
-            }
-
-            onFinished: {
-                if (buttonId == Enums.ok){
-                    let productModel = productsDialog.bodyItem.productModel;
-                    let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
-
-                    console.log("productModel", productModel.toJSON());
-
-                    let index = productsView.activeProductIndex;
-                    if (index < 0){
-                        console.log("actualOrderProducts1", actualOrderProducts.toJSON());
-
-                        if (actualOrderProducts){
-                            index = actualOrderProducts.GetItemsCount();
-                            actualOrderProducts.CopyItemDataFromModel(index, productModel);
-                        }
-
-                        console.log("actualOrderProducts2", actualOrderProducts.toJSON());
-                    }
-                    else{
-                        if (actualOrderProducts){
-                            let actualProductModel = actualOrderProducts.GetModelFromItem(index);
-                            let isEqual = actualProductModel.IsEqualWithModel(productModel);
-                            if (!isEqual){
-                                actualOrderProducts.CopyItemDataFromModel(index, productModel);
-                            }
-                        }
-                    }
-
-                    actualOrderProducts.Refresh();
-                }
-            }
-        }
+        color: Style.backgroundColor2;
     }
 
     CustomScrollbar {
         id: scrollbar;
 
-        anchors.left: productsView.right;
-        anchors.leftMargin: 5;
-        anchors.top: productsView.top;
-        anchors.bottom: productsView.bottom;
+        anchors.right: parent.right;
+        anchors.top: flickable.top;
+        anchors.bottom: flickable.bottom;
 
         secondSize: 10;
-        targetItem: productsView;
+        targetItem: flickable;
 
         radius: 2;
     }
 
-    Rectangle {
-        id: productsTitle;
+    Flickable {
+        id: flickable;
 
-        anchors.leftMargin: 25;
+        anchors.top: parent.top;
+        anchors.topMargin: Style.size_largeMargin;
 
-        width: productsView.width;
-        height: 30;
-
-        color: Style.alternateBaseColor;
-
-        border.width: 1;
-        border.color: Style.borderColor;
-
-        radius: 3;
-
-        ToolButton {
-            id: addProduct;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.right: parent.right;
-            anchors.rightMargin: 10;
-
-            height: 22;
-            width: height;
-
-            iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
-
-            onClicked: {
-                productsView.activeProductIndex = -1;
-                modalDialogManager.openDialog(productEditorDialog, {});
-            }
-
-            Component.onCompleted: {
-                let ok = PermissionsController.checkPermission("ChangeOrder");
-
-                addProduct.visible = ok;
-            }
-        }
-
-        Text {
-            id: titleLicenses;
-
-            anchors.left: parent.left;
-            anchors.leftMargin: 10;
-            anchors.verticalCenter: parent.verticalCenter;
-
-            text: qsTr("Products");
-            color: Style.textColor;
-            font.family: Style.fontFamilyBold;
-            font.pixelSize: Style.fontSize_common;
-        }
-    }
-
-    ListView {
-        id: productsView;
-
-        anchors.top: productsTitle.bottom;
-        anchors.topMargin: productsView.spacing;
-        anchors.left: productsTitle.left;
-        anchors.leftMargin: productsView.leftMargin;
         anchors.bottom: parent.bottom;
-        anchors.bottomMargin: 5;
+        anchors.bottomMargin: Style.size_largeMargin;
 
-        width: bodyColumn.width;
+        anchors.left: parent.left;
+        anchors.right: scrollbar.left;
+
+        contentWidth: content.width;
+        contentHeight: content.height + 2 * Style.size_largeMargin;
+
+        boundsBehavior: Flickable.StopAtBounds;
 
         clip: true;
-        boundsBehavior: Flickable.StopAtBounds;
-        spacing: 5;
 
-        cacheBuffer: 1000;
+        Column {
+            id: content;
 
-        property int activeProductIndex: -1;
+            anchors.top: parent.top;
 
-        property int selectedIndex: -1;
+            anchors.left: parent.left;
+            anchors.leftMargin: Style.size_largeMargin;
 
-        property bool readOnly: false;
-        property bool isLicenseConsuming: false;
-        property bool softwareEditing: true;
+            width: 700;
 
-        Component.onCompleted: {
-            let ok = PermissionsController.checkPermission("ChangeOrder");
+            spacing: Style.size_largeMargin;
 
-            productsView.readOnly = !ok;
-        }
+            NumberAnimation {
+                id: orderInfoAnimation;
 
-        delegate: OrderProductCard {
-            id: orderProductDelegate;
-
-            width: productsView.width;
-
-            productsListView: productsView;
-
-            productIndex: model.index;
-
-            readOnly: productsView.readOnly;
-            isLicenseConsuming: productsView.isLicenseConsuming;
-
-            orderEditorPtr: orderEditorContainer;
-
-            onEdited: {
-                productsView.activeProductIndex = model.index;
-
-                modalDialogManager.openDialog(productEditorDialog, {});
+                target: group;
+                property: "height";
+                duration: 200;
             }
 
-            onRemoved: {
-                productsView.activeProductIndex = model.index;
+            Rectangle {
+                id: orderInfoTitle;
 
-                modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
+                width: group.width;
+                height: titleLicenses.height;
+
+                color: "transparent";
+
+                radius: 3;
+
+                property bool orderInfoOpened: true;
+
+                onOrderInfoOpenedChanged: {
+                    if (orderInfoOpened){
+                        orderInfoAnimation.from = 0;
+                        orderInfoAnimation.to = group.contentHeight;
+                    }
+                    else{
+                        orderInfoAnimation.from = group.contentHeight;
+                        orderInfoAnimation.to = 0;
+                    }
+
+                    orderInfoAnimation.start();
+                }
+
+                ToolButton {
+                    id: openButton;
+
+                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors.right: parent.right;
+                    anchors.rightMargin: 10;
+
+                    height: 22;
+                    width: height;
+
+                    iconSource: orderInfoTitle.orderInfoOpened
+                                ? "../../../" + Style.getIconPath("Icons/Up", Icon.State.On, Icon.Mode.Normal)
+                                : "../../../" + Style.getIconPath("Icons/Down", Icon.State.On, Icon.Mode.Normal);
+
+                    onClicked: {
+                        orderInfoTitle.orderInfoOpened = !orderInfoTitle.orderInfoOpened;
+                    }
+                }
+
+                Text {
+                    id: titleOrderInfo;
+
+                    anchors.left: parent.left;
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    text: qsTr("Order Information");
+
+                    color: Style.textColor;
+                    font.family: Style.fontFamilyBold;
+                    font.pixelSize: Style.fontSize_title;
+                }
+            }
+
+            GroupElementView {
+                id: group;
+
+                width: content.width;
+
+                TextInputElementView {
+                    id: instanceIdInput;
+
+                    name: qsTr("ERP Order-ID");
+                    placeHolderText: qsTr("Enter the ERP Order-ID");
+                    description: qsTr("ERP Order-ID");
+
+                    readOnly: orderEditorContainer.readOnly;
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        instanceIdInput.readOnly = !ok;
+                    }
+
+                    onEditingFinished: {
+                        orderEditorContainer.doUpdateModel();
+                    }
+
+                    KeyNavigation.tab: purchaseIdInput;
+                }
+
+                TextInputElementView {
+                    id: purchaseIdInput;
+
+                    name: qsTr("Purchase Order-ID");
+                    placeHolderText: qsTr("Enter the Purchase-ID");
+                    description: qsTr("Purchase Order-ID");
+
+                    readOnly: orderEditorContainer.readOnly;
+
+                    onEditingFinished: {
+                        orderEditorContainer.doUpdateModel();
+                    }
+
+                    KeyNavigation.tab: descriptionInput;
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        purchaseIdInput.readOnly = !ok;
+                    }
+                }
+
+                TextInputElementView {
+                    id: descriptionInput;
+
+                    name: qsTr("Description");
+                    placeHolderText: qsTr("Enter the comment");
+
+                    readOnly: orderEditorContainer.readOnly;
+
+                    onEditingFinished: {
+                        orderEditorContainer.doUpdateModel();
+                    }
+
+                    KeyNavigation.tab: instanceIdInput;
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        descriptionInput.readOnly = !ok;
+                    }
+                }
+
+                ComboBoxElementView {
+                    id: customerCB;
+
+                    name: qsTr("Customer");
+
+                    model: orderEditorContainer.accountsModel;
+                    changeable: !orderEditorContainer.readOnly;
+
+                    onCurrentIndexChanged: {
+                        orderEditorContainer.doUpdateModel();
+                    }
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                        customerCB.changeable = ok;
+                    }
+
+                    onModelChanged: {
+                        orderEditorContainer.doUpdateGui();
+                    }
+                }
+
+                ComboBoxElementView {
+                    id: orderStatusCB;
+
+                    name: qsTr("Order Status");
+
+                    changeable: !orderEditorContainer.readOnly;
+
+                    model: orderStatus.statusModel;
+
+                    onCurrentIndexChanged: {
+                        orderEditorContainer.doUpdateModel();
+
+                        if (orderStatusCB.currentIndex < 0){
+                            orderStatusCB.model = orderStatus.statusModel;
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                        orderStatusCB.changeable = ok;
+                    }
+                }
+            }
+
+            Component {
+                id: productEditorDialog;
+
+                ProductEditorDialog {
+                    id: productsDialog;
+
+                    onStarted: {
+                        productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
+                        productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
+                        productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
+
+                        if (orderEditorContainer.model.ContainsKey("Id")){
+                            productsDialog.bodyItem.orderUuid = orderEditorContainer.model.GetData("Id");
+                        }
+
+                        productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
+                        productsDialog.activeProductIndex = productsView.activeProductIndex;
+
+                        if (orderEditorContainer.model.ContainsKey("OrderId")){
+                            productsDialog.bodyItem.orderId = orderEditorContainer.model.GetData("OrderId");
+                        }
+
+                        let orderProductsModel = orderEditorContainer.model.GetData("OrderProducts");
+                        productsDialog.bodyItem.orderProductsModel = orderProductsModel;
+                        if (productsView.activeProductIndex >= 0){
+                            let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                            productsDialog.bodyItem.productModel = productModel;
+                        }
+
+                        productsDialog.bodyItem.started();
+                    }
+
+                    onFinished: {
+                        if (buttonId == Enums.ok){
+                            let productModel = productsDialog.bodyItem.productModel;
+                            let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
+
+                            console.log("productModel", productModel.toJSON());
+
+                            let index = productsView.activeProductIndex;
+                            if (index < 0){
+                                console.log("actualOrderProducts1", actualOrderProducts.toJSON());
+
+                                if (actualOrderProducts){
+                                    if (actualOrderProducts.GetItemsCount() > 0){
+                                        index = actualOrderProducts.InsertNewItem(0);
+                                    }
+                                    else{
+                                        index = actualOrderProducts.InsertNewItem();
+                                    }
+
+//                                    index = actualOrderProducts.GetItemsCount();
+                                    actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                                }
+
+                                console.log("actualOrderProducts2", actualOrderProducts.toJSON());
+                            }
+                            else{
+                                if (actualOrderProducts){
+                                    let actualProductModel = actualOrderProducts.GetModelFromItem(index);
+                                    let isEqual = actualProductModel.IsEqualWithModel(productModel);
+                                    if (!isEqual){
+                                        actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                                    }
+                                }
+                            }
+
+                            actualOrderProducts.Refresh();
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                id: productsTitle;
+
+                width: content.width;
+                height: titleLicenses.height;
+
+                color: "transparent";
+
+                radius: 3;
+
+                ToolButton {
+                    id: addProduct;
+
+                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors.right: parent.right;
+                    anchors.rightMargin: 10;
+
+                    height: 22;
+                    width: height;
+
+                    iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
+
+                    onClicked: {
+                        productsView.activeProductIndex = -1;
+                        modalDialogManager.openDialog(productEditorDialog, {});
+                    }
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                        addProduct.visible = ok;
+                    }
+                }
+
+                Text {
+                    id: titleLicenses;
+
+                    anchors.left: parent.left;
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    text: qsTr("Products") + " (" + productsView.count + ")";
+                    color: Style.textColor;
+                    font.family: Style.fontFamilyBold;
+                    font.pixelSize: Style.fontSize_title;
+                }
+            }
+
+            ListView {
+                id: productsView;
+
+                width: content.width;
+                height: contentHeight;
+
+                clip: true;
+                boundsBehavior: Flickable.StopAtBounds;
+                spacing: Style.size_largeMargin;
+
+                cacheBuffer: 1000;
+
+                property int activeProductIndex: -1;
+
+                property int selectedIndex: -1;
+
+                property bool readOnly: false;
+                property bool isLicenseConsuming: false;
+                property bool softwareEditing: true;
+
+                Component.onCompleted: {
+                    let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                    productsView.readOnly = !ok;
+                }
+
+                delegate: OrderProductDelegate {
+                    id: orderProductDelegate;
+
+                    width: productsView.width;
+
+                    productsListView: productsView;
+
+                    readOnly: productsView.readOnly;
+                    isLicenseConsuming: productsView.isLicenseConsuming;
+
+                    orderEditorPtr: orderEditorContainer;
+
+                    onEdited: {
+                        productsView.activeProductIndex = model.index;
+
+                        modalDialogManager.openDialog(productEditorDialog, {});
+                    }
+
+                    onRemoved: {
+                        productsView.activeProductIndex = model.index;
+
+                        modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
+                    }
+                }
             }
         }
+
     }
 
     Component {
