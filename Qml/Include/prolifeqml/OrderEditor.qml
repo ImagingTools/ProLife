@@ -7,8 +7,6 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
-import QtGraphicalEffects 1.0
-import Qt5Compat.GraphicalEffects 6.0
 
 ViewBase {
     id: orderEditorContainer;
@@ -456,6 +454,8 @@ ViewBase {
 
                     onFinished: {
                         if (buttonId == Enums.ok){
+                            orderEditorContainer.model.SetUpdateEnabled(false);
+
                             let productModel = productsDialog.bodyItem.productModel;
                             let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
 
@@ -466,13 +466,7 @@ ViewBase {
                                 console.log("actualOrderProducts1", actualOrderProducts.toJSON());
 
                                 if (actualOrderProducts){
-                                    if (actualOrderProducts.GetItemsCount() > 0){
-                                        index = actualOrderProducts.InsertNewItem(0);
-                                    }
-                                    else{
-                                        index = actualOrderProducts.InsertNewItem();
-                                    }
-
+                                    index = actualOrderProducts.InsertNewItem(0);
 //                                    index = actualOrderProducts.GetItemsCount();
                                     actualOrderProducts.CopyItemDataFromModel(index, productModel);
                                 }
@@ -490,6 +484,9 @@ ViewBase {
                             }
 
                             actualOrderProducts.Refresh();
+
+                            orderEditorContainer.model.SetUpdateEnabled(true);
+                            orderEditorContainer.model.dataChanged(null, null);
                         }
                     }
                 }
