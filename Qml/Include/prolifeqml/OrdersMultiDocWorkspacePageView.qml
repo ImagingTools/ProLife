@@ -51,6 +51,7 @@ MultiDocWorkspacePageView {
             gqlAddCommandId: "OrderAdd";
 
             onSaved: {
+                console.log("Order onSaved1", documentModel.toJSON())
                 if (documentModel.ContainsKey("OrderProducts")){
                     let orderProductsModel = documentModel.GetData("OrderProducts");
                     for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
@@ -62,6 +63,8 @@ MultiDocWorkspacePageView {
                         }
                     }
                 }
+
+                console.log("Order onSaved2", documentModel.toJSON())
             }
         }
     }

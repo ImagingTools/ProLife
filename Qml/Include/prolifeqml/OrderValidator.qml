@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import Acf 1.0
 import imtdocgui 1.0
+import imtauthgui 1.0
 
 DocumentValidator {
     id: root;
@@ -10,28 +11,35 @@ DocumentValidator {
     }
 
     function isValid(data){
+        let canChange = PermissionsController.checkPermission("ChangeOrder");
+        if (!canChange){
+            data.message = qsTr("Permission denied")
+
+            return false;
+        }
+
         let orderId = "";
         if (documentModel.ContainsKey("OrderId")){
             orderId = documentModel.GetData("OrderId");
         }
 
-//        let regExp = new RegExp(regularExpressionValidator.regularExpression);
-//        if (!regExp.test(orderId)){
-//            data.message = qsTr("ERP Order-ID invalid")
+        let regExp = new RegExp(regularExpressionValidator.regularExpression);
+        if (!regExp.test(orderId)){
+            data.message = qsTr("ERP Order-ID invalid")
 
-//            return false;
-//        }
+            return false;
+        }
 
         let purchaseId = "";
         if (documentModel.ContainsKey("PurchaseId")){
             purchaseId = documentModel.GetData("PurchaseId");
         }
 
-//        if (purchaseId === ""){
-//            data.message = qsTr("Purchase Order-ID cannot be empty");
+        if (purchaseId === ""){
+            data.message = qsTr("Purchase Order-ID cannot be empty");
 
-//            return false;
-//        }
+            return false;
+        }
 
         let customerId = "";
         if (documentModel.ContainsKey("CustomerId")){

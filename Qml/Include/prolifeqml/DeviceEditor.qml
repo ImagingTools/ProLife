@@ -56,9 +56,23 @@ ViewBase {
     }
 
     Component.onCompleted: {
-        console.log("DeviceEditor onCompleted");
         CachedOrderCollection.updateModel();
         CachedProductCollection.updateModel();
+
+        checkWidth();
+    }
+
+    onWidthChanged: {
+        checkWidth();
+    }
+
+    function checkWidth(){
+        if (width < bodyColumn.width + scrollbar.width + 50){
+            bodyColumn.width = width - 50;
+        }
+        else{
+            bodyColumn.width = 700;
+        }
     }
 
     Component {
@@ -118,7 +132,6 @@ ViewBase {
         configurationCB.changeable = !readOnly;
     }
 
-
     function updateGui(){
         console.log("DeviceEditor updateGui");
         if (deviceEditorContainer.model.ContainsKey("Description")){
@@ -152,7 +165,7 @@ ViewBase {
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
-                        statusCB.updateIcon(status);
+//                        statusCB.updateIcon(status);
                         statusCB.currentIndex = i;
 
                         statusFound = true;
@@ -277,12 +290,6 @@ ViewBase {
         }
     }
 
-    Rectangle {
-        anchors.fill: parent;
-
-        color: Style.backgroundColor;
-    }
-
     function macAddressIsValid(){
         if (macAddressInput.text === ""){
             return true;
@@ -298,8 +305,7 @@ ViewBase {
     CustomScrollbar {
         id: scrollbar;
 
-        anchors.left: flickable.right;
-        anchors.leftMargin: Style.size_mainMargin;
+        anchors.right: parent.right;
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
 
@@ -309,551 +315,274 @@ ViewBase {
         radius: 2;
     }
 
-    //    Item {
-    //        id: card;
-
-    //        width: parent.width;
-    //        height: content.height + header.height;
-
-    //        property string title: qsTr("Additional information");
-
-    //        Rectangle {
-    //            id: header;
-
-    //            width: parent.width;
-    //            height: 30;
-
-    //            color: Style.alternateBaseColor;
-
-    //            Text {
-    //                id: title;
-
-    //                anchors.verticalCenter: parent.verticalCenter;
-    //                anchors.left: parent.left;
-    //                anchors.leftMargin: Style.size_mainMargin;
-    //                anchors.right: parent.right;
-    //                anchors.rightMargin: Style.size_mainMargin;
-
-    //                text: card.title;
-
-    //                color: Style.textColor;
-    //                font.family: Style.fontFamilyBold;
-    //                font.pixelSize: Style.fontSize_common;
-
-    //                elide: Text.ElideRight;
-    //                wrapMode: Text.NoWrap;
-    //            }
-    //        }
-
-    //        Column {
-    //            id: content;
-
-    //            width: parent.width;
-    //        }
-    //    }
-
     Flickable {
         id: flickable;
 
-        anchors.top: parent.top;
-        anchors.bottom: parent.bottom;
+        anchors.left: parent.left;
+        anchors.leftMargin: Style.size_largeMargin;
 
-        width: bodyColumn.width;
+        anchors.top: parent.top;
+        anchors.topMargin: Style.size_largeMargin;
+
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: Style.size_largeMargin;
+
+        anchors.right: scrollbar.left;
+        anchors.rightMargin: Style.size_largeMargin;
 
         contentWidth: bodyColumn.width;
-        contentHeight: bodyColumn.height;
+        contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
 
         boundsBehavior: Flickable.StopAtBounds;
 
         Column {
             id: bodyColumn;
 
-            width: 500;
-            height: childrenRect.height;
+            width: 700;
 
-            spacing: Style.size_mainMargin;
+            spacing: Style.size_largeMargin;
 
-            Text {
-                id: titleDeviceInformationBlock;
-                text: qsTr("Device information");
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
+            GroupHeaderView {
+                width: parent.width;
+
+                title: qsTr("Device Information");
+                groupView: deviceInformationGroup;
             }
 
-            Rectangle {
-                id: deviceInformationBlockBorders;
+            GroupElementView {
+                id: deviceInformationGroup;
 
                 width: parent.width;
-                height: deviceInformationBlock.height + 25;
 
-                color: "transparent";
+                ComboBoxElementView {
+                    id: productCB;
 
-                border.width: 1;
-                border.color: Style.borderColor;
+                    name: qsTr("Device Type");
 
-                radius: deviceEditorContainer.radius;
+                    model: CachedProductCollection.hardwareProductsModel;
 
-                Column {
-                    id: deviceInformationBlock;
+                    nameId: "ProductName";
 
-                    anchors.centerIn: deviceInformationBlockBorders;
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        productCB.changeable = ok;
+                    }
 
-                    width: parent.width - 20;
+                    onCurrentIndexChanged: {
+                        let ok = false;
+                        if (productCB.currentIndex >= 0){
+                            let model = productCB.model.GetData("Licenses", productCB.currentIndex);
+                            if (model){
+                                configurationCB.model = model;
 
-                    spacing: deviceEditorContainer.spacing;
-
-                    Item {
-                        width: parent.width;
-                        height: titleDeviceName.height + productCB.height + productCB.anchors.topMargin;
-
-                        Text {
-                            id: titleDeviceName;
-                            text: qsTr("Device Type");
-                            color: Style.textColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
+                                ok = true;
+                            }
                         }
 
-                        ComboBox {
-                            id: productCB;
+                        if (!ok){
+                            configurationCB.model = 0;
+                        }
 
-                            anchors.top: titleDeviceName.bottom;
-                            anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
+                        deviceEditorContainer.doUpdateModel();
+                    }
 
-                            width: parent.width;
-                            height: deviceEditorContainer.comboBoxHeight;
+                    onModelChanged: {
+                        deviceEditorContainer.doUpdateGui();
+                    }
+                }
 
-                            radius: deviceEditorContainer.radius;
+                ComboBoxElementView {
+                    id: configurationCB;
 
-                            model: CachedProductCollection.hardwareProductsModel;
+                    name: qsTr("Hardware Configuration");
+                    nameId: "LicenseName";
 
-                            nameId: "ProductName";
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        configurationCB.changeable = ok;
+                    }
 
-                            Component.onCompleted: {
-                                let ok = PermissionsController.checkPermission("ChangeSensor");
-                                productCB.changeable = ok;
-                            }
+                    onCurrentIndexChanged: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+                }
 
-                            onCurrentIndexChanged: {
-                                let ok = false;
-                                if (productCB.currentIndex >= 0){
-                                    let model = productCB.model.GetData("Licenses", productCB.currentIndex);
-                                    if (model){
-                                        configurationCB.model = model;
+                TextInputElementView {
+                    id: descriptionInput;
 
-                                        ok = true;
-                                    }
-                                }
+                    name: qsTr("Description");
+                    placeHolderText: qsTr("Enter description");
 
-                                if (!ok){
-                                    configurationCB.model = 0;
-                                }
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeSensorDescription");
+                        }
 
-                                deviceEditorContainer.doUpdateModel();
-                            }
+                        descriptionInput.readOnly = !ok;
+                    }
 
-                            onModelChanged: {
-                                deviceEditorContainer.doUpdateGui();
-                            }
+                    onEditingFinished: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+
+                    KeyNavigation.tab: serialNumberInput;
+                }
+
+                TextInputElementView {
+                    id: serialNumberInput;
+
+                    name: qsTr("Serial Number");
+
+                    placeHolderText: qsTr("Enter serial number");
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeSerialNumber");
+                        }
+
+                        serialNumberInput.readOnly = !ok;
+                    }
+
+                    onEditingFinished: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+
+                    KeyNavigation.tab: macAddressInput;
+                }
+
+                TextInputElementView {
+                    id: macAddressInput;
+
+                    name: qsTr("MAC-Address");
+                    placeHolderText: qsTr("Enter MAC-Address");
+
+                    maximumLength: 17;
+
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeMacAddress");
+                        }
+
+                        macAddressInput.readOnly = !ok;
+                    }
+
+                    onEditingFinished: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+
+                    property var regExp: new RegExp(macAddressRegExp.regularExpression)
+                    onTextChanged: {
+                        if (macAddressInput.text === ""){
+                            macAddressInput.borderColor = Style.iconColorOnSelected;
+
+                            macAddressInput.bottomComp = undefined;
+                        }
+                        else if (regExp){
+                            let isValid = regExp.test(macAddressInput.text);
+
+                            macAddressInput.bottomComp = isValid ? undefined : errorComp;
+                            macAddressInput.borderColor = isValid ? Style.iconColorOnSelected : Style.errorTextColor;
                         }
                     }
 
-                    Item {
-                        width: parent.width;
-                        height: titleConfigurationName.height + configurationCB.height + configurationCB.anchors.topMargin;
+                    KeyNavigation.tab: macAddressInput;
 
-                        Text {
-                            id: titleConfigurationName;
-                            text: qsTr("Hardware Configuration");
-                            color: Style.textColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
-                        }
-
-                        ComboBox {
-                            id: configurationCB;
-
-                            anchors.top: titleConfigurationName.bottom;
-                            anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
-
-                            width: parent.width;
-                            height: deviceEditorContainer.comboBoxHeight;
-
-                            radius: deviceEditorContainer.radius;
-
-                            nameId: "LicenseName";
-
-                            Component.onCompleted: {
-                                let ok = PermissionsController.checkPermission("ChangeSensor");
-                                configurationCB.changeable = ok;
-                            }
-
-                            onCurrentIndexChanged: {
-                                deviceEditorContainer.doUpdateModel();
-                            }
-                        }
-                    }
-
-                    TextFieldWithTitle {
-                        id: descriptionInput;
-
-                        width: parent.width;
-
-                        title: qsTr("Description");
-                        placeHolderText: qsTr("Enter description");
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeSensor");
-                            if (!ok){
-                                ok = PermissionsController.checkPermission("ChangeSensorDescription");
-                            }
-
-                            descriptionInput.readOnly = !ok;
-                        }
-
-                        onEditingFinished: {
-                            deviceEditorContainer.doUpdateModel();
-                        }
-
-                        KeyNavigation.tab: serialNumberInput;
-                    }
-
-                    TextFieldWithTitle {
-                        id: serialNumberInput;
-
-                        width: parent.width;
-
-                        title: qsTr("Serial Number");
-                        placeHolderText: qsTr("Enter serial number");
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeSensor");
-                            if (!ok){
-                                ok = PermissionsController.checkPermission("ChangeSerialNumber");
-                            }
-
-                            serialNumberInput.readOnly = !ok;
-                        }
-
-                        onEditingFinished: {
-                            deviceEditorContainer.doUpdateModel();
-                        }
-
-                        KeyNavigation.tab: macAddressInput;
-                    }
-
-                    Item {
-                        width: parent.width;
-
-                        height: macAddresInvalidText.visible ?
-                                    macAddressInput.height + macAddresInvalidText.height + macAddresInvalidText.anchors.topMargin :
-                                    macAddressInput.height ;
-
-                        TextFieldWithTitle {
-                            id: macAddressInput;
-
-                            width: parent.width;
-
-                            title: qsTr("MAC-Address");
-                            placeHolderText: qsTr("Enter MAC-Address");
-
-                            maximumLength: 17;
-
-                            Component.onCompleted: {
-                                let ok = PermissionsController.checkPermission("ChangeSensor");
-                                if (!ok){
-                                    ok = PermissionsController.checkPermission("ChangeMacAddress");
-                                }
-
-                                macAddressInput.readOnly = !ok;
-                            }
-
-                            onEditingFinished: {
-                                deviceEditorContainer.doUpdateModel();
-                            }
-
-                            property int lastLength: 0;
-                            property bool blockSignal: false;;
-                            property var regExp: new RegExp(macAddressRegExp.regularExpression)
-                            onTextChanged: {
-                                if(blockSignal){
-                                    return;
-                                }
-
-                                if (macAddressInput.text === ""){
-                                    macAddressInput.borderColor = Style.iconColorOnSelected;
-                                    macAddresInvalidText.visible = false;
-                                }
-                                else if (regExp){
-                                    let isValid = regExp.test(macAddressInput.text);
-                                    if (isValid){
-                                        macAddressInput.borderColor = Style.iconColorOnSelected;
-                                    }
-                                    else{
-                                        macAddressInput.borderColor = Style.errorTextColor;
-                                    }
-
-                                    macAddresInvalidText.visible = !isValid;
-                                }
-                            }
-
-                            KeyNavigation.tab: macAddressInput;
-                        }
+                    Component {
+                        id: errorComp;
 
                         Text {
                             id: macAddresInvalidText;
-
-                            anchors.top: macAddressInput.bottom;
-                            anchors.topMargin: Style.size_mainMargin;
 
                             text: qsTr("MAC-Address invalid");
                             color: Style.errorTextColor;
                             font.family: Style.fontFamily;
                             font.pixelSize: Style.fontSize_common;
-
-                            visible: false;
-                        }
-
-                        RegularExpressionValidator {
-                            id: macAddressRegExp;
-
-                            regularExpression: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
                         }
                     }
                 }
+
+                RegularExpressionValidator {
+                    id: macAddressRegExp;
+
+                    regularExpression: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+                }
             }
 
-            Text {
-                id: titleAdditonalInfoId;
-                text: qsTr("Additional information");
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_common;
-            }
-
-            Rectangle {
-                id: additionalInfoBorders;
+            GroupHeaderView {
+                id: additionalHeaderView;
 
                 width: parent.width;
-                height: additionalInfoBlock.height + 25;
 
-                color: "transparent";
+                groupView: additionalInformationGroup;
+                title: qsTr("Additional Information");
+            }
 
-                border.width: 1;
-                border.color: Style.borderColor;
+            GroupElementView {
+                id: additionalInformationGroup;
 
-                radius: deviceEditorContainer.radius;
+                width: parent.width;
 
-                Column {
-                    id: additionalInfoBlock;
+                ClearableComboBoxElementView {
+                    id: statusCB;
 
-                    anchors.horizontalCenter: additionalInfoBorders.horizontalCenter;
-                    anchors.verticalCenter: additionalInfoBorders.verticalCenter;
+                    name: qsTr("Production Status");
+                    model: productionStatus.statusModel;
 
-                    width: parent.width - 15;
+                    property bool blockingIndexChanged: false;
 
-                    spacing: deviceEditorContainer.spacing;
-
-                    Item {
-                        width: parent.width;
-                        height: titleStatusId.height + comboBoxItem.height + comboBoxItem.anchors.topMargin;
-
-                        Text {
-                            id: titleStatusId;
-                            text: qsTr("Production Status");
-                            color: Style.textColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeProductionStatus");
                         }
 
-                        Item {
-                            id: comboBoxItem;
-
-                            anchors.top: titleStatusId.bottom;
-                            anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
-
-                            width: parent.width;
-                            height: 30;
-
-                            ComboBox {
-                                id: statusCB;
-
-                                anchors.left: parent.left;
-
-                                width: parent.width - iconStatus.width - 2*iconStatus.anchors.leftMargin - buttonContainer.width;
-                                height: deviceEditorContainer.comboBoxHeight;
-
-                                radius: deviceEditorContainer.radius;
-
-                                model: productionStatus.statusModel;
-
-                                function updateIcon(statusId){
-                                    if (statusId === "None"){
-                                        iconStatus.source = "../../../" + Style.getIconPath("Icons/StateUnknown", Icon.State.On, Icon.Mode.Normal);
-                                    }
-                                    else if (statusId === "Canceled"){
-                                        iconStatus.source = "../../../" + Style.getIconPath("Icons/Cancel", Icon.State.On, Icon.Mode.Normal);
-                                    }
-                                    else if (statusId === "Accepted" || statusId === "InProgress"){
-                                        iconStatus.source = "../../../" + Style.getIconPath("Icons/Timeline", Icon.State.On, Icon.Mode.Normal);
-                                    }
-                                    else if (statusId === "OnHold"){
-                                        iconStatus.source = "../../../" + Style.getIconPath("Icons/Pause", Icon.State.On, Icon.Mode.Normal);
-                                    }
-                                    else{
-                                        iconStatus.source = "../../../" + Style.getIconPath("Icons/StateOk", Icon.State.On, Icon.Mode.Normal);
-                                    }
-                                }
-
-                                property bool blockingIndexChanged: false;
-
-                                Component.onCompleted: {
-                                    let ok = PermissionsController.checkPermission("ChangeSensor");
-                                    if (!ok){
-                                        ok = PermissionsController.checkPermission("ChangeProductionStatus");
-                                    }
-
-                                    statusCB.changeable = ok;
-                                }
-
-                                onCurrentIndexChanged: {
-                                    deviceEditorContainer.doUpdateModel();
-                                    //                                    deviceEditorContainer.updateModel();
-
-                                    if (statusCB.currentIndex >= 0){
-                                        if ( deviceEditorContainer.model.ContainsKey("ProductionStatus")){
-                                            let status = deviceEditorContainer.model.GetData("ProductionStatus");
-                                            statusCB.updateIcon(status);
-                                        }
-                                    }
-                                    else{
-                                        iconStatus.source = "";
-                                        statusCB.model = productionStatus.statusModel;
-                                    }
-                                }
-                            }
-
-                            Image {
-                                id: iconStatus;
-
-                                anchors.verticalCenter: parent.verticalCenter;
-                                anchors.left: statusCB.right;
-                                anchors.leftMargin: Style.size_mainMargin;
-
-                                width: 25;
-                                height: width;
-
-                                sourceSize.height: height;
-                                sourceSize.width: width;
-                            }
-
-                            Button{
-                                id: buttonContainer;
-
-                                anchors.verticalCenter: parent.verticalCenter;
-                                anchors.right: parent.right;
-
-                                text: qsTr("Clear");
-
-                                enabled: statusCB.changeable && statusCB.currentIndex >= 0;
-
-                                onClicked: {
-                                    if(deviceEditorContainer.model.ContainsKey("ProductionStatus")){
-                                        if (statusCB.currentIndex != -1){
-                                            statusCB.currentIndex = -1;
-                                        }
-                                    }
-                                }
-
-                                decorator: Component {
-                                    ButtonDecorator {
-                                        width: 70;
-                                        height: statusCB.height;
-                                        radius: deviceEditorContainer.radius;
-                                    }
-                                }
-                            }
-                        }
+                        statusCB.changeable = ok;
                     }
 
-                    Item {
-                        width: parent.width;
-                        height: orderCB.height + titleOrderId.height + orderCB.anchors.topMargin;
+                    onCurrentIndexChanged: {
+                        deviceEditorContainer.doUpdateModel();
 
-                        Text {
-                            id: titleOrderId;
-                            text: qsTr("Order-ID");
-                            color: Style.textColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
-                        }
-
-                        FilterableComboBox {
-                            id: orderCB;
-
-                            anchors.left: parent.left;
-                            anchors.top: titleOrderId.bottom;
-                            anchors.topMargin: deviceEditorContainer.heightBetweenTitleAndComp;
-
-                            width: parent.width - orderClearButton.width - 10;
-                            height: deviceEditorContainer.comboBoxHeight;
-
-                            radius: deviceEditorContainer.radius;
-
-                            nameId: "OrderId";
-
-                            model: CachedOrderCollection.collectionModel;
-
-                            Component.onCompleted: {
-                                let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");
-                                let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
-
-                                orderCB.changeable = canChangeSensor && canChangeOrder;
-                            }
-
-                            onCurrentIndexChanged: {
-                                deviceEditorContainer.doUpdateModel();
-                            }
-
-                            onModelChanged: {
-                                deviceEditorContainer.doUpdateGui();
+                        if (statusCB.currentIndex >= 0){
+                            if ( deviceEditorContainer.model.ContainsKey("ProductionStatus")){
+                                let status = deviceEditorContainer.model.GetData("ProductionStatus");
                             }
                         }
-
-                        Button {
-                            id: orderClearButton;
-
-                            anchors.top: orderCB.top;
-                            anchors.right: parent.right;
-
-                            text: qsTr("Clear");
-
-                            enabled: orderCB.changeable && orderCB.currentIndex >= 0;
-
-                            onClicked: {
-                                if(deviceEditorContainer.model.ContainsKey("OrderId")){
-                                    if (orderCB.currentIndex != -1){
-                                        orderCB.currentIndex = -1;
-                                    }
-                                }
-                            }
-
-                            decorator: Component {
-                                ButtonDecorator {
-                                    width: 70;
-                                    height: orderCB.height;
-                                    radius: deviceEditorContainer.radius;
-                                }
-                            }
+                        else{
+                            statusCB.model = productionStatus.statusModel;
                         }
+                    }
+                }
+
+                FilterableComboBoxElementView {
+                    id: orderCB;
+
+                    name: qsTr("Order-ID");
+
+                    nameId: "OrderId";
+
+                    model: CachedOrderCollection.collectionModel;
+
+                    Component.onCompleted: {
+                        let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");
+                        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+
+                        orderCB.changeable = canChangeSensor && canChangeOrder;
+                    }
+
+                    onCurrentIndexChanged: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+
+                    onModelChanged: {
+                        deviceEditorContainer.doUpdateGui();
                     }
                 }
             }
         }
     }
-
-    property int heightBetweenTitleAndComp: Style.size_mainMargin;
 }
 
 

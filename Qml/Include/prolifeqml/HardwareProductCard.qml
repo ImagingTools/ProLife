@@ -10,7 +10,7 @@ Rectangle {
 
     color: Style.baseColor;
 
-    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
+    property bool isNewDevice: false//model.IsNewDevice ? model.IsNewDevice : false;
     property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
     property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
     property bool readOnly: false;
@@ -108,7 +108,7 @@ Rectangle {
             id: table;
 
             width: contentColumn.width;
-            height: contentHeight + 15;
+            height: contentHeight;
 
             radius: 0;
 

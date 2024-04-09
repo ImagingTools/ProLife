@@ -6,12 +6,6 @@ import imtauthgui 1.0
 DocumentValidator {
     id: root;
 
-    property RegularExpressionValidator regularExpressionValidator: RegularExpressionValidator {
-        id: macAddressRegExp;
-
-        regularExpression: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
-    }
-
     function isValid(data){
         if (!documentModel){
             data.message = "Unknown error. Model is invalid.";

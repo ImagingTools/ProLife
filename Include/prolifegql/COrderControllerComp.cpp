@@ -163,11 +163,17 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 	}
 
 	if (!itemData.isEmpty()){
+		qDebug() << "itemData" << itemData;
 		istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderPtr = new prolifedata::CIdentifiableOrderInfo();
 		Q_ASSERT(orderPtr.IsValid());
 
 		imtbase::CTreeItemModel itemModel;
-		itemModel.CreateFromJson(itemData);
+		if (!itemModel.CreateFromJson(itemData)){
+			errorMessage = QString("Unable to create model from json: '%1'").arg(itemData);
+			SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
+			return nullptr;
+		}
 
 		orderPtr->SetObjectUuid(objectId);
 

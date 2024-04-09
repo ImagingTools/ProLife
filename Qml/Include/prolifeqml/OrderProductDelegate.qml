@@ -31,7 +31,7 @@ ElementView {
 
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
-    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
+//    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
     property bool inUse: model.InUse ? model.InUse : false;
     property bool selected: false;
 

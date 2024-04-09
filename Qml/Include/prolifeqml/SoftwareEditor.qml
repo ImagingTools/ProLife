@@ -14,18 +14,35 @@ ViewBase {
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
 
+    property var productLicensesModel: TreeItemModel{}
+
     property string alertMessage: "";
     property int comboBoxHeight: 27;
 
     Component.onCompleted: {
         CachedProductCollection.updateModel();
         CachedOrderCollection.updateModel();
+
+        checkWidth();
     }
 
     onReadOnlyChanged: {
         console.log("SE onReadOnlyChanged", root.readOnly);
 
         projectInput.readOnly = root.readOnly;
+    }
+
+    onWidthChanged: {
+        checkWidth();
+    }
+
+    function checkWidth(){
+        if (width < bodyColumn.width + scrollbar.width + 50){
+            bodyColumn.width = width - 50;
+        }
+        else{
+            bodyColumn.width = 700;
+        }
     }
 
     onVisibleChanged: {
@@ -41,8 +58,6 @@ ViewBase {
         console.log("SE onModelChanged", root.model.toJSON());
 
         checkInUse();
-
-        softwareProductEditor.model = root.model;
     }
 
     Component {
@@ -69,8 +84,6 @@ ViewBase {
 
         ordersCB.changeable = !readOnly;
         productCB.changeable = !readOnly;
-
-        softwareProductEditor.setReadOnly(readOnly);
     }
 
     function updateGui(){
@@ -124,7 +137,7 @@ ViewBase {
             productCB.currentIndex = -1;
         }
 
-        softwareProductEditor.doUpdateGui();
+        group2.updateGui();
     }
 
     function updateModel(){
@@ -153,7 +166,7 @@ ViewBase {
             root.model.SetData("ProductId", "");
         }
 
-        softwareProductEditor.doUpdateModel();
+        group2.updateModel();
     }
 
     function getProductLicensesModel(){
@@ -169,209 +182,428 @@ ViewBase {
         return null;
     }
 
-    Rectangle {
-        anchors.fill: parent;
+    CustomScrollbar {
+        id: scrollbar;
 
-        color: Style.backgroundColor;
+        anchors.right: parent.right;
+        anchors.top: flickable.top;
+        anchors.bottom: flickable.bottom;
+
+        secondSize: 10;
+        targetItem: flickable;
+
+        radius: 2;
     }
 
-    Column {
-        id: bodyColumn;
+    Flickable {
+        id: flickable;
+
+        anchors.left: parent.left;
+        anchors.leftMargin: Style.size_largeMargin;
 
         anchors.top: parent.top;
-        anchors.left: parent.left;
-        anchors.leftMargin: 20;
+        anchors.topMargin: Style.size_largeMargin;
 
-        width: 500;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: Style.size_largeMargin;
 
-        spacing: 7;
+        anchors.right: scrollbar.left;
+        anchors.rightMargin: Style.size_largeMargin;
 
-        Text {
-            id: titleProject;
+        contentWidth: bodyColumn.width;
+        contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
 
-            color: Style.textColor;
-            font.family: Style.fontFamilyBold;
-            font.pixelSize: Style.fontSize_common;
+        boundsBehavior: Flickable.StopAtBounds;
 
-            text: qsTr("Project");
-        }
+        Column {
+            id: bodyColumn;
 
-        CustomTextField {
-            id: projectInput;
+            width: 700;
 
-            height: 30;
-            width: bodyColumn.width;
+            spacing: Style.size_largeMargin;
 
-            placeHolderText: qsTr("Enter the project");
+            GroupHeaderView {
+                width: parent.width;
 
-            readOnly: root.readOnly;
-
-            Component.onCompleted: {
-                console.log("project onCompleted", root.readOnly);
-
-                if (!root.readOnly){
-                    let ok = PermissionsController.checkPermission("ChangeLicense");
-                    console.log("ok", ok);
-                    projectInput.readOnly = !ok;
-                }
+                title: qsTr("Software Information");
+                groupView: group;
             }
 
-            onEditingFinished: {
-                root.doUpdateModel();
-            }
-        }
+            GroupElementView {
+                id: group;
 
-        Text {
-            id: titleOrder;
+                width: parent.width;
 
-            text: qsTr("Order");
-            color: Style.textColor;
-            font.family: Style.fontFamilyBold;
-            font.pixelSize: Style.fontSize_common;
-        }
+                TextInputElementView {
+                    id: projectInput;
 
-        Item {
-            width: parent.width;
-            height: 23;
+                    name: qsTr("Project");
+                    placeHolderText: qsTr("Enter the project");
 
-            FilterableComboBox {
-                id: ordersCB;
+                    readOnly: root.readOnly;
 
-                anchors.left: parent.left;
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeLicense");
+                            console.log("ok", ok);
+                            projectInput.readOnly = !ok;
+                        }
+                    }
 
-                width: parent.width - buttonContainer.width - 10;
-                height: root.comboBoxHeight;
-
-                radius: 3;
-
-                nameId: "OrderId";
-
-                model: CachedOrderCollection.collectionModel;
-
-                changeable: !root.readOnly;
-
-                Component.onCompleted: {
-                    if (!root.readOnly){
-                        let ok = PermissionsController.checkPermission("ChangeLicense");
-                        console.log("ok", ok);
-
-                        ordersCB.changeable = ok;
+                    onEditingFinished: {
+                        root.doUpdateModel();
                     }
                 }
 
-                onCurrentIndexChanged: {
-                    root.doUpdateModel();
-                }
+                FilterableComboBoxElementView {
+                    id: ordersCB;
 
-                onModelChanged: {
-                    root.doUpdateGui();
+                    nameId: "OrderId";
+                    name: qsTr("Order");
+
+                    model: CachedOrderCollection.collectionModel;
+
+                    changeable: !root.readOnly;
+
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeLicense");
+                            console.log("ok", ok);
+
+                            ordersCB.changeable = ok;
+                        }
+                    }
+
+                    onCurrentIndexChanged: {
+                        root.doUpdateModel();
+                    }
+
+                    onModelChanged: {
+                        root.doUpdateGui();
+                    }
                 }
             }
 
-            Button{
-                id: buttonContainer;
+            GroupHeaderView {
+                width: parent.width;
 
-                anchors.right: parent.right;
+                title: qsTr("License Information");
+                groupView: group2;
+            }
 
-                text: qsTr("Clear");
+            GroupElementView {
+                id: group2;
 
-                enabled: ordersCB.changeable && ordersCB.currentIndex >= 0;
+                width: parent.width;
 
-                onClicked: {
-                    if(root.model.ContainsKey("OrderUuid")){
-                        let orderUuid = root.model.GetData("OrderUuid")
-                        if (ordersCB.currentIndex != -1){
-                            ordersCB.currentIndex = -1;
+                function updateGui(){
+                    if (root.model.ContainsKey("SerialNumber")){
+                        serialNumberInput.text = root.model.GetData("SerialNumber")
+                    }
+                    else{
+                        serialNumberInput.text = "";
+                    }
+
+                    let licenseFound = false;
+
+                    let licenseUuid = root.model.GetData("LicenseUuid");
+                    if (licenseCB.model){
+                        for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
+                            let licenseId = licenseCB.model.GetData("Id", i);
+                            if (licenseId == licenseUuid){
+                                licenseCB.currentIndex = i;
+
+                                licenseFound = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!licenseFound){
+                        licenseCB.currentIndex = -1;
+                    }
+
+                    if (root.model.ContainsKey("Expiration")){
+                        let expiration = root.model.GetData("Expiration");
+
+                        if (expiration && expiration !== "" ){
+                            expirationEditor.setCheckState(Qt.Checked);
+                        }
+                        else{
+                            expirationEditor.setCheckState(Qt.Unchecked);
+                        }
+
+                        if (expiration){
+                            let currentDate = expirationEditor.getDate();
+
+                            if (expiration !== "" && expiration !== currentDate){
+                                let date = expiration;
+                                let data = date.split("-");
+                                expirationEditor.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                            }
                         }
                     }
                 }
 
-                decorator: Component {
-                    ButtonDecorator{
-                        width: 70;
-                        height: ordersCB.height;
+                function updateModel(){
+                    root.model.SetData("SerialNumber", serialNumberInput.text)
 
-                        radius: 3;
+                    if (expirationEditor.getCheckState() === Qt.Checked){
+                        root.model.SetData("Expiration", expirationEditor.getDate());
+                    }
+                    else{
+                        root.model.SetData("Expiration", "");
+                    }
+
+                    if (licenseCB.currentIndex >= 0 && licenseCB.model){
+                        let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
+                        root.model.SetData("LicenseUuid", selectedId);
+                    }
+                    else{
+                        root.model.SetData("LicenseUuid", "");
+                    }
+                }
+
+                ComboBoxElementView {
+                    id: productCB;
+
+                    name: qsTr("Product");
+                    nameId: "ProductName";
+
+                    model: CachedProductCollection.softwareProductsModel;
+
+                    changeable: !root.readOnly
+
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                            productCB.changeable = ok;
+                        }
+                    }
+
+                    onModelChanged: {
+                        root.doUpdateGui();
+                    }
+
+                    onCurrentIndexChanged: {
+                        console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
+
+                        if (productCB.currentIndex >= 0){
+                            let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+                            if (!licensesModel){
+                                licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+                            }
+
+                            root.productLicensesModel = licensesModel;
+                        }
+                        else{
+                            root.productLicensesModel = 0;
+                        }
+
+                        root.doUpdateModel();
+                    }
+                }
+
+                ComboBoxElementView {
+                    id: licenseCB;
+
+                    nameId: "LicenseName";
+                    name: qsTr("Licenses");
+
+                    model: root.productLicensesModel;
+
+                    changeable: !root.readOnly;
+
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                            if (canEditOrder){
+                                ok = true;
+                            }
+
+                            licenseCB.changeable = ok;
+                        }
+                    }
+
+                    onCurrentIndexChanged: {
+                        root.doUpdateModel();
+                    }
+                }
+
+                TextInputElementView {
+                    id: serialNumberInput;
+
+                    placeHolderText: qsTr("Enter the license number");
+                    name: qsTr("License Number");
+
+                    readOnly: root.readOnly;
+
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeLicense");
+                            if (!ok){
+                                ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+                            }
+
+                            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                            if (canEditOrder){
+                                ok = true;
+                            }
+
+                            serialNumberInput.readOnly = !ok;
+                        }
+                    }
+
+                    onEditingFinished: {
+                        root.doUpdateModel();
+                    }
+                }
+
+                ElementView {
+                    id: expirationEditor;
+
+                    name: qsTr("Expiration");
+
+                    property bool readOnly: false;
+
+                    function getDate(){
+                        if (datePicker){
+                            return datePicker.getDate();
+                        }
+
+                        return "";
+                    }
+
+                    function setDate(year, month, day){
+                        if (datePicker){
+                            datePicker.setDate(year, month, day);
+                        }
+                    }
+
+                    function setCheckState(state){
+                        if (checkBox){
+                            checkBox.checkState = state;
+                        }
+                    }
+
+                    function getCheckState(){
+                        if (checkBox){
+                            return checkBox.checkState;
+                        }
+
+                        return Qt.Unchecked;
+                    }
+
+                    property DatePicker datePicker: null;
+                    property CheckBox checkBox: null;
+
+                    controlComp: expirationComp;
+
+                    Component {
+                        id: expirationComp;
+
+                        Item {
+                            width: 300;
+                            height: 30;
+
+                            CheckBox {
+                                id: checkBox;
+
+                                anchors.verticalCenter: parent.verticalCenter;
+                                anchors.left: parent.left;
+
+                                onClicked: {
+                                    checkBox.checkState = Qt.Checked - checkBox.checkState;
+                                }
+
+                                isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
+
+                                onCheckStateChanged: {
+                                    root.doUpdateModel();
+                                }
+
+                                Component.onCompleted: {
+                                    expirationEditor.checkBox = checkBox;
+                                }
+                            }
+
+                            Text {
+                                id: textUnlimited;
+
+                                anchors.verticalCenter: parent.verticalCenter;
+                                anchors.left: checkBox.right;
+                                anchors.leftMargin: 5;
+
+                                visible: checkBox.checkState === Qt.Unchecked;
+
+                                font.family: Style.fontFamily;
+                                font.pixelSize: Style.fontSize_common;
+                                color: Style.textColor;
+
+                                text: qsTr("Unlimited");
+                            }
+
+                            DatePicker {
+                                id: datePicker;
+
+                                anchors.verticalCenter: parent.verticalCenter;
+                                anchors.left: checkBox.right;
+                                anchors.leftMargin: 5;
+
+                                visible: checkBox.checkState === Qt.Checked;
+
+                                width: 100;
+                                height: 20;
+
+                                currentDayButtonVisible: false;
+                                startWithCurrentDay: true;
+
+                                hasDayCombo: false;
+                                hasMonthCombo: false;
+                                hasYearCombo: false;
+
+                                readOnly: root.readOnly;
+
+                                Component.onCompleted: {
+                                    if (!root.readOnly){
+                                        let ok = PermissionsController.checkPermission("ChangeLicense");
+                                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                                        if (canEditOrder){
+                                            ok = true;
+                                        }
+
+                                        datePicker.readOnly = !ok;
+                                    }
+
+                                    expirationEditor.datePicker = datePicker;
+                                }
+
+                                onDateChanged: {
+                                    root.doUpdateModel()
+                                }
+
+                                onCompletedChanged: {
+                                    if (completed){
+                                        var date_ = new Date();
+
+                                        let day = date_.getDay();
+                                        let year = date_.getFullYear() + 1;
+                                        let month = date_.getMonth();
+
+                                        datePicker.setDate(year, month, day)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-
-        Text {
-            id: titleProduct;
-
-            text: qsTr("Product");
-            color: Style.textColor;
-            font.family: Style.fontFamilyBold;
-            font.pixelSize: Style.fontSize_common;
-        }
-
-        ComboBox {
-            id: productCB;
-
-            width: parent.width;
-            height: root.comboBoxHeight;
-
-            radius: 3;
-
-            nameId: "ProductName";
-
-            model: CachedProductCollection.softwareProductsModel;
-
-            changeable: !root.readOnly
-
-            Component.onCompleted: {
-                if (!root.readOnly){
-                    let ok = PermissionsController.checkPermission("ChangeLicense");
-
-                    productCB.changeable = ok;
-                }
-            }
-
-            onModelChanged: {
-                root.doUpdateGui();
-            }
-
-            onCurrentIndexChanged: {
-                console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
-
-                if (productCB.currentIndex >= 0){
-                    let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
-                    if (!licensesModel){
-                        licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
-                    }
-
-                    softwareProductEditor.productLicensesModel = licensesModel;
-                }
-                else{
-                    softwareProductEditor.productLicensesModel = 0;
-                }
-
-                root.doUpdateModel();
-            }
-        }
     }
-
-    SoftwareProductEditor {
-        id: softwareProductEditor;
-
-        anchors.top: bodyColumn.bottom;
-        anchors.left: parent.left;
-        anchors.leftMargin: 20;
-        anchors.topMargin: bodyColumn.spacing;
-        anchors.bottom: root.bottom;
-
-        width: bodyColumn.width;
-
-        model: root.model;
-
-        readOnly: root.readOnly;
-
-        function onModelChanged(){
-            root.doUpdateModel();
-        }
-    }
-    //    }
 }//Container
 
 

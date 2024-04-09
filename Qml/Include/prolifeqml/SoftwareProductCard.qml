@@ -94,7 +94,7 @@ Rectangle {
             id: licensesView;
 
             width: contentColumn.width;
-            height: contentHeight + 15;
+            height: contentHeight;
 
             enableAlternating: false;
 

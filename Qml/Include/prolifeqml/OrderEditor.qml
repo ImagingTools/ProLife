@@ -142,7 +142,7 @@ ViewBase {
     }
 
     function updateModel(){
-        console.log("Order updateModel");
+        console.log("Order updateModel1", model.toJSON());
 
         model.SetData("OrderId", instanceIdInput.text)
         model.SetData("PurchaseId", purchaseIdInput.text)
@@ -167,6 +167,8 @@ ViewBase {
         if (!model.ContainsKey("OrderProducts")){
             model.AddTreeModel("OrderProducts")
         }
+
+        console.log("Order updateModel2", model.toJSON());
     }
 
     OrderStatus {
@@ -310,6 +312,35 @@ ViewBase {
 
                 width: content.width;
 
+                RegularExpressionValidator {
+                    id: regexValid;
+
+                    Component.onCompleted: {
+                        let regex = "\\d{5}";
+
+                        let re = new RegExp(regex)
+                        if (re){
+                            regexValid.regularExpression = re;
+                            instanceIdInput.textInputValidator = regexValid;
+                        }
+                    }
+                }
+
+                Component {
+                    id: errorComp;
+
+                    Text {
+                        id: errorInstanceId;
+
+                        text: qsTr("Enter a five-digit number");
+
+//                        visible: !instanceIdInput.acceptableInput;
+                        color: Style.errorTextColor;
+                        font.family: Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
+                }
+
                 TextInputElementView {
                     id: instanceIdInput;
 
@@ -329,6 +360,11 @@ ViewBase {
                     }
 
                     KeyNavigation.tab: purchaseIdInput;
+
+                    onAcceptableInputChanged: {
+                        console.log("onAcceptableInputChanged", acceptableInput);
+                        instanceIdInput.bottomComp = acceptableInput ? undefined : errorComp;
+                    }
                 }
 
                 TextInputElementView {
@@ -483,10 +519,10 @@ ViewBase {
                                 }
                             }
 
-                            actualOrderProducts.Refresh();
-
                             orderEditorContainer.model.SetUpdateEnabled(true);
                             orderEditorContainer.model.dataChanged(null, null);
+
+                            actualOrderProducts.Refresh();
                         }
                     }
                 }

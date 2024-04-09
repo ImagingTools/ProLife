@@ -117,14 +117,14 @@ ApplicationMain{
                             if (status === "Disconnected"){
                                 window.lisaConnected = false;
 
-                                if (!window.errorVisible){
+                                if (!window.wasError){
                                     modalDialogManager.openDialog(errorDialog, {});
+
+                                    window.wasError = true;
                                 }
                             }
                             else if (status === "Connected"){
                                 window.lisaConnected = true;
-
-                                window.errorVisible = false;
                             }
                         }
                     }
@@ -133,7 +133,7 @@ ApplicationMain{
         }
     }
 
-    property bool errorVisible: false;
+    property bool wasError: false;
 
     Component {
         id: errorDialog;
@@ -141,10 +141,6 @@ ApplicationMain{
         ErrorDialog {
             title: qsTr("Warning Message");
             message: qsTr("Lisa server connection error");
-
-            Component.onCompleted: {
-                window.errorVisible = true;
-            }
 
             onFinished: {}
         }
