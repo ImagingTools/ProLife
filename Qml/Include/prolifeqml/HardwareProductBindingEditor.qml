@@ -19,6 +19,10 @@ Item {
     property string productId: ""
     property string hardwareId: "";
 
+    property string productErrorMessage: qsTr("Please select a product");
+    property string duplicateErrorMessage: qsTr("License with ID '%1' has already been selected");
+    property string licenseErrorMessage: qsTr("License with ID '%1' has already been added");
+
     signal modelChanged();
 
     Component.onCompleted: {
@@ -67,10 +71,10 @@ Item {
         }
 
         if (productsCB.currentIndex < 0){
-            productEditor.setError(0);
+            productEditor.setError(productErrorMessage);
         }
         else{
-            productEditor.setError(-1)
+            productEditor.setError("")
         }
 
         bindingProductsCollection.updateData();
@@ -83,16 +87,11 @@ Item {
         if (bindingElements){
             for (let i = 0; i < bindingElements.GetItemsCount(); i++){
                 let id = bindingElements.GetData("LicenseId", i)
-                if (id == licenseId){
-                    bindButton.enabled = false
-                    productEditor.setError(1);
-
+                if (id === licenseId){
                     return false;
                 }
             }
         }
-
-        productEditor.setError(-1);
 
         return true;
     }
@@ -104,39 +103,29 @@ Item {
     BaseText {
         id: titleLable
 
-        anchors.top: parent.top
-        anchors.topMargin: Style.margin
         anchors.horizontalCenter: availableLicensesColumn.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: Style.size_mainMargin
 
         text: qsTr("Available licenses");
         font.family: Style.fontFamilyBold;
     }
 
-    function setError(errorType){
-        if (errorType === 0){
-            console.log("errorType === 0");
-
-            errorText.text = qsTr("Please select a product");
-        }
-        else if (errorType === 1){
-            errorText.text = qsTr("A license with this ID has already been added");
-        }
-        else{
-            errorText.text = "";
-        }
+    function setError(message){
+        errorText.text = message;
     }
 
     Column {
         id: availableLicensesColumn;
 
         anchors.top: titleLable.bottom
-        anchors.topMargin: Style.margin
+        anchors.topMargin: Style.size_mainMargin;
         anchors.right: parent.horizontalCenter;
-        anchors.rightMargin: 20;
+        anchors.rightMargin: buttonsColumn.width;
         anchors.left: parent.left;
-        anchors.leftMargin: productEditor.margin;
+        anchors.leftMargin: Style.size_mainMargin;
 
-        spacing: 10;
+        spacing: Style.size_mainMargin;
 
         Item {
             width: parent.width;
@@ -154,9 +143,9 @@ Item {
                 id: productsCB;
 
                 anchors.left: productLable.right
-                anchors.leftMargin: Style.margin
+                anchors.leftMargin: Style.size_mainMargin;
                 anchors.right: lockImage.left;
-                anchors.rightMargin: 10;
+                anchors.rightMargin: Style.size_mainMargin;
 
                 height: 30;
 
@@ -169,7 +158,7 @@ Item {
 
                 Component.onCompleted: {
                     if (productsCB.currentIndex < 0){
-                        productEditor.setError(0);
+                        productEditor.setError(productEditor.productErrorMessage);
                     }
                 }
 
@@ -183,10 +172,10 @@ Item {
                     }
 
                     if (productsCB.currentIndex < 0){
-                        productEditor.setError(0);
+                        productEditor.setError(productEditor.productErrorMessage);
                     }
                     else{
-                        productEditor.setError(-1);
+                        productEditor.setError("");
                     }
 
                     if (productsCB.currentIndex > -1){
@@ -241,6 +230,9 @@ Item {
 
                 commandsControllerComp: null;
 
+                table.checkable: true;
+                table.selectable: false;
+
                 dataControllerComp:
                     Component {
                     CollectionRepresentation {
@@ -260,28 +252,59 @@ Item {
 
                 function registerDocumentInfo(){}
 
-                onElementsChanged: {
-                    console.log("onElementsChanged", table.elements.toJSON());
-                }
-
-                onSelectionChanged: {
+                onCheckedItemsChanged: {
+                    let selection = softwareProductCollection.table.getCheckedItems();
                     if (selection.length <= 0){
+                        productEditor.setError("")
                         bindButton.enabled = false
                     }
                     else{
-                        bindingProductsCollection.table.resetSelection();
+                        let ok = true;
+                        for (let i = 0; i < selection.length; i++){
+                            let index = selection[i];
 
-                        let index = selection[0];
-                        let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+                            let inUse = softwareProductCollection.table.elements.GetData("InUse", index);
+                            if (inUse && !unbindButton.userCanUnbind){
+                                ok = false;
+                                break;
+                            }
 
-                        let inUse = softwareProductCollection.table.elements.GetData("InUse", index);
-                        if (inUse && !unbindButton.userCanUnbind){
-                            bindButton.enabled = false;
+                            let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+                            if (!productEditor.checkLicenseId(licenseId)){
+                                productEditor.licenseErrorMessage = productEditor.licenseErrorMessage.replace("%1", licenseId)
+                                productEditor.setError(productEditor.licenseErrorMessage)
 
-                            return;
+                                ok = false;
+
+                                break;
+                            }
+
+
+                            let isDuplicate = false;
+                            for (let j = i + 1; j < selection.length; j++){
+                                let index2 = selection[j];
+
+                                let licenseId2 = softwareProductCollection.table.elements.GetData("LicenseId", index2);
+                                if (licenseId === licenseId2){
+                                    productEditor.duplicateErrorMessage = productEditor.duplicateErrorMessage.replace("%1", licenseId);
+                                    isDuplicate = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (isDuplicate){
+                                productEditor.setError(productEditor.duplicateErrorMessage)
+
+                                ok = false;
+                                break;
+                            }
                         }
 
-                        let ok = productEditor.checkLicenseId(licenseId);
+                        if (ok){
+                            productEditor.setError("")
+                        }
+
                         bindButton.enabled = ok;
                     }
                 }
@@ -349,9 +372,10 @@ Item {
     }
 
     BaseText {
-        anchors.top: parent.top
-        anchors.topMargin: Style.margin
         anchors.horizontalCenter: bindingLicensesColumn.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: Style.size_mainMargin;
+
         text: qsTr("Used licenses");
         font.family: Style.fontFamilyBold;
     }
@@ -361,11 +385,11 @@ Item {
 
         anchors.bottom: availableLicensesColumn.bottom;
         anchors.right: parent.right;
-        anchors.rightMargin: productEditor.margin;
+        anchors.rightMargin: Style.size_mainMargin;
         anchors.left: parent.horizontalCenter;
-        anchors.leftMargin: 20;
+        anchors.leftMargin: buttonsColumn.width;
 
-        Rectangle{
+        Rectangle {
             width: parent.width;
             height: 400;
 
@@ -456,7 +480,7 @@ Item {
 
         anchors.centerIn: parent;
 
-        spacing: 25;
+        spacing: Style.size_largeMargin;
 
         width: 20;
 
@@ -487,7 +511,8 @@ Item {
                 if (softwareIds && softwareIds != ""){
                     selectedProductIds = softwareIds.split(';')
                 }
-                let indexes = softwareProductCollection.table.tableSelection.selectedIndexes;
+
+                let indexes = softwareProductCollection.table.getCheckedItems();
                 if (indexes.length === 0){
                     return
                 }
@@ -500,6 +525,7 @@ Item {
                         bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
                     }
                 }
+
                 let products = selectedProductIds.join(';');
                 productEditor.bindingModel.SetData("SoftwareIds", products)
 
@@ -590,6 +616,9 @@ Item {
             filterHeadersModel.SetData("Id", "OrderId", index);
 
             index = filterHeadersModel.InsertNewItem();
+            filterHeadersModel.SetData("Id", "PurchaseOrderId", index);
+
+            index = filterHeadersModel.InsertNewItem();
             filterHeadersModel.SetData("Id", "SerialNumber", index);
 
             index = filterHeadersModel.InsertNewItem();
@@ -616,19 +645,23 @@ Item {
 
         index = collectionHeadersModel.InsertNewItem();
         collectionHeadersModel.SetData("Id", "LicenseName", index);
-        collectionHeadersModel.SetData("Name", qsTr("License name"), index);
+        collectionHeadersModel.SetData("Name", qsTr("Name"), index);
 
         index = collectionHeadersModel.InsertNewItem();
         collectionHeadersModel.SetData("Id", "LicenseId", index);
-        collectionHeadersModel.SetData("Name", qsTr("License-ID"), index);
+        collectionHeadersModel.SetData("Name", qsTr("Article"), index);
 
         index = collectionHeadersModel.InsertNewItem();
         collectionHeadersModel.SetData("Id", "OrderId", index);
-        collectionHeadersModel.SetData("Name", qsTr("Order-ID"), index);
+        collectionHeadersModel.SetData("Name", qsTr("Delivery-ID"), index);
+
+        index = collectionHeadersModel.InsertNewItem();
+        collectionHeadersModel.SetData("Id", "PurchaseOrderId", index);
+        collectionHeadersModel.SetData("Name", qsTr("Purchase Order-ID"), index);
 
         index = collectionHeadersModel.InsertNewItem();
         collectionHeadersModel.SetData("Id", "SerialNumber", index);
-        collectionHeadersModel.SetData("Name", qsTr("Serial Number"), index);
+        collectionHeadersModel.SetData("Name", qsTr("Software-ID"), index);
 
         index = collectionHeadersModel.InsertNewItem();
         collectionHeadersModel.SetData("Id", "Customer", index);
@@ -646,6 +679,9 @@ Item {
 
             let index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", 30, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);

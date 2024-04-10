@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -57,10 +57,11 @@
                             <Values>
                                 <Value>Status</Value>
                                 <Value>ProductName</Value>
-                                <Value>LicenseName</Value>
                                 <Value>LicenseId</Value>
+                                <Value>LicenseName</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>OrderId</Value>
+                                <Value>PurchaseOrderId</Value>
                                 <Value>Project</Value>
                                 <Value>Customer</Value>
                                 <Value>DeviceId</Value>
@@ -75,15 +76,16 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value></Value>
+                                <Value>Status</Value>
                                 <Value>Product</Value>
-                                <Value>License Name</Value>
-                                <Value>License-ID</Value>
-                                <Value>License Number</Value>
-                                <Value>Order-ID</Value>
+                                <Value>Article</Value>
+                                <Value>Name</Value>
+                                <Value>Software-ID</Value>
+                                <Value>Delivery-ID</Value>
+                                <Value>Purchase Order-ID</Value>
                                 <Value>Project</Value>
                                 <Value>Customer</Value>
-                                <Value>Device-ID</Value>
+                                <Value>Hardware-ID</Value>
                                 <Value>Added</Value>
                                 <Value>Last Modified</Value>
                             </Values>
@@ -103,6 +105,7 @@
                                 <Value>LicenseId</Value>
                                 <Value>Project</Value>
                                 <Value>LicenseName</Value>
+                                <Value>PurchaseOrderId</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

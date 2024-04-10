@@ -143,6 +143,7 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 				si."Document"->>'Project' as "Project",
 				bp."Document"->>'HardwareId'  as "DeviceUuid",
 				ord."Document"->>'OrderId' as "OrderId",
+				ord."Document"->>'PurchaseId' as "PurchaseOrderId",
 				acc."Document"->>'Name' as "Customer",
 				acc."DocumentId" as "CustomerUuid",
 				dev."Document"->>'MacAddress' as "DeviceId",
@@ -411,7 +412,12 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') %1)")
 					.arg(qPrintable(sortOrder));
 		}
-		else if (columnId == "OrderId" || columnId == "DeviceId" || columnId == "Customer" || columnId == "LastModified" || columnId == "Added"){
+		else if (columnId == "OrderId" ||
+				 columnId == "PurchaseOrderId" ||
+				 columnId == "DeviceId" ||
+				 columnId == "Customer" ||
+				 columnId == "LastModified" ||
+				 columnId == "Added"){
 			sortQuery = QString("ORDER BY \"%1\" %2")
 					.arg(qPrintable(columnId))
 					.arg(qPrintable(sortOrder));
@@ -443,7 +449,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 
 			QByteArray columnId = filteringColumnIds[i];
 
-			if (columnId == "OrderId"){
+			if (columnId == "OrderId" || columnId == "PurchaseOrderId"){
 				textFilterQuery += QString("ord.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 			else if (columnId == "DeviceId"){

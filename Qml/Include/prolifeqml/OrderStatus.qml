@@ -11,42 +11,24 @@ QtObject {
         let index = root.statusModel.InsertNewItem();
 
         // 0
-        root.statusModel.SetData("Id", "None", index);
-        root.statusModel.SetData("Name", qsTr("None"), index);
-
-        index = root.statusModel.InsertNewItem();
-
-        // 1
         root.statusModel.SetData("Id", "Created", index);
         root.statusModel.SetData("Name", qsTr("Created"), index);
 
         index = root.statusModel.InsertNewItem();
 
-        // 2
+        // 1
         root.statusModel.SetData("Id", "InProgress", index);
         root.statusModel.SetData("Name", qsTr("In Progress"), index);
 
         index = root.statusModel.InsertNewItem();
 
-        // 3
+        // 2
         root.statusModel.SetData("Id", "Canceled", index);
         root.statusModel.SetData("Name", qsTr("Canceled"), index);
 
         index = root.statusModel.InsertNewItem();
 
-        // 4
-        root.statusModel.SetData("Id", "OnHold", index);
-        root.statusModel.SetData("Name", qsTr("On Hold"), index);
-
-        index = root.statusModel.InsertNewItem();
-
-        // 5
-        root.statusModel.SetData("Id", "Finished", index);
-        root.statusModel.SetData("Name", qsTr("Finished"), index);
-
-        index = root.statusModel.InsertNewItem();
-
-        // 6
+        // 3
         root.statusModel.SetData("Id", "Closed", index);
         root.statusModel.SetData("Name", qsTr("Closed"), index);
     }

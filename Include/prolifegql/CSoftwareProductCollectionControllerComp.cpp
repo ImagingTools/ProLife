@@ -47,7 +47,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
-		errorMessage = QObject::tr("No object-ID could not be extracted from the request");
+		errorMessage = QString("No object-ID could not be extracted from the request");
 		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 		return nullptr;
@@ -136,6 +136,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 				else if (informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId").toByteArray();
+				}
+				else if (informationId == "PurchaseOrderId"){
+					elementInformation = objectCollectionIterator->GetElementInfo("PurchaseOrderId").toByteArray();
 				}
 				else if (informationId == "Customer"){
 					elementInformation = objectCollectionIterator->GetElementInfo("Customer").toByteArray();

@@ -279,6 +279,8 @@ RemoteCollectionView {
                         else if (licenseComboBox.currentIndex == 3){
                             container.collectionFilter.setLicenseFilter("OnlyInUse");
                         }
+
+                        container.doUpdateGui();
                     }
                 }
 
@@ -302,6 +304,8 @@ RemoteCollectionView {
                         else{
                             container.collectionFilter.setAccountFilter("");
                         }
+
+                        container.doUpdateGui();
                     }
                 }
             }
@@ -384,7 +388,10 @@ RemoteCollectionView {
             var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
 
             let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 40, index);
+            cellWidthModel.SetData("Width", 60, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);

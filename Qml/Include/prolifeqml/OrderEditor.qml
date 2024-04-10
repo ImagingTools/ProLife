@@ -109,7 +109,7 @@ ViewBase {
         if (orderEditorContainer.model.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.model.GetData("OrderStatus");
 //            let statusModel = stateMachine.getAvailableModel(status);
-            let statusModel = stateMachine.stateModel;
+            let statusModel = orderStatus.statusModel
             if (statusModel){
                 orderStatusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
@@ -175,21 +175,21 @@ ViewBase {
         id: orderStatus;
     }
 
-    StateMachine {
-        id: stateMachine;
+//    StateMachine {
+//        id: stateMachine;
 
-        Component.onCompleted: {
-            stateMachine.registerModel(orderStatus.statusModel);
+//        Component.onCompleted: {
+//            stateMachine.registerModel(orderStatus.statusModel);
 
-            stateMachine.addState("None", ["None", "Created"]);
-            stateMachine.addState("Created", ["Created", "InProgress", "Canceled", "OnHold"]);
-            stateMachine.addState("InProgress", ["InProgress", "OnHold", "Finished"]);
-            stateMachine.addState("Canceled", ["Canceled", "None", "Closed"]);
-            stateMachine.addState("OnHold", ["OnHold", "Created", "InProgress"]);
-            stateMachine.addState("Finished", ["Finished", "Closed"]);
-            stateMachine.addState("Closed", ["Closed"]);
-        }
-    }
+//            stateMachine.addState("None", ["None", "Created"]);
+//            stateMachine.addState("Created", ["Created", "InProgress", "Canceled", "OnHold"]);
+//            stateMachine.addState("InProgress", ["InProgress", "OnHold", "Finished"]);
+//            stateMachine.addState("Canceled", ["Canceled", "None", "Closed"]);
+//            stateMachine.addState("OnHold", ["OnHold", "Created", "InProgress"]);
+//            stateMachine.addState("Finished", ["Finished", "Closed"]);
+//            stateMachine.addState("Closed", ["Closed"]);
+//        }
+//    }
 
     Rectangle {
         anchors.fill: parent;
@@ -344,9 +344,8 @@ ViewBase {
                 TextInputElementView {
                     id: instanceIdInput;
 
-                    name: qsTr("ERP Order-ID");
-                    placeHolderText: qsTr("Enter the ERP Order-ID");
-                    description: qsTr("ERP Order-ID");
+                    name: qsTr("Delivery-ID");
+                    placeHolderText: qsTr("Enter the delivery-ID");
 
                     readOnly: orderEditorContainer.readOnly;
 
@@ -372,7 +371,6 @@ ViewBase {
 
                     name: qsTr("Purchase Order-ID");
                     placeHolderText: qsTr("Enter the Purchase-ID");
-                    description: qsTr("Purchase Order-ID");
 
                     readOnly: orderEditorContainer.readOnly;
 

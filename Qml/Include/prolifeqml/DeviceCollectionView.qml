@@ -21,8 +21,6 @@ RemoteCollectionView {
     }
     }
 
-//    filterMenu.decorator: deviceCollectionFilterComp;
-
     visibleMetaInfo: true;
 
     Component.onCompleted: {
@@ -61,6 +59,8 @@ RemoteCollectionView {
         else if (filterId == "StatusFilter"){
             container.collectionFilter.setDeviceStatusFilter(filterValue);
         }
+
+        container.doUpdateGui();
     }
 
     onHeadersChanged: {

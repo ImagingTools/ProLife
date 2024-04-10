@@ -235,44 +235,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			}
 		}
 
-		iprm::CTextParam valueParam2;
-		valueParam2.SetText(purchaseOrderId);
-
-		iprm::CEnableableParam isEqualParam2;
-		isEqualParam2.SetEnabled(true);
-
-		iprm::CParamsSet valueParamsSet2;
-		valueParamsSet2.SetEditableParameter("Value", &valueParam2);
-		valueParamsSet2.SetEditableParameter("IsEqual", &isEqualParam2);
-
-		iprm::CParamsSet paramsSet2;
-		paramsSet2.SetEditableParameter("PurchaseId", &valueParamsSet2);
-
-		iprm::CParamsSet filterParam2;
-		filterParam2.SetEditableParameter("ObjectFilter", &paramsSet2);
-
-		// Check Purchase-ID exists
-		imtbase::ICollectionInfo::Ids collectionIds2 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam2);
-		if (!collectionIds2.isEmpty()){
-			QByteArray orderObjectId = collectionIds2[0];
-			if (objectId != orderObjectId){
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
-					prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-					if (orderInfoPtr != nullptr){
-						QByteArray currentPurchaseId = orderInfoPtr->GetPurchaseOrderId().toLower();
-						if (purchaseOrderId != "" && currentPurchaseId == purchaseOrderId.toLower()){
-							errorMessage = QT_TR_NOOP("Purchase order ID already exists");
-							SendErrorMessage(0, errorMessage, "COrderControllerComp");
-							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
-
-							return nullptr;
-						}
-					}
-				}
-			}
-		}
-
 		QByteArray customerId;
 		if (itemModel.ContainsKey("CustomerId")){
 			customerId = itemModel.GetData("CustomerId").toByteArray();

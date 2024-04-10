@@ -215,10 +215,10 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Status</Value>
                                 <Value>OrderId</Value>
                                 <Value>PurchaseId</Value>
                                 <Value>Description</Value>
-                                <Value>Status</Value>
                                 <Value>OrderCustomer</Value>
                                 <Value>Added</Value>
                                 <Value>LastModified</Value>
@@ -231,10 +231,10 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ERP Order-ID</Value>
-                                <Value>Purchase-ID</Value>
-                                <Value>Description</Value>
                                 <Value>Status</Value>
+                                <Value>Delivery-ID</Value>
+                                <Value>Purchase Order-ID</Value>
+                                <Value>Description</Value>
                                 <Value>Customer</Value>
                                 <Value>Added</Value>
                                 <Value>Last Modified</Value>

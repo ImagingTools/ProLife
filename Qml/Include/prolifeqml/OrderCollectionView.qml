@@ -127,6 +127,8 @@ RemoteCollectionView {
                         else{
                             container.collectionFilter.setAccountFilter("");
                         }
+
+                        container.doUpdateGui();
                     }
                 }
             }
