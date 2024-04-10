@@ -19,10 +19,12 @@ ApplicationMain{
         context.appName = 'ProLife';
 
         Events.subscribeEvent("Login", loginSuccesful);
+        Events.subscribeEvent("Logout", logout);
     }
 
     Component.onDestruction: {
-         Events.unSubscribeEvent("Login", loginSuccesful);
+        Events.unSubscribeEvent("Login", loginSuccesful);
+        Events.unSubscribeEvent("Logout", logout);
     }
 
     ModalDialogManager {
@@ -42,6 +44,17 @@ ApplicationMain{
         CachedGroupCollection.updateModel();
         CachedUserCollection.updateModel();
         CachedRoleCollection.updateModel();
+    }
+
+    function logout(){
+        CachedProductCollection.clearModel();
+        CachedLicenseCollection.clearModel();
+        CachedAccountCollection.clearModel();
+        CachedOrderCollection.clearModel();
+        CachedDeviceCollection.clearModel();
+        CachedGroupCollection.clearModel();
+        CachedUserCollection.clearModel();
+        CachedRoleCollection.clearModel();
     }
 
     property bool pumaConnected: false;
