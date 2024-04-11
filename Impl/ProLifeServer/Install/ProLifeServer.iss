@@ -43,7 +43,7 @@ Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest,*.arp";  DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 //Source: "postgresql.exe"; DestDir: "{app}"; Flags: deleteafterinstall; Components: postgresql
 Source: "{#BasePath}\ProLifeServerConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
+//Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
