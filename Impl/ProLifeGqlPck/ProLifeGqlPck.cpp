@@ -79,6 +79,21 @@ I_EXPORT_COMPONENT(
 		"Change generator for hardware binding",
 		"Hardware Binding Bind Change Generator History Document");
 
+I_EXPORT_COMPONENT(
+		CustomerController,
+		"Customer controller",
+		"Customer Controller");
+
+I_EXPORT_COMPONENT(
+		CustomerCollectionController,
+		"Customer collection controller",
+		"Customer Collection Controller");
+
+I_EXPORT_COMPONENT(
+		CustomerInfo,
+		"Customer info",
+		"Customer Info");
+
 
 } // namespace ProLifeGqlPck
 

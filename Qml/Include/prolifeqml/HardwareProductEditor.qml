@@ -130,7 +130,7 @@ ViewBase {
         id: deviceText;
 
         anchors.top: parent.top;
-        text: qsTr("Device");
+        text: qsTr("Hardware-ID");
         color: Style.textColor;
         font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;
@@ -177,7 +177,7 @@ ViewBase {
         anchors.top: selectSensorText.visible ? selectSensorText.bottom : deviceCB.bottom;
         anchors.topMargin: root.margin;
 
-        text: qsTr("Models");
+        text: qsTr("Types");
         color: Style.textColor;
         font.family: Style.fontFamilyBold;
         font.pixelSize: Style.fontSize_common;

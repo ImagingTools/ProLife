@@ -108,7 +108,6 @@ ViewBase {
         let statusFound = false;
         if (orderEditorContainer.model.ContainsKey("OrderStatus")){
             let status = orderEditorContainer.model.GetData("OrderStatus");
-//            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = orderStatus.statusModel
             if (statusModel){
                 orderStatusCB.model = statusModel;
@@ -127,8 +126,6 @@ ViewBase {
             orderStatusCB.currentIndex = -1;
         }
 
-        console.log("Order updateGui", model.toJSON());
-
         if (model.ContainsKey("OrderProducts")){
             productsView.model = model.GetTreeItemModel("OrderProducts");
 
@@ -137,8 +134,6 @@ ViewBase {
         else{
             productsView.model = 0;
         }
-
-        model.Refresh();
     }
 
     function updateModel(){
@@ -312,29 +307,14 @@ ViewBase {
 
                 width: content.width;
 
-                RegularExpressionValidator {
-                    id: regexValid;
-
-                    Component.onCompleted: {
-                        let regex = "\\d{5}";
-
-                        let re = new RegExp(regex)
-                        if (re){
-                            regexValid.regularExpression = re;
-                            instanceIdInput.textInputValidator = regexValid;
-                        }
-                    }
-                }
-
                 Component {
                     id: errorComp;
 
                     Text {
                         id: errorInstanceId;
 
-                        text: qsTr("Enter a five-digit number");
+                        text: qsTr("Enter a 5-digit or 10-digit number");
 
-//                        visible: !instanceIdInput.acceptableInput;
                         color: Style.errorTextColor;
                         font.family: Style.fontFamily;
                         font.pixelSize: Style.fontSize_common;
@@ -348,6 +328,7 @@ ViewBase {
                     placeHolderText: qsTr("Enter the delivery-ID");
 
                     readOnly: orderEditorContainer.readOnly;
+                    maximumLength: 10;
 
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeOrder");
@@ -361,8 +342,25 @@ ViewBase {
                     KeyNavigation.tab: purchaseIdInput;
 
                     onAcceptableInputChanged: {
-                        console.log("onAcceptableInputChanged", acceptableInput);
                         instanceIdInput.bottomComp = acceptableInput ? undefined : errorComp;
+                    }
+
+                    onTextChanged: {
+                        let len = instanceIdInput.text.length;
+
+                        let ok1 = instanceIdInput.test("\\d{5}", instanceIdInput.text) && len === 5;
+                        let ok2 = instanceIdInput.test("\\d{10}", instanceIdInput.text) && len === 10;
+
+                        instanceIdInput.bottomComp = ok1 || ok2 ? undefined : errorComp;
+                    }
+
+                    function test(regex, text){
+                        let re = new RegExp(regex)
+                        if (re){
+                            return re.test(text);
+                        }
+
+                        return false;
                     }
                 }
 

@@ -34,7 +34,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountDataController" PackageId="ImtLicenseGqlPck" ComponentId="AccountController">
+        <Element Id="AccountDataController" PackageId="ProLifeGqlPck" ComponentId="CustomerController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="AccountFactory" Type="Factory" ExportId="">
@@ -67,12 +67,12 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountInfo" PackageId="ImtAuthPck" ComponentId="CompanyInfo">
+        <Element Id="AccountInfo" PackageId="ProLifeGqlPck" ComponentId="CustomerInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="AccountListController" PackageId="ImtLicenseGqlPck" ComponentId="AccountCollectionController">
+        <Element Id="AccountListController" PackageId="ProLifeGqlPck" ComponentId="CustomerCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -128,6 +128,7 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>CustomerId</Value>
                                 <Value>Name</Value>
                                 <Value>Email</Value>
                                 <Value>Description</Value>
@@ -140,6 +141,7 @@
                     <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>Customer-ID</Value>
                                 <Value>Account Name</Value>
                                 <Value>Email</Value>
                                 <Value>Account Description</Value>
@@ -149,12 +151,10 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>CustomerId</Value>
                                 <Value>Name</Value>
                                 <Value>Mail</Value>
                                 <Value>Description</Value>

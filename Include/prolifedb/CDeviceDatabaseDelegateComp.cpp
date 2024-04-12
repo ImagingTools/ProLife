@@ -167,6 +167,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"Id",
 						"DocumentId",
 						"Document",
+						('s' || replace("Document"->>'MacAddress', ':', '')) as "MacAddress",
 						"Document"->>'OrderId' as "OrderUuid",
 						"Document"->>'DeviceType' as "ProductUuid",
 						"Document"->>'ConfigurationType' as "LicenseUuid",
@@ -400,7 +401,12 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += " OR ";
 			}
 
+			if (filteringColumnIds[i] == "MacAddress"){
+				textFilter = textFilter.toUtf8().replace(":", "");
+			}
+
 			if (	filteringColumnIds[i] == "OrderId" ||
+					filteringColumnIds[i] == "MacAddress" ||
 					filteringColumnIds[i] == "LicenseId" ||
 					filteringColumnIds[i] == "PurchaseOrderId" ||
 					filteringColumnIds[i] == "Customer" ||
@@ -408,7 +414,6 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 					filteringColumnIds[i] == "DeviceType"){
 				textFilterQuery += QString("\"%1\" ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}
-
 			else{
 				textFilterQuery += QString("\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(filteringColumnIds[i])).arg(textFilter);
 			}

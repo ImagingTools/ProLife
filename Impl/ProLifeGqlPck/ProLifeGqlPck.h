@@ -1,6 +1,10 @@
 #pragma once
 
 
+// ACF includes
+#include <icomp/TModelCompWrap.h>
+#include <icomp/TMakeComponentWrap.h>
+
 // ProLife includes
 #include <prolifegql/COrderControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
@@ -15,10 +19,13 @@
 #include <prolifegql/CLicenseChangeGeneratorComp.h>
 #include <prolifegql/COrderChangeGeneratorComp.h>
 #include <prolifegql/CHardwareBindingChangeGeneratorComp.h>
+#include <prolifegql/CCustomerControllerComp.h>
+#include <prolifegql/CCustomerCollectionControllerComp.h>
+#include <prolifedata/CCustomerInfo.h>
 
 
 /**
-	ProLifeLicenseGqlPck package
+	ProLifeGql package
 */
 namespace ProLifeGqlPck
 {
@@ -37,6 +44,16 @@ typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
+typedef prolifegql::CCustomerControllerComp CustomerController;
+typedef prolifegql::CCustomerCollectionControllerComp CustomerCollectionController;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap<
+						prolifedata::CCustomerInfo,
+						prolifedata::ICustomerInfo,
+						imtauth::ICompanyInfo,
+						iser::IObject,
+						iser::ISerializable,
+						istd::IChangeable>> CustomerInfo;
 
 
 } // namespace ImtLicenseGqlPck

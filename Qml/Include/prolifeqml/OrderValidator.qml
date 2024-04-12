@@ -10,6 +10,15 @@ DocumentValidator {
           regularExpression: /(\d{5})/g;
     }
 
+    function test(regex, text){
+        let re = new RegExp(regex)
+        if (re){
+            return re.test(text);
+        }
+
+        return false;
+    }
+
     function isValid(data){
         let canChange = PermissionsController.checkPermission("ChangeOrder");
         if (!canChange){
@@ -23,9 +32,11 @@ DocumentValidator {
             orderId = documentModel.GetData("OrderId");
         }
 
-        let regExp = new RegExp(regularExpressionValidator.regularExpression);
-        if (!regExp.test(orderId)){
-            data.message = qsTr("ERP Order-ID invalid")
+        let ok1 = root.test("\\d{5}", orderId) && orderId.length === 5;
+        let ok2 = root.test("\\d{10}", orderId) && orderId.length === 10;
+
+        if (!ok1 && !ok2){
+            data.message = qsTr("Delivery-ID invalid")
 
             return false;
         }
