@@ -271,32 +271,29 @@ Item {
 
                             let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
                             if (!productEditor.checkLicenseId(licenseId)){
-                                productEditor.licenseErrorMessage = productEditor.licenseErrorMessage.replace("%1", licenseId)
-                                productEditor.setError(productEditor.licenseErrorMessage)
+                                let message = productEditor.licenseErrorMessage.replace("%1", licenseId)
+                                productEditor.setError(message)
 
                                 ok = false;
 
                                 break;
                             }
 
-
-                            let isDuplicate = false;
                             for (let j = i + 1; j < selection.length; j++){
                                 let index2 = selection[j];
 
                                 let licenseId2 = softwareProductCollection.table.elements.GetData("LicenseId", index2);
                                 if (licenseId === licenseId2){
-                                    productEditor.duplicateErrorMessage = productEditor.duplicateErrorMessage.replace("%1", licenseId);
-                                    isDuplicate = true;
+                                    let message =  productEditor.duplicateErrorMessage.replace("%1", licenseId);
+                                    productEditor.setError(message)
+
+                                    ok = false;
 
                                     break;
                                 }
                             }
 
-                            if (isDuplicate){
-                                productEditor.setError(productEditor.duplicateErrorMessage)
-
-                                ok = false;
+                            if (!ok){
                                 break;
                             }
                         }
@@ -310,8 +307,8 @@ Item {
                 }
 
                 onHeadersChanged: {
-                    softwareProductCollection.table.setColumnContentComponent(0, pairComp);
-                    softwareProductCollection.table.tableDecorator = tableDecoratorModel;
+                    softwareProductCollection.table.setColumnContentComponent(0, null);
+                    softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
                 }
 
                 function updateData() {
@@ -629,11 +626,49 @@ Item {
     }
 
     TreeItemModel {
+        id: collectionHeadersModel2;
+
+        Component.onCompleted: {
+            productEditor.updateHeaders2();
+        }
+    }
+
+    TreeItemModel {
         id: collectionHeadersModel;
 
         Component.onCompleted: {
             productEditor.updateHeaders();
         }
+    }
+
+    function updateHeaders2(){
+        collectionHeadersModel2.Clear();
+
+        let index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "LicenseName", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Name"), index);
+
+        index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "LicenseId", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Article"), index);
+
+        index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "OrderId", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Delivery-ID"), index);
+
+        index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "PurchaseOrderId", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Purchase Order-ID"), index);
+
+        index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "SerialNumber", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Software-ID"), index);
+
+        index = collectionHeadersModel2.InsertNewItem();
+        collectionHeadersModel2.SetData("Id", "Customer", index);
+        collectionHeadersModel2.SetData("Name", qsTr("Customer"), index);
+
+        softwareProductCollection.dataController.headersModel  = collectionHeadersModel2;
     }
 
     function updateHeaders(){
@@ -667,7 +702,6 @@ Item {
         collectionHeadersModel.SetData("Id", "Customer", index);
         collectionHeadersModel.SetData("Name", qsTr("Customer"), index);
 
-        softwareProductCollection.dataController.headersModel  = collectionHeadersModel;
         bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
     }
 
@@ -681,6 +715,32 @@ Item {
             cellWidthModel.SetData("Width", 30, index);
 
             index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+
+            index = cellWidthModel.InsertNewItem();
+            cellWidthModel.SetData("Width", -1, index);
+        }
+    }
+
+    TreeItemModel {
+        id: tableDecoratorModel2;
+
+        Component.onCompleted: {
+            var cellWidthModel = tableDecoratorModel2.AddTreeModel("CellWidth");
+
+            let index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);
 
             index = cellWidthModel.InsertNewItem();

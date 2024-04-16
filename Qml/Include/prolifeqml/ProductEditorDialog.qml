@@ -6,7 +6,10 @@ import Acf 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: 650;
+    width: 800;
+    height: 600;
+
+    backgroundColor: Style.backgroundColor2;
 
     property TreeItemModel productModel: TreeItemModel {}
 
@@ -30,7 +33,7 @@ Dialog {
     contentComp: Component {
         ProductEditor {
             width: productEditorDialog.width;
-            height: 400;
+            height: productEditorDialog.height;
 
             rootItem: productEditorDialog;
 

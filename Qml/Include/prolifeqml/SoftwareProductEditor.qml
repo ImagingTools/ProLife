@@ -13,282 +13,427 @@ ViewBase {
 
     property var productLicensesModel: TreeItemModel{}
 
+    property TreeItemModel softwaresModel: TreeItemModel{}
+
     property bool serialNumberEdit: true;
 
-//    property alias tableElements: licensesTable.elements;
+    //    property alias tableElements: licensesTable.elements;
     property alias tableElements: licenseCB.model;
     property bool readOnly: false;
 
     property int comboBoxHeight: 27;
 
+    property bool isNewSoftware: switchNewLicense.checked;
+
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
-        datePicker.readOnly = readOnly;
+        expirationElementView.datePicker.readOnly = readOnly;
         licenseCB.changeable = !readOnly
     }
 
     function updateGui(){
-        if (model.ContainsKey("SerialNumber")){
-            serialNumberInput.text = model.GetData("SerialNumber")
-        }
-        else{
-            serialNumberInput.text = "";
-        }
+        console.log("Software updateGui", model.toJSON());
 
-        let licenseFound = false;
+        let isNew = model.GetData("IsNew")
 
-        let licenseUuid = root.model.GetData("LicenseUuid");
-        if (licenseCB.model){
-            for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
-                let licenseId = licenseCB.model.GetData("Id", i);
-                if (licenseId == licenseUuid){
-                    licenseCB.currentIndex = i;
+        if (isNew){
+            switchNewLicense.checked = true;
 
-                    licenseFound = true;
+            licenseCB.currentIndex = -1;
 
-                    break;
+            let licenseUuid = root.model.GetData("LicenseUuid");
+            if (licenseCB.model){
+                for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
+                    let id = licenseCB.model.GetData("Id", i);
+                    if (id === licenseUuid){
+                        licenseCB.currentIndex = i;
+
+                        break;
+                    }
+                }
+            }
+
+            if (model.ContainsKey("SerialNumber")){
+                serialNumberInput.text = model.GetData("SerialNumber")
+            }
+            else{
+                serialNumberInput.text = "";
+            }
+
+            if (root.model.ContainsKey("Expiration")){
+                let expiration = root.model.GetData("Expiration");
+
+                if (expiration && expiration !== "" ){
+                    expirationElementView.checkBox.checkState = Qt.Checked;
+                }
+                else{
+                    expirationElementView.checkBox.checkState = Qt.Unchecked;
+                }
+
+                if (expiration){
+                    let currentDate = expirationElementView.datePicker.getDate();
+
+                    if (expiration !== "" && expiration !== currentDate){
+                        let date = expiration;
+                        let data = date.split("-");
+                        expirationElementView.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                    }
                 }
             }
         }
+        else{
+            switchNewLicense.checked = false;
 
-        if (!licenseFound){
-            licenseCB.currentIndex = -1;
-        }
+            createdLicenseCb.currentIndex = -1;
 
-        if (root.model.ContainsKey("Expiration")){
-            let expiration = root.model.GetData("Expiration");
+            let licenseUuid = root.model.GetData("LicenseUuid");
 
-            if (expiration && expiration !== "" ){
-                checkBox.checkState = Qt.Checked;
-            }
-            else{
-                checkBox.checkState = Qt.Unchecked;
-            }
+            console.log("licenseUuid", licenseUuid);
+            console.log("licenseCB.model", createdLicenseCb.model);
 
-            if (expiration){
-                let currentDate = datePicker.getDate();
+            if (createdLicenseCb.model){
+                for (let i = 0; i < createdLicenseCb.model.GetItemsCount(); i++){
+                    let id = createdLicenseCb.model.GetData("LicenseUuid", i);
 
-                if (expiration !== "" && expiration !== currentDate){
-                    let date = expiration;
-                    let data = date.split("-");
-                    datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                    if (id === licenseUuid){
+                        createdLicenseCb.currentIndex = i;
+
+                        break;
+                    }
                 }
             }
         }
     }
 
     function updateModel(){
-        model.SetData("SerialNumber", serialNumberInput.text)
+        model.SetData("IsNew", isNewSoftware);
 
-        if (checkBox.checkState == Qt.Checked){
-            model.SetData("Expiration", datePicker.getDate());
-        }
-        else{
-            model.SetData("Expiration", "");
-        }
+        if (isNewSoftware){
+            if (licenseCB.currentIndex >= 0 && licenseCB.model){
+                let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
+                model.SetData("LicenseUuid", selectedId);
 
-        if (licenseCB.currentIndex >= 0 && licenseCB.model){
-            let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
-            model.SetData("LicenseUuid", selectedId);
+                let licenseId = licenseCB.model.GetData("LicenseId", licenseCB.currentIndex);
+                model.SetData("LicenseId", licenseId);
+
+                let licenseName = licenseCB.model.GetData("LicenseName", licenseCB.currentIndex);
+                model.SetData("LicenseName", licenseName);
+            }
+            else{
+                model.SetData("LicenseUuid", "");
+                model.SetData("LicenseId", "");
+                model.SetData("LicenseName", "");
+            }
+
+            model.SetData("SerialNumber", serialNumberInput.text)
+
+            if (expirationElementView.checkBox.checkState == Qt.Checked){
+                model.SetData("Expiration", expirationElementView.datePicker.getDate());
+            }
+            else{
+                model.SetData("Expiration", "");
+            }
         }
         else{
             model.SetData("LicenseUuid", "");
-        }
-    }
+            model.SetData("LicenseId", "");
+            model.SetData("LicenseName", "");
+            model.SetData("SerialNumber", "");
+            model.SetData("Expiration", "");
 
-    Text {
-        id: serialNumberText;
+            if (createdLicenseCb.currentIndex >= 0){
+                let id = createdLicenseCb.model.GetData("Id", createdLicenseCb.currentIndex);
+                model.SetData("Id", id);
 
-        anchors.top: parent.top;
+                let licenseUuid = createdLicenseCb.model.GetData("LicenseUuid", createdLicenseCb.currentIndex);
+                model.SetData("LicenseUuid", licenseUuid);
 
-        height: visible ? licensesText.height : 0;
+                let licenseID = createdLicenseCb.model.GetData("LicenseId", createdLicenseCb.currentIndex);
+                model.SetData("LicenseId", licenseID);
 
-        text: qsTr("Software-ID");
-        color: Style.textColor;
-        font.family: Style.fontFamilyBold;
-        font.pixelSize: Style.fontSize_common;
-    }
+                let licenseName = createdLicenseCb.model.GetData("LicenseName", createdLicenseCb.currentIndex);
+                model.SetData("LicenseName", licenseName);
 
-    CustomTextField {
-        id: serialNumberInput;
+                let serialNumber = createdLicenseCb.model.GetData("SerialNumber", createdLicenseCb.currentIndex);
+                model.SetData("SerialNumber", serialNumber);
 
-        anchors.top: serialNumberText.bottom;
-        anchors.topMargin: root.margin;
-
-        height: visible ? root.itemHeight : 0;
-        width: parent.width;
-
-        placeHolderText: qsTr("Enter the software-ID");
-
-        radius: 3;
-        readOnly: root.readOnly;
-
-        Component.onCompleted: {
-            if (!root.readOnly){
-                let ok = PermissionsController.checkPermission("ChangeLicense");
-                if (!ok){
-                    ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-                }
-
-                let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                if (canEditOrder){
-                    ok = true;
-                }
-
-                serialNumberInput.readOnly = !ok;
+                let expiration = createdLicenseCb.model.GetData("Expiration", createdLicenseCb.currentIndex);
+                model.SetData("Expiration", expiration);
             }
         }
-
-        onEditingFinished: {
-            root.doUpdateModel();
-        }
     }
 
-    Text {
-        id: licensesText;
-
-        anchors.top: serialNumberInput.bottom;
-        anchors.topMargin: root.margin;
-
-        text: qsTr("Types");
-        color: Style.textColor;
-        font.family: Style.fontFamilyBold;
-        font.pixelSize: Style.fontSize_common;
-    }
-
-    ComboBox {
-        id: licenseCB;
-
-        anchors.top: licensesText.bottom;
-        anchors.topMargin: root.margin;
-
+    Column {
         width: parent.width;
-        height: root.comboBoxHeight;
 
-        nameId: "LicenseName";
+        spacing: Style.size_mainMargin;
 
-        model: root.productLicensesModel;
+        SwitchElementView {
+            id: switchNewLicense;
 
-        radius: 3;
+            width: parent.width;
 
-        changeable: !root.readOnly;
+            name: qsTr("New License");
 
-        Component.onCompleted: {
-            if (!root.readOnly){
-                let ok = PermissionsController.checkPermission("ChangeLicense");
+            onCheckedChanged: {
+                createdLicenseCb.visible = !checked;
 
-                let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                if (canEditOrder){
-                    ok = true;
-                }
-
-                licenseCB.changeable = ok;
-            }
-        }
-
-        onCurrentIndexChanged: {
-            root.doUpdateModel();
-        }
-    }
-
-    Text {
-        id: expirationText;
-
-        anchors.top: licenseCB.bottom;
-        anchors.topMargin: root.margin;
-
-        text: qsTr("Expiration");
-        color: Style.textColor;
-        font.family: Style.fontFamilyBold;
-        font.pixelSize: Style.fontSize_common;
-    }
-
-    Item {
-        anchors.top: expirationText.bottom;
-        anchors.topMargin: root.margin;
-
-        width: parent.width;
-        height: 30;
-
-        CheckBox {
-            id: checkBox;
-
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: parent.left;
-
-            onClicked: {
-                checkBox.checkState = Qt.Checked - checkBox.checkState;
-            }
-
-            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
-
-            onCheckStateChanged: {
                 root.doUpdateModel();
             }
         }
 
-        Text {
-            id: textUnlimited;
+        ComboBoxElementView {
+            id: createdLicenseCb;
 
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: checkBox.right;
-            anchors.leftMargin: 5;
+            width: parent.width;
 
-            visible: checkBox.checkState === Qt.Unchecked;
+            model: root.softwaresModel;
 
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-            color: Style.textColor;
+            changeable: !root.readOnly;
 
-            text: qsTr("Unlimited");
-        }
+            name: qsTr("License")
 
-        DatePicker {
-            id: datePicker;
+            onCurrentIndexChanged: {
+                if (currentIndex >= 0){
+                    if (createdLicenseCb.model.ContainsKey("LicenseName", currentIndex)){
+                        let licenseName = createdLicenseCb.model.GetData("LicenseName", currentIndex)
 
-            anchors.verticalCenter: parent.verticalCenter;
-            anchors.left: checkBox.right;
-            anchors.leftMargin: 5;
-
-            visible: checkBox.checkState === Qt.Checked;
-
-            width: 100;
-            height: 20;
-
-            currentDayButtonVisible: false;
-            startWithCurrentDay: true;
-
-            readOnly: root.readOnly;
-
-            Component.onCompleted: {
-                if (!root.readOnly){
-                    let ok = PermissionsController.checkPermission("ChangeLicense");
-                    let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                    if (canEditOrder){
-                        ok = true;
+                        typeValue.text = licenseName;
                     }
 
-                    datePicker.readOnly = !ok;
+                    if (createdLicenseCb.model.ContainsKey("SerialNumber", currentIndex)){
+                        let serialNumber = createdLicenseCb.model.GetData("SerialNumber", currentIndex)
+
+                        softwareValue.text = serialNumber;
+                    }
+
+                    if (createdLicenseCb.model.ContainsKey("Expiration", currentIndex)){
+                        let expiration = createdLicenseCb.model.GetData("Expiration", currentIndex)
+
+                        expirationValue.text = expiration;
+                    }
+                }
+
+                root.doUpdateModel();
+            }
+        }
+
+        Column {
+            id: softwareContent;
+
+            width: parent.width;
+
+            spacing: parent.spacing;
+
+            visible: !root.isNewSoftware;
+
+            TextElementView {
+                id: typeValue;
+
+                width: parent.width;
+
+                name: qsTr("License Type");
+            }
+
+            TextElementView {
+                id: softwareValue;
+
+                width: parent.width;
+
+                name: qsTr("License-ID");
+            }
+
+            TextElementView {
+                id: expirationValue;
+
+                width: parent.width;
+
+                name: qsTr("Expiration");
+            }
+        }
+
+        Column {
+            id: newSoftwareContent;
+
+            width: parent.width;
+
+            spacing: parent.spacing;
+
+            visible: root.isNewSoftware;
+
+            ComboBoxElementView {
+                id: licenseCB;
+
+                width: parent.width;
+
+                name: qsTr("License Types");
+                nameId: "LicenseName";
+
+                model: root.productLicensesModel;
+
+                changeable: !root.readOnly;
+
+                Component.onCompleted: {
+                    if (!root.readOnly){
+                        let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                        if (canEditOrder){
+                            ok = true;
+                        }
+
+                        licenseCB.changeable = ok;
+                    }
+                }
+
+                onCurrentIndexChanged: {
+                    root.doUpdateModel();
                 }
             }
 
-            onDateChanged: {
-                root.doUpdateModel()
+            TextInputElementView {
+                id: serialNumberInput;
+
+                width: parent.width;
+
+                name: qsTr("Software-ID");
+                placeHolderText: qsTr("Enter the software-ID");
+
+                readOnly: root.readOnly;
+
+                Component.onCompleted: {
+                    if (!root.readOnly){
+                        let ok = PermissionsController.checkPermission("ChangeLicense");
+                        if (!ok){
+                            ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+                        }
+
+                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                        if (canEditOrder){
+                            ok = true;
+                        }
+
+                        serialNumberInput.readOnly = !ok;
+                    }
+                }
+
+                onEditingFinished: {
+                    root.doUpdateModel();
+                }
             }
 
-            onCompletedChanged: {
-                if (completed){
-                    var date_ = new Date();
+            ElementView {
+                id: expirationElementView;
 
-                    let day = date_.getDay();
-                    let year = date_.getFullYear() + 1;
-                    let month = date_.getMonth();
+                width: parent.width;
 
-                    datePicker.setDate(year, month, day)
+                name: qsTr("Expiration");
+
+                property CheckBox checkBox;
+                property DatePicker datePicker;
+
+                controlComp: Component {
+                    Item {
+                        width: 300;
+                        height: 30;
+
+                        CheckBox {
+                            id: checkBox;
+
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.left: parent.left;
+
+                            onClicked: {
+                                checkBox.checkState = Qt.Checked - checkBox.checkState;
+                            }
+
+                            isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
+
+                            onCheckStateChanged: {
+                                root.doUpdateModel();
+                            }
+
+                            Component.onCompleted: {
+                                expirationElementView.checkBox = checkBox;
+                            }
+                        }
+
+                        Text {
+                            id: textUnlimited;
+
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.left: checkBox.right;
+                            anchors.leftMargin: 5;
+
+                            visible: checkBox.checkState === Qt.Unchecked;
+
+                            font.family: Style.fontFamily;
+                            font.pixelSize: Style.fontSize_common;
+                            color: Style.textColor;
+
+                            text: qsTr("Unlimited");
+                        }
+
+                        DatePicker {
+                            id: datePicker;
+
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.left: checkBox.right;
+                            anchors.leftMargin: 5;
+
+                            visible: checkBox.checkState === Qt.Checked;
+
+                            width: 100;
+                            height: 20;
+
+                            currentDayButtonVisible: false;
+                            startWithCurrentDay: true;
+
+                            readOnly: root.readOnly;
+
+                            hasDayCombo: false;
+                            hasMonthCombo: false;
+                            hasYearCombo: false;
+
+                            textFieldBorderColor: Style.borderColor;
+
+                            Component.onCompleted: {
+                                if (!root.readOnly){
+                                    let ok = PermissionsController.checkPermission("ChangeLicense");
+                                    let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                                    if (canEditOrder){
+                                        ok = true;
+                                    }
+
+                                    datePicker.readOnly = !ok;
+                                }
+
+                                expirationElementView.datePicker = datePicker;
+                            }
+
+                            onDateChanged: {
+                                root.doUpdateModel()
+                            }
+
+                            onCompletedChanged: {
+                                if (completed){
+                                    var date_ = new Date();
+
+                                    let day = date_.getDay();
+                                    let year = date_.getFullYear() + 1;
+                                    let month = date_.getMonth();
+
+                                    datePicker.setDate(year, month, day)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
+
 }//Container
 
 

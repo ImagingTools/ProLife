@@ -1,0 +1,17 @@
+pragma Singleton
+
+import QtQuick 2.12
+import Acf 1.0
+import imtcolgui 1.0
+
+CollectionDataProvider {
+    id: container;
+
+    commandId: "SoftwareProducts";
+
+    sortByField: "Name";
+
+    fields: ["Id", "Name", "ProductName", "LicenseUuid", "LicenseId", "LicenseName", "SerialNumber", "Customer", "ProductUuid", "OrderUuid", "Expiration"];
+}
+
+

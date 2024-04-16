@@ -6,12 +6,16 @@ import imtcontrols 1.0
 ViewBase {
     id: root;
 
+    height: content.height;
+
     property int margin: 10;
 
     property var productLicensesModel: TreeItemModel{}
     property TreeItemModel devicesModel: TreeItemModel{}
 
     property alias deviceIndex: deviceCB.currentIndex;
+
+    property bool isNewDevice: switchNewSensor.checked;
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
@@ -22,229 +26,275 @@ ViewBase {
     }
 
     function onLocalizationChanged(language){
-        root.updateHeaders();
+//        root.updateHeaders();
     }
 
     function updateGui(){
-        console.log("Hardware updateGui", root.model.toJSON());
-        console.log("deviceCB.model", deviceCB.model.toJSON());
-        let deviceFound = false;
-        if (root.model.ContainsKey("DeviceId")){
-            let deviceId = root.model.GetData("DeviceId")
-            if (deviceCB.model){
+        let isNew = model.GetData("IsNew")
+        if (isNew){
+            switchNewSensor.checked = true;
 
-                for (let i = 0; i < deviceCB.model.GetItemsCount(); i++){
-                    let id = deviceCB.model.GetData("Id", i);
-                    if (id === deviceId){
-                        deviceCB.currentIndex = i;
-                        deviceFound = true;
-                        break;
+            macAddressInput.text = "";
+
+            if (root.model.ContainsKey("MacAddress")){
+                let macAddress = root.model.GetData("MacAddress");
+                macAddressInput.text = macAddress;
+            }
+
+            typesCB.currentIndex = -1;
+
+            if (root.model.ContainsKey("LicenseUuid")){
+                let licenseUuid = root.model.GetData("LicenseUuid");
+
+                if (typesCB.model){
+                    for (let i = 0; i < typesCB.model.GetItemsCount(); i++){
+                        let id = typesCB.model.GetData("Id", i);
+                        if (id === licenseUuid){
+                            typesCB.currentIndex = i;
+                            break;
+                        }
                     }
                 }
-            }
-        }
-
-        if (!deviceFound){
-            deviceCB.currentIndex = -1;
-        }
-
-        updateTableGui();
-    }
-
-    function updateModel(){
-        if (deviceCB.currentIndex >= 0){
-            if (deviceCB.currentIndex == 0){
-                root.model.SetData("IsNewDevice", true);
-            }
-            else{
-                root.model.RemoveData("IsNewDevice");
-            }
-
-            let deviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
-            root.model.SetData("DeviceId", deviceId);
-
-            if (deviceCB.model.ContainsKey("LicenseUuid", deviceCB.currentIndex)){
-                let configurationType = deviceCB.model.GetData("LicenseUuid", deviceCB.currentIndex);
-                root.model.SetData("LicenseUuid", configurationType);
-            }
-            else{
-                root.model.SetData("LicenseUuid", "");
-            }
-
-            if (deviceCB.model.ContainsKey("LicenseId", deviceCB.currentIndex)){
-                let licenseId = deviceCB.model.GetData("LicenseId", deviceCB.currentIndex);
-                root.model.SetData("LicenseId", licenseId);
-            }
-            else{
-                root.model.SetData("LicenseId", "");
-            }
-
-            if (deviceCB.model.ContainsKey("LicenseName", deviceCB.currentIndex)){
-                let licenseName = deviceCB.model.GetData("LicenseName", deviceCB.currentIndex);
-                root.model.SetData("LicenseName", licenseName);
-            }
-            else{
-                root.model.SetData("LicenseName", "");
-            }
-
-            if (deviceCB.model.ContainsKey("MacAddress", deviceCB.currentIndex)){
-                let macAddress = deviceCB.model.GetData("MacAddress", deviceCB.currentIndex);
-                root.model.SetData("MacAddress", macAddress);
-            }
-            else{
-                root.model.SetData("MacAddress", "");
-            }
-
-            if (deviceCB.model.ContainsKey("SerialNumber", deviceCB.currentIndex)){
-                let serialNumber = deviceCB.model.GetData("SerialNumber", deviceCB.currentIndex);
-                root.model.SetData("SerialNumber", serialNumber);
-            }
-            else{
-                root.model.SetData("SerialNumber", "");
             }
         }
         else{
-            root.model.SetData("DeviceId", "");
-            root.model.SetData("LicenseUuid", "");
-            root.model.SetData("LicenseId", "");
-            root.model.SetData("LicenseName", "");
-            root.model.SetData("MacAddress", "");
-            root.model.SetData("SerialNumber", "");
-        }
+            switchNewSensor.checked = false;
 
-        let checkedIndexes = modelsTable.getCheckedItems();
-        if (checkedIndexes.length > 0){
-            let index = checkedIndexes[0];
-
-            let uuid = root.productLicensesModel.GetData("Id", index);
-            let licenseId = root.productLicensesModel.GetData("LicenseId", index);
-            let licenseName = root.productLicensesModel.GetData("LicenseName", index);
-
-            root.model.SetData("LicenseUuid", uuid);
-            root.model.SetData("LicenseId", licenseId);
-            root.model.SetData("LicenseName", licenseName);
-        }
-    }
-
-    Text {
-        id: deviceText;
-
-        anchors.top: parent.top;
-        text: qsTr("Hardware-ID");
-        color: Style.textColor;
-        font.family: Style.fontFamilyBold;
-        font.pixelSize: Style.fontSize_common;
-    }
-
-    ComboBox {
-        id: deviceCB;
-
-        anchors.top: deviceText.bottom;
-        anchors.topMargin: root.margin;
-
-        width: parent.width;
-        height: Style.comboBoxHeight;
-
-        radius: 3;
-
-        model: root.devicesModel;
-
-        onCurrentIndexChanged: {
-            console.log("deviceCB onCurrentIndexChanged", deviceCB.currentIndex)
-
-            root.doUpdateModel();
-            root.updateTableGui();
-        }
-    }
-
-    Text {
-        id: selectSensorText;
-
-        anchors.top: deviceCB.bottom;
-        anchors.topMargin: root.margin;
-
-        text: qsTr("Please select a sensor");
-        color: Style.errorTextColor;
-        font.family: Style.fontFamily;
-        font.pixelSize: Style.fontSize_common;
-
-        visible: deviceCB.currentIndex < 0;
-    }
-
-    Text {
-        id: licensesText;
-
-        anchors.top: selectSensorText.visible ? selectSensorText.bottom : deviceCB.bottom;
-        anchors.topMargin: root.margin;
-
-        text: qsTr("Types");
-        color: Style.textColor;
-        font.family: Style.fontFamilyBold;
-        font.pixelSize: Style.fontSize_common;
-    }
-
-    Table {
-        id: modelsTable;
-
-        anchors.top: licensesText.bottom;
-        anchors.topMargin: root.margin;
-        anchors.bottom: parent.bottom;
-        anchors.bottomMargin: root.margin;
-
-        width: parent.width;
-
-        radius: 0;
-
-        checkable: true;
-        canSelectAll: false;
-        isMultiCheckable: false;
-
-        elements: root.productLicensesModel;
-
-        readOnly: deviceCB.currentIndex !== 0;
-
-        onCheckedItemsChanged: {
-            root.doUpdateModel();
-        }
-    }
-
-    function updateTableGui(){
-        modelsTable.uncheckAll();
-
-        if (root.productLicensesModel){
-            if (root.model.ContainsKey("LicenseUuid")){
-                let modelTypeId = root.model.GetData("LicenseUuid");
-
-                for (let i = 0; i < root.productLicensesModel.GetItemsCount(); i++){
-                    let id = root.productLicensesModel.GetData("Id", i);
-                    if (id === modelTypeId){
-                        modelsTable.checkItem(i);
-                        break;
+            deviceCB.currentIndex = -1;
+            if (root.model.ContainsKey("DeviceId")){
+                let deviceId = root.model.GetData("DeviceId")
+                if (deviceCB.model){
+                    for (let i = 0; i < deviceCB.model.GetItemsCount(); i++){
+                        let id = deviceCB.model.GetData("Id", i);
+                        if (id === deviceId){
+                            deviceCB.currentIndex = i;
+                            break;
+                        }
                     }
                 }
             }
         }
     }
 
-    TreeItemModel {
-        id: headersModel;
-        Component.onCompleted: {
-            root.updateHeaders();
+    function updateModel(){
+        root.model.SetData("IsNew", isNewDevice);
+
+        if (isNewDevice){
+            if (typesCB.currentIndex >= 0){
+                let index = typesCB.currentIndex;
+
+                let uuid = root.productLicensesModel.GetData("Id", index);
+                let licenseId = root.productLicensesModel.GetData("LicenseId", index);
+                let licenseName = root.productLicensesModel.GetData("LicenseName", index);
+
+                root.model.SetData("LicenseUuid", uuid);
+                root.model.SetData("LicenseId", licenseId);
+                root.model.SetData("LicenseName", licenseName);
+            }
+            else{
+                root.model.SetData("LicenseUuid", "");
+                root.model.SetData("LicenseId", "");
+                root.model.SetData("LicenseName", "");
+            }
+
+            root.model.SetData("MacAddress", macAddressInput.text);
+        }
+        else{
+            if (deviceCB.currentIndex >= 0){
+                let deviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
+                root.model.SetData("DeviceId", deviceId);
+
+                if (deviceCB.model.ContainsKey("LicenseUuid", deviceCB.currentIndex)){
+                    let configurationType = deviceCB.model.GetData("LicenseUuid", deviceCB.currentIndex);
+                    root.model.SetData("LicenseUuid", configurationType);
+                }
+                else{
+                    root.model.SetData("LicenseUuid", "");
+                }
+
+                if (deviceCB.model.ContainsKey("LicenseId", deviceCB.currentIndex)){
+                    let licenseId = deviceCB.model.GetData("LicenseId", deviceCB.currentIndex);
+                    root.model.SetData("LicenseId", licenseId);
+                }
+                else{
+                    root.model.SetData("LicenseId", "");
+                }
+
+                if (deviceCB.model.ContainsKey("LicenseName", deviceCB.currentIndex)){
+                    let licenseName = deviceCB.model.GetData("LicenseName", deviceCB.currentIndex);
+                    root.model.SetData("LicenseName", licenseName);
+                }
+                else{
+                    root.model.SetData("LicenseName", "");
+                }
+
+                if (deviceCB.model.ContainsKey("MacAddress", deviceCB.currentIndex)){
+                    let macAddress = deviceCB.model.GetData("MacAddress", deviceCB.currentIndex);
+                    root.model.SetData("MacAddress", macAddress);
+                }
+                else{
+                    root.model.SetData("MacAddress", "");
+                }
+
+                if (deviceCB.model.ContainsKey("SerialNumber", deviceCB.currentIndex)){
+                    let serialNumber = deviceCB.model.GetData("SerialNumber", deviceCB.currentIndex);
+                    root.model.SetData("SerialNumber", serialNumber);
+                }
+                else{
+                    root.model.SetData("SerialNumber", "");
+                }
+            }
+            else{
+                root.model.SetData("DeviceId", "");
+                root.model.SetData("LicenseUuid", "");
+                root.model.SetData("LicenseId", "");
+                root.model.SetData("LicenseName", "");
+                root.model.SetData("MacAddress", "");
+                root.model.SetData("SerialNumber", "");
+            }
         }
     }
 
-    function updateHeaders(){
-        headersModel.Clear();
+    Column {
+        id: content;
 
-        let index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "LicenseName", index)
-        headersModel.SetData("Name", qsTr("Model Name"), index)
+        width: parent.width;
 
-        index = headersModel.InsertNewItem();
-        headersModel.SetData("Id", "LicenseId", index)
-        headersModel.SetData("Name", qsTr("Model-ID"), index)
+        spacing: Style.size_mainMargin;
 
-        modelsTable.headers = headersModel;
+        SwitchElementView {
+            id: switchNewSensor;
+
+            width: parent.width;
+
+            name: qsTr("New Sensor");
+
+            onCheckedChanged: {
+                deviceCB.visible = !checked;
+
+                root.doUpdateModel();
+            }
+        }
+
+        FilterableComboBoxElementView {
+            id: deviceCB;
+
+            width: parent.width;
+
+            model: root.devicesModel;
+
+            name: qsTr("Hardware-ID");
+
+            onCurrentIndexChanged: {
+                bottomComp = deviceCB.currentIndex < 0 ? sensorErrorComp : undefined;
+
+                if (deviceCB.currentIndex >= 0 && deviceCB.model){
+                    if (deviceCB.model.ContainsKey("LicenseName", deviceCB.currentIndex)){
+                        let licenseName = deviceCB.model.GetData("LicenseName", deviceCB.currentIndex)
+
+                        deviceTypeText.text = licenseName;
+                    }
+
+                    if (deviceCB.model.ContainsKey("MacAddress", deviceCB.currentIndex)){
+                        let macAddress = deviceCB.model.GetData("MacAddress", deviceCB.currentIndex)
+
+                        macAddressText.text = macAddress;
+                    }
+                }
+
+                root.doUpdateModel();
+            }
+        }
+
+        Component {
+            id: sensorErrorComp;
+
+            Text {
+                id: selectSensorText;
+
+                text: qsTr("Please select a sensor");
+                color: Style.errorTextColor;
+                font.family: Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+        }
+
+        Column {
+            width: parent.width;
+
+            spacing: content.spacing;
+
+            visible: root.isNewDevice;
+
+            FilterableComboBoxElementView {
+                id: typesCB;
+
+                width: parent.width;
+
+                model: root.productLicensesModel;
+
+                name: qsTr("Types");
+                nameId: "LicenseName";
+
+                bottomComp: typesCB.currentIndex < 0 ? typeSensorErrorComp : undefined;
+
+                onCurrentIndexChanged: {
+                    root.doUpdateModel();
+                }
+            }
+
+            Component {
+                id: typeSensorErrorComp;
+
+                Text {
+                    id: selectTypeText;
+
+                    text: qsTr("Please select a type sensor");
+                    color: Style.errorTextColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+            }
+
+            TextInputElementView {
+                id: macAddressInput;
+
+                width: parent.width;
+
+                placeHolderText: qsTr("Enter the MAC Address");
+                name: qsTr("MAC Address");
+
+                readOnly: root.readOnly;
+
+                onEditingFinished: {
+                    root.doUpdateModel();
+                }
+            }
+        }
+
+        Column {
+            width: parent.width;
+
+            spacing: content.spacing;
+
+            visible: !root.isNewDevice;
+
+            TextElementView {
+                id: deviceTypeText;
+
+                width: parent.width;
+
+                name: qsTr("Type");
+            }
+
+            TextElementView {
+                id: macAddressText;
+
+                width: parent.width;
+
+                name: qsTr("MAC Address");
+            }
+        }
     }
 }//Container
 

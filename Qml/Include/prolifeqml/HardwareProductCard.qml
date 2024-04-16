@@ -19,7 +19,6 @@ Rectangle {
     property string productId: model.ProductUuid ? model.ProductUuid : "";
     property string macAddress: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.MacAddress ? model.MacAddress : "";
     property string serialNumber: hardwareCard.isNewDevice ? qsTr("New Sensor") : model.SerialNumber ? model.SerialNumber : "";
-    property string modelType: model.LicenseUuid ? model.LicenseUuid : "";
 
     property Item productCardRoot: null;
 
@@ -57,10 +56,6 @@ Rectangle {
         let index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("MAC Address"), index)
         elementsTableModel.SetData("Value", hardwareCard.macAddress, index)
-
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
-        elementsTableModel.SetData("Value", hardwareCard.serialNumber, index)
 
         index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("Model Type"), index)

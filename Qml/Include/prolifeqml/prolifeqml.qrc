@@ -31,6 +31,7 @@
         <file alias="ProLife/ProductCollectionView.qml">ProductCollectionView.qml</file>
         <file alias="prolifeqml/CachedOrderCollection.qml">CachedOrderCollection.qml</file>
         <file alias="prolifeqml/CachedDeviceCollection.qml">CachedDeviceCollection.qml</file>
+	<file alias="prolifeqml/CachedSoftwareCollection.qml">CachedSoftwareCollection.qml</file>
         <file alias="ProLife/DeviceValidator.qml">DeviceValidator.qml</file>
         <file alias="ProLife/LicenseValidator.qml">LicenseValidator.qml</file>
         <file alias="ProLife/OrderValidator.qml">OrderValidator.qml</file>

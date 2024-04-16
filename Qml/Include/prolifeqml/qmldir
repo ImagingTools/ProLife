@@ -2,6 +2,7 @@ module prolifeqml
 
 singleton CachedOrderCollection 1.0 CachedOrderCollection.qml
 singleton CachedDeviceCollection 1.0 CachedDeviceCollection.qml
+singleton CachedSoftwareCollection 1.0 CachedSoftwareCollection.qml
 
 DeviceValidator 1.0 DeviceValidator.qml
 LicenseValidator 1.0 LicenseValidator.qml

@@ -26,12 +26,6 @@ ViewBase {
         checkWidth();
     }
 
-    onReadOnlyChanged: {
-        console.log("SE onReadOnlyChanged", root.readOnly);
-
-        projectInput.readOnly = root.readOnly;
-    }
-
     onWidthChanged: {
         checkWidth();
     }
@@ -55,8 +49,6 @@ ViewBase {
     }
 
     onModelChanged: {
-        console.log("SE onModelChanged", root.model.toJSON());
-
         checkInUse();
     }
 
@@ -84,6 +76,15 @@ ViewBase {
 
         ordersCB.changeable = !readOnly;
         productCB.changeable = !readOnly;
+        licenseCB.changeable = !readOnly;
+
+        let ok = PermissionsController.checkPermission("ChangeLicense");
+        if (!ok){
+            ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+        }
+
+        serialNumberInput.readOnly = readOnly;
+        expirationEditor.readOnly = readOnly;
     }
 
     function updateGui(){
@@ -414,16 +415,9 @@ ViewBase {
 
                     model: root.productLicensesModel;
 
-                    changeable: !root.readOnly;
-
                     Component.onCompleted: {
                         if (!root.readOnly){
                             let ok = PermissionsController.checkPermission("ChangeLicense");
-
-                            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                            if (canEditOrder){
-                                ok = true;
-                            }
 
                             licenseCB.changeable = ok;
                         }
@@ -440,18 +434,11 @@ ViewBase {
                     placeHolderText: qsTr("Enter the license number");
                     name: qsTr("License Number");
 
-                    readOnly: root.readOnly;
-
                     Component.onCompleted: {
                         if (!root.readOnly){
                             let ok = PermissionsController.checkPermission("ChangeLicense");
                             if (!ok){
                                 ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-                            }
-
-                            let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                            if (canEditOrder){
-                                ok = true;
                             }
 
                             serialNumberInput.readOnly = !ok;
@@ -500,6 +487,11 @@ ViewBase {
 
                     property DatePicker datePicker: null;
                     property CheckBox checkBox: null;
+
+                    onReadOnlyChanged: {
+                        checkBox.isActive = !readOnly;
+                        datePicker.readOnly = readOnly;
+                    }
 
                     controlComp: expirationComp;
 
@@ -566,15 +558,11 @@ ViewBase {
                                 hasMonthCombo: false;
                                 hasYearCombo: false;
 
-                                readOnly: root.readOnly;
+                                textFieldBorderColor: Style.borderColor;
 
                                 Component.onCompleted: {
                                     if (!root.readOnly){
                                         let ok = PermissionsController.checkPermission("ChangeLicense");
-                                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
-                                        if (canEditOrder){
-                                            ok = true;
-                                        }
 
                                         datePicker.readOnly = !ok;
                                     }

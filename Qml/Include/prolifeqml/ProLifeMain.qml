@@ -44,6 +44,7 @@ ApplicationMain{
         CachedGroupCollection.updateModel();
         CachedUserCollection.updateModel();
         CachedRoleCollection.updateModel();
+        CachedSoftwareCollection.updateModel();
     }
 
     function logout(){
@@ -55,6 +56,7 @@ ApplicationMain{
         CachedGroupCollection.clearModel();
         CachedUserCollection.clearModel();
         CachedRoleCollection.clearModel();
+        CachedSoftwareCollection.clearModel();
     }
 
     property bool pumaConnected: false;

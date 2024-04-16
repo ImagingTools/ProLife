@@ -15,7 +15,6 @@ Rectangle {
     property int margin: 10;
     property int contentHeight: contentColumn.height;
 
-    property string licenseUuid: model.LicenseUuid ? model.LicenseUuid : "";
     property string licenseId: model.LicenseId;
     property string licenseName: model.LicenseName;
     property string expiration: model.Expiration ? model.Expiration : "";

@@ -14,6 +14,7 @@ ViewBase {
     property TreeItemModel accountsModel: CachedAccountCollection.collectionModel;
     property TreeItemModel productsModel: CachedProductCollection.collectionModel;
     property TreeItemModel devicesModel: CachedDeviceCollection.collectionModel;
+    property TreeItemModel softwaresModel: CachedSoftwareCollection.collectionModel;
     property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
 
     property string orderUuid: "";
@@ -32,8 +33,15 @@ ViewBase {
         CachedLicenseCollection.updateModel();
         CachedDeviceCollection.updateModel();
         CachedProductCollection.updateModel();
+        CachedSoftwareCollection.updateModel();
+
+        CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.deviceCollectionChanged);
 
         checkWidth();
+    }
+
+    Component.onDestruction: {
+        CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.deviceCollectionChanged);
     }
 
     onWidthChanged: {
@@ -42,6 +50,10 @@ ViewBase {
 
     LicensesProvider {
         id: licensesProvider;
+    }
+
+    function deviceCollectionChanged(){
+//        doUpdateGui();
     }
 
     function checkWidth(){
@@ -126,14 +138,16 @@ ViewBase {
             orderStatusCB.currentIndex = -1;
         }
 
+        productsView.model = 0;
+
         if (model.ContainsKey("OrderProducts")){
             productsView.model = model.GetTreeItemModel("OrderProducts");
 
             productsView.model.Refresh();
         }
-        else{
-            productsView.model = 0;
-        }
+//        else{
+//            productsView.model = 0;
+//        }
     }
 
     function updateModel(){
@@ -169,22 +183,6 @@ ViewBase {
     OrderStatus {
         id: orderStatus;
     }
-
-//    StateMachine {
-//        id: stateMachine;
-
-//        Component.onCompleted: {
-//            stateMachine.registerModel(orderStatus.statusModel);
-
-//            stateMachine.addState("None", ["None", "Created"]);
-//            stateMachine.addState("Created", ["Created", "InProgress", "Canceled", "OnHold"]);
-//            stateMachine.addState("InProgress", ["InProgress", "OnHold", "Finished"]);
-//            stateMachine.addState("Canceled", ["Canceled", "None", "Closed"]);
-//            stateMachine.addState("OnHold", ["OnHold", "Created", "InProgress"]);
-//            stateMachine.addState("Finished", ["Finished", "Closed"]);
-//            stateMachine.addState("Closed", ["Closed"]);
-//        }
-//    }
 
     Rectangle {
         anchors.fill: parent;
@@ -461,6 +459,7 @@ ViewBase {
                     onStarted: {
                         productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel;
                         productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
+                        productsDialog.bodyItem.softwaresModel = orderEditorContainer.softwaresModel;
                         productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
 
                         if (orderEditorContainer.model.ContainsKey("Id")){

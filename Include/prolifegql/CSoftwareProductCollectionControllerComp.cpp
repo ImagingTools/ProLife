@@ -127,12 +127,23 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 			QByteArray orderUuid = productOrderInfoPtr->GetOrderId();
 
 			QByteArray hardwareMacAddress = objectCollectionIterator->GetElementInfo("DeviceId").toByteArray();
-			QByteArray hardwareUuid = objectCollectionIterator->GetElementInfo("DeviceUuid").toByteArray();;
+			QByteArray hardwareUuid = objectCollectionIterator->GetElementInfo("DeviceUuid").toByteArray();
+
+			QByteArray licenseId ;
+			imtbase::ICollectionInfo::Ids licenseIds = productOrderInfoPtr->GetLicenseInstances().GetElementIds();
+			if (!licenseIds.isEmpty()){
+				licenseId = licenseIds[0];
+			}
 
 			for (const QByteArray& informationId : informationIds){
 				QVariant elementInformation;
 				if (informationId == "Id"){
 					elementInformation = collectionId;
+				}
+				if (informationId == "Name"){
+					QString productName = objectCollectionIterator->GetElementInfo("ProductName").toString();
+
+					elementInformation = productName + " (" + serialNumber + ")";
 				}
 				else if (informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId").toByteArray();
@@ -168,6 +179,15 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				}
 				else if (informationId == "SerialNumber"){
 					elementInformation = serialNumber;
+				}
+				else if (informationId == "Expiration"){
+					const imtlic::ILicenseInstance* licenseInstancePtr = productOrderInfoPtr->GetLicenseInstance(licenseId);
+					if (licenseInstancePtr != nullptr){
+						QDateTime expirationDate = licenseInstancePtr->GetExpiration();
+						if (expirationDate.isValid()){
+							elementInformation = expirationDate.toString("yyyy-MM-dd");
+						}
+					}
 				}
 				else if (informationId == "IsPaired"){
 					elementInformation = !hardwareMacAddress.isEmpty();
