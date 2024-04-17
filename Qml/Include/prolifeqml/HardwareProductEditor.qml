@@ -61,8 +61,8 @@ ViewBase {
             switchNewSensor.checked = false;
 
             deviceCB.currentIndex = -1;
-            if (root.model.ContainsKey("DeviceId")){
-                let deviceId = root.model.GetData("DeviceId")
+            if (root.model.ContainsKey("Id")){
+                let deviceId = root.model.GetData("Id")
                 if (deviceCB.model){
                     for (let i = 0; i < deviceCB.model.GetItemsCount(); i++){
                         let id = deviceCB.model.GetData("Id", i);
@@ -102,7 +102,7 @@ ViewBase {
         else{
             if (deviceCB.currentIndex >= 0){
                 let deviceId = deviceCB.model.GetData("Id", deviceCB.currentIndex);
-                root.model.SetData("DeviceId", deviceId);
+                root.model.SetData("Id", deviceId);
 
                 if (deviceCB.model.ContainsKey("LicenseUuid", deviceCB.currentIndex)){
                     let configurationType = deviceCB.model.GetData("LicenseUuid", deviceCB.currentIndex);
@@ -145,7 +145,6 @@ ViewBase {
                 }
             }
             else{
-                root.model.SetData("DeviceId", "");
                 root.model.SetData("LicenseUuid", "");
                 root.model.SetData("LicenseId", "");
                 root.model.SetData("LicenseName", "");
@@ -185,9 +184,9 @@ ViewBase {
 
             name: qsTr("Hardware-ID");
 
-            onCurrentIndexChanged: {
-                bottomComp = deviceCB.currentIndex < 0 ? sensorErrorComp : undefined;
+            bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 
+            onCurrentIndexChanged: {
                 if (deviceCB.currentIndex >= 0 && deviceCB.model){
                     if (deviceCB.model.ContainsKey("LicenseName", deviceCB.currentIndex)){
                         let licenseName = deviceCB.model.GetData("LicenseName", deviceCB.currentIndex)
@@ -236,7 +235,7 @@ ViewBase {
                 name: qsTr("Types");
                 nameId: "LicenseName";
 
-                bottomComp: typesCB.currentIndex < 0 ? typeSensorErrorComp : undefined;
+                bottomComp: currentIndex < 0 ? typeSensorErrorComp : undefined;
 
                 onCurrentIndexChanged: {
                     root.doUpdateModel();

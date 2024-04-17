@@ -88,9 +88,6 @@ ViewBase {
 
             let licenseUuid = root.model.GetData("LicenseUuid");
 
-            console.log("licenseUuid", licenseUuid);
-            console.log("licenseCB.model", createdLicenseCb.model);
-
             if (createdLicenseCb.model){
                 for (let i = 0; i < createdLicenseCb.model.GetItemsCount(); i++){
                     let id = createdLicenseCb.model.GetData("LicenseUuid", i);
@@ -182,7 +179,7 @@ ViewBase {
             }
         }
 
-        ComboBoxElementView {
+        FilterableComboBoxElementView {
             id: createdLicenseCb;
 
             width: parent.width;
@@ -192,6 +189,8 @@ ViewBase {
             changeable: !root.readOnly;
 
             name: qsTr("License")
+
+            bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
 
             onCurrentIndexChanged: {
                 if (currentIndex >= 0){
@@ -225,7 +224,7 @@ ViewBase {
 
             spacing: parent.spacing;
 
-            visible: !root.isNewSoftware;
+            visible: !root.isNewSoftware && createdLicenseCb.currentIndex >= 0;
 
             TextElementView {
                 id: typeValue;
@@ -261,7 +260,7 @@ ViewBase {
 
             visible: root.isNewSoftware;
 
-            ComboBoxElementView {
+            FilterableComboBoxElementView {
                 id: licenseCB;
 
                 width: parent.width;
@@ -272,6 +271,8 @@ ViewBase {
                 model: root.productLicensesModel;
 
                 changeable: !root.readOnly;
+
+                bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
 
                 Component.onCompleted: {
                     if (!root.readOnly){
@@ -291,6 +292,19 @@ ViewBase {
                 }
             }
 
+            Component {
+                id: licenseTypeErrorComp;
+
+                Text {
+                    id: selectSensorText;
+
+                    text: qsTr("Please select a license");
+                    color: Style.errorTextColor;
+                    font.family: Style.fontFamily;
+                    font.pixelSize: Style.fontSize_common;
+                }
+            }
+
             TextInputElementView {
                 id: serialNumberInput;
 
@@ -300,6 +314,8 @@ ViewBase {
                 placeHolderText: qsTr("Enter the software-ID");
 
                 readOnly: root.readOnly;
+
+                visible: licenseCB.currentIndex >= 0;
 
                 Component.onCompleted: {
                     if (!root.readOnly){
@@ -328,6 +344,8 @@ ViewBase {
                 width: parent.width;
 
                 name: qsTr("Expiration");
+
+                visible: licenseCB.currentIndex >= 0;
 
                 property CheckBox checkBox;
                 property DatePicker datePicker;

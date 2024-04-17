@@ -328,20 +328,25 @@ ViewBase {
                     if (root.model.ContainsKey("Expiration")){
                         let expiration = root.model.GetData("Expiration");
 
-                        if (expiration && expiration !== "" ){
-                            expirationEditor.setCheckState(Qt.Checked);
-                        }
-                        else{
-                            expirationEditor.setCheckState(Qt.Unchecked);
+                        if (expirationEditor.checkBox){
+                            if (expiration && expiration !== "" ){
+                                expirationEditor.checkBox.checkState = Qt.Checked
+                            }
+                            else{
+                                expirationEditor.checkBox.checkState = Qt.Unchecked
+                            }
                         }
 
-                        if (expiration){
-                            let currentDate = expirationEditor.getDate();
+                        if (expirationEditor.datePicker){
+                            if (expiration){
+                                let currentDate = expirationEditor.datePicker.getDate()
 
-                            if (expiration !== "" && expiration !== currentDate){
-                                let date = expiration;
-                                let data = date.split("-");
-                                expirationEditor.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                                if (expiration !== "" && expiration !== currentDate){
+                                    let date = expiration;
+                                    let data = date.split("-");
+
+                                    expirationEditor.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
+                                }
                             }
                         }
                     }
@@ -350,11 +355,13 @@ ViewBase {
                 function updateModel(){
                     root.model.SetData("SerialNumber", serialNumberInput.text)
 
-                    if (expirationEditor.getCheckState() === Qt.Checked){
-                        root.model.SetData("Expiration", expirationEditor.getDate());
-                    }
-                    else{
-                        root.model.SetData("Expiration", "");
+                    if (expirationEditor.checkBox && expirationEditor.datePicker){
+                        if (expirationEditor.checkBox.checkState === Qt.Checked){
+                            root.model.SetData("Expiration", expirationEditor.datePicker.getDate());
+                        }
+                        else{
+                            root.model.SetData("Expiration", "");
+                        }
                     }
 
                     if (licenseCB.currentIndex >= 0 && licenseCB.model){
@@ -456,34 +463,6 @@ ViewBase {
                     name: qsTr("Expiration");
 
                     property bool readOnly: false;
-
-                    function getDate(){
-                        if (datePicker){
-                            return datePicker.getDate();
-                        }
-
-                        return "";
-                    }
-
-                    function setDate(year, month, day){
-                        if (datePicker){
-                            datePicker.setDate(year, month, day);
-                        }
-                    }
-
-                    function setCheckState(state){
-                        if (checkBox){
-                            checkBox.checkState = state;
-                        }
-                    }
-
-                    function getCheckState(){
-                        if (checkBox){
-                            return checkBox.checkState;
-                        }
-
-                        return Qt.Unchecked;
-                    }
 
                     property DatePicker datePicker: null;
                     property CheckBox checkBox: null;

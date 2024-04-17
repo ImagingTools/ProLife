@@ -143,7 +143,11 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				if (informationId == "Name"){
 					QString productName = objectCollectionIterator->GetElementInfo("ProductName").toString();
 
-					elementInformation = productName + " (" + serialNumber + ")";
+					elementInformation = productName;
+
+					if (!serialNumber.isEmpty()){
+						elementInformation = productName + " (" + serialNumber + ")";
+					}
 				}
 				else if (informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId").toByteArray();

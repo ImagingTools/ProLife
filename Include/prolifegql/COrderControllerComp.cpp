@@ -514,11 +514,11 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
 		}
 
-		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), deviceUuid, nullptr, nullptr, operationContextPtr);
+		m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), uuidId, nullptr, nullptr, operationContextPtr);
 	}
 	else{
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_deviceCollectionCompPtr->GetObjectData(deviceUuid, dataPtr)){
+		if (m_deviceCollectionCompPtr->GetObjectData(uuidId, dataPtr)){
 			prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
 				QByteArray deviceOrderUuid = deviceInfoPtr->GetOrderId();
@@ -533,10 +533,10 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 					imtbase::IOperationContext* operationContextPtr = nullptr;
 
 					if (m_deviceOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, deviceUuid, deviceInfoPtr);
+						operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, uuidId, deviceInfoPtr);
 					}
 
-					m_deviceCollectionCompPtr->SetObjectData(deviceUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
+					m_deviceCollectionCompPtr->SetObjectData(uuidId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
 				}
 			}
 		}
@@ -545,10 +545,10 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
 
-	objectLinkPtr->SetObjectUuid(deviceUuid);
+	objectLinkPtr->SetObjectUuid(uuidId);
 	objectLinkPtr->SetFactoryId("HardwareInfo");
 
-	productCollection.InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceUuid);
+	productCollection.InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), uuidId);
 }
 
 
@@ -599,9 +599,6 @@ void COrderControllerComp::InsertSoftwareProductToModel(
 					}
 				}
 
-//				QString licenseName = licenseInstancePtr->GetLicenseName();
-//				softwareProductModel.SetData("LicenseName", licenseName, modelIndex);
-
 				QDate date = licenseInstancePtr->GetExpiration().date();
 				QString licenseExpiration = date.toString("yyyy-MM-dd");
 				softwareProductModel.SetData("Expiration", licenseExpiration, modelIndex);
@@ -627,7 +624,6 @@ void COrderControllerComp::InsertHardwareProductToModel(
 		hardwareProductModel.SetData("ProductUuid", productUuid, modelIndex);
 		hardwareProductModel.SetData("CategoryId", QByteArray("Hardware"), modelIndex);
 		hardwareProductModel.SetData("LicenseUuid", licenseDefinitionUuid, modelIndex);
-//		hardwareProductModel.SetData("DeviceId", objectUuid, modelIndex);
 		hardwareProductModel.SetData("IsNew", false, modelIndex);
 
 		if (m_productCollectionCompPtr.IsValid()){

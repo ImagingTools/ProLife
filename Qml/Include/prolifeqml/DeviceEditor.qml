@@ -363,6 +363,8 @@ ViewBase {
 
                     nameId: "ProductName";
 
+                    KeyNavigation.tab: configurationCB;
+
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeSensor");
                         productCB.changeable = ok;
@@ -396,6 +398,8 @@ ViewBase {
 
                     name: qsTr("Hardware Configuration");
                     nameId: "LicenseName";
+
+                    KeyNavigation.tab: descriptionInput;
 
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeSensor");
@@ -488,7 +492,7 @@ ViewBase {
                         }
                     }
 
-                    KeyNavigation.tab: macAddressInput;
+                    KeyNavigation.tab: statusCB;
 
                     Component {
                         id: errorComp;
@@ -533,6 +537,8 @@ ViewBase {
 
                     property bool blockingIndexChanged: false;
 
+                    KeyNavigation.tab: orderCB;
+
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeSensor");
                         if (!ok){
@@ -564,6 +570,8 @@ ViewBase {
                     nameId: "OrderId";
 
                     model: CachedOrderCollection.collectionModel;
+
+                    KeyNavigation.tab: productCB;
 
                     Component.onCompleted: {
                         let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");

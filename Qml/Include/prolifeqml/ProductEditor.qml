@@ -50,21 +50,41 @@ Item {
 
     function getSoftwareModel(){
         console.log("getSoftwareModel");
+
+        let excludeIds = []
+        for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
+            let categoryId = orderProductsModel.GetData("CategoryId", i);
+            if (categoryId === "Software"){
+                let id = orderProductsModel.GetData("Id", i);
+                if (id !== ""){
+                    excludeIds.push(id)
+                }
+            }
+        }
+
+        if (productEditor.productModel.ContainsKey("Id")){
+            let id = productEditor.productModel.GetData("Id");
+
+            let index = excludeIds.indexOf(id);
+            if (index >= 0){
+                excludeIds.splice(index, 1)
+            }
+        }
+
         let resultModel = treeItemModelComp.createObject(null);
 
-        console.log("productEditor.orderUuid", productEditor.orderUuid);
-        console.log("productEditor.productId", productEditor.productId);
-
         for (let i = 0; i < productEditor.softwaresModel.GetItemsCount(); i++){
+            let id = productEditor.softwaresModel.GetData("Id", i);
+
+            if (excludeIds.includes(id)){
+                continue;
+            }
+
             let orderUuid = productEditor.softwaresModel.GetData("OrderUuid", i);
             let productUuid = productEditor.softwaresModel.GetData("ProductUuid", i);
             let licenseUuid = productEditor.softwaresModel.GetData("LicenseUuid", i);
 
-            console.log("licenseUuid", licenseUuid);
-
             if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productEditor.productId){
-                console.log("ok");
-
                 let index = resultModel.InsertNewItem();
 
                 resultModel.CopyItemDataFromModel(index, productEditor.softwaresModel, i);
@@ -79,7 +99,7 @@ Item {
         for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
             let categoryId = orderProductsModel.GetData("CategoryId", i);
             if (categoryId === "Hardware"){
-                let deviceID = orderProductsModel.GetData("DeviceId", i);
+                let deviceID = orderProductsModel.GetData("Id", i);
                 if (deviceID !== ""){
                     excludeDeviceIds.push(deviceID)
                 }
@@ -88,7 +108,7 @@ Item {
 
         let resultModel = treeItemModelComp.createObject(null);
         let selectedProductId = productEditor.productModel.GetData("ProductUuid");
-        let selectedDeviceId = productEditor.productModel.GetData("DeviceId");
+        let selectedDeviceId = productEditor.productModel.GetData("Id");
 
         let index = excludeDeviceIds.indexOf(selectedDeviceId);
         if (index >= 0){
@@ -117,55 +137,24 @@ Item {
 
     function onModelChanged(){
         console.log("onModelChanged", productModel.toJSON());
-        //        if (productEditor.blockUpdatingModel){
-        //            return;
-        //        }
 
-        //        productEditor.blockUpdatingModel = true;
+        let ok = true;
 
-        //        let ok = false;
+        let licenseUuid = "";
+        if (productModel.ContainsKey("LicenseUuid")){
+            licenseUuid = productModel.GetData("LicenseUuid");
+        }
 
-        //        if (productModel.ContainsKey("LicenseUuid")){
-        //            let licenseUuid = productModel.GetData("LicenseUuid");
-        //            if (licenseUuid !== ""){
-        //                ok = true;
-        //            }
-        //        }
+        ok = ok && licenseUuid !== "";
 
-        //        if (productEditor.productCategory === "Hardware"){
-        //            if (ok){
-        //                ok = false;
-        //                if (productModel.ContainsKey("DeviceId")){
-        //                    let deviceId = productModel.GetData("DeviceId");
-        //                    if (deviceId !== ""){
-        //                        ok = true;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        else{
-        //            if (productModel.ContainsKey("LicenseUuid")){
-        //                let licenseUuid = productModel.GetData("LicenseUuid");
-        //                if (licenseUuid !== ""){
-        //                    for (let i = 0; i < licensesModel.GetItemsCount(); i++){
-        //                        let uuid = licensesModel.GetData("Id", i);
-        //                        if (uuid === licenseUuid){
-        //                            let licenseId = licensesModel.GetData("LicenseId", i)
-        //                            let licenseName = licensesModel.GetData("LicenseName", i)
+        let productUuid = "";
+        if (productModel.ContainsKey("ProductUuid")){
+            productUuid = productModel.GetData("ProductUuid");
+        }
 
-        //                            productModel.SetData("LicenseId", licenseId);
-        //                            productModel.SetData("LicenseName", licenseName);
+        ok = ok && productUuid !== "";
 
-        //                            break;
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        productEditor.rootItem.buttons.setButtonState(Enums.ok, true);
-
-        productEditor.blockUpdatingModel = false;
+        productEditor.rootItem.buttons.setButtonState(Enums.ok, ok);
     }
 
     function setHardware(){
@@ -280,6 +269,8 @@ Item {
                     isExclusive: true;
 
                     onSelectedIndexChanged: {
+                        productEditor.clearProduct();
+
                         if (selectedIndex == 0){
                             productEditor.setSoftware();
                         }
@@ -369,18 +360,19 @@ Item {
 
     function clearProduct(){
         productEditor.productModel.Clear();
-        if (productEditor.productCategory === "Hardware"){
-            productEditor.productModel.SetData("DeviceId", "");
-            productEditor.productModel.SetData("LicenseUuid", "");
-            productEditor.productModel.SetData("LicenseId", "");
-            productEditor.productModel.SetData("LicenseName", "");
-            productEditor.productModel.SetData("MacAddress", "");
-            productEditor.productModel.SetData("SerialNumber", "");
 
+        productEditor.productModel.SetData("ProductUuid", "");
+        productEditor.productModel.SetData("ProductName", "");
+        productEditor.productModel.SetData("LicenseUuid", "");
+        productEditor.productModel.SetData("LicenseId", "");
+        productEditor.productModel.SetData("LicenseName", "");
+        productEditor.productModel.SetData("IsNew", false);
+
+        if (productEditor.productCategory === "Hardware"){
+            productEditor.productModel.SetData("MacAddress", "");
         }
         else if (productEditor.productCategory === "Software"){
             productEditor.productModel.SetData("SerialNumber", "");
-            productEditor.productModel.SetData("LicenseUuid", "");
             productEditor.productModel.SetData("Expiration", "");
         }
     }
@@ -415,30 +407,6 @@ Item {
         }
 
         return null;
-    }
-
-    function getProductName(productId){
-        let retVal = "";
-        for (let i = 0; i < productsModel.GetItemsCount(); i++){
-            let id = productsModel.GetData("Id", i);
-            if (id === productId){
-                retVal = productsModel.GetData("Name", i);
-                break;
-            }
-        }
-        return retVal;
-    }
-
-    function getLicenseName(licenseUuid){
-        let retVal = "";
-        for (let i = 0; i < licensesModel.GetItemsCount(); i++){
-            let id = licensesModel.GetData("Id", i);
-            if (id === licenseUuid){
-                retVal = licensesModel.GetData("LicenseName", i);
-                break;
-            }
-        }
-        return retVal;
     }
 
     function started(){
@@ -490,8 +458,6 @@ Item {
 
         productEditor.blockUpdatingModel = false;
     }
-
-    function updateModel(){}
 }//Container
 
 
