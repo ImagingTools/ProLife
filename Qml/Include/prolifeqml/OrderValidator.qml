@@ -41,16 +41,16 @@ DocumentValidator {
             return false;
         }
 
-        let purchaseId = "";
-        if (documentModel.ContainsKey("PurchaseId")){
-            purchaseId = documentModel.GetData("PurchaseId");
-        }
+//        let purchaseId = "";
+//        if (documentModel.ContainsKey("PurchaseId")){
+//            purchaseId = documentModel.GetData("PurchaseId");
+//        }
 
-        if (purchaseId === ""){
-            data.message = qsTr("Purchase Order-ID cannot be empty");
+//        if (purchaseId === ""){
+//            data.message = qsTr("Purchase Order-ID cannot be empty");
 
-            return false;
-        }
+//            return false;
+//        }
 
         let customerId = "";
         if (documentModel.ContainsKey("CustomerId")){

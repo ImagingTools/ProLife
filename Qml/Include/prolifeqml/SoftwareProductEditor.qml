@@ -9,7 +9,6 @@ ViewBase {
     id: root;
 
     property int itemHeight: 30;
-    property int margin: 10;
 
     property var productLicensesModel: TreeItemModel{}
 
@@ -21,9 +20,8 @@ ViewBase {
     property alias tableElements: licenseCB.model;
     property bool readOnly: false;
 
-    property int comboBoxHeight: 27;
-
     property bool isNewSoftware: switchNewLicense.checked;
+    property int productIndex: -1;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -171,6 +169,8 @@ ViewBase {
             width: parent.width;
 
             name: qsTr("New License");
+
+            visible: root.productIndex == -1 || root.model.GetData("IsNew");
 
             onCheckedChanged: {
                 createdLicenseCb.visible = !checked;
@@ -397,7 +397,7 @@ ViewBase {
 
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: checkBox.right;
-                            anchors.leftMargin: 5;
+                            anchors.leftMargin: Style.size_mainMargin;
 
                             visible: checkBox.checkState === Qt.Checked;
 

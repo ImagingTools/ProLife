@@ -137,7 +137,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 	}
 
 	if (productOrderInfoPtr->IsInUse()){
-		errorMessage = QString("It is not possible to update an product in use");
+		errorMessage = QString("It is not possible to update a product in use");
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");
 
 		return nullptr;

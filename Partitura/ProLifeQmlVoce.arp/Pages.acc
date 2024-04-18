@@ -374,6 +374,9 @@
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>

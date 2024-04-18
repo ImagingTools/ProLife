@@ -240,8 +240,6 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 				}
 			}
 		}
-
-		qDebug() << "filterQuery" << filterQuery;
 	}
 
 	return true;

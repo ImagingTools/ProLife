@@ -163,7 +163,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 	}
 
 	if (!itemData.isEmpty()){
-		qDebug() << "itemData" << itemData;
 		istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderPtr = new prolifedata::CIdentifiableOrderInfo();
 		Q_ASSERT(orderPtr.IsValid());
 
@@ -301,12 +300,17 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 				if (productCategory == "Software"){
 					InsertSoftwareProductToProductCollection(gqlRequest, *orderedProducts, productIndex, *productCollectionPtr, objectId, errorMessage);
+
 					if (!errorMessage.isEmpty()){
 						return nullptr;
 					}
 				}
 				else if (productCategory == "Hardware"){
 					InsertHardwareProductToProductCollection(gqlRequest, *orderedProducts, productIndex, *productCollectionPtr, objectId, errorMessage);
+
+					if (!errorMessage.isEmpty()){
+						return nullptr;
+					}
 				}
 			}
 		}
@@ -321,20 +325,49 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 				GenerateDifferences(*oldOrderInfoPtr, *orderPtr, addedProducts, removedProducts, updatedProducts);
 
+				imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
+				if (oldProductCollectionPtr == nullptr){
+					return nullptr;
+				}
+
 				for (const QByteArray& id : removedProducts){
+					imtbase::ICollectionInfo::Id typeId = oldProductCollectionPtr->GetObjectTypeId(id);
+
 					imtbase::IObjectCollection::DataPtr productDataPtr;
-					if (m_softwareInstanceCollectionCompPtr->GetObjectData(id, productDataPtr)){
-						prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
-						if (productInfoPtr != nullptr){
-							productInfoPtr->SetOrderId("");
+					if (typeId == QByteArray("HardwareInfo")){
+						if (m_deviceCollectionCompPtr->GetObjectData(id, productDataPtr)){
+							prolifedata::COrderedIdentifiableDeviceInfo* hardwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
+							if (hardwareInfoPtr != nullptr){
+								hardwareInfoPtr->SetOrderId("");
 
-							imtbase::IOperationContext* operationContextPtr = nullptr;
+								imtbase::IOperationContext* operationContextPtr = nullptr;
 
-							if (m_softwareOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, id, productInfoPtr);
+								if (m_deviceOperationContextControllerCompPtr.IsValid()){
+									operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, id, hardwareInfoPtr);
+								}
+
+								if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+									return nullptr;
+								}
 							}
+						}
+					}
+					else if (typeId == QByteArray("SoftwareInfo")){
+						if (m_softwareInstanceCollectionCompPtr->GetObjectData(id, productDataPtr)){
+							prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
+							if (softwareInfoPtr != nullptr){
+								softwareInfoPtr->SetOrderId("");
 
-							m_softwareInstanceCollectionCompPtr->SetObjectData(id, *productInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr);
+								imtbase::IOperationContext* operationContextPtr = nullptr;
+
+								if (m_softwareOperationContextControllerCompPtr.IsValid()){
+									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, id, softwareInfoPtr);
+								}
+
+								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+									return nullptr;
+								}
+							}
 						}
 					}
 				}

@@ -16,18 +16,7 @@ ViewBase {
     property alias deviceIndex: deviceCB.currentIndex;
 
     property bool isNewDevice: switchNewSensor.checked;
-
-    Component.onCompleted: {
-        Events.subscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
-    }
-
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", root.onLocalizationChanged);
-    }
-
-    function onLocalizationChanged(language){
-//        root.updateHeaders();
-    }
+    property int productIndex: -1;
 
     function updateGui(){
         let isNew = model.GetData("IsNew")
@@ -167,6 +156,8 @@ ViewBase {
             width: parent.width;
 
             name: qsTr("New Sensor");
+
+            visible: root.productIndex == -1 || root.model.GetData("IsNew");
 
             onCheckedChanged: {
                 deviceCB.visible = !checked;

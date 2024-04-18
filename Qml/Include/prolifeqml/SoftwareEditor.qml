@@ -44,7 +44,8 @@ ViewBase {
             checkInUse()
         }
         else{
-            Events.sendEvent("SetAlertPanel", undefined);
+            let parameters = {"Id": "SoftwareProducts", "AlertPanelComp": undefined};
+            Events.sendEvent("SetAlertPanel", parameters);
         }
     }
 
@@ -60,14 +61,18 @@ ViewBase {
     }
 
     function checkInUse(){
+        let parameters = {"Id": "SoftwareProducts"};
+
         let inUse = root.model.GetData("InUse");
         if (inUse){
             root.readOnly = true;
-            Events.sendEvent("SetAlertPanel", alertComp);
+            parameters["AlertPanelComp"] = alertComp
+            Events.sendEvent("SetAlertPanel", parameters);
         }
         else{
             root.readOnly = false;
-            Events.sendEvent("SetAlertPanel", undefined);
+            parameters["AlertPanelComp"] = undefined
+            Events.sendEvent("SetAlertPanel", parameters);
         }
     }
 

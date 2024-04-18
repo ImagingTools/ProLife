@@ -6,7 +6,11 @@
 #include <iprm/CParamsSet.h>
 #include <iprm/CEnableableParam.h>
 
+// ImtCore includes
+#include <imtbase/CObjectLink.h>
+
 // ProLife includes
+#include <prolifedata/COrderInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/CDeviceInfo.h>
 
@@ -105,11 +109,11 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 
 istd::IChangeable* CDeviceControllerComp::CreateObject(
-			const QList<imtgql::CGqlObject>& inputParams,
-			QByteArray& objectId,
-			QString& name,
-			QString& /*description*/,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		QByteArray& objectId,
+		QString& name,
+		QString& /*description*/,
+		QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QString("Internal error").toUtf8();
@@ -125,23 +129,31 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		return nullptr;
 	}
 
-	if (inputParams.isEmpty()){
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	if (inputParamPtr == nullptr){
 		errorMessage = QString("GQL input params is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 		return nullptr;
 	}
 
-	objectId = GetObjectIdFromInputParams(inputParams);
+	objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
 	if (objectId.isEmpty()){
 		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 	}
 
-	QByteArray itemData = inputParams.at(0).GetFieldArgumentValue("Item").toByteArray();
+	QByteArray itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
 	if (!itemData.isEmpty()){
 		istd::TDelPtr<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>> devicePtr = new prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>();
 		if (!devicePtr.IsValid()){
 			return nullptr;
+		}
+
+		prolifedata::COrderedIdentifiableDeviceInfo* oldDeviceInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr oldDeviceDataPtr;
+
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, oldDeviceDataPtr)){
+			oldDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(oldDeviceDataPtr.GetPtr());
 		}
 
 		imtbase::CTreeItemModel itemModel;
@@ -152,10 +164,81 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 			return nullptr;
 		}
 
+		QByteArray orderId;
 		if (itemModel.ContainsKey("OrderId")){
-			QByteArray orderId = itemModel.GetData("OrderId").toByteArray();
+			orderId = itemModel.GetData("OrderId").toByteArray();
 
 			devicePtr->SetOrderId(orderId);
+		}
+
+		QByteArray oldOrderId;
+		if (oldDeviceInfoPtr != nullptr){
+			oldOrderId = oldDeviceInfoPtr->GetOrderId();
+
+			prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
+			imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
+			if (m_orderCollectionCompPtr->GetObjectData(oldOrderId, oldOrderDataPtr)){
+				oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
+			}
+
+			// Remove device from the old order
+			if (oldOrderInfoPtr != nullptr){
+				imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
+
+				if (oldProductCollectionPtr != nullptr && orderId != oldOrderId){
+					if (oldProductCollectionPtr->GetElementIds().contains(objectId)){
+						oldProductCollectionPtr->RemoveElement(objectId);
+
+						imtbase::IOperationContext* operationContextPtr = nullptr;
+
+						if (m_orderOperationContextControllerCompPtr.IsValid()){
+							operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, oldOrderId, oldOrderInfoPtr);
+						}
+
+						if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+							errorMessage = QString("Unable to update an order info").toUtf8();
+							SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+							return nullptr;
+						}
+					}
+				}
+			}
+		}
+
+		if (oldOrderId != orderId){
+			// Add device to the new order info
+			if (m_orderCollectionCompPtr.IsValid()){
+				imtbase::IObjectCollection::DataPtr orderDataPtr;
+				if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+					prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+					if (orderInfoPtr != nullptr){
+						imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
+						if (orderProductCollectionPtr != nullptr){
+							istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+							objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+							objectLinkPtr->SetObjectUuid(objectId);
+							objectLinkPtr->SetFactoryId("HardwareInfo");
+
+							orderProductCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
+
+							imtbase::IOperationContext* operationContextPtr = nullptr;
+
+							if (m_orderOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderId, orderInfoPtr);
+							}
+
+							if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+								errorMessage = QString("Unable to update an order info").toUtf8();
+								SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+								return nullptr;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		QByteArray macAddress;

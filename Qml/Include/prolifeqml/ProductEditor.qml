@@ -239,11 +239,11 @@ Item {
         id: contentColumn;
 
         anchors.top: parent.top;
-        anchors.topMargin: 10;
+        anchors.topMargin: Style.size_mainMargin;
         anchors.left: parent.left;
-        anchors.leftMargin: 10;
+        anchors.leftMargin: Style.size_mainMargin;
         anchors.right: parent.right;
-        anchors.rightMargin: 10;
+        anchors.rightMargin: Style.size_mainMargin;
 
         spacing: Style.size_mainMargin;
 
@@ -381,6 +381,7 @@ Item {
         id: hardwareProductComponent;
         HardwareProductEditor {
             model: productEditor.productModel;
+            productIndex: productEditor.rootItem.activeProductIndex;
         }
     }
 
@@ -388,6 +389,7 @@ Item {
         id: softwareProductComponent;
         SoftwareProductEditor {
             serialNumberEdit: productEditor.serialNumberEdit;
+            productIndex: productEditor.rootItem.activeProductIndex;
         }
     }
 

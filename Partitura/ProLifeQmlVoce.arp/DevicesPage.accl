@@ -54,6 +54,10 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="425" Y="725" Note=""/>
@@ -69,10 +73,6 @@
                 <Element ComponentName="Save" X="125" Y="600" Note=""/>
                 <Element ComponentName="Undo" X="125" Y="425" Note=""/>
             </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

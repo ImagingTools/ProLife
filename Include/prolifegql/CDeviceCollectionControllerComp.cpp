@@ -541,8 +541,8 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 	QString name = QT_TR_NOOP("Licenses");
 
+	QByteArray languageId;
 	if (m_translationManagerCompPtr.IsValid()){
-		QByteArray languageId;
 		imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 		if (gqlContextPtr != nullptr){
 			languageId = gqlContextPtr->GetLanguageId();
@@ -556,11 +556,16 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	dataModelPtr->SetData("Name", name, index);
 	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("Children", index);
 
+	bool ok = false;
+
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
 		if (bindingInfoPtr != nullptr){
 			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+
+			ok = !softwareIds.isEmpty();
+
 			for (const QByteArray& softwareId : softwareIds){
 				imtbase::IObjectCollection::DataPtr productDataPtr;
 				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
@@ -589,6 +594,13 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 				}
 			}
 		}
+	}
+
+	if (!ok){
+		int childrenIndex = childrenModelPtr->InsertNewItem();
+		QString elementNameTr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("No Licenses"), languageId, "prolifegql::CDeviceCollectionControllerComp");
+
+		childrenModelPtr->SetData("Value", elementNameTr, childrenIndex);
 	}
 
 	return rootModelPtr.PopPtr();

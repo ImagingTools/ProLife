@@ -6,33 +6,159 @@ import imtlicgui 1.0
 ElementView {
     id: root;
 
-    name: model.ProductName + " (" + model.CategoryId + ")";
+    name: model.ProductName;
 
     property TreeItemModel activeCommandsModel: TreeItemModel {}
 
     controlComp: Component {
-        SimpleCommandsDecorator {
-            id: commands;
+        Item {
+            id: item;
 
+            width: row.width + commands.width + commands.anchors.rightMargin+ row.anchors.rightMargin;
             height: 30;
 
-            commandModel: root.activeCommandsModel;
+            Row {
+                id: row;
 
-            onCommandActivated: {
-                if (commandId == "Remove"){
-                    root.removed();
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.right: commands.left;
+                anchors.rightMargin: Style.size_largeMargin;
+
+                spacing: Style.size_mainMargin;
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    width: productCategoryText.width + 2* Style.size_smallMargin;
+                    height: 20;
+
+                    color: Style.iconColorOnSelected;
+
+                    radius: Style.buttonRadius;
+
+                    Text {
+                        id: productCategoryText;
+
+                        anchors.centerIn: parent;
+
+                        text: root.categoryId;
+
+                        color: Style.baseColor;
+
+                        font.family:Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
                 }
-                else if (commandId == "Edit"){
-                    root.edited();
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    width: newText.width + 2* Style.size_smallMargin;
+                    height: 20;
+
+                    color: Style.errorColor;
+
+                    radius: Style.buttonRadius;
+
+                    visible: root.isNew
+
+                    Text {
+                        id: newText;
+
+                        anchors.centerIn: parent;
+
+                        text: qsTr("New");
+
+                        color: Style.baseColor;
+
+                        font.family:Style.fontFamily;
+                        font.pixelSize: Style.fontSize_common;
+                    }
+                }
+            }
+
+            SimpleCommandsDecorator {
+                id: commands;
+
+                anchors.right: parent.right;
+                anchors.rightMargin: Style.size_mainMargin;
+
+                height: 30;
+
+                commandModel: root.activeCommandsModel;
+
+                onCommandActivated: {
+                    if (commandId == "Remove"){
+                        root.removed();
+                    }
+                    else if (commandId == "Edit"){
+                        root.edited();
+                    }
                 }
             }
         }
     }
 
+//    topComp: Component {
+//        Row {
+//            spacing: Style.size_mainMargin;
+
+//            Rectangle {
+//                anchors.verticalCenter: parent.verticalCenter;
+
+//                width: productCategoryText.width + 2* Style.size_smallMargin;
+//                height: productCategoryText.height;
+
+//                color: Style.iconColorOnSelected;
+
+//                radius: Style.buttonRadius;
+
+//                Text {
+//                    id: productCategoryText;
+
+//                    anchors.centerIn: parent;
+
+//                    text: root.categoryId;
+
+//                    color: Style.baseColor;
+
+//                    font.family:Style.fontFamily;
+//                    font.pixelSize: Style.fontSize_common;
+//                }
+//            }
+
+//            Rectangle {
+//                anchors.verticalCenter: parent.verticalCenter;
+
+//                width: newText.width + 2* Style.size_smallMargin;
+//                height: newText.height;
+
+//                color: Style.errorColor;
+
+//                radius: Style.buttonRadius;
+
+//                visible: root.isNew
+
+//                Text {
+//                    id: newText;
+
+//                    anchors.centerIn: parent;
+
+//                    text: qsTr("New");
+
+//                    color: Style.baseColor;
+
+//                    font.family:Style.fontFamily;
+//                    font.pixelSize: Style.fontSize_common;
+//                }
+//            }
+//        }
+//    }
+
     property bool readOnly: false;
     property bool isLicenseConsuming: false;
-//    property bool isNewDevice: model.IsNewDevice ? model.IsNewDevice : false;
     property bool inUse: model.InUse ? model.InUse : false;
+    property bool isNew: model.IsNew ? model.IsNew : false;
     property bool selected: false;
 
     property bool hardwareInUse: hardwareCommandsModel.completed && root.inUse;

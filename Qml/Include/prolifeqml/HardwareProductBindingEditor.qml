@@ -32,8 +32,6 @@ Item {
     }
 
     onBindingModelChanged: {
-        console.log("onBindingModelChanged", productEditor.bindingModel.toJSON());
-
         if (productEditor.bindingModel.ContainsKey("Id")){
             let id = productEditor.bindingModel.GetData("Id")
 
