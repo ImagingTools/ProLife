@@ -51,14 +51,16 @@ protected:
 				QString& errorMessage) const;
 
 	virtual void InsertSoftwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& softwareProductModel) const;
-	virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel) const;
+    virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel) const;
 
+private:
 	void GenerateDifferences(
 				prolifedata::IOrderInfo& currentOrder,
 				prolifedata::IOrderInfo& newOrder,
 				QByteArrayList& addedProducts,
 				QByteArrayList& removedProducts,
 				QByteArrayList& updatedProducts) const;
+    bool CheckProducts(const QByteArray& orderUuid, imtbase::CTreeItemModel& productsModel, QString& errorMessage) const;
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);

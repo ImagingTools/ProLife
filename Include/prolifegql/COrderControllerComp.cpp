@@ -751,6 +751,42 @@ void COrderControllerComp::GenerateDifferences(
 }
 
 
+bool COrderControllerComp::CheckProducts(
+    const QByteArray& orderUuid,
+    imtbase::CTreeItemModel& productsModel,
+    QString& errorMessage) const
+{
+    for(int productIndex = 0; productIndex < productsModel.GetItemsCount(); productIndex++){
+        QByteArray productUuid;
+        if(productsModel.ContainsKey("Id", productIndex)){
+            productUuid = productsModel.GetData("Id", productIndex).toByteArray();
+        }
+
+        QByteArray productCategory;
+        if(productsModel.ContainsKey("CategoryId", productIndex)){
+            productCategory = productsModel.GetData("CategoryId", productIndex).toByteArray();
+        }
+
+        if (productCategory == "Software"){
+            imtbase::IObjectCollection::DataPtr dataPtr;
+            if (m_softwareInstanceCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+                prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+                if (softwareInfoPtr != nullptr){
+                    QByteArray currentOrderId = softwareInfoPtr->GetOrderId();
+                    if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
+                        return false;
+                    }
+                }
+            }
+        }
+        else if (productCategory == "Hardware"){
+        }
+    }
+
+    return false;
+}
+
+
 } // namespace prolifegql
 
 
