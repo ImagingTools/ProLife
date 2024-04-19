@@ -151,7 +151,7 @@ ViewBase {
     }
 
     function updateModel(){
-        console.log("Order updateModel1", model.toJSON());
+        console.log("Order updateModel1", model.ToJson());
 
         model.SetData("OrderId", instanceIdInput.text)
         model.SetData("PurchaseId", purchaseIdInput.text)
@@ -177,7 +177,7 @@ ViewBase {
             model.AddTreeModel("OrderProducts")
         }
 
-        console.log("Order updateModel2", model.toJSON());
+        console.log("Order updateModel2", model.ToJson());
     }
 
     OrderStatus {
@@ -490,11 +490,11 @@ ViewBase {
                             let productModel = productsDialog.bodyItem.productModel;
                             let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
 
-                            console.log("productModel", productModel.toJSON());
+                            console.log("productModel", productModel.ToJson());
 
                             let index = productsView.activeProductIndex;
                             if (index < 0){
-                                console.log("actualOrderProducts1", actualOrderProducts.toJSON());
+                                console.log("actualOrderProducts1", actualOrderProducts.ToJson());
 
                                 if (actualOrderProducts){
                                     index = actualOrderProducts.InsertNewItem(0);
@@ -502,7 +502,7 @@ ViewBase {
                                     actualOrderProducts.CopyItemDataFromModel(index, productModel);
                                 }
 
-                                console.log("actualOrderProducts2", actualOrderProducts.toJSON());
+                                console.log("actualOrderProducts2", actualOrderProducts.ToJson());
                             }
                             else{
                                 if (actualOrderProducts){

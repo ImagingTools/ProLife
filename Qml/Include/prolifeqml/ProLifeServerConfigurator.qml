@@ -15,11 +15,11 @@ Rectangle {
     signal settingsUpdate();
 
     onSettingsUpdate: {
-        console.log("window onSettingsUpdate", localSettings.toJSON());
+        console.log("window onSettingsUpdate", localSettings.ToJson());
     }
 
     onLocalSettingsChanged: {
-        console.log("onLocalSettingsChanged", localSettings.toJSON());
+        console.log("onLocalSettingsChanged", localSettings.ToJson());
 
         preferenceDialog.settingsModel = localSettings;
     }

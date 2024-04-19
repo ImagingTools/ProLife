@@ -119,7 +119,7 @@ ApplicationMain{
             console.log("LisaWsConnection onStateChanged", state);
 
             if (state === "Ready"){
-                console.log("data", lisaSub.toJSON());
+                console.log("data", lisaSub.ToJson());
 
                 if (lisaSub.ContainsKey("data")){
                     let localModel = lisaSub.GetData("data")

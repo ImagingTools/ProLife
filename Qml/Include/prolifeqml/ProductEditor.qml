@@ -136,7 +136,7 @@ Item {
     }
 
     function onModelChanged(){
-        console.log("onModelChanged", productModel.toJSON());
+        console.log("onModelChanged", productModel.ToJson());
 
         let ok = true;
 
@@ -414,7 +414,7 @@ Item {
     function started(){
         productEditor.blockUpdatingModel = true;
 
-        console.log("started", productEditor.productModel.toJSON());
+        console.log("started", productEditor.productModel.ToJson());
 
         let uuid;
         if (productEditor.productModel.ContainsKey("Id")){

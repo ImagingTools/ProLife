@@ -30,7 +30,7 @@ ViewBase {
     }
 
     function updateGui(){
-        console.log("Software updateGui", model.toJSON());
+        console.log("Software updateGui", model.ToJson());
 
         let isNew = model.GetData("IsNew")
 

@@ -2953,7 +2953,7 @@
         <location filename="../../../AuxInclude/Qt6_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-332"/>
         <location filename="../../../AuxInclude/Qt6_VC16_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-344"/>
         <source>Icons/ShownPassword</source>
-        <translation type="unfinished"></translation>
+        <translation "Passwort zeigen"></translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2988,7 +2988,7 @@
         <location filename="../../../AuxInclude/Qt6_VC16_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-350"/>
         <location filename="../../../AuxInclude/Qt6_VC16_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-344"/>
         <location filename="../../../AuxInclude/Qt6_VC16_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-354"/>
-        <source>Bind</source>
+        <source>f</source>
         <translation>Verknüpfen</translation>
     </message>
     <message>

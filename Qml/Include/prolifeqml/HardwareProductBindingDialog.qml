@@ -100,7 +100,7 @@ Dialog {
         gqlAddCommandId: "HardwareProductBindingAdd";
 
         onDocumentModelChanged: {
-            console.log("documentController onDocumentModelChanged", documentModel.toJSON());
+            console.log("documentController onDocumentModelChanged", documentModel.ToJson());
             productEditorDialog.contentItem.bindingModel = documentModel;
         }
     }
