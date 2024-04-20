@@ -60,7 +60,8 @@ private:
 				QByteArrayList& addedProducts,
 				QByteArrayList& removedProducts,
 				QByteArrayList& updatedProducts) const;
-    bool CheckProducts(const QByteArray& orderUuid, imtbase::CTreeItemModel& productsModel, QString& errorMessage) const;
+	bool CheckProducts(const QByteArray& orderUuid, imtbase::CTreeItemModel& productsModel, QString& errorMessage) const;
+	QString GetProductName(const QByteArray& productUuid) const;
 
 private:
 	I_FACT(prolifedata::IOrderInfo, m_orderPtr);

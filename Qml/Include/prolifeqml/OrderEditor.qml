@@ -35,13 +35,7 @@ ViewBase {
         CachedProductCollection.updateModel();
         CachedSoftwareCollection.updateModel();
 
-        CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.deviceCollectionChanged);
-
         checkWidth();
-    }
-
-    Component.onDestruction: {
-        CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.deviceCollectionChanged);
     }
 
     onWidthChanged: {
@@ -50,10 +44,6 @@ ViewBase {
 
     LicensesProvider {
         id: licensesProvider;
-    }
-
-    function deviceCollectionChanged(){
-//        doUpdateGui();
     }
 
     function checkWidth(){
@@ -145,14 +135,9 @@ ViewBase {
 
             productsView.model.Refresh();
         }
-//        else{
-//            productsView.model = 0;
-//        }
     }
 
     function updateModel(){
-        console.log("Order updateModel1", model.ToJson());
-
         model.SetData("OrderId", instanceIdInput.text)
         model.SetData("PurchaseId", purchaseIdInput.text)
 
@@ -176,8 +161,6 @@ ViewBase {
         if (!model.ContainsKey("OrderProducts")){
             model.AddTreeModel("OrderProducts")
         }
-
-        console.log("Order updateModel2", model.ToJson());
     }
 
     OrderStatus {
@@ -234,70 +217,10 @@ ViewBase {
 
             spacing: Style.size_largeMargin;
 
-            NumberAnimation {
-                id: orderInfoAnimation;
-
-                target: group;
-                property: "height";
-                duration: 200;
-            }
-
-            Rectangle {
-                id: orderInfoTitle;
-
-                width: group.width;
-                height: titleLicenses.height;
-
-                color: "transparent";
-
-                radius: 3;
-
-                property bool orderInfoOpened: true;
-
-                onOrderInfoOpenedChanged: {
-                    if (orderInfoOpened){
-                        orderInfoAnimation.from = 0;
-                        orderInfoAnimation.to = group.contentHeight;
-                    }
-                    else{
-                        orderInfoAnimation.from = group.contentHeight;
-                        orderInfoAnimation.to = 0;
-                    }
-
-                    orderInfoAnimation.start();
-                }
-
-                ToolButton {
-                    id: openButton;
-
-                    anchors.verticalCenter: parent.verticalCenter;
-                    anchors.right: parent.right;
-                    anchors.rightMargin: 10;
-
-                    height: 22;
-                    width: height;
-
-                    iconSource: orderInfoTitle.orderInfoOpened
-                                ? "../../../" + Style.getIconPath("Icons/Up", Icon.State.On, Icon.Mode.Normal)
-                                : "../../../" + Style.getIconPath("Icons/Down", Icon.State.On, Icon.Mode.Normal);
-
-                    onClicked: {
-                        orderInfoTitle.orderInfoOpened = !orderInfoTitle.orderInfoOpened;
-                    }
-                }
-
-                Text {
-                    id: titleOrderInfo;
-
-                    anchors.left: parent.left;
-                    anchors.verticalCenter: parent.verticalCenter;
-
-                    text: qsTr("Order Information");
-
-                    color: Style.textColor;
-                    font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSize_title;
-                }
+            GroupHeaderView {
+                title: qsTr("Order Information");
+                width: content.width;
+                groupView: group;
             }
 
             GroupElementView {
@@ -490,19 +413,12 @@ ViewBase {
                             let productModel = productsDialog.bodyItem.productModel;
                             let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
 
-                            console.log("productModel", productModel.ToJson());
-
                             let index = productsView.activeProductIndex;
                             if (index < 0){
-                                console.log("actualOrderProducts1", actualOrderProducts.ToJson());
-
                                 if (actualOrderProducts){
                                     index = actualOrderProducts.InsertNewItem(0);
-//                                    index = actualOrderProducts.GetItemsCount();
                                     actualOrderProducts.CopyItemDataFromModel(index, productModel);
                                 }
-
-                                console.log("actualOrderProducts2", actualOrderProducts.ToJson());
                             }
                             else{
                                 if (actualOrderProducts){
@@ -523,37 +439,37 @@ ViewBase {
                 }
             }
 
-            Rectangle {
+            Item {
                 id: productsTitle;
 
                 width: content.width;
                 height: titleLicenses.height;
 
-                color: "transparent";
-
-                radius: 3;
-
-                ToolButton {
-                    id: addProduct;
-
+                Row {
                     anchors.verticalCenter: parent.verticalCenter;
                     anchors.right: parent.right;
-                    anchors.rightMargin: 10;
+                    anchors.rightMargin: Style.size_mainMargin;
 
-                    height: 22;
-                    width: height;
+                    height: parent.height;
 
-                    iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
+                    ToolButton {
+                        id: addProduct;
 
-                    onClicked: {
-                        productsView.activeProductIndex = -1;
-                        modalDialogManager.openDialog(productEditorDialog, {});
-                    }
+                        width: 22;
+                        height: width;
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
-                        addProduct.visible = ok;
+                        onClicked: {
+                            productsView.activeProductIndex = -1;
+                            modalDialogManager.openDialog(productEditorDialog, {});
+                        }
+
+                        Component.onCompleted: {
+                            let ok = PermissionsController.checkPermission("ChangeOrder");
+
+                            addProduct.visible = ok;
+                        }
                     }
                 }
 
@@ -576,19 +492,14 @@ ViewBase {
                 width: content.width;
                 height: contentHeight;
 
-                clip: true;
                 boundsBehavior: Flickable.StopAtBounds;
                 spacing: Style.size_largeMargin;
 
                 cacheBuffer: 1000;
 
                 property int activeProductIndex: -1;
-
                 property int selectedIndex: -1;
-
                 property bool readOnly: false;
-                property bool isLicenseConsuming: false;
-                property bool softwareEditing: true;
 
                 Component.onCompleted: {
                     let ok = PermissionsController.checkPermission("ChangeOrder");
@@ -601,12 +512,7 @@ ViewBase {
 
                     width: productsView.width;
 
-                    productsListView: productsView;
-
                     readOnly: productsView.readOnly;
-                    isLicenseConsuming: productsView.isLicenseConsuming;
-
-                    orderEditorPtr: orderEditorContainer;
 
                     onEdited: {
                         productsView.activeProductIndex = model.index;
@@ -622,7 +528,6 @@ ViewBase {
                 }
             }
         }
-
     }
 
     Component {

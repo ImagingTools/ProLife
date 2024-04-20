@@ -449,8 +449,11 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 
 			QByteArray columnId = filteringColumnIds[i];
 
-			if (columnId == "OrderId" || columnId == "PurchaseOrderId"){
+			if (columnId == "OrderId"){
 				textFilterQuery += QString("ord.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+			}
+			else if (columnId == "PurchaseOrderId"){
+				textFilterQuery += QString("ord.\"Document\"->>'PurchaseId' ILIKE '%%1%'").arg(textFilter);
 			}
 			else if (columnId == "DeviceId"){
 				textFilterQuery += QString("dev.\"Document\"->>'MacAddress' ILIKE '%%1%'").arg(textFilter);

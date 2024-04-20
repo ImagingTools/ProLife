@@ -6,10 +6,13 @@ import Acf 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: 800;
-    height: 600;
+    width: rootWidth - 100 < 800 ? rootWidth - 100 : 800;
+    height: rootHeight - 100 < 600 ? rootHeight - 100 : 600;
 
     backgroundColor: Style.backgroundColor2;
+
+    property int rootWidth: root ? root.width: 0;
+    property int rootHeight: root ? root.height: 0;
 
     property TreeItemModel productModel: TreeItemModel {}
 

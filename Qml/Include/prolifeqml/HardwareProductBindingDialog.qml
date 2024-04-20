@@ -9,9 +9,6 @@ Dialog {
 
     property int rootWidth: root ? root.width - 100 : 0;
 
-//    width: 800;
-//    height: 500;
-
     onRootWidthChanged: {
         width = rootWidth;
     }
@@ -24,7 +21,6 @@ Dialog {
     signal saved();
 
     onHardwareIdChanged: {
-        console.log("onHardwareIdChanged", hardwareId);
         documentController.documentId = hardwareId;
         documentController.updateDocumentModel();
     }
@@ -32,7 +28,7 @@ Dialog {
     Component.onCompleted: {
         productEditorDialog.fillButtons();
 
-        productEditorDialog.title = qsTr("Add License to Sensor");
+        productEditorDialog.title = qsTr("Add license to sensor");
     }
 
     onLocalizationChanged: {
@@ -71,7 +67,7 @@ Dialog {
         id: messageDialog;
 
         MessageDialog {
-            title: qsTr("Apply Changes");
+            title: qsTr("Apply changes");
             message: qsTr("Please check the data before saving. Save changes ?")
             onFinished: {
                 if (buttonId == Enums.yes){
@@ -100,7 +96,6 @@ Dialog {
         gqlAddCommandId: "HardwareProductBindingAdd";
 
         onDocumentModelChanged: {
-            console.log("documentController onDocumentModelChanged", documentModel.ToJson());
             productEditorDialog.contentItem.bindingModel = documentModel;
         }
     }

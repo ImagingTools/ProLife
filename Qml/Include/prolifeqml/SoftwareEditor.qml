@@ -333,13 +333,11 @@ ViewBase {
                     if (root.model.ContainsKey("Expiration")){
                         let expiration = root.model.GetData("Expiration");
 
-                        if (expirationEditor.checkBox){
-                            if (expiration && expiration !== "" ){
-                                expirationEditor.checkBox.checkState = Qt.Checked
-                            }
-                            else{
-                                expirationEditor.checkBox.checkState = Qt.Unchecked
-                            }
+                        if (expiration && expiration !== "" ){
+                            unlimitedSwitch.checked = false;
+                        }
+                        else{
+                            unlimitedSwitch.checked = true;
                         }
 
                         if (expirationEditor.datePicker){
@@ -360,8 +358,8 @@ ViewBase {
                 function updateModel(){
                     root.model.SetData("SerialNumber", serialNumberInput.text)
 
-                    if (expirationEditor.checkBox && expirationEditor.datePicker){
-                        if (expirationEditor.checkBox.checkState === Qt.Checked){
+                    if (expirationEditor.datePicker){
+                        if (!unlimitedSwitch.checked){
                             root.model.SetData("Expiration", expirationEditor.datePicker.getDate());
                         }
                         else{
@@ -461,6 +459,41 @@ ViewBase {
                         root.doUpdateModel();
                     }
                 }
+            }
+
+            GroupHeaderView {
+                width: parent.width;
+
+                title: qsTr("Expiration Information");
+                groupView: expirationGroup;
+            }
+
+            GroupElementView {
+                id: expirationGroup;
+
+                width: parent.width;
+
+                SwitchElementView {
+                    id: unlimitedSwitch;
+
+                    name: qsTr("Unlimited");
+
+                    onCheckedChanged: {
+                        root.doUpdateModel();
+                    }
+
+                    readOnly: root.readOnly;
+
+                    onSwitchRefChanged: {
+                        if (switchRef){
+                            if (!root.readOnly){
+                                let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                                switchRef.readOnly = !ok;
+                            }
+                        }
+                    }
+                }
 
                 ElementView {
                     id: expirationEditor;
@@ -473,11 +506,69 @@ ViewBase {
                     property CheckBox checkBox: null;
 
                     onReadOnlyChanged: {
-                        checkBox.isActive = !readOnly;
                         datePicker.readOnly = readOnly;
                     }
 
-                    controlComp: expirationComp;
+                    visible: !unlimitedSwitch.checked;
+
+                    controlComp: datePickerComp;
+
+                    Component {
+                        id: datePickerComp;
+
+                        Item {
+                            width: 300;
+                            height: 20;
+
+                            DatePicker {
+                                id: datePicker;
+
+                                anchors.right: parent.right;
+
+                                width: contentWidth;
+                                height: 20;
+
+                                currentDayButtonVisible: false;
+                                startWithCurrentDay: true;
+
+                                hasDayCombo: false;
+                                hasMonthCombo: false;
+                                hasYearCombo: false;
+
+                                textFieldBorderColor: Style.borderColor;
+
+                                textFieldWidthDay: 30;
+                                textFieldWidthYear: 45;
+                                textFieldWidthMonth: 90;
+
+                                Component.onCompleted: {
+                                    if (!root.readOnly){
+                                        let ok = PermissionsController.checkPermission("ChangeLicense");
+
+                                        datePicker.readOnly = !ok;
+                                    }
+
+                                    expirationEditor.datePicker = datePicker;
+                                }
+
+                                onDateChanged: {
+                                    root.doUpdateModel()
+                                }
+
+                                onCompletedChanged: {
+                                    if (completed){
+                                        var date_ = new Date();
+
+                                        let day = date_.getDay();
+                                        let year = date_.getFullYear() + 1;
+                                        let month = date_.getMonth();
+
+                                        datePicker.setDate(year, month, day)
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     Component {
                         id: expirationComp;

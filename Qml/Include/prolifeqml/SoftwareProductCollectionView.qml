@@ -47,8 +47,6 @@ RemoteCollectionView {
         if (container.table.headers.GetItemsCount() > 0){
             container.table.setColumnContentComponent(0, pairComp);
 
-            let orderIndex = container.table.getHeaderIndex("OrderId");
-            container.table.setColumnContentComponent(orderIndex, orderColumnContentComp);
             container.table.tableDecorator = tableDecoratorModel;
         }
     }
@@ -319,64 +317,6 @@ RemoteCollectionView {
                 baseElement: mainItem.baseElement;
 
                 width: 325;
-            }
-        }
-    }
-
-    Component {
-        id: orderColumnContentComp;
-
-        TableCellDelegateBase {
-            id: cellDelegate
-
-            Image {
-                id: image;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-
-                width: 18;
-                height: width;
-
-                source: "../../../../" + Style.getIconPath("Icons/Alert", Icon.State.On, Icon.Mode.Normal);
-
-                visible: false;
-
-                sourceSize.width: width;
-                sourceSize.height: height;
-            }
-
-            Text {
-                id: lable;
-
-                anchors.left: parent.left;
-                anchors.right: parent.right;
-                anchors.verticalCenter: parent.verticalCenter;
-
-                font.pixelSize: Style.fontSize_common;
-                font.family: Style.fontFamily;
-                color: Style.textColor;
-
-                elide: Text.ElideRight;
-            }
-
-            onRowIndexChanged: {
-                if (!rowDelegate){
-                    return
-                }
-
-                if (rowIndex >= 0){
-                    let orderUuid = cellDelegate.rowDelegate.tableItem.elements.GetData("OrderUuid", rowIndex);
-                    if (orderUuid === "undefined"){
-                        image.visible = true;
-                        lable.visible = false;
-                    }
-                    else{
-                        lable.visible = true;
-                        lable.text = cellDelegate.getValue();
-                    }
-                }
             }
         }
     }

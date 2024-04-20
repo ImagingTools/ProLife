@@ -164,9 +164,6 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
 							elementInformation = orderUuid;
 						}
-						else{
-							elementInformation = QByteArray("undefined");
-						}
 					}
 				}
 				else if (informationId == "HardwareUuid"){

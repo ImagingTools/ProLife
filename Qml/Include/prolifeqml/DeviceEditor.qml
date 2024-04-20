@@ -165,7 +165,7 @@ ViewBase {
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
-//                        statusCB.updateIcon(status);
+                        //                        statusCB.updateIcon(status);
                         statusCB.currentIndex = i;
 
                         statusFound = true;
@@ -473,12 +473,50 @@ ViewBase {
                         macAddressInput.readOnly = !ok;
                     }
 
-                    onEditingFinished: {
-                        deviceEditorContainer.doUpdateModel();
+                    property bool block: false;
+                    property string prevText: "";
+
+                    function doInsert(){
+                        block = true;
+
+                        let macAddress = macAddressInput.text;
+                        let len = macAddress.length;
+                        let maxLen = 17;
+
+                        if(len >= 2 && len < maxLen) {
+                            while(!(macAddress.indexOf(":") < 0)){
+                                macAddress = macAddress.replace(":", "")
+                            }
+
+                            let resultMacAddress = "";
+
+                            for (let i = 1; i <= macAddress.length; i++){
+                                resultMacAddress += macAddress[i - 1];
+
+                                if (i % 2 == 0 && i != 12){
+                                    resultMacAddress += ":";
+                                }
+                            }
+
+                            macAddressInput.text = resultMacAddress;
+                        }
+
+                        block = false;
                     }
 
-                    property var regExp: new RegExp(macAddressRegExp.regularExpression)
                     onTextChanged: {
+                        if (block){
+                            return;
+                        }
+
+                        if (prevText.length < text.length){
+                            doInsert();
+                        }
+
+                        prevText = text;
+                    }
+
+                    onEditingFinished: {
                         if (macAddressInput.text === ""){
                             macAddressInput.borderColor = Style.iconColorOnSelected;
 
@@ -490,7 +528,11 @@ ViewBase {
                             macAddressInput.bottomComp = isValid ? undefined : errorComp;
                             macAddressInput.borderColor = isValid ? Style.iconColorOnSelected : Style.errorTextColor;
                         }
+
+                        deviceEditorContainer.doUpdateModel();
                     }
+
+                    property var regExp: new RegExp(macAddressRegExp.regularExpression)
 
                     KeyNavigation.tab: statusCB;
 
@@ -500,7 +542,8 @@ ViewBase {
                         Text {
                             id: macAddresInvalidText;
 
-                            text: qsTr("MAC-Address invalid");
+                            text: macAddressInput.text.length < 17 ? ""
+                                                                   : qsTr("Your entered MAC address is invalid. It should only be include 0-9 and a-f.");
                             color: Style.errorTextColor;
                             font.family: Style.fontFamily;
                             font.pixelSize: Style.fontSize_common;

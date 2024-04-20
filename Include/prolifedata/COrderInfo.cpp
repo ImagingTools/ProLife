@@ -22,7 +22,7 @@ namespace prolifedata
 {
 
 
-// public static methods
+// public methods
 
 QByteArray COrderInfo::GetTypeId()
 {
@@ -33,7 +33,7 @@ QByteArray COrderInfo::GetTypeId()
 // public methods
 
 COrderInfo::COrderInfo():
-	m_status(OS_NONE)
+	m_status(OS_CREATED)
 {
 	typedef istd::TSingleFactory<istd::IChangeable, imtlic::CIdentifiableSoftwareInstanceInfo> FactorySoftwareImpl;
 	m_productInstanceCollection.RegisterFactory<FactorySoftwareImpl>("Software");
@@ -170,7 +170,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	bool retVal = true;
 
 	// Serialize order with the new format:
-	static iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(statusTag);
 	if (prolifeVersion >= 5902) {
 		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
@@ -182,29 +182,29 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	}
 	retVal = retVal && archive.EndTag(statusTag);
 
-	static iser::CArchiveTag orderIdTag("OrderId", "User-defined order-ID", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag orderIdTag("OrderId", "User-defined order-ID", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderIdTag);
 	retVal = retVal && archive.Process(m_orderId);
 	retVal = retVal && archive.EndTag(orderIdTag);
 
 	if (imtCoreVersion > 6630) {
-		static iser::CArchiveTag purchaseOrderIdTag("PurchaseId", "User-defined purchase order-ID", iser::CArchiveTag::TT_LEAF);
+		iser::CArchiveTag purchaseOrderIdTag("PurchaseId", "User-defined purchase order-ID", iser::CArchiveTag::TT_LEAF);
 		retVal = retVal && archive.BeginTag(purchaseOrderIdTag);
 		retVal = retVal && archive.Process(m_purchaseId);
 		retVal = retVal && archive.EndTag(purchaseOrderIdTag);
 	}
 
-	static iser::CArchiveTag orderCustomerTag("OrderCustomer", "Order Customer", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag orderCustomerTag("OrderCustomer", "Order Customer", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderCustomerTag);
 	retVal = retVal && archive.Process(m_customerId);
 	retVal = retVal && archive.EndTag(orderCustomerTag);
 
-	static iser::CArchiveTag orderDescriptionTag("Description", "Order Description", iser::CArchiveTag::TT_LEAF);
+	iser::CArchiveTag orderDescriptionTag("Description", "Order Description", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderDescriptionTag);
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(orderDescriptionTag);
 
-	static iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
+	iser::CArchiveTag productsTag("Products", "Products in the order", iser::CArchiveTag::TT_GROUP);
 	if (prolifeVersion >= 5902){
 		retVal = retVal && archive.BeginTag(productsTag);
 		retVal = retVal && m_productInstanceCollection.Serialize(archive);
@@ -266,7 +266,7 @@ bool COrderInfo::ResetData(CompatibilityMode /*mode*/)
 	m_purchaseId.clear();
 	m_customerId.clear();
 	m_productInstanceCollection.ResetData();
-	m_status = OS_NONE;
+	m_status = OS_CREATED;
 
 	return true;
 }

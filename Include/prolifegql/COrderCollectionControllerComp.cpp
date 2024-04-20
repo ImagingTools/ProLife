@@ -61,10 +61,10 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "Status"){
 					int status = orderInfoPtr->GetOrderStatus();
 					switch (status){
-					case prolifedata::IOrderInfo::OS_NONE:
-						elementInformation = "None";
-						break;
-					case prolifedata::IOrderInfo::OS_CREATED:
+					case prolifedata::IOrderInfo::OrderStatus::OS_NONE:
+					case prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD:
+					case prolifedata::IOrderInfo::OrderStatus::OS_FINISHED:
+					case prolifedata::IOrderInfo::OrderStatus::OS_CREATED:
 						elementInformation = "Created";
 						break;
 					case prolifedata::IOrderInfo::OS_IN_PROGRESS:
@@ -72,12 +72,6 @@ bool COrderCollectionControllerComp::SetupGqlItem(
 						break;
 					case prolifedata::IOrderInfo::OS_CANCELED:
 						elementInformation = "Canceled";
-						break;
-					case prolifedata::IOrderInfo::OS_ON_HOLD:
-						elementInformation = "Hold";
-						break;
-					case prolifedata::IOrderInfo::OS_FINISHED:
-						elementInformation = "Finished";
 						break;
 					case prolifedata::IOrderInfo::OS_CLOSED:
 						elementInformation = "Closed";

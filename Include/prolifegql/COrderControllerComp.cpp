@@ -67,8 +67,8 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 
 		switch (status){
 		case prolifedata::IOrderInfo::OrderStatus::OS_NONE:
-			dataModelPtr->SetData("OrderStatus", "None");
-			break;
+		case prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD:
+		case prolifedata::IOrderInfo::OrderStatus::OS_FINISHED:
 		case prolifedata::IOrderInfo::OrderStatus::OS_CREATED:
 			dataModelPtr->SetData("OrderStatus", "Created");
 			break;
@@ -77,12 +77,6 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 			break;
 		case prolifedata::IOrderInfo::OrderStatus::OS_CANCELED:
 			dataModelPtr->SetData("OrderStatus", "Canceled");
-			break;
-		case prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD:
-			dataModelPtr->SetData("OrderStatus", "OnHold");
-			break;
-		case prolifedata::IOrderInfo::OrderStatus::OS_FINISHED:
-			dataModelPtr->SetData("OrderStatus", "Finished");
 			break;
 		case prolifedata::IOrderInfo::OrderStatus::OS_CLOSED:
 			dataModelPtr->SetData("OrderStatus", "Closed");
@@ -254,10 +248,10 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		if (itemModel.ContainsKey("OrderStatus")){
 			QString status = itemModel.GetData("OrderStatus").toString();
-			if (status == "None"){
-				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_NONE);
-			}
-			else if (status == "Created"){
+			if (	status == "None" ||
+					status == "Created" ||
+					status == "OnHold" ||
+					status == "Finished" ){
 				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CREATED);
 			}
 			else if (status == "InProgress"){
@@ -265,12 +259,6 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			}
 			else if (status == "Canceled"){
 				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CANCELED);
-			}
-			else if (status == "OnHold"){
-				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_ON_HOLD);
-			}
-			else if (status == "Finished"){
-				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_FINISHED);
 			}
 			else if (status == "Closed"){
 				orderPtr->SetOrderStatus(prolifedata::IOrderInfo::OrderStatus::OS_CLOSED);
@@ -292,6 +280,11 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 
 		imtbase::CTreeItemModel* orderedProducts = itemModel.GetTreeItemModel("OrderProducts");
 		if(orderedProducts != nullptr){
+			bool result = CheckProducts(objectId, *orderedProducts, errorMessage);
+			if (!result){
+				return nullptr;
+			}
+
 			for(int productIndex = 0; productIndex < orderedProducts->GetItemsCount(); productIndex++){
 				QByteArray productCategory;
 				if(orderedProducts->ContainsKey("CategoryId", productIndex)){
@@ -463,6 +456,17 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 				if (productInfoPtr != nullptr){
 					bool isInUse = productInfoPtr->IsInUse();
+					if (isInUse){
+						errorMessage = QString("it is not possible to add a product that is already in use");
+
+						return;
+					}
+
+					QByteArray oldOrderId = productInfoPtr->GetOrderId();
+					if (!oldOrderId.isEmpty() && oldOrderId != orderUuid){
+						return;
+					}
+
 					if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
 						imtbase::IOperationContext* operationContextPtr = nullptr;
 
@@ -752,38 +756,162 @@ void COrderControllerComp::GenerateDifferences(
 
 
 bool COrderControllerComp::CheckProducts(
-    const QByteArray& orderUuid,
-    imtbase::CTreeItemModel& productsModel,
-    QString& errorMessage) const
+			const QByteArray& orderUuid,
+			imtbase::CTreeItemModel& productsModel,
+			QString& errorMessage) const
 {
-    for(int productIndex = 0; productIndex < productsModel.GetItemsCount(); productIndex++){
-        QByteArray productUuid;
-        if(productsModel.ContainsKey("Id", productIndex)){
-            productUuid = productsModel.GetData("Id", productIndex).toByteArray();
-        }
+	if (!m_deviceCollectionCompPtr.IsValid()){
+		return false;
+	}
 
-        QByteArray productCategory;
-        if(productsModel.ContainsKey("CategoryId", productIndex)){
-            productCategory = productsModel.GetData("CategoryId", productIndex).toByteArray();
-        }
+	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
+		return false;
+	}
 
-        if (productCategory == "Software"){
-            imtbase::IObjectCollection::DataPtr dataPtr;
-            if (m_softwareInstanceCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-                prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-                if (softwareInfoPtr != nullptr){
-                    QByteArray currentOrderId = softwareInfoPtr->GetOrderId();
-                    if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
-                        return false;
-                    }
-                }
-            }
-        }
-        else if (productCategory == "Hardware"){
-        }
-    }
+	for(int productIndex = 0; productIndex < productsModel.GetItemsCount(); productIndex++){
+		QByteArray objectUuid;
+		if(productsModel.ContainsKey("Id", productIndex)){
+			objectUuid = productsModel.GetData("Id", productIndex).toByteArray();
+		}
 
-    return false;
+		QByteArray productUuid;
+		if(productsModel.ContainsKey("ProductUuid", productIndex)){
+			productUuid = productsModel.GetData("ProductUuid", productIndex).toByteArray();
+		}
+
+		QByteArray productCategory;
+		if(productsModel.ContainsKey("CategoryId", productIndex)){
+			productCategory = productsModel.GetData("CategoryId", productIndex).toByteArray();
+		}
+
+		QString productName = GetProductName(productUuid);
+
+		if (productCategory == "Software"){
+			QByteArray serialNumber;
+			if(productsModel.ContainsKey("SerialNumber", productIndex)){
+				serialNumber = productsModel.GetData("SerialNumber", productIndex).toByteArray();
+			}
+
+			iprm::CTextParam valueParam;
+			valueParam.SetText(serialNumber);
+
+			iprm::CParamsSet paramsSet;
+			paramsSet.SetEditableParameter("SerialNumber", &valueParam);
+
+			iprm::CParamsSet filterParam;
+			filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+
+			imtbase::IObjectCollection::Ids collectionIds = m_softwareInstanceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+			if (!collectionIds.isEmpty() && !serialNumber.isEmpty()){
+				QByteArray objectId = collectionIds[0];
+				if (objectId != objectUuid){
+					errorMessage = QString(QT_TR_NOOP("it is not possible to save the product '%1' because serial number '%2' already exists"))
+								.arg(productName)
+								.arg(qPrintable(serialNumber));
+
+					return false;
+				}
+			}
+
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_softwareInstanceCollectionCompPtr->GetObjectData(objectUuid, dataPtr)){
+				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+				if (softwareInfoPtr != nullptr){
+					QByteArray currentOrderId = softwareInfoPtr->GetOrderId();
+					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
+						QByteArray serialNumber = softwareInfoPtr->GetSerialNumber();
+
+						errorMessage = QString("It is not possible to add a product that is linked to another order. Software product '%1' with ID '%2'").arg(productName).arg(serialNumber);
+
+						return false;
+					}
+				}
+			}
+		}
+		else if (productCategory == "Hardware"){
+			QByteArray macAddress;
+			if(productsModel.ContainsKey("MacAddress", productIndex)){
+				macAddress = productsModel.GetData("MacAddress", productIndex).toByteArray();
+			}
+
+			if (!macAddress.isEmpty()){
+				iprm::CTextParam valueParam;
+				valueParam.SetText(macAddress);
+
+				iprm::CEnableableParam isEqualParam;
+				isEqualParam.SetEnabled(true);
+
+				iprm::CParamsSet valueParamsSet;
+				valueParamsSet.SetEditableParameter("Value", &valueParam);
+				valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+				iprm::CParamsSet paramsSet1;
+				paramsSet1.SetEditableParameter("MacAddress", &valueParamsSet);
+
+				iprm::CParamsSet filterParam;
+				filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+
+				imtbase::ICollectionInfo::Ids collectionIds = m_deviceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+				if (!collectionIds.isEmpty()){
+					QByteArray id = collectionIds[0];
+					if (objectUuid != id){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_deviceCollectionCompPtr->GetObjectData(id, dataPtr)){
+							prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+							if (deviceInfoPtr != nullptr){
+								QByteArray currentMacAddress = deviceInfoPtr->GetMacAddress().toLower();
+								if (currentMacAddress == macAddress.toLower()){
+									errorMessage = QString(QT_TR_NOOP("it is not possible to save the product '%1' because MAC address '%2' already exists"))
+												.arg(productName)
+												.arg(qPrintable(macAddress));
+
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_deviceCollectionCompPtr->GetObjectData(objectUuid, dataPtr)){
+				prolifedata::COrderedIdentifiableDeviceInfo* hardwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(dataPtr.GetPtr());
+				if (hardwareInfoPtr != nullptr){
+					QByteArray currentOrderId = hardwareInfoPtr->GetOrderId();
+					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
+						QByteArray macAddress = hardwareInfoPtr->GetMacAddress();
+
+						errorMessage = QString("It is not possible to save a product that is linked to another order. Hardware product '%1' with ID '%2'").arg(productName).arg(macAddress);
+
+						return false;
+					}
+				}
+			}
+		}
+		else{
+			errorMessage = QString("Unknown category for product");
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+QString COrderControllerComp::GetProductName(const QByteArray& productUuid) const
+{
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				return productInfoPtr->GetName();
+			}
+		}
+	}
+
+	return QString();
 }
 
 

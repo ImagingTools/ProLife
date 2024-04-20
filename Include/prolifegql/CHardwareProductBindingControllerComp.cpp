@@ -394,7 +394,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	}
 
 	if (!m_objectCollectionCompPtr->SetObjectData(objectId, *newHardwareBindingObjectPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
-		errorMessage = QObject::tr("Can not update object: %1").arg(qPrintable(objectId));
+		errorMessage = QString("Can not update object: %1").arg(qPrintable(objectId));
 
 		return nullptr;
 	}
