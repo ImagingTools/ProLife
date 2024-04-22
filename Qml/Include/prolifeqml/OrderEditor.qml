@@ -448,9 +448,46 @@ ViewBase {
                 Row {
                     anchors.verticalCenter: parent.verticalCenter;
                     anchors.right: parent.right;
-                    anchors.rightMargin: Style.size_mainMargin;
 
                     height: parent.height;
+
+                    spacing: Style.size_mainMargin;
+
+                    ToolButton {
+                        id: collapseButton;
+
+                        width: 22;
+                        height: width;
+
+                        enabled: productsView.expanded;
+
+                        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Collapse", Icon.State.On, Icon.Mode.Normal)
+                                            : "../../../" + Style.getIconPath("Icons/Collapse", Icon.State.Off, Icon.Mode.Disabled);
+
+                        tooltipText: qsTr("Collapse the product view");
+
+                        onClicked: {
+                            productsView.expanded = false;
+                        }
+                    }
+
+                    ToolButton {
+                        id: expandButton;
+
+                        width: 22;
+                        height: width;
+
+                        enabled: !productsView.expanded;
+
+                        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Expand", Icon.State.On, Icon.Mode.Normal)
+                                            : "../../../" + Style.getIconPath("Icons/Expand", Icon.State.Off, Icon.Mode.Disabled);
+
+                        tooltipText: qsTr("Expand the product view");
+
+                        onClicked: {
+                            productsView.expanded = true;
+                        }
+                    }
 
                     ToolButton {
                         id: addProduct;
@@ -460,7 +497,11 @@ ViewBase {
 
                         iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
+                        tooltipText: qsTr("Add a new product");
+
                         onClicked: {
+                            console.log("addProduct onClicked");
+
                             productsView.activeProductIndex = -1;
                             modalDialogManager.openDialog(productEditorDialog, {});
                         }
@@ -501,6 +542,8 @@ ViewBase {
                 property int selectedIndex: -1;
                 property bool readOnly: false;
 
+                property bool expanded: true;
+
                 Component.onCompleted: {
                     let ok = PermissionsController.checkPermission("ChangeOrder");
 
@@ -513,6 +556,8 @@ ViewBase {
                     width: productsView.width;
 
                     readOnly: productsView.readOnly;
+
+                    expanded: productsView.expanded;
 
                     onEdited: {
                         productsView.activeProductIndex = model.index;

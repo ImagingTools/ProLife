@@ -541,6 +541,8 @@ ViewBase {
                                 textFieldWidthYear: 45;
                                 textFieldWidthMonth: 90;
 
+                                mainMargin: Style.size_mainMargin;
+
                                 Component.onCompleted: {
                                     if (!root.readOnly){
                                         let ok = PermissionsController.checkPermission("ChangeLicense");

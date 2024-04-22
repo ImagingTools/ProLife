@@ -12,6 +12,8 @@ ElementView {
 
     property TreeItemModel activeCommandsModel: TreeItemModel {}
 
+    property bool expanded: true;
+
     controlComp: Component {
         Item {
             id: item;
@@ -40,6 +42,8 @@ ElementView {
             }
         }
     }
+
+    bottomComp: root.categoryId == "Software" ? softwareProductCard : hardwareProductCard;
 
     Row {
         id: row;
@@ -129,15 +133,6 @@ ElementView {
         }
     }
 
-    onCategoryIdChanged: {
-        if (root.categoryId == "Software"){
-            root.bottomComp = softwareProductCard;
-        }
-        else if (root.categoryId == "Hardware"){
-            root.bottomComp = hardwareProductCard;
-        }
-    }
-
     onReadOnlyChanged: {
         root.setIsEnabledCommand(softwareCommandsModel, "Edit", !root.readOnly);
         root.setIsEnabledCommand(softwareCommandsModel, "Remove", !root.readOnly);
@@ -166,13 +161,17 @@ ElementView {
     Component {
         id: softwareProductCard;
 
-        SoftwareProductCard {}
+        SoftwareProductCard {
+            visible: root.expanded;
+        }
     }
 
     Component {
         id: hardwareProductCard;
 
-        HardwareProductCard {}
+        HardwareProductCard {
+            visible: root.expanded;
+        }
     }
 
     TreeItemModel {

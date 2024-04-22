@@ -6,7 +6,7 @@ import imtcontrols 1.0
 Rectangle {
     id: hardwareCard;
 
-    height: hardwareCard.contentHeight;
+    height: visible ? hardwareCard.contentHeight : 0;
 
     color: Style.baseColor;
 

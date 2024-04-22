@@ -8,7 +8,7 @@ Rectangle {
     id: softwareCard;
 
     width: 500;
-    height: softwareCard.contentHeight;
+    height: visible ? softwareCard.contentHeight : 0;
 
     color: Style.baseColor;
 
