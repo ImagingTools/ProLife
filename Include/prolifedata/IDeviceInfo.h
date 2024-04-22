@@ -107,6 +107,16 @@ public:
 		Set the status of this order.
 	*/
 	virtual void SetDeviceProductionStatus(DeviceProductionStatus status) = 0;
+
+	/**
+		Get the project of this device instance.
+	*/
+	virtual QByteArray GetProject() const = 0;
+
+	/**
+		Set the project of this device instance.
+	*/
+	virtual void SetProject(const QByteArray& project) = 0;
 };
 
 

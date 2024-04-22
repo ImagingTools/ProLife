@@ -418,8 +418,8 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 				else if(informationId == "SerialNumber"){
 					elementInformation = deviceInfoPtr->GetSerialNumber();
 				}
-				else if(informationId == "Description"){
-					elementInformation = deviceInfoPtr->GetDescription();
+				else if(informationId == "Project"){
+					elementInformation = deviceInfoPtr->GetProject();
 				}
 				else if(informationId == "DeviceType"){
 					elementInformation = objectCollectionIterator->GetElementInfo("DeviceType");

@@ -126,9 +126,6 @@ ViewBase {
         statusCB.changeable = !readOnly;
         productCB.changeable = !readOnly;
         orderCB.changeable = !readOnly;
-        orderClearButton.enabled = !readOnly
-        buttonContainer.enabled = !readOnly;
-
         configurationCB.changeable = !readOnly;
     }
 
@@ -456,6 +453,10 @@ ViewBase {
                     KeyNavigation.tab: macAddressInput;
                 }
 
+                MacAddressValidator {
+                    id: macAddressValidator;
+                }
+
                 TextInputElementView {
                     id: macAddressInput;
 
@@ -473,36 +474,8 @@ ViewBase {
                         macAddressInput.readOnly = !ok;
                     }
 
-                    property bool block: false;
                     property string prevText: "";
-
-                    function doInsert(){
-                        block = true;
-
-                        let macAddress = macAddressInput.text;
-                        let len = macAddress.length;
-                        let maxLen = 17;
-
-                        if(len >= 2 && len < maxLen) {
-                            while(!(macAddress.indexOf(":") < 0)){
-                                macAddress = macAddress.replace(":", "")
-                            }
-
-                            let resultMacAddress = "";
-
-                            for (let i = 1; i <= macAddress.length; i++){
-                                resultMacAddress += macAddress[i - 1];
-
-                                if (i % 2 == 0 && i != 12){
-                                    resultMacAddress += ":";
-                                }
-                            }
-
-                            macAddressInput.text = resultMacAddress;
-                        }
-
-                        block = false;
-                    }
+                    property bool block: false;
 
                     onTextChanged: {
                         if (block){
@@ -510,51 +483,63 @@ ViewBase {
                         }
 
                         if (prevText.length < text.length){
-                            doInsert();
+                            block = true;
+
+                            macAddressInput.text = macAddressValidator.convert(macAddressInput.text);
+
+                            block = false;
                         }
 
                         prevText = text;
                     }
 
                     onEditingFinished: {
-                        if (macAddressInput.text === ""){
-                            macAddressInput.borderColor = Style.iconColorOnSelected;
+                        macAddressInput.bottomComp = undefined;
 
-                            macAddressInput.bottomComp = undefined;
+                        if (macAddressInput.text.length == 0){
+                            macAddressInput.borderColor = Style.iconColorOnSelected
                         }
-                        else if (regExp){
-                            let isValid = regExp.test(macAddressInput.text);
+                        else if (macAddressInput.text.length < macAddressInput.maximumLength){
+                            macAddressInput.borderColor = Style.errorTextColor;
+                            macAddressInput.bottomComp = errorComp1;
+                        }
+                        else{
+                            let isValid = macAddressValidator.isValid(macAddressInput.text);
 
-                            macAddressInput.bottomComp = isValid ? undefined : errorComp;
                             macAddressInput.borderColor = isValid ? Style.iconColorOnSelected : Style.errorTextColor;
+                            macAddressInput.bottomComp = isValid ? undefined : errorComp2;
                         }
 
                         deviceEditorContainer.doUpdateModel();
                     }
 
-                    property var regExp: new RegExp(macAddressRegExp.regularExpression)
-
                     KeyNavigation.tab: statusCB;
 
                     Component {
-                        id: errorComp;
+                        id: errorComp1;
 
                         Text {
                             id: macAddresInvalidText;
 
-                            text: macAddressInput.text.length < 17 ? ""
-                                                                   : qsTr("Your entered MAC address is invalid. It should only be include 0-9 and a-f.");
+                            text: qsTr("MAC Address must be in the format XX:XX:XX:XX:XX:XX");
                             color: Style.errorTextColor;
                             font.family: Style.fontFamily;
                             font.pixelSize: Style.fontSize_common;
                         }
                     }
-                }
 
-                RegularExpressionValidator {
-                    id: macAddressRegExp;
+                    Component {
+                        id: errorComp2;
 
-                    regularExpression: /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+                        Text {
+                            id: macAddresInvalidText;
+
+                            text: qsTr("Your entered MAC address is invalid. It should only be include 0-9 and a-f.");
+                            color: Style.errorTextColor;
+                            font.family: Style.fontFamily;
+                            font.pixelSize: Style.fontSize_common;
+                        }
+                    }
                 }
             }
 

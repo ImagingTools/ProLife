@@ -92,6 +92,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 	dataModelPtr->SetData("Id", objectId);
 	dataModelPtr->SetData("SoftwareIds", "");
 	dataModelPtr->SetData("ProductUuid", "");
+	dataModelPtr->SetData("Project", "");
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
@@ -111,8 +112,10 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
 						imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 						if (productInstanceInfoPtr != nullptr){
-							QByteArray productId = productInstanceInfoPtr->GetProductId();
+							QByteArray project = productInstanceInfoPtr->GetProject();
+							dataModelPtr->SetData("Project", project);
 
+							QByteArray productId = productInstanceInfoPtr->GetProductId();
 							dataModelPtr->SetData("ProductUuid", productId);
 						}
 					}
@@ -247,10 +250,21 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 
 imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
+	QByteArray itemData;
 	QByteArray objectId;
 	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
+		itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
+
+	}
+
+	QByteArray project;
+	imtbase::CTreeItemModel itemModel;
+	if (itemModel.CreateFromJson(itemData)){
+		if (itemModel.ContainsKey("Project")){
+			project = itemModel.GetData("Project").toByteArray();
+		}
 	}
 
 	QString name;
@@ -302,6 +316,8 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		if (m_deviceCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
+				deviceInfoPtr->SetProject(project);
+
 				iprm::CTextParam addedTextParam;
 				if (!addedLicenses.isEmpty()){
 					addedTextParam.SetText(addedLicenses.join(';'));
@@ -338,6 +354,8 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					if (!productInstanceInfoPtr->IsInUse()){
+						productInstanceInfoPtr->SetProject(project);
+
 						imtbase::IOperationContext* operationContextPtr = nullptr;
 
 						iprm::CTextParam textParam;
@@ -366,6 +384,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					productInstanceInfoPtr->SetInUse(false);
+					productInstanceInfoPtr->SetProject("");
 
 					imtbase::IOperationContext* operationContextPtr = nullptr;
 
@@ -398,6 +417,8 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 		return nullptr;
 	}
+
+	// Update project
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* notificationModelPtr = rootModelPtr->AddTreeModel("updatedNotification");

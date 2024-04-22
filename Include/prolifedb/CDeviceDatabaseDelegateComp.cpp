@@ -385,8 +385,8 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& textFilterQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

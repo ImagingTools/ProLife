@@ -96,6 +96,13 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(
 		return false;
 	}
 
+	QByteArray oldProject = oldDeviceInfoPtr->GetProject();
+	QByteArray newProject = newDeviceInfoPtr->GetProject();
+	if (oldProject != newProject){
+		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Project");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Project", keyName, oldProject, newProject), "Project");
+	}
+
 	QByteArray oldSerialNumber = oldDeviceInfoPtr->GetSerialNumber();
 	QByteArray newSerialNumber = newDeviceInfoPtr->GetSerialNumber();
 	if (oldSerialNumber != newSerialNumber){

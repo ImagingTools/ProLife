@@ -43,7 +43,12 @@ Dialog {
 
     onFinished: {
         if (buttonId == Enums.ok){
-            modalDialogManager.openDialog(messageDialog, {});
+            let project = ""
+            if (productEditorDialog.contentItem.bindingModel.ContainsKey("Project")){
+                project = productEditorDialog.contentItem.bindingModel.GetData("Project")
+            }
+
+            modalDialogManager.openDialog(messageDialog, {"placeHolderText":project});
         }
     }
 
@@ -66,14 +71,17 @@ Dialog {
     Component {
         id: messageDialog;
 
-        MessageDialog {
+        InputDialog {
             title: qsTr("Apply changes");
             message: qsTr("Please check the data before saving. Save changes ?")
+            placeHolderText: qsTr("Please enter the project");
             onFinished: {
-                if (buttonId == Enums.yes){
+                if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
 
                     bindingModel.SetData("Id", productEditorDialog.hardwareId);
+                    bindingModel.SetData("Project", inputValue);
+
                     documentController.documentModel = bindingModel;
 
                     documentController.saveDocument();

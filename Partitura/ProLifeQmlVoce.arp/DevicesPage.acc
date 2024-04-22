@@ -208,7 +208,7 @@
                                 <Value>MacAddress</Value>
                                 <Value>OrderId</Value>
                                 <Value>PurchaseOrderId</Value>
-                                <Value>Description</Value>
+                                <Value>Project</Value>
                                 <Value>Customer</Value>
                                 <Value>Added</Value>
                                 <Value>LastModified</Value>
@@ -225,7 +225,7 @@
                                 <Value>Hardware-ID</Value>
                                 <Value>Delivery-ID</Value>
                                 <Value>Purchase Order-ID</Value>
-                                <Value>Description</Value>
+                                <Value>Project</Value>
                                 <Value>Customer</Value>
                                 <Value>Added</Value>
                                 <Value>Last Modified</Value>
@@ -242,7 +242,7 @@
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
                                 <Value>Status</Value>
-                                <Value>Description</Value>
+                                <Value>Project</Value>
                                 <Value>OrderId</Value>
                                 <Value>LicenseName</Value>
                                 <Value>LicenseId</Value>

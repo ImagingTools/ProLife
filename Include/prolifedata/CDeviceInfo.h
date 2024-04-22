@@ -32,6 +32,8 @@ public:
 	virtual void SetDescription(const QString& description) override;
 	virtual DeviceProductionStatus GetDeviceProductionStatus() const override;
 	virtual void SetDeviceProductionStatus(DeviceProductionStatus status) override;
+	virtual QByteArray GetProject() const override;
+	virtual void SetProject(const QByteArray& project) override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -51,6 +53,7 @@ private:
 	QByteArray m_deviceType;
 	QByteArray m_configurationType;
 	QString m_description;
+	QByteArray m_project;
 	DeviceProductionStatus m_status;
 };
 

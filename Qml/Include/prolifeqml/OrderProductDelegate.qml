@@ -45,9 +45,34 @@ ElementView {
         id: row;
 
         anchors.verticalCenter: parent.top;
-        anchors.right: parent.right;
+        anchors.left: parent.left;
+        anchors.leftMargin: Style.size_mainMargin;
 
         spacing: Style.size_mainMargin;
+
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter;
+
+            width: productCategoryText.width + 2* Style.size_smallMargin;
+            height: 20;
+
+            color: Style.iconColorOnSelected;
+
+            radius: Style.buttonRadius;
+
+            Text {
+                id: productCategoryText;
+
+                anchors.centerIn: parent;
+
+                text: root.categoryId;
+
+                color: Style.baseColor;
+
+                font.family:Style.fontFamily;
+                font.pixelSize: Style.fontSize_common;
+            }
+        }
 
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter;
@@ -67,30 +92,6 @@ ElementView {
                 anchors.centerIn: parent;
 
                 text: qsTr("New");
-
-                color: Style.baseColor;
-
-                font.family:Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-        }
-
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter;
-
-            width: productCategoryText.width + 2* Style.size_smallMargin;
-            height: 20;
-
-            color: Style.iconColorOnSelected;
-
-            radius: Style.buttonRadius;
-
-            Text {
-                id: productCategoryText;
-
-                anchors.centerIn: parent;
-
-                text: root.categoryId;
 
                 color: Style.baseColor;
 
@@ -138,10 +139,6 @@ ElementView {
     }
 
     onReadOnlyChanged: {
-        if (cardLoader.item){
-            cardLoader.item.readOnly = root.readOnly;
-        }
-
         root.setIsEnabledCommand(softwareCommandsModel, "Edit", !root.readOnly);
         root.setIsEnabledCommand(softwareCommandsModel, "Remove", !root.readOnly);
     }
