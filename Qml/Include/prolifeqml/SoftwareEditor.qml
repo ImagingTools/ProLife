@@ -83,18 +83,11 @@ ViewBase {
         productCB.changeable = !readOnly;
         licenseCB.changeable = !readOnly;
 
-        let ok = PermissionsController.checkPermission("ChangeLicense");
-        if (!ok){
-            ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-        }
-
         serialNumberInput.readOnly = readOnly;
         expirationEditor.readOnly = readOnly;
     }
 
     function updateGui(){
-        console.log("Software updateGui start");
-
         if (root.model.ContainsKey("Project")){
             projectInput.text = root.model.GetData("Project");
         }
@@ -147,8 +140,6 @@ ViewBase {
     }
 
     function updateModel(){
-        console.log("updateModel");
-
         root.model.SetData("Project", projectInput.text);
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
@@ -248,10 +239,13 @@ ViewBase {
 
                     readOnly: root.readOnly;
 
+                    KeyNavigation.tab: ordersCB;
+                    KeyNavigation.backtab: expirationEditor;
+
                     Component.onCompleted: {
                         if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicense");
-                            console.log("ok", ok);
+                            let ok = PermissionsController.checkPermission("ChangeProjectForLicense");
+
                             projectInput.readOnly = !ok;
                         }
                     }
@@ -271,10 +265,12 @@ ViewBase {
 
                     changeable: !root.readOnly;
 
+                    KeyNavigation.tab: productCB;
+                    KeyNavigation.backtab: projectInput;
+
                     Component.onCompleted: {
                         if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicense");
-                            console.log("ok", ok);
+                            let ok = PermissionsController.checkPermission("ChangeOrderForLicense");
 
                             ordersCB.changeable = ok;
                         }
@@ -386,9 +382,12 @@ ViewBase {
 
                     changeable: !root.readOnly
 
+                    KeyNavigation.tab: licenseCB;
+                    KeyNavigation.backtab: ordersCB;
+
                     Component.onCompleted: {
                         if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicense");
+                            let ok = PermissionsController.checkPermission("ChangeProductForLicense");
 
                             productCB.changeable = ok;
                         }
@@ -399,8 +398,6 @@ ViewBase {
                     }
 
                     onCurrentIndexChanged: {
-                        console.log("productCB onCurrentIndexChanged", productCB.currentIndex);
-
                         if (productCB.currentIndex >= 0){
                             let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
                             if (!licensesModel){
@@ -425,9 +422,12 @@ ViewBase {
 
                     model: root.productLicensesModel;
 
+                    KeyNavigation.tab: serialNumberInput;
+                    KeyNavigation.backtab: productCB;
+
                     Component.onCompleted: {
                         if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicense");
+                            let ok = PermissionsController.checkPermission("ChangeProductLicenses");
 
                             licenseCB.changeable = ok;
                         }
@@ -444,12 +444,12 @@ ViewBase {
                     placeHolderText: qsTr("Enter the license number");
                     name: qsTr("License Number");
 
+                    KeyNavigation.tab: unlimitedSwitch;
+                    KeyNavigation.backtab: licenseCB;
+
                     Component.onCompleted: {
                         if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicense");
-                            if (!ok){
-                                ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-                            }
+                            let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
 
                             serialNumberInput.readOnly = !ok;
                         }
@@ -484,10 +484,13 @@ ViewBase {
 
                     readOnly: root.readOnly;
 
+                    KeyNavigation.tab: expirationEditor;
+                    KeyNavigation.backtab: serialNumberInput;
+
                     onSwitchRefChanged: {
                         if (switchRef){
                             if (!root.readOnly){
-                                let ok = PermissionsController.checkPermission("ChangeLicense");
+                                let ok = PermissionsController.checkPermission("ChangeExpiration");
 
                                 switchRef.readOnly = !ok;
                             }
@@ -512,6 +515,9 @@ ViewBase {
                     visible: !unlimitedSwitch.checked;
 
                     controlComp: datePickerComp;
+
+                    KeyNavigation.tab: projectInput;
+                    KeyNavigation.backtab: unlimitedSwitch;
 
                     Component {
                         id: datePickerComp;

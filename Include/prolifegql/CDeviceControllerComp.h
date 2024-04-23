@@ -25,11 +25,8 @@ public:
 	I_END_COMPONENT
 
 protected:
-
 	virtual imtbase::CTreeItemModel* GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObject(const imtgql::CGqlRequest& gqlRequest, QByteArray &objectId, QString &name, QString &description, QString& errorMessage) const override;
-private:
-//	void UpdateOrderProducts();
 
 private:
 	I_FACT(prolifedata::IDeviceInfo, m_deviceCompPtr);

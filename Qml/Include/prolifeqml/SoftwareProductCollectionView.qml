@@ -328,7 +328,7 @@ RemoteCollectionView {
             var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
 
             let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 60, index);
+            cellWidthModel.SetData("Width", 70, index);
 
             index = cellWidthModel.InsertNewItem();
             cellWidthModel.SetData("Width", -1, index);

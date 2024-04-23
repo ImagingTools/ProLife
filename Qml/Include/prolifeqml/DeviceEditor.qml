@@ -162,14 +162,11 @@ ViewBase {
         let statusFound = false;
         if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.model.GetData("ProductionStatus");
-            //            let statusModel = stateMachine.getAvailableModel(status);
             let statusModel = statusCB.model;
             if (statusModel){
-                //                statusCB.model = statusModel;
                 for (let i = 0; i < statusModel.GetItemsCount(); i++){
                     let id = statusModel.GetData("Id", i);
                     if (id === status){
-                        //                        statusCB.updateIcon(status);
                         statusCB.currentIndex = i;
 
                         statusFound = true;
@@ -369,9 +366,10 @@ ViewBase {
                     nameId: "ProductName";
 
                     KeyNavigation.tab: configurationCB;
+                    KeyNavigation.backtab: orderCB;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        let ok = PermissionsController.checkPermission("ChangeDeviceType");
                         productCB.changeable = ok;
                     }
 
@@ -405,9 +403,10 @@ ViewBase {
                     nameId: "LicenseName";
 
                     KeyNavigation.tab: descriptionInput;
+                    KeyNavigation.backtab: productCB;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
+                        let ok = PermissionsController.checkPermission("ChangeHardwareConfiguration");
                         configurationCB.changeable = ok;
                     }
 
@@ -423,10 +422,7 @@ ViewBase {
                     placeHolderText: qsTr("Enter description");
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
-                        if (!ok){
-                            ok = PermissionsController.checkPermission("ChangeSensorDescription");
-                        }
+                        let ok = PermissionsController.checkPermission("ChangeDescriptionForSensor");
 
                         descriptionInput.readOnly = !ok;
                     }
@@ -436,6 +432,7 @@ ViewBase {
                     }
 
                     KeyNavigation.tab: serialNumberInput;
+                    KeyNavigation.backtab: configurationCB;
                 }
 
                 TextInputElementView {
@@ -446,10 +443,7 @@ ViewBase {
                     placeHolderText: qsTr("Enter serial number");
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
-                        if (!ok){
-                            ok = PermissionsController.checkPermission("ChangeSerialNumber");
-                        }
+                        let ok = PermissionsController.checkPermission("ChangeSerialNumberForSensor");
 
                         serialNumberInput.readOnly = !ok;
                     }
@@ -459,6 +453,7 @@ ViewBase {
                     }
 
                     KeyNavigation.tab: macAddressInput;
+                    KeyNavigation.backtab: descriptionInput;
                 }
 
                 MacAddressValidator {
@@ -474,10 +469,7 @@ ViewBase {
                     maximumLength: 17;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
-                        if (!ok){
-                            ok = PermissionsController.checkPermission("ChangeMacAddress");
-                        }
+                        let ok = PermissionsController.checkPermission("ChangeMacAddress");
 
                         macAddressInput.readOnly = !ok;
                     }
@@ -521,7 +513,8 @@ ViewBase {
                         deviceEditorContainer.doUpdateModel();
                     }
 
-                    KeyNavigation.tab: statusCB;
+                    KeyNavigation.tab: projectInput;
+                    KeyNavigation.backtab: serialNumberInput;
 
                     Component {
                         id: errorComp1;
@@ -575,10 +568,13 @@ ViewBase {
 
                     Component.onCompleted: {
                         if (!deviceEditorContainer.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            let ok = PermissionsController.checkPermission("ChangeProjectForSensor");
                             projectInput.readOnly = !ok;
                         }
                     }
+
+                    KeyNavigation.tab: statusCB;
+                    KeyNavigation.backtab: macAddressInput;
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
@@ -594,12 +590,10 @@ ViewBase {
                     property bool blockingIndexChanged: false;
 
                     KeyNavigation.tab: orderCB;
+                    KeyNavigation.backtab: projectInput;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSensor");
-                        if (!ok){
-                            ok = PermissionsController.checkPermission("ChangeProductionStatus");
-                        }
+                        let ok = PermissionsController.checkPermission("ChangeProductionStatus");
 
                         statusCB.changeable = ok;
                     }
@@ -628,12 +622,12 @@ ViewBase {
                     model: CachedOrderCollection.collectionModel;
 
                     KeyNavigation.tab: productCB;
+                    KeyNavigation.backtab: statusCB;
 
                     Component.onCompleted: {
-                        let canChangeSensor = PermissionsController.checkPermission("ChangeSensor");
-                        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeOrderForSensor");
 
-                        orderCB.changeable = canChangeSensor && canChangeOrder;
+                        orderCB.changeable = ok;
                     }
 
                     onCurrentIndexChanged: {

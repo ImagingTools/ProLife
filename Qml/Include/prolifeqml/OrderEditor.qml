@@ -252,7 +252,7 @@ ViewBase {
                     maximumLength: 10;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeDeliveryId");
                         instanceIdInput.readOnly = !ok;
                     }
 
@@ -261,6 +261,7 @@ ViewBase {
                     }
 
                     KeyNavigation.tab: purchaseIdInput;
+                    KeyNavigation.backtab: orderStatusCB;
 
                     onAcceptableInputChanged: {
                         instanceIdInput.bottomComp = acceptableInput ? undefined : errorComp;
@@ -298,9 +299,10 @@ ViewBase {
                     }
 
                     KeyNavigation.tab: descriptionInput;
+                    KeyNavigation.backtab: instanceIdInput;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangePurchaseOrderId");
                         purchaseIdInput.readOnly = !ok;
                     }
                 }
@@ -317,10 +319,11 @@ ViewBase {
                         orderEditorContainer.doUpdateModel();
                     }
 
-                    KeyNavigation.tab: instanceIdInput;
+                    KeyNavigation.tab: customerCB;
+                    KeyNavigation.backtab: purchaseIdInput;
 
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeDescriptionForOrder");
                         descriptionInput.readOnly = !ok;
                     }
                 }
@@ -337,8 +340,11 @@ ViewBase {
                         orderEditorContainer.doUpdateModel();
                     }
 
+                    KeyNavigation.tab: orderStatusCB;
+                    KeyNavigation.backtab: descriptionInput;
+
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeCustomer");
 
                         customerCB.changeable = ok;
                     }
@@ -365,8 +371,11 @@ ViewBase {
                         }
                     }
 
+                    KeyNavigation.tab: instanceIdInput;
+                    KeyNavigation.backtab: customerCB;
+
                     Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeOrderStatus");
 
                         orderStatusCB.changeable = ok;
                     }
@@ -432,8 +441,6 @@ ViewBase {
 
                             orderEditorContainer.model.SetUpdateEnabled(true);
                             orderEditorContainer.model.dataChanged(null, null);
-
-                            actualOrderProducts.Refresh();
                         }
                     }
                 }
@@ -477,16 +484,15 @@ ViewBase {
 
                         iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
-                        tooltipText: qsTr("Add a new product");
+//                        tooltipText: qsTr("Add a new product");
 
                         onClicked: {
-                            console.log("addProduct onClicked");
                             productsView.activeProductIndex = -1;
                             modalDialogManager.openDialog(productEditorDialog, {});
                         }
 
                         Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrder");
+                            let ok = PermissionsController.checkPermission("ChangeOrderProducts");
 
                             addProduct.visible = ok;
                         }
@@ -524,7 +530,7 @@ ViewBase {
                 property bool expanded: true;
 
                 Component.onCompleted: {
-                    let ok = PermissionsController.checkPermission("ChangeOrder");
+                    let ok = PermissionsController.checkPermission("ChangeOrderProducts");
 
                     productsView.readOnly = !ok;
                 }

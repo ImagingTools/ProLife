@@ -157,33 +157,42 @@
                         <Object FeatureId="EditSensor" FeatureName="Edit Sensor" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures>
-                                <Object FeatureId="ChangeSensorDescription" FeatureName="Change Sensor Description" FeatureDescription="" Optional="false">
-                                    <Dependencies>
-                                        <Dependency>ChangeSensor</Dependency>
-                                    </Dependencies>
-                                    <SubFeatures/>
-                                </Object>
-                                <Object FeatureId="ChangeSerialNumber" FeatureName="Change Serial Number" FeatureDescription="" Optional="false">
-                                    <Dependencies>
-                                        <Dependency>ChangeSensor</Dependency>
-                                    </Dependencies>
-                                    <SubFeatures/>
-                                </Object>
-                                <Object FeatureId="ChangeMacAddress" FeatureName="Change Mac Address" FeatureDescription="" Optional="false">
-                                    <Dependencies>
-                                        <Dependency>ChangeSensor</Dependency>
-                                    </Dependencies>
-                                    <SubFeatures/>
-                                </Object>
-                                <Object FeatureId="ChangeProductionStatus" FeatureName="Change Production Status" FeatureDescription="" Optional="false">
-                                    <Dependencies>
-                                        <Dependency>ChangeSensor</Dependency>
-                                    </Dependencies>
-                                    <SubFeatures/>
-                                </Object>
                                 <Object FeatureId="ChangeSensor" FeatureName="Change Sensor" FeatureDescription="" Optional="false">
                                     <Dependencies/>
-                                    <SubFeatures/>
+                                    <SubFeatures>
+                                        <Object FeatureId="ChangeOrderForSensor" FeatureName="Change Order" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeProductionStatus" FeatureName="Change Production Status" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeHardwareConfiguration" FeatureName="Change Hardware Configuration" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeDeviceType" FeatureName="Change Device Type" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeDescriptionForSensor" FeatureName="Change Description" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeSerialNumberForSensor" FeatureName="Change Serial Number" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeMacAddress" FeatureName="Change Mac Address" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeProjectForSensor" FeatureName="Change Project" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                    </SubFeatures>
                                 </Object>
                                 <Object FeatureId="RemoveSensor" FeatureName="Remove Sensor" FeatureDescription="" Optional="false">
                                     <Dependencies/>
@@ -227,7 +236,32 @@
                             <SubFeatures>
                                 <Object FeatureId="ChangeOrder" FeatureName="Change Order" FeatureDescription="" Optional="false">
                                     <Dependencies/>
-                                    <SubFeatures/>
+                                    <SubFeatures>
+                                        <Object FeatureId="ChangeOrderProducts" FeatureName="Change Order Products" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeOrderStatus" FeatureName="Change Order Status" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeCustomer" FeatureName="Change Customer" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeDescriptionForOrder" FeatureName="Change Description" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangePurchaseOrderId" FeatureName="Change Purchase Order-ID" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeDeliveryId" FeatureName="Change Delivery-ID" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                    </SubFeatures>
                                 </Object>
                                 <Object FeatureId="RemoveOrder" FeatureName="Remove Order" FeatureDescription="" Optional="false">
                                     <Dependencies/>
@@ -266,15 +300,34 @@
                         <Object FeatureId="EditLicense" FeatureName="Edit License" FeatureDescription="" Optional="false">
                             <Dependencies/>
                             <SubFeatures>
-                                <Object FeatureId="ChangeLicenseNumber" FeatureName="Change License Number" FeatureDescription="" Optional="false">
-                                    <Dependencies>
-                                        <Dependency>ChangeLicense</Dependency>
-                                    </Dependencies>
-                                    <SubFeatures/>
-                                </Object>
                                 <Object FeatureId="ChangeLicense" FeatureName="Change License" FeatureDescription="" Optional="false">
                                     <Dependencies/>
-                                    <SubFeatures/>
+                                    <SubFeatures>
+                                        <Object FeatureId="ChangeLicenseNumber" FeatureName="Change License Number" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeExpiration" FeatureName="Change Expiration" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeProductLicenses" FeatureName="Change Product Licenses" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeProductForLicense" FeatureName="Change Product" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeOrderForLicense" FeatureName="Change Order" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeProjectForLicense" FeatureName="Change Project" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                    </SubFeatures>
                                 </Object>
                                 <Object FeatureId="RemoveLicense" FeatureName="Remove License" FeatureDescription="" Optional="false">
                                     <Dependencies/>
@@ -311,7 +364,32 @@
                             <SubFeatures>
                                 <Object FeatureId="ChangeAccount" FeatureName="Change Account" FeatureDescription="" Optional="false">
                                     <Dependencies/>
-                                    <SubFeatures/>
+                                    <SubFeatures>
+                                        <Object FeatureId="ChangeAccountGroups" FeatureName="Change Account Groups" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeCompanyAddress" FeatureName="Change Company Address" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeAccountEmail" FeatureName="Change Account Email" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeAccountDescription" FeatureName="Change Account Description" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeAccountName" FeatureName="Change Account Name" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                        <Object FeatureId="ChangeCustomerId" FeatureName="Change Customer-ID" FeatureDescription="" Optional="false">
+                                            <Dependencies/>
+                                            <SubFeatures/>
+                                        </Object>
+                                    </SubFeatures>
                                 </Object>
                                 <Object FeatureId="RemoveAccount" FeatureName="Remove Account" FeatureDescription="" Optional="false">
                                     <Dependencies/>
