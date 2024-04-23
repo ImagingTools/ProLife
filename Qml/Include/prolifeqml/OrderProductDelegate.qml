@@ -25,8 +25,6 @@ ElementView {
                 id: commands;
 
                 anchors.right: parent.right;
-                anchors.rightMargin: Style.size_mainMargin;
-
                 height: 30;
 
                 commandModel: root.activeCommandsModel;

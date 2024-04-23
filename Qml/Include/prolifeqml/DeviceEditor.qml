@@ -152,6 +152,13 @@ ViewBase {
             macAddressInput.text = "";
         }
 
+        if (deviceEditorContainer.model.ContainsKey("Project")){
+            projectInput.text = deviceEditorContainer.model.GetData("Project");
+        }
+        else{
+            projectInput.text = "";
+        }
+
         let statusFound = false;
         if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
             let status = deviceEditorContainer.model.GetData("ProductionStatus");
@@ -277,6 +284,7 @@ ViewBase {
         deviceEditorContainer.model.SetData("Description", descriptionInput.text);
         deviceEditorContainer.model.SetData("SerialNumber", serialNumberInput.text);
         deviceEditorContainer.model.SetData("MacAddress", macAddressInput.text);
+        deviceEditorContainer.model.SetData("Project", projectInput.text);
 
         if (statusCB.currentIndex >= 0 && statusCB.model){
             let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
@@ -534,7 +542,7 @@ ViewBase {
                         Text {
                             id: macAddresInvalidText;
 
-                            text: qsTr("Your entered MAC address is invalid. It should only be include 0-9 and a-f.");
+                            text: qsTr("Only the symbols <a-f> and <0 - 9> may be included");
                             color: Style.errorTextColor;
                             font.family: Style.fontFamily;
                             font.pixelSize: Style.fontSize_common;
@@ -556,6 +564,26 @@ ViewBase {
                 id: additionalInformationGroup;
 
                 width: parent.width;
+
+                TextInputElementView {
+                    id: projectInput;
+
+                    name: qsTr("Project");
+                    placeHolderText: qsTr("Enter the project");
+
+                    readOnly: deviceEditorContainer.readOnly;
+
+                    Component.onCompleted: {
+                        if (!deviceEditorContainer.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeSensor");
+                            projectInput.readOnly = !ok;
+                        }
+                    }
+
+                    onEditingFinished: {
+                        deviceEditorContainer.doUpdateModel();
+                    }
+                }
 
                 ClearableComboBoxElementView {
                     id: statusCB;

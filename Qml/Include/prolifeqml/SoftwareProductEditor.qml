@@ -381,7 +381,7 @@ ViewBase {
 
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: checkBox.right;
-                            anchors.leftMargin: 5;
+                            anchors.leftMargin: Style.size_mainMargin;
 
                             visible: checkBox.checkState === Qt.Unchecked;
 
