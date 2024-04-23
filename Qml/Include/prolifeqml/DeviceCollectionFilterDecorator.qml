@@ -13,8 +13,8 @@ DecoratorBase {
 
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
+        updateText();
         checkWidth();
-        updateText()
     }
 
     Component.onDestruction: {
