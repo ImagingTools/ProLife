@@ -167,7 +167,7 @@ DecoratorBase {
         Row {
             id: row;
 
-            height: content.height;
+            height: filtermenu.height;
 
             anchors.verticalCenter: parent.verticalCenter;
 
