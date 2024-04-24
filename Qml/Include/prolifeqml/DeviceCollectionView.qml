@@ -46,7 +46,6 @@ RemoteCollectionView {
     }
 
     function onFilterChanged(filterId, filterValue){
-        console.log("onFilterChanged", filterId, filterValue);
         if (filterId == "TextFilter"){
             container.collectionFilter.setTextFilter(filterValue);
         }

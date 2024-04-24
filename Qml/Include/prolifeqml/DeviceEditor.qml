@@ -34,6 +34,8 @@ ViewBase {
                     }
 
                     if (hardwareUuid === ""){
+                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Warning message")});
+
                         return;
                     }
 
@@ -43,8 +45,8 @@ ViewBase {
                         macAddress = deviceEditorContainer.model.GetData("MacAddress");
                     }
 
-                    if (hardwareUuid === "" || macAddress === ""){
-                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter the MAC-Address then save the document.")});
+                    if (!macAddressValidator.isValid(macAddress)){
+                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
 
                         return;
                     }
@@ -53,6 +55,10 @@ ViewBase {
                 }
             }
         }
+    }
+
+    MacAddressValidator {
+        id: macAddressValidator;
     }
 
     Component.onCompleted: {
@@ -81,7 +87,7 @@ ViewBase {
         ErrorDialog {
             width: 300;
 
-            title: qsTr("Save document");
+            title: qsTr("Warning message");
         }
     }
 

@@ -463,6 +463,8 @@ ViewBase {
                     ToolButton {
                         id: expandButton;
 
+                        anchors.verticalCenter: parent.verticalCenter;
+
                         width: 22;
                         height: width;
 
@@ -478,6 +480,8 @@ ViewBase {
 
                     ToolButton {
                         id: addProduct;
+
+                        anchors.verticalCenter: parent.verticalCenter;
 
                         width: 22;
                         height: width;
