@@ -49,8 +49,8 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccountPermissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -58,8 +58,8 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -88,8 +88,8 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccountPermissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="false"/>
@@ -106,10 +106,19 @@
                     <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ObjectViewDataProvider"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="AccountPermissions" PackageId="ProLifeVoce" ComponentId="AccountPermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -167,6 +176,11 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -210,9 +224,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="../../imtauthgui/AccountEditor.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -259,8 +270,13 @@
                                 <AttributeInfo Id="EditCommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeAccount</Value>
                                             <Value>ViewAccounts</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -412,8 +428,13 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>RemoveAccount</Value>
-                                            <Value>ChangeAccount</Value>
                                             <Value>ViewAccounts</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -425,7 +446,12 @@
                                         <Values>
                                             <Value>AddAccount</Value>
                                             <Value>RemoveAccount</Value>
-                                            <Value>ChangeAccount</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -434,7 +460,12 @@
                                         <Values>
                                             <Value>AddAccount</Value>
                                             <Value>RemoveAccount</Value>
-                                            <Value>ChangeAccount</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -443,7 +474,12 @@
                                         <Values>
                                             <Value>AddAccount</Value>
                                             <Value>RemoveAccount</Value>
-                                            <Value>ChangeAccount</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

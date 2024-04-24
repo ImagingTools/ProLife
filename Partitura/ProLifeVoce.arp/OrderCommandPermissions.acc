@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5125" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -21,7 +21,12 @@
                             <Values>
                                 <Value>EditOrder</Value>
                                 <Value>ViewOrders</Value>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -45,7 +50,6 @@
                                 <Value>CreateLicenseFile</Value>
                                 <Value>Undo</Value>
                                 <Value>Redo</Value>
-                                <Value>EditLicense</Value>
                                 <Value>History</Value>
                             </Values>
                         </Data>
@@ -63,28 +67,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>CreateLicenseFile</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="EditLicense" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="EditLicense"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>EditLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -128,7 +110,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -150,7 +137,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -172,7 +164,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

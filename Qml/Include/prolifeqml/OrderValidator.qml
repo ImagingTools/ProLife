@@ -20,13 +20,6 @@ DocumentValidator {
     }
 
     function isValid(data){
-        let canChange = PermissionsController.checkPermission("ChangeOrder");
-        if (!canChange){
-            data.message = qsTr("Permission denied")
-
-            return false;
-        }
-
         let orderId = "";
         if (documentModel.ContainsKey("OrderId")){
             orderId = documentModel.GetData("OrderId");
@@ -40,17 +33,6 @@ DocumentValidator {
 
             return false;
         }
-
-//        let purchaseId = "";
-//        if (documentModel.ContainsKey("PurchaseId")){
-//            purchaseId = documentModel.GetData("PurchaseId");
-//        }
-
-//        if (purchaseId === ""){
-//            data.message = qsTr("Purchase Order-ID cannot be empty");
-
-//            return false;
-//        }
 
         let customerId = "";
         if (documentModel.ContainsKey("CustomerId")){

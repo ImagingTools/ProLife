@@ -32,9 +32,6 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -112,6 +109,9 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderPermissions"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderHeadersDataProvider"/>
                     </AttributeInfo>
@@ -166,6 +166,9 @@
                                 <Value>OrderHistory</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderPermissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
                         <Data IsEnabled="false"/>
@@ -290,6 +293,15 @@
         <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="OrderPermissions" PackageId="ProLifeVoce" ComponentId="OrderPermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="OrderViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
@@ -445,7 +457,12 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
-                                            <Value>ChangeOrder</Value>
+                                            <Value>ChangeDeliveryId</Value>
+                                            <Value>ChangePurchaseOrderId</Value>
+                                            <Value>ChangeDescriptionForOrder</Value>
+                                            <Value>ChangeCustomer</Value>
+                                            <Value>ChangeOrderStatus</Value>
+                                            <Value>ChangeOrderProducts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -733,27 +750,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
                                     <Data IsEnabled="true" Value="History"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LicenseEdit" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Redo"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="EditLicense"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value=""/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

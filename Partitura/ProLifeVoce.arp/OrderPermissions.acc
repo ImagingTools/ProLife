@@ -10,21 +10,16 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="OrderAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountUpdate"/>
+                        <Data IsEnabled="true" Value="OrderAdd"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>AddOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -34,16 +29,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="OrderUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountAdd"/>
+                        <Data IsEnabled="true" Value="OrderUpdate"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -53,16 +53,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsRemove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="OrdersRemove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsRemove"/>
+                        <Data IsEnabled="true" Value="OrdersRemove"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveAccount</Value>
+                                <Value>RemoveOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -78,9 +78,9 @@
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AccountsAdd</Value>
-                                <Value>AccountUpdate</Value>
-                                <Value>AccountsRemove</Value>
+                                <Value>OrderAdd</Value>
+                                <Value>OrderUpdate</Value>
+                                <Value>OrdersRemove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -91,6 +91,7 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PermissionsJoiner"/>
     </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>

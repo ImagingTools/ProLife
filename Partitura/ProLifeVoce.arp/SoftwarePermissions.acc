@@ -10,79 +10,79 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountUpdate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="AccountsAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountAdd"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>AddAccount</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="AccountsRemove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsRemove"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>RemoveAccount</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="PermissionsJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AccountsAdd</Value>
-                                <Value>AccountUpdate</Value>
-                                <Value>AccountsRemove</Value>
+                                <Value>SoftwareProductAdd</Value>
+                                <Value>SoftwareProductUpdate</Value>
+                                <Value>SoftwareProductsRemove</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareProductAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProductAdd"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AddLicense</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareProductUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProductUpdate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ChangeProjectForLicense</Value>
+                                <Value>ChangeProductForLicense</Value>
+                                <Value>ChangeOrderForLicense</Value>
+                                <Value>ChangeProductLicenses</Value>
+                                <Value>ChangeExpiration</Value>
+                                <Value>ChangeLicenseNumber</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareProductsRemove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProductsRemove"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>RemoveLicense</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -91,6 +91,7 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PermissionsJoiner"/>
     </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>

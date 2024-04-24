@@ -8,10 +8,10 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountUpdate" X="875" Y="275" Note=""/>
-        <Element ComponentName="AccountsAdd" X="200" Y="275" Note=""/>
-        <Element ComponentName="AccountsRemove" X="200" Y="375" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
+        <Element ComponentName="SoftwareProductAdd" X="200" Y="275" Note=""/>
+        <Element ComponentName="SoftwareProductUpdate" X="875" Y="275" Note=""/>
+        <Element ComponentName="SoftwareProductsRemove" X="200" Y="375" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

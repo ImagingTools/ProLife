@@ -13,8 +13,10 @@
         <Element ComponentName="AccountDataController" X="125" Y="250" Note=""/>
         <Element ComponentName="AccountInfo" X="150" Y="400" Note=""/>
         <Element ComponentName="AccountListController" X="1050" Y="250" Note=""/>
+        <Element ComponentName="AccountPermissions" X="525" Y="500" Note=""/>
         <Element ComponentName="AccountsHeadersDataProvider" X="800" Y="400" Note=""/>
-        <Element ComponentName="Demultiplexer" X="500" Y="75" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="525" Y="600" Note=""/>
+        <Element ComponentName="Demultiplexer" X="575" Y="50" Note=""/>
         <Element ComponentName="ObjectViewDataProvider" X="1075" Y="400" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>

@@ -187,6 +187,15 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SoftwarePermissions" PackageId="ProLifeVoce" ComponentId="SoftwarePermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SoftwareProductCollectionController" PackageId="ProLifeGqlPck" ComponentId="SoftwareProductCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -202,6 +211,9 @@
                                 <Value>SoftwareProductsRemove</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwarePermissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
@@ -254,6 +266,9 @@
                                 <Value>SoftwareProductHistory</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwarePermissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
@@ -349,8 +364,6 @@
                                             <Value>EditPermissions</Value>
                                             <Value>OpenOrderPermissions</Value>
                                             <Value>RemovePermissions</Value>
-                                            <Value>OnlyPairedPermissions</Value>
-                                            <Value>OnlyUnpairedPermissions</Value>
                                             <Value>NewPermissions</Value>
                                         </Values>
                                     </Data>
@@ -410,7 +423,12 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewLicenses</Value>
-                                            <Value>ChangeLicense</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
+                                            <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -475,96 +493,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="OnlyPaired" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="ShowLinked"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnlyPaired"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Only Paired"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OnlyPairedPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnlyPaired"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewLicenses</Value>
-                                            <Value>EditLicense</Value>
-                                            <Value>ChangeLicense</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OnlyUnpaired" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="ShowUnlinked"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnlyUnpaired"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Only Unpaired"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OnlyUnpairedPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnlyUnpaired"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewLicenses</Value>
-                                            <Value>EditLicense</Value>
-                                            <Value>ChangeLicense</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="OpenOrder" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -596,7 +524,12 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
-                                            <Value>ChangeOrder</Value>
+                                            <Value>ChangeDeliveryId</Value>
+                                            <Value>ChangePurchaseOrderId</Value>
+                                            <Value>ChangeDescriptionForOrder</Value>
+                                            <Value>ChangeCustomer</Value>
+                                            <Value>ChangeOrderStatus</Value>
+                                            <Value>ChangeOrderProducts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -700,6 +633,12 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewLicenses</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
+                                            <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -880,8 +819,11 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditLicense</Value>
-                                            <Value>ChangeLicense</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
                                             <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
@@ -925,8 +867,11 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditLicense</Value>
-                                            <Value>ChangeLicense</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
                                             <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>
@@ -970,8 +915,11 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>EditLicense</Value>
-                                            <Value>ChangeLicense</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
                                             <Value>ChangeLicenseNumber</Value>
                                         </Values>
                                     </Data>

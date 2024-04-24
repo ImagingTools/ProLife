@@ -25,8 +25,6 @@ Item {
     property string orderId;
     property string orderUuid;
 
-    //    property var excludeDeviceIds: [];
-
     property string productCategory: "";
     property string productId: "";
     property string uuid: "";
@@ -123,8 +121,7 @@ Item {
                 continue;
             }
 
-            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId) && (status === "Finished" || status === "None") ||
-                    selectedProductId === deviceType && productEditor.orderUuid === orderId){
+            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId)){
                 let index = resultModel.InsertNewItem();
                 resultModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
             }

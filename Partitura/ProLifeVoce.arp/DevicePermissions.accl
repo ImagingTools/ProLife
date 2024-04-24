@@ -8,9 +8,11 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountUpdate" X="875" Y="275" Note=""/>
-        <Element ComponentName="AccountsAdd" X="200" Y="275" Note=""/>
-        <Element ComponentName="AccountsRemove" X="200" Y="375" Note=""/>
+        <Element ComponentName="DeviceUpdate" X="875" Y="275" Note=""/>
+        <Element ComponentName="DevicesAdd" X="200" Y="275" Note=""/>
+        <Element ComponentName="DevicesRemove" X="200" Y="375" Note=""/>
+        <Element ComponentName="HardwareProductBindingAdd" X="875" Y="475" Note=""/>
+        <Element ComponentName="HardwareProductBindingUpdate" X="875" Y="375" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

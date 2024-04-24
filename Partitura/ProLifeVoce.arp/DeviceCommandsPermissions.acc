@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -42,6 +42,14 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewSensors</Value>
+                                <Value>ChangeProjectForSensor</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -103,12 +111,14 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditSensor</Value>
-                                <Value>ChangeSensor</Value>
-                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                                 <Value>ChangeMacAddress</Value>
-                                <Value>ChangeSerialNumber</Value>
-                                <Value>ChangeSensorDescription</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -130,12 +140,14 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditSensor</Value>
-                                <Value>ChangeSensor</Value>
-                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                                 <Value>ChangeMacAddress</Value>
-                                <Value>ChangeSerialNumber</Value>
-                                <Value>ChangeSensorDescription</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -157,12 +169,14 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditSensor</Value>
-                                <Value>ChangeSensor</Value>
-                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                                 <Value>ChangeMacAddress</Value>
-                                <Value>ChangeSerialNumber</Value>
-                                <Value>ChangeSensorDescription</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

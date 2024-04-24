@@ -2,17 +2,16 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5125" Description="ACF"/>
-            <Version Id="1" Number="2197" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="Close" X="1050" Y="375" Note=""/>
         <Element ComponentName="CommandPermissionsProviderJoiner" X="600" Y="300" Note=""/>
         <Element ComponentName="CreateLicenseFile" X="600" Y="200" Note=""/>
-        <Element ComponentName="EditLicense" X="600" Y="400" Note=""/>
-        <Element ComponentName="History" X="600" Y="575" Note=""/>
+        <Element ComponentName="History" X="600" Y="400" Note=""/>
         <Element ComponentName="Redo" X="200" Y="200" Note=""/>
         <Element ComponentName="Save" X="1000" Y="200" Note=""/>
         <Element ComponentName="Undo" X="200" Y="400" Note=""/>

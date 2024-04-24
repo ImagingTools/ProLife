@@ -13,13 +13,6 @@ DocumentValidator {
     }
 
     function isValid(data){
-        let canChange = PermissionsController.checkPermission("ChangeSensor");
-        if (!canChange){
-            data.message = qsTr("Permission denied")
-
-            return false;
-        }
-
         //Check mac address valid
         let macAddress = "";
         if (documentModel.ContainsKey("MacAddress")){

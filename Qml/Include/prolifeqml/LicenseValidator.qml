@@ -13,13 +13,6 @@ DocumentValidator {
             return false;
         }
 
-        let canChange = PermissionsController.checkPermission("ChangeLicense");
-        if (!canChange){
-            data.message = qsTr("Permission denied")
-
-            return false;
-        }
-
         if (documentModel.ContainsKey("InUse")){
             let inUse = documentModel.GetData("InUse");
             if (inUse){
