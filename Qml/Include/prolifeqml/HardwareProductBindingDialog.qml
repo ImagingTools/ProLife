@@ -48,7 +48,7 @@ Dialog {
                 project = productEditorDialog.contentItem.bindingModel.GetData("Project")
             }
 
-            modalDialogManager.openDialog(messageDialog, {"placeHolderText":project});
+            modalDialogManager.openDialog(messageDialog, {"inputValue":project});
         }
     }
 

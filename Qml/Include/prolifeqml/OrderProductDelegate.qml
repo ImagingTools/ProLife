@@ -58,7 +58,7 @@ ElementView {
             width: productCategoryText.width + 2* Style.size_smallMargin;
             height: 20;
 
-            color: Style.iconColorOnSelected;
+            color: root.categoryId == "Software" ? "orange" : Style.iconColorOnSelected;
 
             radius: Style.buttonRadius;
 

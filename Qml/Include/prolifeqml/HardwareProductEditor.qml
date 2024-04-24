@@ -246,13 +246,10 @@ ViewBase {
                 }
             }
 
-            TextInputElementView {
+            MacAddressElementView {
                 id: macAddressInput;
 
                 width: parent.width;
-
-                placeHolderText: qsTr("Enter the MAC Address");
-                name: qsTr("MAC Address");
 
                 readOnly: root.readOnly;
 

@@ -456,17 +456,8 @@ ViewBase {
                     KeyNavigation.backtab: descriptionInput;
                 }
 
-                MacAddressValidator {
-                    id: macAddressValidator;
-                }
-
-                TextInputElementView {
+                MacAddressElementView {
                     id: macAddressInput;
-
-                    name: qsTr("MAC-Address");
-                    placeHolderText: qsTr("Enter MAC-Address");
-
-                    maximumLength: 17;
 
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeMacAddress");
@@ -474,73 +465,12 @@ ViewBase {
                         macAddressInput.readOnly = !ok;
                     }
 
-                    property string prevText: "";
-                    property bool block: false;
-
-                    onTextChanged: {
-                        if (block){
-                            return;
-                        }
-
-                        if (prevText.length < text.length){
-                            block = true;
-
-                            macAddressInput.text = macAddressValidator.convert(macAddressInput.text);
-
-                            block = false;
-                        }
-
-                        prevText = text;
-                    }
-
                     onEditingFinished: {
-                        macAddressInput.bottomComp = undefined;
-
-                        if (macAddressInput.text.length == 0){
-                            macAddressInput.borderColor = Style.iconColorOnSelected
-                        }
-                        else if (macAddressInput.text.length < macAddressInput.maximumLength){
-                            macAddressInput.borderColor = Style.errorTextColor;
-                            macAddressInput.bottomComp = errorComp1;
-                        }
-                        else{
-                            let isValid = macAddressValidator.isValid(macAddressInput.text);
-
-                            macAddressInput.borderColor = isValid ? Style.iconColorOnSelected : Style.errorTextColor;
-                            macAddressInput.bottomComp = isValid ? undefined : errorComp2;
-                        }
-
                         deviceEditorContainer.doUpdateModel();
                     }
 
                     KeyNavigation.tab: projectInput;
                     KeyNavigation.backtab: serialNumberInput;
-
-                    Component {
-                        id: errorComp1;
-
-                        Text {
-                            id: macAddresInvalidText;
-
-                            text: qsTr("MAC Address must be in the format XX:XX:XX:XX:XX:XX");
-                            color: Style.errorTextColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
-                        }
-                    }
-
-                    Component {
-                        id: errorComp2;
-
-                        Text {
-                            id: macAddresInvalidText;
-
-                            text: qsTr("Only the symbols <a-f> and <0 - 9> may be included");
-                            color: Style.errorTextColor;
-                            font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
-                        }
-                    }
                 }
             }
 
