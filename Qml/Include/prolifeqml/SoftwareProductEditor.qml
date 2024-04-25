@@ -393,7 +393,7 @@ ViewBase {
                         }
 
                         DatePicker {
-                            id: datePicker;
+                            id: datePicker_;
 
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: checkBox.right;
@@ -402,7 +402,7 @@ ViewBase {
                             visible: checkBox.checkState === Qt.Checked;
 
                             width: 100;
-                            height: 20;
+                            height: parent.height;
 
                             currentDayButtonVisible: false;
                             startWithCurrentDay: true;
@@ -413,7 +413,14 @@ ViewBase {
                             hasMonthCombo: false;
                             hasYearCombo: false;
 
+                            textFieldWidthDay: 30;
+                            textFieldWidthYear: 45;
+                            textFieldWidthMonth: 90;
+
+                            textFieldHeight: height;
+
                             textFieldBorderColor: Style.borderColor;
+                            mainMargin: Style.size_mainMargin;
 
                             Component.onCompleted: {
                                 if (!root.readOnly){
@@ -423,10 +430,10 @@ ViewBase {
                                         ok = true;
                                     }
 
-                                    datePicker.readOnly = !ok;
+                                    datePicker_.readOnly = !ok;
                                 }
 
-                                expirationElementView.datePicker = datePicker;
+                                expirationElementView.datePicker = datePicker_;
                             }
 
                             onDateChanged: {
@@ -441,7 +448,7 @@ ViewBase {
                                     let year = date_.getFullYear() + 1;
                                     let month = date_.getMonth();
 
-                                    datePicker.setDate(year, month, day)
+                                    datePicker_.setDate(year, month, day)
                                 }
                             }
                         }

@@ -38,12 +38,6 @@ DecoratorBase {
         onlyNewSensorsText.text = qsTr("Only new sensors");
     }
 
-    Rectangle{
-        anchors.fill: parent;
-
-        color: Style.backgroundColor;
-    }
-
     CollectionDataProvider {
         id: accountsList;
 

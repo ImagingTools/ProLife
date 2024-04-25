@@ -72,6 +72,10 @@ Item {
         for (let i = 0; i < productEditor.softwaresModel.GetItemsCount(); i++){
             let id = productEditor.softwaresModel.GetData("Id", i);
 
+            if (!id || id === ""){
+                continue;
+            }
+
             if (excludeIds.includes(id)){
                 continue;
             }
@@ -116,6 +120,11 @@ Item {
             let orderId = productEditor.devicesModel.GetData("OrderUuid", i);
             let deviceId = productEditor.devicesModel.GetData("Id", i);
             let deviceType = productEditor.devicesModel.GetData("ProductUuid", i);
+            let macAddress = productEditor.devicesModel.GetData("MacAddress", i);
+
+            if (!deviceId || deviceId === ""){
+                continue;
+            }
 
             if (excludeDeviceIds.includes(deviceId)){
                 continue;
@@ -124,6 +133,9 @@ Item {
             if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId)){
                 let index = resultModel.InsertNewItem();
                 resultModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
+
+                let sMacAddress = "s" + macAddress.split(':').join('');
+                resultModel.SetData("SMacAddress", sMacAddress, index);
             }
         }
 
@@ -131,8 +143,6 @@ Item {
     }
 
     function onModelChanged(){
-        console.log("onModelChanged", productModel.ToJson());
-
         let ok = true;
 
         let licenseUuid = "";

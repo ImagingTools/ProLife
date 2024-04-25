@@ -503,13 +503,14 @@ ViewBase {
 
                     name: qsTr("Expiration");
 
-                    property bool readOnly: false;
+                    property bool readOnly: root.readOnly;
 
                     property DatePicker datePicker: null;
-                    property CheckBox checkBox: null;
 
                     onReadOnlyChanged: {
-                        datePicker.readOnly = readOnly;
+                        if (datePicker){
+                            datePicker.readOnly = readOnly;
+                        }
                     }
 
                     visible: !unlimitedSwitch.checked;
@@ -519,20 +520,28 @@ ViewBase {
                     KeyNavigation.tab: projectInput;
                     KeyNavigation.backtab: unlimitedSwitch;
 
+                    onDatePickerChanged: {
+                        if (datePicker){
+                            datePicker.readOnly = readOnly;
+                        }
+                    }
+
                     Component {
                         id: datePickerComp;
 
                         Item {
                             width: 300;
-                            height: 20;
+                            height: 30;
 
                             DatePicker {
-                                id: datePicker;
+                                id: datePicker_;
 
                                 anchors.right: parent.right;
 
+                                readOnly: expirationEditor.readOnly;
+
                                 width: contentWidth;
-                                height: 20;
+                                height: parent.height;
 
                                 currentDayButtonVisible: false;
                                 startWithCurrentDay: true;
@@ -547,16 +556,18 @@ ViewBase {
                                 textFieldWidthYear: 45;
                                 textFieldWidthMonth: 90;
 
+                                textFieldHeight: height;
+
                                 mainMargin: Style.size_mainMargin;
 
                                 Component.onCompleted: {
-                                    if (!root.readOnly){
-                                        let ok = PermissionsController.checkPermission("ChangeLicense");
+                                    if (!expirationEditor.readOnly){
+                                        let ok = PermissionsController.checkPermission("ChangeExpiration");
 
-                                        datePicker.readOnly = !ok;
+                                        datePicker_.readOnly = !ok;
                                     }
 
-                                    expirationEditor.datePicker = datePicker;
+                                    expirationEditor.datePicker = datePicker_;
                                 }
 
                                 onDateChanged: {
@@ -571,101 +582,7 @@ ViewBase {
                                         let year = date_.getFullYear() + 1;
                                         let month = date_.getMonth();
 
-                                        datePicker.setDate(year, month, day)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    Component {
-                        id: expirationComp;
-
-                        Item {
-                            width: 300;
-                            height: 30;
-
-                            CheckBox {
-                                id: checkBox;
-
-                                anchors.verticalCenter: parent.verticalCenter;
-                                anchors.left: parent.left;
-
-                                onClicked: {
-                                    checkBox.checkState = Qt.Checked - checkBox.checkState;
-                                }
-
-                                isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
-
-                                onCheckStateChanged: {
-                                    root.doUpdateModel();
-                                }
-
-                                Component.onCompleted: {
-                                    expirationEditor.checkBox = checkBox;
-                                }
-                            }
-
-                            Text {
-                                id: textUnlimited;
-
-                                anchors.verticalCenter: parent.verticalCenter;
-                                anchors.left: checkBox.right;
-                                anchors.leftMargin: 5;
-
-                                visible: checkBox.checkState === Qt.Unchecked;
-
-                                font.family: Style.fontFamily;
-                                font.pixelSize: Style.fontSize_common;
-                                color: Style.textColor;
-
-                                text: qsTr("Unlimited");
-                            }
-
-                            DatePicker {
-                                id: datePicker;
-
-                                anchors.verticalCenter: parent.verticalCenter;
-                                anchors.left: checkBox.right;
-                                anchors.leftMargin: 5;
-
-                                visible: checkBox.checkState === Qt.Checked;
-
-                                width: 100;
-                                height: 20;
-
-                                currentDayButtonVisible: false;
-                                startWithCurrentDay: true;
-
-                                hasDayCombo: false;
-                                hasMonthCombo: false;
-                                hasYearCombo: false;
-
-                                textFieldBorderColor: Style.borderColor;
-
-                                Component.onCompleted: {
-                                    if (!root.readOnly){
-                                        let ok = PermissionsController.checkPermission("ChangeLicense");
-
-                                        datePicker.readOnly = !ok;
-                                    }
-
-                                    expirationEditor.datePicker = datePicker;
-                                }
-
-                                onDateChanged: {
-                                    root.doUpdateModel()
-                                }
-
-                                onCompletedChanged: {
-                                    if (completed){
-                                        var date_ = new Date();
-
-                                        let day = date_.getDay();
-                                        let year = date_.getFullYear() + 1;
-                                        let month = date_.getMonth();
-
-                                        datePicker.setDate(year, month, day)
+                                        datePicker_.setDate(year, month, day)
                                     }
                                 }
                             }

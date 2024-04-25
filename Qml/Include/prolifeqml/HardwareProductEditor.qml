@@ -176,6 +176,7 @@ ViewBase {
             name: qsTr("Hardware-ID");
 
             bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
+            filteringFields: ["SMacAddress", "Name"];
 
             onCurrentIndexChanged: {
                 if (deviceCB.currentIndex >= 0 && deviceCB.model){
