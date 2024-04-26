@@ -322,18 +322,16 @@ Item {
                         dataController.collectionId = "SoftwareProducts"
 
                         let elementsModel = bindingProductsCollection.table.elements;
-                        let products = ""
-                        let customerUuid = ""
+
+                        let products = []
+                        let licenseIds = []
+
                         for(var i = 0; i < bindingProductsCollection.table.elements.GetItemsCount(); i++){
                             let id = bindingProductsCollection.table.elements.GetData("Id", i);
-                            if (i > 0){
-                                products += ";"
-                            }
-                            else{
-                                customerUuid = bindingProductsCollection.table.elements.GetData("CustomerUuid", i);
-                            }
+                            let licenseId = bindingProductsCollection.table.elements.GetData("LicenseId", i);
 
-                            products += id
+                            products.push(id)
+                            licenseIds.push(licenseId)
                         }
 
                         let filterModel = softwareProductCollection.collectionFilter.filterModel;
@@ -345,8 +343,12 @@ Item {
                             bindingFilterModel.SetData("ProductUuid", productEditor.productId);
                         }
 
-                        if (products != ""){
-                            bindingFilterModel.SetData("ExcludeUuids", products);
+                        if (products.length !== 0){
+                            bindingFilterModel.SetData("ExcludeUuids", products.join(';'));
+                        }
+
+                        if (licenseIds.length !== 0){
+                            bindingFilterModel.SetData("LicenseIds", licenseIds.join(';'));
                         }
 
                         bindingFilterModel.SetData("HardwareUuidFilter", productEditor.hardwareId);

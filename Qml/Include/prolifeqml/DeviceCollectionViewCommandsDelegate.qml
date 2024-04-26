@@ -101,8 +101,12 @@ DocumentCollectionViewDelegate {
 
         if (commandId === "Bind"){
             let hardwareId = elementsModel.GetData("Id", indexes[0]);
+            let macAddress = elementsModel.GetData("MacAddress", indexes[0]);
 
-            modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId});
+            let title = qsTr("Add license to sensor '%1'");
+            title = title.replace("%1", macAddress);
+
+            modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
         }
         else if (commandId === "OpenOrder"){
             let orderId = elementsModel.GetData("OrderUuid", indexes[0]);

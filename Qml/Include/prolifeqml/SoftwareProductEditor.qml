@@ -190,7 +190,20 @@ ViewBase {
 
             name: qsTr("License")
 
+            nameId: "ProductName"
+
+            filteringFields: ["SerialNumber", "ProductName"];
+
             bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
+
+            delegate: Component {
+                FilterableComboBoxDelegate {
+                    width: createdLicenseCb.width;
+                    comboBoxRef: createdLicenseCb.cbRef;
+
+                    description: model.SerialNumber === "" ? qsTr("Serial Number") + ": " + qsTr("not specified"): qsTr("Serial Number") + ": " + model.SerialNumber;
+                }
+            }
 
             onCurrentIndexChanged: {
                 if (currentIndex >= 0){

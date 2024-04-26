@@ -28,7 +28,7 @@ Dialog {
     Component.onCompleted: {
         productEditorDialog.fillButtons();
 
-        productEditorDialog.title = qsTr("Add license to sensor");
+//        productEditorDialog.title = qsTr("Add license to sensor");
     }
 
     onLocalizationChanged: {

@@ -178,7 +178,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		name = orderId;
 
 		if (orderId.isEmpty()){
-			errorMessage = QT_TR_NOOP("Devivery-ID cannot be empty");
+			errorMessage = QT_TR_NOOP("Delivery-ID cannot be empty");
 			SendErrorMessage(0, errorMessage, "COrderControllerComp");
 			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 
@@ -217,7 +217,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 					if (orderInfoPtr != nullptr){
 						QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
 						if (currentOrderId == orderId.toLower()){
-							errorMessage = QT_TR_NOOP("Devivery-ID already exists");
+							errorMessage = QT_TR_NOOP("Delivery-ID already exists");
 							SendErrorMessage(0, errorMessage, "COrderControllerComp");
 							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::COrderControllerComp");
 

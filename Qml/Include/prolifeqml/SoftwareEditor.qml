@@ -261,12 +261,23 @@ ViewBase {
                     nameId: "OrderId";
                     name: qsTr("Order");
 
+                    filteringFields: ["OrderId", "OrderCustomer"];
+
                     model: CachedOrderCollection.collectionModel;
 
                     changeable: !root.readOnly;
 
                     KeyNavigation.tab: productCB;
                     KeyNavigation.backtab: projectInput;
+
+                    delegate: Component {
+                        FilterableComboBoxDelegate {
+                            width: ordersCB.width;
+                            comboBoxRef: ordersCB.cbRef;
+
+                            description: qsTr("Customer") + ": " + model.OrderCustomer;
+                        }
+                    }
 
                     Component.onCompleted: {
                         if (!root.readOnly){
@@ -487,13 +498,17 @@ ViewBase {
                     KeyNavigation.tab: expirationEditor;
                     KeyNavigation.backtab: serialNumberInput;
 
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeExpiration");
+
+                            switchRef.readOnly = !ok;
+                        }
+                    }
+
                     onSwitchRefChanged: {
                         if (switchRef){
-                            if (!root.readOnly){
-                                let ok = PermissionsController.checkPermission("ChangeExpiration");
-
-                                switchRef.readOnly = !ok;
-                            }
+                            switchRef.readOnly = unlimitedSwitch.readOnly;
                         }
                     }
                 }
@@ -523,6 +538,14 @@ ViewBase {
                     onDatePickerChanged: {
                         if (datePicker){
                             datePicker.readOnly = readOnly;
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        if (!root.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeExpiration");
+
+                            expirationEditor.readOnly = !ok;
                         }
                     }
 
@@ -561,13 +584,9 @@ ViewBase {
                                 mainMargin: Style.size_mainMargin;
 
                                 Component.onCompleted: {
-                                    if (!expirationEditor.readOnly){
-                                        let ok = PermissionsController.checkPermission("ChangeExpiration");
+                                   datePicker_.readOnly = expirationEditor.readOnly
 
-                                        datePicker_.readOnly = !ok;
-                                    }
-
-                                    expirationEditor.datePicker = datePicker_;
+                                   expirationEditor.datePicker = datePicker_;
                                 }
 
                                 onDateChanged: {

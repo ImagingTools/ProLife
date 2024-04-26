@@ -51,7 +51,10 @@ ViewBase {
                         return;
                     }
 
-                    modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid});
+                    let title = qsTr("Add license to sensor '%1'");
+                    title = title.replace("%1", macAddress);
+
+                    modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid, "title": title});
                 }
             }
         }
@@ -555,10 +558,21 @@ ViewBase {
 
                     nameId: "OrderId";
 
+                    filteringFields: ["OrderId", "OrderCustomer"];
+
                     model: CachedOrderCollection.collectionModel;
 
                     KeyNavigation.tab: productCB;
                     KeyNavigation.backtab: statusCB;
+
+                    delegate: Component {
+                        FilterableComboBoxDelegate {
+                            width: orderCB.width;
+                            comboBoxRef: orderCB.cbRef;
+
+                            description: qsTr("Customer") + ": " + model.OrderCustomer;
+                        }
+                    }
 
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeOrderForSensor");

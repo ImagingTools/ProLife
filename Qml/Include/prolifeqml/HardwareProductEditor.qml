@@ -174,9 +174,20 @@ ViewBase {
             model: root.devicesModel;
 
             name: qsTr("Hardware-ID");
+            nameId: "DeviceType";
 
             bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
-            filteringFields: ["SMacAddress", "Name"];
+
+            filteringFields: ["SMacAddress", "DeviceType"];
+
+            delegate: Component {
+                FilterableComboBoxDelegate {
+                    width: deviceCB.width;
+                    comboBoxRef: deviceCB.cbRef;
+
+                    description: model.MacAddress === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model.MacAddress;
+                }
+            }
 
             onCurrentIndexChanged: {
                 if (deviceCB.currentIndex >= 0 && deviceCB.model){

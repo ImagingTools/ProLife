@@ -11,7 +11,7 @@ CollectionDataProvider {
 
     sortByField: "OrderId";
 
-    fields: ["Id", "OrderId", "Description"];
+    fields: ["Id", "OrderId", "Description", "OrderCustomer"];
 }
 
 

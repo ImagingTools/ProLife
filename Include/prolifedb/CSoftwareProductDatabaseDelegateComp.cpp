@@ -270,6 +270,29 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 						filterQuery += excludeFilter;
 					}
 				}
+
+				iprm::TParamsPtr<iprm::ITextParam> licenseIdsFilterParamPtr(bindingFilterParamPtr.GetPtr(), "LicenseIds");
+				if (licenseIdsFilterParamPtr.IsValid()){
+					QString value = licenseIdsFilterParamPtr->GetText();
+
+					if (!value.isEmpty()){
+						QStringList uuids = value.split(';');
+
+						QStringList resultUuids;
+						for (const QString& uuid : uuids){
+							QString result = "'" + uuid + "'";
+							resultUuids << result;
+						}
+
+						QString excludeFilter = QString(R"(((SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') NOT IN (%1)))").arg(resultUuids.join(','));
+
+						if (!filterQuery.isEmpty()){
+							filterQuery += " AND ";
+						}
+
+						filterQuery += excludeFilter;
+					}
+				}
 			}
 		}
 
