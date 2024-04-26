@@ -19,7 +19,6 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>EditOrder</Value>
                                 <Value>ViewOrders</Value>
                                 <Value>ChangeDeliveryId</Value>
                                 <Value>ChangePurchaseOrderId</Value>
@@ -27,6 +26,7 @@
                                 <Value>ChangeCustomer</Value>
                                 <Value>ChangeOrderStatus</Value>
                                 <Value>ChangeOrderProducts</Value>
+                                <Value>AddOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -116,6 +116,7 @@
                                 <Value>ChangeCustomer</Value>
                                 <Value>ChangeOrderStatus</Value>
                                 <Value>ChangeOrderProducts</Value>
+                                <Value>AddOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -143,6 +144,7 @@
                                 <Value>ChangeCustomer</Value>
                                 <Value>ChangeOrderStatus</Value>
                                 <Value>ChangeOrderProducts</Value>
+                                <Value>AddOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -170,6 +172,7 @@
                                 <Value>ChangeCustomer</Value>
                                 <Value>ChangeOrderStatus</Value>
                                 <Value>ChangeOrderProducts</Value>
+                                <Value>AddOrder</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

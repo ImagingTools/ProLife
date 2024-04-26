@@ -11,7 +11,6 @@ MultiDocWorkspacePageView {
     anchors.fill: parent;
 
     Component.onCompleted: {
-        console.log("OrdersMultiDoc onCompleted")
         documentManager.registerDocumentView("Order", "OrderEditor", orderEditorComp);
         documentManager.registerDocumentDataController("Order", dataControllerComp);
         documentManager.registerDocumentValidator("Order", orderValidatorComp);

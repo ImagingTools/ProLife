@@ -137,7 +137,7 @@ Rectangle {
         elementsTableModel.Clear();
 
         let index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
+        elementsTableModel.SetData("Key", qsTr("License-ID"), index)
         elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
 
         let licenseId = softwareCard.licenseId;
@@ -145,11 +145,11 @@ Rectangle {
 
         let name = licenseName;
         if (licenseId !== ""){
-            name += "(" + licenseId + ")";
+            name += " (" + licenseId + ")";
         }
 
         index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("License"), index)
+        elementsTableModel.SetData("Key", qsTr("Article"), index)
         elementsTableModel.SetData("Value", name, index);
 
         let expiration = qsTr("Unlimited");

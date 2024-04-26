@@ -122,8 +122,7 @@ ViewBase {
             if (productCB.model){
                 for (let i = 0; i < productCB.model.GetItemsCount(); i++){
                     let id = productCB.model.GetData("Id", i);
-
-                    if (id == productId){
+                    if (id === productId){
                         productCB.currentIndex = i;
                         productFound = true;
                         break;
@@ -323,7 +322,7 @@ ViewBase {
                     if (licenseCB.model){
                         for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
                             let licenseId = licenseCB.model.GetData("Id", i);
-                            if (licenseId == licenseUuid){
+                            if (licenseId === licenseUuid){
                                 licenseCB.currentIndex = i;
 
                                 licenseFound = true;

@@ -30,8 +30,6 @@ ViewBase {
     }
 
     function updateGui(){
-        console.log("Software updateGui", model.ToJson());
-
         let isNew = model.GetData("IsNew")
 
         if (isNew){
@@ -97,63 +95,70 @@ ViewBase {
                     }
                 }
             }
+
+            if (model.ContainsKey("SerialNumber")){
+                softwareValue.text = model.GetData("SerialNumber")
+            }
+            else{
+                softwareValue.text = "";
+            }
         }
     }
 
     function updateModel(){
-        model.SetData("IsNew", isNewSoftware);
+        root.model.SetData("IsNew", isNewSoftware);
 
         if (isNewSoftware){
             if (licenseCB.currentIndex >= 0 && licenseCB.model){
                 let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
-                model.SetData("LicenseUuid", selectedId);
+                root.model.SetData("LicenseUuid", selectedId);
 
                 let licenseId = licenseCB.model.GetData("LicenseId", licenseCB.currentIndex);
-                model.SetData("LicenseId", licenseId);
+                root.model.SetData("LicenseId", licenseId);
 
                 let licenseName = licenseCB.model.GetData("LicenseName", licenseCB.currentIndex);
-                model.SetData("LicenseName", licenseName);
+                root.model.SetData("LicenseName", licenseName);
             }
             else{
-                model.SetData("LicenseUuid", "");
-                model.SetData("LicenseId", "");
-                model.SetData("LicenseName", "");
+                root.model.SetData("LicenseUuid", "");
+                root.model.SetData("LicenseId", "");
+                root.model.SetData("LicenseName", "");
             }
 
-            model.SetData("SerialNumber", serialNumberInput.text)
+            root.model.SetData("SerialNumber", serialNumberInput.text)
 
             if (expirationElementView.checkBox.checkState == Qt.Checked){
-                model.SetData("Expiration", expirationElementView.datePicker.getDate());
+                root.model.SetData("Expiration", expirationElementView.datePicker.getDate());
             }
             else{
-                model.SetData("Expiration", "");
+                root.model.SetData("Expiration", "");
             }
         }
         else{
-            model.SetData("LicenseUuid", "");
-            model.SetData("LicenseId", "");
-            model.SetData("LicenseName", "");
-            model.SetData("SerialNumber", "");
-            model.SetData("Expiration", "");
+            root.model.SetData("LicenseUuid", "");
+            root.model.SetData("LicenseId", "");
+            root.model.SetData("LicenseName", "");
+            root.model.SetData("SerialNumber", "");
+            root.model.SetData("Expiration", "");
 
             if (createdLicenseCb.currentIndex >= 0){
                 let id = createdLicenseCb.model.GetData("Id", createdLicenseCb.currentIndex);
-                model.SetData("Id", id);
+                root.model.SetData("Id", id);
 
                 let licenseUuid = createdLicenseCb.model.GetData("LicenseUuid", createdLicenseCb.currentIndex);
-                model.SetData("LicenseUuid", licenseUuid);
+                root.model.SetData("LicenseUuid", licenseUuid);
 
                 let licenseID = createdLicenseCb.model.GetData("LicenseId", createdLicenseCb.currentIndex);
-                model.SetData("LicenseId", licenseID);
+                root.model.SetData("LicenseId", licenseID);
 
                 let licenseName = createdLicenseCb.model.GetData("LicenseName", createdLicenseCb.currentIndex);
-                model.SetData("LicenseName", licenseName);
+                root.model.SetData("LicenseName", licenseName);
 
                 let serialNumber = createdLicenseCb.model.GetData("SerialNumber", createdLicenseCb.currentIndex);
-                model.SetData("SerialNumber", serialNumber);
+                root.model.SetData("SerialNumber", serialNumber);
 
                 let expiration = createdLicenseCb.model.GetData("Expiration", createdLicenseCb.currentIndex);
-                model.SetData("Expiration", expiration);
+                root.model.SetData("Expiration", expiration);
             }
         }
     }
@@ -190,9 +195,9 @@ ViewBase {
 
             name: qsTr("License")
 
-            nameId: "ProductName"
+            nameId: "Name"
 
-            filteringFields: ["SerialNumber", "ProductName"];
+            filteringFields: ["SerialNumber", "ProductName", "LicenseId", "LicenseName"];
 
             bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
 
@@ -201,7 +206,12 @@ ViewBase {
                     width: createdLicenseCb.width;
                     comboBoxRef: createdLicenseCb.cbRef;
 
-                    description: model.SerialNumber === "" ? qsTr("Serial Number") + ": " + qsTr("not specified"): qsTr("Serial Number") + ": " + model.SerialNumber;
+                    text: model.SerialNumber === "" ? model.ProductName + " (" + qsTr("No software-ID") + ")" : model.ProductName + " (" + model.SerialNumber+ ")";
+
+                    property string article: qsTr("Article");
+                    property string notSpecified: qsTr("not specified");
+
+                    description: model.LicenseId !== "" ? article + ": " + model.LicenseName + " (" + model.LicenseId + ")": article + ": " + notSpecified;
                 }
             }
 
@@ -222,7 +232,12 @@ ViewBase {
                     if (createdLicenseCb.model.ContainsKey("Expiration", currentIndex)){
                         let expiration = createdLicenseCb.model.GetData("Expiration", currentIndex)
 
-                        expirationValue.text = expiration;
+                        if (expiration === ""){
+                            expirationValue.text = qsTr("Unlimited");
+                        }
+                        else{
+                            expirationValue.text = expiration;
+                        }
                     }
                 }
 

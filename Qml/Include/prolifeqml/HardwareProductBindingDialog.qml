@@ -27,8 +27,6 @@ Dialog {
 
     Component.onCompleted: {
         productEditorDialog.fillButtons();
-
-//        productEditorDialog.title = qsTr("Add license to sensor");
     }
 
     onLocalizationChanged: {
@@ -43,12 +41,7 @@ Dialog {
 
     onFinished: {
         if (buttonId == Enums.ok){
-            let project = ""
-            if (productEditorDialog.contentItem.bindingModel.ContainsKey("Project")){
-                project = productEditorDialog.contentItem.bindingModel.GetData("Project")
-            }
-
-            modalDialogManager.openDialog(messageDialog, {"inputValue":project});
+            modalDialogManager.openDialog(messageDialog, {});
         }
     }
 
@@ -76,6 +69,7 @@ Dialog {
             message: qsTr("Please check the data before saving. Save changes ?")
             placeHolderText: qsTr("Please enter the project");
             onFinished: {
+                console.log("InputDialog onFinished", buttonId);
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
 

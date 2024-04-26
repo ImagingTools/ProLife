@@ -47,6 +47,7 @@ Item {
     }
 
     function getSoftwareModel(){
+        console.log("getSoftwareModel");
         let excludeIds = []
         for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
             let categoryId = orderProductsModel.GetData("CategoryId", i);
@@ -79,6 +80,8 @@ Item {
             if (excludeIds.includes(id)){
                 continue;
             }
+
+            let serialNumber = productEditor.softwaresModel.GetData("SerialNumber", i);
 
             let orderUuid = productEditor.softwaresModel.GetData("OrderUuid", i);
             let productUuid = productEditor.softwaresModel.GetData("ProductUuid", i);

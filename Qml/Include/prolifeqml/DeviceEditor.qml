@@ -67,8 +67,6 @@ ViewBase {
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
         CachedProductCollection.updateModel();
-
-        checkWidth();
     }
 
     onWidthChanged: {

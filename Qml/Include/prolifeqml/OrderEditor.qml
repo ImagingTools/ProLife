@@ -35,11 +35,21 @@ ViewBase {
         CachedProductCollection.updateModel();
         CachedSoftwareCollection.updateModel();
 
-        checkWidth();
+//        CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
+//        CachedSoftwareCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
+    }
+
+    Component.onDestruction: {
+//        CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
+//        CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
     }
 
     onWidthChanged: {
         checkWidth();
+    }
+
+    onModelChanged: {
+        checkPermissions();
     }
 
     LicensesProvider {
@@ -63,6 +73,99 @@ ViewBase {
 
         customerCB.changeable = !readOnly;
         orderStatusCB.changeable = !readOnly;
+    }
+
+    function checkPermissions(){
+        let orderId = "";
+        if (model.ContainsKey("Id")){
+            orderId = model.GetData("Id");
+        }
+
+        let canAddOrder = PermissionsController.checkPermission("AddOrder");
+
+        if (orderId === "" && canAddOrder){
+            instanceIdInput.readOnly = false;
+            purchaseIdInput.readOnly = false;
+            descriptionInput.readOnly = false;
+            customerCB.changeable = true;
+            orderStatusCB.changeable = true;
+            addProduct.visible = true;
+            productsView.readOnly = false;
+        }
+        else{
+            let canChangeDeliveryId = PermissionsController.checkPermission("ChangeDeliveryId");
+            instanceIdInput.readOnly = !canChangeDeliveryId;
+
+            let canChangePurchaseOrderId = PermissionsController.checkPermission("ChangePurchaseOrderId");
+            purchaseIdInput.readOnly = !canChangePurchaseOrderId;
+
+            let canChangeDescriptionForOrder = PermissionsController.checkPermission("ChangeDescriptionForOrder");
+            descriptionInput.readOnly = !canChangeDescriptionForOrder;
+
+            let canChangeCustomer = PermissionsController.checkPermission("ChangeCustomer");
+            customerCB.changeable = canChangeCustomer;
+
+            let canChangeOrderStatus = PermissionsController.checkPermission("ChangeOrderStatus");
+            orderStatusCB.changeable = canChangeOrderStatus;
+
+            let canChangeOrderProducts = PermissionsController.checkPermission("ChangeOrderProducts");
+            addProduct.visible = canChangeOrderProducts;
+            productsView.readOnly = !canChangeOrderProducts;
+
+            let ok = canChangeDeliveryId || canChangePurchaseOrderId || canChangeDescriptionForOrder || canChangeCustomer || canChangeOrderStatus || canChangeOrderProducts;
+
+            if (commandsController){
+                commandsController.setCommandVisible("Undo", ok);
+                commandsController.setCommandVisible("Redo", ok);
+                commandsController.setCommandVisible("Save", ok);
+            }
+        }
+    }
+
+    function syncroniseProducts(){
+        if (model.ContainsKey("OrderProducts")){
+            let orderProducts = model.GetData("OrderProducts")
+
+            for (let j = 0; j < orderProducts.GetItemsCount(); j++){
+                let orderedProductId = orderProducts.GetData("Id", j);
+                let categoryId = orderProducts.GetData("CategoryId", j);
+
+                let productFound = false;
+
+                if (categoryId === "Software"){
+                    for (let i = 0; i < softwaresModel.GetItemsCount(); i++){
+                        let softwareId = softwaresModel.GetData("Id", i);
+                        if (softwareId === orderedProductId){
+                            if (softwaresModel.ContainsKey("SerialNumber", i)){
+                                let serialNumber = softwaresModel.GetData("SerialNumber", i)
+                                orderProducts.SetData("SerialNumber", serialNumber, j);
+
+                                productFound = true;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (categoryId === "Hardware") {
+                    for (let i = 0; i < devicesModel.GetItemsCount(); i++){
+                        let hardwareId = devicesModel.GetData("Id", i);
+                        if (hardwareId === orderedProductId){
+                            let macAddress = devicesModel.GetData("MacAddress", i);
+                            orderProducts.SetData("MacAddress", macAddress, j);
+
+                            productFound = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!productFound){
+                    //
+                }
+            }
+        }
     }
 
     function updateGui(){
@@ -127,6 +230,8 @@ ViewBase {
         if (!statusFound){
             orderStatusCB.currentIndex = -1;
         }
+
+//        syncroniseProducts();
 
         productsView.model = 0;
 
@@ -251,11 +356,6 @@ ViewBase {
                     readOnly: orderEditorContainer.readOnly;
                     maximumLength: 10;
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeDeliveryId");
-                        instanceIdInput.readOnly = !ok;
-                    }
-
                     onEditingFinished: {
                         orderEditorContainer.doUpdateModel();
                     }
@@ -300,11 +400,6 @@ ViewBase {
 
                     KeyNavigation.tab: descriptionInput;
                     KeyNavigation.backtab: instanceIdInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangePurchaseOrderId");
-                        purchaseIdInput.readOnly = !ok;
-                    }
                 }
 
                 TextInputElementView {
@@ -321,11 +416,6 @@ ViewBase {
 
                     KeyNavigation.tab: customerCB;
                     KeyNavigation.backtab: purchaseIdInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeDescriptionForOrder");
-                        descriptionInput.readOnly = !ok;
-                    }
                 }
 
                 ComboBoxElementView {
@@ -342,12 +432,6 @@ ViewBase {
 
                     KeyNavigation.tab: orderStatusCB;
                     KeyNavigation.backtab: descriptionInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCustomer");
-
-                        customerCB.changeable = ok;
-                    }
 
                     onModelChanged: {
                         orderEditorContainer.doUpdateGui();
@@ -373,12 +457,6 @@ ViewBase {
 
                     KeyNavigation.tab: instanceIdInput;
                     KeyNavigation.backtab: customerCB;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrderStatus");
-
-                        orderStatusCB.changeable = ok;
-                    }
                 }
             }
 
@@ -469,7 +547,7 @@ ViewBase {
                         height: width;
 
                         iconSource: !productsView.expanded ? "../../../" + Style.getIconPath("Icons/DetailedView", Icon.State.On, Icon.Mode.Normal)
-                                            : "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal);
+                                                           : "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal);
 
                         tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
 
@@ -491,12 +569,6 @@ ViewBase {
                         onClicked: {
                             productsView.activeProductIndex = -1;
                             modalDialogManager.openDialog(productEditorDialog, {});
-                        }
-
-                        Component.onCompleted: {
-                            let ok = PermissionsController.checkPermission("ChangeOrderProducts");
-
-                            addProduct.visible = ok;
                         }
                     }
                 }
@@ -530,12 +602,6 @@ ViewBase {
                 property bool readOnly: false;
 
                 property bool expanded: true;
-
-                Component.onCompleted: {
-                    let ok = PermissionsController.checkPermission("ChangeOrderProducts");
-
-                    productsView.readOnly = !ok;
-                }
 
                 delegate: OrderProductDelegate {
                     id: orderProductDelegate;
