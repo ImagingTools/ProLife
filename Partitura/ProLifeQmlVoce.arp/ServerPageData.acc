@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5211" Description="ACF"/>
+            <Version Id="0" Number="5221" Description="ACF"/>
             <Version Id="1" Number="2205" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="1023" Number="394754" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -112,6 +112,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ServiceTypeName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LoggingParams/TracingConfiguration"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -229,6 +232,11 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LoggingParams" PackageId="ImtCoreVoce" ComponentId="LoggingParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="Preferences" PackageId="BasePck" ComponentId="ComposedParamsSet">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -238,6 +246,7 @@
                                 <Value>Database</Value>
                                 <Value>Server</Value>
                                 <Value>Backup</Value>
+                                <Value>LoggingParams</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -247,6 +256,7 @@
                                 <Value>Database</Value>
                                 <Value>Server</Value>
                                 <Value>Backup</Value>
+                                <Value>Log</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -373,6 +383,7 @@
         <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrl"/>
         <Component ExportedId="ServerParam" ComponentId="Server"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>
+        <Component ExportedId="TracingConfiguration" ComponentId="LoggingParams/TracingConfiguration"/>
         <Component ExportedId="WebSocketPumaUrl" ComponentId="WebSocketPumaUrl"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="WebSocketServerPort"/>
     </ExportedComponents>
