@@ -61,6 +61,10 @@ Rectangle {
         elementsTableModel.SetData("Key", qsTr("Model Type"), index)
         elementsTableModel.SetData("Value", model.LicenseName, index)
 
+        index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", qsTr("Article"), index)
+        elementsTableModel.SetData("Value", model.LicenseId, index)
+
         table.elements = elementsTableModel;
     }
 

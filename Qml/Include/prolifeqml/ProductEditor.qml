@@ -7,9 +7,6 @@ import imtlicgui 1.0
 Item {
     id: productEditor;
 
-    width: 700;
-    height: 800;
-
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
     property TreeItemModel orderProductsModel: TreeItemModel {}
@@ -138,7 +135,16 @@ Item {
                 resultModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
 
                 let sMacAddress = "s" + macAddress.split(':').join('');
-                resultModel.SetData("SMacAddress", sMacAddress, index);
+                resultModel.SetData("SMacAddress1", sMacAddress, index);
+
+                let sMacAddress2 = "s:" + macAddress.split(':').join('');
+                resultModel.SetData("SMacAddress2", sMacAddress2, index);
+
+                let sMacAddress3 = "s:" + macAddress;
+                resultModel.SetData("SMacAddress3", sMacAddress3, index);
+
+                let sMacAddress4 = "s" + macAddress;
+                resultModel.SetData("SMacAddress4", sMacAddress4, index);
             }
         }
 

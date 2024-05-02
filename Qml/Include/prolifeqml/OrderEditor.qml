@@ -35,13 +35,13 @@ ViewBase {
         CachedProductCollection.updateModel();
         CachedSoftwareCollection.updateModel();
 
-//        CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
-//        CachedSoftwareCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
+        CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
+        CachedSoftwareCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
     }
 
     Component.onDestruction: {
-//        CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
-//        CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
+        CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
+        CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
     }
 
     onWidthChanged: {
@@ -123,6 +123,21 @@ ViewBase {
     }
 
     function syncroniseProducts(){
+        if (!softwaresModel){
+            return;
+        }
+
+        if (!devicesModel){
+            return;
+        }
+
+        model.SetUpdateEnabled(false);
+
+        let orderUuid = ""
+        if (model.ContainsKey("Id")){
+            orderUuid = model.GetData("Id");
+        }
+
         if (model.ContainsKey("OrderProducts")){
             let orderProducts = model.GetData("OrderProducts")
 
@@ -135,10 +150,37 @@ ViewBase {
                 if (categoryId === "Software"){
                     for (let i = 0; i < softwaresModel.GetItemsCount(); i++){
                         let softwareId = softwaresModel.GetData("Id", i);
+                        let softwareOrderUuid = orderProducts.GetData("OrderUuid", i);
+
                         if (softwareId === orderedProductId){
+                            // ????
+//                            if (orderUuid !== "" && orderUuid !== softwareOrderUuid){
+//                                orderProducts.SetData("ErrorMessage", qsTr("The product has been removed from this order"), j);
+
+//                                break;
+//                            }
+
                             if (softwaresModel.ContainsKey("SerialNumber", i)){
                                 let serialNumber = softwaresModel.GetData("SerialNumber", i)
                                 orderProducts.SetData("SerialNumber", serialNumber, j);
+
+                                let licenseUuid = softwaresModel.GetData("LicenseUuid", i)
+                                orderProducts.SetData("LicenseUuid", licenseUuid, j);
+
+                                let licenseId = softwaresModel.GetData("LicenseId", i)
+                                orderProducts.SetData("LicenseId", licenseId, j);
+
+                                let licenseName = softwaresModel.GetData("LicenseName", i)
+                                orderProducts.SetData("LicenseName", licenseName, j);
+
+                                let productUuid = softwaresModel.GetData("ProductUuid", i)
+                                orderProducts.SetData("ProductUuid", productUuid, j);
+
+                                let productName = softwaresModel.GetData("ProductName", i)
+                                orderProducts.SetData("ProductName", productName, j);
+
+                                let expiration = softwaresModel.GetData("Expiration", i)
+                                orderProducts.SetData("Expiration", expiration, j);
 
                                 productFound = true;
 
@@ -154,6 +196,24 @@ ViewBase {
                             let macAddress = devicesModel.GetData("MacAddress", i);
                             orderProducts.SetData("MacAddress", macAddress, j);
 
+                            let serialNumber = devicesModel.GetData("SerialNumber", i);
+                            orderProducts.SetData("SerialNumber", serialNumber, j);
+
+                            let licenseUuid = devicesModel.GetData("LicenseUuid", i)
+                            orderProducts.SetData("LicenseUuid", licenseUuid, j);
+
+                            let licenseId = devicesModel.GetData("LicenseId", i)
+                            orderProducts.SetData("LicenseId", licenseId, j);
+
+                            let licenseName = devicesModel.GetData("LicenseName", i)
+                            orderProducts.SetData("LicenseName", licenseName, j);
+
+                            let productUuid = devicesModel.GetData("ProductUuid", i)
+                            orderProducts.SetData("ProductUuid", productUuid, j);
+
+                            let productName = devicesModel.GetData("DeviceType", i)
+                            orderProducts.SetData("ProductName", productName, j);
+
                             productFound = true;
 
                             break;
@@ -162,10 +222,14 @@ ViewBase {
                 }
 
                 if (!productFound){
-                    //
+                    // ????
                 }
+
+                orderProducts.Refresh()
             }
         }
+
+        model.SetUpdateEnabled(true);
     }
 
     function updateGui(){
@@ -231,7 +295,7 @@ ViewBase {
             orderStatusCB.currentIndex = -1;
         }
 
-//        syncroniseProducts();
+        syncroniseProducts();
 
         productsView.model = 0;
 
@@ -549,7 +613,7 @@ ViewBase {
                         iconSource: !productsView.expanded ? "../../../" + Style.getIconPath("Icons/DetailedView", Icon.State.On, Icon.Mode.Normal)
                                                            : "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal);
 
-                        tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
+//                        tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
 
                         onClicked: {
                             productsView.expanded = !productsView.expanded;
@@ -565,6 +629,8 @@ ViewBase {
                         height: width;
 
                         iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
+
+//                        tooltipText: qsTr("Add a new product");
 
                         onClicked: {
                             productsView.activeProductIndex = -1;

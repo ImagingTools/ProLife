@@ -8,6 +8,8 @@ import imtcontrols 1.0
 ViewBase {
     id: root;
 
+    height: content.height;
+
     property int itemHeight: 30;
 
     property var productLicensesModel: TreeItemModel{}
@@ -22,6 +24,8 @@ ViewBase {
 
     property bool isNewSoftware: switchNewLicense.checked;
     property int productIndex: -1;
+
+    property bool isNewProduct: root.model.GetData("IsNew") ? root.model.GetData("IsNew") : false;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -164,6 +168,8 @@ ViewBase {
     }
 
     Column {
+        id: content;
+
         width: parent.width;
 
         spacing: Style.size_mainMargin;
@@ -175,7 +181,7 @@ ViewBase {
 
             name: qsTr("New License");
 
-            visible: root.productIndex == -1 || root.model.GetData("IsNew");
+            visible: root.productIndex == -1 || root.isNewProduct;
 
             onCheckedChanged: {
                 createdLicenseCb.visible = !checked;
@@ -223,6 +229,12 @@ ViewBase {
                         typeValue.text = licenseName;
                     }
 
+                    if (createdLicenseCb.model.ContainsKey("LicenseId", currentIndex)){
+                        let licenseId = createdLicenseCb.model.GetData("LicenseId", currentIndex)
+
+                        articleValue.text = licenseId;
+                    }
+
                     if (createdLicenseCb.model.ContainsKey("SerialNumber", currentIndex)){
                         let serialNumber = createdLicenseCb.model.GetData("SerialNumber", currentIndex)
 
@@ -263,11 +275,19 @@ ViewBase {
             }
 
             TextElementView {
+                id: articleValue;
+
+                width: parent.width;
+
+                name: qsTr("Article Number");
+            }
+
+            TextElementView {
                 id: softwareValue;
 
                 width: parent.width;
 
-                name: qsTr("License-ID");
+                name: qsTr("Software-ID");
             }
 
             TextElementView {
@@ -301,6 +321,17 @@ ViewBase {
                 changeable: !root.readOnly;
 
                 bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
+                filteringFields: ["LicenseName", "LicenseId"];
+
+                delegate: Component {
+                    FilterableComboBoxDelegate {
+                        width: licenseCB.width;
+                        comboBoxRef: licenseCB.cbRef;
+
+                        text: model.LicenseName;
+                        description: model.LicenseId;
+                    }
+                }
 
                 Component.onCompleted: {
                     if (!root.readOnly){
@@ -316,6 +347,14 @@ ViewBase {
                 }
 
                 onCurrentIndexChanged: {
+                    if (currentIndex >= 0){
+                        if (licenseCB.model.ContainsKey("LicenseId", currentIndex)){
+                            let licenseId = licenseCB.model.GetData("LicenseId", currentIndex)
+
+                            newArticleValue.text = licenseId
+                        }
+                    }
+
                     root.doUpdateModel();
                 }
             }
@@ -483,7 +522,17 @@ ViewBase {
                     }
                 }
             }
-        }
+
+            TextElementView {
+                id: newArticleValue;
+
+                width: parent.width;
+
+                name: qsTr("Article Number");
+
+                visible: parent.visible && licenseCB.currentIndex >= 0;
+            }
+         }
     }
 
 

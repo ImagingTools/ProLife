@@ -451,8 +451,8 @@ ViewBase {
                 TextInputElementView {
                     id: serialNumberInput;
 
-                    placeHolderText: qsTr("Enter the license number");
-                    name: qsTr("License Number");
+                    placeHolderText: qsTr("Enter the software-ID");
+                    name: qsTr("Software-ID");
 
                     KeyNavigation.tab: unlimitedSwitch;
                     KeyNavigation.backtab: licenseCB;

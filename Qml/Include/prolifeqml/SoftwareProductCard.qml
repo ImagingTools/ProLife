@@ -137,7 +137,7 @@ Rectangle {
         elementsTableModel.Clear();
 
         let index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("License-ID"), index)
+        elementsTableModel.SetData("Key", qsTr("Software-ID"), index)
         elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
 
         let licenseId = softwareCard.licenseId;

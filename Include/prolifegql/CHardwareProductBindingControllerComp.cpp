@@ -256,7 +256,6 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
 		itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
-
 	}
 
 	QByteArray project;
@@ -285,8 +284,16 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		hardwareBindingObjectPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
 	}
-	else{
-		return InsertObject(gqlRequest, errorMessage);
+
+	if (hardwareBindingObjectPtr == nullptr){
+		imtbase::CTreeItemModel* resultPtr = InsertObject(gqlRequest, errorMessage);
+		if (resultPtr == nullptr){
+			return nullptr;
+		}
+
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			hardwareBindingObjectPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+		}
 	}
 
 	if (hardwareBindingObjectPtr == nullptr){

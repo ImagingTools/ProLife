@@ -494,7 +494,7 @@ Item {
             iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
                                   "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
 
-            tooltipText: qsTr("Bind to the sensor");
+//            tooltipText: qsTr("Bind to the sensor");
 
             property bool userCanBind: false;
 
@@ -547,7 +547,7 @@ Item {
 
             property bool userCanUnbind: false;
 
-            tooltipText: qsTr("Unbind from the sensor");
+//            tooltipText: qsTr("Unbind from the sensor");
 
             Component.onCompleted: {
                 unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");

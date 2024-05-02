@@ -7,7 +7,7 @@ Dialog {
     id: productEditorDialog;
 
     width: rootWidth - 100 < 800 ? rootWidth - 100 : 800;
-    height: rootHeight - 100 < 600 ? rootHeight - 100 : 600;
+    height: rootHeight - 100 < 700 ? rootHeight - 100 : 700;
 
     backgroundColor: Style.backgroundColor2;
 
@@ -27,8 +27,8 @@ Dialog {
     property bool serialNumberEdit: true;
 
     Component.onCompleted: {
-        productEditorDialog.buttonsModel.append({"Id": Enums.ok, "Name": "OK", "Enabled": false});
-        productEditorDialog.buttonsModel.append({"Id": Enums.cancel, "Name": "Cancel", "Enabled": true});
+        productEditorDialog.buttonsModel.append({"Id": Enums.ok, "Name": qsTr("OK"), "Enabled": false});
+        productEditorDialog.buttonsModel.append({"Id": Enums.cancel, "Name": qsTr("Cancel"), "Enabled": true});
 
         productEditorDialog.title = qsTr("Product editor");
     }

@@ -18,6 +18,8 @@ ViewBase {
     property bool isNewDevice: switchNewSensor.checked;
     property int productIndex: -1;
 
+    property bool isNewProduct: root.model.GetData("IsNew") ? root.model.GetData("IsNew") : false;
+
     function updateGui(){
         let isNew = model.GetData("IsNew")
         if (isNew){
@@ -178,7 +180,7 @@ ViewBase {
 
             bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 
-            filteringFields: ["SMacAddress", "DeviceType"];
+            filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "DeviceType", "MacAddress"];
 
             delegate: Component {
                 FilterableComboBoxDelegate {
@@ -201,6 +203,12 @@ ViewBase {
                         let macAddress = deviceCB.model.GetData("MacAddress", deviceCB.currentIndex)
 
                         macAddressText.text = macAddress;
+                    }
+
+                    if (deviceCB.model.ContainsKey("LicenseId", deviceCB.currentIndex)){
+                        let licenseId = deviceCB.model.GetData("LicenseId", deviceCB.currentIndex)
+
+                        articulText.text = licenseId;
                     }
                 }
 
@@ -239,9 +247,28 @@ ViewBase {
                 nameId: "LicenseName";
 
                 bottomComp: currentIndex < 0 ? typeSensorErrorComp : undefined;
+                filteringFields: ["LicenseName", "LicenseId"];
 
                 onCurrentIndexChanged: {
+                    if (currentIndex >= 0){
+                        if (typesCB.model.ContainsKey("LicenseId", currentIndex)){
+                            let licenseId = typesCB.model.GetData("LicenseId", currentIndex)
+
+                            newArticulText.text = licenseId;
+                        }
+                    }
+
                     root.doUpdateModel();
+                }
+
+                delegate: Component {
+                    FilterableComboBoxDelegate {
+                        width: typesCB.width;
+                        comboBoxRef: typesCB.cbRef;
+
+                        text: model.LicenseName;
+                        description: model.LicenseId;
+                    }
                 }
             }
 
@@ -265,9 +292,21 @@ ViewBase {
 
                 readOnly: root.readOnly;
 
+                visible: parent.visible && typesCB.currentIndex >= 0;
+
                 onEditingFinished: {
                     root.doUpdateModel();
                 }
+            }
+
+            TextElementView {
+                id: newArticulText;
+
+                width: parent.width;
+
+                visible: parent.visible && typesCB.currentIndex >= 0;
+
+                name: qsTr("Article Number");
             }
         }
 
@@ -284,6 +323,8 @@ ViewBase {
                 width: parent.width;
 
                 name: qsTr("Type");
+
+                visible: parent.visible && deviceCB.currentIndex >= 0;
             }
 
             TextElementView {
@@ -292,6 +333,18 @@ ViewBase {
                 width: parent.width;
 
                 name: qsTr("MAC Address");
+
+                visible: parent.visible && deviceCB.currentIndex >= 0;
+            }
+
+            TextElementView {
+                id: articulText;
+
+                width: parent.width;
+
+                name: qsTr("Article Number");
+
+                visible: parent.visible && deviceCB.currentIndex >= 0;
             }
         }
     }
