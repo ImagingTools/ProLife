@@ -9,9 +9,6 @@ set(ARXC_OUTDIR "${AUX_INCLUDE_DIR}")
 
 message("ARXC_CONFIG " ${ARXC_CONFIG})
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS WebSockets QuickWidgets)
-find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Quick Qml REQUIRED)
-
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)

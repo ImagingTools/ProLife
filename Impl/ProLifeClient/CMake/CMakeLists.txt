@@ -21,13 +21,8 @@ if(APPLE)
 	set(CMAKE_MACOSX_BUNDLE "on")
 endif()
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS WebSockets QuickWidgets)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Quick QuickControls2 Qml REQUIRED)
-
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
-
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
-
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
 include(${ACFDIR}/Config/CMake/AcfQt.cmake)
 include(${ACFDIR}/Config/CMake/AcfStd.cmake)
