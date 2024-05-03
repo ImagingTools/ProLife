@@ -6,8 +6,11 @@ import Acf 1.0
 Dialog {
     id: productEditorDialog;
 
-    width: rootWidth - 100 < 800 ? rootWidth - 100 : 800;
-    height: rootHeight - 100 < 700 ? rootHeight - 100 : 700;
+//    width: rootWidth - 100 < 800 ? rootWidth - 100 : 800;
+//    height: rootHeight - 100 < 700 ? rootHeight - 100 : 700;
+
+//    width: 800;
+//    height: 500;
 
     backgroundColor: Style.backgroundColor2;
 
@@ -35,8 +38,8 @@ Dialog {
 
     contentComp: Component {
         ProductEditor {
-            width: productEditorDialog.width;
-            height: productEditorDialog.height;
+            width: 800;
+            height: 700;
 
             rootItem: productEditorDialog;
 

@@ -209,7 +209,7 @@ ViewBase {
 
             delegate: Component {
                 FilterableComboBoxDelegate {
-                    width: createdLicenseCb.width;
+                    width: comboBoxRef ? comboBoxRef.width : 0;
                     comboBoxRef: createdLicenseCb.cbRef;
 
                     text: model.SerialNumber === "" ? model.ProductName + " (" + qsTr("No software-ID") + ")" : model.ProductName + " (" + model.SerialNumber+ ")";

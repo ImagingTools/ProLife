@@ -75,8 +75,6 @@ ApplicationMain{
         }
 
         onStateChanged: {
-            console.log("PumaWsConnection onStateChanged", state);
-
             if (state === "Ready"){
                 if (pumaSub.ContainsKey("data")){
                     let localModel = pumaSub.GetData("data")
@@ -116,11 +114,7 @@ ApplicationMain{
         }
 
         onStateChanged: {
-            console.log("LisaWsConnection onStateChanged", state);
-
             if (state === "Ready"){
-                console.log("data", lisaSub.ToJson());
-
                 if (lisaSub.ContainsKey("data")){
                     let localModel = lisaSub.GetData("data")
 

@@ -119,7 +119,7 @@ DecoratorBase {
             id: licenseComboBox;
 
             height: filtermenu.height;
-            width: 200;
+            width: 250;
 
             currentIndex: 0;
 

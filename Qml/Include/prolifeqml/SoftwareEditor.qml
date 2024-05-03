@@ -22,21 +22,6 @@ ViewBase {
     Component.onCompleted: {
         CachedProductCollection.updateModel();
         CachedOrderCollection.updateModel();
-
-        checkWidth();
-    }
-
-    onWidthChanged: {
-        checkWidth();
-    }
-
-    function checkWidth(){
-        if (width < bodyColumn.width + scrollbar.width + 50){
-            bodyColumn.width = width - 50;
-        }
-        else{
-            bodyColumn.width = 700;
-        }
     }
 
     onVisibleChanged: {
@@ -141,7 +126,7 @@ ViewBase {
     function updateModel(){
         root.model.SetData("Project", projectInput.text);
 
-        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+        let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
         if (canChangeOrder){
             if (ordersCB.model){
                 if (ordersCB.currentIndex >= 0){
@@ -181,14 +166,29 @@ ViewBase {
     CustomScrollbar {
         id: scrollbar;
 
+        z: parent.z + 1;
+
         anchors.right: parent.right;
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
 
         secondSize: 10;
         targetItem: flickable;
+    }
 
-        radius: 2;
+    CustomScrollbar{
+        id: scrollHoriz;
+
+        z: parent.z + 1;
+
+        anchors.left: flickable.left;
+        anchors.right: flickable.right;
+        anchors.bottom: flickable.bottom;
+
+        secondSize: 10;
+
+        vertical: false;
+        targetItem: flickable;
     }
 
     Flickable {
@@ -210,6 +210,7 @@ ViewBase {
         contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
 
         boundsBehavior: Flickable.StopAtBounds;
+        clip: true;
 
         Column {
             id: bodyColumn;
@@ -271,7 +272,7 @@ ViewBase {
 
                     delegate: Component {
                         FilterableComboBoxDelegate {
-                            width: ordersCB.width;
+                            width: comboBoxRef ? comboBoxRef.width : 0;
                             comboBoxRef: ordersCB.cbRef;
 
                             description: qsTr("Customer") + ": " + model.OrderCustomer;

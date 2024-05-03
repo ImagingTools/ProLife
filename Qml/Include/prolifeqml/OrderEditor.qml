@@ -44,25 +44,12 @@ ViewBase {
         CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
     }
 
-    onWidthChanged: {
-        checkWidth();
-    }
-
     onModelChanged: {
         checkPermissions();
     }
 
     LicensesProvider {
         id: licensesProvider;
-    }
-
-    function checkWidth(){
-        if (width < content.width + scrollbar.width + 50){
-            content.width = width - 50;
-        }
-        else{
-            content.width = 700;
-        }
     }
 
     function setReadOnly(readOnly){
@@ -344,6 +331,7 @@ ViewBase {
 
     CustomScrollbar {
         id: scrollbar;
+        z: parent.z + 1;
 
         anchors.right: parent.right;
         anchors.top: flickable.top;
@@ -355,8 +343,26 @@ ViewBase {
         radius: 2;
     }
 
+    CustomScrollbar{
+        id: scrollHoriz;
+
+        z: parent.z + 1;
+
+        anchors.left: flickable.left;
+        anchors.right: flickable.right;
+        anchors.bottom: flickable.bottom;
+
+        secondSize: 10;
+
+        vertical: false;
+        targetItem: flickable;
+    }
+
     Flickable {
         id: flickable;
+
+        anchors.left: parent.left;
+        anchors.leftMargin: Style.size_largeMargin;
 
         anchors.top: parent.top;
         anchors.topMargin: Style.size_largeMargin;
@@ -364,8 +370,8 @@ ViewBase {
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: Style.size_largeMargin;
 
-        anchors.left: parent.left;
         anchors.right: scrollbar.left;
+        anchors.rightMargin: Style.size_largeMargin;
 
         contentWidth: content.width;
         contentHeight: content.height + 2 * Style.size_largeMargin;
@@ -376,11 +382,6 @@ ViewBase {
 
         Column {
             id: content;
-
-            anchors.top: parent.top;
-
-            anchors.left: parent.left;
-            anchors.leftMargin: Style.size_largeMargin;
 
             width: 700;
 

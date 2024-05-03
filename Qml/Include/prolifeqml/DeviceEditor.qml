@@ -69,19 +69,6 @@ ViewBase {
         CachedProductCollection.updateModel();
     }
 
-    onWidthChanged: {
-        checkWidth();
-    }
-
-    function checkWidth(){
-        if (width < bodyColumn.width + scrollbar.width + 50){
-            bodyColumn.width = width - 50;
-        }
-        else{
-            bodyColumn.width = 700;
-        }
-    }
-
     Component {
         id: saveDialogComp;
 
@@ -274,7 +261,7 @@ ViewBase {
             deviceEditorContainer.model.SetData("LicenseName", "");
         }
 
-        let canChangeOrder = PermissionsController.checkPermission("ChangeOrder");
+        let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
                 let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
@@ -314,6 +301,8 @@ ViewBase {
     CustomScrollbar {
         id: scrollbar;
 
+        z: parent.z + 1;
+
         anchors.right: parent.right;
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
@@ -322,6 +311,21 @@ ViewBase {
         targetItem: flickable;
 
         radius: 2;
+    }
+
+    CustomScrollbar{
+        id: scrollHoriz;
+
+        z: parent.z + 1;
+
+        anchors.left: flickable.left;
+        anchors.right: flickable.right;
+        anchors.bottom: flickable.bottom;
+
+        secondSize: 10;
+
+        vertical: false;
+        targetItem: flickable;
     }
 
     Flickable {
@@ -343,6 +347,8 @@ ViewBase {
         contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
 
         boundsBehavior: Flickable.StopAtBounds;
+
+        clip: true;
 
         Column {
             id: bodyColumn;
@@ -495,26 +501,41 @@ ViewBase {
 
                 width: parent.width;
 
-                TextInputElementView {
-                    id: projectInput;
+                FilterableComboBoxElementView {
+                    id: orderCB;
 
-                    name: qsTr("Project");
-                    placeHolderText: qsTr("Enter the project");
+                    name: qsTr("Order-ID");
 
-                    readOnly: deviceEditorContainer.readOnly;
+                    nameId: "OrderId";
 
-                    Component.onCompleted: {
-                        if (!deviceEditorContainer.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeProjectForSensor");
-                            projectInput.readOnly = !ok;
+                    filteringFields: ["OrderId", "OrderCustomer"];
+
+                    model: CachedOrderCollection.collectionModel;
+
+                    KeyNavigation.tab: productCB;
+                    KeyNavigation.backtab: statusCB;
+
+                    delegate: Component {
+                        FilterableComboBoxDelegate {
+                            width: comboBoxRef ? comboBoxRef.width : 0;
+                            comboBoxRef: orderCB.cbRef;
+
+                            description: qsTr("Customer") + ": " + model.OrderCustomer;
                         }
                     }
 
-                    KeyNavigation.tab: statusCB;
-                    KeyNavigation.backtab: macAddressInput;
+                    Component.onCompleted: {
+                        let ok = PermissionsController.checkPermission("ChangeOrderForSensor");
 
-                    onEditingFinished: {
+                        orderCB.changeable = ok;
+                    }
+
+                    onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
+                    }
+
+                    onModelChanged: {
+                        deviceEditorContainer.doUpdateGui();
                     }
                 }
 
@@ -549,41 +570,26 @@ ViewBase {
                     }
                 }
 
-                FilterableComboBoxElementView {
-                    id: orderCB;
+                TextInputElementView {
+                    id: projectInput;
 
-                    name: qsTr("Order-ID");
+                    name: qsTr("Project");
+                    placeHolderText: qsTr("Enter the project");
 
-                    nameId: "OrderId";
+                    readOnly: deviceEditorContainer.readOnly;
 
-                    filteringFields: ["OrderId", "OrderCustomer"];
-
-                    model: CachedOrderCollection.collectionModel;
-
-                    KeyNavigation.tab: productCB;
-                    KeyNavigation.backtab: statusCB;
-
-                    delegate: Component {
-                        FilterableComboBoxDelegate {
-                            width: orderCB.width;
-                            comboBoxRef: orderCB.cbRef;
-
-                            description: qsTr("Customer") + ": " + model.OrderCustomer;
+                    Component.onCompleted: {
+                        if (!deviceEditorContainer.readOnly){
+                            let ok = PermissionsController.checkPermission("ChangeProjectForSensor");
+                            projectInput.readOnly = !ok;
                         }
                     }
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrderForSensor");
+                    KeyNavigation.tab: statusCB;
+                    KeyNavigation.backtab: macAddressInput;
 
-                        orderCB.changeable = ok;
-                    }
-
-                    onCurrentIndexChanged: {
+                    onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
-                    }
-
-                    onModelChanged: {
-                        deviceEditorContainer.doUpdateGui();
                     }
                 }
             }

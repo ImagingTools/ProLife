@@ -180,11 +180,16 @@ ViewBase {
 
             bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 
+            // SMacAddress1 - sxxxxxxxxxxxx
+            // SMacAddress2 - s:xxxxxxxxxxxx
+            // SMacAddress3 - s:xx:xx:xx:xx:xx:xx
+            // SMacAddress4 - sxx:xx:xx:xx:xx:xx
+
             filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "DeviceType", "MacAddress"];
 
             delegate: Component {
                 FilterableComboBoxDelegate {
-                    width: deviceCB.width;
+                    width: comboBoxRef ? comboBoxRef.width : 0;
                     comboBoxRef: deviceCB.cbRef;
 
                     description: model.MacAddress === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model.MacAddress;
@@ -232,7 +237,7 @@ ViewBase {
         Column {
             width: parent.width;
 
-            spacing: content.spacing;
+            spacing: parent.spacing;
 
             visible: root.isNewDevice;
 
@@ -263,7 +268,7 @@ ViewBase {
 
                 delegate: Component {
                     FilterableComboBoxDelegate {
-                        width: typesCB.width;
+                        width: comboBoxRef ? comboBoxRef.width : 0;
                         comboBoxRef: typesCB.cbRef;
 
                         text: model.LicenseName;
@@ -313,7 +318,7 @@ ViewBase {
         Column {
             width: parent.width;
 
-            spacing: content.spacing;
+            spacing: parent.spacing;
 
             visible: !root.isNewDevice;
 
