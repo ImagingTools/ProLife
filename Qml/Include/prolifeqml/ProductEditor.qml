@@ -81,6 +81,7 @@ Item {
             let serialNumber = productEditor.softwaresModel.GetData("SerialNumber", i);
 
             let orderUuid = productEditor.softwaresModel.GetData("OrderUuid", i);
+
             let productUuid = productEditor.softwaresModel.GetData("ProductUuid", i);
             let licenseUuid = productEditor.softwaresModel.GetData("LicenseUuid", i);
 

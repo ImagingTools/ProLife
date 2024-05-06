@@ -51,7 +51,7 @@ protected:
 				QString& errorMessage) const;
 
 	virtual void InsertSoftwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& softwareProductModel) const;
-    virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel) const;
+	virtual void InsertHardwareProductToModel(const imtbase::IIdentifiable& identifiable, imtbase::CTreeItemModel& hardwareProductModel) const;
 
 private:
 	void GenerateDifferences(

@@ -30,12 +30,6 @@ RemoteCollectionView {
         }
     }
 
-    commandsControllerComp: Component {CommandsRepresentationProvider {
-            commandId: "SoftwareProducts";
-            uuid: container.viewId;
-        }
-    }
-
     commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
             collectionView: container;
         }

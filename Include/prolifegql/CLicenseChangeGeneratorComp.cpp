@@ -136,7 +136,7 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 	QByteArray oldSerialNumber = oldSoftwareInfoPtr->GetSerialNumber();
 	QByteArray newSerialNumber = newSoftwareInfoPtr->GetSerialNumber();
 	if (oldSerialNumber != newSerialNumber){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Serial Number"), oldSerialNumber, newSerialNumber), "SerialNumber");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Software-ID"), oldSerialNumber, newSerialNumber), "SerialNumber");
 	}
 
 	QByteArray oldOrderId = oldSoftwareInfoPtr->GetOrderId();

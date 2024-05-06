@@ -457,8 +457,6 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 				if (productInfoPtr != nullptr){
 					bool isInUse = productInfoPtr->IsInUse();
 					if (isInUse){
-						errorMessage = QString("it is not possible to add a product that is already in use");
-
 						return;
 					}
 

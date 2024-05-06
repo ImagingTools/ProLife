@@ -132,8 +132,6 @@ Rectangle {
     }
 
     function updateElements(){
-        console.log("updateElements");
-
         elementsTableModel.Clear();
 
         let index = elementsTableModel.InsertNewItem();

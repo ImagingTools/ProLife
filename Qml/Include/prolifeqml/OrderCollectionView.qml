@@ -14,20 +14,9 @@ RemoteCollectionView {
 
     collectionId: "Orders";
 
-    dataControllerComp: Component {CollectionRepresentation {
-            collectionId: "Orders";
-        }
-    }
-
     filterMenu.decorator: orderCollectionFilterComp;
 
     collectionFilter: OrderCollectionFilter {}
-
-    commandsControllerComp: Component {CommandsRepresentationProvider {
-            commandId: "Orders";
-            uuid: container.viewId;
-        }
-    }
 
     commandsDelegateComp: Component {DocumentCollectionViewDelegate {
             collectionView: container;

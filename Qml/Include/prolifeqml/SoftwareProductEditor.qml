@@ -86,11 +86,11 @@ ViewBase {
 
             createdLicenseCb.currentIndex = -1;
 
-            let licenseUuid = root.model.GetData("LicenseUuid");
+            let licenseUuid = root.model.GetData("Id");
 
             if (createdLicenseCb.model){
                 for (let i = 0; i < createdLicenseCb.model.GetItemsCount(); i++){
-                    let id = createdLicenseCb.model.GetData("LicenseUuid", i);
+                    let id = createdLicenseCb.model.GetData("Id", i);
 
                     if (id === licenseUuid){
                         createdLicenseCb.currentIndex = i;

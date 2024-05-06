@@ -488,6 +488,7 @@ ViewBase {
                     id: unlimitedSwitch;
 
                     name: qsTr("Unlimited");
+                    description: unlimitedSwitch.checked ? qsTr("Deactivate it if you want to set the expiration date manually") : qsTr("Activate it if you want to set an unlimited expiration date");
 
                     onCheckedChanged: {
                         root.doUpdateModel();
