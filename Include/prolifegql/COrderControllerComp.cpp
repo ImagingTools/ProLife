@@ -456,26 +456,24 @@ void COrderControllerComp::InsertSoftwareProductToProductCollection(
 				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 				if (productInfoPtr != nullptr){
 					bool isInUse = productInfoPtr->IsInUse();
-					if (isInUse){
-						return;
-					}
-
-					QByteArray oldOrderId = productInfoPtr->GetOrderId();
-					if (!oldOrderId.isEmpty() && oldOrderId != orderUuid){
-						return;
-					}
-
-					if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
-						imtbase::IOperationContext* operationContextPtr = nullptr;
-
-						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, uuidId, softwareInstancePtr.GetPtr());
+					if (!isInUse){
+						QByteArray oldOrderId = productInfoPtr->GetOrderId();
+						if (!oldOrderId.isEmpty() && oldOrderId != orderUuid){
+							return;
 						}
 
-						if (!m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
-							errorMessage = QString("Unable to update a software product with ID: '%1'").arg(uuidId);
+						if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
+							imtbase::IOperationContext* operationContextPtr = nullptr;
 
-							return;
+							if (m_softwareOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, uuidId, softwareInstancePtr.GetPtr());
+							}
+
+							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(uuidId, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+								errorMessage = QString("Unable to update a software product with ID: '%1'").arg(uuidId);
+
+								return;
+							}
 						}
 					}
 				}
