@@ -44,7 +44,6 @@ Item {
     }
 
     function getSoftwareModel(){
-        console.log("getSoftwareModel");
         let excludeIds = []
         for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
             let categoryId = orderProductsModel.GetData("CategoryId", i);
@@ -334,6 +333,7 @@ Item {
             id: productCB;
 
             width: parent.width;
+            controlWidth: 500;
 
             name: qsTr("Product");
             nameId: "ProductName";
@@ -428,8 +428,6 @@ Item {
 
     function started(){
         productEditor.blockUpdatingModel = true;
-
-        console.log("started", productEditor.productModel.ToJson());
 
         let uuid;
         if (productEditor.productModel.ContainsKey("Id")){

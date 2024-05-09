@@ -482,7 +482,7 @@ ViewBase {
                         deviceEditorContainer.doUpdateModel();
                     }
 
-                    KeyNavigation.tab: projectInput;
+                    KeyNavigation.tab: orderCB;
                     KeyNavigation.backtab: serialNumberInput;
                 }
             }
@@ -512,8 +512,8 @@ ViewBase {
 
                     model: CachedOrderCollection.collectionModel;
 
-                    KeyNavigation.tab: productCB;
-                    KeyNavigation.backtab: statusCB;
+                    KeyNavigation.tab: statusCB;
+                    KeyNavigation.backtab: macAddressInput;
 
                     delegate: Component {
                         FilterableComboBoxDelegate {
@@ -547,8 +547,8 @@ ViewBase {
 
                     property bool blockingIndexChanged: false;
 
-                    KeyNavigation.tab: orderCB;
-                    KeyNavigation.backtab: projectInput;
+                    KeyNavigation.tab: projectInput;
+                    KeyNavigation.backtab: orderCB;
 
                     Component.onCompleted: {
                         let ok = PermissionsController.checkPermission("ChangeProductionStatus");
@@ -585,8 +585,8 @@ ViewBase {
                         }
                     }
 
-                    KeyNavigation.tab: statusCB;
-                    KeyNavigation.backtab: macAddressInput;
+                    KeyNavigation.tab: productCB;
+                    KeyNavigation.backtab: statusCB;
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();

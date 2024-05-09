@@ -172,6 +172,7 @@ ViewBase {
             id: deviceCB;
 
             width: parent.width;
+            controlWidth: 500;
 
             model: root.devicesModel;
 
@@ -245,6 +246,7 @@ ViewBase {
                 id: typesCB;
 
                 width: parent.width;
+                controlWidth: 500;
 
                 model: root.productLicensesModel;
 
@@ -294,6 +296,7 @@ ViewBase {
                 id: macAddressInput;
 
                 width: parent.width;
+                controlWidth: 500;
 
                 readOnly: root.readOnly;
 

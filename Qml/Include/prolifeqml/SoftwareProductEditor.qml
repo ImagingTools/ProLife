@@ -194,6 +194,7 @@ ViewBase {
             id: createdLicenseCb;
 
             width: parent.width;
+            controlWidth: 500;
 
             model: root.softwaresModel;
 
@@ -312,6 +313,7 @@ ViewBase {
                 id: licenseCB;
 
                 width: parent.width;
+                controlWidth: 500;
 
                 name: qsTr("License Types");
                 nameId: "LicenseName";
@@ -376,6 +378,7 @@ ViewBase {
                 id: serialNumberInput;
 
                 width: parent.width;
+                controlWidth: 500;
 
                 name: qsTr("Software-ID");
                 placeHolderText: qsTr("Enter the software-ID");

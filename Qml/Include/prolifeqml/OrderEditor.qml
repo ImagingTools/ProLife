@@ -614,7 +614,7 @@ ViewBase {
                         iconSource: !productsView.expanded ? "../../../" + Style.getIconPath("Icons/DetailedView", Icon.State.On, Icon.Mode.Normal)
                                                            : "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal);
 
-//                        tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
+                        tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
 
                         onClicked: {
                             productsView.expanded = !productsView.expanded;
@@ -631,7 +631,7 @@ ViewBase {
 
                         iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
 
-//                        tooltipText: qsTr("Add a new product");
+                        tooltipText: qsTr("Add a new product");
 
                         onClicked: {
                             productsView.activeProductIndex = -1;
