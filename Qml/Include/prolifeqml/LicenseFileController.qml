@@ -17,7 +17,6 @@ Item {
     }
 
     function createLicenseFile(dataId){
-        console.log("createLicenseFile", dataId);
         _private.dataId = dataId;
 
         fileDialogSave.currentFile = 'file:///' + controller.fileName;
@@ -74,7 +73,7 @@ Item {
             let id = _private.dataId;
 
             if (fileName == ""){
-                fileName= controller.defaultName;
+                fileName= controller.fileName;
             }
 
             remoteFileController.GetFile(id, fileName);

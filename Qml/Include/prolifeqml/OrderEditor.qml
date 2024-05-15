@@ -428,9 +428,7 @@ ViewBase {
                     KeyNavigation.tab: purchaseIdInput;
                     KeyNavigation.backtab: orderStatusCB;
 
-                    onAcceptableInputChanged: {
-                        instanceIdInput.bottomComp = acceptableInput ? undefined : errorComp;
-                    }
+                    bottomComp: acceptableInput ? undefined : errorComp;
 
                     onTextChanged: {
                         let len = instanceIdInput.text.length;
