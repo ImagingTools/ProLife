@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ProLifeServer"
-#define MyAppVersion "1.0"
+#define MyAppVersion GetEnv('APP_VERSION')
 #define MyAppPublisher "ImagingTools GmbH"
 #define MyAppURL "http://www.imagingtools.de"
 #define MyAppExeName "ProLifeServer.exe"
@@ -19,7 +19,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf64}\ImagingTools\ProLifeServer
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
-OutputBaseFilename=ProLifeServerInstall
+OutputBaseFilename=ProLifeServerInstall_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

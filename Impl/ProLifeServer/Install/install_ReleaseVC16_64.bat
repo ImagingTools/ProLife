@@ -1,5 +1,11 @@
 @echo on
+set OUTPUT_FILE=tempFile.txt
+python ./GetSvnVersion.py -D ..\..\..\ -F %OUTPUT_FILE%
+set /p APP_VERSION=< %OUTPUT_FILE% 
+IF EXIST %OUTPUT_FILE% DEL /F %OUTPUT_FILE%
+
 set PROLIFE_BUILD_DIR=..\..\..\Bin\Release_Qt6_VC16_x64
 iscc ProLifeServer.iss
+
 pause
 
