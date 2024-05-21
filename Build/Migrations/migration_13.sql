@@ -1,0 +1,1 @@
+UPDATE "Devices" SET "Document" = jsonb_set("Document", '{Project}', "Document"->'Description') WHERE "IsActive" = true;
