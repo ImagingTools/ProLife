@@ -185,12 +185,12 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(descriptionTag);
 
-	if (imtCoreVersion >= 9644){
+//	if (imtCoreVersion >= 9644){
 		iser::CArchiveTag projectTag("Project", "Project", iser::CArchiveTag::TT_LEAF);
 		retVal = retVal && archive.BeginTag(projectTag);
 		retVal = retVal && archive.Process(m_project);
 		retVal = retVal && archive.EndTag(projectTag);
-	}
+//	}
 
 	iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(statusTag);
