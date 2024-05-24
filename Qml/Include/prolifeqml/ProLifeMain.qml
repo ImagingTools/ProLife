@@ -17,14 +17,34 @@ ApplicationMain{
 
     Component.onCompleted: {
         context.appName = 'ProLife';
-
-        Events.subscribeEvent("Login", loginSuccesful);
-        Events.subscribeEvent("Logout", logout);
     }
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("Login", loginSuccesful);
-        Events.unSubscribeEvent("Logout", logout);
+    Connections {
+        target: AuthorizationController;
+
+        function onLoginSuccessful(){
+            CachedProductCollection.updateModel();
+            CachedLicenseCollection.updateModel();
+            CachedAccountCollection.updateModel();
+            CachedOrderCollection.updateModel();
+            CachedDeviceCollection.updateModel();
+            CachedGroupCollection.updateModel();
+            CachedUserCollection.updateModel();
+            CachedRoleCollection.updateModel();
+            CachedSoftwareCollection.updateModel();
+        }
+
+        function onLogoutSignal(){
+            CachedProductCollection.clearModel();
+            CachedLicenseCollection.clearModel();
+            CachedAccountCollection.clearModel();
+            CachedOrderCollection.clearModel();
+            CachedDeviceCollection.clearModel();
+            CachedGroupCollection.clearModel();
+            CachedUserCollection.clearModel();
+            CachedRoleCollection.clearModel();
+            CachedSoftwareCollection.clearModel();
+        }
     }
 
     ModalDialogManager {
@@ -33,30 +53,6 @@ ApplicationMain{
         z: 30;
 
         anchors.fill: parent;
-    }
-
-    function loginSuccesful(){
-        CachedProductCollection.updateModel();
-        CachedLicenseCollection.updateModel();
-        CachedAccountCollection.updateModel();
-        CachedOrderCollection.updateModel();
-        CachedDeviceCollection.updateModel();
-        CachedGroupCollection.updateModel();
-        CachedUserCollection.updateModel();
-        CachedRoleCollection.updateModel();
-        CachedSoftwareCollection.updateModel();
-    }
-
-    function logout(){
-        CachedProductCollection.clearModel();
-        CachedLicenseCollection.clearModel();
-        CachedAccountCollection.clearModel();
-        CachedOrderCollection.clearModel();
-        CachedDeviceCollection.clearModel();
-        CachedGroupCollection.clearModel();
-        CachedUserCollection.clearModel();
-        CachedRoleCollection.clearModel();
-        CachedSoftwareCollection.clearModel();
     }
 
     property bool pumaConnected: false;

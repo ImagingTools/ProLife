@@ -534,6 +534,13 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 		deviceInstancePtr->SetMacAddress(macAddress);
 	}
 
+	QByteArray serialNumber;
+	if (hardwareProductModel.ContainsKey("SerialNumber", modelIndex)){
+		serialNumber = hardwareProductModel.GetData("SerialNumber", modelIndex).toByteArray();
+
+		deviceInstancePtr->SetSerialNumber(serialNumber);
+	}
+
 	bool isNew = false;
 
 	if (hardwareProductModel.ContainsKey("IsNew", modelIndex)){

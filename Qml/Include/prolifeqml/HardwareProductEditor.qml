@@ -26,10 +26,16 @@ ViewBase {
             switchNewSensor.checked = true;
 
             macAddressInput.text = "";
+            serialNumberInput.text = "";
 
             if (root.model.ContainsKey("MacAddress")){
                 let macAddress = root.model.GetData("MacAddress");
                 macAddressInput.text = macAddress;
+            }
+
+            if (root.model.ContainsKey("SerialNumber")){
+                let serialNumber = root.model.GetData("SerialNumber");
+                serialNumberInput.text = serialNumber;
             }
 
             typesCB.currentIndex = -1;
@@ -89,6 +95,7 @@ ViewBase {
             }
 
             root.model.SetData("MacAddress", macAddressInput.text);
+            root.model.SetData("SerialNumber", serialNumberInput.text);
         }
         else{
             if (deviceCB.currentIndex >= 0){
@@ -211,6 +218,12 @@ ViewBase {
                         macAddressText.text = macAddress;
                     }
 
+                    if (deviceCB.model.ContainsKey("SerialNumber", deviceCB.currentIndex)){
+                        let serialNumber = deviceCB.model.GetData("SerialNumber", deviceCB.currentIndex)
+
+                        serialNumberText.text = serialNumber;
+                    }
+
                     if (deviceCB.model.ContainsKey("LicenseId", deviceCB.currentIndex)){
                         let licenseId = deviceCB.model.GetData("LicenseId", deviceCB.currentIndex)
 
@@ -307,6 +320,24 @@ ViewBase {
                 }
             }
 
+            TextInputElementView {
+                id: serialNumberInput;
+
+                width: parent.width;
+                controlWidth: 500;
+
+                name: qsTr("Serial Number");
+                placeHolderText: qsTr("Enter the serial number");
+
+                readOnly: root.readOnly;
+
+                visible: parent.visible && typesCB.currentIndex >= 0;
+
+                onEditingFinished: {
+                    root.doUpdateModel();
+                }
+            }
+
             TextElementView {
                 id: newArticulText;
 
@@ -341,6 +372,16 @@ ViewBase {
                 width: parent.width;
 
                 name: qsTr("MAC Address");
+
+                visible: parent.visible && deviceCB.currentIndex >= 0;
+            }
+
+            TextElementView {
+                id: serialNumberText;
+
+                width: parent.width;
+
+                name: qsTr("Serial Number");
 
                 visible: parent.visible && deviceCB.currentIndex >= 0;
             }

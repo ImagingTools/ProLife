@@ -19,14 +19,7 @@ ViewBase {
 
     property string orderUuid: "";
 
-    property alias licensesProviderLocal: licensesProvider;
-
     property bool serialNumberEdit: true;
-
-    property int radius: 3;
-    property int spacing: 25;
-
-    property int comboBoxHeight: 27;
 
     Component.onCompleted: {
         CachedAccountCollection.updateModel();
@@ -46,10 +39,6 @@ ViewBase {
 
     onModelChanged: {
         checkPermissions();
-    }
-
-    LicensesProvider {
-        id: licensesProvider;
     }
 
     function setReadOnly(readOnly){
