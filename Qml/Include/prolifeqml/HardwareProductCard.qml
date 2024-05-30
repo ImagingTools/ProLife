@@ -58,6 +58,10 @@ Rectangle {
         elementsTableModel.SetData("Value", hardwareCard.macAddress, index)
 
         index = elementsTableModel.InsertNewItem();
+        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
+        elementsTableModel.SetData("Value", hardwareCard.serialNumber, index)
+
+        index = elementsTableModel.InsertNewItem();
         elementsTableModel.SetData("Key", qsTr("Model Type"), index)
         elementsTableModel.SetData("Value", model.LicenseName, index)
 

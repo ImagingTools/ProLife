@@ -69,6 +69,71 @@ ViewBase {
         CachedProductCollection.updateModel();
     }
 
+    onModelChanged: {
+        checkPermissions();
+    }
+
+    function checkPermissions(){
+        console.log("checkPermissions");
+        let deviceId = "";
+        if (model.ContainsKey("Id")){
+            deviceId = model.GetData("Id");
+        }
+
+        let canAddSensor = PermissionsController.checkPermission("AddSensor");
+        if (deviceId === "" && canAddSensor){
+            descriptionInput.readOnly = false;
+            serialNumberInput.readOnly = false;
+            macAddressInput.readOnly = false;
+            projectInput.readOnly = false;
+            statusCB.changeable = true;
+            productCB.changeable = true;
+            orderCB.changeable = true;
+            configurationCB.changeable = true;
+        }
+        else{
+            let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
+            descriptionInput.readOnly = !canChangeDescription;
+
+            let canChangeSerialNumber = PermissionsController.checkPermission("ChangeSerialNumberForSensor");
+            serialNumberInput.readOnly = !canChangeSerialNumber;
+
+            let canChangeMacAddress = PermissionsController.checkPermission("ChangeMacAddress");
+            macAddressInput.readOnly = !canChangeMacAddress;
+
+            let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
+            orderCB.changeable = canChangeOrder;
+
+            let canChangeProductionStatus = PermissionsController.checkPermission("ChangeProductionStatus");
+            statusCB.changeable = canChangeProductionStatus;
+
+            let canChangeProject = PermissionsController.checkPermission("ChangeProjectForSensor");
+            projectInput.readOnly = !canChangeProject;
+
+            let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration");
+            configurationCB.changeable = canChangeConfiguration;
+
+            let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType");
+            productCB.changeable = canChangeDevice;
+
+            let ok =
+                canChangeDescription ||
+                canChangeSerialNumber ||
+                canChangeMacAddress ||
+                canChangeOrder||
+                canChangeProductionStatus ||
+                canChangeProject ||
+                canChangeConfiguration ||
+                canChangeDevice;
+
+            if (commandsController){
+                commandsController.setCommandVisible("Undo", ok);
+                commandsController.setCommandVisible("Redo", ok);
+                commandsController.setCommandVisible("Save", ok);
+            }
+        }
+    }
+
     Component {
         id: saveDialogComp;
 
@@ -381,11 +446,6 @@ ViewBase {
                     KeyNavigation.tab: configurationCB;
                     KeyNavigation.backtab: orderCB;
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeDeviceType");
-                        productCB.changeable = ok;
-                    }
-
                     onCurrentIndexChanged: {
                         let ok = false;
                         if (productCB.currentIndex >= 0){
@@ -418,11 +478,6 @@ ViewBase {
                     KeyNavigation.tab: descriptionInput;
                     KeyNavigation.backtab: productCB;
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeHardwareConfiguration");
-                        configurationCB.changeable = ok;
-                    }
-
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
                     }
@@ -433,12 +488,6 @@ ViewBase {
 
                     name: qsTr("Description");
                     placeHolderText: qsTr("Enter description");
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeDescriptionForSensor");
-
-                        descriptionInput.readOnly = !ok;
-                    }
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
@@ -455,12 +504,6 @@ ViewBase {
 
                     placeHolderText: qsTr("Enter serial number");
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeSerialNumberForSensor");
-
-                        serialNumberInput.readOnly = !ok;
-                    }
-
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
                     }
@@ -471,12 +514,6 @@ ViewBase {
 
                 MacAddressElementView {
                     id: macAddressInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeMacAddress");
-
-                        macAddressInput.readOnly = !ok;
-                    }
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
@@ -524,12 +561,6 @@ ViewBase {
                         }
                     }
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeOrderForSensor");
-
-                        orderCB.changeable = ok;
-                    }
-
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
                     }
@@ -549,12 +580,6 @@ ViewBase {
 
                     KeyNavigation.tab: projectInput;
                     KeyNavigation.backtab: orderCB;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeProductionStatus");
-
-                        statusCB.changeable = ok;
-                    }
 
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
@@ -577,13 +602,6 @@ ViewBase {
                     placeHolderText: qsTr("Enter the project");
 
                     readOnly: deviceEditorContainer.readOnly;
-
-                    Component.onCompleted: {
-                        if (!deviceEditorContainer.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeProjectForSensor");
-                            projectInput.readOnly = !ok;
-                        }
-                    }
 
                     KeyNavigation.tab: productCB;
                     KeyNavigation.backtab: statusCB;

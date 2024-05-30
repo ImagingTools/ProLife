@@ -36,12 +36,68 @@ ViewBase {
 
     onModelChanged: {
         checkInUse();
+
+        checkPermissions();
     }
 
     Component {
         id: alertComp;
         AlertMessage {
             message: qsTr("The product cannot be edited as it is in use.");
+        }
+    }
+
+    function checkPermissions(){
+        let softwareId = "";
+        if (model.ContainsKey("Id")){
+            softwareId = model.GetData("Id");
+        }
+
+        let canAddLicense = PermissionsController.checkPermission("AddLicense");
+        if (softwareId === "" && canAddLicense){
+            projectInput.readOnly = false;
+
+            ordersCB.changeable = true;
+            productCB.changeable = true;
+            licenseCB.changeable = true;
+
+            serialNumberInput.readOnly = false;
+            expirationEditor.readOnly = false;
+            unlimitedSwitch.readOnly = false;
+        }
+        else{
+            let canChangeProject = PermissionsController.checkPermission("ChangeProjectForLicense");
+            projectInput.readOnly = !canChangeProject;
+
+            let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
+            ordersCB.changeable = canChangeOrder;
+
+            let canChangeProduct = PermissionsController.checkPermission("ChangeProductForLicense");
+            productCB.changeable = canChangeProduct;
+
+            let canChangeLicense = PermissionsController.checkPermission("ChangeProductLicenses");
+            licenseCB.changeable = canChangeLicense;
+
+            let canChangeLicenseNumber = PermissionsController.checkPermission("ChangeLicenseNumber");
+            serialNumberInput.readOnly = !canChangeLicenseNumber;
+
+            let canChangeExpiration = PermissionsController.checkPermission("ChangeExpiration");
+            expirationEditor.readOnly = !canChangeExpiration;
+            unlimitedSwitch.readOnly = !canChangeExpiration;
+
+            let ok =
+                canChangeProject ||
+                canChangeOrder ||
+                canChangeProduct ||
+                canChangeLicense ||
+                canChangeLicenseNumber ||
+                canChangeExpiration;
+
+            if (commandsController){
+                commandsController.setCommandVisible("Undo", ok);
+                commandsController.setCommandVisible("Redo", ok);
+                commandsController.setCommandVisible("Save", ok);
+            }
         }
     }
 
@@ -242,14 +298,6 @@ ViewBase {
                     KeyNavigation.tab: ordersCB;
                     KeyNavigation.backtab: expirationEditor;
 
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeProjectForLicense");
-
-                            projectInput.readOnly = !ok;
-                        }
-                    }
-
                     onEditingFinished: {
                         root.doUpdateModel();
                     }
@@ -276,14 +324,6 @@ ViewBase {
                             comboBoxRef: ordersCB.cbRef;
 
                             description: qsTr("Customer") + ": " + model.OrderCustomer;
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeOrderForLicense");
-
-                            ordersCB.changeable = ok;
                         }
                     }
 
@@ -341,10 +381,10 @@ ViewBase {
                         let expiration = root.model.GetData("Expiration");
 
                         if (expiration && expiration !== "" ){
-                            unlimitedSwitch.checked = false;
+                            unlimitedSwitch.switchRef.setChecked(false);
                         }
                         else{
-                            unlimitedSwitch.checked = true;
+                            unlimitedSwitch.switchRef.setChecked(true);
                         }
 
                         if (expirationEditor.datePicker){
@@ -396,14 +436,6 @@ ViewBase {
                     KeyNavigation.tab: licenseCB;
                     KeyNavigation.backtab: ordersCB;
 
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeProductForLicense");
-
-                            productCB.changeable = ok;
-                        }
-                    }
-
                     onModelChanged: {
                         root.doUpdateGui();
                     }
@@ -436,14 +468,6 @@ ViewBase {
                     KeyNavigation.tab: serialNumberInput;
                     KeyNavigation.backtab: productCB;
 
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeProductLicenses");
-
-                            licenseCB.changeable = ok;
-                        }
-                    }
-
                     onCurrentIndexChanged: {
                         root.doUpdateModel();
                     }
@@ -457,14 +481,6 @@ ViewBase {
 
                     KeyNavigation.tab: unlimitedSwitch;
                     KeyNavigation.backtab: licenseCB;
-
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-
-                            serialNumberInput.readOnly = !ok;
-                        }
-                    }
 
                     onEditingFinished: {
                         root.doUpdateModel();
@@ -499,14 +515,6 @@ ViewBase {
                     KeyNavigation.tab: expirationEditor;
                     KeyNavigation.backtab: serialNumberInput;
 
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeExpiration");
-
-                            switchRef.readOnly = !ok;
-                        }
-                    }
-
                     onSwitchRefChanged: {
                         if (switchRef){
                             switchRef.readOnly = unlimitedSwitch.readOnly;
@@ -539,14 +547,6 @@ ViewBase {
                     onDatePickerChanged: {
                         if (datePicker){
                             datePicker.readOnly = readOnly;
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        if (!root.readOnly){
-                            let ok = PermissionsController.checkPermission("ChangeExpiration");
-
-                            expirationEditor.readOnly = !ok;
                         }
                     }
 
