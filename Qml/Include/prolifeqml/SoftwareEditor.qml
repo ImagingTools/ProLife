@@ -35,9 +35,8 @@ ViewBase {
     }
 
     onModelChanged: {
-        checkInUse();
-
         checkPermissions();
+        checkInUse();
     }
 
     Component {

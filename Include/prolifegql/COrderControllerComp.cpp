@@ -890,6 +890,48 @@ bool COrderControllerComp::CheckProducts(
 					}
 				}
 			}
+
+			QByteArray serialNumber;
+			if (productsModel.ContainsKey("SerialNumber", productIndex)){
+				serialNumber = productsModel.GetData("SerialNumber", productIndex).toByteArray();
+			}
+
+			if (!serialNumber.isEmpty()){
+				iprm::CTextParam valueParam;
+				valueParam.SetText(serialNumber);
+
+				iprm::CEnableableParam isEqualParam;
+				isEqualParam.SetEnabled(true);
+
+				iprm::CParamsSet valueParamsSet;
+				valueParamsSet.SetEditableParameter("Value", &valueParam);
+				valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+				iprm::CParamsSet paramsSet1;
+				paramsSet1.SetEditableParameter("SerialNumber", &valueParamsSet);
+
+				iprm::CParamsSet filterParam;
+				filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+
+				imtbase::ICollectionInfo::Ids collectionIds = m_deviceCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+				if (!collectionIds.isEmpty()){
+					QByteArray id = collectionIds[0];
+					if (objectUuid != id){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_deviceCollectionCompPtr->GetObjectData(id, dataPtr)){
+							prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+							if (deviceInfoPtr != nullptr){
+								QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
+								if (currentSerialNumber == serialNumber.toLower()){
+									errorMessage = QString("it is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
+
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		else{
 			errorMessage = QString("Unknown category for product");
