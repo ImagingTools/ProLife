@@ -160,10 +160,6 @@ Item {
                     }
                 }
 
-                onModelChanged: {
-                    productEditor.updateGui();
-                }
-
                 onCurrentIndexChanged: {
                     if (productEditor.blockUpdatingModel){
                         return;
@@ -426,8 +422,6 @@ Item {
                     if (!dataController){
                         return;
                     }
-
-                    console.log("bindingProductsCollection updateData", dataController);
 
                     dataController.collectionId = "SoftwareProducts";
 
