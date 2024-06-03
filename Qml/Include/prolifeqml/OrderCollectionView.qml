@@ -93,7 +93,7 @@ RemoteCollectionView {
             CollectionDataProvider {
                 id: accountsList;
 
-                commandId: "Accounts";
+                commandId: "AccountsList";
 
                 fields: ["Id", "Name"];
 
