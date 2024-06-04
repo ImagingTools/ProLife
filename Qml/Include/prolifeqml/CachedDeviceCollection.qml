@@ -8,6 +8,7 @@ CollectionDataProvider {
     id: container;
 
     commandId: "DevicesList";
+    subscriptionCommandId: "OnDevicesCollectionChanged"
 
     sortByField: "Name";
 

@@ -94,6 +94,7 @@ RemoteCollectionView {
                 id: accountsList;
 
                 commandId: "AccountsList";
+                subscriptionCommandId: "OnAccountsCollectionChanged"
 
                 fields: ["Id", "Name"];
 
