@@ -6,6 +6,7 @@ import imtauthgui 1.0
 import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
+import imtguigql 1.0
 import prolifeqml 1.0
 
 ViewBase {

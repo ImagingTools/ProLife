@@ -1,2 +1,3 @@
 @echo on
-.\nginx.exe -s stop
+.\nginx.exe -s quit
+taskkill /f /IM nginx.exe
