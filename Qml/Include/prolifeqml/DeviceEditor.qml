@@ -25,6 +25,10 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
+    model: TreeItemModel{
+        id: model;
+    }
+
     commandsDelegateComp: Component {ViewCommandsDelegateBase {
             view: deviceEditorContainer;
             onCommandActivated: {
@@ -75,7 +79,6 @@ ViewBase {
     }
 
     function checkPermissions(){
-        console.log("checkPermissions");
         let deviceId = "";
         if (model.ContainsKey("Id")){
             deviceId = model.GetData("Id");
