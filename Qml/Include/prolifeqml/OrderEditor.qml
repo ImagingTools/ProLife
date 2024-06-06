@@ -622,7 +622,7 @@ ViewBase {
 
                         onClicked: {
                             productsView.activeProductIndex = -1;
-                            modalDialogManager.openDialog(productEditorDialog, {});
+                            ModalDialogManager.openDialog(productEditorDialog, {});
                         }
                     }
                 }
@@ -669,13 +669,13 @@ ViewBase {
                     onEdited: {
                         productsView.activeProductIndex = model.index;
 
-                        modalDialogManager.openDialog(productEditorDialog, {});
+                        ModalDialogManager.openDialog(productEditorDialog, {});
                     }
 
                     onRemoved: {
                         productsView.activeProductIndex = model.index;
 
-                        modalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
+                        ModalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
                     }
                 }
             }

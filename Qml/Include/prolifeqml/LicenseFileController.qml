@@ -30,7 +30,7 @@ Item {
         prefix: "/files";
 
         onFileDownloadFailed: {
-            modalDialogManager.openDialog(messageErrorDialog, {"message": qsTr("Error when trying to create a license file.")});
+            ModalDialogManager.openDialog(messageErrorDialog, {"message": qsTr("Error when trying to create a license file.")});
         }
 
         onStateChanged: {

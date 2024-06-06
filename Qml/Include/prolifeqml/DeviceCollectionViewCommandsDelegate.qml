@@ -106,7 +106,7 @@ DocumentCollectionViewDelegate {
             let title = qsTr("Add license to sensor '%1'");
             title = title.replace("%1", macAddress);
 
-            modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
+            ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
         }
         else if (commandId === "OpenOrder"){
             let orderId = elementsModel.GetData("OrderUuid", indexes[0]);

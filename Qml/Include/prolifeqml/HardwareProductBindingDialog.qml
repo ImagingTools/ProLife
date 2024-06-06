@@ -7,7 +7,7 @@ import imtcontrols 1.0
 Dialog {
     id: productEditorDialog;
 
-    property int rootWidth: root ? root.width - 100 : 0;
+    property int rootWidth: root.activeView ? root.activeView.width - 100 : 0;
 
     onRootWidthChanged: {
         width = rootWidth;
@@ -41,7 +41,7 @@ Dialog {
 
     onFinished: {
         if (buttonId == Enums.ok){
-            modalDialogManager.openDialog(messageDialog, {});
+            ModalDialogManager.openDialog(messageDialog, {});
         }
     }
 

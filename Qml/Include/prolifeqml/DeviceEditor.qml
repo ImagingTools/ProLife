@@ -39,7 +39,7 @@ ViewBase {
                     }
 
                     if (hardwareUuid === ""){
-                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Warning message")});
+                        ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Warning message")});
 
                         return;
                     }
@@ -51,7 +51,7 @@ ViewBase {
                     }
 
                     if (!macAddressValidator.isValid(macAddress)){
-                        modalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
+                        ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
 
                         return;
                     }
@@ -59,7 +59,7 @@ ViewBase {
                     let title = qsTr("Add license to sensor '%1'");
                     title = title.replace("%1", macAddress);
 
-                    modalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid, "title": title});
+                    ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid, "title": title});
                 }
             }
         }
@@ -613,6 +613,11 @@ ViewBase {
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
                     }
+                }
+
+                DoubleInputElementView {
+                    name: qsTr("Double");
+                    placeHolderText: qsTr("Enter the Double");
                 }
             }
         }

@@ -47,14 +47,6 @@ ApplicationMain{
         }
     }
 
-    ModalDialogManager {
-        id: modalDialogManager;
-
-        z: 30;
-
-        anchors.fill: parent;
-    }
-
     property bool pumaConnected: false;
     SubscriptionClient {
         id: pumaSub;
@@ -123,7 +115,7 @@ ApplicationMain{
                                 window.lisaConnected = false;
 
                                 if (!window.wasError){
-                                    modalDialogManager.openDialog(errorDialog, {});
+                                    ModalDialogManager.openDialog(errorDialog, {});
 
                                     window.wasError = true;
                                 }

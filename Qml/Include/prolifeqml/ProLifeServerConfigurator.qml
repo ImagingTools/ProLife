@@ -14,13 +14,7 @@ Rectangle {
 
     signal settingsUpdate();
 
-    onSettingsUpdate: {
-        console.log("window onSettingsUpdate", localSettings.ToJson());
-    }
-
     onLocalSettingsChanged: {
-        console.log("onLocalSettingsChanged", localSettings.ToJson());
-
         preferenceDialog.settingsModel = localSettings;
     }
 
@@ -80,12 +74,10 @@ Rectangle {
             if (buttonId == Enums.apply){
                 window.settingsUpdate();
                 preferenceDialog.modelIsDirty = false;
-
-                //                buttons.setButtonState("Apply", false);
             }
             else if (buttonId == Enums.ButtonType.Close){
                 if (preferenceDialog.modelIsDirty){
-                    modalDialogManager.openDialog(saveDialog, {"message": qsTr("Save all changes ?")});
+                    ModalDialogManager.openDialog(saveDialog, {"message": qsTr("Save all changes ?")});
                 }
                 else{
                     Qt.quit();
@@ -93,24 +85,6 @@ Rectangle {
             }
         }
     }
-
-    ModalDialogManager {
-        id: modalDialogManager;
-
-        z: 30;
-
-        anchors.fill: parent;
-    }
-
-//    Connections {
-//        target: Qt.application;
-
-//        onAboutToQuit: {
-//            console.log("onAboutToQuit");
-
-//            buttons.buttonClicked("Close");
-//        }
-//    }
 
     Component {
         id: saveDialog;
@@ -132,6 +106,12 @@ Rectangle {
                 }
             }
         }
+    }
+
+    DialogManagerView {
+        anchors.fill: parent;
+
+        z: 30;
     }
 
     Loading {
