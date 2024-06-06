@@ -614,11 +614,6 @@ ViewBase {
                         deviceEditorContainer.doUpdateModel();
                     }
                 }
-
-                DoubleInputElementView {
-                    name: qsTr("Double");
-                    placeHolderText: qsTr("Enter the Double");
-                }
             }
         }
     }
