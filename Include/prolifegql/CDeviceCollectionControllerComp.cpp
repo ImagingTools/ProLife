@@ -232,7 +232,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 			filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
 			filterParams.SetEditableParameter("LicenseFilter", &licenseFilter);
 
-			this->SetAdditionalFilters(*viewParamsGql, &filterParams);
+			this->SetAdditionalFilters(gqlRequest, *viewParamsGql, &filterParams);
 		}
 
 		int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);

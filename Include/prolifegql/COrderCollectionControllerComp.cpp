@@ -187,7 +187,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 
 		filterParams.SetEditableParameter("Filter", &m_filter);
 
-		this->SetAdditionalFilters(*viewParamsGql, &filterParams);
+		this->SetAdditionalFilters(gqlRequest, *viewParamsGql, &filterParams);
 	}
 
 	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
