@@ -369,7 +369,7 @@ Item {
 
             var gqlData = query.GetQuery();
             console.log("InstallationCollectionView metaInfo query ", gqlData);
-            this.SetGqlQuery(gqlData);
+            this.setGqlQuery(gqlData);
         }
 
         onStateChanged: {
@@ -431,7 +431,7 @@ Item {
 
             var gqlData = query.GetQuery();
             console.log("InstallationCollectionView licenseFile query ", gqlData);
-            this.SetGqlQuery(gqlData);
+            this.setGqlQuery(gqlData);
         }
 
         onStateChanged: {
