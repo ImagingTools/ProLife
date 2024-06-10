@@ -101,6 +101,10 @@ ViewBase {
     }
 
     function checkInUse(){
+        if (!root.model){
+            return;
+        }
+
         let parameters = {"Id": "SoftwareProducts"};
 
         let inUse = root.model.getData("InUse");
