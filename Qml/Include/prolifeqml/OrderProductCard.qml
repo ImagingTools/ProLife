@@ -85,20 +85,20 @@ Rectangle {
     }
 
     function setIsEnabledCommand(commandsModel, commandId, isEnabled){
-        for (let i = 0; i < commandsModel.GetItemsCount(); i++){
-            let id = commandsModel.GetData("Id", i);
+        for (let i = 0; i < commandsModel.getItemsCount(); i++){
+            let id = commandsModel.getData("Id", i);
             if (id === commandId){
-                commandsModel.SetData("IsEnabled", isEnabled, i);
+                commandsModel.setData("IsEnabled", isEnabled, i);
                 break;
             }
         }
     }
 
     function setCommandValue(commandsModel, commandId, commandKey, commandValue){
-        for (let i = 0; i < commandsModel.GetItemsCount(); i++){
-            let id = commandsModel.GetData("Id", i);
+        for (let i = 0; i < commandsModel.getItemsCount(); i++){
+            let id = commandsModel.getData("Id", i);
             if (id === commandId){
-                commandsModel.SetData(commandKey, commandValue, i);
+                commandsModel.setData(commandKey, commandValue, i);
                 break;
             }
         }
@@ -234,29 +234,29 @@ Rectangle {
         property bool completed: false;
 
         Component.onCompleted: {
-            let index = softwareCommandsModel.InsertNewItem();
+            let index = softwareCommandsModel.insertNewItem();
 
-            softwareCommandsModel.SetData("Id", "Edit", index);
-            softwareCommandsModel.SetData("Name", "Edit", index);
-            softwareCommandsModel.SetData("Icon", "Icons/Edit", index);
-            softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            softwareCommandsModel.SetData("Visible", true, index);
+            softwareCommandsModel.setData("Id", "Edit", index);
+            softwareCommandsModel.setData("Name", "Edit", index);
+            softwareCommandsModel.setData("Icon", "Icons/Edit", index);
+            softwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
+            softwareCommandsModel.setData("Visible", true, index);
 
-            index = softwareCommandsModel.InsertNewItem();
+            index = softwareCommandsModel.insertNewItem();
 
-            softwareCommandsModel.SetData("Id", "Remove", index);
-            softwareCommandsModel.SetData("Name", "Remove", index);
-            softwareCommandsModel.SetData("Icon", "Icons/Delete", index);
-            softwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            softwareCommandsModel.SetData("Visible", true, index);
+            softwareCommandsModel.setData("Id", "Remove", index);
+            softwareCommandsModel.setData("Name", "Remove", index);
+            softwareCommandsModel.setData("Icon", "Icons/Delete", index);
+            softwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
+            softwareCommandsModel.setData("Visible", true, index);
 
-            index = softwareCommandsModel.InsertNewItem();
+            index = softwareCommandsModel.insertNewItem();
 
-            softwareCommandsModel.SetData("Id", "Lock", index);
-            softwareCommandsModel.SetData("Name", "Lock", index);
-            softwareCommandsModel.SetData("Icon", "Icons/Lock", index);
-            softwareCommandsModel.SetData("IsEnabled", false, index);
-            softwareCommandsModel.SetData("Visible", false, index);
+            softwareCommandsModel.setData("Id", "Lock", index);
+            softwareCommandsModel.setData("Name", "Lock", index);
+            softwareCommandsModel.setData("Icon", "Icons/Lock", index);
+            softwareCommandsModel.setData("IsEnabled", false, index);
+            softwareCommandsModel.setData("Visible", false, index);
 
             if (root.categoryId == "Software"){
                 commands.commandModel = softwareCommandsModel;
@@ -272,29 +272,29 @@ Rectangle {
         property bool completed: false;
 
         Component.onCompleted: {
-            let index = hardwareCommandsModel.InsertNewItem();
+            let index = hardwareCommandsModel.insertNewItem();
 
-            hardwareCommandsModel.SetData("Id", "Edit", index);
-            hardwareCommandsModel.SetData("Name", "Edit", index);
-            hardwareCommandsModel.SetData("Icon", "Icons/Edit", index);
-            hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            hardwareCommandsModel.SetData("Visible", true, index);
+            hardwareCommandsModel.setData("Id", "Edit", index);
+            hardwareCommandsModel.setData("Name", "Edit", index);
+            hardwareCommandsModel.setData("Icon", "Icons/Edit", index);
+            hardwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
+            hardwareCommandsModel.setData("Visible", true, index);
 
-            index = hardwareCommandsModel.InsertNewItem();
+            index = hardwareCommandsModel.insertNewItem();
 
-            hardwareCommandsModel.SetData("Id", "Remove", index);
-            hardwareCommandsModel.SetData("Name", "Remove", index);
-            hardwareCommandsModel.SetData("Icon", "Icons/Delete", index);
-            hardwareCommandsModel.SetData("IsEnabled", !root.readOnly, index);
-            hardwareCommandsModel.SetData("Visible", true, index);
+            hardwareCommandsModel.setData("Id", "Remove", index);
+            hardwareCommandsModel.setData("Name", "Remove", index);
+            hardwareCommandsModel.setData("Icon", "Icons/Delete", index);
+            hardwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
+            hardwareCommandsModel.setData("Visible", true, index);
 
-            index = hardwareCommandsModel.InsertNewItem();
+            index = hardwareCommandsModel.insertNewItem();
 
-            hardwareCommandsModel.SetData("Id", "Lock", index);
-            hardwareCommandsModel.SetData("Name", "Lock", index);
-            hardwareCommandsModel.SetData("Icon", "Icons/Lock", index);
-            hardwareCommandsModel.SetData("IsEnabled", false, index);
-            hardwareCommandsModel.SetData("Visible", false, index);
+            hardwareCommandsModel.setData("Id", "Lock", index);
+            hardwareCommandsModel.setData("Name", "Lock", index);
+            hardwareCommandsModel.setData("Icon", "Icons/Lock", index);
+            hardwareCommandsModel.setData("IsEnabled", false, index);
+            hardwareCommandsModel.setData("Visible", false, index);
 
             if (root.categoryId == "Hardware"){
                 commands.commandModel = hardwareCommandsModel;

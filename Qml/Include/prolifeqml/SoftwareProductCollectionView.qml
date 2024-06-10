@@ -38,7 +38,7 @@ RemoteCollectionView {
     visibleMetaInfo: false;
 
     onHeadersChanged: {
-        if (container.table.headers.GetItemsCount() > 0){
+        if (container.table.headers.getItemsCount() > 0){
             container.table.setColumnContentComponent(0, pairComp);
 
             container.table.tableDecorator = tableDecoratorModel;
@@ -181,14 +181,14 @@ RemoteCollectionView {
                 }
 
                 onCollectionModelChanged: {
-                    accountsList.collectionModel.InsertNewItem(0);
+                    accountsList.collectionModel.insertNewItem(0);
 
                     accountsList.updateComboBoxModel();
                 }
 
                 function updateComboBoxModel(){
-                    accountsList.collectionModel.SetData("Id", "All");
-                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+                    accountsList.collectionModel.setData("Id", "All");
+                    accountsList.collectionModel.setData("Name", qsTr("All customers"))
 
                     accountComboBox.model = accountsList.collectionModel;
                 }
@@ -210,25 +210,25 @@ RemoteCollectionView {
             }
 
             function updateModel(){
-                modelCategogy.Clear();
+                modelCategogy.clear();
 
-                let index = modelCategogy.InsertNewItem();
-                modelCategogy.SetData("Id", "All", index);
-                modelCategogy.SetData("Name", qsTr("Show all licenses"), index);
+                let index = modelCategogy.insertNewItem();
+                modelCategogy.setData("Id", "All", index);
+                modelCategogy.setData("Name", qsTr("Show all licenses"), index);
 
-                index = modelCategogy.InsertNewItem();
-                modelCategogy.SetData("Id", "Paired", index);
-                modelCategogy.SetData("Name", qsTr("Show only paired licenses"), index);
+                index = modelCategogy.insertNewItem();
+                modelCategogy.setData("Id", "Paired", index);
+                modelCategogy.setData("Name", qsTr("Show only paired licenses"), index);
 
-                index = modelCategogy.InsertNewItem();
-                modelCategogy.SetData("Id", "NotPaired", index);
-                modelCategogy.SetData("Name", qsTr("Show only not paired licenses"), index);
+                index = modelCategogy.insertNewItem();
+                modelCategogy.setData("Id", "NotPaired", index);
+                modelCategogy.setData("Name", qsTr("Show only not paired licenses"), index);
 
-                index = modelCategogy.InsertNewItem();
-                modelCategogy.SetData("Id", "InUse", index);
-                modelCategogy.SetData("Name", qsTr("Show the licenses for which the file was created"), index);
+                index = modelCategogy.insertNewItem();
+                modelCategogy.setData("Id", "InUse", index);
+                modelCategogy.setData("Name", qsTr("Show the licenses for which the file was created"), index);
 
-                modelCategogy.Refresh();
+                modelCategogy.refresh();
 
                 licenseComboBox.model = modelCategogy;
             }
@@ -291,7 +291,7 @@ RemoteCollectionView {
 
                     onCurrentIndexChanged: {
                         if (accountComboBox.currentIndex > 0){
-                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+                            let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);
                             container.collectionFilter.setAccountFilter(value);
                         }
                         else{
@@ -320,43 +320,43 @@ RemoteCollectionView {
         id: tableDecoratorModel;
 
         Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+            var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
 
-            let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 70, index);
+            let index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", 70, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
         }
     }
 }

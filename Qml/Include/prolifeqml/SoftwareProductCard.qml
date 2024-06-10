@@ -132,11 +132,11 @@ Rectangle {
     }
 
     function updateElements(){
-        elementsTableModel.Clear();
+        elementsTableModel.clear();
 
-        let index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Software-ID"), index)
-        elementsTableModel.SetData("Value", softwareCard.serialNumber, index)
+        let index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Software-ID"), index)
+        elementsTableModel.setData("Value", softwareCard.serialNumber, index)
 
         let licenseId = softwareCard.licenseId;
         let licenseName = softwareCard.licenseName;
@@ -146,9 +146,9 @@ Rectangle {
             name += " (" + licenseId + ")";
         }
 
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Article"), index)
-        elementsTableModel.SetData("Value", name, index);
+        index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Article"), index)
+        elementsTableModel.setData("Value", name, index);
 
         let expiration = qsTr("Unlimited");
 
@@ -156,25 +156,25 @@ Rectangle {
             expiration = softwareCard.expiration;
         }
 
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Expiration"), index)
-        elementsTableModel.SetData("Value", expiration, index)
+        index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Expiration"), index)
+        elementsTableModel.setData("Value", expiration, index)
 
         licensesView.elements = elementsTableModel;
     }
 
     function updateHeaders(){
-        headersLicensesTable.Clear();
+        headersLicensesTable.clear();
 
-        let index = headersLicensesTable.InsertNewItem();
+        let index = headersLicensesTable.insertNewItem();
 
-        headersLicensesTable.SetData("Id", "Key", index)
-        headersLicensesTable.SetData("Name", qsTr("Key"), index)
+        headersLicensesTable.setData("Id", "Key", index)
+        headersLicensesTable.setData("Name", qsTr("Key"), index)
 
-        index = headersLicensesTable.InsertNewItem();
+        index = headersLicensesTable.insertNewItem();
 
-        headersLicensesTable.SetData("Id", "Value", index)
-        headersLicensesTable.SetData("Name", qsTr("Value"), index)
+        headersLicensesTable.setData("Id", "Value", index)
+        headersLicensesTable.setData("Name", qsTr("Value"), index)
 
         licensesView.headers = headersLicensesTable;
     }
@@ -183,13 +183,13 @@ Rectangle {
         id: tableDecoratorModel;
 
         Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+            var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
 
-            let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 150, index);
+            let index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", 150, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
         }
     }
 } //Card

@@ -36,27 +36,27 @@ Item {
     }
 
     onProductIdChanged: {
-        productEditor.productModel.SetData("ProductUuid", productEditor.productId);
+        productEditor.productModel.setData("ProductUuid", productEditor.productId);
     }
 
     onProductCategoryChanged: {
-        productEditor.productModel.SetData("CategoryId", productEditor.productCategory);
+        productEditor.productModel.setData("CategoryId", productEditor.productCategory);
     }
 
     function getSoftwareModel(){
         let excludeIds = []
-        for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
-            let categoryId = orderProductsModel.GetData("CategoryId", i);
+        for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
+            let categoryId = orderProductsModel.getData("CategoryId", i);
             if (categoryId === "Software"){
-                let id = orderProductsModel.GetData("Id", i);
+                let id = orderProductsModel.getData("Id", i);
                 if (id !== ""){
                     excludeIds.push(id)
                 }
             }
         }
 
-        if (productEditor.productModel.ContainsKey("Id")){
-            let id = productEditor.productModel.GetData("Id");
+        if (productEditor.productModel.containsKey("Id")){
+            let id = productEditor.productModel.getData("Id");
 
             let index = excludeIds.indexOf(id);
             if (index >= 0){
@@ -66,8 +66,8 @@ Item {
 
         let resultModel = treeItemModelComp.createObject(null);
 
-        for (let i = 0; i < productEditor.softwaresModel.GetItemsCount(); i++){
-            let id = productEditor.softwaresModel.GetData("Id", i);
+        for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
+            let id = productEditor.softwaresModel.getData("Id", i);
 
             if (!id || id === ""){
                 continue;
@@ -77,17 +77,17 @@ Item {
                 continue;
             }
 
-            let serialNumber = productEditor.softwaresModel.GetData("SerialNumber", i);
+            let serialNumber = productEditor.softwaresModel.getData("SerialNumber", i);
 
-            let orderUuid = productEditor.softwaresModel.GetData("OrderUuid", i);
+            let orderUuid = productEditor.softwaresModel.getData("OrderUuid", i);
 
-            let productUuid = productEditor.softwaresModel.GetData("ProductUuid", i);
-            let licenseUuid = productEditor.softwaresModel.GetData("LicenseUuid", i);
+            let productUuid = productEditor.softwaresModel.getData("ProductUuid", i);
+            let licenseUuid = productEditor.softwaresModel.getData("LicenseUuid", i);
 
             if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productEditor.productId){
-                let index = resultModel.InsertNewItem();
+                let index = resultModel.insertNewItem();
 
-                resultModel.CopyItemDataFromModel(index, productEditor.softwaresModel, i);
+                resultModel.copyItemDataFromModel(index, productEditor.softwaresModel, i);
             }
         }
 
@@ -96,10 +96,10 @@ Item {
 
     function getDevicesModel(){
         let excludeDeviceIds = []
-        for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
-            let categoryId = orderProductsModel.GetData("CategoryId", i);
+        for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
+            let categoryId = orderProductsModel.getData("CategoryId", i);
             if (categoryId === "Hardware"){
-                let deviceID = orderProductsModel.GetData("Id", i);
+                let deviceID = orderProductsModel.getData("Id", i);
                 if (deviceID !== ""){
                     excludeDeviceIds.push(deviceID)
                 }
@@ -107,20 +107,20 @@ Item {
         }
 
         let resultModel = treeItemModelComp.createObject(null);
-        let selectedProductId = productEditor.productModel.GetData("ProductUuid");
-        let selectedDeviceId = productEditor.productModel.GetData("Id");
+        let selectedProductId = productEditor.productModel.getData("ProductUuid");
+        let selectedDeviceId = productEditor.productModel.getData("Id");
 
         let index = excludeDeviceIds.indexOf(selectedDeviceId);
         if (index >= 0){
             excludeDeviceIds.splice(index, 1)
         }
 
-        for (let i = 0; i < productEditor.devicesModel.GetItemsCount(); i++){
-            let status = productEditor.devicesModel.GetData("Status", i);
-            let orderId = productEditor.devicesModel.GetData("OrderUuid", i);
-            let deviceId = productEditor.devicesModel.GetData("Id", i);
-            let deviceType = productEditor.devicesModel.GetData("ProductUuid", i);
-            let macAddress = productEditor.devicesModel.GetData("MacAddress", i);
+        for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
+            let status = productEditor.devicesModel.getData("Status", i);
+            let orderId = productEditor.devicesModel.getData("OrderUuid", i);
+            let deviceId = productEditor.devicesModel.getData("Id", i);
+            let deviceType = productEditor.devicesModel.getData("ProductUuid", i);
+            let macAddress = productEditor.devicesModel.getData("MacAddress", i);
 
             if (!deviceId || deviceId === ""){
                 continue;
@@ -131,20 +131,20 @@ Item {
             }
 
             if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId)){
-                let index = resultModel.InsertNewItem();
-                resultModel.CopyItemDataFromModel(index, productEditor.devicesModel, i);
+                let index = resultModel.insertNewItem();
+                resultModel.copyItemDataFromModel(index, productEditor.devicesModel, i);
 
                 let sMacAddress = "s" + macAddress.split(':').join('');
-                resultModel.SetData("SMacAddress1", sMacAddress, index);
+                resultModel.setData("SMacAddress1", sMacAddress, index);
 
                 let sMacAddress2 = "s:" + macAddress.split(':').join('');
-                resultModel.SetData("SMacAddress2", sMacAddress2, index);
+                resultModel.setData("SMacAddress2", sMacAddress2, index);
 
                 let sMacAddress3 = "s:" + macAddress;
-                resultModel.SetData("SMacAddress3", sMacAddress3, index);
+                resultModel.setData("SMacAddress3", sMacAddress3, index);
 
                 let sMacAddress4 = "s" + macAddress;
-                resultModel.SetData("SMacAddress4", sMacAddress4, index);
+                resultModel.setData("SMacAddress4", sMacAddress4, index);
             }
         }
 
@@ -155,15 +155,15 @@ Item {
         let ok = true;
 
         let licenseUuid = "";
-        if (productModel.ContainsKey("LicenseUuid")){
-            licenseUuid = productModel.GetData("LicenseUuid");
+        if (productModel.containsKey("LicenseUuid")){
+            licenseUuid = productModel.getData("LicenseUuid");
         }
 
         ok = ok && licenseUuid !== "";
 
         let productUuid = "";
-        if (productModel.ContainsKey("ProductUuid")){
-            productUuid = productModel.GetData("ProductUuid");
+        if (productModel.containsKey("ProductUuid")){
+            productUuid = productModel.getData("ProductUuid");
         }
 
         ok = ok && productUuid !== "";
@@ -201,8 +201,8 @@ Item {
 
     function updateProductModel(){
         if (productCB.currentIndex >= 0){
-            let productId = productCB.model.GetData("Id", productCB.currentIndex);
-            let categoryId = productCB.model.GetData("CategoryId", productCB.currentIndex);
+            let productId = productCB.model.getData("Id", productCB.currentIndex);
+            let categoryId = productCB.model.getData("CategoryId", productCB.currentIndex);
 
             productEditor.productCategory = categoryId;
             productEditor.productId = productId;
@@ -211,22 +211,22 @@ Item {
                 productEditor.clearProduct();
             }
 
-            productEditor.productModel.SetData("Id", productEditor.uuid);
-            productEditor.productModel.SetData("CategoryId", categoryId);
-            productEditor.productModel.SetData("ProductUuid", productEditor.productId);
+            productEditor.productModel.setData("Id", productEditor.uuid);
+            productEditor.productModel.setData("CategoryId", categoryId);
+            productEditor.productModel.setData("ProductUuid", productEditor.productId);
 
-            let productName = productCB.model.GetData("ProductName", productCB.currentIndex);
-            productEditor.productModel.SetData("ProductName", productName);
+            let productName = productCB.model.getData("ProductName", productCB.currentIndex);
+            productEditor.productModel.setData("ProductName", productName);
 
             contentLoader.item.productLicensesModel = 0;
 
-            let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+            let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
             if (licensesModel){
                 contentLoader.item.productLicensesModel = licensesModel;
             }
 
             if (contentLoader.item.productLicensesModel){
-                contentLoader.item.productLicensesModel.Refresh()
+                contentLoader.item.productLicensesModel.refresh()
             }
 
             if (productEditor.productCategory === "Hardware"){
@@ -374,21 +374,21 @@ Item {
     }
 
     function clearProduct(){
-        productEditor.productModel.Clear();
+        productEditor.productModel.clear();
 
-        productEditor.productModel.SetData("ProductUuid", "");
-        productEditor.productModel.SetData("ProductName", "");
-        productEditor.productModel.SetData("LicenseUuid", "");
-        productEditor.productModel.SetData("LicenseId", "");
-        productEditor.productModel.SetData("LicenseName", "");
-        productEditor.productModel.SetData("IsNew", false);
+        productEditor.productModel.setData("ProductUuid", "");
+        productEditor.productModel.setData("ProductName", "");
+        productEditor.productModel.setData("LicenseUuid", "");
+        productEditor.productModel.setData("LicenseId", "");
+        productEditor.productModel.setData("LicenseName", "");
+        productEditor.productModel.setData("IsNew", false);
 
         if (productEditor.productCategory === "Hardware"){
-            productEditor.productModel.SetData("MacAddress", "");
+            productEditor.productModel.setData("MacAddress", "");
         }
         else if (productEditor.productCategory === "Software"){
-            productEditor.productModel.SetData("SerialNumber", "");
-            productEditor.productModel.SetData("Expiration", "");
+            productEditor.productModel.setData("SerialNumber", "");
+            productEditor.productModel.setData("Expiration", "");
         }
     }
 
@@ -414,11 +414,11 @@ Item {
     }
 
     function getProductLicensesModel(){
-        for (let i = 0; i < productEditor.licensesModel.GetItemsCount(); i++){
-            let productId = productEditor.licensesModel.GetData("Id", i);
+        for (let i = 0; i < productEditor.licensesModel.getItemsCount(); i++){
+            let productId = productEditor.licensesModel.getData("Id", i);
             if (productId === productEditor.productId){
-                if (productEditor.licensesModel.ContainsKey("Licenses", i)){
-                    return productEditor.licensesModel.GetData("Licenses", i);
+                if (productEditor.licensesModel.containsKey("Licenses", i)){
+                    return productEditor.licensesModel.getData("Licenses", i);
                 }
             }
         }
@@ -430,8 +430,8 @@ Item {
         productEditor.blockUpdatingModel = true;
 
         let uuid;
-        if (productEditor.productModel.ContainsKey("Id")){
-            uuid = productEditor.productModel.GetData("Id");
+        if (productEditor.productModel.containsKey("Id")){
+            uuid = productEditor.productModel.getData("Id");
         }
         else{
             uuid = UuidGenerator.generateUUID();
@@ -439,8 +439,8 @@ Item {
 
         productEditor.uuid = uuid;
 
-        if (productEditor.productModel.ContainsKey("CategoryId")){
-            productEditor.productCategory = productEditor.productModel.GetData("CategoryId")
+        if (productEditor.productModel.containsKey("CategoryId")){
+            productEditor.productCategory = productEditor.productModel.getData("CategoryId")
         }
 
         // By default
@@ -457,11 +457,11 @@ Item {
 
         productCB.currentIndex = -1;
 
-        if (productEditor.productModel.ContainsKey("ProductUuid")){
-            productEditor.productId = productEditor.productModel.GetData("ProductUuid")
+        if (productEditor.productModel.containsKey("ProductUuid")){
+            productEditor.productId = productEditor.productModel.getData("ProductUuid")
 
-            for (let i = 0; i < productCB.model.GetItemsCount(); i++){
-                let id = productCB.model.GetData("Id", i);
+            for (let i = 0; i < productCB.model.getItemsCount(); i++){
+                let id = productCB.model.getData("Id", i);
                 if (id === productEditor.productId){
                     productCB.currentIndex = i;
                     break;

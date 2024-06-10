@@ -48,8 +48,8 @@ ViewBase {
 
     function checkPermissions(){
         let softwareId = "";
-        if (model.ContainsKey("Id")){
-            softwareId = model.GetData("Id");
+        if (model.containsKey("Id")){
+            softwareId = model.getData("Id");
         }
 
         let canAddLicense = PermissionsController.checkPermission("AddLicense");
@@ -103,7 +103,7 @@ ViewBase {
     function checkInUse(){
         let parameters = {"Id": "SoftwareProducts"};
 
-        let inUse = root.model.GetData("InUse");
+        let inUse = root.model.getData("InUse");
         if (inUse){
             root.readOnly = true;
             parameters["AlertPanelComp"] = alertComp
@@ -128,19 +128,19 @@ ViewBase {
     }
 
     function updateGui(){
-        if (root.model.ContainsKey("Project")){
-            projectInput.text = root.model.GetData("Project");
+        if (root.model.containsKey("Project")){
+            projectInput.text = root.model.getData("Project");
         }
         else{
             projectInput.text = "";
         }
 
         let orderFound = false;
-        if (root.model.ContainsKey("OrderUuid")){
-            let orderUuid = root.model.GetData("OrderUuid");
+        if (root.model.containsKey("OrderUuid")){
+            let orderUuid = root.model.getData("OrderUuid");
             if (ordersCB.model){
-                for (let i = 0; i < ordersCB.model.GetItemsCount(); i++){
-                    let id = ordersCB.model.GetData("Id", i);
+                for (let i = 0; i < ordersCB.model.getItemsCount(); i++){
+                    let id = ordersCB.model.getData("Id", i);
                     if (id === orderUuid){
                         ordersCB.currentIndex = i;
 
@@ -156,12 +156,12 @@ ViewBase {
         }
 
         let productFound = false;
-        if (root.model.ContainsKey("ProductId")){
-            let productId = root.model.GetData("ProductId");
+        if (root.model.containsKey("ProductId")){
+            let productId = root.model.getData("ProductId");
 
             if (productCB.model){
-                for (let i = 0; i < productCB.model.GetItemsCount(); i++){
-                    let id = productCB.model.GetData("Id", i);
+                for (let i = 0; i < productCB.model.getItemsCount(); i++){
+                    let id = productCB.model.getData("Id", i);
                     if (id === productId){
                         productCB.currentIndex = i;
                         productFound = true;
@@ -179,38 +179,38 @@ ViewBase {
     }
 
     function updateModel(){
-        root.model.SetData("Project", projectInput.text);
+        root.model.setData("Project", projectInput.text);
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
         if (canChangeOrder){
             if (ordersCB.model){
                 if (ordersCB.currentIndex >= 0){
-                    let orderUuid = ordersCB.model.GetData("Id", ordersCB.currentIndex);
-                    root.model.SetData("OrderUuid", orderUuid);
+                    let orderUuid = ordersCB.model.getData("Id", ordersCB.currentIndex);
+                    root.model.setData("OrderUuid", orderUuid);
                 }
                 else{
-                    root.model.SetData("OrderUuid", "");
+                    root.model.setData("OrderUuid", "");
                 }
             }
         }
 
         if (productCB.currentIndex >= 0 && productCB.model){
-            let selectedId = productCB.model.GetData("Id", productCB.currentIndex);
-            root.model.SetData("ProductId", selectedId);
+            let selectedId = productCB.model.getData("Id", productCB.currentIndex);
+            root.model.setData("ProductId", selectedId);
         }
         else{
-            root.model.SetData("ProductId", "");
+            root.model.setData("ProductId", "");
         }
 
         group2.updateModel();
     }
 
     function getProductLicensesModel(){
-        for (let i = 0; i < root.licensesModel.GetItemsCount(); i++){
-            let productId = root.licensesModel.GetData("Id", i);
+        for (let i = 0; i < root.licensesModel.getItemsCount(); i++){
+            let productId = root.licensesModel.getData("Id", i);
             if (productId === root.productId){
-                if (root.licensesModel.ContainsKey("Licenses", i)){
-                    return root.licensesModel.GetData("Licenses", i);
+                if (root.licensesModel.containsKey("Licenses", i)){
+                    return root.licensesModel.getData("Licenses", i);
                 }
             }
         }
@@ -349,8 +349,8 @@ ViewBase {
                 width: parent.width;
 
                 function updateGui(){
-                    if (root.model.ContainsKey("SerialNumber")){
-                        serialNumberInput.text = root.model.GetData("SerialNumber")
+                    if (root.model.containsKey("SerialNumber")){
+                        serialNumberInput.text = root.model.getData("SerialNumber")
                     }
                     else{
                         serialNumberInput.text = "";
@@ -358,10 +358,10 @@ ViewBase {
 
                     let licenseFound = false;
 
-                    let licenseUuid = root.model.GetData("LicenseUuid");
+                    let licenseUuid = root.model.getData("LicenseUuid");
                     if (licenseCB.model){
-                        for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
-                            let licenseId = licenseCB.model.GetData("Id", i);
+                        for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
+                            let licenseId = licenseCB.model.getData("Id", i);
                             if (licenseId === licenseUuid){
                                 licenseCB.currentIndex = i;
 
@@ -376,8 +376,8 @@ ViewBase {
                         licenseCB.currentIndex = -1;
                     }
 
-                    if (root.model.ContainsKey("Expiration")){
-                        let expiration = root.model.GetData("Expiration");
+                    if (root.model.containsKey("Expiration")){
+                        let expiration = root.model.getData("Expiration");
 
                         if (expiration && expiration !== "" ){
                             unlimitedSwitch.switchRef.setChecked(false);
@@ -402,23 +402,23 @@ ViewBase {
                 }
 
                 function updateModel(){
-                    root.model.SetData("SerialNumber", serialNumberInput.text)
+                    root.model.setData("SerialNumber", serialNumberInput.text)
 
                     if (expirationEditor.datePicker){
                         if (!unlimitedSwitch.checked){
-                            root.model.SetData("Expiration", expirationEditor.datePicker.getDate());
+                            root.model.setData("Expiration", expirationEditor.datePicker.getDate());
                         }
                         else{
-                            root.model.SetData("Expiration", "");
+                            root.model.setData("Expiration", "");
                         }
                     }
 
                     if (licenseCB.currentIndex >= 0 && licenseCB.model){
-                        let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
-                        root.model.SetData("LicenseUuid", selectedId);
+                        let selectedId = licenseCB.model.getData("Id", licenseCB.currentIndex);
+                        root.model.setData("LicenseUuid", selectedId);
                     }
                     else{
-                        root.model.SetData("LicenseUuid", "");
+                        root.model.setData("LicenseUuid", "");
                     }
                 }
 
@@ -441,9 +441,9 @@ ViewBase {
 
                     onCurrentIndexChanged: {
                         if (productCB.currentIndex >= 0){
-                            let licensesModel = productCB.model.GetData("Licenses", productCB.currentIndex);
+                            let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
                             if (!licensesModel){
-                                licensesModel = productCB.model.AddTreeModel("Licenses", productCB.currentIndex);
+                                licensesModel = productCB.model.addTreeModel("Licenses", productCB.currentIndex);
                             }
 
                             root.productLicensesModel = licensesModel;

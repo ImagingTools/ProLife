@@ -73,8 +73,8 @@ Dialog {
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
 
-                    bindingModel.SetData("Id", productEditorDialog.hardwareId);
-                    bindingModel.SetData("Project", inputValue);
+                    bindingModel.setData("Id", productEditorDialog.hardwareId);
+                    bindingModel.setData("Project", inputValue);
 
                     documentController.documentModel = bindingModel;
 

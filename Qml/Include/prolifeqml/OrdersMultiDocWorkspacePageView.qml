@@ -50,13 +50,13 @@ MultiDocWorkspacePageView {
             gqlAddCommandId: "OrderAdd";
 
             onSaved: {
-                if (documentModel.ContainsKey("OrderProducts")){
-                    let orderProductsModel = documentModel.GetData("OrderProducts");
-                    for (let i = 0; i < orderProductsModel.GetItemsCount(); i++){
-                        let categoryId = orderProductsModel.GetData("CategoryId", i);
-                        let isNew = orderProductsModel.GetData("IsNew", i);
+                if (documentModel.containsKey("OrderProducts")){
+                    let orderProductsModel = documentModel.getData("OrderProducts");
+                    for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
+                        let categoryId = orderProductsModel.getData("CategoryId", i);
+                        let isNew = orderProductsModel.getData("IsNew", i);
                         if (isNew){
-                            orderProductsModel.SetData("IsNew", false, i);
+                            orderProductsModel.setData("IsNew", false, i);
                         }
                     }
                 }

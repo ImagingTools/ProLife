@@ -34,8 +34,8 @@ ViewBase {
             onCommandActivated: {
                 if (commandId == "Bind"){
                     let hardwareUuid = "";
-                    if (deviceEditorContainer.model.ContainsKey("Id")){
-                        hardwareUuid = deviceEditorContainer.model.GetData("Id")
+                    if (deviceEditorContainer.model.containsKey("Id")){
+                        hardwareUuid = deviceEditorContainer.model.getData("Id")
                     }
 
                     if (hardwareUuid === ""){
@@ -46,8 +46,8 @@ ViewBase {
 
                     let macAddress = "";
 
-                    if (deviceEditorContainer.model.ContainsKey("MacAddress")){
-                        macAddress = deviceEditorContainer.model.GetData("MacAddress");
+                    if (deviceEditorContainer.model.containsKey("MacAddress")){
+                        macAddress = deviceEditorContainer.model.getData("MacAddress");
                     }
 
                     if (!macAddressValidator.isValid(macAddress)){
@@ -80,8 +80,8 @@ ViewBase {
 
     function checkPermissions(){
         let deviceId = "";
-        if (model.ContainsKey("Id")){
-            deviceId = model.GetData("Id");
+        if (model.containsKey("Id")){
+            deviceId = model.getData("Id");
         }
 
         let canAddSensor = PermissionsController.checkPermission("AddSensor");
@@ -194,41 +194,41 @@ ViewBase {
 
     function updateGui(){
         console.log("DeviceEditor updateGui");
-        if (deviceEditorContainer.model.ContainsKey("Description")){
-            descriptionInput.text = deviceEditorContainer.model.GetData("Description");
+        if (deviceEditorContainer.model.containsKey("Description")){
+            descriptionInput.text = deviceEditorContainer.model.getData("Description");
         }
         else{
             descriptionInput.text = "";
         }
 
-        if (deviceEditorContainer.model.ContainsKey("SerialNumber")){
-            serialNumberInput.text = deviceEditorContainer.model.GetData("SerialNumber");
+        if (deviceEditorContainer.model.containsKey("SerialNumber")){
+            serialNumberInput.text = deviceEditorContainer.model.getData("SerialNumber");
         }
         else{
             serialNumberInput.text = "";
         }
 
-        if (deviceEditorContainer.model.ContainsKey("MacAddress")){
-            macAddressInput.text = deviceEditorContainer.model.GetData("MacAddress");
+        if (deviceEditorContainer.model.containsKey("MacAddress")){
+            macAddressInput.text = deviceEditorContainer.model.getData("MacAddress");
         }
         else{
             macAddressInput.text = "";
         }
 
-        if (deviceEditorContainer.model.ContainsKey("Project")){
-            projectInput.text = deviceEditorContainer.model.GetData("Project");
+        if (deviceEditorContainer.model.containsKey("Project")){
+            projectInput.text = deviceEditorContainer.model.getData("Project");
         }
         else{
             projectInput.text = "";
         }
 
         let statusFound = false;
-        if (deviceEditorContainer.model.ContainsKey("ProductionStatus")){
-            let status = deviceEditorContainer.model.GetData("ProductionStatus");
+        if (deviceEditorContainer.model.containsKey("ProductionStatus")){
+            let status = deviceEditorContainer.model.getData("ProductionStatus");
             let statusModel = statusCB.model;
             if (statusModel){
-                for (let i = 0; i < statusModel.GetItemsCount(); i++){
-                    let id = statusModel.GetData("Id", i);
+                for (let i = 0; i < statusModel.getItemsCount(); i++){
+                    let id = statusModel.getData("Id", i);
                     if (id === status){
                         statusCB.currentIndex = i;
 
@@ -244,12 +244,12 @@ ViewBase {
         }
 
         let deviceTypeFound = false;
-        if (deviceEditorContainer.model.ContainsKey("DeviceType")){
-            let productId = deviceEditorContainer.model.GetData("DeviceType");
+        if (deviceEditorContainer.model.containsKey("DeviceType")){
+            let productId = deviceEditorContainer.model.getData("DeviceType");
             let productModel = productCB.model;
             if (productModel){
-                for (let i = 0; i < productModel.GetItemsCount(); i++){
-                    let id = productModel.GetData("Id", i);
+                for (let i = 0; i < productModel.getItemsCount(); i++){
+                    let id = productModel.getData("Id", i);
                     if (id === productId){
                         productCB.currentIndex = i;
 
@@ -265,12 +265,12 @@ ViewBase {
         }
 
         let configurationTypeFound = false;
-        if (deviceEditorContainer.model.ContainsKey("LicenseName")){
-            let productId = deviceEditorContainer.model.GetData("LicenseName");
+        if (deviceEditorContainer.model.containsKey("LicenseName")){
+            let productId = deviceEditorContainer.model.getData("LicenseName");
             let model = configurationCB.model;
             if (model){
-                for (let i = 0; i < model.GetItemsCount(); i++){
-                    let id = model.GetData("Id", i);
+                for (let i = 0; i < model.getItemsCount(); i++){
+                    let id = model.getData("Id", i);
                     if (id === productId){
                         configurationCB.currentIndex = i;
 
@@ -287,12 +287,12 @@ ViewBase {
 
         let orderIdFound = false;
 
-        if (deviceEditorContainer.model.ContainsKey("OrderId")){
-            let orderId = deviceEditorContainer.model.GetData("OrderId");
+        if (deviceEditorContainer.model.containsKey("OrderId")){
+            let orderId = deviceEditorContainer.model.getData("OrderId");
             let ordersModel = orderCB.model;
             if (ordersModel){
-                for (let i = 0; i < ordersModel.GetItemsCount(); i++){
-                    let id = ordersModel.GetData("Id", i);
+                for (let i = 0; i < ordersModel.getItemsCount(); i++){
+                    let id = ordersModel.getData("Id", i);
                     if (id === orderId){
                         orderCB.currentIndex = i;
                         orderIdFound = true;
@@ -309,49 +309,49 @@ ViewBase {
 
     function updateModel(){
         if (productCB.currentIndex >= 0 && productCB.model){
-            let selectedProductId = productCB.model.GetData("Id", productCB.currentIndex);
-            deviceEditorContainer.model.SetData("DeviceType", selectedProductId);
+            let selectedProductId = productCB.model.getData("Id", productCB.currentIndex);
+            deviceEditorContainer.model.setData("DeviceType", selectedProductId);
         }
         else{
-            deviceEditorContainer.model.SetData("DeviceType", "");
+            deviceEditorContainer.model.setData("DeviceType", "");
         }
 
         let configurationExists = false;
         if (configurationCB.model){
             if (configurationCB.currentIndex >= 0){
-                let configurationType = configurationCB.model.GetData("Id", configurationCB.currentIndex);
-                deviceEditorContainer.model.SetData("LicenseName", configurationType);
+                let configurationType = configurationCB.model.getData("Id", configurationCB.currentIndex);
+                deviceEditorContainer.model.setData("LicenseName", configurationType);
 
                 configurationExists = true;
             }
         }
 
         if (!configurationExists){
-            deviceEditorContainer.model.SetData("LicenseName", "");
+            deviceEditorContainer.model.setData("LicenseName", "");
         }
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
-                let selectedOrderId = orderCB.model.GetData("Id", orderCB.currentIndex);
-                deviceEditorContainer.model.SetData("OrderId", selectedOrderId);
+                let selectedOrderId = orderCB.model.getData("Id", orderCB.currentIndex);
+                deviceEditorContainer.model.setData("OrderId", selectedOrderId);
             }
             else{
-                deviceEditorContainer.model.SetData("OrderId", "");
+                deviceEditorContainer.model.setData("OrderId", "");
             }
         }
 
-        deviceEditorContainer.model.SetData("Description", descriptionInput.text);
-        deviceEditorContainer.model.SetData("SerialNumber", serialNumberInput.text);
-        deviceEditorContainer.model.SetData("MacAddress", macAddressInput.text);
-        deviceEditorContainer.model.SetData("Project", projectInput.text);
+        deviceEditorContainer.model.setData("Description", descriptionInput.text);
+        deviceEditorContainer.model.setData("SerialNumber", serialNumberInput.text);
+        deviceEditorContainer.model.setData("MacAddress", macAddressInput.text);
+        deviceEditorContainer.model.setData("Project", projectInput.text);
 
         if (statusCB.currentIndex >= 0 && statusCB.model){
-            let selectedStatus = statusCB.model.GetData("Id", statusCB.currentIndex);
-            deviceEditorContainer.model.SetData("ProductionStatus", selectedStatus);
+            let selectedStatus = statusCB.model.getData("Id", statusCB.currentIndex);
+            deviceEditorContainer.model.setData("ProductionStatus", selectedStatus);
         }
         else{
-            deviceEditorContainer.model.SetData("ProductionStatus", "");
+            deviceEditorContainer.model.setData("ProductionStatus", "");
         }
     }
 
@@ -453,7 +453,7 @@ ViewBase {
                     onCurrentIndexChanged: {
                         let ok = false;
                         if (productCB.currentIndex >= 0){
-                            let model = productCB.model.GetData("Licenses", productCB.currentIndex);
+                            let model = productCB.model.getData("Licenses", productCB.currentIndex);
                             if (model){
                                 configurationCB.model = model;
 
@@ -589,8 +589,8 @@ ViewBase {
                         deviceEditorContainer.doUpdateModel();
 
                         if (statusCB.currentIndex >= 0){
-                            if ( deviceEditorContainer.model.ContainsKey("ProductionStatus")){
-                                let status = deviceEditorContainer.model.GetData("ProductionStatus");
+                            if ( deviceEditorContainer.model.containsKey("ProductionStatus")){
+                                let status = deviceEditorContainer.model.getData("ProductionStatus");
                             }
                         }
                         else{

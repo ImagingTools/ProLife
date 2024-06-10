@@ -64,14 +64,14 @@ ApplicationMain{
 
         onStateChanged: {
             if (state === "Ready"){
-                if (pumaSub.ContainsKey("data")){
-                    let localModel = pumaSub.GetData("data")
+                if (pumaSub.containsKey("data")){
+                    let localModel = pumaSub.getData("data")
 
-                    if (localModel.ContainsKey("PumaWsConnection")){
-                        localModel = localModel.GetData("PumaWsConnection")
+                    if (localModel.containsKey("PumaWsConnection")){
+                        localModel = localModel.getData("PumaWsConnection")
 
-                        if (localModel.ContainsKey("status")){
-                            let status = localModel.GetData("status")
+                        if (localModel.containsKey("status")){
+                            let status = localModel.getData("status")
                             if (status === "Disconnected"){
                                 window.pumaConnected = false;
 
@@ -103,14 +103,14 @@ ApplicationMain{
 
         onStateChanged: {
             if (state === "Ready"){
-                if (lisaSub.ContainsKey("data")){
-                    let localModel = lisaSub.GetData("data")
+                if (lisaSub.containsKey("data")){
+                    let localModel = lisaSub.getData("data")
 
-                    if (localModel.ContainsKey("LisaWsConnection")){
-                        localModel = localModel.GetData("LisaWsConnection")
+                    if (localModel.containsKey("LisaWsConnection")){
+                        localModel = localModel.getData("LisaWsConnection")
 
-                        if (localModel.ContainsKey("status")){
-                            let status = localModel.GetData("status")
+                        if (localModel.containsKey("status")){
+                            let status = localModel.getData("status")
                             if (status === "Disconnected"){
                                 window.lisaConnected = false;
 

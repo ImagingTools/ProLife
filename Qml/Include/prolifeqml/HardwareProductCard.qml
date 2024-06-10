@@ -51,23 +51,23 @@ Rectangle {
     }
 
     function updateElements(){
-        elementsTableModel.Clear();
+        elementsTableModel.clear();
 
-        let index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("MAC Address"), index)
-        elementsTableModel.SetData("Value", hardwareCard.macAddress, index)
+        let index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("MAC Address"), index)
+        elementsTableModel.setData("Value", hardwareCard.macAddress, index)
 
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Serial Number"), index)
-        elementsTableModel.SetData("Value", hardwareCard.serialNumber, index)
+        index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Serial Number"), index)
+        elementsTableModel.setData("Value", hardwareCard.serialNumber, index)
 
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Model Type"), index)
-        elementsTableModel.SetData("Value", model.LicenseName, index)
+        index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Model Type"), index)
+        elementsTableModel.setData("Value", model.LicenseName, index)
 
-        index = elementsTableModel.InsertNewItem();
-        elementsTableModel.SetData("Key", qsTr("Article"), index)
-        elementsTableModel.SetData("Value", model.LicenseId, index)
+        index = elementsTableModel.insertNewItem();
+        elementsTableModel.setData("Key", qsTr("Article"), index)
+        elementsTableModel.setData("Value", model.LicenseId, index)
 
         table.elements = elementsTableModel;
     }
@@ -81,17 +81,17 @@ Rectangle {
     }
 
     function updateHeaders(){
-        headersTableModel.Clear();
+        headersTableModel.clear();
 
-        let index = headersTableModel.InsertNewItem();
+        let index = headersTableModel.insertNewItem();
 
-        headersTableModel.SetData("Id", "Key", index)
-        headersTableModel.SetData("Name", qsTr("Key"), index)
+        headersTableModel.setData("Id", "Key", index)
+        headersTableModel.setData("Name", qsTr("Key"), index)
 
-        index = headersTableModel.InsertNewItem();
+        index = headersTableModel.insertNewItem();
 
-        headersTableModel.SetData("Id", "Value", index)
-        headersTableModel.SetData("Name", qsTr("Value"), index)
+        headersTableModel.setData("Id", "Value", index)
+        headersTableModel.setData("Name", qsTr("Value"), index)
 
         table.headers = headersTableModel;
     }
@@ -134,13 +134,13 @@ Rectangle {
         id: tableDecoratorModel;
 
         Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+            var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
 
-            let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 150, index);
+            let index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", 150, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
         }
     }
 } //Card

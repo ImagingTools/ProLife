@@ -8,29 +8,29 @@ QtObject {
     property TreeItemModel statusModel: TreeItemModel {}
 
     Component.onCompleted: {
-        let index = root.statusModel.InsertNewItem();
+        let index = root.statusModel.insertNewItem();
 
         // 0
-        root.statusModel.SetData("Id", "Created", index);
-        root.statusModel.SetData("Name", qsTr("Created"), index);
+        root.statusModel.setData("Id", "Created", index);
+        root.statusModel.setData("Name", qsTr("Created"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 1
-        root.statusModel.SetData("Id", "InProgress", index);
-        root.statusModel.SetData("Name", qsTr("In Progress"), index);
+        root.statusModel.setData("Id", "InProgress", index);
+        root.statusModel.setData("Name", qsTr("In Progress"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 2
-        root.statusModel.SetData("Id", "Canceled", index);
-        root.statusModel.SetData("Name", qsTr("Canceled"), index);
+        root.statusModel.setData("Id", "Canceled", index);
+        root.statusModel.setData("Name", qsTr("Canceled"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 3
-        root.statusModel.SetData("Id", "Closed", index);
-        root.statusModel.SetData("Name", qsTr("Closed"), index);
+        root.statusModel.setData("Id", "Closed", index);
+        root.statusModel.setData("Name", qsTr("Closed"), index);
     }
 
     function getIconPath(statusId){

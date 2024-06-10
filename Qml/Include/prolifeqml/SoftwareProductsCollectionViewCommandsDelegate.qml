@@ -22,16 +22,16 @@ DocumentCollectionViewDelegate {
             let elementsModel = container.collectionView.table.elements;
             let createLicenseFileIsEnabled = isEnabled;
             if (createLicenseFileIsEnabled){
-                let deviceId = elementsModel.GetData("DeviceId", indexes[0]);
-                let licenseNumber = elementsModel.GetData("SerialNumber", indexes[0]);
+                let deviceId = elementsModel.getData("DeviceId", indexes[0]);
+                let licenseNumber = elementsModel.getData("SerialNumber", indexes[0]);
 
                 createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
             }
 
             let openOrderEnabled = isEnabled;
             if (openOrderEnabled){
-                let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
-                let orderId = elementsModel.GetData("OrderId", indexes[0]);
+                let orderUuid = elementsModel.getData("OrderUuid", indexes[0]);
+                let orderId = elementsModel.getData("OrderId", indexes[0]);
 
                 if (orderUuid == "undefined" || orderUuid == ""){
                     openOrderEnabled = false;
@@ -51,28 +51,28 @@ DocumentCollectionViewDelegate {
     function setupContextMenu(){
         let commandsController = collectionView.commandsController;
         if (commandsController){
-            container.contextMenuModel.Clear();
+            container.contextMenuModel.clear();
 
             let canEdit = commandsController.commandExists("Edit");
             let canRemove = commandsController.commandExists("Remove");
 
             if (canEdit){
-                let index = container.contextMenuModel.InsertNewItem();
+                let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.SetData("Id", "Edit", index);
-                container.contextMenuModel.SetData("Name", qsTr("Edit"), index);
-                container.contextMenuModel.SetData("Icon", "Icons/Edit", index);
+                container.contextMenuModel.setData("Id", "Edit", index);
+                container.contextMenuModel.setData("Name", qsTr("Edit"), index);
+                container.contextMenuModel.setData("Icon", "Icons/Edit", index);
             }
 
             if (canRemove){
-                let index = container.contextMenuModel.InsertNewItem();
+                let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.SetData("Id", "Remove", index);
-                container.contextMenuModel.SetData("Name", qsTr("Remove"), index);
-                container.contextMenuModel.SetData("Icon", "Icons/Delete", index);
+                container.contextMenuModel.setData("Id", "Remove", index);
+                container.contextMenuModel.setData("Name", qsTr("Remove"), index);
+                container.contextMenuModel.setData("Icon", "Icons/Delete", index);
             }
 
-            container.contextMenuModel.Refresh();
+            container.contextMenuModel.refresh();
         }
     }
 
@@ -80,7 +80,7 @@ DocumentCollectionViewDelegate {
         if (commandId === "OpenOrder"){
             let indexes = container.collectionView.table.getSelectedIndexes();
             let elementsModel = container.collectionView.table.elements;
-            let orderUuid = elementsModel.GetData("OrderUuid", indexes[0]);
+            let orderUuid = elementsModel.getData("OrderUuid", indexes[0]);
             if (orderUuid !== ""){
                 let parameters = {}
                 parameters["TypeId"] = "Orders";

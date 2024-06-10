@@ -12,41 +12,41 @@ QtObject {
     property var availableStates: ({})
 
     Component.onCompleted: {
-        let index = root.statusModel.InsertNewItem();
+        let index = root.statusModel.insertNewItem();
 
         // 0
-        root.statusModel.SetData("Id", "None", index);
-        root.statusModel.SetData("Name", qsTr("None"), index);
+        root.statusModel.setData("Id", "None", index);
+        root.statusModel.setData("Name", qsTr("None"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 1
-        root.statusModel.SetData("Id", "Accepted", index);
-        root.statusModel.SetData("Name", qsTr("Accepted"), index);
+        root.statusModel.setData("Id", "Accepted", index);
+        root.statusModel.setData("Name", qsTr("Accepted"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 2
-        root.statusModel.SetData("Id", "InProgress", index);
-        root.statusModel.SetData("Name", qsTr("In Progress"), index);
+        root.statusModel.setData("Id", "InProgress", index);
+        root.statusModel.setData("Name", qsTr("In Progress"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 3
-        root.statusModel.SetData("Id", "Canceled", index);
-        root.statusModel.SetData("Name", qsTr("Canceled"), index);
+        root.statusModel.setData("Id", "Canceled", index);
+        root.statusModel.setData("Name", qsTr("Canceled"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 4
-        root.statusModel.SetData("Id", "OnHold", index);
-        root.statusModel.SetData("Name", qsTr("On Hold"), index);
+        root.statusModel.setData("Id", "OnHold", index);
+        root.statusModel.setData("Name", qsTr("On Hold"), index);
 
-        index = root.statusModel.InsertNewItem();
+        index = root.statusModel.insertNewItem();
 
         // 5
-        root.statusModel.SetData("Id", "Finished", index);
-        root.statusModel.SetData("Name", qsTr("Finished"), index);
+        root.statusModel.setData("Id", "Finished", index);
+        root.statusModel.setData("Name", qsTr("Finished"), index);
     }
 
     function getIconPath(statusId){

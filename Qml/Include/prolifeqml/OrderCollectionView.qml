@@ -27,37 +27,37 @@ RemoteCollectionView {
             function setupContextMenu(){
                 let commandsController = collectionView.commandsController;
                 if (commandsController){
-                    contextMenuModel.Clear();
+                    contextMenuModel.clear();
 
                     let canEdit = commandsController.commandExists("Edit");
                     let canRemove = commandsController.commandExists("Remove");
 
                     if (canEdit){
-                        let index = contextMenuModel.InsertNewItem();
+                        let index = contextMenuModel.insertNewItem();
 
-                        contextMenuModel.SetData("Id", "Edit", index);
-                        contextMenuModel.SetData("Name", qsTr("Edit"), index);
-                        contextMenuModel.SetData("Icon", "Icons/Edit", index);
+                        contextMenuModel.setData("Id", "Edit", index);
+                        contextMenuModel.setData("Name", qsTr("Edit"), index);
+                        contextMenuModel.setData("Icon", "Icons/Edit", index);
                     }
 
                     if (canRemove){
-                        let index = contextMenuModel.InsertNewItem();
+                        let index = contextMenuModel.insertNewItem();
 
-                        contextMenuModel.SetData("Id", "Remove", index);
-                        contextMenuModel.SetData("Name", qsTr("Remove"), index);
-                        contextMenuModel.SetData("Icon", "Icons/Delete", index);
+                        contextMenuModel.setData("Id", "Remove", index);
+                        contextMenuModel.setData("Name", qsTr("Remove"), index);
+                        contextMenuModel.setData("Icon", "Icons/Delete", index);
                     }
 
                     let ok = PermissionsController.checkPermission("ChangeDescriptionForOrder");
                     if (ok){
-                        let index = contextMenuModel.InsertNewItem();
+                        let index = contextMenuModel.insertNewItem();
 
-                        contextMenuModel.SetData("Id", "SetDescription", index);
-                        contextMenuModel.SetData("Name", qsTr("Set Description"), index);
-                        contextMenuModel.SetData("Icon", "", index);
+                        contextMenuModel.setData("Id", "SetDescription", index);
+                        contextMenuModel.setData("Name", qsTr("Set Description"), index);
+                        contextMenuModel.setData("Icon", "", index);
                     }
 
-                    contextMenuModel.Refresh();
+                    contextMenuModel.refresh();
                 }
             }
         }
@@ -109,14 +109,14 @@ RemoteCollectionView {
                 }
 
                 onCollectionModelChanged: {
-                    accountsList.collectionModel.InsertNewItem(0);
+                    accountsList.collectionModel.insertNewItem(0);
 
                     accountsList.updateComboBoxModel();
                 }
 
                 function updateComboBoxModel(){
-                    accountsList.collectionModel.SetData("Id", "All");
-                    accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+                    accountsList.collectionModel.setData("Id", "All");
+                    accountsList.collectionModel.setData("Name", qsTr("All customers"))
 
                     accountComboBox.model = accountsList.collectionModel;
                 }
@@ -148,7 +148,7 @@ RemoteCollectionView {
 
                     onCurrentIndexChanged: {
                         if (accountComboBox.currentIndex > 0){
-                            let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+                            let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);
                             container.collectionFilter.setAccountFilter(value);
                         }
                         else{

@@ -15,8 +15,8 @@ DocumentValidator {
     function isValid(data){
         //Check mac address valid
         let macAddress = "";
-        if (documentModel.ContainsKey("MacAddress")){
-            macAddress = documentModel.GetData("MacAddress");
+        if (documentModel.containsKey("MacAddress")){
+            macAddress = documentModel.getData("MacAddress");
         }
 
         if (macAddress !== ""){
@@ -29,8 +29,8 @@ DocumentValidator {
 
         //Check device type valid
         let deviceType = "";
-        if (documentModel.ContainsKey("DeviceType")){
-            deviceType = documentModel.GetData("DeviceType");
+        if (documentModel.containsKey("DeviceType")){
+            deviceType = documentModel.getData("DeviceType");
         }
 
         if (String(deviceType) === ""){
@@ -41,8 +41,8 @@ DocumentValidator {
 
         //Check device configuration valid
         let configurationType = "";
-        if (documentModel.ContainsKey("LicenseName")){
-            configurationType = documentModel.GetData("LicenseName");
+        if (documentModel.containsKey("LicenseName")){
+            configurationType = documentModel.getData("LicenseName");
         }
 
         if (String(configurationType) === ""){

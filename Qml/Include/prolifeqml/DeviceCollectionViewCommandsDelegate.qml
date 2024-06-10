@@ -35,13 +35,13 @@ DocumentCollectionViewDelegate {
                 return;
             }
 
-            let macAddress = elementsModel.GetData("MacAddress", selectedItems[0]);
+            let macAddress = elementsModel.getData("MacAddress", selectedItems[0]);
 
             let isEnabled = selectedItems.length === 1;
 
             let isOpenOrderEnabled = isEnabled;
             if (isOpenOrderEnabled){
-                let orderId = elementsModel.GetData("OrderId", selectedItems[0]);
+                let orderId = elementsModel.getData("OrderId", selectedItems[0]);
                 isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
             }
 
@@ -52,7 +52,7 @@ DocumentCollectionViewDelegate {
 
             let createLicenseFileEnabled = selectedItems.length === 1;
             if (createLicenseFileEnabled){
-                let count = elementsModel.GetData("SoftwareLinksCount", selectedItems[0]);
+                let count = elementsModel.getData("SoftwareLinksCount", selectedItems[0]);
                 createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
             }
 
@@ -70,28 +70,28 @@ DocumentCollectionViewDelegate {
     function setupContextMenu(){
         let commandsController = collectionView.commandsController;
         if (commandsController){
-            container.contextMenuModel.Clear();
+            container.contextMenuModel.clear();
 
             let canEdit = commandsController.commandExists("Edit");
             let canRemove = commandsController.commandExists("Remove");
 
             if (canEdit){
-                let index = container.contextMenuModel.InsertNewItem();
+                let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.SetData("Id", "Edit", index);
-                container.contextMenuModel.SetData("Name", qsTr("Edit"), index);
-                container.contextMenuModel.SetData("Icon", "Icons/Edit", index);
+                container.contextMenuModel.setData("Id", "Edit", index);
+                container.contextMenuModel.setData("Name", qsTr("Edit"), index);
+                container.contextMenuModel.setData("Icon", "Icons/Edit", index);
             }
 
             if (canRemove){
-                let index = container.contextMenuModel.InsertNewItem();
+                let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.SetData("Id", "Remove", index);
-                container.contextMenuModel.SetData("Name", qsTr("Remove"), index);
-                container.contextMenuModel.SetData("Icon", "Icons/Delete", index);
+                container.contextMenuModel.setData("Id", "Remove", index);
+                container.contextMenuModel.setData("Name", qsTr("Remove"), index);
+                container.contextMenuModel.setData("Icon", "Icons/Delete", index);
             }
 
-            container.contextMenuModel.Refresh();
+            container.contextMenuModel.refresh();
         }
     }
 
@@ -100,8 +100,8 @@ DocumentCollectionViewDelegate {
         let elementsModel = container.collectionView.table.elements;
 
         if (commandId === "Bind"){
-            let hardwareId = elementsModel.GetData("Id", indexes[0]);
-            let macAddress = elementsModel.GetData("MacAddress", indexes[0]);
+            let hardwareId = elementsModel.getData("Id", indexes[0]);
+            let macAddress = elementsModel.getData("MacAddress", indexes[0]);
 
             let title = qsTr("Add license to sensor '%1'");
             title = title.replace("%1", macAddress);
@@ -109,7 +109,7 @@ DocumentCollectionViewDelegate {
             ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
         }
         else if (commandId === "OpenOrder"){
-            let orderId = elementsModel.GetData("OrderUuid", indexes[0]);
+            let orderId = elementsModel.getData("OrderUuid", indexes[0]);
             if (orderId !== ""){
                 let parameters = {}
                 parameters["TypeId"] = "Orders";
@@ -121,14 +121,14 @@ DocumentCollectionViewDelegate {
             }
         }
         else if (commandId === "CreateLicenseFile"){
-            let macAddress = elementsModel.GetData("MacAddress", indexes[0])
+            let macAddress = elementsModel.getData("MacAddress", indexes[0])
 
             let data = macAddress.split(':');
             let fileName = data.join('_') + "_" + licenseFileController.defaultName;
 
             licenseFileController.fileName = fileName;
 
-            let hardwareId = elementsModel.GetData("Id", indexes[0]);
+            let hardwareId = elementsModel.getData("Id", indexes[0]);
             licenseFileController.createLicenseFile(hardwareId);
         }
     }

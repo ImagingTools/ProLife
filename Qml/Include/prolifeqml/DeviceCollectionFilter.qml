@@ -7,44 +7,44 @@ CollectionFilter {
 
     function setDeviceStatusFilter(status){
         if (status === ""){
-            filterModel.RemoveData("ObjectFilter");
+            filterModel.removeData("ObjectFilter");
         }
         else{
-            let objectFilter = filterModel.GetData("ObjectFilter");
+            let objectFilter = filterModel.getData("ObjectFilter");
             if (!objectFilter){
-                objectFilter = filterModel.AddTreeModel("ObjectFilter")
+                objectFilter = filterModel.addTreeModel("ObjectFilter")
             }
 
-            objectFilter.SetData("Key", "Status");
-            objectFilter.SetData("Value", status);
+            objectFilter.setData("Key", "Status");
+            objectFilter.setData("Value", status);
         }
 
         filterChanged();
     }
 
     function setLicenseFilter(licenseId){
-        let licenceFilterModel = filterModel.GetData("LicenseFilter")
+        let licenceFilterModel = filterModel.getData("LicenseFilter")
         if (!licenceFilterModel){
-            licenceFilterModel = filterModel.AddTreeModel("LicenseFilter")
+            licenceFilterModel = filterModel.addTreeModel("LicenseFilter")
         }
 
-        licenceFilterModel.SetData("Key", "Status");
-        licenceFilterModel.SetData("Value", licenseId);
+        licenceFilterModel.setData("Key", "Status");
+        licenceFilterModel.setData("Value", licenseId);
 
         filterChanged();
     }
 
     function setAccountFilter(accountId){
         if (accountId !== ""){
-            let accountFilterModel = filterModel.GetData("AccountFilter")
+            let accountFilterModel = filterModel.getData("AccountFilter")
             if (!accountFilterModel){
-                accountFilterModel = filterModel.AddTreeModel("AccountFilter")
+                accountFilterModel = filterModel.addTreeModel("AccountFilter")
             }
 
-            accountFilterModel.SetData("Id", accountId);
+            accountFilterModel.setData("Id", accountId);
         }
         else{
-            filterModel.RemoveData("AccountFilter");
+            filterModel.removeData("AccountFilter");
         }
 
         filterChanged();

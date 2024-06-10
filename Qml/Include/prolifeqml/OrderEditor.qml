@@ -53,8 +53,8 @@ ViewBase {
 
     function checkPermissions(){
         let orderId = "";
-        if (model.ContainsKey("Id")){
-            orderId = model.GetData("Id");
+        if (model.containsKey("Id")){
+            orderId = model.getData("Id");
         }
 
         let canAddOrder = PermissionsController.checkPermission("AddOrder");
@@ -107,56 +107,56 @@ ViewBase {
             return;
         }
 
-        model.SetUpdateEnabled(false);
+        model.setUpdateEnabled(false);
 
         let orderUuid = ""
-        if (model.ContainsKey("Id")){
-            orderUuid = model.GetData("Id");
+        if (model.containsKey("Id")){
+            orderUuid = model.getData("Id");
         }
 
-        if (model.ContainsKey("OrderProducts")){
-            let orderProducts = model.GetData("OrderProducts")
+        if (model.containsKey("OrderProducts")){
+            let orderProducts = model.getData("OrderProducts")
 
-            for (let j = 0; j < orderProducts.GetItemsCount(); j++){
-                let orderedProductId = orderProducts.GetData("Id", j);
-                let categoryId = orderProducts.GetData("CategoryId", j);
+            for (let j = 0; j < orderProducts.getItemsCount(); j++){
+                let orderedProductId = orderProducts.getData("Id", j);
+                let categoryId = orderProducts.getData("CategoryId", j);
 
                 let productFound = false;
 
                 if (categoryId === "Software"){
-                    for (let i = 0; i < softwaresModel.GetItemsCount(); i++){
-                        let softwareId = softwaresModel.GetData("Id", i);
-                        let softwareOrderUuid = orderProducts.GetData("OrderUuid", i);
+                    for (let i = 0; i < softwaresModel.getItemsCount(); i++){
+                        let softwareId = softwaresModel.getData("Id", i);
+                        let softwareOrderUuid = orderProducts.getData("OrderUuid", i);
 
                         if (softwareId === orderedProductId){
                             // ????
 //                            if (orderUuid !== "" && orderUuid !== softwareOrderUuid){
-//                                orderProducts.SetData("ErrorMessage", qsTr("The product has been removed from this order"), j);
+//                                orderProducts.setData("ErrorMessage", qsTr("The product has been removed from this order"), j);
 
 //                                break;
 //                            }
 
-                            if (softwaresModel.ContainsKey("SerialNumber", i)){
-                                let serialNumber = softwaresModel.GetData("SerialNumber", i)
-                                orderProducts.SetData("SerialNumber", serialNumber, j);
+                            if (softwaresModel.containsKey("SerialNumber", i)){
+                                let serialNumber = softwaresModel.getData("SerialNumber", i)
+                                orderProducts.setData("SerialNumber", serialNumber, j);
 
-                                let licenseUuid = softwaresModel.GetData("LicenseUuid", i)
-                                orderProducts.SetData("LicenseUuid", licenseUuid, j);
+                                let licenseUuid = softwaresModel.getData("LicenseUuid", i)
+                                orderProducts.setData("LicenseUuid", licenseUuid, j);
 
-                                let licenseId = softwaresModel.GetData("LicenseId", i)
-                                orderProducts.SetData("LicenseId", licenseId, j);
+                                let licenseId = softwaresModel.getData("LicenseId", i)
+                                orderProducts.setData("LicenseId", licenseId, j);
 
-                                let licenseName = softwaresModel.GetData("LicenseName", i)
-                                orderProducts.SetData("LicenseName", licenseName, j);
+                                let licenseName = softwaresModel.getData("LicenseName", i)
+                                orderProducts.setData("LicenseName", licenseName, j);
 
-                                let productUuid = softwaresModel.GetData("ProductUuid", i)
-                                orderProducts.SetData("ProductUuid", productUuid, j);
+                                let productUuid = softwaresModel.getData("ProductUuid", i)
+                                orderProducts.setData("ProductUuid", productUuid, j);
 
-                                let productName = softwaresModel.GetData("ProductName", i)
-                                orderProducts.SetData("ProductName", productName, j);
+                                let productName = softwaresModel.getData("ProductName", i)
+                                orderProducts.setData("ProductName", productName, j);
 
-                                let expiration = softwaresModel.GetData("Expiration", i)
-                                orderProducts.SetData("Expiration", expiration, j);
+                                let expiration = softwaresModel.getData("Expiration", i)
+                                orderProducts.setData("Expiration", expiration, j);
 
                                 productFound = true;
 
@@ -166,29 +166,29 @@ ViewBase {
                     }
                 }
                 else if (categoryId === "Hardware") {
-                    for (let i = 0; i < devicesModel.GetItemsCount(); i++){
-                        let hardwareId = devicesModel.GetData("Id", i);
+                    for (let i = 0; i < devicesModel.getItemsCount(); i++){
+                        let hardwareId = devicesModel.getData("Id", i);
                         if (hardwareId === orderedProductId){
-                            let macAddress = devicesModel.GetData("MacAddress", i);
-                            orderProducts.SetData("MacAddress", macAddress, j);
+                            let macAddress = devicesModel.getData("MacAddress", i);
+                            orderProducts.setData("MacAddress", macAddress, j);
 
-                            let serialNumber = devicesModel.GetData("SerialNumber", i);
-                            orderProducts.SetData("SerialNumber", serialNumber, j);
+                            let serialNumber = devicesModel.getData("SerialNumber", i);
+                            orderProducts.setData("SerialNumber", serialNumber, j);
 
-                            let licenseUuid = devicesModel.GetData("LicenseUuid", i)
-                            orderProducts.SetData("LicenseUuid", licenseUuid, j);
+                            let licenseUuid = devicesModel.getData("LicenseUuid", i)
+                            orderProducts.setData("LicenseUuid", licenseUuid, j);
 
-                            let licenseId = devicesModel.GetData("LicenseId", i)
-                            orderProducts.SetData("LicenseId", licenseId, j);
+                            let licenseId = devicesModel.getData("LicenseId", i)
+                            orderProducts.setData("LicenseId", licenseId, j);
 
-                            let licenseName = devicesModel.GetData("LicenseName", i)
-                            orderProducts.SetData("LicenseName", licenseName, j);
+                            let licenseName = devicesModel.getData("LicenseName", i)
+                            orderProducts.setData("LicenseName", licenseName, j);
 
-                            let productUuid = devicesModel.GetData("ProductUuid", i)
-                            orderProducts.SetData("ProductUuid", productUuid, j);
+                            let productUuid = devicesModel.getData("ProductUuid", i)
+                            orderProducts.setData("ProductUuid", productUuid, j);
 
-                            let productName = devicesModel.GetData("DeviceType", i)
-                            orderProducts.SetData("ProductName", productName, j);
+                            let productName = devicesModel.getData("DeviceType", i)
+                            orderProducts.setData("ProductName", productName, j);
 
                             productFound = true;
 
@@ -201,42 +201,42 @@ ViewBase {
                     // ????
                 }
 
-                orderProducts.Refresh()
+                orderProducts.refresh()
             }
         }
 
-        model.SetUpdateEnabled(true);
+        model.setUpdateEnabled(true);
     }
 
     function updateGui(){
-        if (model.ContainsKey("OrderId")){
-            instanceIdInput.text = model.GetData("OrderId");
+        if (model.containsKey("OrderId")){
+            instanceIdInput.text = model.getData("OrderId");
         }
         else{
             instanceIdInput.text = "";
         }
 
-        if (model.ContainsKey("PurchaseId")){
-            purchaseIdInput.text = model.GetData("PurchaseId");
+        if (model.containsKey("PurchaseId")){
+            purchaseIdInput.text = model.getData("PurchaseId");
         }
         else{
             purchaseIdInput.text = "";
         }
 
-        if (model.ContainsKey("Description")){
-            descriptionInput.text = model.GetData("Description");
+        if (model.containsKey("Description")){
+            descriptionInput.text = model.getData("Description");
         }
         else{
             descriptionInput.text = "";
         }
 
         let customerFound = false;
-        if (model.ContainsKey("CustomerId")){
-            let customerId = model.GetData("CustomerId");
+        if (model.containsKey("CustomerId")){
+            let customerId = model.getData("CustomerId");
             let customerModel = customerCB.model;
             if (customerModel){
-                for (let i = 0; i < customerModel.GetItemsCount(); i++){
-                    let id = customerModel.GetData("Id", i);
+                for (let i = 0; i < customerModel.getItemsCount(); i++){
+                    let id = customerModel.getData("Id", i);
                     if (id === customerId){
                         customerCB.currentIndex = i;
                         customerFound = true;
@@ -251,13 +251,13 @@ ViewBase {
         }
 
         let statusFound = false;
-        if (orderEditorContainer.model.ContainsKey("OrderStatus")){
-            let status = orderEditorContainer.model.GetData("OrderStatus");
+        if (orderEditorContainer.model.containsKey("OrderStatus")){
+            let status = orderEditorContainer.model.getData("OrderStatus");
             let statusModel = orderStatus.statusModel
             if (statusModel){
                 orderStatusCB.model = statusModel;
-                for (let i = 0; i < statusModel.GetItemsCount(); i++){
-                    let id = statusModel.GetData("Id", i);
+                for (let i = 0; i < statusModel.getItemsCount(); i++){
+                    let id = statusModel.getData("Id", i);
                     if (id === status){
                         orderStatusCB.currentIndex = i;
                         statusFound = true;
@@ -275,36 +275,36 @@ ViewBase {
 
         productsView.model = 0;
 
-        if (model.ContainsKey("OrderProducts")){
-            productsView.model = model.GetTreeItemModel("OrderProducts");
+        if (model.containsKey("OrderProducts")){
+            productsView.model = model.getTreeItemModel("OrderProducts");
 
-            productsView.model.Refresh();
+            productsView.model.refresh();
         }
     }
 
     function updateModel(){
-        model.SetData("OrderId", instanceIdInput.text)
-        model.SetData("PurchaseId", purchaseIdInput.text)
+        model.setData("OrderId", instanceIdInput.text)
+        model.setData("PurchaseId", purchaseIdInput.text)
 
         let selectedAccountId = "";
         if (customerCB.currentIndex >= 0 && customerCB.model){
-            selectedAccountId = customerCB.model.GetData("Id", customerCB.currentIndex);
+            selectedAccountId = customerCB.model.getData("Id", customerCB.currentIndex);
         }
 
-        model.SetData("CustomerId", selectedAccountId);
+        model.setData("CustomerId", selectedAccountId);
 
         if (orderStatusCB.currentIndex >= 0){
-            let selectedStatus = orderStatusCB.model.GetData("Id", orderStatusCB.currentIndex);
-            orderEditorContainer.model.SetData("OrderStatus", selectedStatus);
+            let selectedStatus = orderStatusCB.model.getData("Id", orderStatusCB.currentIndex);
+            orderEditorContainer.model.setData("OrderStatus", selectedStatus);
         }
         else{
-            orderEditorContainer.model.SetData("OrderStatus", "");
+            orderEditorContainer.model.setData("OrderStatus", "");
         }
 
-        model.SetData("Description", descriptionInput.text);
+        model.setData("Description", descriptionInput.text);
 
-        if (!model.ContainsKey("OrderProducts")){
-            model.AddTreeModel("OrderProducts")
+        if (!model.containsKey("OrderProducts")){
+            model.addTreeModel("OrderProducts")
         }
     }
 
@@ -524,21 +524,21 @@ ViewBase {
                         productsDialog.bodyItem.softwaresModel = orderEditorContainer.softwaresModel;
                         productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
 
-                        if (orderEditorContainer.model.ContainsKey("Id")){
-                            productsDialog.bodyItem.orderUuid = orderEditorContainer.model.GetData("Id");
+                        if (orderEditorContainer.model.containsKey("Id")){
+                            productsDialog.bodyItem.orderUuid = orderEditorContainer.model.getData("Id");
                         }
 
                         productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
                         productsDialog.activeProductIndex = productsView.activeProductIndex;
 
-                        if (orderEditorContainer.model.ContainsKey("OrderId")){
-                            productsDialog.bodyItem.orderId = orderEditorContainer.model.GetData("OrderId");
+                        if (orderEditorContainer.model.containsKey("OrderId")){
+                            productsDialog.bodyItem.orderId = orderEditorContainer.model.getData("OrderId");
                         }
 
-                        let orderProductsModel = orderEditorContainer.model.GetData("OrderProducts");
+                        let orderProductsModel = orderEditorContainer.model.getData("OrderProducts");
                         productsDialog.bodyItem.orderProductsModel = orderProductsModel;
                         if (productsView.activeProductIndex >= 0){
-                            let productModel = orderProductsModel.GetModelFromItem(productsView.activeProductIndex);
+                            let productModel = orderProductsModel.getModelFromItem(productsView.activeProductIndex);
                             productsDialog.bodyItem.productModel = productModel;
                         }
 
@@ -547,29 +547,29 @@ ViewBase {
 
                     onFinished: {
                         if (buttonId == Enums.ok){
-                            orderEditorContainer.model.SetUpdateEnabled(false);
+                            orderEditorContainer.model.setUpdateEnabled(false);
 
                             let productModel = productsDialog.bodyItem.productModel;
-                            let actualOrderProducts = orderEditorContainer.model.GetData("OrderProducts");
+                            let actualOrderProducts = orderEditorContainer.model.getData("OrderProducts");
 
                             let index = productsView.activeProductIndex;
                             if (index < 0){
                                 if (actualOrderProducts){
-                                    index = actualOrderProducts.InsertNewItem(0);
-                                    actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                                    index = actualOrderProducts.insertNewItem(0);
+                                    actualOrderProducts.copyItemDataFromModel(index, productModel);
                                 }
                             }
                             else{
                                 if (actualOrderProducts){
-                                    let actualProductModel = actualOrderProducts.GetModelFromItem(index);
-                                    let isEqual = actualProductModel.IsEqualWithModel(productModel);
+                                    let actualProductModel = actualOrderProducts.getModelFromItem(index);
+                                    let isEqual = actualProductModel.isEqualWithModel(productModel);
                                     if (!isEqual){
-                                        actualOrderProducts.CopyItemDataFromModel(index, productModel);
+                                        actualOrderProducts.copyItemDataFromModel(index, productModel);
                                     }
                                 }
                             }
 
-                            orderEditorContainer.model.SetUpdateEnabled(true);
+                            orderEditorContainer.model.setUpdateEnabled(true);
                             orderEditorContainer.model.dataChanged(null, null);
                         }
                     }
@@ -692,10 +692,10 @@ ViewBase {
                         return;
                     }
 
-                    if (orderEditorContainer.model.ContainsKey("OrderProducts")){
-                        let orderProducts = orderEditorContainer.model.GetTreeItemModel("OrderProducts")
+                    if (orderEditorContainer.model.containsKey("OrderProducts")){
+                        let orderProducts = orderEditorContainer.model.getTreeItemModel("OrderProducts")
                         if (orderProducts){
-                            orderProducts.RemoveItem(productsView.activeProductIndex);
+                            orderProducts.removeItem(productsView.activeProductIndex);
                         }
                     }
                 }

@@ -21,8 +21,8 @@ DocumentValidator {
 
     function isValid(data){
         let orderId = "";
-        if (documentModel.ContainsKey("OrderId")){
-            orderId = documentModel.GetData("OrderId");
+        if (documentModel.containsKey("OrderId")){
+            orderId = documentModel.getData("OrderId");
         }
 
         let ok1 = root.test("\\d{5}", orderId) && orderId.length === 5;
@@ -35,8 +35,8 @@ DocumentValidator {
         }
 
         let customerId = "";
-        if (documentModel.ContainsKey("CustomerId")){
-            customerId = documentModel.GetData("CustomerId");
+        if (documentModel.containsKey("CustomerId")){
+            customerId = documentModel.getData("CustomerId");
         }
 
         if (customerId === ""){

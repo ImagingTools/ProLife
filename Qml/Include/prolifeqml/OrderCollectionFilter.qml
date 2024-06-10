@@ -6,12 +6,12 @@ CollectionFilter {
     id: root;
 
     function setAccountFilter(accountId){
-        let objectFilter = filterModel.GetData("ObjectFilter");
+        let objectFilter = filterModel.getData("ObjectFilter");
         if (!objectFilter){
-            objectFilter = filterModel.AddTreeModel("ObjectFilter")
+            objectFilter = filterModel.addTreeModel("ObjectFilter")
         }
 
-        objectFilter.SetData("AccountFilter", accountId);
+        objectFilter.setData("AccountFilter", accountId);
 
         filterChanged();
     }

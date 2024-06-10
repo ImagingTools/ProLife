@@ -148,7 +148,7 @@ RemoteCollectionView {
                 }
 
                 if (rowIndex >= 0){
-                    let statusId = cellDelegate.rowDelegate.tableItem.elements.GetData("StatusId", rowIndex);
+                    let statusId = cellDelegate.rowDelegate.tableItem.elements.getData("StatusId", rowIndex);
                     image.source = deviceProductionStatus.getIconPath(statusId);
                     statusLable.text = cellDelegate.getValue();
                 }

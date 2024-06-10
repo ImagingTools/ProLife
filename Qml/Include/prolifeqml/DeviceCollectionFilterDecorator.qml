@@ -57,16 +57,16 @@ DecoratorBase {
         }
 
         onCollectionModelChanged: {
-            accountsList.collectionModel.InsertNewItem(0);
+            accountsList.collectionModel.insertNewItem(0);
 
             accountsList.updateComboBoxModel();
         }
 
         function updateComboBoxModel(){
-            accountsList.collectionModel.SetData("Id", "All");
-            accountsList.collectionModel.SetData("Name", qsTr("All customers"))
+            accountsList.collectionModel.setData("Id", "All");
+            accountsList.collectionModel.setData("Name", qsTr("All customers"))
 
-            accountsList.collectionModel.Refresh();
+            accountsList.collectionModel.refresh();
 
             accountComboBox.model = accountsList.collectionModel;
         }
@@ -81,21 +81,21 @@ DecoratorBase {
     }
 
     function updateModel(){
-        modelCategogy.Clear();
+        modelCategogy.clear();
 
-        let index = modelCategogy.InsertNewItem();
-        modelCategogy.SetData("Id", "None", index);
-        modelCategogy.SetData("Name", qsTr("Show All Sensors"), index);
+        let index = modelCategogy.insertNewItem();
+        modelCategogy.setData("Id", "None", index);
+        modelCategogy.setData("Name", qsTr("Show All Sensors"), index);
 
-        index = modelCategogy.InsertNewItem();
-        modelCategogy.SetData("Id", "WithoutLicense", index);
-        modelCategogy.SetData("Name", qsTr("Sensors without a license"), index);
+        index = modelCategogy.insertNewItem();
+        modelCategogy.setData("Id", "WithoutLicense", index);
+        modelCategogy.setData("Name", qsTr("Sensors without a license"), index);
 
-        index = modelCategogy.InsertNewItem();
-        modelCategogy.SetData("Id", "WithLicense", index);
-        modelCategogy.SetData("Name", qsTr("Sensors with license"), index);
+        index = modelCategogy.insertNewItem();
+        modelCategogy.setData("Id", "WithLicense", index);
+        modelCategogy.setData("Name", qsTr("Sensors with license"), index);
 
-        modelCategogy.Refresh();
+        modelCategogy.refresh();
 
         licenseComboBox.model = modelCategogy;
     }
@@ -128,7 +128,7 @@ DecoratorBase {
 
             onCurrentIndexChanged: {
                 if (licenseComboBox.currentIndex >= 0){
-                    let value = licenseComboBox.model.GetData("Id", licenseComboBox.currentIndex);
+                    let value = licenseComboBox.model.getData("Id", licenseComboBox.currentIndex);
 
                     mainItem.baseElement.filterChanged("LicenseFilter", value);
                 }
@@ -149,7 +149,7 @@ DecoratorBase {
 
             onCurrentIndexChanged: {
                 if (accountComboBox.currentIndex > 0){
-                    let value = accountComboBox.model.GetData("Id", accountComboBox.currentIndex);
+                    let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);
 
                     mainItem.baseElement.filterChanged("AccountFilter", value);
                 }

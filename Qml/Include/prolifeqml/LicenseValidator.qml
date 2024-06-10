@@ -13,8 +13,8 @@ DocumentValidator {
             return false;
         }
 
-        if (documentModel.ContainsKey("InUse")){
-            let inUse = documentModel.GetData("InUse");
+        if (documentModel.containsKey("InUse")){
+            let inUse = documentModel.getData("InUse");
             if (inUse){
                 data.message = qsTr("The product cannot be edited as it is in use");
 
@@ -23,8 +23,8 @@ DocumentValidator {
         }
 
         let productId = "";
-        if (documentModel.ContainsKey("ProductId")){
-            productId = documentModel.GetData("ProductId");
+        if (documentModel.containsKey("ProductId")){
+            productId = documentModel.getData("ProductId");
         }
 
         if (productId === ""){
@@ -34,8 +34,8 @@ DocumentValidator {
         }
 
         let licenseUuid = "";
-        if (documentModel.ContainsKey("LicenseUuid")){
-            licenseUuid = documentModel.GetData("LicenseUuid");
+        if (documentModel.containsKey("LicenseUuid")){
+            licenseUuid = documentModel.getData("LicenseUuid");
         }
 
         if (licenseUuid === ""){
@@ -45,8 +45,8 @@ DocumentValidator {
         }
 
         let serialNumber = "";
-        if (documentModel.ContainsKey("SerialNumber")){
-            serialNumber = documentModel.GetData("SerialNumber");
+        if (documentModel.containsKey("SerialNumber")){
+            serialNumber = documentModel.getData("SerialNumber");
         }
 
         if (serialNumber === ""){

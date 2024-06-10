@@ -25,7 +25,7 @@ ViewBase {
     property bool isNewSoftware: switchNewLicense.checked;
     property int productIndex: -1;
 
-    property bool isNewProduct: root.model.GetData("IsNew") ? root.model.GetData("IsNew") : false;
+    property bool isNewProduct: root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -34,17 +34,17 @@ ViewBase {
     }
 
     function updateGui(){
-        let isNew = model.GetData("IsNew")
+        let isNew = model.getData("IsNew")
 
         if (isNew){
             switchNewLicense.checked = true;
 
             licenseCB.currentIndex = -1;
 
-            let licenseUuid = root.model.GetData("LicenseUuid");
+            let licenseUuid = root.model.getData("LicenseUuid");
             if (licenseCB.model){
-                for (let i = 0; i < licenseCB.model.GetItemsCount(); i++){
-                    let id = licenseCB.model.GetData("Id", i);
+                for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
+                    let id = licenseCB.model.getData("Id", i);
                     if (id === licenseUuid){
                         licenseCB.currentIndex = i;
 
@@ -53,15 +53,15 @@ ViewBase {
                 }
             }
 
-            if (model.ContainsKey("SerialNumber")){
-                serialNumberInput.text = model.GetData("SerialNumber")
+            if (model.containsKey("SerialNumber")){
+                serialNumberInput.text = model.getData("SerialNumber")
             }
             else{
                 serialNumberInput.text = "";
             }
 
-            if (root.model.ContainsKey("Expiration")){
-                let expiration = root.model.GetData("Expiration");
+            if (root.model.containsKey("Expiration")){
+                let expiration = root.model.getData("Expiration");
 
                 if (expiration && expiration !== "" ){
                     expirationElementView.checkBox.checkState = Qt.Checked;
@@ -86,11 +86,11 @@ ViewBase {
 
             createdLicenseCb.currentIndex = -1;
 
-            let licenseUuid = root.model.GetData("Id");
+            let licenseUuid = root.model.getData("Id");
 
             if (createdLicenseCb.model){
-                for (let i = 0; i < createdLicenseCb.model.GetItemsCount(); i++){
-                    let id = createdLicenseCb.model.GetData("Id", i);
+                for (let i = 0; i < createdLicenseCb.model.getItemsCount(); i++){
+                    let id = createdLicenseCb.model.getData("Id", i);
 
                     if (id === licenseUuid){
                         createdLicenseCb.currentIndex = i;
@@ -100,8 +100,8 @@ ViewBase {
                 }
             }
 
-            if (model.ContainsKey("SerialNumber")){
-                softwareValue.text = model.GetData("SerialNumber")
+            if (model.containsKey("SerialNumber")){
+                softwareValue.text = model.getData("SerialNumber")
             }
             else{
                 softwareValue.text = "";
@@ -110,59 +110,59 @@ ViewBase {
     }
 
     function updateModel(){
-        root.model.SetData("IsNew", isNewSoftware);
+        root.model.setData("IsNew", isNewSoftware);
 
         if (isNewSoftware){
             if (licenseCB.currentIndex >= 0 && licenseCB.model){
-                let selectedId = licenseCB.model.GetData("Id", licenseCB.currentIndex);
-                root.model.SetData("LicenseUuid", selectedId);
+                let selectedId = licenseCB.model.getData("Id", licenseCB.currentIndex);
+                root.model.setData("LicenseUuid", selectedId);
 
-                let licenseId = licenseCB.model.GetData("LicenseId", licenseCB.currentIndex);
-                root.model.SetData("LicenseId", licenseId);
+                let licenseId = licenseCB.model.getData("LicenseId", licenseCB.currentIndex);
+                root.model.setData("LicenseId", licenseId);
 
-                let licenseName = licenseCB.model.GetData("LicenseName", licenseCB.currentIndex);
-                root.model.SetData("LicenseName", licenseName);
+                let licenseName = licenseCB.model.getData("LicenseName", licenseCB.currentIndex);
+                root.model.setData("LicenseName", licenseName);
             }
             else{
-                root.model.SetData("LicenseUuid", "");
-                root.model.SetData("LicenseId", "");
-                root.model.SetData("LicenseName", "");
+                root.model.setData("LicenseUuid", "");
+                root.model.setData("LicenseId", "");
+                root.model.setData("LicenseName", "");
             }
 
-            root.model.SetData("SerialNumber", serialNumberInput.text)
+            root.model.setData("SerialNumber", serialNumberInput.text)
 
             if (expirationElementView.checkBox.checkState == Qt.Checked){
-                root.model.SetData("Expiration", expirationElementView.datePicker.getDate());
+                root.model.setData("Expiration", expirationElementView.datePicker.getDate());
             }
             else{
-                root.model.SetData("Expiration", "");
+                root.model.setData("Expiration", "");
             }
         }
         else{
-            root.model.SetData("LicenseUuid", "");
-            root.model.SetData("LicenseId", "");
-            root.model.SetData("LicenseName", "");
-            root.model.SetData("SerialNumber", "");
-            root.model.SetData("Expiration", "");
+            root.model.setData("LicenseUuid", "");
+            root.model.setData("LicenseId", "");
+            root.model.setData("LicenseName", "");
+            root.model.setData("SerialNumber", "");
+            root.model.setData("Expiration", "");
 
             if (createdLicenseCb.currentIndex >= 0){
-                let id = createdLicenseCb.model.GetData("Id", createdLicenseCb.currentIndex);
-                root.model.SetData("Id", id);
+                let id = createdLicenseCb.model.getData("Id", createdLicenseCb.currentIndex);
+                root.model.setData("Id", id);
 
-                let licenseUuid = createdLicenseCb.model.GetData("LicenseUuid", createdLicenseCb.currentIndex);
-                root.model.SetData("LicenseUuid", licenseUuid);
+                let licenseUuid = createdLicenseCb.model.getData("LicenseUuid", createdLicenseCb.currentIndex);
+                root.model.setData("LicenseUuid", licenseUuid);
 
-                let licenseID = createdLicenseCb.model.GetData("LicenseId", createdLicenseCb.currentIndex);
-                root.model.SetData("LicenseId", licenseID);
+                let licenseID = createdLicenseCb.model.getData("LicenseId", createdLicenseCb.currentIndex);
+                root.model.setData("LicenseId", licenseID);
 
-                let licenseName = createdLicenseCb.model.GetData("LicenseName", createdLicenseCb.currentIndex);
-                root.model.SetData("LicenseName", licenseName);
+                let licenseName = createdLicenseCb.model.getData("LicenseName", createdLicenseCb.currentIndex);
+                root.model.setData("LicenseName", licenseName);
 
-                let serialNumber = createdLicenseCb.model.GetData("SerialNumber", createdLicenseCb.currentIndex);
-                root.model.SetData("SerialNumber", serialNumber);
+                let serialNumber = createdLicenseCb.model.getData("SerialNumber", createdLicenseCb.currentIndex);
+                root.model.setData("SerialNumber", serialNumber);
 
-                let expiration = createdLicenseCb.model.GetData("Expiration", createdLicenseCb.currentIndex);
-                root.model.SetData("Expiration", expiration);
+                let expiration = createdLicenseCb.model.getData("Expiration", createdLicenseCb.currentIndex);
+                root.model.setData("Expiration", expiration);
             }
         }
     }
@@ -224,26 +224,26 @@ ViewBase {
 
             onCurrentIndexChanged: {
                 if (currentIndex >= 0){
-                    if (createdLicenseCb.model.ContainsKey("LicenseName", currentIndex)){
-                        let licenseName = createdLicenseCb.model.GetData("LicenseName", currentIndex)
+                    if (createdLicenseCb.model.containsKey("LicenseName", currentIndex)){
+                        let licenseName = createdLicenseCb.model.getData("LicenseName", currentIndex)
 
                         typeValue.text = licenseName;
                     }
 
-                    if (createdLicenseCb.model.ContainsKey("LicenseId", currentIndex)){
-                        let licenseId = createdLicenseCb.model.GetData("LicenseId", currentIndex)
+                    if (createdLicenseCb.model.containsKey("LicenseId", currentIndex)){
+                        let licenseId = createdLicenseCb.model.getData("LicenseId", currentIndex)
 
                         articleValue.text = licenseId;
                     }
 
-                    if (createdLicenseCb.model.ContainsKey("SerialNumber", currentIndex)){
-                        let serialNumber = createdLicenseCb.model.GetData("SerialNumber", currentIndex)
+                    if (createdLicenseCb.model.containsKey("SerialNumber", currentIndex)){
+                        let serialNumber = createdLicenseCb.model.getData("SerialNumber", currentIndex)
 
                         softwareValue.text = serialNumber;
                     }
 
-                    if (createdLicenseCb.model.ContainsKey("Expiration", currentIndex)){
-                        let expiration = createdLicenseCb.model.GetData("Expiration", currentIndex)
+                    if (createdLicenseCb.model.containsKey("Expiration", currentIndex)){
+                        let expiration = createdLicenseCb.model.getData("Expiration", currentIndex)
 
                         if (expiration === ""){
                             expirationValue.text = qsTr("Unlimited");
@@ -350,8 +350,8 @@ ViewBase {
 
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0){
-                        if (licenseCB.model.ContainsKey("LicenseId", currentIndex)){
-                            let licenseId = licenseCB.model.GetData("LicenseId", currentIndex)
+                        if (licenseCB.model.containsKey("LicenseId", currentIndex)){
+                            let licenseId = licenseCB.model.getData("LicenseId", currentIndex)
 
                             newArticleValue.text = licenseId
                         }

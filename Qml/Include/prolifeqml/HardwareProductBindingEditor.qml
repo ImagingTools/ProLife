@@ -32,14 +32,14 @@ Item {
     }
 
     onBindingModelChanged: {
-        if (productEditor.bindingModel.ContainsKey("Id")){
-            let id = productEditor.bindingModel.GetData("Id")
+        if (productEditor.bindingModel.containsKey("Id")){
+            let id = productEditor.bindingModel.getData("Id")
 
             productEditor.hardwareId = id;
         }
 
-        if (productEditor.bindingModel.ContainsKey("ProductUuid")){
-            let productId = productEditor.bindingModel.GetData("ProductUuid")
+        if (productEditor.bindingModel.containsKey("ProductUuid")){
+            let productId = productEditor.bindingModel.getData("ProductUuid")
 
             productEditor.productId = productId;
         }
@@ -59,8 +59,8 @@ Item {
 
         productsCB.currentIndex = -1;
         if (productsCB.model){
-            for (let i = 0; i < productsCB.model.GetItemsCount(); i++){
-                let id = productsCB.model.GetData("Id", i);
+            for (let i = 0; i < productsCB.model.getItemsCount(); i++){
+                let id = productsCB.model.getData("Id", i);
                 if (id === productEditor.productId){
                     productsCB.currentIndex = i;
                     break;
@@ -83,8 +83,8 @@ Item {
     function checkLicenseId(licenseId){
         let bindingElements = bindingProductsCollection.table.elements;
         if (bindingElements){
-            for (let i = 0; i < bindingElements.GetItemsCount(); i++){
-                let id = bindingElements.GetData("LicenseId", i)
+            for (let i = 0; i < bindingElements.getItemsCount(); i++){
+                let id = bindingElements.getData("LicenseId", i)
                 if (id === licenseId){
                     return false;
                 }
@@ -173,7 +173,7 @@ Item {
                     }
 
                     if (productsCB.currentIndex > -1){
-                        productEditor.productId = productsCB.model.GetData("Id", productsCB.currentIndex);
+                        productEditor.productId = productsCB.model.getData("Id", productsCB.currentIndex);
                     }
 
                     softwareProductCollection.updateData();
@@ -257,13 +257,13 @@ Item {
                         for (let i = 0; i < selection.length; i++){
                             let index = selection[i];
 
-                            let inUse = softwareProductCollection.table.elements.GetData("InUse", index);
+                            let inUse = softwareProductCollection.table.elements.getData("InUse", index);
                             if (inUse && !unbindButton.userCanUnbind){
                                 ok = false;
                                 break;
                             }
 
-                            let licenseId = softwareProductCollection.table.elements.GetData("LicenseId", index);
+                            let licenseId = softwareProductCollection.table.elements.getData("LicenseId", index);
                             if (!productEditor.checkLicenseId(licenseId)){
                                 let message = productEditor.licenseErrorMessage.replace("%1", licenseId)
                                 productEditor.setError(message)
@@ -276,7 +276,7 @@ Item {
                             for (let j = i + 1; j < selection.length; j++){
                                 let index2 = selection[j];
 
-                                let licenseId2 = softwareProductCollection.table.elements.GetData("LicenseId", index2);
+                                let licenseId2 = softwareProductCollection.table.elements.getData("LicenseId", index2);
                                 if (licenseId === licenseId2){
                                     let message =  productEditor.duplicateErrorMessage.replace("%1", licenseId);
                                     productEditor.setError(message)
@@ -322,9 +322,9 @@ Item {
                         let products = []
                         let licenseIds = []
 
-                        for(var i = 0; i < bindingProductsCollection.table.elements.GetItemsCount(); i++){
-                            let id = bindingProductsCollection.table.elements.GetData("Id", i);
-                            let licenseId = bindingProductsCollection.table.elements.GetData("LicenseId", i);
+                        for(var i = 0; i < bindingProductsCollection.table.elements.getItemsCount(); i++){
+                            let id = bindingProductsCollection.table.elements.getData("Id", i);
+                            let licenseId = bindingProductsCollection.table.elements.getData("LicenseId", i);
 
                             products.push(id)
                             licenseIds.push(licenseId)
@@ -332,22 +332,22 @@ Item {
 
                         let filterModel = softwareProductCollection.collectionFilter.filterModel;
 
-                        let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
+                        let objectFilter =  filterModel.addTreeModel("ObjectFilter")
 
-                        let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
+                        let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
                         if (productEditor.productId != ""){
-                            bindingFilterModel.SetData("ProductUuid", productEditor.productId);
+                            bindingFilterModel.setData("ProductUuid", productEditor.productId);
                         }
 
                         if (products.length !== 0){
-                            bindingFilterModel.SetData("ExcludeUuids", products.join(';'));
+                            bindingFilterModel.setData("ExcludeUuids", products.join(';'));
                         }
 
                         if (licenseIds.length !== 0){
-                            bindingFilterModel.SetData("LicenseIds", licenseIds.join(';'));
+                            bindingFilterModel.setData("LicenseIds", licenseIds.join(';'));
                         }
 
-                        bindingFilterModel.SetData("HardwareUuidFilter", productEditor.hardwareId);
+                        bindingFilterModel.setData("HardwareUuidFilter", productEditor.hardwareId);
 
                         softwareProductCollection.doUpdateGui();
                     }
@@ -426,9 +426,9 @@ Item {
                     dataController.collectionId = "SoftwareProducts";
 
                     let filterModel = bindingProductsCollection.collectionFilter.filterModel;
-                    let objectFilter =  filterModel.AddTreeModel("ObjectFilter")
-                    let bindingFilterModel = objectFilter.AddTreeModel("BindingFilter");
-                    bindingFilterModel.SetData("HardwareUuid", productEditor.hardwareId);
+                    let objectFilter =  filterModel.addTreeModel("ObjectFilter")
+                    let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
+                    bindingFilterModel.setData("HardwareUuid", productEditor.hardwareId);
 
                     bindingProductsCollection.doUpdateGui();
                 }
@@ -443,7 +443,7 @@ Item {
                         let index = selection[0];
 
                         let elementsModel = bindingProductsCollection.table.elements;
-                        let inUse = elementsModel.GetData("InUse", index);
+                        let inUse = elementsModel.getData("InUse", index);
 
                         if (unbindButton.userCanUnbind){
                             unbindButton.enabled = true;
@@ -498,7 +498,7 @@ Item {
 
             onClicked: {
                 let selectedProductIds = []
-                let softwareIds = productEditor.bindingModel.GetData("SoftwareIds")
+                let softwareIds = productEditor.bindingModel.getData("SoftwareIds")
                 if (softwareIds && softwareIds != ""){
                     selectedProductIds = softwareIds.split(';')
                 }
@@ -509,16 +509,16 @@ Item {
                 }
 
                 for (let index of indexes){
-                    let id = softwareProductCollection.table.elements.GetData("Id", index);
+                    let id = softwareProductCollection.table.elements.getData("Id", index);
                     if (!selectedProductIds.includes(id)){
                         selectedProductIds.push(id)
-                        let newIndex = bindingProductsCollection.table.elements.InsertNewItem()
-                        bindingProductsCollection.table.elements.CopyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
+                        let newIndex = bindingProductsCollection.table.elements.insertNewItem()
+                        bindingProductsCollection.table.elements.copyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
                     }
                 }
 
                 let products = selectedProductIds.join(';');
-                productEditor.bindingModel.SetData("SoftwareIds", products)
+                productEditor.bindingModel.setData("SoftwareIds", products)
 
                 softwareProductCollection.updateData()
 
@@ -549,7 +549,7 @@ Item {
 
             onClicked: {
                 let selectedProductIds = []
-                selectedProductIds = productEditor.bindingModel.GetData("SoftwareIds").split(';')
+                selectedProductIds = productEditor.bindingModel.getData("SoftwareIds").split(';')
                 let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
                 if (indexes.length === 0){
                     return
@@ -559,22 +559,22 @@ Item {
                 let elementsModel = bindingProductsCollection.table.elements;
 
                 if (!unbindButton.userCanUnbind){
-                    if (elementsModel.ContainsKey("InUse", index)){
-                        let inUse = elementsModel.GetData("InUse", index);
+                    if (elementsModel.containsKey("InUse", index)){
+                        let inUse = elementsModel.getData("InUse", index);
                         if (inUse){
                             return;
                         }
                     }
                 }
 
-                let id = elementsModel.GetData("Id", index);
+                let id = elementsModel.getData("Id", index);
                 if (selectedProductIds.indexOf(id) > -1){
-                    elementsModel.RemoveItem(index)
+                    elementsModel.removeItem(index)
                     selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
                 }
 
                 let products = selectedProductIds.join(';');
-                productEditor.bindingModel.SetData("SoftwareIds", products)
+                productEditor.bindingModel.setData("SoftwareIds", products)
 
                 bindingProductsCollection.table.resetSelection();
 
@@ -597,23 +597,23 @@ Item {
         id: filterHeadersModel;
 
         Component.onCompleted: {
-            let index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "LicenseName", index);
+            let index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "LicenseName", index);
 
-            index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "LicenseId", index);
+            index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "LicenseId", index);
 
-            index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "OrderId", index);
+            index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "OrderId", index);
 
-            index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "PurchaseOrderId", index);
+            index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "PurchaseOrderId", index);
 
-            index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "SerialNumber", index);
+            index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "SerialNumber", index);
 
-            index = filterHeadersModel.InsertNewItem();
-            filterHeadersModel.SetData("Id", "Customer", index);
+            index = filterHeadersModel.insertNewItem();
+            filterHeadersModel.setData("Id", "Customer", index);
 
             softwareProductCollection.collectionFilter.setFilteringInfoIds(filterHeadersModel);
         }
@@ -636,65 +636,65 @@ Item {
     }
 
     function updateHeaders2(){
-        collectionHeadersModel2.Clear();
+        collectionHeadersModel2.clear();
 
-        let index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "LicenseName", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Name"), index);
+        let index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "LicenseName", index);
+        collectionHeadersModel2.setData("Name", qsTr("Name"), index);
 
-        index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "LicenseId", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Article"), index);
+        index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "LicenseId", index);
+        collectionHeadersModel2.setData("Name", qsTr("Article"), index);
 
-        index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "OrderId", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Delivery-ID"), index);
+        index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "OrderId", index);
+        collectionHeadersModel2.setData("Name", qsTr("Delivery-ID"), index);
 
-        index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "PurchaseOrderId", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Purchase Order-ID"), index);
+        index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "PurchaseOrderId", index);
+        collectionHeadersModel2.setData("Name", qsTr("Purchase Order-ID"), index);
 
-        index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "SerialNumber", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Software-ID"), index);
+        index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "SerialNumber", index);
+        collectionHeadersModel2.setData("Name", qsTr("Software-ID"), index);
 
-        index = collectionHeadersModel2.InsertNewItem();
-        collectionHeadersModel2.SetData("Id", "Customer", index);
-        collectionHeadersModel2.SetData("Name", qsTr("Customer"), index);
+        index = collectionHeadersModel2.insertNewItem();
+        collectionHeadersModel2.setData("Id", "Customer", index);
+        collectionHeadersModel2.setData("Name", qsTr("Customer"), index);
 
         softwareProductCollection.dataController.headersModel  = collectionHeadersModel2;
     }
 
     function updateHeaders(){
-        collectionHeadersModel.Clear();
+        collectionHeadersModel.clear();
 
-        let index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "InUse", index);
-        collectionHeadersModel.SetData("Name", "", index);
+        let index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "InUse", index);
+        collectionHeadersModel.setData("Name", "", index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "LicenseName", index);
-        collectionHeadersModel.SetData("Name", qsTr("Name"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "LicenseName", index);
+        collectionHeadersModel.setData("Name", qsTr("Name"), index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "LicenseId", index);
-        collectionHeadersModel.SetData("Name", qsTr("Article"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "LicenseId", index);
+        collectionHeadersModel.setData("Name", qsTr("Article"), index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "OrderId", index);
-        collectionHeadersModel.SetData("Name", qsTr("Delivery-ID"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "OrderId", index);
+        collectionHeadersModel.setData("Name", qsTr("Delivery-ID"), index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "PurchaseOrderId", index);
-        collectionHeadersModel.SetData("Name", qsTr("Purchase Order-ID"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "PurchaseOrderId", index);
+        collectionHeadersModel.setData("Name", qsTr("Purchase Order-ID"), index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "SerialNumber", index);
-        collectionHeadersModel.SetData("Name", qsTr("Software-ID"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "SerialNumber", index);
+        collectionHeadersModel.setData("Name", qsTr("Software-ID"), index);
 
-        index = collectionHeadersModel.InsertNewItem();
-        collectionHeadersModel.SetData("Id", "Customer", index);
-        collectionHeadersModel.SetData("Name", qsTr("Customer"), index);
+        index = collectionHeadersModel.insertNewItem();
+        collectionHeadersModel.setData("Id", "Customer", index);
+        collectionHeadersModel.setData("Name", qsTr("Customer"), index);
 
         bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
     }
@@ -703,28 +703,28 @@ Item {
         id: tableDecoratorModel;
 
         Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel.AddTreeModel("CellWidth");
+            var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
 
-            let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", 30, index);
+            let index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", 30, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
         }
     }
 
@@ -732,25 +732,25 @@ Item {
         id: tableDecoratorModel2;
 
         Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel2.AddTreeModel("CellWidth");
+            var cellWidthModel = tableDecoratorModel2.addTreeModel("CellWidth");
 
-            let index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            let index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
 
-            index = cellWidthModel.InsertNewItem();
-            cellWidthModel.SetData("Width", -1, index);
+            index = cellWidthModel.insertNewItem();
+            cellWidthModel.setData("Width", -1, index);
         }
     }
 
