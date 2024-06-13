@@ -743,9 +743,6 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="LisaGqlRequest">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -788,6 +785,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -798,9 +798,6 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="LisaGqlRequest">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">

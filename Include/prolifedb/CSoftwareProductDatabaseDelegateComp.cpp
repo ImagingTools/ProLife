@@ -31,33 +31,31 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
-					.arg(qPrintable(*m_tableNameAttrPtr))
-					.arg(qPrintable(*m_objectIdColumnAttrPtr))
-					.arg(qPrintable(objectId)).toUtf8();
+				.arg(qPrintable(*m_tableNameAttrPtr))
+				.arg(qPrintable(*m_objectIdColumnAttrPtr))
+				.arg(qPrintable(objectId)).toUtf8();
 	}
 
 	QByteArray beforeSelectionQuery;
 
-//	if (!TableIsExists("UsersTemp")){
-		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
-		beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
+	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
+	beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
 
-		if (m_userCollectionCompPtr.IsValid()){
-			imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
+	if (m_userCollectionCompPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
 
-			for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
-				idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
-				if (dataMetaInfo.IsValid()){
-					QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
-					QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
+		for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
+			idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
+			if (dataMetaInfo.IsValid()){
+				QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
+				QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
 
-					beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
-								.arg(userId)
-								.arg(groups).toUtf8();
-				}
+				beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
+						.arg(userId)
+						.arg(groups).toUtf8();
 			}
 		}
-//	}
+	}
 
 	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
 	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
@@ -75,10 +73,10 @@ QByteArray CSoftwareProductDatabaseDelegateComp::GetSelectionQuery(
 				QString licenseName = dataMetaInfo->GetMetaInfo(imtlic::ILicenseDefinition::MIT_LICENSE_NAME).toString();
 
 				beforeSelectionQuery += QString(R"(INSERT INTO "LicensesTemp" ("DocumentId", "LicenseId", "LicenseName") VALUES('%1', '%2', '%3');)")
-							.arg(qPrintable(licenseCollectionId))
-							.arg(qPrintable(licenseId))
-							.arg(licenseName)
-							.toUtf8();
+						.arg(qPrintable(licenseCollectionId))
+						.arg(qPrintable(licenseId))
+						.arg(licenseName)
+						.toUtf8();
 			}
 		}
 	}
@@ -137,6 +135,7 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	return R"(
 			SELECT
+				acc."Document"->'Groups' as "Groups",
 				si."DocumentId",
 				si."Document"->>'SerialNumber' as "SerialNumber",
 				si."Document"->>'OrderId' as "OrderUuid",
@@ -172,8 +171,8 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
-			const iprm::IParamsSet& filterParams,
-			QString& filterQuery) const
+		const iprm::IParamsSet& filterParams,
+		QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 
@@ -347,44 +346,53 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 			}
 		}
 
-		if (paramIdsList.contains("Orders")){
-			const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter("Orders"));
-			if (selectionPtr != nullptr){
-				const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-				if (optionsListPtr != nullptr){
-					QString ordersFilterQuery;
-					if (optionsListPtr->GetOptionsCount() > 0){
-						ordersFilterQuery += "(";
+		if (paramIdsList.contains("Groups")){
+			iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, "Groups");
+			if (filterParamPtr.IsValid()){
+				QByteArray userId;
+				iprm::TParamsPtr<iprm::ITextParam> userParamPtr(filterParamPtr.GetPtr(), "UserParam");
+				if (userParamPtr.IsValid()){
+					userId = userParamPtr->GetText().toUtf8();
+				}
+
+				iprm::TParamsPtr<iprm::ITextParam> textParamPtr(filterParamPtr.GetPtr(), "GroupParam");
+				QString groupFilter;
+
+				if (textParamPtr.IsValid()){
+					QByteArray groups = textParamPtr->GetText().toUtf8();
+					QByteArrayList groupIds;
+					if (!groups.isEmpty()){
+						groupIds = groups.split(';');
 					}
 
-					for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-						if (i > 0){
-							ordersFilterQuery += " OR ";
-						}
-						QByteArray optionId = optionsListPtr->GetOptionId(i);
-						QString optionName = optionsListPtr->GetOptionName(i);
+					QString ownerSubquery = QString(R"((SELECT sof."OwnerId" FROM "SoftwareInstances" as sof WHERE sof."DocumentId" = si."DocumentId" AND sof."RevisionNumber" = 1 LIMIT 1))");
 
-						if (!optionName.isEmpty()){
-							ordersFilterQuery += QString("si.\"Document\"->>'OrderId' = '%1'").arg(optionName);
+					if (!groupIds.isEmpty()){
+						QString array = "array[";
+
+						for (int i = 0; i < groupIds.size(); i++){
+							if (i > 0){
+								array += ",";
+							}
+
+							array += "'" + groupIds[i] + "'";
 						}
-						else{
-							ordersFilterQuery += QString("(si.\"Document\"->>'OrderId' = '' AND ((SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3))")
-										.arg(qPrintable(optionId))
-										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1))")
-										.arg("((SELECT \"OwnerId\" FROM \"SoftwareInstances\" WHERE \"DocumentId\" = si.\"DocumentId\" AND \"RevisionNumber\" = 1 LIMIT 1) = 'su')");
-						}
+
+						array += "]";
+
+						QString groupsQuery = QString(R"((SELECT "Groups" FROM "UsersTemp" WHERE "UserId" = %1))").arg(ownerSubquery);
+						groupFilter += QString(R"((acc."Document"->'Groups' ?| %1) OR (si."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
+					}
+					else{
+						groupFilter += QString(R"(%1 = '%2')").arg(ownerSubquery).arg(userId);
 					}
 
-					if (!ordersFilterQuery.isEmpty()){
-						ordersFilterQuery += ')';
-					}
-
-					if (!ordersFilterQuery.isEmpty()){
+					if (!groupFilter.isEmpty()){
 						if (!filterQuery.isEmpty()){
 							filterQuery += " AND ";
 						}
 
-						filterQuery += ordersFilterQuery;
+						filterQuery += "(" + groupFilter + ")";
 					}
 				}
 			}
@@ -400,8 +408,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
-			const imtbase::ICollectionFilter& collectionFilter,
-			QString& sortQuery) const
+		const imtbase::ICollectionFilter& collectionFilter,
+		QString& sortQuery) const
 {
 	QByteArray columnId;
 	QByteArray sortOrder;
@@ -455,8 +463,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
-			const imtbase::ICollectionFilter& collectionFilter,
-			QString& textFilterQuery) const
+		const imtbase::ICollectionFilter& collectionFilter,
+		QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

@@ -198,24 +198,29 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 		return nullptr;
 	}
 
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr){
+		return nullptr;
+	}
+
+	QByteArrayList userPermissions = userInfoPtr->GetPermissions();
+	QByteArrayList groupIds = userInfoPtr->GetGroups();
+	QByteArray userId = userInfoPtr->GetId();
+
+	bool isAdmin = userInfoPtr->IsAdmin();
 	bool filterByGroup = true;
+
 	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList userPermissions;
-
-		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-		if (userInfoPtr != nullptr){
-			userPermissions = userInfoPtr->GetPermissions();
-		}
-
 		QByteArrayList permissions;
 		permissions << *m_permissionIdAttrPtr;
+
 		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
 	}
 
-	iprm::COptionsManager optionsManager;
-	iprm::COptionsManager accountsOptionsManager;
+	if (isAdmin){
+		filterByGroup = false;
+	}
 
-	iprm::CParamsSet accountFilter;
 	iprm::CParamsSet objectFilter;
 
 	iprm::CParamsSet groups;
@@ -231,31 +236,23 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
 	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
 
+	iprm::CParamsSet composedFilter;
+
+	iprm::CTextParam userParam;
+	iprm::CTextParam groupParam;
 	if (filterByGroup){
-		// User group ID-s from GQL context user
-		QByteArrayList userGroupIds;
-		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-		if (userInfoPtr != nullptr){
-			userGroupIds = userInfoPtr->GetGroups();
+		userParam.SetText(userId);
+
+		QByteArray groups;
+		if (!groupIds.isEmpty()){
+			groups = groupIds.join(';');
 		}
+		groupParam.SetText(groups);
 
-		for (const QByteArray& groupId : userGroupIds){
-			optionsManager.InsertOption("", groupId);
-		}
+		composedFilter.SetEditableParameter("UserParam", &userParam);
+		composedFilter.SetEditableParameter("GroupParam", &groupParam);
 
-		groups.SetEditableParameter("Groups", &optionsManager);
-		accountFilter.SetEditableParameter("ObjectFilter", &groups);
-
-		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-		for (const QByteArray& accountId : accountIds){
-			accountsOptionsManager.InsertOption("", accountId);
-		}
-
-		if (accountsOptionsManager.GetOptionsCount() == 0){
-			return rootModelPtr.PopPtr();
-		}
-
-		objectFilter.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
+		objectFilter.SetEditableParameter("Groups", &composedFilter);
 	}
 
 	filterParams.SetEditableParameter("ObjectFilter", &objectFilter);

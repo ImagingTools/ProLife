@@ -9,6 +9,7 @@
 #include <iprm/TParamsPtr.h>
 
 // ImtCore includes
+#include <imtauth/IUserInfo.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 
 // ProLife includes
@@ -23,6 +24,59 @@ namespace prolifedb
 // public methods
 
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
+
+QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(
+			const QByteArray& objectId,
+			int offset,
+			int count,
+			const iprm::IParamsSet* paramsPtr) const
+{
+	if (!objectId.isEmpty()){
+		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
+				.arg(qPrintable(*m_tableNameAttrPtr))
+				.arg(qPrintable(*m_objectIdColumnAttrPtr))
+				.arg(qPrintable(objectId)).toUtf8();
+	}
+
+	QByteArray beforeSelectionQuery;
+
+	beforeSelectionQuery += R"(DROP TABLE IF EXISTS "UsersTemp";)";
+	beforeSelectionQuery += R"(CREATE TEMP TABLE "UsersTemp"("UserId" varchar, "Groups" varchar);)";
+
+	if (m_userCollectionCompPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids userCollectionIds = m_userCollectionCompPtr->GetElementIds();
+
+		for (const imtbase::ICollectionInfo::Id& userCollectionId : userCollectionIds){
+			idoc::MetaInfoPtr dataMetaInfo = m_userCollectionCompPtr->GetDataMetaInfo(userCollectionId);
+			if (dataMetaInfo.IsValid()){
+				QString groups = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_GROUPS).toString();
+				QString userId = dataMetaInfo->GetMetaInfo(imtauth::IUserInfo::MIT_ID).toString();
+
+				beforeSelectionQuery += QString(R"(INSERT INTO "UsersTemp" ("UserId", "Groups") VALUES('%1', '%2');)")
+						.arg(userId)
+						.arg(groups).toUtf8();
+			}
+		}
+	}
+
+	if (m_databaseEngineCompPtr.IsValid()){
+		if (!beforeSelectionQuery.isEmpty()){
+			QSqlError sqlError;
+			m_databaseEngineCompPtr->ExecSqlQuery(beforeSelectionQuery, &sqlError);
+			if (sqlError.type() != QSqlError::NoError){
+				SendErrorMessage(0, sqlError.text(), "CDeviceDatabaseDelegateComp");
+
+				qDebug() << "SQL-error" << beforeSelectionQuery;
+
+				return QByteArray();
+			}
+		}
+	}
+
+	QByteArray selectionQuery = BaseClass::GetSelectionQuery(objectId, offset, count, paramsPtr);
+
+	return selectionQuery;
+}
 
 QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
@@ -136,6 +190,7 @@ QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 	return QString("SELECT *"
 					 "FROM ("
 						"SELECT "
+							"(SELECT \"Document\"->'Groups' FROM \"Accounts\" as acc WHERE acc.\"DocumentId\" = t1.\"Document\"->>'OrderCustomer' AND acc.\"IsActive\" = true) as \"Groups\","
 							"\"DocumentId\", "
 							"\"Document\", "
 							"\"LastModified\", "
@@ -159,7 +214,7 @@ QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 							") as \"MacAddress\", "
 							"\"IsActive\""
 							"FROM \"Orders\" as t1"
-						") u "
+						") as t2 "
 					"WHERE \"IsActive\" = true");
 }
 
@@ -188,34 +243,96 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 
 				filterQuery += QString("(\"Document\"->>'OrderCustomer' = '%1')").arg(value);
 			}
-			else if (id == "OrderCustomers"){
-				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
-				if (selectionPtr != nullptr){
-					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-					if (optionsListPtr != nullptr){
+			else if (id == "Groups"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, id);
+				if (filterParamPtr.IsValid()){
+					QByteArray userId;
+					iprm::TParamsPtr<iprm::ITextParam> userParamPtr(filterParamPtr.GetPtr(), "UserParam");
+					if (userParamPtr.IsValid()){
+						userId = userParamPtr->GetText().toUtf8();
+					}
 
-						QString filter;
-
-						for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-							if (i > 0){
-								filter += " OR ";
-							}
-							QByteArray accountId = optionsListPtr->GetOptionId(i);
-							filter += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(qPrintable(accountId));
+					iprm::TParamsPtr<iprm::ITextParam> textParamPtr(filterParamPtr.GetPtr(), "GroupParam");
+					if (textParamPtr.IsValid()){
+						QByteArray groups = textParamPtr->GetText().toUtf8();
+						QByteArrayList groupIds;
+						if (!groups.isEmpty()){
+							groupIds = groups.split(';');
 						}
 
-						if (!filter.isEmpty()){
+						if (!groupIds.isEmpty()){
+							QString array = "array[";
+
+							for (int i = 0; i < groupIds.size(); i++){
+								if (i > 0){
+									array += ",";
+								}
+
+								array += "'" + groupIds[i] + "'";
+							}
+
+							array += "]";
+
 							if (!filterQuery.isEmpty()){
 								filterQuery += " AND ";
 							}
+
+							filterQuery += QString(R"((t2."Groups" ?| %1))").arg(array);
 						}
+						else{
+							if (!filterQuery.isEmpty()){
+								filterQuery += " AND ";
+							}
 
-						filter = "(" + filter + ")";
-
-						filterQuery += filter;
+							filterQuery += QString(R"((SELECT ord."OwnerId" FROM "Orders" as ord WHERE ord."DocumentId" = t2."DocumentId" AND ord."RevisionNumber" = 1 LIMIT 1) = '%1')").arg(userId);
+						}
 					}
 				}
 			}
+//			else if (id == "OrderCustomers"){
+//				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
+//				if (selectionPtr != nullptr){
+//					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
+//					if (optionsListPtr != nullptr){
+//						QString filter;
+
+//						int optionCount = optionsListPtr->GetOptionsCount();
+//						if (optionCount == 0){
+
+//						}
+//						else{
+//							for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
+//								if (i > 0){
+//									filter += " OR ";
+//								}
+
+//								QByteArray optionId = optionsListPtr->GetOptionId(i);
+//								QString optionName = optionsListPtr->GetOptionName(i);
+
+//								if (!optionName.isEmpty()){
+//									filter += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(optionId);
+//								}
+//								else{
+//									filter += QString("(\"Document\"->>'OrderId' = '' AND ( ( SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3 ) )")
+//											.arg(optionId)
+//											.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Orders\" as ord WHERE ord.\"DocumentId\" = t2.\"DocumentId\" AND ord.\"RevisionNumber\" = 1 LIMIT 1))")
+//											.arg("((SELECT \"OwnerId\" FROM \"Orders\" as ord WHERE ord.\"DocumentId\" = t2.\"DocumentId\" AND ord.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
+//								}
+//							}
+//						}
+
+//						if (!filter.isEmpty()){
+//							if (!filterQuery.isEmpty()){
+//								filterQuery += " AND ";
+//							}
+//						}
+
+//						filter = "(" + filter + ")";
+
+//						filterQuery += filter;
+//					}
+//				}
+//			}
 			else if (id == "OrderId" || id == "PurchaseId"){
 				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, id);
 				if (filterParamPtr.IsValid()){

@@ -28,10 +28,10 @@ namespace prolifedb
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
 QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
-			const QByteArray& objectId,
-			int offset,
-			int count,
-			const iprm::IParamsSet* paramsPtr) const
+		const QByteArray& objectId,
+		int offset,
+		int count,
+		const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
@@ -98,10 +98,10 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 					QString productName = dataMetaInfo->GetMetaInfo(imtlic::IProductInfo::MIT_PRODUCT_NAME).toString();
 
 					beforeSelectionQuery += QString(R"(INSERT INTO "ProductsTemp" ("DocumentId", "ProductId", "ProductName") VALUES('%1', '%2', '%3');)")
-								.arg(qPrintable(productCollectionId))
-								.arg(qPrintable(productId))
-								.arg(productName)
-								.toUtf8();
+							.arg(qPrintable(productCollectionId))
+							.arg(qPrintable(productId))
+							.arg(productName)
+							.toUtf8();
 				}
 			}
 		}
@@ -128,11 +128,11 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
-			const imtbase::IObjectCollection& collection,
-			const QByteArray& objectId,
-			const istd::IChangeable& object,
-			const imtbase::IOperationContext* operationContextPtr,
-			bool /*useExternDelegate*/) const
+		const imtbase::IObjectCollection& collection,
+		const QByteArray& objectId,
+		const istd::IChangeable& object,
+		const imtbase::IOperationContext* operationContextPtr,
+		bool /*useExternDelegate*/) const
 {
 	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
@@ -141,9 +141,9 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-			const imtbase::IObjectCollection& /*collection*/,
-			const QByteArray& objectId,
-			const imtbase::IOperationContext* /*operationContextPtr*/) const
+		const imtbase::IObjectCollection& /*collection*/,
+		const QByteArray& objectId,
+		const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	QByteArray retVal;
 
@@ -164,6 +164,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 				FROM
 				(
 					SELECT
+						(SELECT "Document"->'Groups' FROM "Accounts" as acc WHERE acc."DocumentId" = (SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId') AND acc."IsActive" = true) as "Groups",
 						"Id",
 						"DocumentId",
 						"Document",
@@ -253,6 +254,21 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 #else
 		QByteArrayList idsList = paramIds.toList();
 #endif
+
+		if (idsList.contains("Status")){
+			const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter("Status"));
+			if (textParamPtr == nullptr){
+				return false;
+			}
+
+			if (!filterQuery.isEmpty()){
+				filterQuery += " AND ";
+			}
+
+			QString value = textParamPtr->GetText();
+			filterQuery += QString("\"Document\"->>'Status' = '%1'").arg(value);
+		}
+
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
 
@@ -296,59 +312,56 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				}
 				continue;
 			}
-			else if (key == "Orders"){
-				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(key));
-				if (selectionPtr != nullptr){
-					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-					if (optionsListPtr != nullptr){
-						QString ordersFilterQuery;
-						if (optionsListPtr->GetOptionsCount() > 0){
-							ordersFilterQuery += "(";
+			else if (key == "Groups"){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
+				if (filterParamPtr.IsValid()){
+					QByteArray userId;
+					iprm::TParamsPtr<iprm::ITextParam> userParamPtr(filterParamPtr.GetPtr(), "UserParam");
+					if (userParamPtr.IsValid()){
+						userId = userParamPtr->GetText().toUtf8();
+					}
+
+					iprm::TParamsPtr<iprm::ITextParam> textParamPtr(filterParamPtr.GetPtr(), "GroupParam");
+					QString groupFilter;
+
+					if (textParamPtr.IsValid()){
+						QByteArray groups = textParamPtr->GetText().toUtf8();
+						QByteArrayList groupIds;
+						if (!groups.isEmpty()){
+							groupIds = groups.split(';');
 						}
 
-						for (int j = 0; j < optionsListPtr->GetOptionsCount(); j++){
-							if (j > 0){
-								ordersFilterQuery += " OR ";
+						QString ownerSubquery = QString(R"((SELECT dev."OwnerId" FROM "Devices" as dev WHERE dev."DocumentId" = t2."DocumentId" AND dev."RevisionNumber" = 1 LIMIT 1))");
+
+						if (!groupIds.isEmpty()){
+							QString array = "array[";
+
+							for (int i = 0; i < groupIds.size(); i++){
+								if (i > 0){
+									array += ",";
+								}
+
+								array += "'" + groupIds[i] + "'";
 							}
-							QByteArray optionId = optionsListPtr->GetOptionId(j);
-							QString optionName = optionsListPtr->GetOptionName(j);
 
-							if (!optionName.isEmpty()){
-								ordersFilterQuery += QString("\"Document\"->>'OrderId' = '%1'").arg(qPrintable(optionName));
+							array += "]";
+
+							QString groupsQuery = QString(R"((SELECT "Groups" FROM "UsersTemp" WHERE "UserId" = %1))").arg(ownerSubquery);
+							groupFilter += QString(R"((t2."Groups" ?| %1) OR (t2."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
+						}
+						else{
+							groupFilter += QString(R"(%1 = '%2')").arg(ownerSubquery).arg(userId);
+						}
+
+						if (!groupFilter.isEmpty()){
+							if (!filterQuery.isEmpty()){
+								filterQuery += " AND ";
 							}
-							else{
-								ordersFilterQuery += QString("(\"Document\"->>'OrderId' = '' AND ( ( SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3 ) )")
-										.arg(qPrintable(optionId))
-										.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1))")
-										.arg("((SELECT \"OwnerId\" FROM \"Devices\" as dev WHERE dev.\"DocumentId\" = t2.\"DocumentId\" AND dev.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
-							}
+
+							filterQuery += "(" + groupFilter + ")";
 						}
-
-						if (!ordersFilterQuery.isEmpty()){
-							ordersFilterQuery += ')';
-						}
-
-
-						if (!filterQuery.isEmpty()){
-							filterQuery += " AND ";
-						}
-
-						filterQuery += ordersFilterQuery;
 					}
 				}
-			}
-			else if (key == "Status"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
-				if (textParamPtr == nullptr){
-					return false;
-				}
-
-				if (!filterQuery.isEmpty()){
-					filterQuery += " AND ";
-				}
-
-				QString value = textParamPtr->GetText();
-				filterQuery += QString("\"Document\"->>'%1' = '%2'").arg(qPrintable(key)).arg(value);
 			}
 			else if (key == "MacAddress" || key == "SerialNumber"){
 				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
@@ -375,9 +388,9 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 			}
 		}
 
-		if (!filterQuery.isEmpty()){
-			filterQuery = '(' + filterQuery + ')';
-		}
+//		if (!filterQuery.isEmpty()){
+//			filterQuery = '(' + filterQuery + ')';
+//		}
 	}
 
 	return true;
@@ -385,8 +398,8 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
-			const imtbase::ICollectionFilter& collectionFilter,
-			QString& textFilterQuery) const
+		const imtbase::ICollectionFilter& collectionFilter,
+		QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

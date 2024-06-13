@@ -29,16 +29,24 @@ bool CAccountDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSe
 				if (selectionPtr != nullptr){
 					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
 					if (optionsListPtr != nullptr){
-						for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-							if (i > 0){
-								filterQuery += " OR ";
+						QString groupsQuery;
+
+						int optionCount = optionsListPtr->GetOptionsCount();
+						if (optionCount == 0){
+							groupsQuery = QString("\"Document\"->'Groups' = '[]'");
+						}
+						else {
+							for (int i = 0; i < optionCount; i++){
+								if (i > 0){
+									groupsQuery += " OR ";
+								}
+								QByteArray groupId = optionsListPtr->GetOptionId(i);
+								groupsQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupId));
 							}
-							QByteArray groupId = optionsListPtr->GetOptionId(i);
-							filterQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupId));
 						}
 
-						if (!filterQuery.isEmpty()){
-							filterQuery = '(' + filterQuery + ')';
+						if (!groupsQuery.isEmpty()){
+							filterQuery = '(' + groupsQuery + ')';
 						}
 					}
 				}

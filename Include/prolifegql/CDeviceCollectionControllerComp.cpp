@@ -69,22 +69,14 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 		filterByGroup = false;
 	}
 
-	iprm::CParamsSet objectFilter;
-	iprm::CParamsSet licenseFilter;
-
-	iprm::CParamsSet accountFilter;
-	iprm::CParamsSet groups;
-	iprm::CParamsSet accountParams;
-	iprm::CParamsSet orderFilter;
-
-	iprm::COptionsManager optionsManager;
-	iprm::COptionsManager accountsOptionsManager;
-	iprm::COptionsManager ordersOptionsManager;
-
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
 	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
 	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
+
+	iprm::CParamsSet objectFilter;
+	iprm::CParamsSet composedFilter;
+	iprm::CTextParam userParam;
+	iprm::CTextParam groupParam;
 
 	if (filterByGroup){
 		// User group ID-s from GQL context user
@@ -94,42 +86,18 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 			userGroupIds = userInfoPtr->GetGroups();
 		}
 
-		for (const QByteArray& groupId : userGroupIds){
-			optionsManager.InsertOption("", groupId);
+		userParam.SetText(userId);
+
+		QByteArray groups;
+		if (!userGroupIds.isEmpty()){
+			groups = userGroupIds.join(';');
 		}
+		groupParam.SetText(groups);
 
-		if (optionsManager.GetOptionsCount() > 0){
-			groups.SetEditableParameter("Groups", &optionsManager);
-			accountFilter.SetEditableParameter("ObjectFilter", &groups);
+		composedFilter.SetEditableParameter("UserParam", &userParam);
+		composedFilter.SetEditableParameter("GroupParam", &groupParam);
 
-			imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-			for (const QByteArray& accountId : accountIds){
-				accountsOptionsManager.InsertOption("", accountId);
-			}
-
-			accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-			orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
-
-			imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
-			for (const QByteArray& orderId : ordersIds){
-				ordersOptionsManager.InsertOption(orderId, orderId);
-			}
-
-			if (ordersOptionsManager.GetOptionsCount() == 0){
-				ordersOptionsManager.InsertOption("", "");
-			}
-
-			if (!userId.isEmpty()){
-				ordersOptionsManager.InsertOption("", userGroupIds.join(';'));
-			}
-
-			if (ordersOptionsManager.GetOptionsCount() > 0){
-				objectFilter.SetEditableParameter("Orders", &ordersOptionsManager);
-			}
-		}
-		else{
-			return rootModelPtr.PopPtr();
-		}
+		objectFilter.SetEditableParameter("Groups", &composedFilter);
 	}
 
 	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
@@ -230,7 +198,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 
 			filterParams.SetEditableParameter("Filter", &m_filter);
 			filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
-			filterParams.SetEditableParameter("LicenseFilter", &licenseFilter);
 
 			this->SetAdditionalFilters(gqlRequest, *viewParamsGql, &filterParams);
 		}
@@ -294,8 +261,8 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
 
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
-			const imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_bindingCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("No collection component was set");
@@ -365,11 +332,11 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 
 
 bool CDeviceCollectionControllerComp::SetupGqlItem(
-			const imtgql::CGqlRequest& gqlRequest,
-			imtbase::CTreeItemModel& model,
-			int itemIndex,
-			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		imtbase::CTreeItemModel& model,
+		int itemIndex,
+		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+		QString& errorMessage) const
 {
 	bool retVal = true;
 

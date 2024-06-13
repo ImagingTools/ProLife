@@ -159,12 +159,7 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					elementInformation = objectCollectionIterator->GetElementInfo("Customer").toByteArray();
 				}
 				else if (informationId == "OrderUuid"){
-					if (m_orderCollectionCompPtr.IsValid() && !orderUuid.isEmpty()){
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_orderCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-							elementInformation = orderUuid;
-						}
-					}
+					elementInformation = orderUuid;
 				}
 				else if (informationId == "HardwareUuid"){
 					elementInformation = hardwareUuid;
@@ -306,47 +301,22 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		iprm::CParamsSet accountFilter;
+		istd::TDelPtr<iprm::CTextParam> userParamPtr(new iprm::CTextParam());
+		userParamPtr->SetText(userId);
 
-		iprm::CParamsSet groupsObjectFilter;
-		iprm::COptionsManager groupsOptionsManager;
-
-		for (const QByteArray& groupId : userGroupIds){
-			groupsOptionsManager.InsertOption("", groupId);
+		istd::TDelPtr<iprm::CTextParam> groupParamPtr(new iprm::CTextParam());
+		QByteArray groups;
+		if (!userGroupIds.isEmpty()){
+			groups = userGroupIds.join(';');
 		}
+		groupParamPtr->SetText(groups);
 
-		groupsObjectFilter.SetEditableParameter("Groups", &groupsOptionsManager);
-		accountFilter.SetEditableParameter("ObjectFilter", &groupsObjectFilter);
+		istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
 
-		iprm::COptionsManager accountsOptionsManager;
-		imtbase::ICollectionInfo::Ids accountIds = m_accountCollectionCompPtr->GetElementIds(0, -1, &accountFilter);
-		for (const QByteArray& accountId : accountIds){
-			accountsOptionsManager.InsertOption("", accountId);
-		}
+		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr.PopPtr());
+		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr.PopPtr());
 
-		istd::TDelPtr<iprm::COptionsManager> ordersOptionsManagerPtr;
-		ordersOptionsManagerPtr.SetPtr(new iprm::COptionsManager());
-
-		iprm::CParamsSet orderFilter;
-
-		iprm::CParamsSet accountParams;
-		accountParams.SetEditableParameter("OrderCustomers", &accountsOptionsManager);
-		orderFilter.SetEditableParameter("ObjectFilter", &accountParams);
-
-		imtbase::ICollectionInfo::Ids ordersIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &orderFilter);
-		for (const QByteArray& orderId : ordersIds){
-			ordersOptionsManagerPtr->InsertOption(orderId, orderId);
-		}
-
-//		if (!userId.isEmpty()){
-//			ordersOptionsManagerPtr->InsertOption("", userId);
-//		}
-
-		if (!userId.isEmpty()){
-			ordersOptionsManagerPtr->InsertOption("", userGroupIds.join(';'));
-		}
-
-		filterParams.SetEditableParameter("Orders", ordersOptionsManagerPtr.PopPtr());
+		filterParams.SetEditableParameter("Groups", paramsSetPtr.PopPtr());
 	}
 
 	if (objectFilterModel.ContainsKey("BindingFilter")){

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5222" Description="ACF"/>
+            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="Authorization" X="398" Y="502" Note=""/>
+        <Element ComponentName="DatabaseEngine" X="300" Y="275" Note=""/>
+        <Element ComponentName="LicenseManagement" X="800" Y="500" Note=""/>
+        <Element ComponentName="ProLifeHandlers" X="775" Y="275" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="Authorization">
+            <PositionMap>
+                <Element ComponentName="Role" X="500" Y="450" Note=""/>
+                <Element ComponentName="RoleCollectionAdapter" X="200" Y="525" Note=""/>
+                <Element ComponentName="RoleDocumentSqlRepository" X="300" Y="100" Note=""/>
+                <Element ComponentName="UserGroupSqlRepository" X="800" Y="525" Note=""/>
+                <Element ComponentName="UserSqlRepository" X="875" Y="325" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="LicenseManagement">
+            <PositionMap>
+                <Element ComponentName="FeatureSqlRepository" X="350" Y="350" Note=""/>
+                <Element ComponentName="LicenseSqlRepository" X="900" Y="350" Note=""/>
+                <Element ComponentName="ProductRepository" X="600" Y="350" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>
