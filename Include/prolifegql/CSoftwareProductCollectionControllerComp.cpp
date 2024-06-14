@@ -1,7 +1,7 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
 
 
-// Acf includes
+// ACF includes
 #include <iprm/CTextParam.h>
 #include <iprm/CIdParam.h>
 
@@ -17,19 +17,6 @@
 
 namespace prolifegql
 {
-
-
-imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
-{
-	imtbase::CTreeItemModel* retVal = BaseClass::ListObjects(gqlRequest, errorMessage);
-	if (retVal == nullptr){
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	return retVal;
-}
 
 
 imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(

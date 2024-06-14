@@ -1,6 +1,9 @@
 #include <prolifegql/CCustomerCollectionControllerComp.h>
 
 
+// ACF includes
+#include <iprm/CTextParam.h>
+
 // ImtCore includes
 #include <imtbase/imtbase.h>
 
@@ -17,8 +20,8 @@ namespace prolifegql
 // reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
 imtbase::CTreeItemModel* CCustomerCollectionControllerComp::GetMetaInfo(
-			const imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
+		const imtgql::CGqlRequest& gqlRequest,
+		QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_translationManagerCompPtr.IsValid()){
 		errorMessage = QString("Internal error").toUtf8();
@@ -109,11 +112,11 @@ imtbase::CTreeItemModel* CCustomerCollectionControllerComp::GetMetaInfo(
 
 
 bool CCustomerCollectionControllerComp::SetupGqlItem(
-			const imtgql::CGqlRequest& gqlRequest,
-			imtbase::CTreeItemModel& model,
-			int itemIndex,
-			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-			QString& /*errorMessage*/) const
+		const imtgql::CGqlRequest& gqlRequest,
+		imtbase::CTreeItemModel& model,
+		int itemIndex,
+		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+		QString& /*errorMessage*/) const
 {
 	if (objectCollectionIterator == nullptr){
 		return false;
@@ -179,6 +182,65 @@ bool CCustomerCollectionControllerComp::SetupGqlItem(
 	}
 
 	return false;
+}
+
+
+void CCustomerCollectionControllerComp::SetObjectFilter(
+		const imtgql::CGqlRequest& gqlRequest,
+		const imtbase::CTreeItemModel& objectFilterModel,
+		iprm::CParamsSet& filterParams) const
+{
+	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
+
+	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr){
+		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
+
+		return;
+	}
+
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr){
+		SendErrorMessage(0, QString("Unable to create an object filter. Error: user from GraphQL is invalid."), "CSoftwareProductCollectionControllerComp");
+
+		return;
+	}
+
+	bool filterByGroup = true;
+
+	QByteArray userId = userInfoPtr->GetId();
+	QByteArrayList userGroupIds = userInfoPtr->GetGroups();
+	QByteArrayList userPermissions = userInfoPtr->GetPermissions();
+
+	if (m_checkPermissionCompPtr.IsValid()){
+		QByteArrayList permissions;
+		permissions << *m_permissionIdAttrPtr;
+
+		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
+	}
+
+	if (userInfoPtr->IsAdmin()){
+		filterByGroup = false;
+	}
+
+	if (filterByGroup){
+		istd::TDelPtr<iprm::CTextParam> userParamPtr(new iprm::CTextParam());
+		userParamPtr->SetText(userId);
+
+		istd::TDelPtr<iprm::CTextParam> groupParamPtr(new iprm::CTextParam());
+		QByteArray groups;
+		if (!userGroupIds.isEmpty()){
+			groups = userGroupIds.join(';');
+		}
+		groupParamPtr->SetText(groups);
+
+		istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
+
+		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr.PopPtr());
+		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr.PopPtr());
+
+		filterParams.SetEditableParameter("Groups", paramsSetPtr.PopPtr());
+	}
 }
 
 

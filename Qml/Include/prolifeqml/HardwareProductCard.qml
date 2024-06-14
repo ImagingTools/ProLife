@@ -11,8 +11,6 @@ Rectangle {
     color: Style.baseColor;
 
     property bool isNewDevice: false//model.IsNewDevice ? model.IsNewDevice : false;
-    property bool notExists: model.DeviceNotExists ? model.DeviceNotExists : false;
-    property bool checker: hardwareCard.productCardRoot != null && hardwareCard.notExists;
     property bool readOnly: false;
     property bool commmandsVisible: false;
 
@@ -35,13 +33,6 @@ Rectangle {
 
     Component.onDestruction: {
         Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
-    }
-
-    onCheckerChanged: {
-        if (checker){
-            let message = qsTr("Sensor detection error. Please select a new sensor.");
-            hardwareCard.productCardRoot.showErrorMessage(message);
-        }
     }
 
     function onLocalizationChanged(language){

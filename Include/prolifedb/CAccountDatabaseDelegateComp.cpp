@@ -3,6 +3,8 @@
 
 // ACF includes
 #include <iprm/ISelectionParam.h>
+#include <iprm/ITextParam.h>
+#include <iprm/TParamsPtr.h>
 
 
 namespace prolifedb
@@ -25,24 +27,39 @@ bool CAccountDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSe
 #endif
 		for (const QByteArray& id : ids){
 			if (id == "Groups"){
-				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
-				if (selectionPtr != nullptr){
-					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-					if (optionsListPtr != nullptr){
+				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, "Groups");
+				if (filterParamPtr.IsValid()){
+					QByteArray userId;
+					iprm::TParamsPtr<iprm::ITextParam> userParamPtr(filterParamPtr.GetPtr(), "UserParam");
+					if (userParamPtr.IsValid()){
+						userId = userParamPtr->GetText().toUtf8();
+					}
+
+					iprm::TParamsPtr<iprm::ITextParam> textParamPtr(filterParamPtr.GetPtr(), "GroupParam");
+					if (textParamPtr.IsValid()){
+						QByteArray groups = textParamPtr->GetText().toUtf8();
+						QByteArrayList groupIds;
+						if (!groups.isEmpty()){
+							groupIds = groups.split(';');
+						}
+
 						QString groupsQuery;
 
-						int optionCount = optionsListPtr->GetOptionsCount();
-						if (optionCount == 0){
+						if (groupIds.isEmpty()){
 							groupsQuery = QString("\"Document\"->'Groups' = '[]'");
 						}
 						else {
-							for (int i = 0; i < optionCount; i++){
+							for (int i = 0; i < groupIds.size(); i++){
 								if (i > 0){
 									groupsQuery += " OR ";
 								}
-								QByteArray groupId = optionsListPtr->GetOptionId(i);
-								groupsQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupId));
+
+								groupsQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupIds[i]));
 							}
+
+							QString ownerSubquery = QString(R"((SELECT acc."OwnerId" FROM "Accounts" as acc WHERE acc."DocumentId" = t2."DocumentId" AND acc."RevisionNumber" = 1 LIMIT 1))");
+
+							groupsQuery += QString(R"( OR (%1 = '%2'))").arg(ownerSubquery).arg(userId);
 						}
 
 						if (!groupsQuery.isEmpty()){

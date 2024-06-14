@@ -410,6 +410,12 @@
                             </Dependencies>
                             <SubFeatures/>
                         </Object>
+                        <Object FeatureId="ViewAllAccounts" FeatureName="View All Accounts" FeatureDescription="" Optional="false">
+                            <Dependencies>
+                                <Dependency>ViewAccounts</Dependency>
+                            </Dependencies>
+                            <SubFeatures/>
+                        </Object>
                     </SubFeatures>
                 </Data>
             </Object>

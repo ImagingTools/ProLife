@@ -465,6 +465,8 @@ ViewBase {
                             configurationCB.model = 0;
                         }
 
+                        configurationCB.currentIndex = -1;
+
                         deviceEditorContainer.doUpdateModel();
                     }
 
@@ -483,7 +485,9 @@ ViewBase {
                     KeyNavigation.backtab: productCB;
 
                     onCurrentIndexChanged: {
-                        deviceEditorContainer.doUpdateModel();
+                        if (configurationCB.currentIndex >= 0){
+                            deviceEditorContainer.doUpdateModel();
+                        }
                     }
                 }
 

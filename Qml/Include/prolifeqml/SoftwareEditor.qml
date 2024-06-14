@@ -106,8 +106,8 @@ ViewBase {
         }
 
         let parameters = {"Id": "SoftwareProducts"};
-
         let inUse = root.model.getData("InUse");
+
         if (inUse){
             root.readOnly = true;
             parameters["AlertPanelComp"] = alertComp
@@ -129,6 +129,7 @@ ViewBase {
 
         serialNumberInput.readOnly = readOnly;
         expirationEditor.readOnly = readOnly;
+        unlimitedSwitch.readOnly = readOnly;
     }
 
     function updateGui(){
@@ -183,6 +184,7 @@ ViewBase {
     }
 
     function updateModel(){
+        console.log("updateModel", model.toJson())
         root.model.setData("Project", projectInput.text);
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
@@ -207,6 +209,7 @@ ViewBase {
         }
 
         group2.updateModel();
+        console.log("end updateModel", model.toJson())
     }
 
     function getProductLicensesModel(){
@@ -456,6 +459,8 @@ ViewBase {
                             root.productLicensesModel = 0;
                         }
 
+                        licenseCB.currentIndex = -1;
+
                         root.doUpdateModel();
                     }
                 }
@@ -472,7 +477,9 @@ ViewBase {
                     KeyNavigation.backtab: productCB;
 
                     onCurrentIndexChanged: {
-                        root.doUpdateModel();
+                        if (currentIndex >= 0){
+                            root.doUpdateModel();
+                        }
                     }
                 }
 
