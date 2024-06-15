@@ -25,7 +25,7 @@ ViewBase {
     property bool isNewSoftware: switchNewLicense.checked;
     property int productIndex: -1;
 
-    property bool isNewProduct: root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
+    property bool isNewProduct: root.model && root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -337,9 +337,9 @@ ViewBase {
 
                 Component.onCompleted: {
                     if (!root.readOnly){
-                        let ok = PermissionsController.checkPermission("ChangeLicense");
+                        let ok = PermissionsController.checkPermission("ChangeProductLicenses");
 
-                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
                         if (canEditOrder){
                             ok = true;
                         }
@@ -389,12 +389,8 @@ ViewBase {
 
                 Component.onCompleted: {
                     if (!root.readOnly){
-                        let ok = PermissionsController.checkPermission("ChangeLicense");
-                        if (!ok){
-                            ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-                        }
-
-                        let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                        let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
                         if (canEditOrder){
                             ok = true;
                         }
@@ -494,8 +490,8 @@ ViewBase {
 
                             Component.onCompleted: {
                                 if (!root.readOnly){
-                                    let ok = PermissionsController.checkPermission("ChangeLicense");
-                                    let canEditOrder = PermissionsController.checkPermission("ChangeOrder");
+                                    let ok = PermissionsController.checkPermission("ChangeExpiration");
+                                    let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
                                     if (canEditOrder){
                                         ok = true;
                                     }

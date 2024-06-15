@@ -25,10 +25,6 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
-    model: TreeItemModel{
-        id: model;
-    }
-
     commandsDelegateComp: Component {ViewCommandsDelegateBase {
             view: deviceEditorContainer;
             onCommandActivated: {
@@ -79,10 +75,13 @@ ViewBase {
     }
 
     function checkPermissions(){
+        console.log("checkPermissions");
         let deviceId = "";
         if (model.containsKey("Id")){
             deviceId = model.getData("Id");
         }
+
+        console.log("deviceId", deviceId);
 
         let canAddSensor = PermissionsController.checkPermission("AddSensor");
         if (deviceId === "" && canAddSensor){
@@ -98,6 +97,7 @@ ViewBase {
         else{
             let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
             descriptionInput.readOnly = !canChangeDescription;
+            console.log("canChangeDescription", canChangeDescription);
 
             let canChangeSerialNumber = PermissionsController.checkPermission("ChangeSerialNumberForSensor");
             serialNumberInput.readOnly = !canChangeSerialNumber;
