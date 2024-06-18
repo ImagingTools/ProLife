@@ -393,7 +393,7 @@ ViewBase {
                     Text {
                         id: errorInstanceId;
 
-                        text: qsTr("Enter a 5-digit or 10-digit number");
+                        text: qsTr("Enter a 5-digit or 8-digit number");
 
                         color: Style.errorTextColor;
                         font.family: Style.fontFamily;
@@ -408,7 +408,7 @@ ViewBase {
                     placeHolderText: qsTr("Enter the delivery-ID");
 
                     readOnly: orderEditorContainer.readOnly;
-                    maximumLength: 10;
+                    maximumLength: 8;
 
                     onEditingFinished: {
                         orderEditorContainer.doUpdateModel();
@@ -423,7 +423,7 @@ ViewBase {
                         let len = instanceIdInput.text.length;
 
                         let ok1 = instanceIdInput.test("\\d{5}", instanceIdInput.text) && len === 5;
-                        let ok2 = instanceIdInput.test("\\d{10}", instanceIdInput.text) && len === 10;
+                        let ok2 = instanceIdInput.test("\\d{8}", instanceIdInput.text) && len === 8;
 
                         instanceIdInput.bottomComp = ok1 || ok2 ? undefined : errorComp;
                     }
@@ -548,6 +548,7 @@ ViewBase {
                     onFinished: {
                         if (buttonId == Enums.ok){
                             orderEditorContainer.model.setUpdateEnabled(false);
+//                            orderEditorContainer.model.beginChanges();
 
                             let productModel = productsDialog.bodyItem.productModel;
                             let actualOrderProducts = orderEditorContainer.model.getData("OrderProducts");
@@ -569,6 +570,7 @@ ViewBase {
                                 }
                             }
 
+//                            orderEditorContainer.model.endChanges();
                             orderEditorContainer.model.setUpdateEnabled(true);
                             orderEditorContainer.model.dataChanged(null, null);
                         }

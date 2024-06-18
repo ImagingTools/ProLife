@@ -26,7 +26,7 @@ DocumentValidator {
         }
 
         let ok1 = root.test("\\d{5}", orderId) && orderId.length === 5;
-        let ok2 = root.test("\\d{10}", orderId) && orderId.length === 10;
+        let ok2 = root.test("\\d{8}", orderId) && orderId.length === 8;
 
         if (!ok1 && !ok2){
             data.message = qsTr("Delivery-ID invalid")

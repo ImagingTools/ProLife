@@ -50,7 +50,7 @@ DocumentValidator {
         }
 
         if (serialNumber === ""){
-            data.message = qsTr("Please enter the serial number");
+            data.message = qsTr("Please enter the software-ID");
 
             return false;
         }
