@@ -25,46 +25,6 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
-    commandsDelegateComp: Component {ViewCommandsDelegateBase {
-            view: deviceEditorContainer;
-            onCommandActivated: {
-                if (commandId == "Bind"){
-                    let hardwareUuid = "";
-                    if (deviceEditorContainer.model.containsKey("Id")){
-                        hardwareUuid = deviceEditorContainer.model.getData("Id")
-                    }
-
-                    if (hardwareUuid === ""){
-                        ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Warning message")});
-
-                        return;
-                    }
-
-                    let macAddress = "";
-
-                    if (deviceEditorContainer.model.containsKey("MacAddress")){
-                        macAddress = deviceEditorContainer.model.getData("MacAddress");
-                    }
-
-                    if (!macAddressValidator.isValid(macAddress)){
-                        ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
-
-                        return;
-                    }
-
-                    let title = qsTr("Add license to sensor '%1'");
-                    title = title.replace("%1", macAddress);
-
-                    ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareUuid, "title": title});
-                }
-            }
-        }
-    }
-
-    MacAddressValidator {
-        id: macAddressValidator;
-    }
-
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
         CachedProductCollection.updateModel();
@@ -75,13 +35,10 @@ ViewBase {
     }
 
     function checkPermissions(){
-        console.log("checkPermissions");
         let deviceId = "";
         if (model.containsKey("Id")){
             deviceId = model.getData("Id");
         }
-
-        console.log("deviceId", deviceId);
 
         let canAddSensor = PermissionsController.checkPermission("AddSensor");
         if (deviceId === "" && canAddSensor){
@@ -135,23 +92,6 @@ ViewBase {
                 commandsController.setCommandVisible("Redo", ok);
                 commandsController.setCommandVisible("Save", ok);
             }
-        }
-    }
-
-    Component {
-        id: saveDialogComp;
-
-        ErrorDialog {
-            width: 300;
-
-            title: qsTr("Warning message");
-        }
-    }
-
-    Component {
-        id: productPairEditorDialog;
-
-        HardwareProductBindingDialog {
         }
     }
 

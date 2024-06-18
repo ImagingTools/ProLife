@@ -547,8 +547,7 @@ ViewBase {
 
                     onFinished: {
                         if (buttonId == Enums.ok){
-                            orderEditorContainer.model.setUpdateEnabled(false);
-//                            orderEditorContainer.model.beginChanges();
+                            orderEditorContainer.model.beginChanges();
 
                             let productModel = productsDialog.bodyItem.productModel;
                             let actualOrderProducts = orderEditorContainer.model.getData("OrderProducts");
@@ -570,9 +569,7 @@ ViewBase {
                                 }
                             }
 
-//                            orderEditorContainer.model.endChanges();
-                            orderEditorContainer.model.setUpdateEnabled(true);
-                            orderEditorContainer.model.dataChanged(null, null);
+                            orderEditorContainer.model.endChanges();
                         }
                     }
                 }
@@ -697,7 +694,9 @@ ViewBase {
                     if (orderEditorContainer.model.containsKey("OrderProducts")){
                         let orderProducts = orderEditorContainer.model.getTreeItemModel("OrderProducts")
                         if (orderProducts){
+                            orderEditorContainer.model.beginChanges();
                             orderProducts.removeItem(productsView.activeProductIndex);
+                            orderEditorContainer.model.endChanges();
                         }
                     }
                 }

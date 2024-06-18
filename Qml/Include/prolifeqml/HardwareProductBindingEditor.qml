@@ -26,7 +26,7 @@ Item {
     signal modelChanged();
 
     Component.onCompleted: {
-        bindingModel.dataChanged.connect(productEditor.modelChanged);
+        bindingModel.modelChanged.connect(productEditor.modelChanged);
 
         CachedProductCollection.updateModel();
     }
@@ -44,7 +44,7 @@ Item {
             productEditor.productId = productId;
         }
 
-        bindingModel.dataChanged.connect(productEditor.modelChanged);
+        bindingModel.modelChanged.connect(productEditor.modelChanged);
 
         updateGui();
     }

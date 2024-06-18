@@ -17,8 +17,8 @@ RemoteCollectionView {
     collectionFilter: DeviceCollectionFilter {}
 
     commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
-        collectionView: container;
-    }
+            collectionView: container;
+        }
     }
 
     visibleMetaInfo: true;
@@ -72,12 +72,97 @@ RemoteCollectionView {
         DeviceEditor {
             id: deviceEditor;
 
+            commandsDelegateComp: Component {ViewCommandsDelegateBase {
+                    view: deviceEditor;
+                    onCommandActivated: {
+                        if (commandId == "Bind"){
+                            let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+                            if (documentManager){
+                                let documentData = documentManager.getDocumentDataByView(deviceEditor);
+                                if (!documentData){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+                                    return;
+                                }
+
+                                let documentIndex = documentData.documentIndex;
+                                if (documentIndex < 0){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+                                    return;
+                                }
+
+                                let isDirty = documentData.isDirty;
+                                let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
+                                if (isNew || isDirty){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
+
+                                    return;
+                                }
+
+                                let documentModel = documentData.documentDataController.documentModel;
+                                if (!documentModel){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+                                    return;
+                                }
+
+                                let macAddress = "";
+
+                                if (documentModel.containsKey("MacAddress")){
+                                    macAddress = documentModel.getData("MacAddress");
+                                }
+
+                                if (!macAddressValidator.isValid(macAddress)){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
+
+                                    return;
+                                }
+
+                                let title = qsTr("Add license to sensor '%1'");
+                                title = title.replace("%1", macAddress);
+
+                                let documentId = documentData.documentId;
+                                if (documentId === ""){
+                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+                                    return;
+                                }
+
+                                ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
+                            }
+                        }
+                    }
+                }
+            }
+
             commandsControllerComp:
                 Component {CommandsRepresentationProvider {
-                commandId: "Device";
-                uuid: deviceEditor.viewId;
-            }}
+                    commandId: "Device";
+                    uuid: deviceEditor.viewId;
+                }}
         }
+    }
+
+    Component {
+        id: saveDialogComp;
+
+        ErrorDialog {
+            width: 300;
+
+            title: qsTr("Warning message");
+        }
+    }
+
+    Component {
+        id: productPairEditorDialog;
+
+        HardwareProductBindingDialog {
+        }
+    }
+
+    MacAddressValidator {
+        id: macAddressValidator;
     }
 
     MetaInfoProvider {
