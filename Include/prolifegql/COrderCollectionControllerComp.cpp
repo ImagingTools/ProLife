@@ -223,9 +223,6 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::ListObjects(
 
 	iprm::CParamsSet objectFilter;
 
-	iprm::CParamsSet groups;
-	iprm::CParamsSet orderParams;
-
 	iprm::CTextParam customerParam;
 	if (!customerUuid.isEmpty()){
 		customerParam.SetText(customerUuid);

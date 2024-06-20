@@ -288,60 +288,60 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		istd::TDelPtr<iprm::CTextParam> userParamPtr(new iprm::CTextParam());
+		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
 		userParamPtr->SetText(userId);
 
-		istd::TDelPtr<iprm::CTextParam> groupParamPtr(new iprm::CTextParam());
+		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
 		QByteArray groups;
 		if (!userGroupIds.isEmpty()){
 			groups = userGroupIds.join(';');
 		}
 		groupParamPtr->SetText(groups);
 
-		istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
+		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
 
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr.PopPtr());
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr.PopPtr());
+		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
+		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
 
-		filterParams.SetEditableParameter("Groups", paramsSetPtr.PopPtr());
+		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
 	}
 
 	if (objectFilterModel.ContainsKey("BindingFilter")){
 		imtbase::CTreeItemModel* bindingFilterPtr = objectFilterModel.GetTreeItemModel("BindingFilter");
 		if (bindingFilterPtr != nullptr){
-			istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
+			iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
 			QStringList keys = bindingFilterPtr->GetKeys(0);
 
 			for (const QString& key : keys){
 				QByteArray value = bindingFilterPtr->GetData(key.toUtf8()).toByteArray();
 
-				istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+				iprm::CTextParam* textParamPtr = new iprm::CTextParam();
 				textParamPtr->SetText(value);
 
-				paramsSetPtr->SetEditableParameter(key.toUtf8(), textParamPtr.PopPtr());
+				paramsSetPtr->SetEditableParameter(key.toUtf8(), textParamPtr, true);
 			}
 
-			filterParams.SetEditableParameter("BindingFilter", paramsSetPtr.PopPtr());
+			filterParams.SetEditableParameter("BindingFilter", paramsSetPtr, true);
 		}
 	}
 
 	if (objectFilterModel.ContainsKey("LicenseFilter")){
 		QString licenseFilter = objectFilterModel.GetData("LicenseFilter").toString();
 		if (!licenseFilter.isEmpty()){
-			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			iprm::CTextParam* textParamPtr = new iprm::CTextParam();
 			textParamPtr->SetText(licenseFilter);
 
-			filterParams.SetEditableParameter("LicenseFilter", textParamPtr.PopPtr());
+			filterParams.SetEditableParameter("LicenseFilter", textParamPtr, true);
 		}
 	}
 
 	if (objectFilterModel.ContainsKey("AccountFilter")){
 		QString filter = objectFilterModel.GetData("AccountFilter").toString();
 		if (!filter.isEmpty()){
-			istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
+			iprm::CTextParam* textParamPtr = new iprm::CTextParam();
 			textParamPtr->SetText(filter);
 
-			filterParams.SetEditableParameter("CustomerUuid", textParamPtr.PopPtr());
+			filterParams.SetEditableParameter("CustomerUuid", textParamPtr, true);
 		}
 	}
 }

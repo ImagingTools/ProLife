@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -261,6 +261,7 @@
                                 <Value>UserAdd</Value>
                                 <Value>UserUpdate</Value>
                                 <Value>UsersRemove</Value>
+                                <Value>UsersRename</Value>
                                 <Value>UsersCommands</Value>
                                 <Value>UserCommands</Value>
                                 <Value>RolesList</Value>
@@ -281,6 +282,7 @@
                                 <Value>GroupAdd</Value>
                                 <Value>GroupUpdate</Value>
                                 <Value>GroupsRemove</Value>
+                                <Value>GroupsRename</Value>
                                 <Value>GroupsCommands</Value>
                                 <Value>GroupCommands</Value>
                                 <Value>RolesMetaInfo</Value>
