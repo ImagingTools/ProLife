@@ -40,7 +40,7 @@ include(${ACFDIR}/Config/CMake/AcfStd.cmake)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Include/prolifeqml/Qml")
+	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
 	set(files  \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
 
 	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
