@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -41,10 +41,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -66,6 +62,10 @@
                 <Element ComponentName="Remove" X="75" Y="375" Note=""/>
                 <Element ComponentName="RemovePermissions" X="1025" Y="525" Note=""/>
             </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

@@ -251,8 +251,6 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 			const imtbase::CTreeItemModel& objectFilterModel,
 			iprm::CParamsSet& filterParams) const
 {
-	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
-
 	if (!m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
 		return;
 	}
@@ -315,8 +313,8 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 			for (const QString& key : keys){
 				QByteArray value = bindingFilterPtr->GetData(key.toUtf8()).toByteArray();
 
-				iprm::CTextParam* textParamPtr = new iprm::CTextParam();
-				textParamPtr->SetText(value);
+				iprm::CIdParam* textParamPtr = new iprm::CIdParam();
+				textParamPtr->SetId(value);
 
 				paramsSetPtr->SetEditableParameter(key.toUtf8(), textParamPtr, true);
 			}
@@ -328,18 +326,18 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 	if (objectFilterModel.ContainsKey("LicenseFilter")){
 		QString licenseFilter = objectFilterModel.GetData("LicenseFilter").toString();
 		if (!licenseFilter.isEmpty()){
-			iprm::CTextParam* textParamPtr = new iprm::CTextParam();
-			textParamPtr->SetText(licenseFilter);
+			iprm::CIdParam* textParamPtr = new iprm::CIdParam();
+			textParamPtr->SetId(licenseFilter.toUtf8());
 
 			filterParams.SetEditableParameter("LicenseFilter", textParamPtr, true);
 		}
 	}
 
-	if (objectFilterModel.ContainsKey("AccountFilter")){
-		QString filter = objectFilterModel.GetData("AccountFilter").toString();
+	if (objectFilterModel.ContainsKey("CustomerUuid")){
+		QString filter = objectFilterModel.GetData("CustomerUuid").toString();
 		if (!filter.isEmpty()){
-			iprm::CTextParam* textParamPtr = new iprm::CTextParam();
-			textParamPtr->SetText(filter);
+			iprm::CIdParam* textParamPtr = new iprm::CIdParam();
+			textParamPtr->SetId(filter.toUtf8());
 
 			filterParams.SetEditableParameter("CustomerUuid", textParamPtr, true);
 		}

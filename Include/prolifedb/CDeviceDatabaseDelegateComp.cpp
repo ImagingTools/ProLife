@@ -4,6 +4,7 @@
 // ACF includes
 #include <iprm/TParamsPtr.h>
 #include <iprm/ITextParam.h>
+#include <iprm/IIdParam.h>
 #include <iprm/ISelectionParam.h>
 #include <iprm/IEnableableParam.h>
 
@@ -28,10 +29,10 @@ namespace prolifedb
 // reimplemented (imtdb::ISqlDatabaseObjectDelegate)
 
 QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
-		const QByteArray& objectId,
-		int offset,
-		int count,
-		const iprm::IParamsSet* paramsPtr) const
+			const QByteArray& objectId,
+			int offset,
+			int count,
+			const iprm::IParamsSet* paramsPtr) const
 {
 	if (!objectId.isEmpty()){
 		return QString("SELECT * FROM \"%1\" WHERE \"IsActive\" = true AND \"%2\" = '%3'")
@@ -128,11 +129,11 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
-		const imtbase::IObjectCollection& collection,
-		const QByteArray& objectId,
-		const istd::IChangeable& object,
-		const imtbase::IOperationContext* operationContextPtr,
-		bool /*useExternDelegate*/) const
+			const imtbase::IObjectCollection& collection,
+			const QByteArray& objectId,
+			const istd::IChangeable& object,
+			const imtbase::IOperationContext* operationContextPtr,
+			bool /*useExternDelegate*/) const
 {
 	QByteArray retVal = BaseClass::CreateUpdateObjectQuery(collection, objectId, object, operationContextPtr, false);
 
@@ -141,9 +142,9 @@ QByteArray CDeviceDatabaseDelegateComp::CreateUpdateObjectQuery(
 
 
 QByteArray CDeviceDatabaseDelegateComp::CreateDeleteObjectQuery(
-		const imtbase::IObjectCollection& /*collection*/,
-		const QByteArray& objectId,
-		const imtbase::IOperationContext* /*operationContextPtr*/) const
+			const imtbase::IObjectCollection& /*collection*/,
+			const QByteArray& objectId,
+			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	QByteArray retVal;
 
@@ -164,7 +165,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 				FROM
 				(
 					SELECT
-						(SELECT "Document"->'Groups' FROM "Accounts" as acc WHERE acc."DocumentId" = (SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId') AND acc."IsActive" = true) as "Groups",
+						(SELECT "Document"->'Groups' FROM "Accounts" as acc WHERE acc."DocumentId" = (SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = root."Document"->>'OrderId') AND acc."IsActive" = true) as "Groups",
 						"Id",
 						"DocumentId",
 						"Document",
@@ -172,21 +173,21 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						"Document"->>'OrderId' as "OrderUuid",
 						"Document"->>'DeviceType' as "ProductUuid",
 						"Document"->>'ConfigurationType' as "LicenseUuid",
-						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "LicenseName",
-						(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = t2."Document"->>'ConfigurationType') as "LicenseId",
-						(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = t2."Document"->>'DeviceType') as "DeviceType",
+						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->>'ConfigurationType') as "LicenseName",
+						(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->>'ConfigurationType') as "LicenseId",
+						(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = root."Document"->>'DeviceType') as "DeviceType",
 						"OwnerId",
 						"RevisionNumber",
 						"LastModified",
-						(SELECT "LastModified" FROM "Devices" as t1 WHERE "RevisionNumber" = 1 AND t2."DocumentId" = t1."DocumentId" LIMIT 1) as "Added",
-						(SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId') as "CustomerUuid",
-						(SELECT "Document"->>'Name' FROM "Accounts" as acc WHERE acc."IsActive" = true AND acc."DocumentId" = ((SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = t2."Document"->>'OrderId' LIMIT 1))) as "Customer",
-						(SELECT "Document"->>'OrderId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "OrderId",
-						(SELECT "Document"->>'PurchaseId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."Document"->>'OrderId') as "PurchaseOrderId",
-						(SELECT jsonb_array_length("Document"->'SoftwareIds')  FROM "BindingProducts" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = t2."DocumentId" ) as "SoftwareLinksCount",
+						(SELECT "LastModified" FROM "Devices" as t1 WHERE "RevisionNumber" = 1 AND root."DocumentId" = t1."DocumentId" LIMIT 1) as "Added",
+						(SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = root."Document"->>'OrderId') as "CustomerUuid",
+						(SELECT "Document"->>'Name' FROM "Accounts" as acc WHERE acc."IsActive" = true AND acc."DocumentId" = ((SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."IsActive" = true AND orders."DocumentId" = root."Document"->>'OrderId' LIMIT 1))) as "Customer",
+						(SELECT "Document"->>'OrderId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = root."Document"->>'OrderId') as "OrderId",
+						(SELECT "Document"->>'PurchaseId' FROM "Orders" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = root."Document"->>'OrderId') as "PurchaseOrderId",
+						(SELECT jsonb_array_length("Document"->'SoftwareIds')  FROM "BindingProducts" as t3 WHERE t3."IsActive" = true AND t3."DocumentId" = root."DocumentId" ) as "SoftwareLinksCount",
 						"IsActive"
-					FROM "Devices" as t2 WHERE "IsActive" = true
-				) as t2 WHERE "IsActive" = true )";
+					FROM "Devices" as root WHERE "IsActive" = true
+				) as root WHERE "IsActive" = true )";
 	return retVal;
 }
 
@@ -256,7 +257,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 #endif
 
 		if (idsList.contains("Status")){
-			const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter("Status"));
+			const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter("Status"));
 			if (textParamPtr == nullptr){
 				return false;
 			}
@@ -265,7 +266,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				filterQuery += " AND ";
 			}
 
-			QString value = textParamPtr->GetText();
+			QByteArray value = textParamPtr->GetId();
 			filterQuery += QString("\"Document\"->>'Status' = '%1'").arg(value);
 		}
 
@@ -273,26 +274,26 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 			QByteArray key = idsList[i];
 
 			if (key == "CustomerUuid"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QString value = textParamPtr->GetText();
+				QByteArray value = textParamPtr->GetId();
 
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
 				}
 
-				filterQuery += QString(R"((t2."CustomerUuid" = '%1'))").arg(value);
+				filterQuery += QString(R"((root."CustomerUuid" = '%1'))").arg(value);
 			}
 			else if (key == "LicenseStatus"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QString value = textParamPtr->GetText();
+				QString value = textParamPtr->GetId();
 
 				if (value == "None"){
 					continue;
@@ -302,7 +303,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += " AND ";
 				}
 
-				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = t2.\"DocumentId\" )";
+				QByteArray countLicenseSql = "(SELECT jsonb_array_length(\"Document\"->'SoftwareIds') FROM \"BindingProducts\" as t3  WHERE t3.\"IsActive\" = true AND t3.\"DocumentId\" = root.\"DocumentId\" )";
 
 				if (value == "WithoutLicense"){
 					filterQuery += "(" + countLicenseSql + " IS NULL OR " + countLicenseSql + " = 0)";
@@ -331,7 +332,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							groupIds = groups.split(';');
 						}
 
-						QString ownerSubquery = QString(R"((SELECT dev."OwnerId" FROM "Devices" as dev WHERE dev."DocumentId" = t2."DocumentId" AND dev."RevisionNumber" = 1 LIMIT 1))");
+						QString ownerSubquery = QString(R"((SELECT dev."OwnerId" FROM "Devices" as dev WHERE dev."DocumentId" = root."DocumentId" AND dev."RevisionNumber" = 1 LIMIT 1))");
 
 						if (!groupIds.isEmpty()){
 							QString array = "array[";
@@ -347,7 +348,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 							array += "]";
 
 							QString groupsQuery = QString(R"((SELECT "Groups" FROM "UsersTemp" WHERE "UserId" = %1))").arg(ownerSubquery);
-							groupFilter += QString(R"((t2."Groups" ?| %1) OR (t2."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
+							groupFilter += QString(R"((root."Groups" ?| %1) OR (root."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
 						}
 						else{
 							groupFilter += QString(R"(%1 = '%2')").arg(ownerSubquery).arg(userId);
@@ -387,10 +388,6 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				}
 			}
 		}
-
-//		if (!filterQuery.isEmpty()){
-//			filterQuery = '(' + filterQuery + ')';
-//		}
 	}
 
 	return true;
@@ -398,8 +395,8 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& textFilterQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){

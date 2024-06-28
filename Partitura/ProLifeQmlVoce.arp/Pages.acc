@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -538,10 +538,14 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewAccounts</Value>
-                                            <Value>EditAccount</Value>
                                             <Value>AddAccount</Value>
                                             <Value>RemoveAccount</Value>
-                                            <Value>ChangeAccount</Value>
+                                            <Value>ChangeCustomerId</Value>
+                                            <Value>ChangeAccountDescription</Value>
+                                            <Value>ChangeAccountName</Value>
+                                            <Value>ChangeAccountEmail</Value>
+                                            <Value>ChangeCompanyAddress</Value>
+                                            <Value>ChangeAccountGroups</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -585,10 +589,16 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewSensors</Value>
-                                            <Value>EditSensor</Value>
                                             <Value>AddSensor</Value>
                                             <Value>RemoveSensor</Value>
-                                            <Value>ChangeSensor</Value>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -608,6 +618,14 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewLicenses</Value>
+                                            <Value>ChangeProjectForLicense</Value>
+                                            <Value>ChangeProductForLicense</Value>
+                                            <Value>ChangeOrderForLicense</Value>
+                                            <Value>ChangeProductLicenses</Value>
+                                            <Value>ChangeExpiration</Value>
+                                            <Value>ChangeLicenseNumber</Value>
+                                            <Value>AddLicense</Value>
+                                            <Value>RemoveLicense</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -627,10 +645,14 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ViewOrders</Value>
-                                            <Value>EditOrder</Value>
                                             <Value>AddOrder</Value>
-                                            <Value>ChangeOrder</Value>
                                             <Value>RemoveOrder</Value>
+                                            <Value>ChangeDeliveryId</Value>
+                                            <Value>ChangePurchaseOrderId</Value>
+                                            <Value>ChangeDescriptionForOrder</Value>
+                                            <Value>ChangeCustomer</Value>
+                                            <Value>ChangeOrderStatus</Value>
+                                            <Value>ChangeOrderProducts</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

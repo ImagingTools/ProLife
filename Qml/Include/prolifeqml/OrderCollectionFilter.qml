@@ -6,12 +6,12 @@ CollectionFilter {
     id: root;
 
     function setAccountFilter(accountId){
-        let objectFilter = filterModel.getData("ObjectFilter");
-        if (!objectFilter){
-            objectFilter = filterModel.addTreeModel("ObjectFilter")
+        if (accountId === ""){
+            removeFilterById("CustomerUuid");
         }
-
-        objectFilter.setData("AccountFilter", accountId);
+        else{
+            addAdditionalFilter("CustomerUuid", accountId);
+        }
 
         filterChanged();
     }

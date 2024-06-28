@@ -20,8 +20,8 @@ namespace prolifegql
 // reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
 imtbase::CTreeItemModel* CCustomerCollectionControllerComp::GetMetaInfo(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_translationManagerCompPtr.IsValid()){
 		errorMessage = QString("Internal error").toUtf8();
@@ -186,9 +186,9 @@ bool CCustomerCollectionControllerComp::SetupGqlItem(
 
 
 void CCustomerCollectionControllerComp::SetObjectFilter(
-		const imtgql::CGqlRequest& gqlRequest,
-		const imtbase::CTreeItemModel& objectFilterModel,
-		iprm::CParamsSet& filterParams) const
+			const imtgql::CGqlRequest& gqlRequest,
+			const imtbase::CTreeItemModel& objectFilterModel,
+			iprm::CParamsSet& filterParams) const
 {
 	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
 
@@ -224,22 +224,22 @@ void CCustomerCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		istd::TDelPtr<iprm::CTextParam> userParamPtr(new iprm::CTextParam());
+		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
 		userParamPtr->SetText(userId);
 
-		istd::TDelPtr<iprm::CTextParam> groupParamPtr(new iprm::CTextParam());
+		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
 		QByteArray groups;
 		if (!userGroupIds.isEmpty()){
 			groups = userGroupIds.join(';');
 		}
 		groupParamPtr->SetText(groups);
 
-		istd::TDelPtr<iprm::CParamsSet> paramsSetPtr(new iprm::CParamsSet());
+		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
 
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr.PopPtr());
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr.PopPtr());
+		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
+		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
 
-		filterParams.SetEditableParameter("Groups", paramsSetPtr.PopPtr());
+		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
 	}
 }
 

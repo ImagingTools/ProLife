@@ -26,7 +26,7 @@ protected:
 				int itemIndex,
 				const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 				QString& errorMessage) const override;
-	virtual imtbase::CTreeItemModel* ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);

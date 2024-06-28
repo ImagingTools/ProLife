@@ -395,7 +395,7 @@ ViewBase {
 
                         if (expirationEditor.datePicker){
                             if (expiration){
-                                let currentDate = expirationEditor.datePicker.getDate()
+                                let currentDate = expirationEditor.datePicker.getDateAsString()
 
                                 if (expiration !== "" && expiration !== currentDate){
                                     let date = expiration;
@@ -413,7 +413,7 @@ ViewBase {
 
                     if (expirationEditor.datePicker){
                         if (!unlimitedSwitch.checked){
-                            root.model.setData("Expiration", expirationEditor.datePicker.getDate());
+                            root.model.setData("Expiration", expirationEditor.datePicker.getDateAsString());
                         }
                         else{
                             root.model.setData("Expiration", "");

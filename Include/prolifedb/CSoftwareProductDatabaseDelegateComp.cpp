@@ -3,6 +3,7 @@
 
 // ACF includes
 #include <iprm/ITextParam.h>
+#include <iprm/IIdParam.h>
 #include <iprm/IEnableableParam.h>
 #include <iprm/TParamsPtr.h>
 
@@ -136,43 +137,43 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 	return R"(
 			SELECT
 				acc."Document"->'Groups' as "Groups",
-				si."DocumentId",
-				si."Document"->>'SerialNumber' as "SerialNumber",
-				si."Document"->>'OrderId' as "OrderUuid",
-				si."Document"->>'Project' as "Project",
+				root."DocumentId",
+				root."Document"->>'SerialNumber' as "SerialNumber",
+				root."Document"->>'OrderId' as "OrderUuid",
+				root."Document"->>'Project' as "Project",
 				bp."Document"->>'HardwareId'  as "DeviceUuid",
 				ord."Document"->>'OrderId' as "OrderId",
 				ord."Document"->>'PurchaseId' as "PurchaseOrderId",
 				acc."Document"->>'Name' as "Customer",
 				acc."DocumentId" as "CustomerUuid",
 				dev."Document"->>'MacAddress' as "DeviceId",
-				si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseUuid",
-				(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') as "LicenseId",
-				(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') as "LicenseName",
-				si."Document"->>'InUse' as "InUse",
-				si."Document"->>'ProductId' as "ProductUuid",
-				(SELECT prod."ProductId" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') as "ProductId",
-				(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') as "ProductName",
-				si."Document",
-				si."LastModified",
+				root."Document"->'Licenses'->0->'LicenseData'->>'LicenseId' as "LicenseUuid",
+				(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') as "LicenseId",
+				(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') as "LicenseName",
+				root."Document"->>'InUse' as "InUse",
+				root."Document"->>'ProductId' as "ProductUuid",
+				(SELECT prod."ProductId" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = root."Document"->>'ProductId') as "ProductId",
+				(SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = root."Document"->>'ProductId') as "ProductName",
+				root."Document",
+				root."LastModified",
 				(
 					SELECT "LastModified"
 					FROM "SoftwareInstances" as t2
-					WHERE "RevisionNumber" = 1 AND si."DocumentId" = t2."DocumentId" LIMIT 1
+					WHERE "RevisionNumber" = 1 AND root."DocumentId" = t2."DocumentId" LIMIT 1
 				) as "Added",
-				(SELECT COUNT(*) FROM "Orders" WHERE "DocumentId" = si."Document"->>'OrderId' AND "IsActive" = true LIMIT 1) AS "OrderCount"
-			FROM "SoftwareInstances" as si
-			LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? si."DocumentId" AND bp."IsActive"=true
+				(SELECT COUNT(*) FROM "Orders" WHERE "DocumentId" = root."Document"->>'OrderId' AND "IsActive" = true LIMIT 1) AS "OrderCount"
+			FROM "SoftwareInstances" as root
+			LEFT JOIN "BindingProducts" as bp  ON bp."Document"->'SoftwareIds' ? root."DocumentId" AND bp."IsActive"=true
 			LEFT JOIN "Devices" as dev ON  dev."IsActive" = true AND dev."DocumentId" = bp."Document"->>'HardwareId'
-			LEFT JOIN "Orders" as ord ON ord."DocumentId"=si."Document"->>'OrderId' AND ord."IsActive"=true
+			LEFT JOIN "Orders" as ord ON ord."DocumentId"=root."Document"->>'OrderId' AND ord."IsActive"=true
 			LEFT JOIN "Accounts" as acc ON acc."IsActive" = true AND acc."DocumentId" = ord."Document"->>'OrderCustomer'
-			WHERE si."IsActive"=true)";
+			WHERE root."IsActive"=true)";
 }
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
-		const iprm::IParamsSet& filterParams,
-		QString& filterQuery) const
+			const iprm::IParamsSet& filterParams,
+			QString& filterQuery) const
 {
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 
@@ -186,9 +187,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		if (paramIdsList.contains("BindingFilter")){
 			iprm::TParamsPtr<iprm::IParamsSet> bindingFilterParamPtr(&filterParams, "BindingFilter");
 			if (bindingFilterParamPtr.IsValid()){
-				iprm::TParamsPtr<iprm::ITextParam> hardwareUuidParamPtr(bindingFilterParamPtr.GetPtr(), "HardwareUuid");
+				iprm::TParamsPtr<iprm::IIdParam> hardwareUuidParamPtr(bindingFilterParamPtr.GetPtr(), "HardwareUuid");
 				if (hardwareUuidParamPtr.IsValid()){
-					QString value = hardwareUuidParamPtr->GetText();
+					QString value = hardwareUuidParamPtr->GetId();
 					QString filter = QString(R"((bp."Document"->>'HardwareId' = '%1'))").arg(value);
 
 					if (!filterQuery.isEmpty()){
@@ -226,7 +227,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 				iprm::TParamsPtr<iprm::ITextParam> productUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "ProductUuid");
 				if (productUuidFilterParamPtr.IsValid()){
 					QString value = productUuidFilterParamPtr->GetText();
-					QString productFilter = QString(R"((si."Document"->>'ProductId' = '%1'))").arg(value);
+					QString productFilter = QString(R"((root."Document"->>'ProductId' = '%1'))").arg(value);
 
 					if (!filterQuery.isEmpty()){
 						filterQuery += " AND ";
@@ -260,7 +261,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							resultUuids << result;
 						}
 
-						QString excludeFilter = QString(R"((si."DocumentId" NOT IN (%1)))").arg(resultUuids.join(','));
+						QString excludeFilter = QString(R"((root."DocumentId" NOT IN (%1)))").arg(resultUuids.join(','));
 
 						if (!filterQuery.isEmpty()){
 							filterQuery += " AND ";
@@ -283,7 +284,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 							resultUuids << result;
 						}
 
-						QString excludeFilter = QString(R"(((SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') NOT IN (%1)))").arg(resultUuids.join(','));
+						QString excludeFilter = QString(R"(((SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') NOT IN (%1)))").arg(resultUuids.join(','));
 
 						if (!filterQuery.isEmpty()){
 							filterQuery += " AND ";
@@ -296,32 +297,32 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 		}
 
 		if (paramIdsList.contains("CustomerUuid")){
-			iprm::TParamsPtr<iprm::ITextParam> filterParamPtr(&filterParams, "CustomerUuid");
+			iprm::TParamsPtr<iprm::IIdParam> filterParamPtr(&filterParams, "CustomerUuid");
 			if (filterParamPtr.IsValid()){
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
 				}
 
-				QString value = filterParamPtr->GetText();
+				QString value = filterParamPtr->GetId();
 
 				filterQuery += QString(R"((acc."DocumentId" = '%1'))").arg(value);
 			}
 		}
 
 		if (paramIdsList.contains("LicenseFilter")){
-			iprm::TParamsPtr<iprm::ITextParam> filterParamPtr(&filterParams, "LicenseFilter");
+			iprm::TParamsPtr<iprm::IIdParam> filterParamPtr(&filterParams, "LicenseFilter");
 			if (filterParamPtr.IsValid()){
-				QString value = filterParamPtr->GetText();
+				QString value = filterParamPtr->GetId();
 
 				QString filter;
 				if (value == "OnlyPaired"){
-					filter = QString(R"(((dev."Document"->>'MacAddress' != '') AND ((si."Document"->>'InUse')::boolean = false)))");
+					filter = QString(R"(((dev."Document"->>'MacAddress' != '') AND ((root."Document"->>'InUse')::boolean = false)))");
 				}
 				else if (value == "OnlyUnpaired"){
-					filter = QString(R"(((dev."Document"->>'MacAddress' = '' OR dev."Document"->>'MacAddress' IS NULL) AND ((si."Document"->>'InUse')::boolean = false)))");
+					filter = QString(R"(((dev."Document"->>'MacAddress' = '' OR dev."Document"->>'MacAddress' IS NULL) AND ((root."Document"->>'InUse')::boolean = false)))");
 				}
 				else if (value == "OnlyInUse"){
-					filter = QString(R"(((si."Document"->>'InUse')::boolean = true))");
+					filter = QString(R"(((root."Document"->>'InUse')::boolean = true))");
 				}
 
 				if (!filterQuery.isEmpty()){
@@ -336,7 +337,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 			iprm::TParamsPtr<iprm::ITextParam> filterParamPtr(&filterParams, "SerialNumber");
 			if (filterParamPtr.IsValid()){
 				QString value = filterParamPtr->GetText();
-				QString filter = QString(R"((si."Document"->>'SerialNumber' = '%1'))").arg(value);
+				QString filter = QString(R"((root."Document"->>'SerialNumber' = '%1'))").arg(value);
 
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
@@ -365,7 +366,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 						groupIds = groups.split(';');
 					}
 
-					QString ownerSubquery = QString(R"((SELECT sof."OwnerId" FROM "SoftwareInstances" as sof WHERE sof."DocumentId" = si."DocumentId" AND sof."RevisionNumber" = 1 LIMIT 1))");
+					QString ownerSubquery = QString(R"((SELECT sof."OwnerId" FROM "SoftwareInstances" as sof WHERE sof."DocumentId" = root."DocumentId" AND sof."RevisionNumber" = 1 LIMIT 1))");
 
 					if (!groupIds.isEmpty()){
 						QString array = "array[";
@@ -381,7 +382,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 						array += "]";
 
 						QString groupsQuery = QString(R"((SELECT "Groups" FROM "UsersTemp" WHERE "UserId" = %1))").arg(ownerSubquery);
-						groupFilter += QString(R"((acc."Document"->'Groups' ?| %1) OR (si."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
+						groupFilter += QString(R"((acc."Document"->'Groups' ?| %1) OR (root."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(array).arg(QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
 					}
 					else{
 						groupFilter += QString(R"(%1 = '%2')").arg(ownerSubquery).arg(userId);
@@ -408,8 +409,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& sortQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& sortQuery) const
 {
 	QByteArray columnId;
 	QByteArray sortOrder;
@@ -431,16 +432,16 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 
 	if (!columnId.isEmpty() && !sortOrder.isEmpty()){
 		if (columnId == "LicenseId" || columnId == "LicenseName"){
-			sortQuery =  QString(R"(ORDER BY (SELECT lic."%1" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = si."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') %2)")
+			sortQuery =  QString(R"(ORDER BY (SELECT lic."%1" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->'Licenses'->0->'LicenseData'->>'LicenseId') %2)")
 					.arg(qPrintable(columnId))
 					.arg(qPrintable(sortOrder));
 		}
 		else if (columnId == "ProductId"){
-			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductId" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') %1)")
+			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductId" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = root."Document"->>'ProductId') %1)")
 					.arg(qPrintable(sortOrder));
 		}
 		else if (columnId == "ProductName"){
-			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = si."Document"->>'ProductId') %1)")
+			sortQuery =  QString(R"(ORDER BY (SELECT prod."ProductName" FROM "ProductsTemp" as prod WHERE prod."DocumentId" = root."Document"->>'ProductId') %1)")
 					.arg(qPrintable(sortOrder));
 		}
 		else if (columnId == "OrderId" ||
@@ -454,7 +455,7 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 					.arg(qPrintable(sortOrder));
 		}
 		else{
-			sortQuery = QString("ORDER BY si.\"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
+			sortQuery = QString("ORDER BY root.\"Document\"->>'%1' %2").arg(qPrintable(columnId)).arg(qPrintable(sortOrder));
 		}
 	}
 
@@ -463,8 +464,8 @@ bool CSoftwareProductDatabaseDelegateComp::CreateSortQuery(
 
 
 bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
-		const imtbase::ICollectionFilter& collectionFilter,
-		QString& textFilterQuery) const
+			const imtbase::ICollectionFilter& collectionFilter,
+			QString& textFilterQuery) const
 {
 	QByteArrayList filteringColumnIds = collectionFilter.GetFilteringInfoIds();
 	if (filteringColumnIds.isEmpty()){
@@ -496,16 +497,16 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 				textFilterQuery += QString("bp.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 			else if (columnId == "LicenseId" || columnId == "LicenseName"){
-				textFilterQuery += QString("(SELECT lic.\"%1\" FROM \"LicensesTemp\" as lic WHERE lic.\"DocumentId\" = si.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId') ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+				textFilterQuery += QString("(SELECT lic.\"%1\" FROM \"LicensesTemp\" as lic WHERE lic.\"DocumentId\" = root.\"Document\"->'Licenses'->0->'LicenseData'->>'LicenseId') ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 			else if (columnId == "ProductId"){
-				textFilterQuery += QString("(SELECT prod.\"ProductId\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = si.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
+				textFilterQuery += QString("(SELECT prod.\"ProductId\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = root.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
 			}
 			else if (columnId == "ProductName"){
-				textFilterQuery += QString("(SELECT prod.\"ProductName\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = si.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
+				textFilterQuery += QString("(SELECT prod.\"ProductName\" FROM \"ProductsTemp\" as prod WHERE prod.\"DocumentId\" = root.\"Document\"->>'ProductId') ILIKE '%%1%'").arg(textFilter);
 			}
 			else{
-				textFilterQuery += QString("si.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
+				textFilterQuery += QString("root.\"Document\"->>'%1' ILIKE '%%2%'").arg(qPrintable(columnId)).arg(textFilter);
 			}
 		}
 	}

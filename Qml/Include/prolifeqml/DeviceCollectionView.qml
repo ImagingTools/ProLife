@@ -46,10 +46,8 @@ RemoteCollectionView {
     }
 
     function onFilterChanged(filterId, filterValue){
-        if (filterId == "TextFilter"){
-            container.collectionFilter.setTextFilter(filterValue);
-        }
-        else if (filterId == "AccountFilter"){
+        console.log("onFilterChanged",filterId, filterValue);
+        if (filterId == "AccountFilter"){
             container.collectionFilter.setAccountFilter(filterValue);
         }
         else if (filterId == "LicenseFilter"){

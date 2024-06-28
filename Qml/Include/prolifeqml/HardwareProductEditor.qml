@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtcontrols 1.0
 
 ViewBase {
@@ -17,8 +18,6 @@ ViewBase {
 
     property bool isNewDevice: switchNewSensor.checked;
     property int productIndex: -1;
-
-    property bool isNewProduct: root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
 
     function updateGui(){
         let isNew = model.getData("IsNew")
@@ -172,6 +171,13 @@ ViewBase {
                 deviceCB.visible = !checked;
 
                 root.doUpdateModel();
+            }
+
+            Component.onCompleted: {
+                let canAddSensor = PermissionsController.checkPermission("AddSensor");
+                if (!canAddSensor){
+                    switchNewSensor.visible = false;
+                }
             }
         }
 

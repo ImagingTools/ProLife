@@ -4,6 +4,7 @@
 // ACF includes
 #include <idoc/IDocumentMetaInfo.h>
 #include <iprm/CTextParam.h>
+#include <iprm/CIdParam.h>
 
 // ImtCore includes
 #include <imtbase/imtbase.h>
@@ -28,241 +29,9 @@ namespace prolifegql
 
 // reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::ListObjects(
+imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 			const imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
-{
-	if (!m_objectCollectionCompPtr.IsValid() || !m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
-		errorMessage = QString("Internal error.");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr == nullptr){
-		errorMessage = QString("GraphQL context is invalid.");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	bool isAdmin = false;
-	QByteArray userId;
-	QByteArrayList userPermissions;
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr != nullptr){
-		userPermissions = userInfoPtr->GetPermissions();
-		userId = userInfoPtr->GetId();
-
-		isAdmin = userInfoPtr->IsAdmin();
-	}
-
-	bool filterByGroup = false;
-	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList permissions;
-		permissions << *m_permissionIdAttrPtr;
-		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-	}
-
-	if (isAdmin){
-		filterByGroup = false;
-	}
-
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-	imtbase::CTreeItemModel* dataModel = rootModelPtr->AddTreeModel("data");
-	imtbase::CTreeItemModel* itemsModel = dataModel->AddTreeModel("items");
-
-	iprm::CParamsSet objectFilter;
-	iprm::CParamsSet composedFilter;
-	iprm::CTextParam userParam;
-	iprm::CTextParam groupParam;
-
-	if (filterByGroup){
-		// User group ID-s from GQL context user
-		QByteArrayList userGroupIds;
-		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-		if (userInfoPtr != nullptr){
-			userGroupIds = userInfoPtr->GetGroups();
-		}
-
-		userParam.SetText(userId);
-
-		QByteArray groups;
-		if (!userGroupIds.isEmpty()){
-			groups = userGroupIds.join(';');
-		}
-		groupParam.SetText(groups);
-
-		composedFilter.SetEditableParameter("UserParam", &userParam);
-		composedFilter.SetEditableParameter("GroupParam", &groupParam);
-
-		objectFilter.SetEditableParameter("Groups", &composedFilter);
-	}
-
-	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
-	imtbase::CTreeItemModel* notificationModel = nullptr;
-
-	if (!errorMessage.isEmpty()){
-		imtbase::CTreeItemModel* errorsItemModel = rootModelPtr->AddTreeModel("errors");
-		errorsItemModel->SetData("message", errorMessage);
-	}
-	else{
-		notificationModel = new imtbase::CTreeItemModel();
-
-		const imtgql::CGqlObject* viewParamsGql = nullptr;
-		if (inputParams.size() > 0){
-			viewParamsGql = inputParams.at(0).GetFieldArgumentObjectPtr("viewParams");
-		}
-
-		iprm::CParamsSet filterParams;
-
-		imtbase::CCollectionFilter m_filter;
-		int offset = 0, count = -1;
-		if (viewParamsGql != nullptr){
-			offset = viewParamsGql->GetFieldArgumentValue("Offset").toInt();
-			count = viewParamsGql->GetFieldArgumentValue("Count").toInt();
-
-			QByteArray filterBA = viewParamsGql->GetFieldArgumentValue("FilterModel").toByteArray();
-			if (!filterBA.isEmpty()){
-				imtbase::CTreeItemModel generalModel;
-				generalModel.CreateFromJson(filterBA);
-
-				imtbase::CTreeItemModel* filterModel = generalModel.GetTreeItemModel("FilterIds");
-				if (filterModel != nullptr){
-					QByteArrayList filteringInfoIds;
-					for (int i = 0; i < filterModel->GetItemsCount(); i++){
-						QByteArray headerId = filterModel->GetData("Id", i).toByteArray();
-						if (!headerId.isEmpty()){
-							filteringInfoIds << headerId;
-						}
-					}
-					m_filter.SetFilteringInfoIds(filteringInfoIds);
-				}
-
-				QString filterText = generalModel.GetData("TextFilter").toString();
-				if (!filterText.isEmpty()){
-					m_filter.SetTextFilter(filterText);
-				}
-
-				imtbase::CTreeItemModel* sortModel = generalModel.GetTreeItemModel("Sort");
-				if (sortModel != nullptr){
-					QByteArray headerId = sortModel->GetData("HeaderId").toByteArray();
-					QByteArray sortOrder = sortModel->GetData("SortOrder").toByteArray();
-					if (!headerId.isEmpty() && !sortOrder.isEmpty()){
-						m_filter.SetSortingOrder(sortOrder == "ASC" ? imtbase::ICollectionFilter::SO_ASC : imtbase::ICollectionFilter::SO_DESC);
-						m_filter.SetSortingInfoIds(QByteArrayList() << headerId);
-					}
-				}
-
-				imtbase::CTreeItemModel* objectFilterPtr = generalModel.GetTreeItemModel("ObjectFilter");
-				if (objectFilterPtr != nullptr){
-					QByteArray key;
-					if (objectFilterPtr->ContainsKey("Key")){
-						key = objectFilterPtr->GetData("Key").toByteArray();
-					}
-
-					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-					if (objectFilterPtr->ContainsKey("Value")){
-						QString value = objectFilterPtr->GetData("Value").toString();
-						textParamPtr->SetText(value);
-					}
-					objectFilter.SetEditableParameter(key, textParamPtr.PopPtr());
-				}
-
-				imtbase::CTreeItemModel* licenseFilterPtr = generalModel.GetTreeItemModel("LicenseFilter");
-				if (licenseFilterPtr != nullptr){
-					QByteArray key;
-					if (licenseFilterPtr->ContainsKey("Key")){
-						key = licenseFilterPtr->GetData("Key").toByteArray();
-					}
-
-					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-					if (licenseFilterPtr->ContainsKey("Value")){
-						QString value = licenseFilterPtr->GetData("Value").toString();
-						textParamPtr->SetText(value);
-					}
-					objectFilter.SetEditableParameter("LicenseStatus", textParamPtr.PopPtr());
-				}
-
-				imtbase::CTreeItemModel* accountFilterPtr = generalModel.GetTreeItemModel("AccountFilter");
-				if (accountFilterPtr != nullptr){
-					istd::TDelPtr<iprm::CTextParam> textParamPtr(new iprm::CTextParam());
-					if (accountFilterPtr->ContainsKey("Id")){
-						QString value = accountFilterPtr->GetData("Id").toString();
-						textParamPtr->SetText(value);
-					}
-					objectFilter.SetEditableParameter("CustomerUuid", textParamPtr.PopPtr());
-				}
-			}
-
-			filterParams.SetEditableParameter("Filter", &m_filter);
-			filterParams.SetEditableParameter("ObjectFilter", &objectFilter);
-
-			this->SetAdditionalFilters(gqlRequest, *viewParamsGql, &filterParams);
-		}
-
-		int elementsCount = m_objectCollectionCompPtr->GetElementsCount(&filterParams);
-		int pagesCount = std::ceil(elementsCount / (double)count);
-		if (pagesCount <= 0){
-			pagesCount = 1;
-		}
-
-		notificationModel->SetData("PagesCount", pagesCount);
-		notificationModel->SetData("TotalCount", elementsCount);
-
-		if (offset >= elementsCount){
-			offset -= count;
-		}
-
-		istd::TDelPtr<imtbase::IObjectCollectionIterator> objectCollectionIterator;
-		objectCollectionIterator.SetPtr(m_objectCollectionCompPtr->CreateObjectCollectionIterator(offset, count, &filterParams));
-
-		if (objectCollectionIterator.IsValid()){
-			while (objectCollectionIterator->Next()){
-				imtbase::IObjectCollection::DataPtr objectDataPtr;
-				if (objectCollectionIterator->GetObjectData(objectDataPtr)){
-					int itemIndex = itemsModel->InsertNewItem();
-					if (itemIndex >= 0){
-						if (!SetupGqlItem(gqlRequest, *itemsModel, itemIndex, objectCollectionIterator.GetPtr(), errorMessage)){
-							errorMessage = QString("Error when trying setup GQL item.");
-							SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-							return nullptr;
-						}
-					}
-				}
-				else{
-					errorMessage = QString("Unable to get an object from object iterator.");
-					SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-					return nullptr;
-				}
-			}
-		}
-
-		// Get the number of new devices
-		iprm::CTextParam textParam;
-		textParam.SetText("none");
-
-		objectFilter.SetEditableParameter("Status", &textParam);
-
-		iprm::CParamsSet newObjectsFilterParams;
-		newObjectsFilterParams.SetEditableParameter("ObjectFilter", &objectFilter);
-
-		int newElementsCount = m_objectCollectionCompPtr->GetElementsCount(&newObjectsFilterParams);
-		notificationModel->SetData("NewCount", newElementsCount);
-
-		dataModel->SetExternTreeModel("notification", notificationModel);
-	}
-
-	return rootModelPtr.PopPtr();
-}
-
-
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_bindingCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("No collection component was set");
@@ -332,11 +101,11 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 
 
 bool CDeviceCollectionControllerComp::SetupGqlItem(
-		const imtgql::CGqlRequest& gqlRequest,
-		imtbase::CTreeItemModel& model,
-		int itemIndex,
-		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-		QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			imtbase::CTreeItemModel& model,
+			int itemIndex,
+			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+			QString& errorMessage) const
 {
 	bool retVal = true;
 
@@ -571,6 +340,63 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	}
 
 	return rootModelPtr.PopPtr();
+}
+
+
+void CDeviceCollectionControllerComp::SetObjectFilter(
+			const imtgql::CGqlRequest& gqlRequest,
+			const imtbase::CTreeItemModel& objectFilterModel,
+			iprm::CParamsSet& filterParams) const
+{
+	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
+
+	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr){
+		return;
+	}
+
+	bool isAdmin = false;
+	QByteArray userId;
+	QByteArrayList userGroupIds;
+	QByteArrayList userPermissions;
+
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr != nullptr){
+		userPermissions = userInfoPtr->GetPermissions();
+		userId = userInfoPtr->GetId();
+		isAdmin = userInfoPtr->IsAdmin();
+		userGroupIds = userInfoPtr->GetGroups();
+	}
+
+	bool filterByGroup = false;
+	if (m_checkPermissionCompPtr.IsValid()){
+		QByteArrayList permissions;
+		permissions << *m_permissionIdAttrPtr;
+		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
+	}
+
+	if (isAdmin){
+		filterByGroup = false;
+	}
+
+	if (filterByGroup){
+		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
+		userParamPtr->SetText(userId);
+
+		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
+		QByteArray groups;
+		if (!userGroupIds.isEmpty()){
+			groups = userGroupIds.join(';');
+		}
+		groupParamPtr->SetText(groups);
+
+		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
+
+		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
+		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
+
+		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
+	}
 }
 
 

@@ -9,6 +9,7 @@ import imtlicgui 1.0
 
 Item {
     id: productEditor;
+    clip: true;
 
     property int margin: 10;
 
@@ -227,6 +228,8 @@ Item {
                 table.checkable: true;
                 table.selectable: false;
 
+                commandsViewComp: undefined;
+
                 dataControllerComp:
                     Component {
                     CollectionRepresentation {
@@ -355,7 +358,6 @@ Item {
             }
         }
 
-
         BaseText {
             id: message;
             color: Style.errorTextColor;
@@ -399,6 +401,7 @@ Item {
                 hasFilter: false;
                 filterMenuVisible: false;
                 hasPagination: false;
+                commandsViewComp: undefined;
 
                 dataControllerComp:
                     Component {CollectionRepresentation {

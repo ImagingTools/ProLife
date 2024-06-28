@@ -6,25 +6,21 @@ CollectionFilter {
     id: root;
 
     function setLicenseFilter(value){
-        let objectFilter = filterModel.getData("ObjectFilter");
-        if (!objectFilter){
-            objectFilter = filterModel.addTreeModel("ObjectFilter")
+        if (value == ""){
+            removeFilterById("LicenseFilter");
         }
-
-        objectFilter.setData("LicenseFilter", value);
-
-        filterChanged();
+        else{
+            addAdditionalFilter("LicenseFilter", value);
+        }
     }
 
     function setAccountFilter(accountId){
-        let objectFilter = filterModel.getData("ObjectFilter");
-        if (!objectFilter){
-            objectFilter = filterModel.addTreeModel("ObjectFilter")
+        if (accountId == ""){
+            removeFilterById("CustomerUuid");
         }
-
-        objectFilter.setData("AccountFilter", accountId);
-
-        filterChanged();
+        else{
+            addAdditionalFilter("CustomerUuid", accountId);
+        }
     }
 }
 

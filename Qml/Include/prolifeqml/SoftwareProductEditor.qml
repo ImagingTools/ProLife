@@ -25,7 +25,7 @@ ViewBase {
     property bool isNewSoftware: switchNewLicense.checked;
     property int productIndex: -1;
 
-    property bool isNewProduct: root.model && root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
+//    property bool isNewProduct: root.model.getData("IsNew") ? root.model.getData("IsNew") : false;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -71,7 +71,7 @@ ViewBase {
                 }
 
                 if (expiration){
-                    let currentDate = expirationElementView.datePicker.getDate();
+                    let currentDate = expirationElementView.datePicker.getDateAsString();
 
                     if (expiration !== "" && expiration !== currentDate){
                         let date = expiration;
@@ -132,7 +132,7 @@ ViewBase {
             root.model.setData("SerialNumber", serialNumberInput.text)
 
             if (expirationElementView.checkBox.checkState == Qt.Checked){
-                root.model.setData("Expiration", expirationElementView.datePicker.getDate());
+                root.model.setData("Expiration", expirationElementView.datePicker.getDateAsString());
             }
             else{
                 root.model.setData("Expiration", "");
@@ -181,12 +181,19 @@ ViewBase {
 
             name: qsTr("New License");
 
-            visible: root.productIndex == -1 || root.isNewProduct;
+            visible: root.productIndex == -1 || root.isNewSoftware;
 
             onCheckedChanged: {
                 createdLicenseCb.visible = !checked;
 
                 root.doUpdateModel();
+            }
+
+            Component.onCompleted: {
+                let canAddLicense = PermissionsController.checkPermission("AddLicense");
+                if (!canAddLicense){
+                    switchNewLicense.visible = false;
+                }
             }
         }
 
@@ -335,18 +342,18 @@ ViewBase {
                     }
                 }
 
-                Component.onCompleted: {
-                    if (!root.readOnly){
-                        let ok = PermissionsController.checkPermission("ChangeProductLicenses");
+//                Component.onCompleted: {
+//                    if (!root.readOnly){
+//                        let ok = PermissionsController.checkPermission("ChangeProductLicenses");
 
-                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
-                        if (canEditOrder){
-                            ok = true;
-                        }
+//                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
+//                        if (canEditOrder){
+//                            ok = true;
+//                        }
 
-                        licenseCB.changeable = ok;
-                    }
-                }
+//                        licenseCB.changeable = ok;
+//                    }
+//                }
 
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0){
@@ -387,17 +394,17 @@ ViewBase {
 
                 visible: licenseCB.currentIndex >= 0;
 
-                Component.onCompleted: {
-                    if (!root.readOnly){
-                        let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
-                        if (canEditOrder){
-                            ok = true;
-                        }
+//                Component.onCompleted: {
+//                    if (!root.readOnly){
+//                        let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
+//                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
+//                        if (canEditOrder){
+//                            ok = true;
+//                        }
 
-                        serialNumberInput.readOnly = !ok;
-                    }
-                }
+//                        serialNumberInput.readOnly = !ok;
+//                    }
+//                }
 
                 onEditingFinished: {
                     root.doUpdateModel();
@@ -490,13 +497,13 @@ ViewBase {
 
                             Component.onCompleted: {
                                 if (!root.readOnly){
-                                    let ok = PermissionsController.checkPermission("ChangeExpiration");
-                                    let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
-                                    if (canEditOrder){
-                                        ok = true;
-                                    }
+//                                    let ok = PermissionsController.checkPermission("ChangeExpiration");
+//                                    let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
+//                                    if (canEditOrder){
+//                                        ok = true;
+//                                    }
 
-                                    datePicker_.readOnly = !ok;
+//                                    datePicker_.readOnly = !ok;
                                 }
 
                                 expirationElementView.datePicker = datePicker_;

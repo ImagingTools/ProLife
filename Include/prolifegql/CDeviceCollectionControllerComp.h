@@ -25,7 +25,6 @@ public:
 
 protected:
 	// reimplemented (imtgql::CObjectCollectionControllerCompBase)
-	virtual imtbase::CTreeItemModel* ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual bool SetupGqlItem(
 				const imtgql::CGqlRequest& gqlRequest,
@@ -34,6 +33,7 @@ protected:
 				const imtbase::IObjectCollectionIterator* objectCollectionIterator,
 				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

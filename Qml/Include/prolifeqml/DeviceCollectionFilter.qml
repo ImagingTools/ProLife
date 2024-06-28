@@ -6,48 +6,30 @@ CollectionFilter {
     id: root;
 
     function setDeviceStatusFilter(status){
-        if (status === ""){
-            filterModel.removeData("ObjectFilter");
+        if (status == ""){
+            removeFilterById("Status");
         }
         else{
-            let objectFilter = filterModel.getData("ObjectFilter");
-            if (!objectFilter){
-                objectFilter = filterModel.addTreeModel("ObjectFilter")
-            }
-
-            objectFilter.setData("Key", "Status");
-            objectFilter.setData("Value", status);
+            addAdditionalFilter("Status", status);
         }
-
-        filterChanged();
     }
 
     function setLicenseFilter(licenseId){
-        let licenceFilterModel = filterModel.getData("LicenseFilter")
-        if (!licenceFilterModel){
-            licenceFilterModel = filterModel.addTreeModel("LicenseFilter")
+        if (licenseId === ""){
+            removeFilterById("LicenseStatus");
         }
-
-        licenceFilterModel.setData("Key", "Status");
-        licenceFilterModel.setData("Value", licenseId);
-
-        filterChanged();
+        else{
+            addAdditionalFilter("LicenseStatus", licenseId);
+        }
     }
 
     function setAccountFilter(accountId){
-        if (accountId !== ""){
-            let accountFilterModel = filterModel.getData("AccountFilter")
-            if (!accountFilterModel){
-                accountFilterModel = filterModel.addTreeModel("AccountFilter")
-            }
-
-            accountFilterModel.setData("Id", accountId);
+        if (accountId == ""){
+            removeFilterById("CustomerUuid");
         }
         else{
-            filterModel.removeData("AccountFilter");
+            addAdditionalFilter("CustomerUuid", accountId);
         }
-
-        filterChanged();
     }
 }
 

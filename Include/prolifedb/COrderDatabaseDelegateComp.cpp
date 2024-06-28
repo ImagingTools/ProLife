@@ -5,6 +5,7 @@
 #include <iprm/ISelectionParam.h>
 #include <istd/CCrcCalculator.h>
 #include <iprm/ITextParam.h>
+#include <iprm/IIdParam.h>
 #include <iprm/IEnableableParam.h>
 #include <iprm/TParamsPtr.h>
 
@@ -196,8 +197,8 @@ QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 							"\"LastModified\", "
 							"("
 								"SELECT \"LastModified\" "
-								"FROM \"Orders\" as t2 "
-								"WHERE \"RevisionNumber\" = 1 AND t1.\"DocumentId\" = t2.\"DocumentId\" LIMIT 1"
+								"FROM \"Orders\" as root "
+								"WHERE \"RevisionNumber\" = 1 AND t1.\"DocumentId\" = root.\"DocumentId\" LIMIT 1"
 							") as \"Added\", "
 							"("
 								"SELECT \"Document\"->>'Name' "
@@ -214,7 +215,7 @@ QString COrderDatabaseDelegateComp::GetBaseSelectionQuery() const
 							") as \"MacAddress\", "
 							"\"IsActive\""
 							"FROM \"Orders\" as t1"
-						") as t2 "
+						") as root "
 					"WHERE \"IsActive\" = true");
 }
 
@@ -230,12 +231,12 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 #endif
 		for (const QByteArray& id : ids){
 			if (id == "CustomerUuid"){
-				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(id));
+				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(id));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QString value = textParamPtr->GetText();
+				QString value = textParamPtr->GetId();
 
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
@@ -277,62 +278,18 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 								filterQuery += " AND ";
 							}
 
-							filterQuery += QString(R"((t2."Groups" ?| %1))").arg(array);
+							filterQuery += QString(R"((root."Groups" ?| %1))").arg(array);
 						}
 						else{
 							if (!filterQuery.isEmpty()){
 								filterQuery += " AND ";
 							}
 
-							filterQuery += QString(R"((SELECT ord."OwnerId" FROM "Orders" as ord WHERE ord."DocumentId" = t2."DocumentId" AND ord."RevisionNumber" = 1 LIMIT 1) = '%1')").arg(userId);
+							filterQuery += QString(R"((SELECT ord."OwnerId" FROM "Orders" as ord WHERE ord."DocumentId" = root."DocumentId" AND ord."RevisionNumber" = 1 LIMIT 1) = '%1')").arg(userId);
 						}
 					}
 				}
 			}
-//			else if (id == "OrderCustomers"){
-//				const iprm::ISelectionParam* selectionPtr = dynamic_cast<const iprm::ISelectionParam*>(filterParams.GetParameter(id));
-//				if (selectionPtr != nullptr){
-//					const iprm::IOptionsList* optionsListPtr = selectionPtr->GetSelectionConstraints();
-//					if (optionsListPtr != nullptr){
-//						QString filter;
-
-//						int optionCount = optionsListPtr->GetOptionsCount();
-//						if (optionCount == 0){
-
-//						}
-//						else{
-//							for (int i = 0; i < optionsListPtr->GetOptionsCount(); i++){
-//								if (i > 0){
-//									filter += " OR ";
-//								}
-
-//								QByteArray optionId = optionsListPtr->GetOptionId(i);
-//								QString optionName = optionsListPtr->GetOptionName(i);
-
-//								if (!optionName.isEmpty()){
-//									filter += QString("\"Document\"->>'OrderCustomer' = '%1'").arg(optionId);
-//								}
-//								else{
-//									filter += QString("(\"Document\"->>'OrderId' = '' AND ( ( SELECT string_to_array('%1', ';') && string_to_array(%2, ';')) OR %3 ) )")
-//											.arg(optionId)
-//											.arg("(SELECT \"Groups\" FROM \"UsersTemp\" WHERE \"UserId\" = (SELECT \"OwnerId\" FROM \"Orders\" as ord WHERE ord.\"DocumentId\" = t2.\"DocumentId\" AND ord.\"RevisionNumber\" = 1 LIMIT 1))")
-//											.arg("((SELECT \"OwnerId\" FROM \"Orders\" as ord WHERE ord.\"DocumentId\" = t2.\"DocumentId\" AND ord.\"RevisionNumber\" = 1 LIMIT 1) = 'su')");
-//								}
-//							}
-//						}
-
-//						if (!filter.isEmpty()){
-//							if (!filterQuery.isEmpty()){
-//								filterQuery += " AND ";
-//							}
-//						}
-
-//						filter = "(" + filter + ")";
-
-//						filterQuery += filter;
-//					}
-//				}
-//			}
 			else if (id == "OrderId" || id == "PurchaseId"){
 				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, id);
 				if (filterParamPtr.IsValid()){

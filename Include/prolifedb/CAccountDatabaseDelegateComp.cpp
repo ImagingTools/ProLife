@@ -57,7 +57,7 @@ bool CAccountDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSe
 								groupsQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupIds[i]));
 							}
 
-							QString ownerSubquery = QString(R"((SELECT acc."OwnerId" FROM "Accounts" as acc WHERE acc."DocumentId" = t2."DocumentId" AND acc."RevisionNumber" = 1 LIMIT 1))");
+							QString ownerSubquery = QString(R"((SELECT acc."OwnerId" FROM "Accounts" as acc WHERE acc."DocumentId" = root."DocumentId" AND acc."RevisionNumber" = 1 LIMIT 1))");
 
 							groupsQuery += QString(R"( OR (%1 = '%2'))").arg(ownerSubquery).arg(userId);
 						}
