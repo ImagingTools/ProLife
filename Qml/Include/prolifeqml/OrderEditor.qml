@@ -271,7 +271,7 @@ ViewBase {
             orderStatusCB.currentIndex = -1;
         }
 
-        syncroniseProducts();
+//        syncroniseProducts();
 
         productsView.model = 0;
 
