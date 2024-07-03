@@ -175,6 +175,7 @@
                                 <Value>OrdersPage</Value>
                                 <Value>AccountsPage</Value>
                                 <Value>AdministrationPage</Value>
+                                <Value>SearchPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -189,6 +190,7 @@
                             <Values>
                                 <Value>PageDataControllers</Value>
                                 <Value>PagesVisualStatusController</Value>
+                                <Value>SearchController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -302,6 +304,82 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SearchController" PackageId="ImtGqlPck" ComponentId="GqlSearchController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Search</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchControllersInfos" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SearchControllersInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SearchControllersInfo" PackageId="BasePck" ComponentId="SelectionConstraints">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Devices</Value>
+                                <Value>SoftwareProducts</Value>
+                                <Value>Orders</Value>
+                                <Value>Accounts</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Hardware</Value>
+                                <Value>Software</Value>
+                                <Value>Orders</Value>
+                                <Value>Accounts</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SearchPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Icons/Search"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Id" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Search"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Search"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../../imtdocgui/SingleDocumentWorkspaceView.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="../imtgui/View/SearchPage.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

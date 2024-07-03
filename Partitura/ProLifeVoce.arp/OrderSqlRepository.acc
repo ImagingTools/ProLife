@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -105,7 +105,7 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="Orders" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
+        <Element Id="Orders" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
@@ -125,6 +125,18 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OrderId</Value>
+                                <Value>PurchaseId</Value>
+                                <Value>Description</Value>
+                                <Value>Status</Value>
+                                <Value>OrderCustomer</Value>
+                                <Value>MacAddress</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -156,6 +168,7 @@
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Orders"/>
+        <Interface InterfaceId="imtbase::ISearchController" ComponentId="Orders"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="OrderDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Orders"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Orders"/>

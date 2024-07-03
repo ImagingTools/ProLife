@@ -111,13 +111,7 @@ DocumentCollectionViewDelegate {
         else if (commandId === "OpenOrder"){
             let orderId = elementsModel.getData("OrderUuid", indexes[0]);
             if (orderId !== ""){
-                let parameters = {}
-                parameters["TypeId"] = "Orders";
-                parameters["DocumentId"] = orderId;
-                parameters["DocumentTypeId"] = "Order";
-                parameters["ViewTypeId"] = "OrderEditor";
-
-                Events.sendEvent("OpenDocument", parameters);
+                MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
             }
         }
         else if (commandId === "CreateLicenseFile"){

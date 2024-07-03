@@ -82,13 +82,7 @@ DocumentCollectionViewDelegate {
             let elementsModel = container.collectionView.table.elements;
             let orderUuid = elementsModel.getData("OrderUuid", indexes[0]);
             if (orderUuid !== ""){
-                let parameters = {}
-                parameters["TypeId"] = "Orders";
-                parameters["DocumentId"] = orderUuid;
-                parameters["DocumentTypeId"] = "Order";
-                parameters["ViewTypeId"] = "OrderEditor";
-
-                Events.sendEvent("OpenDocument", parameters);
+                MainDocumentManager.openDocument("Orders", orderUuid, "Order", "OrderEditor")
             }
         }
     }

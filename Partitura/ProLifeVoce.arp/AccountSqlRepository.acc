@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -96,7 +96,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
+        <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -113,6 +113,16 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AccountDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CustomerId</Value>
+                                <Value>Name</Value>
+                                <Value>Mail</Value>
+                                <Value>Description</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -144,6 +154,7 @@
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Repository"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Repository"/>
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Repository"/>
+        <Interface InterfaceId="imtbase::ISearchController" ComponentId="Repository"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="AccountDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Repository"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Repository"/>

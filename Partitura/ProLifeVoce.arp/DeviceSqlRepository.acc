@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -68,9 +68,15 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="Devices" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
+        <Element Id="Devices" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -88,6 +94,22 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DeviceType</Value>
+                                <Value>MacAddress</Value>
+                                <Value>SerialNumber</Value>
+                                <Value>Status</Value>
+                                <Value>Project</Value>
+                                <Value>OrderId</Value>
+                                <Value>LicenseName</Value>
+                                <Value>LicenseId</Value>
+                                <Value>Customer</Value>
+                                <Value>PurchaseOrderId</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -165,6 +187,7 @@
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Devices"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Devices"/>
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Devices"/>
+        <Interface InterfaceId="imtbase::ISearchController" ComponentId="Devices"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="DeviceDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Devices"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Devices"/>

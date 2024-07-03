@@ -434,6 +434,27 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 }
 
 
+bool CDeviceDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
+{
+	BaseClass::SetCollectionItemMetaInfoFromRecord(record, metaInfo);
+
+	if (record.contains("Document")){
+		QByteArray json = record.value("Document").toByteArray();
+		QJsonDocument jsonDocument = QJsonDocument::fromJson(json);
+
+		if (!jsonDocument.isNull()){
+			QString decscription = jsonDocument["Description"].toString();
+			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION, decscription);
+
+			QString name = jsonDocument["MacAddress"].toString();
+			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_NAME, name);
+		}
+	}
+
+	return true;
+}
+
+
 } // namespace prolifedb
 
 

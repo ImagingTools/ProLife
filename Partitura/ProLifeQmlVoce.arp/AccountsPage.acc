@@ -165,7 +165,7 @@
                             <Values>
                                 <Value>CustomerId</Value>
                                 <Value>Name</Value>
-                                <Value>Mail</Value>
+                                <Value>Email</Value>
                                 <Value>Description</Value>
                             </Values>
                         </Data>

@@ -515,6 +515,25 @@ bool CSoftwareProductDatabaseDelegateComp::CreateTextFilterQuery(
 }
 
 
+bool CSoftwareProductDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const
+{
+	BaseClass::SetCollectionItemMetaInfoFromRecord(record, metaInfo);
+
+	if (record.contains("Document")){
+		QByteArray json = record.value("Document").toByteArray();
+		QJsonDocument jsonDocument = QJsonDocument::fromJson(json);
+
+		if (!jsonDocument.isNull()){
+			QString name = jsonDocument["SerialNumber"].toString();
+			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_NAME, name);
+		}
+	}
+
+	return true;
+}
+
+
+
 } // namespace prolifedb
 
 
