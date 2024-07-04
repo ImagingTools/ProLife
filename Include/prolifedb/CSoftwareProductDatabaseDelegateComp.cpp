@@ -199,9 +199,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += filter;
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> hardwareUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "HardwareUuidFilter");
+				iprm::TParamsPtr<iprm::IIdParam> hardwareUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "HardwareUuidFilter");
 				if (hardwareUuidFilterParamPtr.IsValid()){
-					QString value = hardwareUuidFilterParamPtr->GetText();
+					QString value = hardwareUuidFilterParamPtr->GetId();
 					QString elementFilter = QString(R"((bp."Document"->>'HardwareId' = '' OR bp."Document"->>'HardwareId' IS NULL OR bp."Document"->>'HardwareId' = '%1'))").arg(value);
 
 					if (!filterQuery.isEmpty()){
@@ -211,9 +211,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += elementFilter;
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> deviceIdFilterParamPtr(bindingFilterParamPtr.GetPtr(), "DeviceId");
+				iprm::TParamsPtr<iprm::IIdParam> deviceIdFilterParamPtr(bindingFilterParamPtr.GetPtr(), "DeviceId");
 				if (deviceIdFilterParamPtr.IsValid()){
-					QString value = deviceIdFilterParamPtr->GetText();
+					QString value = deviceIdFilterParamPtr->GetId();
 
 					QString elementFilter = QString(R"(((dev."Document"->>'MacAddress' = '' OR dev."Document"->>'MacAddress' IS NULL)))");
 
@@ -224,9 +224,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += elementFilter;
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> productUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "ProductUuid");
+				iprm::TParamsPtr<iprm::IIdParam> productUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "ProductUuid");
 				if (productUuidFilterParamPtr.IsValid()){
-					QString value = productUuidFilterParamPtr->GetText();
+					QString value = productUuidFilterParamPtr->GetId();
 					QString productFilter = QString(R"((root."Document"->>'ProductId' = '%1'))").arg(value);
 
 					if (!filterQuery.isEmpty()){
@@ -236,9 +236,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += productFilter;
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> customerUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "CustomerUuid");
+				iprm::TParamsPtr<iprm::IIdParam> customerUuidFilterParamPtr(bindingFilterParamPtr.GetPtr(), "CustomerUuid");
 				if (customerUuidFilterParamPtr.IsValid()){
-					QString value = customerUuidFilterParamPtr->GetText();
+					QString value = customerUuidFilterParamPtr->GetId();
 					QString accountFilter = QString(R"((acc."DocumentId" = '%1'))").arg(value);
 
 					if (!filterQuery.isEmpty()){
@@ -248,9 +248,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					filterQuery += accountFilter;
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> excludeFilterParamPtr(bindingFilterParamPtr.GetPtr(), "ExcludeUuids");
+				iprm::TParamsPtr<iprm::IIdParam> excludeFilterParamPtr(bindingFilterParamPtr.GetPtr(), "ExcludeUuids");
 				if (excludeFilterParamPtr.IsValid()){
-					QString value = excludeFilterParamPtr->GetText();
+					QString value = excludeFilterParamPtr->GetId();
 
 					if (!value.isEmpty()){
 						QStringList uuids = value.split(';');
@@ -271,9 +271,9 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 				}
 
-				iprm::TParamsPtr<iprm::ITextParam> licenseIdsFilterParamPtr(bindingFilterParamPtr.GetPtr(), "LicenseIds");
+				iprm::TParamsPtr<iprm::IIdParam> licenseIdsFilterParamPtr(bindingFilterParamPtr.GetPtr(), "LicenseIds");
 				if (licenseIdsFilterParamPtr.IsValid()){
-					QString value = licenseIdsFilterParamPtr->GetText();
+					QString value = licenseIdsFilterParamPtr->GetId();
 
 					if (!value.isEmpty()){
 						QStringList uuids = value.split(';');

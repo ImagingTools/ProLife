@@ -376,7 +376,7 @@
                         <Data IsEnabled="true" Value="Search"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtdocgui/SingleDocumentWorkspaceView.qml"/>
+                        <Data IsEnabled="true" Value="../../imtdocgui/SearchPageSingleDocumentView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="../imtgui/View/SearchPage.qml"/>

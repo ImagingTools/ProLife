@@ -278,7 +278,7 @@ ViewBase {
         if (model.containsKey("OrderProducts")){
             productsView.model = model.getTreeItemModel("OrderProducts");
 
-            productsView.model.refresh();
+//            productsView.model.refresh();
         }
     }
 

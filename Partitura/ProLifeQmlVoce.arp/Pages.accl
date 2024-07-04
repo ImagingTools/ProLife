@@ -29,17 +29,13 @@
         <Element ComponentName="SoftwareProductsPage" X="400" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
+        <EmbededRegistry Id="PageData">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
-                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
-                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
+                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
+                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
+                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
+                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
+                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -54,13 +50,17 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="PageData">
+        <EmbededRegistry Id="Repositories">
             <PositionMap>
-                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
-                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
-                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
-                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
-                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
+                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
+                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
+                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
+                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
+                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
