@@ -17,25 +17,12 @@ ApplicationMain{
 
     Component.onCompleted: {
         context.appName = 'ProLife';
-        Style.topCenterPanelDecorator = emptyTopCenterPanelDecoratorComp;
-    }
-
-    Component {
-        id: emptyTopCenterPanelDecoratorComp;
-        DecoratorBase {}
-    }
-
-    Component {
-        id: topCenterPanelDecoratorComp;
-        TopCenterPanelDecorator {}
     }
 
     Connections {
         target: AuthorizationController;
 
         function onLoginSuccessful(){
-            Style.topCenterPanelDecorator = topCenterPanelDecoratorComp;
-
             CachedProductCollection.updateModel();
             CachedLicenseCollection.updateModel();
             CachedAccountCollection.updateModel();
@@ -48,8 +35,6 @@ ApplicationMain{
         }
 
         function onLogoutSignal(){
-            Style.topCenterPanelDecorator = emptyTopCenterPanelDecoratorComp;
-
             CachedProductCollection.clearModel();
             CachedLicenseCollection.clearModel();
             CachedAccountCollection.clearModel();

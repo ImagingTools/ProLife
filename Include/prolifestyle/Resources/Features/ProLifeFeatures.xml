@@ -419,6 +419,17 @@
                     </SubFeatures>
                 </Data>
             </Object>
+            <Object ID="3d98c36e-882a-4a5a-9bff-f932c62b3757" Description="" TypeId="FeatureInfo" Name="">
+                <Data FeatureId="SearchManagement" FeatureName="Search Management" FeatureDescription="" Optional="false">
+                    <Dependencies/>
+                    <SubFeatures>
+                        <Object FeatureId="ViewSearch" FeatureName="View Search" FeatureDescription="" Optional="false">
+                            <Dependencies/>
+                            <SubFeatures/>
+                        </Object>
+                    </SubFeatures>
+                </Data>
+            </Object>
         </ObjectsList>
     </Features>
 </Acf>
