@@ -68,12 +68,14 @@ DocumentCollectionViewDelegate {
     }
 
     function setupContextMenu(){
+        console.log("setupContextMenu");
         let commandsController = collectionView.commandsController;
         if (commandsController){
             container.contextMenuModel.clear();
 
             let canEdit = commandsController.commandExists("Edit");
             let canRemove = commandsController.commandExists("Remove");
+            console.log("canEdit", canEdit);
 
             if (canEdit){
                 let index = container.contextMenuModel.insertNewItem();

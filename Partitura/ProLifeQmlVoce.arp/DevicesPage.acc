@@ -28,7 +28,7 @@
                             <Values>
                                 <Value>DeviceCollectionController</Value>
                                 <Value>DeviceController</Value>
-                                <Value>DeviceCollectionCommands</Value>
+                                <Value>CollectionCommands</Value>
                                 <Value>DeviceCommands</Value>
                                 <Value>HardwareProductBindingController</Value>
                             </Values>
@@ -398,6 +398,13 @@
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Bind"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>BindSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Link"/>
                                 </AttributeInfo>
@@ -419,95 +426,89 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandGroup" PackageId="ImtCoreVoce" ComponentId="CommandGroup">
+                    <Element Id="CommandGroup" PackageId="ImtCoreVoce" ComponentId="Command">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="1"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="Commands" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>New</Value>
-                                            <Value>Remove</Value>
-                                            <Value>Edit</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandsRepresentations" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>New</Value>
-                                            <Value>Remove</Value>
-                                            <Value>Edit</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="GroupId" Type="Id" ExportId="">
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Group1"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="1"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SubCommands" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>New</Value>
+                                            <Value>Remove</Value>
+                                            <Value>Edit</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandGroup2" PackageId="ImtCoreVoce" ComponentId="CommandGroup">
+                    <Element Id="CommandGroup2" PackageId="ImtCoreVoce" ComponentId="Command">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="Commands" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Bind</Value>
-                                            <Value>CreateLicenseFile</Value>
-                                        </Values>
-                                    </Data>
+                                <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="4"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="CommandsRepresentations" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Bind</Value>
-                                            <Value>CreateLicenseFile</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="GroupId" Type="Id" ExportId="">
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Group2"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="10"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SubCommands" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>Bind</Value>
+                                            <Value>CreateLicenseFile</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandGroup3" PackageId="ImtCoreVoce" ComponentId="CommandGroup">
+                    <Element Id="CommandGroup3" PackageId="ImtCoreVoce" ComponentId="Command">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="Commands" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OpenOrder</Value>
-                                        </Values>
-                                    </Data>
+                                <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="2"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="CommandsRepresentations" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OpenOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="GroupId" Type="Id" ExportId="">
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Group3"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="10"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SubCommands" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>OpenOrder</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -520,6 +521,13 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="CreateLicenseFile"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>CreateLicenseFile</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Key"/>
@@ -535,6 +543,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Create License File"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="1"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -564,6 +575,9 @@
                                 <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="GuiElementContainer"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -575,6 +589,21 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Edit"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensors</Value>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Edit"/>
@@ -590,6 +619,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Edit"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="3"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -612,15 +644,6 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="RepresentationControllers" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>CommandGroup</Value>
-                                            <Value>CommandGroup2</Value>
-                                            <Value>CommandGroup3</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -632,6 +655,13 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="New"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Add"/>
@@ -648,6 +678,9 @@
                                 <AttributeInfo Id="Name" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="New sensor"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="1"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -659,6 +692,19 @@
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="OpenOrder"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewOrders</Value>
+                                            <Value>ChangeDeliveryId</Value>
+                                            <Value>ChangePurchaseOrderId</Value>
+                                            <Value>ChangeDescriptionForOrder</Value>
+                                            <Value>ChangeCustomer</Value>
+                                            <Value>ChangeOrderStatus</Value>
+                                            <Value>ChangeOrderProducts</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Deployment"/>
@@ -687,6 +733,13 @@
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Remove"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>RemoveSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Delete"/>
                                 </AttributeInfo>
@@ -701,6 +754,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Remove"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="2"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
