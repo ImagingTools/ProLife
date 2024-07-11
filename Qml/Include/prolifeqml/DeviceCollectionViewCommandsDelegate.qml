@@ -56,6 +56,16 @@ DocumentCollectionViewDelegate {
                 createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
             }
 
+            let commandsView = container.collectionView.commandsView;
+            if (commandsView){
+                commandsView.setPositiveAccentCommandIds(["New"]);
+
+                if (isEnabled){
+                    commandsView.setNegativeAccentCommandIds(["Remove"]);
+                    commandsView.setPositiveAccentCommandIds(["Edit"]);
+                }
+            }
+
             let commandsController = container.collectionView.commandsController;
             if(commandsController){
                 commandsController.setCommandIsEnabled("Remove", isEnabled);
