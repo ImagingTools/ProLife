@@ -27,9 +27,10 @@ MultiDocWorkspacePageView {
             }
             }
 
-            commandsControllerComp: Component {CommandsRepresentationProvider {
+            commandsControllerComp: Component {CommandsPanelController {
                     commandId: "Order";
                     uuid: orderEditor.viewId;
+                    commandsView: orderEditor.commandsView;
                 }
             }
         }

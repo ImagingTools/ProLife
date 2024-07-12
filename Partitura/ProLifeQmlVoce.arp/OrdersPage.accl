@@ -25,43 +25,25 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="OrderCommands">
             <PositionMap>
-                <Element ComponentName="CheckPermissionOr" X="775" Y="425" Note=""/>
-                <Element ComponentName="Close" X="425" Y="600" Note=""/>
-                <Element ComponentName="Commands" X="275" Y="275" Note=""/>
-                <Element ComponentName="CommandsRepresentation" X="1050" Y="275" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="125" Y="725" Note=""/>
-                <Element ComponentName="Empty" X="400" Y="725" Note=""/>
-                <Element ComponentName="History" X="625" Y="725" Note=""/>
-                <Element ComponentName="OrderCommandPermissions" X="1050" Y="425" Note=""/>
-                <Element ComponentName="OrderCommandsController" X="575" Y="75" Note=""/>
-                <Element ComponentName="Redo" X="425" Y="425" Note=""/>
-                <Element ComponentName="Save" X="125" Y="600" Note=""/>
-                <Element ComponentName="Undo" X="125" Y="425" Note=""/>
+                <Element ComponentName="CheckPermissionOr" X="1550" Y="850" Note=""/>
+                <Element ComponentName="Close" X="850" Y="1200" Note=""/>
+                <Element ComponentName="Commands" X="550" Y="550" Note=""/>
+                <Element ComponentName="CommandsRepresentation" X="2100" Y="550" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="350" Y="1475" Note=""/>
+                <Element ComponentName="Empty" X="800" Y="1450" Note=""/>
+                <Element ComponentName="History" X="1250" Y="1450" Note=""/>
+                <Element ComponentName="OrderCommandPermissions" X="2225" Y="900" Note=""/>
+                <Element ComponentName="OrderCommandsController" X="1200" Y="550" Note=""/>
+                <Element ComponentName="Redo" X="850" Y="850" Note=""/>
+                <Element ComponentName="Save" X="250" Y="1200" Note=""/>
+                <Element ComponentName="StandardDocumentCommandsController" X="600" Y="150" Note=""/>
+                <Element ComponentName="Undo" X="250" Y="850" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
         <EmbededRegistry Id="OrderCollectionCommands">
             <PositionMap>
-                <Element ComponentName="CheckPermissionOr" X="775" Y="400" Note=""/>
-                <Element ComponentName="CollectionCommandPermissions" X="1025" Y="399" Note=""/>
-                <Element ComponentName="Commands" X="275" Y="225" Note=""/>
-                <Element ComponentName="CommandsRepresentation" X="1025" Y="225" Note=""/>
-                <Element ComponentName="Edit" X="600" Y="400" Note=""/>
-                <Element ComponentName="Empty" X="425" Y="400" Note=""/>
-                <Element ComponentName="New" X="75" Y="400" Note=""/>
-                <Element ComponentName="OrderCollectionCommandsController" X="575" Y="50" Note=""/>
-                <Element ComponentName="Remove" X="250" Y="400" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="CommandPermissions">
-            <PositionMap>
-                <Element ComponentName="Close" X="1000" Y="400" Note=""/>
-                <Element ComponentName="CommandPermissionsProviderJoiner" X="600" Y="300" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="200" Note=""/>
-                <Element ComponentName="Redo" X="200" Y="200" Note=""/>
-                <Element ComponentName="Save" X="1000" Y="200" Note=""/>
-                <Element ComponentName="Undo" X="200" Y="400" Note=""/>
+                <Element ComponentName="CollectionCommandsController" X="575" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

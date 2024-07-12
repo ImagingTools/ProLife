@@ -181,6 +181,58 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="CollectionCommandsController" PackageId="ImtGraphQlVoce" ComponentId="StandardCollectionCommandsController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="EditPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ViewAccounts</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AccountsCommands</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="NewCommandName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="New customer"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AddAccount</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RemovePermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>RemoveAccount</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -189,18 +241,12 @@
                             <Values>
                                 <Value>AccountListController</Value>
                                 <Value>AccountDataController</Value>
-                                <Value>AccountCollectionCommands</Value>
-                                <Value>AccountCommands</Value>
+                                <Value>CollectionCommandsController</Value>
+                                <Value>StandardDocumentCommandsController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -227,6 +273,84 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="StandardDocumentCommandsController" PackageId="ImtGraphQlVoce" ComponentId="StandardDocumentCommandsController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>RemoveAccount</Value>
+                                <Value>ViewAccounts</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AccountCommands</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AddAccount</Value>
+                                <Value>RemoveAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AddAccount</Value>
+                                <Value>RemoveAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AddAccount</Value>
+                                <Value>RemoveAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
