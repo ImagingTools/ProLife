@@ -388,7 +388,7 @@ ViewBase {
                     nameId: "ProductName";
 
                     KeyNavigation.tab: configurationCB;
-                    KeyNavigation.backtab: orderCB;
+                    KeyNavigation.backtab: projectInput;
 
                     onCurrentIndexChanged: {
                         let ok = false;

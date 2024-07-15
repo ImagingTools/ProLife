@@ -154,7 +154,6 @@ RemoteCollectionView {
                 Component {CommandsPanelController {
                     commandId: "Device";
                     uuid: deviceEditor.viewId;
-                    commandsView: deviceEditor.commandsView;
                 }}
         }
     }
