@@ -34,6 +34,9 @@
         <Element Id="AdministrationPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/LightSettings"/>
                     </AttributeInfo>
@@ -174,8 +177,8 @@
                                 <Value>SoftwareProductsPage</Value>
                                 <Value>OrdersPage</Value>
                                 <Value>AccountsPage</Value>
-                                <Value>AdministrationPage</Value>
                                 <Value>SearchPage</Value>
+                                <Value>AdministrationPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -369,6 +372,9 @@
         <Element Id="SearchPage" PackageId="ImtQmlPck" ComponentId="PageGuiElementModel">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Search"/>
                     </AttributeInfo>
