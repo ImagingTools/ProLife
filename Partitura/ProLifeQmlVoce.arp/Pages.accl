@@ -8,25 +8,19 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountsPage" X="125" Y="675" Note=""/>
-        <Element ComponentName="AdministrationPage" X="125" Y="775" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="675" Y="575" Note=""/>
-        <Element ComponentName="DevicesPage" X="125" Y="475" Note=""/>
-        <Element ComponentName="OrdersPage" X="125" Y="575" Note=""/>
+        <Element ComponentName="AccountsPage" X="125" Y="525" Note=""/>
+        <Element ComponentName="AdministrationPage" X="575" Y="525" Note=""/>
+        <Element ComponentName="DevicesPage" X="125" Y="375" Note=""/>
+        <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
         <Element ComponentName="PageData" X="1025" Y="350" Note=""/>
         <Element ComponentName="PageDataControllers" X="1026" Y="229" Note=""/>
-        <Element ComponentName="Pages" X="125" Y="350" Note=""/>
-        <Element ComponentName="PagesDemultiplexer" X="600" Y="75" Note=""/>
-        <Element ComponentName="PagesPermissions" X="675" Y="475" Note=""/>
-        <Element ComponentName="PagesRepresentation" X="675" Y="350" Note=""/>
-        <Element ComponentName="PagesVisualStatusController" X="400" Y="225" Note=""/>
-        <Element ComponentName="PermissionsChecker" X="1025" Y="575" Note=""/>
-        <Element ComponentName="RemotePermissionChecker" X="675" Y="675" Note=""/>
+        <Element ComponentName="PagesController" X="300" Y="225" Note=""/>
+        <Element ComponentName="PagesDemultiplexer" X="575" Y="75" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="475" Note=""/>
         <Element ComponentName="SearchController" X="725" Y="225" Note=""/>
         <Element ComponentName="SearchControllersInfo" X="800" Y="150" Note=""/>
-        <Element ComponentName="SearchPage" X="400" Y="575" Note=""/>
-        <Element ComponentName="SoftwareProductsPage" X="400" Y="475" Note=""/>
+        <Element ComponentName="SearchPage" X="325" Y="525" Note=""/>
+        <Element ComponentName="SoftwareProductsPage" X="350" Y="375" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PagesPermissions">
@@ -41,16 +35,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="PageData">
-            <PositionMap>
-                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
-                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
-                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
-                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
-                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -62,6 +46,16 @@
                 <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="PageData">
+            <PositionMap>
+                <Element ComponentName="AccountsPage" X="575" Y="100" Note=""/>
+                <Element ComponentName="DevicesPage" X="575" Y="225" Note=""/>
+                <Element ComponentName="HardwareProductCollectionController" X="250" Y="700" Note=""/>
+                <Element ComponentName="OrdersPage" X="575" Y="375" Note=""/>
+                <Element ComponentName="SoftwareProductsPage" X="575" Y="550" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

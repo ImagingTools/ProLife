@@ -67,7 +67,6 @@ RemoteCollectionView {
         collectionFilter.setSortingOrder("DESC");
         collectionFilter.setSortingInfoId("LastModified");
 
-        MainDocumentManager.registerDefaultDocumentData(container.collectionId, "Order", "OrderEditor");
         let documentManager = MainDocumentManager.getDocumentManager("Orders");
         if (documentManager){
             container.commandsDelegate.documentManager = documentManager;

@@ -166,7 +166,7 @@
                     <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DocumentInfo</Value>
+                                <Value>Device</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
