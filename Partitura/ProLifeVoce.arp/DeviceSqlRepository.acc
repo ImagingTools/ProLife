@@ -173,7 +173,7 @@
                     <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DocumentInfo</Value>
+                                <Value>Device</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

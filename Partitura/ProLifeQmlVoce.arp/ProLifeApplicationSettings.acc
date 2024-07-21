@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5147" Description="ACF"/>
-            <Version Id="1" Number="2198" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -26,8 +26,17 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="TableViewParamRepresentationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="UserSettingsController/TableViewParamRepresentationController"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="UserSettingsController/UserSettingsRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserSettingsFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="UserSettingsFactory"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -359,6 +368,8 @@
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="UserSettingsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
+                    <Component ExportedId="TableViewParamRepresentationController" ComponentId="UserSettingsRepresentation/TableViewParamRepresentationController"/>
+                    <Component ExportedId="UserSettings" ComponentId="UserSettings"/>
                     <Component ExportedId="UserSettingsRepository" ComponentId="UserSettingsDatabaseDelegate/UserSettingsRepository"/>
                 </ExportedComponents>
             </Data>

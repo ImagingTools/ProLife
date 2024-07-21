@@ -2,23 +2,19 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5211" Description="ACF"/>
-            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationController" X="575" Y="325" Note=""/>
         <Element ComponentName="AuthorizationOptionsController" X="1000" Y="650" Note=""/>
-        <Element ComponentName="DatabaseServerConnectionController" X="750" Y="100" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="700" Y="750" Note=""/>
-        <Element ComponentName="Pages" X="425" Y="650" Note=""/>
-        <Element ComponentName="PermissionController" X="175" Y="275" Note=""/>
-        <Element ComponentName="SettingsController" X="125" Y="650" Note=""/>
-        <Element ComponentName="SingleProductPermission" X="175" Y="125" Note=""/>
-        <Element ComponentName="TestConnectionController" X="425" Y="100" Note=""/>
-        <Element ComponentName="UrlParamRepresentationController" X="1025" Y="275" Note=""/>
-        <Element ComponentName="WebSocketPortController" X="975" Y="175" Note=""/>
+        <Element ComponentName="Pages" X="525" Y="650" Note=""/>
+        <Element ComponentName="PermissionsController" X="200" Y="150" Note=""/>
+        <Element ComponentName="SettingsController" X="175" Y="650" Note=""/>
+        <Element ComponentName="UrlParamRepresentationController" X="975" Y="225" Note=""/>
+        <Element ComponentName="WebSocketPortController" X="875" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

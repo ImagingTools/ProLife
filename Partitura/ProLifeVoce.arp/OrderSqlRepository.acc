@@ -147,14 +147,14 @@
                     <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DocumentInfo</Value>
+                                <Value>Order</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DocumentInfo</Value>
+                                <Value>Order</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

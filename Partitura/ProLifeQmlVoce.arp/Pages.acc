@@ -56,7 +56,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2"/>
+                        <Data IsEnabled="true" Value="64"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/LightSettings"/>
@@ -97,6 +97,9 @@
         <Element Id="DevicesPage" PackageId="ImtCoreVoce" ComponentId="Page">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="32"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Sensor"/>
                     </AttributeInfo>
@@ -222,29 +225,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PageDataControllers" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>PageData/AccountsPage</Value>
-                                <Value>PageData/OrdersPage</Value>
-                                <Value>PageData/DevicesPage</Value>
-                                <Value>PageData/SoftwareProductsPage</Value>
-                                <Value>PageData/HardwareProductCollectionController</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="PagesController" PackageId="ImtGraphQlVoce" ComponentId="PagesController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -285,7 +265,7 @@
                     <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>PageDataControllers</Value>
+                                <Value>PageData</Value>
                                 <Value>PagesController</Value>
                                 <Value>SearchController</Value>
                             </Values>
@@ -324,10 +304,10 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SearchController" PackageId="ImtGqlPck" ComponentId="GqlSearchController">
+        <Element Id="SearchController" PackageId="ImtGraphQlVoce" ComponentId="SearchController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Search</Value>
@@ -337,28 +317,6 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SearchControllers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Repositories/DeviceSqlRepository</Value>
-                                <Value>Repositories/SoftwareSqlRepository</Value>
-                                <Value>Repositories/OrderSqlRepository</Value>
-                                <Value>Repositories/AccountSqlRepository</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SearchControllersInfos" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SearchControllersInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="SearchControllersInfo" PackageId="BasePck" ComponentId="SelectionConstraints">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
                     <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -379,6 +337,19 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="SearchControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/DeviceSqlCollection</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -386,7 +357,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2"/>
+                        <Data IsEnabled="true" Value="64"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Search"/>
@@ -476,6 +447,26 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AccountsPage</Value>
+                                            <Value>HardwareProductCollectionController</Value>
+                                            <Value>SoftwareProductsPage</Value>
+                                            <Value>OrdersPage</Value>
+                                            <Value>DevicesPage</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -637,7 +628,9 @@
                     </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
+                </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
                     <Component ExportedId="AccountsPageVisualStatus" ComponentId="AccountsPage/AccountsPageVisualStatus"/>
@@ -657,188 +650,6 @@
                     <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
                     <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
                 </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="PagesPermissions">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AccountsPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Accounts"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewAccounts</Value>
-                                            <Value>AddAccount</Value>
-                                            <Value>RemoveAccount</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="AdministrationPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Administration"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewUsers</Value>
-                                            <Value>ViewRoles</Value>
-                                            <Value>ViewGroups</Value>
-                                            <Value>ChangeUser</Value>
-                                            <Value>ChangeRole</Value>
-                                            <Value>ChangeGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="DevicesPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Devices"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewSensors</Value>
-                                            <Value>AddSensor</Value>
-                                            <Value>RemoveSensor</Value>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LicensesPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="SoftwareProducts"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewLicenses</Value>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
-                                            <Value>AddLicense</Value>
-                                            <Value>RemoveLicense</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrdersPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Orders"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>AddOrder</Value>
-                                            <Value>RemoveOrder</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PagePermissions" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AccountsPermissions</Value>
-                                            <Value>OrdersPermissions</Value>
-                                            <Value>AdministrationPermissions</Value>
-                                            <Value>DevicesPermissions</Value>
-                                            <Value>LicensesPermissions</Value>
-                                            <Value>SearchPermissions</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="SearchPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Search"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewSearch</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="PagePermissions"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>
         <EmbeddedRegistry Id="Repositories">

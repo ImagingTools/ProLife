@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5225" Description="ACF"/>
+            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -22,9 +22,6 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="DatabaseServerConnectionChecker">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseSettings" Type="Reference" ExportId="DatabaseSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -32,9 +29,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaGqlEngine" Type="Reference" ExportId="LisaGqlEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -148,7 +142,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="RemoteContextGQLServerFramework" PackageId="ImtHttpServerVoce" ComponentId="RemoteAuthorizableServerFramework">
+        <Element Id="RemoteServerFramework" PackageId="ImtHttpServerVoce" ComponentId="RemoteAuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="BinaryDataControllers" Type="Reference[]" ExportId="">
@@ -415,8 +409,8 @@
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ApplicationController"/>
-        <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="RemoteContextGQLServerFramework"/>
-        <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="RemoteContextGQLServerFramework"/>
+        <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="RemoteServerFramework"/>
+        <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="RemoteServerFramework"/>
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="ApplicationController" ComponentId="ApplicationController"/>

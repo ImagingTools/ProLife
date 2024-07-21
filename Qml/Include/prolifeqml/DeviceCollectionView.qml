@@ -84,10 +84,15 @@ RemoteCollectionView {
         DeviceEditor {
             id: deviceEditor;
 
+            commandsControllerComp:
+                Component {CommandsPanelController {
+                    commandId: "Device";
+                    uuid: deviceEditor.viewId;
+                }}
+
             commandsDelegateComp: Component {ViewCommandsDelegateBase {
                     view: deviceEditor;
                     onCommandActivated: {
-                        console.log("DeviceCollectionView onCommandActivated", commandId);
                         if (commandId == "Bind"){
                             let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
                             if (documentManager){
@@ -148,12 +153,6 @@ RemoteCollectionView {
                     }
                 }
             }
-
-            commandsControllerComp:
-                Component {CommandsPanelController {
-                    commandId: "Device";
-                    uuid: deviceEditor.viewId;
-                }}
         }
     }
 

@@ -40,8 +40,7 @@ RemoteCollectionView {
     onHeadersChanged: {
         if (container.table.headers.getItemsCount() > 0){
             container.table.setColumnContentComponent(0, pairComp);
-
-            container.table.tableDecorator = tableDecoratorModel;
+//            container.table.tableDecorator = tableDecoratorModel;
         }
     }
 
