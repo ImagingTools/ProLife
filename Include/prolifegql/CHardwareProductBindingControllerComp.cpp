@@ -319,9 +319,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	}
 
 	if (m_deviceCollectionCompPtr.IsValid()){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_deviceCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+		imtbase::IObjectCollection::DataPtr deviceDataPtr;
+		if (m_deviceCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
+			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
 				deviceInfoPtr->SetProject(project);
 
@@ -359,9 +359,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		// Update project for all software
 
 		for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			imtbase::IObjectCollection::DataPtr softwareDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					productInstanceInfoPtr->SetProject(project);
 
@@ -384,9 +384,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 	if (m_softwareProductCollectionCompPtr.IsValid()){
 		for (const QByteArray& id : addedLicenses){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_softwareProductCollectionCompPtr->GetObjectData(id, dataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			imtbase::IObjectCollection::DataPtr softwareDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(id, softwareDataPtr)){
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					if (!productInstanceInfoPtr->IsInUse()){
 						productInstanceInfoPtr->SetProject(project);
@@ -415,9 +415,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		}
 
 		for (const QByteArray& id : removedLicenses){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_softwareProductCollectionCompPtr->GetObjectData(id, dataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			imtbase::IObjectCollection::DataPtr softwareDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(id, softwareDataPtr)){
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					productInstanceInfoPtr->SetInUse(false);
 					productInstanceInfoPtr->SetProject("");

@@ -89,9 +89,9 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			QString name = deviceType;
 
 			if (m_productCollectionCompPtr.IsValid()){
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_productCollectionCompPtr->GetObjectData(deviceType, dataPtr)){
-					imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+				imtbase::IObjectCollection::DataPtr productDataPtr;
+				if (m_productCollectionCompPtr->GetObjectData(deviceType, productDataPtr)){
+					imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productDataPtr.GetPtr());
 					if (remoteProductInfoPtr != nullptr){
 						name = remoteProductInfoPtr->GetName();
 					}

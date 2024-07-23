@@ -243,7 +243,7 @@ void COrderChangeGeneratorComp::GenerateDifferences(
 			imtbase::IObjectCollection& currentOrderProducts,
 			QByteArrayList& addProducts,
 			QByteArrayList& removedProducts,
-			QByteArrayList& updatedProducts) const
+			QByteArrayList& /*updatedProducts*/) const
 {
 	imtbase::ICollectionInfo::Ids prevProductIds = prevOrderProducts.GetElementIds();
 	imtbase::ICollectionInfo::Ids currentProductIds = currentOrderProducts.GetElementIds();

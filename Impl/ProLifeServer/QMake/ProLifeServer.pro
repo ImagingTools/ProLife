@@ -17,7 +17,7 @@ RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 DEFINES += WEB_COMPILE
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui -liservice
-LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicdb -limtlic -limtlicgui -lImtCoreLoc -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtfile
+LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicdb -limtlic -limtlicgui -lImtCoreLoc -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtfile -limtstylecontrolsqml
 LIBS += -limtlicgql -limtguigql -limtgql -limtauthgql -limtauthdb -limtcom -limtapp -limtclientgql -limtservice -limtlog
 LIBS += -lprolifeqml -lprolifestyle -lImtCoreLoc -lProLifeLoc -lprolifedata -lprolifedb -lprolifegql
 

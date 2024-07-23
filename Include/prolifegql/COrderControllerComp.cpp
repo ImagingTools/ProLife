@@ -128,7 +128,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			const imtgql::CGqlRequest& gqlRequest,
 			QByteArray& objectId,
 			QString& name,
-			QString& description,
+			QString& /*description*/,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
@@ -241,9 +241,9 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 			return nullptr;
 		}
 
-		QByteArray description;
+		QByteArray orderDescription;
 		if (itemModel.ContainsKey("Description")){
-			description = itemModel.GetData("Description").toByteArray();
+			orderDescription = itemModel.GetData("Description").toByteArray();
 		}
 
 		if (itemModel.ContainsKey("OrderStatus")){
@@ -268,7 +268,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 		orderPtr->SetOrderId(orderId);
 		orderPtr->SetPurchaseOrderId(purchaseOrderId);
 		orderPtr->SetCustomerId(customerId);
-		orderPtr->SetDescription(description);
+		orderPtr->SetDescription(orderDescription);
 
 		imtbase::IObjectCollection* productCollectionPtr = orderPtr->GetProducts();
 		if (productCollectionPtr == nullptr){
@@ -496,7 +496,7 @@ void COrderControllerComp::InsertHardwareProductToProductCollection(
 			const imtbase::CTreeItemModel& hardwareProductModel,
 			int modelIndex, imtbase::IObjectCollection& productCollection,
 			const QByteArray& orderUuid,
-			QString& errorMessage) const
+			QString& /*errorMessage*/) const
 {
 	istd::TDelPtr<prolifedata::COrderedIdentifiableDeviceInfo> deviceInstancePtr;
 	deviceInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableDeviceInfo);
@@ -690,10 +690,10 @@ void COrderControllerComp::InsertHardwareProductToModel(
 		if (m_deviceCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr dataPtr;
 			if (m_deviceCollectionCompPtr->GetObjectData(objectUuid, dataPtr)){
-				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
-				if (deviceInfoPtr != nullptr){
-					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-					QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+				const prolifedata::IDeviceInfo* deviceInfoInstancePtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+				if (deviceInfoInstancePtr != nullptr){
+					QByteArray macAddress = deviceInfoInstancePtr->GetMacAddress();
+					QByteArray serialNumber = deviceInfoInstancePtr->GetSerialNumber();
 
 					hardwareProductModel.SetData("MacAddress", macAddress, modelIndex);
 					hardwareProductModel.SetData("SerialNumber", serialNumber, modelIndex);
@@ -736,7 +736,7 @@ void COrderControllerComp::GenerateDifferences(
 			prolifedata::IOrderInfo& newOrder,
 			QByteArrayList& addedProducts,
 			QByteArrayList& removedProducts,
-			QByteArrayList& updatedProducts) const
+			QByteArrayList& /*updatedProducts*/) const
 {
 	imtbase::IObjectCollection* currentProductCollectionPtr = currentOrder.GetProducts();
 	imtbase::IObjectCollection* newProductCollectionPtr = newOrder.GetProducts();
@@ -822,9 +822,9 @@ bool COrderControllerComp::CheckProducts(
 				if (softwareInfoPtr != nullptr){
 					QByteArray currentOrderId = softwareInfoPtr->GetOrderId();
 					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
-						QByteArray serialNumber = softwareInfoPtr->GetSerialNumber();
+						QByteArray softwareSerialNumber = softwareInfoPtr->GetSerialNumber();
 
-						errorMessage = QString("It is not possible to add a product that is linked to another order. Software product '%1' with ID '%2'").arg(productName).arg(serialNumber);
+						errorMessage = QString("It is not possible to add a product that is linked to another order. Software product '%1' with ID '%2'").arg(productName).arg(softwareSerialNumber);
 
 						return false;
 					}
@@ -882,9 +882,9 @@ bool COrderControllerComp::CheckProducts(
 				if (hardwareInfoPtr != nullptr){
 					QByteArray currentOrderId = hardwareInfoPtr->GetOrderId();
 					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
-						QByteArray macAddress = hardwareInfoPtr->GetMacAddress();
+						QByteArray deviceMacAddress = hardwareInfoPtr->GetMacAddress();
 
-						errorMessage = QString("It is not possible to save a product that is linked to another order. Hardware product '%1' with ID '%2'").arg(productName).arg(macAddress);
+						errorMessage = QString("It is not possible to save a product that is linked to another order. Hardware product '%1' with ID '%2'").arg(productName).arg(deviceMacAddress);
 
 						return false;
 					}
@@ -917,9 +917,9 @@ bool COrderControllerComp::CheckProducts(
 				if (!collectionIds.isEmpty()){
 					QByteArray id = collectionIds[0];
 					if (objectUuid != id){
-						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_deviceCollectionCompPtr->GetObjectData(id, dataPtr)){
-							prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+						imtbase::IObjectCollection::DataPtr deviceDataPtr;
+						if (m_deviceCollectionCompPtr->GetObjectData(id, deviceDataPtr)){
+							prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(deviceDataPtr.GetPtr());
 							if (deviceInfoPtr != nullptr){
 								QByteArray currentSerialNumber = deviceInfoPtr->GetSerialNumber().toLower();
 								if (currentSerialNumber == serialNumber.toLower()){

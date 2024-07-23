@@ -17,7 +17,7 @@ namespace prolifegql
 
 // reimplemented (imtgql::CObjectCollectionControllerCompBase)
 
-imtbase::CTreeItemModel* CHardwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
+imtbase::CTreeItemModel* CHardwareProductCollectionControllerComp::ListObjects(const imtgql::CGqlRequest& gqlRequest, QString& /*errorMessage*/) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_deviceCollectionCompPtr.IsValid()){
 		return nullptr;

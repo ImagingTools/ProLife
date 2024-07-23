@@ -337,12 +337,12 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 						if (!groupIds.isEmpty()){
 							QString array = "array[";
 
-							for (int i = 0; i < groupIds.size(); i++){
-								if (i > 0){
+							for (int j = 0; j < groupIds.size(); j++){
+								if (j > 0){
 									array += ",";
 								}
 
-								array += "'" + groupIds[i] + "'";
+								array += "'" + groupIds[j] + "'";
 							}
 
 							array += "]";
