@@ -2,8 +2,8 @@
 
 
 // ImtCore includes
-#include <imtlic/CProductInstanceCollection.h>
 #include <imtbase/TIdentifiableWrap.h>
+#include <imtlic/CProductInstanceCollection.h>
 
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>

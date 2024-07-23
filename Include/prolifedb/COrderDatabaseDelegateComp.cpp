@@ -79,6 +79,7 @@ QByteArray COrderDatabaseDelegateComp::GetSelectionQuery(
 	return selectionQuery;
 }
 
+
 QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 			const imtbase::IObjectCollection& collection,
 			const QByteArray& objectId,
@@ -89,12 +90,12 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 	QByteArray retVal;
 
 	if (useExternDelegate){
-		QByteArrayList oldOrderedDeviceIDs;
+		QByteArrayList oldOrderedDeviceIds;
 		imtbase::IObjectCollection::DataPtr objectPtr;
 		if (collection.GetObjectData(objectId, objectPtr)){
 			prolifedata::COrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::COrderInfo*>(objectPtr.GetPtr());
 			if (oldOrderInfoPtr != nullptr){
-				oldOrderedDeviceIDs << GetDeviceIdsFromOrder(oldOrderInfoPtr);
+				oldOrderedDeviceIds << GetDeviceIdsFromOrder(oldOrderInfoPtr);
 			}
 		}
 
@@ -105,14 +106,14 @@ QByteArray COrderDatabaseDelegateComp::CreateUpdateObjectQuery(
 		}
 
 		// Calculate removed devices
-		QByteArrayList removedDeviceIDs;
-		for (const QByteArray& deviceId : oldOrderedDeviceIDs){
+		QByteArrayList removedDeviceIds;
+		for (const QByteArray& deviceId : oldOrderedDeviceIds){
 			if (!newOrderedDeviceIDs.contains(deviceId)){
-				removedDeviceIDs << deviceId;
+				removedDeviceIds << deviceId;
 			}
 		}
 
-		for (const QByteArray& deviceId : removedDeviceIDs){
+		for (const QByteArray& deviceId : removedDeviceIds){
 			imtbase::IObjectCollection::DataPtr dataPtr;
 			if (m_deviceCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
 				prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
