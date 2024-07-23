@@ -15,6 +15,10 @@ copyToWebDir($$prolifedir/Include/prolifestyle/Resources/html/, $$buildwebdir/Re
 copyToWebDir($$imtcoredir/Include/imtstylecontrolsqml/Qml/Fonts/, $$buildwebdir/Resources)
 copyToWebDir($$imtcoredir/Include/imtstylecontrolsqml/Qml/Acf/, $$buildwebdir/src/Acf)
 
+# copy translations
+copyToWebDir($$PWD/../../../../Impl/ProLifeLoc/Translations/, $$buildwebdir/Resources/Translations)
+copyToWebDir($$imtcoredir/Impl/ImtCoreLoc/Translations/, $$buildwebdir/Resources/Translations)
+
 compyleWeb($$buildwebdir, "prolife")
 
 GENERATED_RESOURCES = $$_PRO_FILE_PWD_/../empty
