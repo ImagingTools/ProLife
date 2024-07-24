@@ -32,16 +32,16 @@ ARXC_FILES += $$PWD/../ProLifeClient.acc
 ARXC_OUTDIR = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
 
 # Conversion of resource templates:
-# win*{
-#     # File transformation
-# 	ACF_CONVERT_FILES = $$PWD/../VC/ProLifeClient.rc.xtracf
-# 	ACF_CONVERT_OUTDIR = $$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
-# 	ACF_CONVERT_REGISTRY =  $$PWD/../VC/FileSubstitCopyApp.acc
-# 	ACF_CONVERT_CONFIG = $$PWD/../../../Config/BaseOnly.awc
+win*{
+# File transformation
+ACF_CONVERT_FILES = $$PWD/../VC/ProLifeClient.rc.xtracf
+	ACF_CONVERT_OUTDIR = $$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
+	ACF_CONVERT_REGISTRY =  $$PWD/../VC/FileSubstitCopyApp.acc
+	ACF_CONVERT_CONFIG = $$PWD/../../../Config/BaseOnly.awc
 
-#     RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeClient.rc
-# 	RC_INCLUDEPATH = $$_PRO_FILE_PWD_
-# }
+RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeClient.rc
+RC_INCLUDEPATH = $$_PRO_FILE_PWD_
+}
 
 include($(ACFDIR)/Config/QMake/AcfQt.pri)
 include($(ACFDIR)/Config/QMake/AcfStd.pri)
