@@ -227,6 +227,7 @@ Item {
 
                 table.checkable: true;
                 table.selectable: false;
+                tableViewParamsStoredServer: false;
 
                 commandsViewComp: undefined;
 
@@ -402,6 +403,7 @@ Item {
                 filterMenuVisible: false;
                 hasPagination: false;
                 commandsViewComp: undefined;
+                tableViewParamsStoredServer: false;
 
                 dataControllerComp:
                     Component {CollectionRepresentation {
@@ -665,6 +667,7 @@ Item {
         collectionHeadersModel2.setData("Id", "Customer", index);
         collectionHeadersModel2.setData("Name", qsTr("Customer"), index);
 
+        softwareProductCollection.tableViewParamsStoredServer = false;
         softwareProductCollection.dataController.headersModel  = collectionHeadersModel2;
     }
 
@@ -699,6 +702,7 @@ Item {
         collectionHeadersModel.setData("Id", "Customer", index);
         collectionHeadersModel.setData("Name", qsTr("Customer"), index);
 
+        bindingProductsCollection.tableViewParamsStoredServer = false;
         bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
     }
 
@@ -709,25 +713,25 @@ Item {
             var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
 
             let index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", 30, index);
+            cellWidthModel.setData("WidthPercent", 5, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
 
             index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
+            cellWidthModel.setData("WidthPercent", -1, index);
         }
     }
 
