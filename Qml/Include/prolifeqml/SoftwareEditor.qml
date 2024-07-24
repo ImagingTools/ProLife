@@ -184,7 +184,6 @@ ViewBase {
     }
 
     function updateModel(){
-        console.log("updateModel", model.toJson())
         root.model.setData("Project", projectInput.text);
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
@@ -209,7 +208,6 @@ ViewBase {
         }
 
         group2.updateModel();
-        console.log("end updateModel", model.toJson())
     }
 
     function getProductLicensesModel(){

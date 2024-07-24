@@ -69,7 +69,6 @@ Dialog {
             message: qsTr("Please check the data before saving. Save changes ?")
             placeHolderText: qsTr("Please enter the project");
             onFinished: {
-                console.log("InputDialog onFinished", buttonId);
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
 

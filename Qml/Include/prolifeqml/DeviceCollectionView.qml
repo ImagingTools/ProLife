@@ -60,7 +60,6 @@ RemoteCollectionView {
     }
 
     function onFilterChanged(filterId, filterValue){
-        console.log("onFilterChanged",filterId, filterValue);
         if (filterId == "AccountFilter"){
             container.collectionFilter.setAccountFilter(filterValue);
         }

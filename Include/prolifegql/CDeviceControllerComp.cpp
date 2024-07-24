@@ -105,6 +105,9 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 			dataModelPtr->SetData("Name", name);
 		}
 	}
+	else{
+		return nullptr;
+	}
 
 	return rootModelPtr.PopPtr();
 }

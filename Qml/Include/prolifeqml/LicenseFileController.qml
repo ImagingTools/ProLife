@@ -34,8 +34,6 @@ Item {
         }
 
         onStateChanged: {
-            console.log("onStateChanged", state);
-
             if (state == "Loading"){
                 Events.sendEvent("StartLoading");
             }

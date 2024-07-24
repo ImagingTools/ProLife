@@ -54,7 +54,6 @@ ViewBase {
         else{
             let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
             descriptionInput.readOnly = !canChangeDescription;
-            console.log("canChangeDescription", canChangeDescription);
 
             let canChangeSerialNumber = PermissionsController.checkPermission("ChangeSerialNumberForSensor");
             serialNumberInput.readOnly = !canChangeSerialNumber;
@@ -133,7 +132,6 @@ ViewBase {
     }
 
     function updateGui(){
-        console.log("DeviceEditor updateGui");
         if (deviceEditorContainer.model.containsKey("Description")){
             descriptionInput.text = deviceEditorContainer.model.getData("Description");
         }
