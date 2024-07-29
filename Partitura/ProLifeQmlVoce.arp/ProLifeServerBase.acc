@@ -154,9 +154,6 @@
                     <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DatabaseEngine/DatabaseAccessSettings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseServerConnectionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine/PgSqlDatabaseEngine"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/DatabaseParam"/>
                     </AttributeInfo>
