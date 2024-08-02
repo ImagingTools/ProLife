@@ -8,6 +8,7 @@
 
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>

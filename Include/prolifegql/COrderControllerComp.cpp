@@ -8,6 +8,7 @@
 
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
+#include <imtlic/IProductInfo.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 #include <imtgql/imtgql.h>
 

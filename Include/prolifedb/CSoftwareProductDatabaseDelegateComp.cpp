@@ -8,8 +8,9 @@
 #include <iprm/TParamsPtr.h>
 
 //ImtCore includes
-#include <imtlic/CProductInstanceInfo.h>
 #include <imtauth/IUserInfo.h>
+#include <imtlic/IProductInfo.h>
+#include <imtlic/CProductInstanceInfo.h>
 
 //ProLife includes
 #include <prolifedata/COrderInfo.h>
