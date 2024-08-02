@@ -161,18 +161,13 @@ DecoratorBase {
 
         Row {
             id: row;
-
-            height: filtermenu.height;
-
             anchors.verticalCenter: parent.verticalCenter;
-
+            height: filtermenu.height;
             spacing: Style.size_mainMargin;
 
             Text {
                 id: onlyNewSensorsText;
-
                 anchors.verticalCenter: parent.verticalCenter;
-
                 color: Style.textColor;
                 font.family: Style.fontFamily;
                 font.pixelSize: Style.fontSize_common;
@@ -180,7 +175,7 @@ DecoratorBase {
 
             CheckBox {
                 anchors.verticalCenter: parent.verticalCenter;
-
+                widthFromDecorator: true;
                 onClicked: {
                     let filterValue = "";
                     if (checkState == Qt.Checked){
@@ -206,7 +201,7 @@ DecoratorBase {
 
         baseElement: mainItem.baseElement;
 
-        width: 325;
+        width: contentWidth;
     }
 }
 

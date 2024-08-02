@@ -40,7 +40,6 @@ RemoteCollectionView {
     onHeadersChanged: {
         if (container.table.headers.getItemsCount() > 0){
             container.table.setColumnContentComponent(0, pairComp);
-//            container.table.tableDecorator = tableDecoratorModel;
         }
     }
 
@@ -305,58 +304,11 @@ RemoteCollectionView {
 
             FilterPanelDecorator {
                 id: filtermenu
-
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.right: parent.right;
-
                 baseElement: mainItem.baseElement;
-
-                width: 325;
+                width: contentWidth;
             }
-        }
-    }
-
-    TreeItemModel {
-        id: tableDecoratorModel;
-
-        Component.onCompleted: {
-            var cellWidthModel = tableDecoratorModel.addTreeModel("CellWidth");
-
-            let index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", 70, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
-
-            index = cellWidthModel.insertNewItem();
-            cellWidthModel.setData("Width", -1, index);
         }
     }
 }

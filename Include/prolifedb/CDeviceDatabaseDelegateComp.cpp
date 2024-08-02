@@ -257,7 +257,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 #endif
 
 		if (idsList.contains("Status")){
-			const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter("Status"));
+			const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter("Status"));
 			if (textParamPtr == nullptr){
 				return false;
 			}
@@ -266,7 +266,7 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				filterQuery += " AND ";
 			}
 
-			QByteArray value = textParamPtr->GetId();
+			QString value = textParamPtr->GetText();
 			filterQuery += QString("\"Document\"->>'Status' = '%1'").arg(value);
 		}
 
@@ -274,12 +274,12 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 			QByteArray key = idsList[i];
 
 			if (key == "CustomerUuid"){
-				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(key));
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QByteArray value = textParamPtr->GetId();
+				QString value = textParamPtr->GetText();
 
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";
@@ -288,12 +288,12 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 				filterQuery += QString(R"((root."CustomerUuid" = '%1'))").arg(value);
 			}
 			else if (key == "LicenseStatus"){
-				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(key));
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QString value = textParamPtr->GetId();
+				QString value = textParamPtr->GetText();
 
 				if (value == "None"){
 					continue;

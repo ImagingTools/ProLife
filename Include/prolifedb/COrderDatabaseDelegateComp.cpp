@@ -232,12 +232,12 @@ bool COrderDatabaseDelegateComp::CreateObjectFilterQuery(const iprm::IParamsSet&
 #endif
 		for (const QByteArray& id : ids){
 			if (id == "CustomerUuid"){
-				const iprm::IIdParam* textParamPtr = dynamic_cast<const iprm::IIdParam*>(filterParams.GetParameter(id));
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(id));
 				if (textParamPtr == nullptr){
 					return false;
 				}
 
-				QString value = textParamPtr->GetId();
+				QString value = textParamPtr->GetText();
 
 				if (!filterQuery.isEmpty()){
 					filterQuery += " AND ";

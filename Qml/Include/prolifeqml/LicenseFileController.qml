@@ -27,7 +27,7 @@ Item {
     RemoteFileController {
         id: remoteFileController;
 
-        prefix: "/files";
+        prefix: "/files/";
 
         onFileDownloadFailed: {
             ModalDialogManager.openDialog(messageErrorDialog, {"message": qsTr("Error when trying to create a license file.")});

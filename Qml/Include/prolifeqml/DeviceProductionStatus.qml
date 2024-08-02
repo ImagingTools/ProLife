@@ -11,6 +11,17 @@ QtObject {
 
     property var availableStates: ({})
 
+    function getStatusIndex(status){
+        for (let i = 0; i < statusModel.getItemsCount(); i++){
+            let id = statusModel.getData("Id", i);
+            if (id === status){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     Component.onCompleted: {
         let index = root.statusModel.insertNewItem();
 

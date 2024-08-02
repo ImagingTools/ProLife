@@ -94,6 +94,34 @@ ViewBase {
         }
     }
 
+    function checkFinishedStatus(){
+        if (macAddressInput.acceptableInput && serialNumberInput.acceptableInput && !ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp)){
+            let status = model.getData("ProductionStatus")
+
+            let macAddress = model.getData("MacAddress")
+//            let serialNumber = model.getData("SerialNumber")
+
+            if (macAddress !== "" /*&& serialNumber !== ""*/ && status !== "Finished"){
+                ModalDialogManager.openDialog(confirmSetFinishedStatusDialogComp);
+            }
+        }
+    }
+
+    Component {
+        id: confirmSetFinishedStatusDialogComp;
+        MessageDialog {
+            title: qsTr("Confirm status");
+            message: qsTr("Do you want to set the production state of the sensor to Finished ?");
+
+            onFinished: {
+                if (buttonId == Enums.yes){
+                    let finishedStatusIndex = productionStatus.getStatusIndex("Finished");
+                    statusCB.currentIndex = finishedStatusIndex;
+                }
+            }
+        }
+    }
+
     DeviceProductionStatus {
         id: productionStatus;
     }
@@ -463,6 +491,7 @@ ViewBase {
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
+                        deviceEditorContainer.checkFinishedStatus();
                     }
 
                     KeyNavigation.tab: orderCB;
