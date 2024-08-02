@@ -99,9 +99,9 @@ ViewBase {
             let status = model.getData("ProductionStatus")
 
             let macAddress = model.getData("MacAddress")
-//            let serialNumber = model.getData("SerialNumber")
+            let serialNumber = model.getData("SerialNumber")
 
-            if (macAddress !== "" /*&& serialNumber !== ""*/ && status !== "Finished"){
+            if (macAddress !== "" && serialNumber !== "" && status !== "Finished"){
                 ModalDialogManager.openDialog(confirmSetFinishedStatusDialogComp);
             }
         }
@@ -321,18 +321,6 @@ ViewBase {
         }
     }
 
-    function macAddressIsValid(){
-        if (macAddressInput.text === ""){
-            return true;
-        }
-
-        if (macAddressInput.regExp){
-            return macAddressInput.regExp.test(macAddressInput.text);
-        }
-
-        return false;
-    }
-
     CustomScrollbar {
         id: scrollbar;
 
@@ -480,6 +468,7 @@ ViewBase {
 
                     onEditingFinished: {
                         deviceEditorContainer.doUpdateModel();
+                        deviceEditorContainer.checkFinishedStatus();
                     }
 
                     KeyNavigation.tab: macAddressInput;

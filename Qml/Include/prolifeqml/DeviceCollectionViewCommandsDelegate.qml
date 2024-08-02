@@ -50,19 +50,13 @@ DocumentCollectionViewDelegate {
                 isBindEnabled = isBindEnabled && macAddress !== "";
             }
 
-            let createLicenseFileEnabled = selectedItems.length === 1;
-            if (createLicenseFileEnabled){
-                let count = elementsModel.getData("SoftwareLinksCount", selectedItems[0]);
-                createLicenseFileEnabled = createLicenseFileEnabled && macAddress !== "" && count > 0;
-            }
-
             let commandsController = container.collectionView.commandsController;
             if(commandsController){
                 commandsController.setCommandIsEnabled("Remove", isEnabled);
                 commandsController.setCommandIsEnabled("Edit", isEnabled);
                 commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
                 commandsController.setCommandIsEnabled("Bind", isBindEnabled);
-                commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileEnabled);
+                commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
             }
         }
     }
@@ -115,7 +109,29 @@ DocumentCollectionViewDelegate {
             }
         }
         else if (commandId === "CreateLicenseFile"){
+            let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
+            if (count <= 0){
+                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
+                return;
+            }
+
             let macAddress = elementsModel.getData("MacAddress", indexes[0])
+            if (macAddress === ""){
+                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The MAC-Address is not set")})
+                return;
+            }
+
+            let serialNumber = elementsModel.getData("SerialNumber", indexes[0])
+            if (serialNumber === ""){
+                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The Serial Number is not set")})
+                return;
+            }
+
+            let status = elementsModel.getData("Status", indexes[0])
+            if (status !== "Finished"){
+                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The production status must be 'Finished'")})
+                return;
+            }
 
             let data = macAddress.split(':');
             let fileName = data.join('_') + "_" + licenseFileController.defaultName;
@@ -124,6 +140,15 @@ DocumentCollectionViewDelegate {
 
             let hardwareId = elementsModel.getData("Id", indexes[0]);
             licenseFileController.createLicenseFile(hardwareId);
+        }
+    }
+
+    Component {
+        id: errorDialogComp;
+
+        ErrorDialog {
+            width: 450;
+            title: qsTr("The license file could not be created");
         }
     }
 

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -24,14 +24,6 @@
         <Element ComponentName="OperationContextController" X="500" Y="675" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DeviceCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -55,6 +47,10 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="600" Y="275" Note=""/>
@@ -65,8 +61,12 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
+        <EmbededRegistry Id="DeviceCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
+            </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>
