@@ -365,7 +365,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewSearch</Value>
+                                <Value>*</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
