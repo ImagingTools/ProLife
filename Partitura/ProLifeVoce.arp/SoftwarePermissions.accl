@@ -2,13 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5211" Description="ACF"/>
-            <Version Id="1" Number="2205" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
+        <Element ComponentName="SoftwareInfo" X="550" Y="375" Note=""/>
+        <Element ComponentName="SoftwareList" X="550" Y="275" Note=""/>
         <Element ComponentName="SoftwareProductAdd" X="200" Y="275" Note=""/>
         <Element ComponentName="SoftwareProductUpdate" X="875" Y="275" Note=""/>
         <Element ComponentName="SoftwareProductsRemove" X="200" Y="375" Note=""/>

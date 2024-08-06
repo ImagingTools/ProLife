@@ -95,7 +95,10 @@ ViewBase {
     }
 
     function checkFinishedStatus(){
-        if (macAddressInput.acceptableInput && serialNumberInput.acceptableInput && !ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp)){
+        if (macAddressInput.acceptableInput &&
+            serialNumberInput.acceptableInput &&
+            !ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp) &&
+            PermissionsController.checkPermission("ChangeProductionStatus")){
             let status = model.getData("ProductionStatus")
 
             let macAddress = model.getData("MacAddress")

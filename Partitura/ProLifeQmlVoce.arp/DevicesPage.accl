@@ -24,6 +24,28 @@
         <Element ComponentName="OperationContextController" X="500" Y="675" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="DeviceCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="CollectionCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
+                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -44,28 +66,6 @@
                 <Element ComponentName="OpenOrderPermissions" X="1025" Y="650" Note=""/>
                 <Element ComponentName="Remove" X="75" Y="375" Note=""/>
                 <Element ComponentName="RemovePermissions" X="1025" Y="525" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="CollectionCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
-                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
-                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DeviceCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

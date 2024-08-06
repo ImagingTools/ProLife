@@ -139,7 +139,10 @@ bool CCustomerCollectionControllerComp::SetupGqlItem(
 			for (QByteArray informationId : informationIds){
 				QVariant elementInformation;
 
-				if(informationId == "Id"){
+				if (informationId == "TypeId"){
+					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
+				}
+				else if(informationId == "Id"){
 					elementInformation = QString(collectionId);
 				}
 				if(informationId == "CustomerId"){

@@ -331,10 +331,10 @@
                     <AttributeInfo Id="SearchControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Repositories/DeviceSqlCollection</Value>
-                                <Value>Repositories/SoftwareSqlRepository</Value>
-                                <Value>Repositories/OrderSqlRepository</Value>
-                                <Value>Repositories/AccountSqlRepository</Value>
+                                <Value>PageData/DevicesPage</Value>
+                                <Value>PageData/SoftwareProductsPage</Value>
+                                <Value>PageData/OrdersPage</Value>
+                                <Value>PageData/AccountsPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -621,22 +621,12 @@
                 </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
-                    <Component ExportedId="AccountsPageVisualStatus" ComponentId="AccountsPage/AccountsPageVisualStatus"/>
-                    <Component ExportedId="AdministrationPageVisualStatus" ComponentId="AdministrationPage/AdministrationPageVisualStatus"/>
-                    <Component ExportedId="AdministrationPages" ComponentId="AdministrationPage/AdministrationPages"/>
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
                     <Component ExportedId="HardwareProductCollectionController" ComponentId="HardwareProductCollectionController"/>
-                    <Component ExportedId="InstancesPageVisualStatus" ComponentId="InstancesPage/InstancesPageVisualStatus"/>
-                    <Component ExportedId="OrderPageVisualStatus" ComponentId="OrdersPage/OrderPageVisualStatus"/>
-                    <Component ExportedId="OrderVisualStatus" ComponentId="OrdersPage/OrderVisualStatus"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
-                    <Component ExportedId="ProductPageVisualStatus" ComponentId="ProductsPage/ProductPageVisualStatus"/>
-                    <Component ExportedId="SensorPageVisualStatus" ComponentId="ProductsPage/SensorPageVisualStatus"/>
                     <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>
                     <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
-                    <Component ExportedId="UserSqlRepository" ComponentId="AdministrationPage/UserSqlRepository"/>
-                    <Component ExportedId="VisualStatus" ComponentId="SensorsPage/VisualStatus"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
@@ -821,10 +811,7 @@
         <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
         <Component ExportedId="DeviceSqlCollection" ComponentId="Repositories/DeviceSqlCollection"/>
         <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
-        <Component ExportedId="FeatureRepository" ComponentId="Repositories/FeatureRepository"/>
-        <Component ExportedId="LicenseRepository" ComponentId="Repositories/LicenseRepository"/>
         <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
-        <Component ExportedId="ProductRepository" ComponentId="Repositories/ProductRepository"/>
         <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Repositories/SoftwareSqlRepository"/>
     </ExportedComponents>

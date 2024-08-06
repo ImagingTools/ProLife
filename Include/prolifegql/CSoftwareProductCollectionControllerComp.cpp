@@ -108,6 +108,8 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 			productOrderInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(orderDataPtr.GetPtr());
 		}
 
+		idoc::MetaInfoPtr metaInfo = objectCollectionIterator->GetDataMetaInfo();
+
 		if (productOrderInfoPtr != nullptr){
 			QByteArray serialNumber = productOrderInfoPtr->GetSerialNumber();
 			QByteArray productId = productOrderInfoPtr->GetProductId();
@@ -127,7 +129,10 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 				if (informationId == "Id"){
 					elementInformation = collectionId;
 				}
-				if (informationId == "Name"){
+				else if (informationId == "TypeId"){
+					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
+				}
+				else if (informationId == "Name"){
 					QString productName = objectCollectionIterator->GetElementInfo("ProductName").toString();
 
 					elementInformation = productName;
@@ -135,6 +140,9 @@ bool CSoftwareProductCollectionControllerComp::SetupGqlItem(
 					if (!serialNumber.isEmpty()){
 						elementInformation = productName + " (" + serialNumber + ")";
 					}
+				}
+				else if(informationId == "Description"){
+					elementInformation = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
 				}
 				else if (informationId == "OrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("OrderId").toByteArray();

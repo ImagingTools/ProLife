@@ -534,7 +534,6 @@ bool CSoftwareProductDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(c
 }
 
 
-
 } // namespace prolifedb
 
 

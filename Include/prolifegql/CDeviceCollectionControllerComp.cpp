@@ -118,6 +118,8 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(dataPtr.GetPtr());
 		}
 
+		idoc::MetaInfoPtr metaInfo = objectCollectionIterator->GetDataMetaInfo();
+
 		if (deviceInfoPtr != nullptr){
 			QByteArray collectionId = objectCollectionIterator->GetObjectId();
 
@@ -138,6 +140,9 @@ bool CDeviceCollectionControllerComp::SetupGqlItem(
 					if (!macAddress.isEmpty()){
 						elementInformation = deviceType + " (" + macAddress + ")";
 					}
+				}
+				else if(informationId == "Description"){
+					elementInformation = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
 				}
 				else if(informationId == "PurchaseOrderId"){
 					elementInformation = objectCollectionIterator->GetElementInfo("PurchaseOrderId");

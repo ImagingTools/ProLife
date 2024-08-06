@@ -2,18 +2,20 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DeviceUpdate" X="875" Y="275" Note=""/>
+        <Element ComponentName="DeviceUpdate" X="925" Y="275" Note=""/>
         <Element ComponentName="DevicesAdd" X="200" Y="275" Note=""/>
+        <Element ComponentName="DevicesInfo" X="550" Y="375" Note=""/>
+        <Element ComponentName="DevicesList" X="550" Y="275" Note=""/>
         <Element ComponentName="DevicesRemove" X="200" Y="375" Note=""/>
         <Element ComponentName="DevicesSetDescription" X="200" Y="475" Note=""/>
-        <Element ComponentName="HardwareProductBindingAdd" X="875" Y="475" Note=""/>
-        <Element ComponentName="HardwareProductBindingUpdate" X="875" Y="375" Note=""/>
+        <Element ComponentName="HardwareProductBindingAdd" X="925" Y="475" Note=""/>
+        <Element ComponentName="HardwareProductBindingUpdate" X="925" Y="375" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

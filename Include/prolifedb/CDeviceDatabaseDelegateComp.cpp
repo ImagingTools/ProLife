@@ -443,8 +443,8 @@ bool CDeviceDatabaseDelegateComp::SetCollectionItemMetaInfoFromRecord(const QSql
 		QJsonDocument jsonDocument = QJsonDocument::fromJson(json);
 
 		if (!jsonDocument.isNull()){
-			QString decscription = jsonDocument["Description"].toString();
-			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION, decscription);
+			QString description = jsonDocument["Description"].toString();
+			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION, description);
 
 			QString name = jsonDocument["MacAddress"].toString();
 			metaInfo.SetMetaInfo(imtbase::ICollectionInfo::EIT_NAME, name);
