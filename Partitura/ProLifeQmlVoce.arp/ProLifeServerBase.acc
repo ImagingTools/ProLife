@@ -2,35 +2,20 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="DatabaseAutomaticBackup" PackageId="ImtDatabasePck" ComponentId="DatabaseAutomaticBackup">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="BackupOnStart" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine/DatabaseAccessSettings"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Program" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="pg_dump"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/DatabaseAccessSettings"/>
                     </AttributeInfo>
@@ -53,13 +38,13 @@
                                 <Value>Subscriptions/SoftwareProductsSubscriberController</Value>
                                 <Value>Subscriptions/OrdersSubscriberController</Value>
                                 <Value>Subscriptions/AccountsSubscriberController</Value>
-                                <Value>RemoteRepositories/RolesSubscriberController</Value>
-                                <Value>RemoteRepositories/UsersSubscriberController</Value>
-                                <Value>RemoteRepositories/UserGroupsSubscriberController</Value>
-                                <Value>LisaRepositories/LicensesSubscriberController</Value>
-                                <Value>LisaRepositories/ProductsSubscriberController</Value>
-                                <Value>Subscriptions/PumaLoginStatusSubscriberController</Value>
-                                <Value>Subscriptions/LoginStatusSubscriberController</Value>
+                                <Value>PumaGQLClientEngine/RolesSubscriberController</Value>
+                                <Value>PumaGQLClientEngine/UsersSubscriberController</Value>
+                                <Value>PumaGQLClientEngine/UserGroupsSubscriberController</Value>
+                                <Value>PumaGQLClientEngine/LoginStatusSubscriberController</Value>
+                                <Value>LisaGQLEngine/LicensesSubscriberController</Value>
+                                <Value>LisaGQLEngine/ProductsSubscriberController</Value>
+                                <Value>LisaGQLEngine/LoginStatusSubscriberController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -81,49 +66,9 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaGQLEngine" PackageId="ImtGraphQlVoce" ComponentId="GraphQLClientEngine">
+        <Element Id="LisaGQLEngine" PackageId="LisaGraphQlVoce" ComponentId="LisaGQLEngine">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>LicenseFeatures</Value>
-                                <Value>ProductItem</Value>
-                                <Value>ProductList</Value>
-                                <Value>Licenses</Value>
-                                <Value>CommandsData</Value>
-                                <Value>ProductsInfo</Value>
-                                <Value>ProductsList</Value>
-                                <Value>ProductsMetaInfo</Value>
-                                <Value>ProductsObjectView</Value>
-                                <Value>LicensesItems</Value>
-                                <Value>LicensesList</Value>
-                                <Value>FeaturesList</Value>
-                                <Value>GetFeatureDependencies</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="/Lisa"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/LisaUrlConnection"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LisaRepositories" PackageId="" ComponentId="LisaRepositories">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="LisaServerUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/LisaUrlConnection"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -132,6 +77,12 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/LisaUrlConnection"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/LisaWebSocketUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -148,14 +99,11 @@
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="">
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DatabaseEngine/DatabaseAccessSettings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/DatabaseParam"/>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceSessionChangeNotifier" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Subscriptions/DevicesSubscriberController"/>
@@ -169,13 +117,13 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/FeatureRepository"/>
+                        <Data IsEnabled="true" Value="LisaGQLEngine/FeatureRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/CachedLicenseCollection"/>
+                        <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LisaGqlEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine"/>
@@ -190,16 +138,10 @@
                         <Data IsEnabled="true" Value="Subscriptions/OrdersSubscriberController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/CachedProductCollection"/>
+                        <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PumaGQLClientEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/ServerParam"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Settings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Subscriptions/SoftwareProductsSubscriberController"/>
@@ -208,7 +150,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="RemoteRepositories/UserRepository"/>
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -237,65 +179,17 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaGQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="PumaGQLClientEngine">
+        <Element Id="PumaGQLClientEngine" PackageId="PumaGraphQlVoce" ComponentId="PumaGQLClientEngine">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>GetUserInfo</Value>
-                                <Value>GetRoleInfo</Value>
-                                <Value>GetSessionInfo</Value>
-                                <Value>GetUserGroupInfo</Value>
-                                <Value>GetDatabaseStatus</Value>
-                                <Value>UserToken</Value>
-                                <Value>SessionItem</Value>
-                                <Value>UsersObjectView</Value>
-                                <Value>UsersSetDescription</Value>
-                                <Value>UsersInfo</Value>
-                                <Value>UsersList</Value>
-                                <Value>UserItem</Value>
-                                <Value>UserAdd</Value>
-                                <Value>UserUpdate</Value>
-                                <Value>UsersRemove</Value>
-                                <Value>UsersRename</Value>
-                                <Value>UsersCommands</Value>
-                                <Value>UserCommands</Value>
-                                <Value>RolesList</Value>
-                                <Value>RoleItem</Value>
-                                <Value>RoleAdd</Value>
-                                <Value>RoleUpdate</Value>
-                                <Value>RolesRemove</Value>
-                                <Value>RolesObjectView</Value>
-                                <Value>RolesInfo</Value>
-                                <Value>RolesCommands</Value>
-                                <Value>RoleCommands</Value>
-                                <Value>RolesSetDescription</Value>
-                                <Value>GroupsList</Value>
-                                <Value>GroupsInfo</Value>
-                                <Value>GroupsObjectView</Value>
-                                <Value>GroupsSetDescription</Value>
-                                <Value>GroupItem</Value>
-                                <Value>GroupAdd</Value>
-                                <Value>GroupUpdate</Value>
-                                <Value>GroupsRemove</Value>
-                                <Value>GroupsRename</Value>
-                                <Value>GroupsCommands</Value>
-                                <Value>GroupCommands</Value>
-                                <Value>RolesMetaInfo</Value>
-                                <Value>UsersMetaInfo</Value>
-                                <Value>GroupsMetaInfo</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="/Puma"/>
+                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -303,25 +197,7 @@
                     <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/PumaUrlConnection"/>
                     </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="RemoteRepositories" PackageId="ImtGraphQlVoce" ComponentId="RemoteRepositories">
-            <Data IsEnabled="true" Flags="1">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RemoteServerUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/PumaUrlConnection"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="">
+                    <AttributeInfo Id="WebSocketUrlParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/WebSocketPumaUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -369,14 +245,8 @@
         <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="LisaWebSocketServerAddress" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/LisaWebSocketUrl"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PumaWebSocketServerAddress" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/WebSocketPumaUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
@@ -389,290 +259,6 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="LisaRepositories">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="CachedLicenseCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LicenseRepository"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CachedProductCollection" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductRepository"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="FeatureRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaFeature"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableFeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>FeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>FeatureInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Feature Info</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaWebSocketUrlParam"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableFeatureInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableFeatureInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableLicenseInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableLicenseInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="IdentifiableProductInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableProductInfo">
-                        <Data IsEnabled="true" Flags="2">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="LicenseCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LicenseRepository"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LicensesSubscriberController"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LicenseRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaLicense"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableLicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>LicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SubscriptionCommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnLicensesCollectionChanged"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>LicenseInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>License Info</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaWebSocketUrlParam"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LicensesSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OnLicensesCollectionChanged</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LisaWebSocketUrlParam" PackageId="ImtCorePck" ComponentId="UrlParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="localhost"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="8776"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="ws"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductRepository"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ProductsSubscriberController"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductRepository" PackageId="ImtClientVoce" ComponentId="GraphQLObjectCollection">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaProduct"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>IdentifiableProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="/Lisa"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ServerUrl" Type="Reference" ExportId="LisaServerUrlParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SubscriptionCommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OnProductsCollectionChanged"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ProductInfo</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Product Info</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaWebSocketUrlParam"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProductsSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OnProductsCollectionChanged</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
-                <ExportedComponents>
-                    <Component ExportedId="CachedLicenseCollection" ComponentId="CachedLicenseCollection"/>
-                    <Component ExportedId="CachedProductCollection" ComponentId="CachedProductCollection"/>
-                    <Component ExportedId="FeatureRepository" ComponentId="FeatureRepository"/>
-                    <Component ExportedId="LicensesSubscriberController" ComponentId="LicensesSubscriberController"/>
-                    <Component ExportedId="ProductsSubscriberController" ComponentId="ProductsSubscriberController"/>
-                </ExportedComponents>
-            </Data>
-        </EmbeddedRegistry>
         <EmbeddedRegistry Id="Subscriptions">
             <Data Description="" Keywords="">
                 <ElementsList>
@@ -720,52 +306,6 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="LisaLoginStatusSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="LoginStatusSubscriberController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>LisaWsConnection</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="LoginStatusProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaSubscription/WebSocketClient"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LisaSubscription" PackageId="ImtClientVoce" ComponentId="SubscriptionManager">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="LisaWebSocketServerAddress">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerLoginParam" Type="Id" ExportId="WebSocketServerLoginParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerPasswordParam" Type="Id" ExportId="WebSocketServerPasswordParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="OrdersSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -783,52 +323,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PumaLoginStatusSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="LoginStatusSubscriberController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>PumaWsConnection</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="LoginStatusProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="PumaSubscription/WebSocketClient"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PumaSubscription" PackageId="ImtClientVoce" ComponentId="SubscriptionManager">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerAddress" Type="Reference" ExportId="PumaWebSocketServerAddress">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerLoginParam" Type="Id" ExportId="WebSocketServerLoginParam">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="WebSocketServerPasswordParam" Type="Id" ExportId="WebSocketServerPasswordParam">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -862,9 +356,7 @@
                 <ExportedComponents>
                     <Component ExportedId="AccountsSubscriberController" ComponentId="AccountsSubscriberController"/>
                     <Component ExportedId="DevicesSubscriberController" ComponentId="DevicesSubscriberController"/>
-                    <Component ExportedId="LoginStatusSubscriberController" ComponentId="LisaLoginStatusSubscriberController"/>
                     <Component ExportedId="OrdersSubscriberController" ComponentId="OrdersSubscriberController"/>
-                    <Component ExportedId="PumaLoginStatusSubscriberController" ComponentId="PumaLoginStatusSubscriberController"/>
                     <Component ExportedId="SoftwareProductsSubscriberController" ComponentId="SoftwareProductsSubscriberController"/>
                 </ExportedComponents>
             </Data>
@@ -879,7 +371,6 @@
         <Component ExportedId="AutoPersistence" ComponentId="ServerSettings/AutoPersistence"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseAccessSettings2" ComponentId="DatabaseEngine/DatabaseAccessSettings"/>
-        <Component ExportedId="DatabaseAutomaticBackup" ComponentId="DatabaseAutomaticBackup"/>
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="ServerSettings" ComponentId="ServerSettings"/>

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -13,25 +13,21 @@
         <Element ComponentName="UserSettingsController" X="225" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="ServerSettingsController">
+            <PositionMap>
+                <Element ComponentName="Permission" X="575" Y="125" Note=""/>
+                <Element ComponentName="PermissionsChecker" X="175" Y="275" Note=""/>
+                <Element ComponentName="SettingsController" X="575" Y="275" Note=""/>
+                <Element ComponentName="SettingsRepresentation" X="975" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="UserSettingsController">
             <PositionMap>
                 <Element ComponentName="GeneralSettingsFactory" X="200" Y="575" Note=""/>
                 <Element ComponentName="UserSettings" X="425" Y="325" Note=""/>
                 <Element ComponentName="UserSettingsController" X="625" Y="100" Note=""/>
-                <Element ComponentName="UserSettingsDatabaseDelegate" X="725" Y="575" Note=""/>
                 <Element ComponentName="UserSettingsRepresentation" X="900" Y="325" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="ServerSettingsController">
-            <PositionMap>
-                <Element ComponentName="BackupSettingsController" X="575" Y="525" Note=""/>
-                <Element ComponentName="DatabaseSettingsController" X="575" Y="400" Note=""/>
-                <Element ComponentName="Permission" X="575" Y="125" Note=""/>
-                <Element ComponentName="PermissionsChecker" X="175" Y="275" Note=""/>
-                <Element ComponentName="ServerSettingsController" X="575" Y="650" Note=""/>
-                <Element ComponentName="SettingsController" X="575" Y="275" Note=""/>
-                <Element ComponentName="SettingsRepresentation" X="975" Y="275" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

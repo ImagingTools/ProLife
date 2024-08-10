@@ -2,58 +2,132 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="ApplicationController" PackageId="ProLifeVoce" ComponentId="RootDataController">
+        <Element Id="ApplicationHandlers" PackageId="ImtGraphQlVoce" ComponentId="ApplicationHandlers">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="BackupSettings">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="BinaryDataControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>RestoringDatabaseController</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BinaryDataProviders" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>KeyDataProviders</Value>
+                                <Value>RestoringDatabaseController</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseSettings" Type="Reference" ExportId="DatabaseSettings">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/files/*"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GraphQlCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/graphql"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="LanguageConstraints">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                    <AttributeInfo Id="LogPath" Type="Reference" ExportId="LogPath">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Devices</Value>
+                                <Value>SoftwareProducts</Value>
+                                <Value>Orders</Value>
+                                <Value>Accounts</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Hardware</Value>
+                                <Value>Software</Value>
+                                <Value>Orders</Value>
+                                <Value>Customers</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Pages" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Pages/DevicesPage</Value>
+                                <Value>Pages/SoftwareProductsPage</Value>
+                                <Value>Pages/OrdersPage</Value>
+                                <Value>Pages/AccountsPage</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="PumaGqlRequest">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerSettings" Type="Reference" ExportId="ServerSettings">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="RedirectToCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/Views/html/index.html?item=Pages/StartPage.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="Settings" Type="Reference" ExportId="Settings">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="SearchControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Pages/DevicesController</Value>
+                                <Value>Pages/SoftwareProductsController</Value>
+                                <Value>Pages/OrdersController</Value>
+                                <Value>Pages/AccountsController</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveGqlHandlers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Demultiplexer</Value>
+                                <Value>Pages</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebCommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/Views/*"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketPortModel" Type="Reference" ExportId="WebSocketPortModel">
                         <Data IsEnabled="false"/>
@@ -77,13 +151,13 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/BindingProductsRepository"/>
+                        <Data IsEnabled="true" Value="Pages/BindingProductsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/DeviceSqlCollection"/>
+                        <Data IsEnabled="true" Value="Pages/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/DeviceOperationContextController"/>
+                        <Data IsEnabled="true" Value="Pages/DeviceOperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
                         <Data IsEnabled="false"/>
@@ -101,10 +175,10 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/SoftwareOperationContextController"/>
+                        <Data IsEnabled="true" Value="Pages/SoftwareOperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/SoftwareSqlRepository"/>
+                        <Data IsEnabled="true" Value="Pages/SoftwareSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -116,25 +190,25 @@
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
                     <AttributeInfo Id="AccountCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/AccountSqlRepository"/>
+                        <Data IsEnabled="true" Value="Pages/AccountSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="AccountSessionChangeNotifier" Type="Reference" ExportId="AccountSessionChangeNotifier">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/DeviceSqlRepository"/>
+                        <Data IsEnabled="true" Value="Pages/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceSessionChangeNotifier" Type="Reference" ExportId="DeviceSessionChangeNotifier">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/OrderSqlRepository"/>
+                        <Data IsEnabled="true" Value="Pages/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderSessionChangeNotifier" Type="Reference" ExportId="OrderSessionChangeNotifier">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/SoftwareSqlRepository"/>
+                        <Data IsEnabled="true" Value="Pages/SoftwareSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="SoftwareProductSessionChangeNotifier">
                         <Data IsEnabled="false"/>
@@ -142,58 +216,32 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="RemoteServerFramework" PackageId="ImtHttpServerVoce" ComponentId="RemoteAuthorizableServerFramework">
+        <Element Id="Pages" PackageId="ProLifeQmlVoce" ComponentId="Pages">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="BinaryDataControllers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>RestoringDatabaseController</Value>
-                            </Values>
-                        </Data>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="BinaryDataProviders" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>KeyDataProviders</Value>
-                                <Value>RestoringDatabaseController</Value>
-                            </Values>
-                        </Data>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CacheClearingInterval" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="60"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife/files/*"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="GqlRequestHandler" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Demultiplexer</Value>
-                                <Value>ApplicationController</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="GraphQlCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife/graphql"/>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LogPath" Type="Reference" ExportId="LogPath">
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="RedirectToCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife/Views/html/index.html?item=Pages/StartPage.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RemoteGqlRequest" Type="Reference" ExportId="PumaGqlRequest">
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserSettingsCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ApplicationController/UserSettingsRepository"/>
+                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="WebCommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife/Views/*"/>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -207,7 +255,7 @@
                     <AttributeInfo Id="Command-ID" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="GetBackupFile"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="DatabaseLoginSettings">
+                    <AttributeInfo Id="DatabaseLoginSettings" Type="Reference" ExportId="DatabaseAccessSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -398,11 +446,9 @@
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="ApplicationController"/>
-        <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="RemoteServerFramework"/>
-        <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="RemoteServerFramework"/>
+        <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="ApplicationHandlers"/>
+        <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="ApplicationHandlers"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationHandlers"/>
     </ExportedInterfaces>
-    <ExportedComponents>
-        <Component ExportedId="ApplicationController" ComponentId="ApplicationController"/>
-    </ExportedComponents>
+    <ExportedComponents/>
 </Acf>

@@ -74,6 +74,7 @@ protected:
 	virtual QString GetFeatureName(const QByteArray& featureUuid, const imtbase::CTreeItemModel& featuresModel) const;
 
 	virtual imtbase::CTreeItemModel* GetRemoteCollectionData(const QByteArray& collectionCommandId, QByteArrayList fields) const;
+	virtual imtbase::CTreeItemModel* ExtractItemsFromResponseModel(const imtbase::CTreeItemModel& responseModel) const;
 
 private:
 	mutable QByteArray m_productInstanceId;

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -18,9 +18,9 @@
                             <Values>
                                 <Value>Pages</Value>
                                 <Value>SettingsController</Value>
-                                <Value>AuthorizationOptionsController</Value>
+                                <Value>AuthorizationOptions</Value>
                                 <Value>PermissionsController</Value>
-                                <Value>WebSocketPortController</Value>
+                                <Value>WebSocketController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -30,13 +30,13 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AuthorizationOptionsController" PackageId="ImtAuthVoce" ComponentId="RemoteAuthorizationOptions">
+        <Element Id="AuthorizationOptions" PackageId="ImtAuthVoce" ComponentId="AuthorizationOptions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PumaGqlRequest" Type="Reference" ExportId="PumaGqlRequest">
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -144,7 +144,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="UrlParamRepresentationController" PackageId="ImtCorePck" ComponentId="UrlParamRepresentationController">
+        <Element Id="WebSocketController" PackageId="ImtGraphQlVoce" ComponentId="WebSocketController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -153,29 +153,7 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="WebSocketPortController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>GetWebSocketUrl</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DataModel" Type="Reference" ExportId="WebSocketPortModel">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="UrlParamRepresentationController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                    <AttributeInfo Id="WebSocketUrlParam" Type="Reference" ExportId="WebSocketUrlParam">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>

@@ -28,9 +28,6 @@ ApplicationMain{
             CachedAccountCollection.updateModel();
             CachedOrderCollection.updateModel();
             CachedDeviceCollection.updateModel();
-            CachedGroupCollection.updateModel();
-            CachedUserCollection.updateModel();
-            CachedRoleCollection.updateModel();
             CachedSoftwareCollection.updateModel();
         }
 
@@ -40,9 +37,6 @@ ApplicationMain{
             CachedAccountCollection.clearModel();
             CachedOrderCollection.clearModel();
             CachedDeviceCollection.clearModel();
-            CachedGroupCollection.clearModel();
-            CachedUserCollection.clearModel();
-            CachedRoleCollection.clearModel();
             CachedSoftwareCollection.clearModel();
         }
     }

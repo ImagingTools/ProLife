@@ -2,28 +2,28 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5229" Description="ACF"/>
+            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Backup" X="1075" Y="350" Note=""/>
+        <Element ComponentName="Backup" X="1000" Y="350" Note=""/>
         <Element ComponentName="ConnectionCollection" X="575" Y="725" Note=""/>
         <Element ComponentName="Database" X="150" Y="350" Note=""/>
         <Element ComponentName="DatabaseAccessSettings" X="125" Y="525" Note=""/>
         <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
-        <Element ComponentName="FileNameParam" X="1100" Y="525" Note=""/>
-        <Element ComponentName="LisaUrl" X="775" Y="575" Note=""/>
+        <Element ComponentName="FileNameParam" X="1100" Y="500" Note=""/>
+        <Element ComponentName="LisaUrl" X="825" Y="575" Note=""/>
         <Element ComponentName="LisaWebSocketUrl" X="200" Y="725" Note=""/>
         <Element ComponentName="LoggingParams" X="350" Y="325" Note=""/>
         <Element ComponentName="Preferences" X="575" Y="200" Note=""/>
-        <Element ComponentName="PumaUrl" X="650" Y="575" Note=""/>
-        <Element ComponentName="SchedulerParams" X="950" Y="525" Note=""/>
+        <Element ComponentName="PumaUrl" X="675" Y="575" Note=""/>
+        <Element ComponentName="SchedulerParams" X="850" Y="500" Note=""/>
         <Element ComponentName="Server" X="575" Y="350" Note=""/>
         <Element ComponentName="ServerPort" X="325" Y="575" Note=""/>
         <Element ComponentName="WebSocketPumaUrl" X="850" Y="725" Note=""/>
-        <Element ComponentName="WebSocketServerPort" X="475" Y="575" Note=""/>
+        <Element ComponentName="WebSocketServerPort" X="500" Y="575" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

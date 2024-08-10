@@ -119,10 +119,15 @@ bool CKeyDataProviderComp::GetData(
 	productFields << "ProductId";
 	productFields << "ProductName";
 
-	imtbase::CTreeItemModel* productItemsModelPtr = GetRemoteCollectionData("ProductsList", productFields);
-	if (productItemsModelPtr == nullptr){
-		SendErrorMessage(0, "Unable to get product list from Lisa.", "CKeyDataProviderComp");
+	istd::TDelPtr<imtbase::CTreeItemModel> productListResponseModelPtr = GetRemoteCollectionData("ProductsList", productFields);
+	if (!productListResponseModelPtr.IsValid()){
+		SendErrorMessage(0, QString("Unable to create a license file for product: '%1'. Error: Invalid response for request with ID 'ProductsList'.").arg(productUuid), "CKeyDataProviderComp");
 
+		return false;
+	}
+
+	imtbase::CTreeItemModel* productItemsModelPtr = ExtractItemsFromResponseModel(*productListResponseModelPtr.GetPtr());
+	if (productItemsModelPtr == nullptr){
 		return false;
 	}
 
@@ -135,10 +140,15 @@ bool CKeyDataProviderComp::GetData(
 	licenseFields << "ParentLicenses";
 	licenseFields << "Features";
 
-	imtbase::CTreeItemModel* licenseItemsModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
-	if (licenseItemsModelPtr == nullptr){
-		SendErrorMessage(0, "Unable to get license list from Lisa.", "CKeyDataProviderComp");
+	istd::TDelPtr<imtbase::CTreeItemModel> licenseListResponseModelPtr = GetRemoteCollectionData("LicensesList", licenseFields);
+	if (!licenseListResponseModelPtr.IsValid()){
+		SendErrorMessage(0, QString("Unable to create a license file for product: '%1'. Error: Invalid response for request with ID 'LicensesList'.").arg(productUuid), "CKeyDataProviderComp");
 
+		return false;
+	}
+
+	imtbase::CTreeItemModel* licenseItemsModelPtr = ExtractItemsFromResponseModel(*licenseListResponseModelPtr.GetPtr());
+	if (licenseItemsModelPtr == nullptr){
 		return false;
 	}
 
@@ -148,10 +158,15 @@ bool CKeyDataProviderComp::GetData(
 	featureFields << "FeatureId";
 	featureFields << "FeatureName";
 
-	imtbase::CTreeItemModel* featureItemsModelPtr = GetRemoteCollectionData("FeaturesList", featureFields);
-	if (featureItemsModelPtr == nullptr){
-		SendErrorMessage(0, "Unable to get feature list from Lisa.", "CKeyDataProviderComp");
+	istd::TDelPtr<imtbase::CTreeItemModel> featureListResponseModelPtr = GetRemoteCollectionData("FeaturesList", featureFields);
+	if (!featureListResponseModelPtr.IsValid()){
+		SendErrorMessage(0, QString("Unable to create a license file for product: '%1'. Error: Invalid response for request with ID 'FeaturesList'.").arg(productUuid), "CKeyDataProviderComp");
 
+		return false;
+	}
+
+	imtbase::CTreeItemModel* featureItemsModelPtr = ExtractItemsFromResponseModel(*featureListResponseModelPtr.GetPtr());
+	if (featureItemsModelPtr == nullptr){
 		return false;
 	}
 
@@ -309,7 +324,7 @@ bool CKeyDataProviderComp::GetData(
 		}
 	}
 
-	SendInfoMessage(0, QString("License file for product %1 successfully created").arg(QString(productUuid)), "CKeyDataProviderComp");
+	SendInfoMessage(0, QString("License file for product '%1' successfully created").arg(QString(productUuid)), "CKeyDataProviderComp");
 
 	return true;
 }
@@ -504,12 +519,13 @@ imtbase::CTreeItemModel* CKeyDataProviderComp::GetRemoteCollectionData(const QBy
 	request.AddField(itemsObject);
 
 	QString errorMessage;
-	imtbase::CTreeItemModel* modelPtr = m_gqlLicenseRequestCompPtr->CreateResponse(request, errorMessage);
-	if (modelPtr == nullptr){
-		return nullptr;
-	}
+	return m_gqlLicenseRequestCompPtr->CreateResponse(request, errorMessage);
+}
 
-	imtbase::CTreeItemModel* dataModelPtr = modelPtr->GetTreeItemModel("data");
+
+imtbase::CTreeItemModel* CKeyDataProviderComp::ExtractItemsFromResponseModel(const imtbase::CTreeItemModel& responseModel) const
+{
+	imtbase::CTreeItemModel* dataModelPtr = responseModel.GetTreeItemModel("data");
 	if (dataModelPtr == nullptr){
 		return nullptr;
 	}
