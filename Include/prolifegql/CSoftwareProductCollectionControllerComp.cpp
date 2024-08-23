@@ -30,7 +30,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		return nullptr;
 	}
 
-	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){

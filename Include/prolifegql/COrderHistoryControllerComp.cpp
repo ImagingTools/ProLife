@@ -34,7 +34,7 @@ imtbase::CTreeItemModel* COrderHistoryControllerComp::CreateInternalResponse(con
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 
 	QByteArray objectId;
-	const imtgql::CGqlObject* gqlObjectPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* gqlObjectPtr = gqlRequest.GetParamObject("input");
 	if (gqlObjectPtr != nullptr){
 		objectId = gqlObjectPtr->GetFieldArgumentValue("Id").toByteArray();
 	}

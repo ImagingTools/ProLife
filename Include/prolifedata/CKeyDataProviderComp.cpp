@@ -510,13 +510,13 @@ imtbase::CTreeItemModel* CKeyDataProviderComp::GetRemoteCollectionData(const QBy
 
 	imtgql::CGqlRequest request(imtgql::CGqlRequest::RT_QUERY, collectionCommandId);
 
-	imtgql::CGqlObject itemsObject("items");
+	imtgql::CGqlObject itemsObject;
 
 	for (const QByteArray& fieldId : fields){
 		itemsObject.InsertField(fieldId);
 	}
 
-	request.AddField(itemsObject);
+	request.AddField("items", itemsObject);
 
 	QString errorMessage;
 	return m_gqlLicenseRequestCompPtr->CreateResponse(request, errorMessage);

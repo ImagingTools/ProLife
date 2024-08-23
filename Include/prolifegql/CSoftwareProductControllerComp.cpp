@@ -32,7 +32,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::GetObject(const imtgql:
 	}
 
 	QByteArray objectId;
-	const imtgql::CGqlObject* inputObjectPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputObjectPtr = gqlRequest.GetParamObject("input");
 	if (inputObjectPtr != nullptr){
 		objectId = inputObjectPtr->GetFieldArgumentValue("Id").toByteArray();
 	}
@@ -109,7 +109,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 
 	QByteArray objectUuid;
 	QByteArray itemData;
-	const imtgql::CGqlObject* inputObjectPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputObjectPtr = gqlRequest.GetParamObject("input");
 	if (inputObjectPtr != nullptr){
 		objectUuid = inputObjectPtr->GetFieldArgumentValue("Id").toByteArray();
 		itemData = inputObjectPtr->GetFieldArgumentValue("Item").toByteArray();
@@ -327,7 +327,7 @@ imtbase::CTreeItemModel* CSoftwareProductControllerComp::UpdateObject(
 }
 
 
-istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
+istd::IChangeable* CSoftwareProductControllerComp::CreateObjectFromRequest(
 			const imtgql::CGqlRequest& gqlRequest,
 			QByteArray& objectId,
 			QString& name,
@@ -348,7 +348,7 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObject(
 		return nullptr;
 	}
 
-	const imtgql::CGqlObject* gqlParamsPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* gqlParamsPtr = gqlRequest.GetParamObject("input");
 	if (gqlParamsPtr == nullptr){
 		errorMessage = QString("GQL input params is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CSoftwareProductControllerComp");

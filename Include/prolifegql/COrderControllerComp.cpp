@@ -38,7 +38,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 
-	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 
@@ -125,7 +125,7 @@ imtbase::CTreeItemModel* COrderControllerComp::GetObject(const imtgql::CGqlReque
 }
 
 
-istd::IChangeable* COrderControllerComp::CreateObject(
+istd::IChangeable* COrderControllerComp::CreateObjectFromRequest(
 			const imtgql::CGqlRequest& gqlRequest,
 			QByteArray& objectId,
 			QString& name,
@@ -147,7 +147,7 @@ istd::IChangeable* COrderControllerComp::CreateObject(
 	}
 
 	QByteArray itemData;
-	const imtgql::CGqlObject* gqlInputParamsPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* gqlInputParamsPtr = gqlRequest.GetParamObject("input");
 	if (gqlInputParamsPtr != nullptr){
 		objectId = gqlInputParamsPtr->GetFieldArgumentValue("Id").toByteArray();
 		itemData = gqlInputParamsPtr->GetFieldArgumentValue("Item").toByteArray();

@@ -31,7 +31,7 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
-	const QList<imtgql::CGqlObject> inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 
@@ -114,7 +114,7 @@ imtbase::CTreeItemModel* CDeviceControllerComp::GetObject(const imtgql::CGqlRequ
 }
 
 
-istd::IChangeable* CDeviceControllerComp::CreateObject(
+istd::IChangeable* CDeviceControllerComp::CreateObjectFromRequest(
 			const imtgql::CGqlRequest& gqlRequest,
 			QByteArray& objectId,
 			QString& name,
@@ -135,7 +135,7 @@ istd::IChangeable* CDeviceControllerComp::CreateObject(
 		return nullptr;
 	}
 
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr == nullptr){
 		errorMessage = QString("GQL input params is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");

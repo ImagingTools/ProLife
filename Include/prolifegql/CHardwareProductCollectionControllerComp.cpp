@@ -24,7 +24,7 @@ imtbase::CTreeItemModel* CHardwareProductCollectionControllerComp::ListObjects(c
 	}
 
 	QByteArray orderId;
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
 		orderId = inputParamPtr->GetFieldArgumentValue("OrderId").toByteArray();
 	}

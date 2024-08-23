@@ -95,7 +95,7 @@ istd::IChangeable* CCustomerControllerComp::CreateObject(
 		return nullptr;
 	}
 
-	objectId = GetObjectIdFromInputParams(inputParams);
+	objectId = GetObjectIdFromInputParams(inputParams.first());
 	if (objectId.isEmpty()){
 		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
 	}

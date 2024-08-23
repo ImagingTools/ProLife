@@ -18,14 +18,14 @@ namespace prolifegql
 {
 
 
-istd::IChangeable* CHardwareProductBindingControllerComp::CreateObject(
+istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRequest(
 		const imtgql::CGqlRequest& gqlRequest,
 		QByteArray& objectId,
 		QString& /*name*/,
 		QString& /*description*/,
 		QString& errorMessage) const
 {
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr == nullptr){
 		errorMessage = QString("GraphQL input params is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -82,7 +82,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 	}
 
 	QByteArray objectId;
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
 	}
@@ -130,7 +130,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const 
 
 imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr == nullptr){
 		errorMessage = QString("GraphQL input params is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
@@ -142,7 +142,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 	QString name;
 	QString description;
 
-	istd::IChangeable* objectPtr = CreateObject(gqlRequest, objectId, name, description, errorMessage);
+	istd::IChangeable* objectPtr = CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage);
 	if (objectPtr == nullptr){
 		errorMessage = QString("Unable to create object from GQL input params.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
@@ -252,7 +252,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 {
 	QByteArray itemData;
 	QByteArray objectId;
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParam("input");
+	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
 		itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
@@ -268,7 +268,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 	QString name;
 	QString description;
-	istd::IChangeable* objectPtr = CreateObject(gqlRequest, objectId, name, description, errorMessage);
+	istd::IChangeable* objectPtr = CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage);
 	if (objectPtr == nullptr){
 		return nullptr;
 	}
