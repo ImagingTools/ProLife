@@ -350,7 +350,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		name += " (" + macAddress + ")";
 	}
 
-	return deviceInfoPtr;
+	return deviceInstancePtr.PopPtr();
 }
 
 

@@ -1,0 +1,98 @@
+import {
+    "../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+input SoftwareProductsListInput {
+    viewParams: CollectionViewParams
+}
+
+type SoftwareProductItem {
+	TypeId: ID!
+	Id: ID!
+	Name: String!
+	Description: String
+	OrderId: String
+	PurchaseOrderId: String
+	Customer: String
+	OrderUuid: String
+	HardwareUuid: String
+	ProductId: String
+	ProductName: String
+	ProductUuid: String
+	SerialNumber: String
+	Expiration: String
+	IsPaired: Bool
+	InUse: Bool
+	DeviceId: String
+	LicenseName: String
+	LicenseId: String
+	LicenseUuid: String
+	CustomerUuid: String
+	Project: String
+	Status: String
+	Added: String
+	LastModified: String
+}
+
+type SoftwareProductsListPayload {
+    items: [SoftwareProductItem]
+	notification: NotificationItem
+}
+
+type SoftwareProductData {
+	Id: ID!
+	ProductId: ID!
+	Name: String!
+	CategoryId: ID
+	SerialNumber: ID
+	Project: String
+	InUse: Bool
+	OrderUuid: ID
+	LicenseUuid: ID
+	Expiration: String
+}
+
+input SoftwareProductDataInput {
+	Id: ID!
+	Item: SoftwareProductData!
+}
+
+type SoftwareProductDataPayload {
+    SoftwareProductData: SoftwareProductData
+}
+
+type Query {
+    SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
+	SoftwareProductItem (input: InputId): SoftwareProductDataPayload!
+}
+
+type Mutation {
+    SoftwareProductUpdate (input: SoftwareProductDataInput): UpdatedNotificationPayload!
+	SoftwareProductAdd (input: SoftwareProductDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+    type SoftwareProduct {
+	    ref: SoftwareProductItem
+		operations {
+		    list: SoftwareProductsList
+		}
+		subtype SoftwareProduct {
+		    ref: SoftwareProductData
+			operations {
+			    get: SoftwareProductItem
+				update: SoftwareProductUpdate
+				insert: SoftwareProductAdd
+			}
+		}
+	}
+}
+
+
+

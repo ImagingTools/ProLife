@@ -172,6 +172,7 @@ QString CDeviceDatabaseDelegateComp::GetBaseSelectionQuery() const
 						('s' || replace("Document"->>'MacAddress', ':', '')) as "MacAddress",
 						"Document"->>'OrderId' as "OrderUuid",
 						"Document"->>'DeviceType' as "ProductUuid",
+						"Document"->>'Project' as "Project",
 						"Document"->>'ConfigurationType' as "LicenseUuid",
 						(SELECT lic."LicenseName" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->>'ConfigurationType') as "LicenseName",
 						(SELECT lic."LicenseId" FROM "LicensesTemp" as lic WHERE lic."DocumentId" = root."Document"->>'ConfigurationType') as "LicenseId",

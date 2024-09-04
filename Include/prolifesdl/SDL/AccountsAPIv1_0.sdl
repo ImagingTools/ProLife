@@ -1,0 +1,81 @@
+import {
+    "../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+input AccountsListInput {
+    viewParams: CollectionViewParams
+}
+
+type AccountItem {
+	TypeId: ID!
+	Id: ID!
+	CustomerId: ID
+	Name: String!
+	Description: String
+	Email: String
+	Added: String
+	LastModified: String
+}
+
+type AccountsListPayload {
+    items: [AccountItem]
+	notification: NotificationItem
+}
+
+type AccountData {
+	Id: ID!
+	Name: String!
+	CustomerId: ID
+	Description: String
+	Email: String
+	CompanyName: String
+	Country: String
+	City: String
+	PostalCode: String
+	Street: String
+	Groups: String
+}
+
+input AccountDataInput {
+	Id: ID!
+	Item: AccountData!
+}
+
+type AccountDataPayload {
+    AccountData: AccountData
+}
+
+type Query {
+    AccountsList (input:AccountsListInput): AccountsListPayload!
+	AccountItem (input: InputId): AccountDataPayload!
+}
+
+type Mutation {
+    AccountUpdate (input: AccountDataInput): UpdatedNotificationPayload!
+	AccountAdd (input: AccountDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+    type Account {
+	    ref: AccountItem
+		operations {
+		    list: AccountsList
+		}
+		subtype Account {
+		    ref: AccountData
+			operations {
+			    get: AccountItem
+				update: AccountUpdate
+				insert: AccountAdd
+			}
+		}
+	}
+}
+
+

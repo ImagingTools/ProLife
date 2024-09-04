@@ -1,0 +1,92 @@
+import {
+    "../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
+}
+
+schema {
+    query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
+
+input DevicesListInput {
+    viewParams: CollectionViewParams
+}
+
+type DeviceItem {
+    TypeId: ID!
+	Id: ID!
+	Name: String!
+	Description: String
+	OrderId: ID
+	PurchaseOrderId: ID
+	LicenseId: ID
+	ProductUuid: ID
+	LicenseUuid: ID
+	OrderUuid: ID
+	Status: String
+	StatusId: String
+	DeviceType: String
+	LicenseName: String
+	MacAddress: String
+	SerialNumber: String
+	Project: String
+	Customer: ID
+	Added: String
+	LastModified: String
+}
+
+type DevicesListPayload {
+    items: [DeviceItem]
+	notification: NotificationItem
+}
+
+type DeviceData {
+	Id: ID!
+	Name: String!
+	Description: String
+	MacAddress: String
+	SerialNumber: String
+	DeviceType: String
+	OrderId: String
+	LicenseName: String
+	Project: String
+	ProductionStatus: String
+}
+
+input DeviceDataInput {
+	Id: ID!
+	Item: DeviceData!
+}
+
+type DeviceDataPayload {
+    DeviceData: DeviceData
+}
+
+type Query {
+    DevicesList (input:DevicesListInput): DevicesListPayload!
+	DeviceItem (input: InputId): DeviceDataPayload!
+}
+
+type Mutation {
+    DeviceUpdate (input: DeviceDataInput): UpdatedNotificationPayload!
+	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+    type Device {
+	    ref: DeviceItem
+		operations {
+		    list: DevicesList
+		}
+		subtype Device {
+		    ref: DeviceData
+			operations {
+			    get: DeviceItem
+				update: DeviceUpdate
+				insert: DeviceAdd
+			}
+		}
+	}
+}
+
+

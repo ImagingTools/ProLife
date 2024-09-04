@@ -1,0 +1,95 @@
+import {
+    "../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+input OrdersListInput {
+    viewParams: CollectionViewParams
+}
+
+type OrderItem {
+	TypeId: ID!
+	Id: ID!
+	CustomerId: ID
+	Status: String
+	OrderId: ID
+	PurchaseId: ID
+	OrderCustomer: String
+	Description: String
+	Added: String
+	LastModified: String
+}
+
+type OrdersListPayload {
+    items: [OrderItem]
+	notification: NotificationItem
+}
+
+type ProductItem {
+    Id: ID!
+	ProductUuid: ID
+	LicenseUuid: ID
+	CategoryId: ID
+	LicenseId: ID
+	ProductName: String
+	LicenseName: String
+	SerialNumber: ID
+	InUse: Bool
+	IsNew: Bool
+	Expiration: String
+	MacAddress: ID
+}
+
+type OrderData {
+	Id: ID!
+	Name: String!
+	Description: String
+	OrderId: ID
+	PurchaseId: ID
+	CustomerId: ID
+	OrderStatus: ID
+	OrderProducts: [ProductItem]
+}
+
+input OrderDataInput {
+	Id: ID!
+	Item: OrderData!
+}
+
+type OrderDataPayload {
+    OrderData: OrderData
+}
+
+type Query {
+    OrdersList (input:OrdersListInput): OrdersListPayload!
+	OrderItem (input: InputId): OrderDataPayload!
+}
+
+type Mutation {
+    OrderUpdate (input: OrderDataInput): UpdatedNotificationPayload!
+	OrderAdd (input: OrderDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+    type Order {
+	    ref: OrderItem
+		operations {
+		    list: OrdersList
+		}
+		subtype Order {
+		    ref: OrderData
+			operations {
+			    get: OrderItem
+				update: OrderUpdate
+				insert: OrderAdd
+			}
+		}
+	}
+}
+
+
