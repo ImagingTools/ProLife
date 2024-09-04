@@ -11,3 +11,6 @@ DeviceCollectionFilter 1.0 DeviceCollectionFilter.qml
 DeviceCollectionFilterDecorator 1.0 DeviceCollectionFilterDecorator.qml
 LicenseCollectionFilter 1.0 LicenseCollectionFilter.qml
 OrderCollectionFilter 1.0 OrderCollectionFilter.qml
+
+AccountEditor 1.0 AccountEditor.qml
+AccountCollectionView 1.0 AccountCollectionView.qml

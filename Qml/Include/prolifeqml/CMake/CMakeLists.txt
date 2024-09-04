@@ -52,6 +52,18 @@ list(APPEND webdirs ${buildwebdir}/src/imtdocgui)
 list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcontrols)
 list(APPEND webdirs ${buildwebdir}/src/imtcontrols)
 
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeAccountsSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeAccountsSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeSensorsSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeSensorsSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeLicensesSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeLicensesSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeOrdersSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeOrdersSdl)
+
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 

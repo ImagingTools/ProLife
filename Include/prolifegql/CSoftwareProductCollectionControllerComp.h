@@ -2,17 +2,20 @@
 
 
 // ImtCore includes
-#include <imtgql/CObjectCollectionControllerCompBase.h>
+#include <imtlic/IProductInstanceInfo.h>
+
+// ProLife includes
+#include <GeneratedFiles/prolifesdl/SDL/CPP/Licenses/LicensesAPIv1_0.h>
 
 
 namespace prolifegql
 {
 
 
-class CSoftwareProductCollectionControllerComp: public imtgql::CObjectCollectionControllerCompBase
+class CSoftwareProductCollectionControllerComp: public  prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase
 {
 public:
-	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
+	typedef prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -21,17 +24,28 @@ public:
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all licenses", true, "ViewAllLicenses");
+			I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (imtgql::CObjectCollectionControllerCompBase)
-	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual bool SetupGqlItem(
-				const imtgql::CGqlRequest& gqlRequest,
-				imtbase::CTreeItemModel& model,
-				int itemIndex,
-				const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+	// reimplemented (prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase)
+	virtual bool CreateRepresentationFromObject(
+				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+				const prolife::sdl::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+				prolife::sdl::Licenses::CSoftwareProductItem& representationObject,
 				QString& errorMessage) const override;
+	virtual istd::IChangeable* CreateObjectFromRepresentation(
+				const prolife::sdl::Licenses::CSoftwareProductData& softwareProductDataRepresentation,
+				QByteArray& newObjectId,
+				QString& name,
+				QString& description,
+				QString& errorMessage) const override;
+	virtual bool CreateRepresentationFromObject(
+				const istd::IChangeable& data,
+				const prolife::sdl::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+				prolife::sdl::Licenses::CSoftwareProductDataPayload& representationPayload,
+				QString& errorMessage) const override;
+	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
 private:
@@ -41,6 +55,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_ATTR(QByteArray, m_permissionIdAttrPtr);
+	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 };
 
 

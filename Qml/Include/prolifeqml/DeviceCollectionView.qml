@@ -6,6 +6,7 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
 import imtdocgui 1.0
+import prolifeSensorsSdl 1.0
 
 RemoteCollectionView {
     id: container;
@@ -187,10 +188,22 @@ RemoteCollectionView {
     Component {
         id: dataControllerComp;
 
-        GqlDocumentDataController {
+        GqlRequestDocumentDataController {
+            id: requestDocumentDataController
+
             gqlGetCommandId: "DeviceItem";
             gqlUpdateCommandId: "DeviceUpdate";
             gqlAddCommandId: "DeviceAdd";
+
+            documentModelComp: Component {
+                DeviceData {}
+            }
+
+            payloadModel: DeviceDataPayload {
+                onFinished: {
+                    requestDocumentDataController.documentModel = m_deviceData
+                }
+            }
         }
     }
 

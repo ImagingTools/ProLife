@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -14,7 +14,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="FixedItemQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtauthgui/AccountCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Account"/>

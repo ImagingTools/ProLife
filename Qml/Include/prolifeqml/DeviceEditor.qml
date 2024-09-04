@@ -8,6 +8,7 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
 import prolifeqml 1.0
+import prolifeSensorsSdl 1.0
 
 ViewBase {
     id: deviceEditorContainer;
@@ -25,20 +26,28 @@ ViewBase {
 
     property int comboBoxHeight: 27;
 
+    property DeviceData deviceData: model ? model : null;
+
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
         CachedProductCollection.updateModel();
+
     }
 
-    onModelChanged: {
+    // onModelChanged: {
+    //     checkPermissions();
+    // }
+
+    onDeviceDataChanged: {
         checkPermissions();
     }
 
     function checkPermissions(){
-        let deviceId = "";
-        if (model.containsKey("Id")){
-            deviceId = model.getData("Id");
+        if (!deviceData){
+            return;
         }
+
+        let deviceId = deviceData.m_id;
 
         let canAddSensor = PermissionsController.checkPermission("AddSensor");
         if (deviceId === "" && canAddSensor){
@@ -95,16 +104,16 @@ ViewBase {
     }
 
     function checkFinishedStatus(){
+        if (!deviceData){
+            return;
+        }
+
         if (macAddressInput.acceptableInput &&
-            serialNumberInput.acceptableInput &&
-            !ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp) &&
-            PermissionsController.checkPermission("ChangeProductionStatus")){
-            let status = model.getData("ProductionStatus")
+                serialNumberInput.acceptableInput &&
+                !ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp) &&
+                PermissionsController.checkPermission("ChangeProductionStatus")){
 
-            let macAddress = model.getData("MacAddress")
-            let serialNumber = model.getData("SerialNumber")
-
-            if (macAddress !== "" && serialNumber !== "" && status !== "Finished"){
+            if (deviceData.m_macAddress !== "" && deviceData.m_serialNumber !== "" && deviceData.m_productionStatus !== "Finished"){
                 ModalDialogManager.openDialog(confirmSetFinishedStatusDialogComp);
             }
         }
@@ -163,164 +172,123 @@ ViewBase {
     }
 
     function updateGui(){
-        if (deviceEditorContainer.model.containsKey("Description")){
-            descriptionInput.text = deviceEditorContainer.model.getData("Description");
-        }
-        else{
-            descriptionInput.text = "";
+        if (!deviceData){
+            return;
         }
 
-        if (deviceEditorContainer.model.containsKey("SerialNumber")){
-            serialNumberInput.text = deviceEditorContainer.model.getData("SerialNumber");
-        }
-        else{
-            serialNumberInput.text = "";
-        }
+        descriptionInput.text = deviceData.m_description;
+        serialNumberInput.text = deviceData.m_serialNumber;
+        macAddressInput.text = deviceData.m_macAddress;
+        projectInput.text = deviceData.m_project;
 
-        if (deviceEditorContainer.model.containsKey("MacAddress")){
-            macAddressInput.text = deviceEditorContainer.model.getData("MacAddress");
-        }
-        else{
-            macAddressInput.text = "";
-        }
+        statusCB.currentIndex = -1;
 
-        if (deviceEditorContainer.model.containsKey("Project")){
-            projectInput.text = deviceEditorContainer.model.getData("Project");
-        }
-        else{
-            projectInput.text = "";
-        }
+        let status = deviceData.m_productionStatus;
+        let statusModel = statusCB.model;
+        if (statusModel){
+            for (let i = 0; i < statusModel.getItemsCount(); i++){
+                let id = statusModel.getData("Id", i);
+                if (id === status){
+                    statusCB.currentIndex = i;
 
-        let statusFound = false;
-        if (deviceEditorContainer.model.containsKey("ProductionStatus")){
-            let status = deviceEditorContainer.model.getData("ProductionStatus");
-            let statusModel = statusCB.model;
-            if (statusModel){
-                for (let i = 0; i < statusModel.getItemsCount(); i++){
-                    let id = statusModel.getData("Id", i);
-                    if (id === status){
-                        statusCB.currentIndex = i;
-
-                        statusFound = true;
-                        break;
-                    }
+                    break;
                 }
             }
         }
 
-        if (!statusFound){
-            statusCB.currentIndex = -1;
-        }
+        productCB.currentIndex = -1;
 
-        let deviceTypeFound = false;
-        if (deviceEditorContainer.model.containsKey("DeviceType")){
-            let productId = deviceEditorContainer.model.getData("DeviceType");
-            let productModel = productCB.model;
-            if (productModel){
-                for (let i = 0; i < productModel.getItemsCount(); i++){
-                    let id = productModel.getData("Id", i);
-                    if (id === productId){
-                        productCB.currentIndex = i;
+        let productId = deviceData.m_deviceType;
+        let productModel = productCB.model;
+        if (productModel){
+            for (let i = 0; i < productModel.getItemsCount(); i++){
+                let id = productModel.getData("Id", i);
+                if (id === productId){
+                    productCB.currentIndex = i;
 
-                        deviceTypeFound = true;
-                        break;
-                    }
+                    break;
                 }
             }
         }
 
-        if (!deviceTypeFound){
-            productCB.currentIndex = -1;
-        }
+        configurationCB.currentIndex = -1;
 
-        let configurationTypeFound = false;
-        if (deviceEditorContainer.model.containsKey("LicenseName")){
-            let productId = deviceEditorContainer.model.getData("LicenseName");
-            let model = configurationCB.model;
-            if (model){
-                for (let i = 0; i < model.getItemsCount(); i++){
-                    let id = model.getData("Id", i);
-                    if (id === productId){
-                        configurationCB.currentIndex = i;
+        let licenseName = deviceData.m_licenseName;
+        let model = configurationCB.model;
+        if (model){
+            for (let i = 0; i < model.getItemsCount(); i++){
+                let id = model.getData("Id", i);
+                if (id === licenseName){
+                    configurationCB.currentIndex = i;
 
-                        configurationTypeFound = true;
-                        break;
-                    }
+                    break;
                 }
             }
         }
 
-        if (!configurationTypeFound){
-            configurationCB.currentIndex = -1;
-        }
+        orderCB.currentIndex = -1;
 
-        let orderIdFound = false;
-
-        if (deviceEditorContainer.model.containsKey("OrderId")){
-            let orderId = deviceEditorContainer.model.getData("OrderId");
-            let ordersModel = orderCB.model;
-            if (ordersModel){
-                for (let i = 0; i < ordersModel.getItemsCount(); i++){
-                    let id = ordersModel.getData("Id", i);
-                    if (id === orderId){
-                        orderCB.currentIndex = i;
-                        orderIdFound = true;
-                        break;
-                    }
+        let orderId = deviceData.m_orderId;
+        let ordersModel = orderCB.model;
+        if (ordersModel){
+            for (let i = 0; i < ordersModel.getItemsCount(); i++){
+                let id = ordersModel.getData("Id", i);
+                if (id === orderId){
+                    orderCB.currentIndex = i;
+                    break;
                 }
             }
-        }
-
-        if (!orderIdFound){
-            orderCB.currentIndex = -1;
         }
     }
 
     function updateModel(){
+        if (!deviceData){
+            return;
+        }
+
         if (productCB.currentIndex >= 0 && productCB.model){
             let selectedProductId = productCB.model.getData("Id", productCB.currentIndex);
-            deviceEditorContainer.model.setData("DeviceType", selectedProductId);
+            deviceData.m_deviceType = selectedProductId;
         }
         else{
-            deviceEditorContainer.model.setData("DeviceType", "");
+            deviceData.m_deviceType = "";
         }
 
         let configurationExists = false;
         if (configurationCB.model){
             if (configurationCB.currentIndex >= 0){
                 let configurationType = configurationCB.model.getData("Id", configurationCB.currentIndex);
-                deviceEditorContainer.model.setData("LicenseName", configurationType);
-
+                deviceData.m_licenseName = configurationType;
                 configurationExists = true;
             }
         }
 
         if (!configurationExists){
-            deviceEditorContainer.model.setData("LicenseName", "");
+            deviceData.m_licenseName = "";
         }
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
                 let selectedOrderId = orderCB.model.getData("Id", orderCB.currentIndex);
-                deviceEditorContainer.model.setData("OrderId", selectedOrderId);
+                deviceData.m_orderId = selectedOrderId;
             }
             else{
-                deviceEditorContainer.model.setData("OrderId", "");
+                deviceData.m_orderId = "";
             }
         }
 
-        deviceEditorContainer.model.setData("Description", descriptionInput.text);
-        deviceEditorContainer.model.setData("SerialNumber", serialNumberInput.text);
-        deviceEditorContainer.model.setData("MacAddress", macAddressInput.text);
-        deviceEditorContainer.model.setData("Project", projectInput.text);
+        deviceData.m_description = descriptionInput.text;
+        deviceData.m_serialNumber = serialNumberInput.text;
+        deviceData.m_macAddress = macAddressInput.text;
+        deviceData.m_project = projectInput.text;
 
         if (statusCB.currentIndex >= 0 && statusCB.model){
             let selectedStatus = statusCB.model.getData("Id", statusCB.currentIndex);
-            deviceEditorContainer.model.setData("ProductionStatus", selectedStatus);
+            deviceData.m_productionStatus = selectedStatus;
         }
         else{
-            deviceEditorContainer.model.setData("ProductionStatus", "");
+            deviceData.m_productionStatus = "";
         }
     }
 
@@ -552,9 +520,6 @@ ViewBase {
                         deviceEditorContainer.doUpdateModel();
 
                         if (statusCB.currentIndex >= 0){
-                            if ( deviceEditorContainer.model.containsKey("ProductionStatus")){
-                                let status = deviceEditorContainer.model.getData("ProductionStatus");
-                            }
                         }
                         else{
                             statusCB.model = productionStatus.statusModel;

@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -34,7 +34,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>SoftwareProductCollectionController</Value>
-                                <Value>SoftwareProductController</Value>
                                 <Value>CollectionCommands</Value>
                                 <Value>ObjectCommands</Value>
                             </Values>
@@ -151,24 +150,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ObjectViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareProduct"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/SoftwareEditor.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="OperationContextController" PackageId="ImtGqlPck" ComponentId="OperationContextController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -179,6 +160,11 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareInstanceInfo" PackageId="ProLifeDataPck" ComponentId="OrderedIdentifiableSoftwareInstanceInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="SoftwarePermissions" PackageId="ProLifeVoce" ComponentId="SoftwarePermissions">
@@ -203,6 +189,10 @@
                                 <Value>SoftwareProductsList</Value>
                                 <Value>SoftwareProductsObjectView</Value>
                                 <Value>SoftwareProductsRemove</Value>
+                                <Value>SoftwareProductItem</Value>
+                                <Value>SoftwareProductUpdate</Value>
+                                <Value>SoftwareProductAdd</Value>
+                                <Value>SoftwareProductHistory</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -211,6 +201,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="HeadersDataProvider"/>
@@ -227,9 +220,6 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ObjectViewDataProvider"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
@@ -245,51 +235,8 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="SoftwareProductController" PackageId="ProLifeGqlPck" ComponentId="SoftwareProductController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>SoftwareProductItem</Value>
-                                <Value>SoftwareProductUpdate</Value>
-                                <Value>SoftwareProductAdd</Value>
-                                <Value>SoftwareProductHistory</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwarePermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="OrderOperationContextController">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="SoftwareFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareInstanceInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -538,6 +485,5 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
-        <Component ExportedId="SoftwareProductController" ComponentId="SoftwareProductController"/>
     </ExportedComponents>
 </Acf>

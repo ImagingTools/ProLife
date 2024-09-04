@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -37,7 +37,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>DeviceCollectionController</Value>
-                                <Value>DeviceController</Value>
                                 <Value>CollectionCommands</Value>
                                 <Value>DeviceCommands</Value>
                                 <Value>HardwareProductBindingController</Value>
@@ -94,6 +93,10 @@
                             <Values>
                                 <Value>DevicesInfo</Value>
                                 <Value>DevicesList</Value>
+                                <Value>DeviceAdd</Value>
+                                <Value>DeviceUpdate</Value>
+                                <Value>DeviceItem</Value>
+                                <Value>DeviceHistory</Value>
                                 <Value>DevicesObjectView</Value>
                                 <Value>DevicesRemove</Value>
                                 <Value>DevicesMetaInfo</Value>
@@ -102,6 +105,12 @@
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DevicePermissions"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DeviceHeadersDataProvider"/>
@@ -118,13 +127,13 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceViewDataProvider"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="OrderOperationContextController">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
@@ -149,55 +158,6 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="DeviceController" PackageId="ProLifeGqlPck" ComponentId="DeviceController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>DeviceAdd</Value>
-                                <Value>DeviceUpdate</Value>
-                                <Value>DeviceItem</Value>
-                                <Value>DeviceHistory</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DevicePermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="OrderOperationContextController">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -278,24 +238,6 @@
         <Element Id="DevicePermissions" PackageId="ProLifeVoce" ComponentId="DevicePermissions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="DeviceViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Device"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/DeviceEditor.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="HardwareBindingChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="HardwareBindingChangeGenerator">
@@ -1186,7 +1128,6 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="DeviceController" ComponentId="DeviceController"/>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
     </ExportedComponents>
 </Acf>

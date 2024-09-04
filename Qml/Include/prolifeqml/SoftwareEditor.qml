@@ -7,6 +7,7 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
 import prolifeqml 1.0
+import prolifeLicensesSdl 1.0
 
 ViewBase {
     id: root;
@@ -18,6 +19,8 @@ ViewBase {
 
     property string alertMessage: "";
     property int comboBoxHeight: 27;
+
+    property SoftwareProductData softwareProductData: model ? model : null;
 
     Component.onCompleted: {
         CachedProductCollection.updateModel();
@@ -34,7 +37,12 @@ ViewBase {
         }
     }
 
-    onModelChanged: {
+    // onModelChanged: {
+    //     checkPermissions();
+    //     checkInUse();
+    // }
+
+    onSoftwareProductDataChanged: {
         checkPermissions();
         checkInUse();
     }
@@ -47,10 +55,11 @@ ViewBase {
     }
 
     function checkPermissions(){
-        let softwareId = "";
-        if (model.containsKey("Id")){
-            softwareId = model.getData("Id");
+        if (!softwareProductData){
+            return;
         }
+
+        let softwareId = softwareProductData.m_id;
 
         let canAddLicense = PermissionsController.checkPermission("AddLicense");
         if (softwareId === "" && canAddLicense){
@@ -101,14 +110,13 @@ ViewBase {
     }
 
     function checkInUse(){
-        if (!root.model){
+        if (!softwareProductData){
             return;
         }
 
         let parameters = {"Id": "SoftwareProducts"};
-        let inUse = root.model.getData("InUse");
 
-        if (inUse){
+        if (softwareProductData.m_inUse){
             root.readOnly = true;
             parameters["AlertPanelComp"] = alertComp
             Events.sendEvent("SetAlertPanel", parameters);
@@ -133,78 +141,70 @@ ViewBase {
     }
 
     function updateGui(){
-        if (root.model.containsKey("Project")){
-            projectInput.text = root.model.getData("Project");
-        }
-        else{
-            projectInput.text = "";
+        if (!softwareProductData){
+            console.error("Unable to update GUI for 'SoftwareEditor'. Error: softwareProductData is invalid");
+            return;
         }
 
-        let orderFound = false;
-        if (root.model.containsKey("OrderUuid")){
-            let orderUuid = root.model.getData("OrderUuid");
-            if (ordersCB.model){
-                for (let i = 0; i < ordersCB.model.getItemsCount(); i++){
-                    let id = ordersCB.model.getData("Id", i);
-                    if (id === orderUuid){
-                        ordersCB.currentIndex = i;
+        projectInput.text = softwareProductData.m_project;
 
-                        orderFound = true;
-                        break;
-                    }
+        ordersCB.currentIndex = -1;
+
+        let orderUuid = softwareProductData.m_orderUuid;
+        if (ordersCB.model){
+            for (let i = 0; i < ordersCB.model.getItemsCount(); i++){
+                let id = ordersCB.model.getData("Id", i);
+                if (id === orderUuid){
+                    ordersCB.currentIndex = i;
+                    break;
                 }
             }
         }
 
-        if (!orderFound){
-            ordersCB.currentIndex = -1;
-        }
+        productCB.currentIndex = -1;
+        let productId = softwareProductData.m_productId;
 
-        let productFound = false;
-        if (root.model.containsKey("ProductId")){
-            let productId = root.model.getData("ProductId");
-
-            if (productCB.model){
-                for (let i = 0; i < productCB.model.getItemsCount(); i++){
-                    let id = productCB.model.getData("Id", i);
-                    if (id === productId){
-                        productCB.currentIndex = i;
-                        productFound = true;
-                        break;
-                    }
+        if (productCB.model){
+            for (let i = 0; i < productCB.model.getItemsCount(); i++){
+                let id = productCB.model.getData("Id", i);
+                if (id === productId){
+                    productCB.currentIndex = i;
+                    break;
                 }
             }
-        }
-
-        if (!productFound){
-            productCB.currentIndex = -1;
         }
 
         group2.updateGui();
     }
 
     function updateModel(){
-        root.model.setData("Project", projectInput.text);
+        if (!softwareProductData){
+            console.error("Unable to update model for 'SoftwareEditor'. Error: softwareProductData is invalid");
+            return;
+        }
+
+        softwareProductData.m_project = projectInput.text;
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
         if (canChangeOrder){
             if (ordersCB.model){
                 if (ordersCB.currentIndex >= 0){
                     let orderUuid = ordersCB.model.getData("Id", ordersCB.currentIndex);
-                    root.model.setData("OrderUuid", orderUuid);
+                    softwareProductData.m_orderUuid = orderUuid;
                 }
                 else{
-                    root.model.setData("OrderUuid", "");
+                    softwareProductData.m_orderUuid = "";
                 }
             }
         }
 
         if (productCB.currentIndex >= 0 && productCB.model){
             let selectedId = productCB.model.getData("Id", productCB.currentIndex);
-            root.model.setData("ProductId", selectedId);
+            softwareProductData.m_productId = selectedId;
         }
         else{
-            root.model.setData("ProductId", "");
+            softwareProductData.m_productId = "";
+
         }
 
         group2.updateModel();
@@ -354,76 +354,63 @@ ViewBase {
                 width: parent.width;
 
                 function updateGui(){
-                    if (root.model.containsKey("SerialNumber")){
-                        serialNumberInput.text = root.model.getData("SerialNumber")
-                    }
-                    else{
-                        serialNumberInput.text = "";
-                    }
+                    serialNumberInput.text = root.softwareProductData.m_serialNumber;
 
-                    let licenseFound = false;
+                    licenseCB.currentIndex = -1;
 
-                    let licenseUuid = root.model.getData("LicenseUuid");
+                    let licenseUuid = root.softwareProductData.m_licenseUuid;
                     if (licenseCB.model){
                         for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
                             let licenseId = licenseCB.model.getData("Id", i);
                             if (licenseId === licenseUuid){
                                 licenseCB.currentIndex = i;
 
-                                licenseFound = true;
-
                                 break;
                             }
                         }
                     }
 
-                    if (!licenseFound){
-                        licenseCB.currentIndex = -1;
+                    let expiration = root.softwareProductData.m_expiration;
+
+                    if (expiration && expiration !== "" ){
+                        unlimitedSwitch.switchRef.setChecked(false);
+                    }
+                    else{
+                        unlimitedSwitch.switchRef.setChecked(true);
                     }
 
-                    if (root.model.containsKey("Expiration")){
-                        let expiration = root.model.getData("Expiration");
+                    if (expirationEditor.datePicker){
+                        if (expiration){
+                            let currentDate = expirationEditor.datePicker.getDateAsString()
 
-                        if (expiration && expiration !== "" ){
-                            unlimitedSwitch.switchRef.setChecked(false);
-                        }
-                        else{
-                            unlimitedSwitch.switchRef.setChecked(true);
-                        }
+                            if (expiration !== "" && expiration !== currentDate){
+                                let date = expiration;
+                                let data = date.split("-");
 
-                        if (expirationEditor.datePicker){
-                            if (expiration){
-                                let currentDate = expirationEditor.datePicker.getDateAsString()
-
-                                if (expiration !== "" && expiration !== currentDate){
-                                    let date = expiration;
-                                    let data = date.split("-");
-
-                                    expirationEditor.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-                                }
+                                expirationEditor.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
                             }
                         }
                     }
                 }
 
                 function updateModel(){
-                    root.model.setData("SerialNumber", serialNumberInput.text)
+                    root.softwareProductData.m_serialNumber = serialNumberInput.text;
 
                     if (expirationEditor.datePicker){
                         if (!unlimitedSwitch.checked){
-                            root.model.setData("Expiration", expirationEditor.datePicker.getDateAsString());
+                            root.softwareProductData.m_expiration = expirationEditor.datePicker.getDateAsString();
                         }
                         else{
-                            root.model.setData("Expiration", "");
+                            root.softwareProductData.m_expiration = "";
                         }
                     }
 
                     if (licenseCB.currentIndex >= 0 && licenseCB.model){
                         let selectedId = licenseCB.model.getData("Id", licenseCB.currentIndex);
-                        root.model.setData("LicenseUuid", selectedId);
+                        root.softwareProductData.m_licenseUuid = selectedId;
                     }
                     else{
-                        root.model.setData("LicenseUuid", "");
+                        root.softwareProductData.m_licenseUuid = "";
                     }
                 }
 
@@ -593,9 +580,9 @@ ViewBase {
                                 mainMargin: Style.size_mainMargin;
 
                                 Component.onCompleted: {
-                                   datePicker_.readOnly = expirationEditor.readOnly
+                                    datePicker_.readOnly = expirationEditor.readOnly
 
-                                   expirationEditor.datePicker = datePicker_;
+                                    expirationEditor.datePicker = datePicker_;
                                 }
 
                                 onDateChanged: {

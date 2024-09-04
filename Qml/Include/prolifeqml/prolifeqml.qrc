@@ -36,5 +36,9 @@
         <file alias="ProLife/OrderCollectionFilter.qml">OrderCollectionFilter.qml</file>
         <file alias="ProLife/OrdersMultiDocWorkspacePageView.qml">OrdersMultiDocWorkspacePageView.qml</file>
         <file alias="ProLife/OrderProductDelegate.qml">OrderProductDelegate.qml</file>
+	<file alias="ProLife/AccountEditorCommandsDelegate.qml">AccountEditorCommandsDelegate.qml</file>
+	<file alias="ProLife/AccountEditor.qml">AccountEditor.qml</file>
+	<file alias="ProLife/AccountCollectionViewCommandsDelegate.qml">AccountCollectionViewCommandsDelegate.qml</file>
+	<file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
     </qresource>
 </RCC>

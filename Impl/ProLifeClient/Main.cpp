@@ -15,6 +15,7 @@
 #include <imtstyle/CImtStyle.h>
 #include <imtbase/CTreeItemModel.h>
 #include <imtqml/CGqlModel.h>
+#include <imtqml/CGqlRequest.h>
 #include <imtqml/CQuickApplicationComp.h>
 #include <imtqml/CRemoteFileController.h>
 
@@ -43,6 +44,10 @@ int main(int argc, char *argv[])
 
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(prolifestyle);
+	Q_INIT_RESOURCE(prolifeAccountsSdl);
+	Q_INIT_RESOURCE(prolifeSensorsSdl);
+	Q_INIT_RESOURCE(prolifeLicensesSdl);
+	Q_INIT_RESOURCE(prolifeOrdersSdl);
 
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -61,6 +66,7 @@ int main(int argc, char *argv[])
 
 	qmlRegisterType<imtbase::CTreeItemModel>("Acf", 1, 0, "TreeItemModel");
 	qmlRegisterType<imtqml::CGqlModel>("Acf", 1, 0, "GqlModel");
+	qmlRegisterType<imtqml::CGqlRequest>("Acf", 1, 0, "GqlRequest");
 	qmlRegisterType<imtqml::CRemoteFileController>("Acf", 1, 0, "RemoteFileController");
 
 	ibase::IApplication* applicationPtr = instance.GetInterface<ibase::IApplication>();

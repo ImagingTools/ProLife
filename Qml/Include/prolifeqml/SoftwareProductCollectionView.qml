@@ -6,6 +6,7 @@ import imtcontrols 1.0
 import imtcolgui 1.0
 import imtguigql 1.0
 import imtdocgui 1.0
+import prolifeLicensesSdl 1.0
 
 RemoteCollectionView {
     id: container;
@@ -55,7 +56,7 @@ RemoteCollectionView {
         if (documentManager){
             container.commandsDelegate.documentManager = documentManager;
             documentManager.registerDocumentView("SoftwareProduct", "SoftwareProductEditor", softwareEditorComp);
-            documentManager.registerDocumentDataController("SoftwareProduct", dataControllerComp);
+            documentManager.registerDocumentDataController("SoftwareProduct", documentDataControllerComp);
             documentManager.registerDocumentValidator("SoftwareProduct", licenseValidatorComp);
         }
     }
@@ -82,12 +83,24 @@ RemoteCollectionView {
     }
 
     Component {
-        id: dataControllerComp;
+        id: documentDataControllerComp;
 
-        GqlDocumentDataController {
+        GqlRequestDocumentDataController {
+            id: requestDocumentDataController
+
             gqlGetCommandId: "SoftwareProductItem";
             gqlUpdateCommandId: "SoftwareProductUpdate";
             gqlAddCommandId: "SoftwareProductAdd";
+
+            documentModelComp: Component {
+                SoftwareProductData {}
+            }
+
+            payloadModel: SoftwareProductDataPayload {
+                onFinished: {
+                    requestDocumentDataController.documentModel = m_softwareProductData
+                }
+            }
         }
     }
 

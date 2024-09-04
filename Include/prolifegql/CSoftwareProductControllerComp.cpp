@@ -459,12 +459,6 @@ istd::IChangeable* CSoftwareProductControllerComp::CreateObjectFromRequest(
 		}
 	}
 
-	if (itemModel.ContainsKey("Project")){
-		QByteArray project = itemModel.GetData("Project").toByteArray();
-
-		productOrderInfoPtr->SetProject(project);
-	}
-
 	productOrderInfoPtr->SetupProductInstance(productId, "", customerUuid);
 
 	QByteArray licenseId;

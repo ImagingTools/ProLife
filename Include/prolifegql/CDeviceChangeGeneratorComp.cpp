@@ -82,6 +82,10 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(
 			imtbase::CObjectCollection& documentChangeCollection,
 			QString& errorMessage)
 {
+	if (oldDocumentPtr == nullptr || newDocumentPtr == nullptr){
+		return false;
+	}
+
 	const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* oldDeviceInfoPtr = dynamic_cast<const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(oldDocumentPtr);
 	if (oldDeviceInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. Old document is invalid");

@@ -2,123 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountCollectionCommands" PackageId="" ComponentId="AccountCollectionCommands">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="AccountCommands" PackageId="" ComponentId="AccountCommands">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="AccountDataController" PackageId="ProLifeGqlPck" ComponentId="CustomerController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="AccountFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="AccountInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>AccountItem</Value>
-                                <Value>AccountAdd</Value>
-                                <Value>AccountUpdate</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AccountPermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="AccountInfo" PackageId="ProLifeGqlPck" ComponentId="CustomerInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
-            </Data>
-        </Element>
-        <Element Id="AccountListController" PackageId="ProLifeGqlPck" ComponentId="CustomerCollectionController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>AccountsInfo</Value>
-                                <Value>AccountsList</Value>
-                                <Value>AccountsRemove</Value>
-                                <Value>AccountsMetaInfo</Value>
-                                <Value>AccountsRename</Value>
-                                <Value>AccountsSetDescription</Value>
-                                <Value>AccountsObjectView</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AccountPermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsHeadersDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsList"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ObjectViewDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllAccounts"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="AccountPermissions" PackageId="ProLifeVoce" ComponentId="AccountPermissions">
@@ -236,45 +130,71 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CustomerCollectionController" PackageId="ProLifeGqlPck" ComponentId="CustomerCollectionController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="AccountInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AccountsInfo</Value>
+                                <Value>AccountItem</Value>
+                                <Value>AccountAdd</Value>
+                                <Value>AccountUpdate</Value>
+                                <Value>AccountsList</Value>
+                                <Value>AccountsRemove</Value>
+                                <Value>AccountsMetaInfo</Value>
+                                <Value>AccountsRename</Value>
+                                <Value>AccountsSetDescription</Value>
+                                <Value>AccountsObjectView</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccountPermissions"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccountsHeadersDataProvider"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="AccountsList"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ViewAllAccounts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Demultiplexer" PackageId="ImtGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AccountListController</Value>
-                                <Value>AccountDataController</Value>
+                                <Value>CustomerCollectionController</Value>
                                 <Value>CollectionCommandsController</Value>
                                 <Value>StandardDocumentCommandsController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ObjectViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Account"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Account</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="../../imtauthgui/AccountEditor.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -359,428 +279,9 @@
             </Data>
         </Element>
     </ElementsList>
-    <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="AccountCollectionCommands">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AccountCommandsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AccountsCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="Commands"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CommandsRepresentation"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="AccountsCommandPermissions" PackageId="ImtCoreVoce" ComponentId="CollectionCommandPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="EditCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewAccounts</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="NewCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddAccount</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RemoveCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>RemoveAccount</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="Commands" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>New</Value>
-                                            <Value>Remove</Value>
-                                            <Value>Edit</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandsRepresentation" PackageId="ImtCorePck" ComponentId="GuiElementRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="AccountsCommandPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Accounts"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Edit" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Edit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Edit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Edit"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="New" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Add"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="New"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="New"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Remove" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Delete"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Remove"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Remove"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="AccountCommandsController"/>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="AccountCommandsController"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="AccountCommandsController"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="AccountCommands">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AccountCommandPermissions" PackageId="ImtCoreVoce" ComponentId="DocumentCommandPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CloseCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>RemoveAccount</Value>
-                                            <Value>ViewAccounts</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RedoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddAccount</Value>
-                                            <Value>RemoveAccount</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SaveCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddAccount</Value>
-                                            <Value>RemoveAccount</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UndoCommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddAccount</Value>
-                                            <Value>RemoveAccount</Value>
-                                            <Value>ChangeCustomerId</Value>
-                                            <Value>ChangeAccountDescription</Value>
-                                            <Value>ChangeAccountName</Value>
-                                            <Value>ChangeAccountEmail</Value>
-                                            <Value>ChangeCompanyAddress</Value>
-                                            <Value>ChangeAccountGroups</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="AccountCommandsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AccountCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="Commands"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CommandsRepresentation"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="Close" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Close"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Close"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Close"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Commands" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>Undo</Value>
-                                            <Value>Redo</Value>
-                                            <Value>Empty</Value>
-                                            <Value>Save</Value>
-                                            <Value>Empty</Value>
-                                            <Value>Close</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandsRepresentation" PackageId="ImtCorePck" ComponentId="GuiElementRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="AccountCommandPermissions"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Account"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Redo" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Redo"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Redo"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Redo"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Save" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Save"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Save"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Save"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Undo" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Undo"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Undo"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Undo"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="AccountCommandsController"/>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="AccountCommandsController"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="AccountCommandsController"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-    </EmbeddedRegistriesList>
+    <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtbase::ISearchController" ComponentId="AccountListController"/>
+        <Interface InterfaceId="imtbase::ISearchController" ComponentId="CustomerCollectionController"/>
         <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>

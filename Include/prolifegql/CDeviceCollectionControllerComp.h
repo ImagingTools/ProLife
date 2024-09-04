@@ -1,17 +1,19 @@
 #pragma once
 
-// ImtCore includes
-#include <imtgql/CObjectCollectionControllerCompBase.h>
+
+// ProLife includes
+#include <prolifedata/IDeviceInfo.h>
+#include <GeneratedFiles/prolifesdl/SDL/CPP/Sensors/SensorsAPIv1_0.h>
 
 
 namespace prolifegql
 {
 
 
-class CDeviceCollectionControllerComp: public imtgql::CObjectCollectionControllerCompBase
+class CDeviceCollectionControllerComp: public prolife::sdl::Sensors::CDeviceCollectionControllerCompBase
 {
 public:
-	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
+	typedef prolife::sdl::Sensors::CDeviceCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -21,17 +23,29 @@ public:
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all devices", true, "");
+		I_ASSIGN(m_deviceInfoFactCompPtr, "DeviceFactory", "Factory used for creation of the new device instance", true, "DeviceFactory");
+		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Order operation context controller", true, "OrderOperationContextController");
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (imtgql::CObjectCollectionControllerCompBase)
-	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual bool SetupGqlItem(
-				const imtgql::CGqlRequest& gqlRequest,
-				imtbase::CTreeItemModel& model,
-				int itemIndex,
-				const imtbase::IObjectCollectionIterator* objectCollectionIterator,
+	// reimplemented (prolife::sdl::Sensors::CDeviceCollectionControllerCompBase)
+	virtual bool CreateRepresentationFromObject(
+				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+				const prolife::sdl::Sensors::CDevicesListGqlRequest& devicesListRequest,
+				prolife::sdl::Sensors::CDeviceItem& representationObject,
 				QString& errorMessage) const override;
+	virtual istd::IChangeable* CreateObjectFromRepresentation(
+				const prolife::sdl::Sensors::CDeviceData& deviceDataRepresentation,
+				QByteArray& newObjectId,
+				QString& name,
+				QString& description,
+				QString& errorMessage) const override;
+	virtual bool CreateRepresentationFromObject(
+				const istd::IChangeable& data,
+				const prolife::sdl::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
+				prolife::sdl::Sensors::CDeviceDataPayload& representationPayload,
+				QString& errorMessage) const override;
+	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
@@ -43,6 +57,8 @@ private:
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_ATTR(QByteArray, m_permissionIdAttrPtr);
+	I_FACT(prolifedata::IDeviceInfo, m_deviceInfoFactCompPtr);
+	I_REF(imtgql::IOperationContextController, m_orderOperationContextControllerCompPtr);
 };
 
 

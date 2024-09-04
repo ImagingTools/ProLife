@@ -13,12 +13,13 @@ DocumentValidator {
     }
 
     function isValid(data){
-        //Check mac address valid
-        let macAddress = "";
-        if (documentModel.containsKey("MacAddress")){
-            macAddress = documentModel.getData("MacAddress");
+        if (!documentModel){
+            data.message = qsTr("Document model is invalid")
+            return false;
         }
 
+        //Check mac address valid
+        let macAddress = documentModel.m_macAddress;
         if (macAddress !== ""){
             let regExp = new RegExp(regularExpressionValidator.regularExpression);
             if (!regExp.test(macAddress)){
@@ -28,11 +29,7 @@ DocumentValidator {
         }
 
         //Check device type valid
-        let deviceType = "";
-        if (documentModel.containsKey("DeviceType")){
-            deviceType = documentModel.getData("DeviceType");
-        }
-
+        let deviceType = documentModel.m_deviceType;
         if (String(deviceType) === ""){
             data.message = qsTr("Please select a device type")
 
@@ -40,11 +37,7 @@ DocumentValidator {
         }
 
         //Check device configuration valid
-        let configurationType = "";
-        if (documentModel.containsKey("LicenseName")){
-            configurationType = documentModel.getData("LicenseName");
-        }
-
+        let configurationType = documentModel.m_licenseName;
         if (String(configurationType) === ""){
             data.message = qsTr("Please select a device configuration")
 

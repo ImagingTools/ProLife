@@ -8,7 +8,7 @@
 #include <imtbase/imtbase.h>
 
 // ProLife includes
-#include <prolifedata/ICustomerInfo.h>
+#include <prolifedata/CCustomerInfo.h>
 
 
 namespace prolifegql
@@ -17,174 +17,231 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (imtgql::CObjectCollectionControllerCompBase)
+// reimplemented (prolife::sdl::Accounts::CAccountCollectionControllerCompBase)
 
-imtbase::CTreeItemModel* CCustomerCollectionControllerComp::GetMetaInfo(
-			const imtgql::CGqlRequest& gqlRequest,
+bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
+			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+			const prolife::sdl::Accounts::CAccountsListGqlRequest& accountsListRequest,
+			prolife::sdl::Accounts::CAccountItem& representationObject,
 			QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid() || !m_translationManagerCompPtr.IsValid()){
-		errorMessage = QString("Internal error").toUtf8();
+	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 
-		return nullptr;
-	}
-
-	QByteArray languageId;
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr != nullptr){
-		languageId = gqlContextPtr->GetLanguageId();
-	}
-
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
-	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-
-	QByteArray accountId = GetObjectIdFromInputParams(gqlRequest.GetParams());
-
-	int index = dataModelPtr->InsertNewItem();
-
-	QString modificationTime = QT_TR_NOOP("Modification Time");
-	QString modificationTimeTr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), modificationTime.toUtf8(), languageId, "prolifegql::CCustomerCollectionControllerComp");
-
-	dataModelPtr->SetData("Name", modificationTimeTr, index);
-	imtbase::CTreeItemModel* children = dataModelPtr->AddTreeModel("Children", index);
-
-	idoc::MetaInfoPtr metaInfo = m_objectCollectionCompPtr->GetElementMetaInfo(accountId);
-	if (metaInfo.IsValid()){
-		QDateTime lastTime = metaInfo->GetMetaInfo(idoc::IDocumentMetaInfo::MIT_MODIFICATION_TIME).toDateTime();
-		lastTime.setTimeSpec(Qt::UTC);
-
-		children->SetData("Value", lastTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss"));
-	}
-
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (!m_objectCollectionCompPtr->GetObjectData(accountId, dataPtr)){
-		errorMessage = QT_TR_NOOP("Unable to load an object data");
-
-		return nullptr;
-	}
-
-	const imtauth::ICompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::ICompanyInfo*>(dataPtr.GetPtr());
-	if (companyInfoPtr == nullptr){
-		return nullptr;
-	}
-
-	QString companyNameStr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Company Name"), languageId, "prolifegql::CCustomerCollectionControllerComp");
-
-	index = dataModelPtr->InsertNewItem();
-	dataModelPtr->SetData("Name", companyNameStr, index);
-	children = dataModelPtr->AddTreeModel("Children", index);
-
-	QString companyName = companyInfoPtr->GetName();
-	children->SetData("Value", companyName);
-
-	QString emailStr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Email"), languageId, "prolifegql::CCustomerCollectionControllerComp");
-
-	index = dataModelPtr->InsertNewItem();
-	dataModelPtr->SetData("Name", emailStr, index);
-	children = dataModelPtr->AddTreeModel("Children", index);
-
-	QString mail = companyInfoPtr->GetEmail();
-	children->SetData("Value", mail);
-
-	QString descriptionStr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Description"), languageId, "prolifegql::CCustomerCollectionControllerComp");
-
-	index = dataModelPtr->InsertNewItem();
-	dataModelPtr->SetData("Name", descriptionStr, index);
-	children = dataModelPtr->AddTreeModel("Children", index);
-
-	QString description = companyInfoPtr->GetDescription();
-
-	children->SetData("Value", description);
-
-	QString accountNameStr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Account Name"), languageId, "imtlicgql::CCustomerCollectionControllerComp");
-
-	index = dataModelPtr->InsertNewItem();
-	dataModelPtr->SetData("Name", accountNameStr, index);
-
-	children = dataModelPtr->AddTreeModel("Children", index);
-
-	QString name = companyInfoPtr->GetName();
-
-	children->SetData("Value", name);
-
-	return rootModelPtr.PopPtr();
-}
-
-
-bool CCustomerCollectionControllerComp::SetupGqlItem(
-		const imtgql::CGqlRequest& gqlRequest,
-		imtbase::CTreeItemModel& model,
-		int itemIndex,
-		const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-		QString& /*errorMessage*/) const
-{
-	if (objectCollectionIterator == nullptr){
 		return false;
 	}
 
-	bool retVal = true;
-	QByteArray collectionId = objectCollectionIterator->GetObjectId();
-	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
+	prolife::sdl::Accounts::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
 
-	if (!informationIds.isEmpty()){
-		const prolifedata::ICustomerInfo* companyInfoPtr = nullptr;
-		imtbase::IObjectCollection::DataPtr userDataPtr;
-		if (objectCollectionIterator->GetObjectData(userDataPtr)){
-			companyInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(userDataPtr.GetPtr());
-		}
+	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
-		if (companyInfoPtr != nullptr){
-			idoc::MetaInfoPtr elementMetaInfo = objectCollectionIterator->GetDataMetaInfo();
-
-			for (QByteArray informationId : informationIds){
-				QVariant elementInformation;
-
-				if (informationId == "TypeId"){
-					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
-				}
-				else if(informationId == "Id"){
-					elementInformation = QString(collectionId);
-				}
-				if(informationId == "CustomerId"){
-					elementInformation = companyInfoPtr->GetCustomerId();
-				}
-				else if(informationId == "Name"){
-					elementInformation = companyInfoPtr->GetName();
-				}
-				else if(informationId == "Description"){
-					elementInformation = companyInfoPtr->GetDescription();
-				}
-				else if(informationId == "Email"){
-					elementInformation = companyInfoPtr->GetEmail();
-				}
-				else if(informationId == "Added"){
-					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
-					addedTime.setTimeSpec(Qt::UTC);
-
-					elementInformation = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-				}
-				else if(informationId == "LastModified"){
-					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
-					lastTime.setTimeSpec(Qt::UTC);
-
-					elementInformation = lastTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-				}
-
-				if(elementInformation.isNull()){
-					elementInformation = GetObjectInformation(informationId, collectionId);
-				}
-				if (elementInformation.isNull()){
-					elementInformation = "";
-				}
-
-				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
-			}
-		}
-
-		return true;
+	prolifedata::CCustomerInfo* customerInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (objectCollectionIterator.GetObjectData(dataPtr)){
+		customerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
 	}
 
-	return false;
+	if (customerInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object '%1'").arg(qPrintable(objectId));
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return false;
+	}
+
+	if (requestInfo.items.isIdRequested) {
+		representationObject.SetId(objectId);
+	}
+
+	if (requestInfo.items.isCustomerIdRequested) {
+		representationObject.SetCustomerId(customerInfoPtr->GetCustomerId());
+	}
+
+	if (requestInfo.items.isTypeIdRequested) {
+		representationObject.SetTypeId(m_objectCollectionCompPtr->GetObjectTypeId(objectId));
+	}
+
+	if (requestInfo.items.isNameRequested) {
+		representationObject.SetName(customerInfoPtr->GetName());
+	}
+
+	if (requestInfo.items.isDescriptionRequested) {
+		representationObject.SetDescription(customerInfoPtr->GetDescription());
+	}
+
+	if (requestInfo.items.isEmailRequested) {
+		representationObject.SetEmail(customerInfoPtr->GetEmail());
+	}
+
+	if (requestInfo.items.isAddedRequested) {
+		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime();
+		addedTime.setTimeSpec(Qt::UTC);
+
+		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
+		representationObject.SetAdded(added);
+	}
+
+	if (requestInfo.items.isLastModifiedRequested) {
+		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("LastModified").toDateTime();
+		lastModifiedTime.setTimeSpec(Qt::UTC);
+
+		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
+		representationObject.SetLastModified(lastModified);
+	}
+
+	return true;
+}
+
+
+istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
+			const prolife::sdl::Accounts::CAccountData& accountDataRepresentation,
+			QByteArray& newObjectId,
+			QString& name,
+			QString& description,
+			QString& errorMessage) const
+{
+	if (!m_accountInfoFactCompPtr.IsValid()){
+		errorMessage = QString("Unable to create object from representation. Error: Attribute 'm_accountInfoFactCompPtr' was not set");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	istd::TDelPtr<imtauth::ICompanyInfo> companyInstancePtr = m_accountInfoFactCompPtr.CreateInstance();
+	if (!companyInstancePtr.IsValid()){
+		errorMessage = QString("Unable to create company instance. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(companyInstancePtr.GetPtr());
+	if (customerInfoPtr == nullptr){
+		errorMessage = QString("Unable to cast company info to customer info. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	QByteArray accountId = accountDataRepresentation.GetId();
+	if (accountId.isEmpty()){
+		accountId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+	customerInfoPtr->SetObjectUuid(accountId);
+	newObjectId = accountId;
+
+	QString accountName = accountDataRepresentation.GetName();
+	if (accountName.isEmpty()){
+		errorMessage = QString("Account name cannnot be empty");
+		return nullptr;
+	}
+
+	customerInfoPtr->SetName(accountName);
+	name = accountName;
+
+	QString accountDescription = accountDataRepresentation.GetDescription();
+	customerInfoPtr->SetDescription(accountDescription);
+	description = accountDescription;
+
+	QString accountEmail = accountDataRepresentation.GetEmail();
+	customerInfoPtr->SetEmail(accountEmail);
+
+	QString accountGroups = accountDataRepresentation.GetGroups();
+	if (!accountGroups.isEmpty()){
+		QByteArrayList groupIds = accountGroups.toUtf8().split(';');
+		for (const QByteArray& groupId : groupIds){
+			customerInfoPtr->AddGroup(groupId);
+		}
+	}
+
+	QByteArray accountCustomerId = accountDataRepresentation.GetCustomerId();
+	customerInfoPtr->SetCustomerId(accountCustomerId);
+
+	imtauth::CAddress address;
+
+	QString accountCity = accountDataRepresentation.GetCity();
+	address.SetCity(accountCity);
+
+	QString accountStreet = accountDataRepresentation.GetStreet();
+	address.SetStreet(accountStreet);
+
+	QString accountPostalCode = accountDataRepresentation.GetPostalCode();
+	address.SetPostalCode(accountPostalCode.toInt());
+
+	QString accountCountry = accountDataRepresentation.GetCountry();
+	address.SetCountry(accountCountry);
+
+	customerInfoPtr->AddAddress(address);
+
+	return companyInstancePtr.PopPtr();
+}
+
+
+bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
+			const istd::IChangeable& data,
+			const prolife::sdl::Accounts::CAccountItemGqlRequest& accountItemRequest,
+			prolife::sdl::Accounts::CAccountDataPayload& representationPayload,
+			QString& errorMessage) const
+{
+	const prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&data);
+	if (customerInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object. Error: Object is invalid");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return false;
+	}
+
+	prolife::sdl::Accounts::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
+
+	prolife::sdl::Accounts::CAccountData accountData;
+
+	QByteArray id = arguments.input.GetId();
+	accountData.SetId(id);
+
+	QString name = customerInfoPtr->GetName();
+	accountData.SetName(name);
+
+	QString description = customerInfoPtr->GetDescription();
+	accountData.SetDescription(description);
+
+	QString email = customerInfoPtr->GetEmail();
+	accountData.SetEmail(email);
+
+	QByteArray customerId = customerInfoPtr->GetCustomerId();
+	accountData.SetCustomerId(customerId);
+
+	QByteArrayList groups = customerInfoPtr->GetGroups();
+	std::sort(groups.begin(), groups.end());
+	accountData.SetGroups(groups.join(';'));
+
+	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
+	if (addressProviderPtr != nullptr){
+		imtbase::ICollectionInfo::Ids addressesIds = addressProviderPtr->GetAddressList().GetElementIds();
+		if (!addressesIds.isEmpty()){
+			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
+			if (addressPtr != nullptr){
+				QString city = addressPtr->GetCity();
+				accountData.SetCity(city);
+
+				QString country = addressPtr->GetCountry();
+				accountData.SetCountry(country);
+
+				QString street = addressPtr->GetStreet();
+				accountData.SetStreet(street);
+
+				QString postalCodeStr;
+				int postalCode = addressPtr->GetPostalCode();
+				if (postalCode > 0){
+					postalCodeStr = QString::number(postalCode);
+				}
+				accountData.SetPostalCode(postalCodeStr);
+			}
+		}
+	}
+
+	representationPayload.SetAccountData(accountData);
+
+	return true;
 }
 
 

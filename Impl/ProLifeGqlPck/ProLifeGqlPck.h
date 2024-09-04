@@ -16,7 +16,6 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
 #include <prolifegql/CHardwareProductCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductControllerComp.h>
-#include <prolifegql/COrderHistoryControllerComp.h>
 #include <prolifegql/CHardwareProductBindingControllerComp.h>
 #include <prolifegql/CDeviceChangeGeneratorComp.h>
 #include <prolifegql/CLicenseChangeGeneratorComp.h>
@@ -36,15 +35,14 @@ namespace ProLifeGqlPck
 
 typedef prolifegql::COrderControllerComp OrderController;
 typedef imtgql::TObjectCollectionControllerSearchCompWrap<
-					prolifegql::COrderCollectionControllerComp> OrderCollectionController;
+			prolifegql::COrderCollectionControllerComp> OrderCollectionController;
 typedef prolifegql::CDeviceControllerComp DeviceController;
 typedef imtgql::TObjectCollectionControllerSearchCompWrap<
-					prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
+			prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
 typedef imtgql::TObjectCollectionControllerSearchCompWrap<
-					prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
+			prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
 typedef prolifegql::CHardwareProductCollectionControllerComp HardwareProductCollectionController;
 typedef prolifegql::CSoftwareProductControllerComp SoftwareProductController;
-typedef prolifegql::COrderHistoryControllerComp OrderHistoryController;
 typedef prolifegql::CHardwareProductBindingControllerComp HardwareProductBindingController;
 typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
@@ -52,7 +50,7 @@ typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
 typedef prolifegql::CCustomerControllerComp CustomerController;
 typedef imtgql::TObjectCollectionControllerSearchCompWrap<
-					prolifegql::CCustomerCollectionControllerComp> CustomerCollectionController;
+			prolifegql::CCustomerCollectionControllerComp> CustomerCollectionController;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<
 						prolifedata::CCustomerInfo,

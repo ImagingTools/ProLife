@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -24,8 +24,6 @@
                                 <Value>OrderCollectionCommands</Value>
                                 <Value>OrderCommands</Value>
                                 <Value>OrderCollectionController</Value>
-                                <Value>OrderController</Value>
-                                <Value>OrderHistoryController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -95,7 +93,7 @@
         <Element Id="OrderCollectionController" PackageId="ProLifeGqlPck" ComponentId="OrderCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountCollection">
+                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -106,63 +104,6 @@
                                 <Value>OrdersObjectView</Value>
                                 <Value>OrdersRemove</Value>
                                 <Value>OrdersSetDescription</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OrderPermissions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OrderHeadersDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="OrdersList"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OrderViewDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllOrders"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="OrderCommands" PackageId="" ComponentId="OrderCommands">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="OrderController" PackageId="ProLifeGqlPck" ComponentId="OrderController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
                                 <Value>OrderAdd</Value>
                                 <Value>OrderUpdate</Value>
                                 <Value>OrderItem</Value>
@@ -182,8 +123,14 @@
                     <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderChangeGenerator"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderHeadersDataProvider"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LicenseDefinitionCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="OrdersList"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -200,6 +147,9 @@
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ViewAllOrders"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -207,6 +157,18 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderCommands" PackageId="" ComponentId="OrderCommands">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -268,28 +230,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="OrderHistoryController" PackageId="ProLifeGqlPck" ComponentId="OrderHistoryController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>GetOrderHistory</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
@@ -299,24 +239,6 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="OrderViewDataProvider" PackageId="ImtQmlPck" ComponentId="ObjectViewDataProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Order"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectViewPath" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/OrderEditor.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -711,6 +633,5 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
-        <Component ExportedId="OrderController" ComponentId="OrderController"/>
     </ExportedComponents>
 </Acf>

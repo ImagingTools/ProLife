@@ -2,23 +2,24 @@
 
 
 // ACF includes
-#include <idoc/IDocumentMetaInfo.h>
 #include <iprm/CTextParam.h>
-#include <iprm/CIdParam.h>
+#include <iprm/CEnableableParam.h>
+#include <iprm/CParamsSet.h>
 
 // ImtCore includes
 #include <imtbase/imtbase.h>
-#include <imtbase/CCollectionFilter.h>
+#include <imtbase/CObjectLink.h>
 #include <imtbase/IObjectCollectionIterator.h>
-#include <imtdb/CSqlDatabaseObjectCollectionComp.h>
-#include <imtlic/ILicenseDefinition.h>
 #include <imtgql/imtgql.h>
+#include <imtlic/ILicenseDefinition.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
+#include <prolifedata/prolifedata.h>
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/TOrderedWrap.h>
-#include <prolifedata/CHardwareProductBinding.h>
+#include <prolifedata/IHardwareProductBinding.h>
 
 
 namespace prolifegql
@@ -27,7 +28,407 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (imtgql::CObjectCollectionControllerCompBase)
+// reimplemented (prolife::sdl::Sensors::CDeviceCollectionControllerCompBase)
+
+bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
+			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+			const prolife::sdl::Sensors::CDevicesListGqlRequest& devicesListRequest,
+			prolife::sdl::Sensors::CDeviceItem& representationObject,
+			QString& errorMessage) const
+{
+	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	QByteArray objectId = objectCollectionIterator.GetObjectId();
+
+	prolifedata::CDeviceInfo* deviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (objectCollectionIterator.GetObjectData(dataPtr)){
+		deviceInfoPtr = dynamic_cast<prolifedata::CDeviceInfo*>(dataPtr.GetPtr());
+	}
+
+	if (deviceInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object '%1'").arg(qPrintable(objectId));
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
+
+	prolife::sdl::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
+
+	if (requestInfo.items.isTypeIdRequested){
+		representationObject.SetTypeId(m_objectCollectionCompPtr->GetObjectTypeId(objectId));
+	}
+
+	if (requestInfo.items.isIdRequested){
+		representationObject.SetId(objectId);
+	}
+
+	if (requestInfo.items.isNameRequested){
+		QByteArray deviceType = objectCollectionIterator.GetElementInfo("DeviceType").toByteArray();
+		representationObject.SetName(deviceType);
+
+		QByteArray macAddress = objectCollectionIterator.GetElementInfo("MacAddress").toByteArray();
+		if (!macAddress.isEmpty()){
+			representationObject.SetName(deviceType + " (" + macAddress + ")");
+		}
+	}
+
+	if (requestInfo.items.isDescriptionRequested){
+		representationObject.SetDescription(metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
+	}
+
+	if (requestInfo.items.isPurchaseOrderIdRequested){
+		representationObject.SetPurchaseOrderId(objectCollectionIterator.GetElementInfo("PurchaseOrderId").toByteArray());
+	}
+
+	if (requestInfo.items.isCustomerRequested){
+		representationObject.SetCustomer(objectCollectionIterator.GetElementInfo("Customer").toByteArray());
+	}
+
+	if (requestInfo.items.isMacAddressRequested){
+		representationObject.SetMacAddress(deviceInfoPtr->GetMacAddress());
+	}
+
+	if (requestInfo.items.isSerialNumberRequested){
+		representationObject.SetSerialNumber(deviceInfoPtr->GetSerialNumber());
+	}
+
+	if (requestInfo.items.isProjectRequested){
+		representationObject.SetProject(objectCollectionIterator.GetElementInfo("Project").toByteArray());
+	}
+
+	if (requestInfo.items.isDeviceTypeRequested){
+		representationObject.SetDeviceType(objectCollectionIterator.GetElementInfo("DeviceType").toByteArray());
+	}
+
+	if (requestInfo.items.isProductUuidRequested){
+		representationObject.SetProductUuid(objectCollectionIterator.GetElementInfo("ProductUuid").toByteArray());
+	}
+
+	if (requestInfo.items.isLicenseUuidRequested){
+		representationObject.SetLicenseUuid(objectCollectionIterator.GetElementInfo("LicenseUuid").toByteArray());
+	}
+
+	if (requestInfo.items.isLicenseIdRequested){
+		representationObject.SetLicenseId(objectCollectionIterator.GetElementInfo("LicenseId").toByteArray());
+	}
+
+	if (requestInfo.items.isLicenseNameRequested){
+		representationObject.SetLicenseName(objectCollectionIterator.GetElementInfo("LicenseName").toByteArray());
+	}
+
+	if (requestInfo.items.isOrderIdRequested){
+		representationObject.SetOrderId(objectCollectionIterator.GetElementInfo("OrderId").toByteArray());
+	}
+
+	if (requestInfo.items.isOrderUuidRequested){
+		representationObject.SetOrderUuid(objectCollectionIterator.GetElementInfo("OrderUuid").toByteArray());
+	}
+
+	if (requestInfo.items.isStatusRequested){
+		deviceInfoPtr->GetDeviceProductionStatus();
+		representationObject.SetStatus(objectCollectionIterator.GetElementInfo("Status").toByteArray());
+
+		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
+		QString statusName = prolifedata::GetNameFromDeviceProductionStatus(status);
+		representationObject.SetStatus(statusName);
+	}
+
+	if (requestInfo.items.isStatusIdRequested){
+		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
+		QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
+		representationObject.SetStatusId(statusId);
+	}
+
+	if (requestInfo.items.isAddedRequested){
+		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime();
+		addedTime.setTimeSpec(Qt::UTC);
+
+		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
+		representationObject.SetAdded(added);
+	}
+
+	if (requestInfo.items.isLastModifiedRequested){
+		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("LastModified").toDateTime();
+		lastModifiedTime.setTimeSpec(Qt::UTC);
+
+		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
+		representationObject.SetLastModified(lastModified);
+	}
+
+	return true;
+}
+
+
+istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
+			const prolife::sdl::Sensors::CDeviceData& deviceDataRepresentation,
+			QByteArray& newObjectId,
+			QString& name,
+			QString& description,
+			QString& errorMessage) const
+{
+	if (!m_deviceInfoFactCompPtr.IsValid()){
+		errorMessage = QString("Unable to create object from representation. Error: Attribute 'm_deviceInfoFactCompPtr' was not set");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	istd::TDelPtr<prolifedata::IDeviceInfo> deviceInstancePtr = m_deviceInfoFactCompPtr.CreateInstance();
+	if (!deviceInstancePtr.IsValid()){
+		errorMessage = QString("Unable to create device instance. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceInstancePtr.GetPtr());
+	if (deviceInfoPtr == nullptr){
+		errorMessage = QString("Unable to cast device instance to identifable object. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	QByteArray deviceId = deviceDataRepresentation.GetId();
+	if (deviceId.isEmpty()){
+		deviceId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+
+	deviceInfoPtr->SetObjectUuid(deviceId);
+	newObjectId = deviceId;
+
+	prolifedata::COrderedIdentifiableDeviceInfo* oldDeviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr oldDeviceDataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(deviceId, oldDeviceDataPtr)){
+		oldDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(oldDeviceDataPtr.GetPtr());
+	}
+
+	QString macAddress = deviceDataRepresentation.GetMacAddress();
+	if (!macAddress.isEmpty()){
+		bool ok = prolifedata::CheckDeviceMacAddressExists(deviceId, macAddress.toUtf8(), *m_objectCollectionCompPtr);
+		if (!ok){
+			errorMessage = QString("MAC-Address already exists");
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+			return nullptr;
+		}
+	}
+
+	deviceInfoPtr->SetMacAddress(macAddress.toUtf8());
+
+	QString serialNumber = deviceDataRepresentation.GetSerialNumber();
+	if (!serialNumber.isEmpty()){
+		bool ok = prolifedata::CheckDeviceSerialNumberExists(deviceId, serialNumber.toUtf8(), *m_objectCollectionCompPtr);
+		if (!ok){
+			errorMessage = QT_TR_NOOP("Serial Number already exists");
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+			return nullptr;
+		}
+	}
+
+	deviceInfoPtr->SetSerialNumber(serialNumber.toUtf8());
+
+	QString project = deviceDataRepresentation.GetProject();
+	deviceInfoPtr->SetProject(project.toUtf8());
+
+	QString orderId = deviceDataRepresentation.GetOrderId();
+	deviceInfoPtr->SetOrderId(orderId.toUtf8());
+
+	QByteArray oldOrderId;
+
+	if (oldDeviceInfoPtr != nullptr){
+		oldOrderId = oldDeviceInfoPtr->GetOrderId();
+
+		prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
+		if (m_orderCollectionCompPtr->GetObjectData(oldOrderId, oldOrderDataPtr)){
+			oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
+		}
+
+		// Remove device from the old order
+		if (oldOrderInfoPtr != nullptr){
+			imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
+
+			if (oldProductCollectionPtr != nullptr && orderId != oldOrderId){
+				if (oldProductCollectionPtr->GetElementIds().contains(deviceId)){
+					oldProductCollectionPtr->RemoveElement(deviceId);
+
+					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+
+					// if (m_orderOperationContextControllerCompPtr.IsValid()){
+					// 	operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, oldOrderId, oldOrderInfoPtr);
+					// }
+
+					// if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+					// 	errorMessage = QString("Unable to update an order info").toUtf8();
+					// 	SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+					// 	return nullptr;
+					// }
+				}
+			}
+		}
+	}
+
+	if (oldOrderId != orderId){
+		// Add device to the new order info
+		if (m_orderCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr orderDataPtr;
+			if (m_orderCollectionCompPtr->GetObjectData(orderId.toUtf8(), orderDataPtr)){
+				prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+				if (orderInfoPtr != nullptr){
+					imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
+					if (orderProductCollectionPtr != nullptr){
+						istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+						objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+						objectLinkPtr->SetObjectUuid(deviceId);
+						objectLinkPtr->SetFactoryId("HardwareInfo");
+
+						orderProductCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceId);
+
+						// istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+
+						// if (m_orderOperationContextControllerCompPtr.IsValid()){
+						// 	operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderId, orderInfoPtr);
+						// }
+
+						if (!m_orderCollectionCompPtr->SetObjectData(orderId.toUtf8(), *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/)){
+							errorMessage = QString("Unable to update an order info").toUtf8();
+							SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+							return nullptr;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	QString deviceDescription = deviceDataRepresentation.GetDescription();
+	deviceInfoPtr->SetDescription(deviceDescription);
+
+	QString status = deviceDataRepresentation.GetProductionStatus();
+	prolifedata::IDeviceInfo::DeviceProductionStatus productionStatus = prolifedata::GetProductionStatusFromId(status.toUtf8());
+	deviceInfoPtr->SetDeviceProductionStatus(productionStatus);
+
+	QString licenseName = deviceDataRepresentation.GetLicenseName();
+	deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
+
+	QString deviceType = deviceDataRepresentation.GetDeviceType();
+	if (deviceType.isEmpty()){
+		errorMessage = QString("Device type cannot be empty");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return nullptr;
+	}
+
+	deviceInfoPtr->SetDeviceType(deviceType.toUtf8());
+
+	name = deviceType;
+
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(deviceType.toUtf8(), dataPtr)){
+			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (remoteProductInfoPtr != nullptr){
+				name = remoteProductInfoPtr->GetName();
+			}
+		}
+	}
+
+	if (!macAddress.isEmpty()){
+		name += " (" + macAddress + ")";
+	}
+
+	return deviceInfoPtr;
+}
+
+
+bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
+			const istd::IChangeable& data,
+			const prolife::sdl::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
+			prolife::sdl::Sensors::CDeviceDataPayload& representationPayload,
+			QString& errorMessage) const
+{
+	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&data);
+	if (deviceInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object. Error: Object is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	prolife::sdl::Sensors::DeviceItemRequestArguments arguments = deviceItemRequest.GetRequestedArguments();
+
+	prolife::sdl::Sensors::CDeviceData deviceData;
+
+	QByteArray id = arguments.input.GetId();
+	deviceData.SetId(id);
+
+	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
+	deviceData.SetMacAddress(macAddress);
+
+	QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
+	deviceData.SetSerialNumber(serialNumber);
+
+	QByteArray orderId = deviceInfoPtr->GetOrderId();
+	deviceData.SetOrderId(orderId);
+
+	QString description = deviceInfoPtr->GetDescription();
+	deviceData.SetDescription(description);
+
+	prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
+	QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
+	deviceData.SetProductionStatus(statusId);
+
+	QByteArray project = deviceInfoPtr->GetProject();
+	deviceData.SetProject(project);
+
+	QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
+	deviceData.SetLicenseName(configurationType);
+
+	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
+	deviceData.SetDeviceType(productUuid);
+
+	QString name;
+
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr productDataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productUuid, productDataPtr)){
+			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productDataPtr.GetPtr());
+			if (remoteProductInfoPtr != nullptr){
+				name = remoteProductInfoPtr->GetName();
+			}
+		}
+	}
+
+	if (name.isEmpty() && !macAddress.isEmpty()){
+		name = macAddress;
+	}
+	else if (!name.isEmpty() && !macAddress.isEmpty()){
+		name = name + " (" + macAddress + ")";
+	}
+	else{
+		name = productUuid;
+	}
+
+	deviceData.SetName(name);
+
+	representationPayload.SetDeviceData(deviceData);
+
+	return true;
+}
+
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 			const imtgql::CGqlRequest& gqlRequest,
@@ -74,13 +475,13 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = nullptr;
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 
 	if (m_operationContextControllerCompPtr.IsValid()){
 		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_REMOVE, gqlRequest);
 	}
 
-	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
+	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr.GetPtr())){
 		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
 
 		imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
@@ -97,166 +498,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
 
 	return nullptr;
-}
-
-
-bool CDeviceCollectionControllerComp::SetupGqlItem(
-			const imtgql::CGqlRequest& gqlRequest,
-			imtbase::CTreeItemModel& model,
-			int itemIndex,
-			const imtbase::IObjectCollectionIterator* objectCollectionIterator,
-			QString& errorMessage) const
-{
-	bool retVal = true;
-
-	QByteArrayList informationIds = GetInformationIds(gqlRequest, "items");
-
-	if (!informationIds.isEmpty() && m_objectCollectionCompPtr.IsValid()){
-		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (objectCollectionIterator->GetObjectData(dataPtr)){
-			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(dataPtr.GetPtr());
-		}
-
-		idoc::MetaInfoPtr metaInfo = objectCollectionIterator->GetDataMetaInfo();
-
-		if (deviceInfoPtr != nullptr){
-			QByteArray collectionId = objectCollectionIterator->GetObjectId();
-
-			for (QByteArray informationId : informationIds){
-				QVariant elementInformation;
-
-				if (informationId == "TypeId"){
-					elementInformation = m_objectCollectionCompPtr->GetObjectTypeId(collectionId);
-				}
-				else if(informationId == "Id"){
-					elementInformation = collectionId;
-				}
-				else if(informationId == "Name"){
-					QByteArray deviceType = objectCollectionIterator->GetElementInfo("DeviceType").toByteArray();
-					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-
-					elementInformation = deviceType;
-					if (!macAddress.isEmpty()){
-						elementInformation = deviceType + " (" + macAddress + ")";
-					}
-				}
-				else if(informationId == "Description"){
-					elementInformation = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
-				}
-				else if(informationId == "PurchaseOrderId"){
-					elementInformation = objectCollectionIterator->GetElementInfo("PurchaseOrderId");
-				}
-				else if(informationId == "Article"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId");
-				}
-				else if(informationId == "Customer"){
-					elementInformation = objectCollectionIterator->GetElementInfo("Customer");
-				}
-				else if(informationId == "MacAddress"){
-					elementInformation = deviceInfoPtr->GetMacAddress();
-				}
-				else if(informationId == "SerialNumber"){
-					elementInformation = deviceInfoPtr->GetSerialNumber();
-				}
-				else if(informationId == "Project"){
-					elementInformation = deviceInfoPtr->GetProject();
-				}
-				else if(informationId == "DeviceType"){
-					elementInformation = objectCollectionIterator->GetElementInfo("DeviceType");
-				}
-				else if(informationId == "ProductUuid"){
-					elementInformation = objectCollectionIterator->GetElementInfo("ProductUuid");
-				}
-				else if(informationId == "LicenseUuid"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseUuid");
-				}
-				else if(informationId == "LicenseId"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseId");
-				}
-				else if(informationId == "LicenseName"){
-					elementInformation = objectCollectionIterator->GetElementInfo("LicenseName");
-				}
-				else if(informationId == "OrderId"){
-					elementInformation = objectCollectionIterator->GetElementInfo("OrderId");
-				}
-				else if(informationId == "OrderUuid"){
-					elementInformation = deviceInfoPtr->GetOrderId();
-				}
-				else if(informationId == "Status"){
-					int status = deviceInfoPtr->GetDeviceProductionStatus();
-					switch (status){
-					case prolifedata::IDeviceInfo::DPS_NONE:
-						elementInformation = "None";
-						break;
-					case prolifedata::IDeviceInfo::DPS_ACCEPTED:
-						elementInformation = "Accepted";
-						break;
-					case prolifedata::IDeviceInfo::DPS_IN_PROGRESS:
-						elementInformation = "In Progress";
-						break;
-					case prolifedata::IDeviceInfo::DPS_CANCELED:
-						elementInformation = "Canceled";
-						break;
-					case prolifedata::IDeviceInfo::DPS_ON_HOLD:
-						elementInformation = "Hold";
-						break;
-					case prolifedata::IDeviceInfo::DPS_FINISHED:
-						elementInformation = "Finished";
-						break;
-					}
-				}
-				else if(informationId == "StatusId"){
-					int status = deviceInfoPtr->GetDeviceProductionStatus();
-					switch (status){
-					case prolifedata::IDeviceInfo::DPS_NONE:
-						elementInformation = "None";
-						break;
-					case prolifedata::IDeviceInfo::DPS_ACCEPTED:
-						elementInformation = "Accepted";
-						break;
-					case prolifedata::IDeviceInfo::DPS_IN_PROGRESS:
-						elementInformation = "InProgress";
-						break;
-					case prolifedata::IDeviceInfo::DPS_CANCELED:
-						elementInformation = "Canceled";
-						break;
-					case prolifedata::IDeviceInfo::DPS_ON_HOLD:
-						elementInformation = "OnHold";
-						break;
-					case prolifedata::IDeviceInfo::DPS_FINISHED:
-						elementInformation = "Finished";
-						break;
-					}
-				}
-				else if(informationId == "Added"){
-					QDateTime addedTime =  objectCollectionIterator->GetElementInfo("added").toDateTime();
-					addedTime.setTimeSpec(Qt::UTC);
-
-					elementInformation = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-				}
-				else if(informationId == "LastModified"){
-					QDateTime lastTime =  objectCollectionIterator->GetElementInfo("lastmodified").toDateTime();
-					lastTime.setTimeSpec(Qt::UTC);
-
-					elementInformation = lastTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-				}
-
-				if (elementInformation.isNull()){
-					elementInformation = "";
-				}
-
-				retVal = retVal && model.SetData(informationId, elementInformation, itemIndex);
-			}
-
-			QVariant  softwareLinksCount = objectCollectionIterator->GetElementInfo("SoftwareLinksCount").toInt();
-			retVal = retVal && model.SetData("SoftwareLinksCount", softwareLinksCount, itemIndex);
-
-			return true;
-		}
-	}
-
-	return false;
 }
 
 
@@ -312,9 +553,6 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
 					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 					if (productInstanceInfoPtr != nullptr){
-						QByteArray productId = productInstanceInfoPtr->GetProductId();
-						QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
-
 						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
 

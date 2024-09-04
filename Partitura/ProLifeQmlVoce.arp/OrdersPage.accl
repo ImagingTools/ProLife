@@ -2,33 +2,24 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CheckPermissionOr" X="200" Y="600" Note=""/>
-        <Element ComponentName="Demultiplexer" X="625" Y="100" Note=""/>
-        <Element ComponentName="OperationContextController" X="625" Y="600" Note=""/>
-        <Element ComponentName="OrderChangeGenerator" X="775" Y="450" Note=""/>
-        <Element ComponentName="OrderCollectionCommands" X="725" Y="300" Note=""/>
-        <Element ComponentName="OrderCollectionController" X="175" Y="300" Note=""/>
-        <Element ComponentName="OrderCommands" X="450" Y="300" Note=""/>
-        <Element ComponentName="OrderController" X="1000" Y="300" Note=""/>
-        <Element ComponentName="OrderHeadersDataProvider" X="125" Y="450" Note=""/>
-        <Element ComponentName="OrderHistoryController" X="1025" Y="100" Note=""/>
-        <Element ComponentName="OrderInfo" X="1000" Y="450" Note=""/>
-        <Element ComponentName="OrderPermissions" X="625" Y="750" Note=""/>
-        <Element ComponentName="OrderViewDataProvider" X="375" Y="450" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="125" Y="600" Note=""/>
+        <Element ComponentName="Demultiplexer" X="575" Y="125" Note=""/>
+        <Element ComponentName="OperationContextController" X="750" Y="500" Note=""/>
+        <Element ComponentName="OrderChangeGenerator" X="750" Y="650" Note=""/>
+        <Element ComponentName="OrderCollectionCommands" X="900" Y="125" Note=""/>
+        <Element ComponentName="OrderCollectionController" X="550" Y="300" Note=""/>
+        <Element ComponentName="OrderCommands" X="250" Y="125" Note=""/>
+        <Element ComponentName="OrderHeadersDataProvider" X="425" Y="500" Note=""/>
+        <Element ComponentName="OrderInfo" X="1050" Y="500" Note=""/>
+        <Element ComponentName="OrderPermissions" X="125" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="OrderCollectionCommands">
-            <PositionMap>
-                <Element ComponentName="CollectionCommandsController" X="575" Y="250" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="OrderCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="1550" Y="850" Note=""/>
@@ -44,6 +35,12 @@
                 <Element ComponentName="Save" X="250" Y="1200" Note=""/>
                 <Element ComponentName="StandardDocumentCommandsController" X="600" Y="150" Note=""/>
                 <Element ComponentName="Undo" X="250" Y="850" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="OrderCollectionCommands">
+            <PositionMap>
+                <Element ComponentName="CollectionCommandsController" X="575" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

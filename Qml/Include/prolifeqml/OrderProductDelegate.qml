@@ -6,7 +6,7 @@ import imtlicgui 1.0
 ElementView {
     id: root;
 
-    name: model.ProductName;
+    name: model.ProductName != undefined && model.ProductName != null ? model.ProductName : "";
 
     clip: false;
 

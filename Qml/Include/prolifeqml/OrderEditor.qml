@@ -7,6 +7,7 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
+import prolifeOrdersSdl 1.0
 
 ViewBase {
     id: orderEditorContainer;
@@ -19,7 +20,7 @@ ViewBase {
 
     property string orderUuid: "";
 
-    property bool serialNumberEdit: true;
+    property OrderData orderData: model ? model : null;
 
     Component.onCompleted: {
         CachedAccountCollection.updateModel();
@@ -130,11 +131,11 @@ ViewBase {
 
                         if (softwareId === orderedProductId){
                             // ????
-//                            if (orderUuid !== "" && orderUuid !== softwareOrderUuid){
-//                                orderProducts.setData("ErrorMessage", qsTr("The product has been removed from this order"), j);
+                            //                            if (orderUuid !== "" && orderUuid !== softwareOrderUuid){
+                            //                                orderProducts.setData("ErrorMessage", qsTr("The product has been removed from this order"), j);
 
-//                                break;
-//                            }
+                            //                                break;
+                            //                            }
 
                             if (softwaresModel.containsKey("SerialNumber", i)){
                                 let serialNumber = softwaresModel.getData("SerialNumber", i)
@@ -209,103 +210,69 @@ ViewBase {
     }
 
     function updateGui(){
-        if (model.containsKey("OrderId")){
-            instanceIdInput.text = model.getData("OrderId");
-        }
-        else{
-            instanceIdInput.text = "";
-        }
+        instanceIdInput.text = orderData.m_orderId;
+        purchaseIdInput.text = orderData.m_purchaseId;
+        descriptionInput.text = orderData.m_description;
 
-        if (model.containsKey("PurchaseId")){
-            purchaseIdInput.text = model.getData("PurchaseId");
-        }
-        else{
-            purchaseIdInput.text = "";
-        }
-
-        if (model.containsKey("Description")){
-            descriptionInput.text = model.getData("Description");
-        }
-        else{
-            descriptionInput.text = "";
-        }
-
-        let customerFound = false;
-        if (model.containsKey("CustomerId")){
-            let customerId = model.getData("CustomerId");
-            let customerModel = customerCB.model;
-            if (customerModel){
-                for (let i = 0; i < customerModel.getItemsCount(); i++){
-                    let id = customerModel.getData("Id", i);
-                    if (id === customerId){
-                        customerCB.currentIndex = i;
-                        customerFound = true;
-                        break;
-                    }
+        customerCB.currentIndex = -1;
+        let customerId = orderData.m_customerId;
+        let customerModel = customerCB.model;
+        if (customerModel){
+            for (let i = 0; i < customerModel.getItemsCount(); i++){
+                let id = customerModel.getData("Id", i);
+                if (id === customerId){
+                    customerCB.currentIndex = i;
+                    break;
                 }
             }
         }
 
-        if (!customerFound){
-            customerCB.currentIndex = -1;
-        }
-
-        let statusFound = false;
-        if (orderEditorContainer.model.containsKey("OrderStatus")){
-            let status = orderEditorContainer.model.getData("OrderStatus");
-            let statusModel = orderStatus.statusModel
-            if (statusModel){
-                orderStatusCB.model = statusModel;
-                for (let i = 0; i < statusModel.getItemsCount(); i++){
-                    let id = statusModel.getData("Id", i);
-                    if (id === status){
-                        orderStatusCB.currentIndex = i;
-                        statusFound = true;
-                        break;
-                    }
+        orderStatusCB.currentIndex = -1;
+        let status = orderData.m_orderStatus;
+        let statusModel = orderStatus.statusModel
+        if (statusModel){
+            orderStatusCB.model = statusModel;
+            for (let i = 0; i < statusModel.getItemsCount(); i++){
+                let id = statusModel.getData("Id", i);
+                if (id === status){
+                    orderStatusCB.currentIndex = i;
+                    break;
                 }
             }
         }
 
-        if (!statusFound){
-            orderStatusCB.currentIndex = -1;
-        }
-
-//        syncroniseProducts();
+        //        syncroniseProducts();
 
         productsView.model = 0;
 
-        if (model.containsKey("OrderProducts")){
-            productsView.model = model.getTreeItemModel("OrderProducts");
-
-//            productsView.model.refresh();
-        }
+        // if (model.containsKey("OrderProducts")){
+        //     productsView.model = model.getTreeItemModel("OrderProducts");
+        // }
     }
 
     function updateModel(){
-        model.setData("OrderId", instanceIdInput.text)
-        model.setData("PurchaseId", purchaseIdInput.text)
+        orderData.m_orderId = instanceIdInput.text ;
+        orderData.m_purchaseId = purchaseIdInput.text;
+        orderData.m_description = descriptionInput.text;
 
         let selectedAccountId = "";
         if (customerCB.currentIndex >= 0 && customerCB.model){
             selectedAccountId = customerCB.model.getData("Id", customerCB.currentIndex);
         }
 
-        model.setData("CustomerId", selectedAccountId);
+        orderData.m_customerId = selectedAccountId;
 
         if (orderStatusCB.currentIndex >= 0){
             let selectedStatus = orderStatusCB.model.getData("Id", orderStatusCB.currentIndex);
-            orderEditorContainer.model.setData("OrderStatus", selectedStatus);
+            orderData.m_orderStatus = selectedStatus;
         }
         else{
-            orderEditorContainer.model.setData("OrderStatus", "");
+            orderData.m_orderStatus = "";
         }
 
-        model.setData("Description", descriptionInput.text);
-
-        if (!model.containsKey("OrderProducts")){
-            model.addTreeModel("OrderProducts")
-        }
+        // if (!model.containsKey("OrderProducts")){
+        //     model.addTreeModel("OrderProducts")
+        // }
     }
 
     OrderStatus {
@@ -528,7 +495,6 @@ ViewBase {
                             productsDialog.bodyItem.orderUuid = orderEditorContainer.model.getData("Id");
                         }
 
-                        productsDialog.bodyItem.serialNumberEdit = orderEditorContainer.serialNumberEdit;
                         productsDialog.activeProductIndex = productsView.activeProductIndex;
 
                         if (orderEditorContainer.model.containsKey("OrderId")){

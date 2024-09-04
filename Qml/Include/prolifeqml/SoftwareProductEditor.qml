@@ -16,8 +16,6 @@ ViewBase {
 
     property TreeItemModel softwaresModel: TreeItemModel{}
 
-    property bool serialNumberEdit: true;
-
     //    property alias tableElements: licensesTable.elements;
     property alias tableElements: licenseCB.model;
     property bool readOnly: false;

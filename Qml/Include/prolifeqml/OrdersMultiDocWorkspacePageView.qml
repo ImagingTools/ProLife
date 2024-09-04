@@ -4,6 +4,7 @@ import imtcontrols 1.0
 import imtdocgui 1.0
 import imtguigql 1.0
 import imtgui 1.0
+import prolifeOrdersSdl 1.0
 
 MultiDocWorkspacePageView {
     id: multiDocPageView;
@@ -45,7 +46,9 @@ MultiDocWorkspacePageView {
     Component {
         id: dataControllerComp;
 
-        GqlDocumentDataController {
+        GqlRequestDocumentDataController {
+            id: requestDocumentDataController
+
             gqlGetCommandId: "OrderItem";
             gqlUpdateCommandId: "OrderUpdate";
             gqlAddCommandId: "OrderAdd";
@@ -60,6 +63,16 @@ MultiDocWorkspacePageView {
                             orderProductsModel.setData("IsNew", false, i);
                         }
                     }
+                }
+            }
+
+            documentModelComp: Component {
+                OrderData {}
+            }
+
+            payloadModel: OrderDataPayload {
+                onFinished: {
+                    requestDocumentDataController.documentModel = m_orderData
                 }
             }
         }

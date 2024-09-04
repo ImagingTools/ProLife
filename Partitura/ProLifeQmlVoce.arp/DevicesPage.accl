@@ -2,50 +2,26 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5233" Description="ACF"/>
+            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CheckPermissionOr" X="225" Y="75" Note=""/>
-        <Element ComponentName="CollectionCommands" X="425" Y="200" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="125" Y="75" Note=""/>
+        <Element ComponentName="CollectionCommands" X="1000" Y="175" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
-        <Element ComponentName="DeviceChangeGenerator" X="850" Y="675" Note=""/>
-        <Element ComponentName="DeviceCollectionController" X="150" Y="300" Note=""/>
-        <Element ComponentName="DeviceCommands" X="800" Y="200" Note=""/>
-        <Element ComponentName="DeviceController" X="1050" Y="300" Note=""/>
+        <Element ComponentName="DeviceChangeGenerator" X="425" Y="700" Note=""/>
+        <Element ComponentName="DeviceCollectionController" X="350" Y="200" Note=""/>
+        <Element ComponentName="DeviceCommands" X="1000" Y="75" Note=""/>
         <Element ComponentName="DeviceHeadersDataProvider" X="125" Y="500" Note=""/>
-        <Element ComponentName="DeviceInfo" X="1050" Y="500" Note=""/>
-        <Element ComponentName="DevicePermissions" X="1025" Y="75" Note=""/>
-        <Element ComponentName="DeviceViewDataProvider" X="375" Y="500" Note=""/>
-        <Element ComponentName="HardwareBindingChangeGenerator" X="700" Y="775" Note=""/>
-        <Element ComponentName="HardwareProductBindingController" X="750" Y="500" Note=""/>
-        <Element ComponentName="OperationContextController" X="500" Y="675" Note=""/>
+        <Element ComponentName="DeviceInfo" X="200" Y="600" Note=""/>
+        <Element ComponentName="DevicePermissions" X="675" Y="300" Note=""/>
+        <Element ComponentName="HardwareBindingChangeGenerator" X="950" Y="600" Note=""/>
+        <Element ComponentName="HardwareProductBindingController" X="875" Y="475" Note=""/>
+        <Element ComponentName="OperationContextController" X="575" Y="600" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DeviceCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="CollectionCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
-                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
-                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -67,6 +43,28 @@
                 <Element ComponentName="Remove" X="75" Y="375" Note=""/>
                 <Element ComponentName="RemovePermissions" X="1025" Y="525" Note=""/>
             </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DeviceCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="625" Y="300" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="125" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="250" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="CollectionCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
+                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap/>
             <EmbeddedRegistries/>
         </EmbededRegistry>
     </EmbeddedRegistries>

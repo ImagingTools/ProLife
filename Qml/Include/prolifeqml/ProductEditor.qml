@@ -26,8 +26,6 @@ Item {
     property string productId: "";
     property string uuid: "";
 
-    property bool serialNumberEdit: true;
-
     // ProductEditorDialog reference
     property Item rootItem: null;
 
@@ -403,7 +401,6 @@ Item {
     Component {
         id: softwareProductComponent;
         SoftwareProductEditor {
-            serialNumberEdit: productEditor.serialNumberEdit;
             productIndex: productEditor.rootItem.activeProductIndex;
         }
     }
