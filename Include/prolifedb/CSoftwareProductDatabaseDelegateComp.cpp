@@ -137,6 +137,8 @@ QString CSoftwareProductDatabaseDelegateComp::GetBaseSelectionQuery() const
 {
 	return R"(
 			SELECT
+				root."DocumentId" as "Id",
+				root."Document"->>'SerialNumber' as "Name",
 				acc."Document"->'Groups' as "Groups",
 				root."DocumentId",
 				root."Document"->>'SerialNumber' as "SerialNumber",

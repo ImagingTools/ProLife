@@ -11,11 +11,6 @@ Dialog {
     property int rootWidth: root ? root.width: 0;
     property int rootHeight: root ? root.height: 0;
 
-    property TreeItemModel productModel: TreeItemModel {}
-
-    property TreeItemModel documentModel: TreeItemModel{}
-    property TreeItemModel licensesModel: TreeItemModel{}
-    property TreeItemModel productsModel: TreeItemModel{}
     property int activeProductIndex: -1;
 
     property string orderId;
@@ -30,10 +25,23 @@ Dialog {
 
     contentComp: Component {
         ProductEditor {
+            id: productEditor;
+
             width: 800;
             height: 700;
 
-            rootItem: productEditorDialog;
+            index: productEditorDialog.activeProductIndex;
+
+            Connections {
+                target: productEditor.productItem;
+
+                function onModelChanged(){
+                    console.log("onModelChanged", productEditor.productItem.toJson());
+                    let ok = productEditor.productItem.m_licenseUuid !== "" &&
+                            productEditor.productItem.m_productUuid !== "";
+                    productEditorDialog.buttons.setButtonState(Enums.ok, ok);
+                }
+            }
         }
     }
 }//Container

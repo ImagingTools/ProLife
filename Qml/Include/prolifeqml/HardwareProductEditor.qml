@@ -3,13 +3,13 @@ import Acf 1.0
 import imtgui 1.0
 import imtauthgui 1.0
 import imtcontrols 1.0
+import prolifeOrdersSdl 1.0
+import prolifeSensorsSdl 1.0
 
 ViewBase {
     id: root;
 
     height: content.height;
-
-    property int margin: 10;
 
     property var productLicensesModel: TreeItemModel{}
     property TreeItemModel devicesModel: TreeItemModel{}
@@ -19,36 +19,25 @@ ViewBase {
     property bool isNewDevice: switchNewSensor.checked;
     property int productIndex: -1;
 
+    property ProductItem productItem: model ? model : null;
+
     function updateGui(){
-        let isNew = model.getData("IsNew")
+        let isNew = productItem.m_isNew;
         if (isNew){
             switchNewSensor.checked = true;
 
-            macAddressInput.text = "";
-            serialNumberInput.text = "";
-
-            if (root.model.containsKey("MacAddress")){
-                let macAddress = root.model.getData("MacAddress");
-                macAddressInput.text = macAddress;
-            }
-
-            if (root.model.containsKey("SerialNumber")){
-                let serialNumber = root.model.getData("SerialNumber");
-                serialNumberInput.text = serialNumber;
-            }
+            macAddressInput.text = productItem.m_macAddress;
+            serialNumberInput.text = productItem.m_serialNumber;
 
             typesCB.currentIndex = -1;
 
-            if (root.model.containsKey("LicenseUuid")){
-                let licenseUuid = root.model.getData("LicenseUuid");
-
-                if (typesCB.model){
-                    for (let i = 0; i < typesCB.model.getItemsCount(); i++){
-                        let id = typesCB.model.getData("Id", i);
-                        if (id === licenseUuid){
-                            typesCB.currentIndex = i;
-                            break;
-                        }
+            let licenseUuid = productItem.m_licenseUuid;
+            if (typesCB.model){
+                for (let i = 0; i < typesCB.model.getItemsCount(); i++){
+                    let id = typesCB.model.getData(DeviceItem_MetaInfo.s_id, i);
+                    if (id === licenseUuid){
+                        typesCB.currentIndex = i;
+                        break;
                     }
                 }
             }
@@ -57,15 +46,13 @@ ViewBase {
             switchNewSensor.checked = false;
 
             deviceCB.currentIndex = -1;
-            if (root.model.containsKey("Id")){
-                let deviceId = root.model.getData("Id")
-                if (deviceCB.model){
-                    for (let i = 0; i < deviceCB.model.getItemsCount(); i++){
-                        let id = deviceCB.model.getData("Id", i);
-                        if (id === deviceId){
-                            deviceCB.currentIndex = i;
-                            break;
-                        }
+            let deviceId = productItem.m_id;
+            if (deviceCB.model){
+                for (let i = 0; i < deviceCB.model.getItemsCount(); i++){
+                    let id = deviceCB.model.getData(DeviceItem_MetaInfo.s_id, i);
+                    if (id === deviceId){
+                        deviceCB.currentIndex = i;
+                        break;
                     }
                 }
             }
@@ -73,80 +60,77 @@ ViewBase {
     }
 
     function updateModel(){
-        root.model.setData("IsNew", isNewDevice);
+        productItem.m_isNew = isNewDevice;
 
         if (isNewDevice){
             if (typesCB.currentIndex >= 0){
-                let index = typesCB.currentIndex;
-
-                let uuid = root.productLicensesModel.getData("Id", index);
-                let licenseId = root.productLicensesModel.getData("LicenseId", index);
-                let licenseName = root.productLicensesModel.getData("LicenseName", index);
-
-                root.model.setData("LicenseUuid", uuid);
-                root.model.setData("LicenseId", licenseId);
-                root.model.setData("LicenseName", licenseName);
+                productItem.m_licenseUuid = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_id, typesCB.currentIndex);
+                productItem.m_licenseId = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_licenseId, typesCB.currentIndex);
+                productItem.m_licenseName = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_licenseName, typesCB.currentIndex);
             }
             else{
-                root.model.setData("LicenseUuid", "");
-                root.model.setData("LicenseId", "");
-                root.model.setData("LicenseName", "");
+                productItem.m_licenseUuid = "";
+                productItem.m_licenseId = "";
+                productItem.m_licenseName = "";
             }
 
-            root.model.setData("MacAddress", macAddressInput.text);
-            root.model.setData("SerialNumber", serialNumberInput.text);
+            productItem.m_macAddress = macAddressInput.text;
+            productItem.m_serialNumber = serialNumberInput.text;
         }
         else{
             if (deviceCB.currentIndex >= 0){
-                let deviceId = deviceCB.model.getData("Id", deviceCB.currentIndex);
-                root.model.setData("Id", deviceId);
+                let deviceId = deviceCB.model.getData(DeviceItem_MetaInfo.s_id, deviceCB.currentIndex);
+                console.log("deviceCB id", deviceId);
 
-                if (deviceCB.model.containsKey("LicenseUuid", deviceCB.currentIndex)){
-                    let configurationType = deviceCB.model.getData("LicenseUuid", deviceCB.currentIndex);
-                    root.model.setData("LicenseUuid", configurationType);
+                productItem.m_id = deviceId;
+                console.log("productItem.m_id", productItem.m_id);
+
+                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseUuid, deviceCB.currentIndex)){
+                    let configurationType = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseUuid, deviceCB.currentIndex);
+                    productItem.m_licenseUuid = configurationType;
                 }
                 else{
-                    root.model.setData("LicenseUuid", "");
+                    productItem.m_licenseUuid = "";
                 }
 
-                if (deviceCB.model.containsKey("LicenseId", deviceCB.currentIndex)){
-                    let licenseId = deviceCB.model.getData("LicenseId", deviceCB.currentIndex);
-                    root.model.setData("LicenseId", licenseId);
+                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)){
+                    let licenseId = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex);
+                    productItem.m_licenseId = licenseId;
                 }
                 else{
-                    root.model.setData("LicenseId", "");
+                    productItem.m_licenseId = "";
                 }
 
-                if (deviceCB.model.containsKey("LicenseName", deviceCB.currentIndex)){
-                    let licenseName = deviceCB.model.getData("LicenseName", deviceCB.currentIndex);
-                    root.model.setData("LicenseName", licenseName);
+                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)){
+                    let licenseName = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex);
+                    productItem.m_licenseName = licenseName;
                 }
                 else{
-                    root.model.setData("LicenseName", "");
+                    productItem.m_licenseName = "";
                 }
 
-                if (deviceCB.model.containsKey("MacAddress", deviceCB.currentIndex)){
-                    let macAddress = deviceCB.model.getData("MacAddress", deviceCB.currentIndex);
-                    root.model.setData("MacAddress", macAddress);
+                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)){
+                    let macAddress = deviceCB.model.getData(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex);
+                    productItem.m_macAddress = macAddress;
                 }
                 else{
-                    root.model.setData("MacAddress", "");
+                    productItem.m_macAddress = "";
                 }
 
-                if (deviceCB.model.containsKey("SerialNumber", deviceCB.currentIndex)){
-                    let serialNumber = deviceCB.model.getData("SerialNumber", deviceCB.currentIndex);
-                    root.model.setData("SerialNumber", serialNumber);
+                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)){
+                    let serialNumber = deviceCB.model.getData(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex);
+                    productItem.m_serialNumber = serialNumber;
                 }
                 else{
-                    root.model.setData("SerialNumber", "");
+                    productItem.m_serialNumber = "";
                 }
             }
             else{
-                root.model.setData("LicenseUuid", "");
-                root.model.setData("LicenseId", "");
-                root.model.setData("LicenseName", "");
-                root.model.setData("MacAddress", "");
-                root.model.setData("SerialNumber", "");
+                productItem.m_licenseUuid = "";
+                productItem.m_licenseId = "";
+                productItem.m_licenseName = "";
+                productItem.m_macAddress = "";
+                productItem.m_serialNumber = "";
             }
         }
     }
@@ -165,7 +149,7 @@ ViewBase {
 
             name: qsTr("New Sensor");
 
-            visible: root.productIndex == -1 || root.model.getData("IsNew");
+            visible: root.productIndex == -1 || root.isNewDevice;
 
             onCheckedChanged: {
                 deviceCB.visible = !checked;
@@ -212,26 +196,26 @@ ViewBase {
 
             onCurrentIndexChanged: {
                 if (deviceCB.currentIndex >= 0 && deviceCB.model){
-                    if (deviceCB.model.containsKey("LicenseName", deviceCB.currentIndex)){
-                        let licenseName = deviceCB.model.getData("LicenseName", deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)){
+                        let licenseName = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)
 
                         deviceTypeText.text = licenseName;
                     }
 
-                    if (deviceCB.model.containsKey("MacAddress", deviceCB.currentIndex)){
-                        let macAddress = deviceCB.model.getData("MacAddress", deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)){
+                        let macAddress = deviceCB.model.getData(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)
 
                         macAddressText.text = macAddress;
                     }
 
-                    if (deviceCB.model.containsKey("SerialNumber", deviceCB.currentIndex)){
-                        let serialNumber = deviceCB.model.getData("SerialNumber", deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)){
+                        let serialNumber = deviceCB.model.getData(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)
 
                         serialNumberText.text = serialNumber;
                     }
 
-                    if (deviceCB.model.containsKey("LicenseId", deviceCB.currentIndex)){
-                        let licenseId = deviceCB.model.getData("LicenseId", deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)){
+                        let licenseId = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)
 
                         articulText.text = licenseId;
                     }
@@ -270,15 +254,15 @@ ViewBase {
                 model: root.productLicensesModel;
 
                 name: qsTr("Types");
-                nameId: "LicenseName";
+                nameId: DeviceItem_MetaInfo.s_licenseName;
 
                 bottomComp: currentIndex < 0 ? typeSensorErrorComp : undefined;
-                filteringFields: ["LicenseName", "LicenseId"];
+                filteringFields: [DeviceItem_MetaInfo.s_licenseName, DeviceItem_MetaInfo.s_licenseId];
 
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0){
-                        if (typesCB.model.containsKey("LicenseId", currentIndex)){
-                            let licenseId = typesCB.model.getData("LicenseId", currentIndex)
+                        if (typesCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, currentIndex)){
+                            let licenseId = typesCB.model.getData(DeviceItem_MetaInfo.s_licenseId, currentIndex)
 
                             newArticulText.text = licenseId;
                         }

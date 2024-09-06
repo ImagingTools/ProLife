@@ -20,10 +20,12 @@ DocumentValidator {
     }
 
     function isValid(data){
-        let orderId = "";
-        if (documentModel.containsKey("OrderId")){
-            orderId = documentModel.getData("OrderId");
+        if (!documentModel){
+            data.message = qsTr("Document model is invalid")
+            return false;
         }
+
+        let orderId = documentModel.m_orderId;
 
         let ok1 = root.test("\\d{5}", orderId) && orderId.length === 5;
         let ok2 = root.test("\\d{8}", orderId) && orderId.length === 8;
@@ -34,12 +36,7 @@ DocumentValidator {
             return false;
         }
 
-        let customerId = "";
-        if (documentModel.containsKey("CustomerId")){
-            customerId = documentModel.getData("CustomerId");
-        }
-
-        if (customerId === ""){
+        if (documentModel.m_customerId === ""){
             data.message = qsTr("Customer cannot be empty");
 
             return false;

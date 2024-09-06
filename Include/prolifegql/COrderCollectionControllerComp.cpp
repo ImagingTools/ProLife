@@ -70,10 +70,12 @@ bool COrderCollectionControllerComp::CheckProducts(
 		}
 		else if (categoryId == "Hardware"){
 			QByteArray macAddress = product.GetMacAddress();
-			bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
-			if (!ok){
-				errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName).arg(qPrintable(macAddress));
-				return false;
+			if (!macAddress.isEmpty()){
+				bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
+				if (!ok){
+					errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName).arg(qPrintable(macAddress));
+					return false;
+				}
 			}
 
 			imtbase::IObjectCollection::DataPtr dataPtr;
@@ -89,10 +91,12 @@ bool COrderCollectionControllerComp::CheckProducts(
 			}
 
 			QByteArray serialNumber = product.GetSerialNumber();
-			bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
-			if (!serialNumberIsValid){
-				errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
-				return false;
+			if (!serialNumber.isEmpty()){
+				bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
+				if (!serialNumberIsValid){
+					errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
+					return false;
+				}
 			}
 		}
 		else{
@@ -192,7 +196,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.SetDescription(objectCollectionIterator.GetElementInfo("Description").toString());
+		representationObject.SetDescription(orderInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isStatusRequested){
@@ -200,7 +204,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.SetOrderId(objectCollectionIterator.GetElementInfo("OrderId").toByteArray());
+		representationObject.SetOrderId(orderInfoPtr->GetOrderId());
 	}
 
 	if (requestInfo.items.isOrderCustomerRequested){
@@ -208,7 +212,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.SetPurchaseId(objectCollectionIterator.GetElementInfo("PurchaseId").toByteArray());
+		representationObject.SetPurchaseId(orderInfoPtr->GetPurchaseOrderId());
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -516,8 +520,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	prolife::sdl::Orders::COrderDataPayload& representationPayload,
 	QString& errorMessage) const
 {
-	istd::IChangeable objectPtr = static_cast<istd::IChangeable>(data);
-	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&objectPtr);
+	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(data));
 	if (orderInfoPtr == nullptr){
 		errorMessage = QString("Unable to create representation from object. Error: Object is invalid");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
@@ -680,6 +683,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
+	orderData.SetOrderProducts(products);
 	representationPayload.SetOrderData(orderData);
 
 	return true;

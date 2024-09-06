@@ -148,6 +148,9 @@ RemoteCollectionView {
                 else if (value === "InUse"){
                     image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
                 }
+                else{
+                    image.source = "";
+                }
             }
         }
     }

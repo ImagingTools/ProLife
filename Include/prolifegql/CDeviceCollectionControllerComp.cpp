@@ -400,7 +400,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	deviceData.SetDeviceType(productUuid);
 
-	QString name;
+	QString name = productUuid;
 
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
@@ -412,14 +412,8 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
-	if (name.isEmpty() && !macAddress.isEmpty()){
-		name = macAddress;
-	}
-	else if (!name.isEmpty() && !macAddress.isEmpty()){
+	if (!macAddress.isEmpty()){
 		name = name + " (" + macAddress + ")";
-	}
-	else{
-		name = productUuid;
 	}
 
 	deviceData.SetName(name);

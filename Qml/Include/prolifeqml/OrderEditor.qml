@@ -18,8 +18,6 @@ ViewBase {
     property TreeItemModel softwaresModel: CachedSoftwareCollection.collectionModel;
     property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
 
-    property string orderUuid: "";
-
     property OrderData orderData: model ? model : null;
 
     Component.onCompleted: {
@@ -38,7 +36,7 @@ ViewBase {
         CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
     }
 
-    onModelChanged: {
+    onOrderDataChanged: {
         checkPermissions();
     }
 
@@ -53,11 +51,11 @@ ViewBase {
     }
 
     function checkPermissions(){
-        let orderId = "";
-        if (model.containsKey("Id")){
-            orderId = model.getData("Id");
+        if (!orderData){
+            return;
         }
 
+        let orderId = orderData.m_id;
         let canAddOrder = PermissionsController.checkPermission("AddOrder");
 
         if (orderId === "" && canAddOrder){
@@ -243,11 +241,7 @@ ViewBase {
 
         //        syncroniseProducts();
 
-        productsView.model = 0;
-
-        // if (model.containsKey("OrderProducts")){
-        //     productsView.model = model.getTreeItemModel("OrderProducts");
-        // }
+        productsView.model = orderData.m_orderProducts;
     }
 
     function updateModel(){
@@ -269,10 +263,6 @@ ViewBase {
         else{
             orderData.m_orderStatus = "";
         }
-
-        // if (!model.containsKey("OrderProducts")){
-        //     model.addTreeModel("OrderProducts")
-        // }
     }
 
     OrderStatus {
@@ -480,6 +470,12 @@ ViewBase {
             }
 
             Component {
+                id: productFactory;
+
+                ProductItem {}
+            }
+
+            Component {
                 id: productEditorDialog;
 
                 ProductEditorDialog {
@@ -490,22 +486,24 @@ ViewBase {
                         productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel;
                         productsDialog.bodyItem.softwaresModel = orderEditorContainer.softwaresModel;
                         productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel;
-
-                        if (orderEditorContainer.model.containsKey("Id")){
-                            productsDialog.bodyItem.orderUuid = orderEditorContainer.model.getData("Id");
-                        }
-
+                        productsDialog.bodyItem.orderUuid = orderEditorContainer.orderData.m_id;
                         productsDialog.activeProductIndex = productsView.activeProductIndex;
+                        productsDialog.bodyItem.orderId = orderEditorContainer.orderData.m_orderId;
 
-                        if (orderEditorContainer.model.containsKey("OrderId")){
-                            productsDialog.bodyItem.orderId = orderEditorContainer.model.getData("OrderId");
-                        }
-
-                        let orderProductsModel = orderEditorContainer.model.getData("OrderProducts");
-                        productsDialog.bodyItem.orderProductsModel = orderProductsModel;
+                        productsDialog.bodyItem.orderProductsModel = orderEditorContainer.orderData.m_orderProducts;
                         if (productsView.activeProductIndex >= 0){
-                            let productModel = orderProductsModel.getModelFromItem(productsView.activeProductIndex);
-                            productsDialog.bodyItem.productModel = productModel;
+                            let productModel = orderEditorContainer.orderData.m_orderProducts.get(productsView.activeProductIndex).item;
+                            console.log("productModel", productModel);
+                            console.log("productModel", productModel.toJson());
+
+                            productsDialog.bodyItem.productItem = productModel.copyMe();
+                        }
+                        else{
+                            let productItem = productFactory.createObject();
+                            productItem.m_id = UuidGenerator.generateUUID();
+                            productItem.m_categoryId = "Software";
+
+                            productsDialog.bodyItem.productItem = productItem;
                         }
 
                         productsDialog.bodyItem.started();
@@ -513,29 +511,29 @@ ViewBase {
 
                     onFinished: {
                         if (buttonId == Enums.ok){
-                            orderEditorContainer.model.beginChanges();
+                            // orderEditorContainer.model.beginChanges();
 
-                            let productModel = productsDialog.bodyItem.productModel;
-                            let actualOrderProducts = orderEditorContainer.model.getData("OrderProducts");
+                            let productModel = productsDialog.bodyItem.productItem.copyMe();
+                            let actualOrderProducts = orderEditorContainer.orderData.m_orderProducts;
+                            console.log("productModel", productModel.toJson());
 
                             let index = productsView.activeProductIndex;
                             if (index < 0){
                                 if (actualOrderProducts){
-                                    index = actualOrderProducts.insertNewItem(0);
-                                    actualOrderProducts.copyItemDataFromModel(index, productModel);
+                                    actualOrderProducts.insert(0, {"item": productModel})
                                 }
                             }
                             else{
                                 if (actualOrderProducts){
-                                    let actualProductModel = actualOrderProducts.getModelFromItem(index);
-                                    let isEqual = actualProductModel.isEqualWithModel(productModel);
-                                    if (!isEqual){
-                                        actualOrderProducts.copyItemDataFromModel(index, productModel);
-                                    }
+                                    actualOrderProducts.set(index, {"item": productModel})
                                 }
                             }
 
-                            orderEditorContainer.model.endChanges();
+                            productsView.model = 0;
+                            productsView.model = actualOrderProducts;
+
+                            // orderEditorContainer.model.endChanges();
+                            orderEditorContainer.model.modelChanged([]);
                         }
                     }
                 }
@@ -657,13 +655,13 @@ ViewBase {
                         return;
                     }
 
-                    if (orderEditorContainer.model.containsKey("OrderProducts")){
-                        let orderProducts = orderEditorContainer.model.getTreeItemModel("OrderProducts")
-                        if (orderProducts){
-                            orderEditorContainer.model.beginChanges();
-                            orderProducts.removeItem(productsView.activeProductIndex);
-                            orderEditorContainer.model.endChanges();
-                        }
+                    let orderProducts = orderEditorContainer.orderData.m_orderProducts
+                    if (orderProducts){
+                        // orderEditorContainer.model.beginChanges();
+                        orderProducts.remove(productsView.activeProductIndex);
+                        // orderEditorContainer.model.endChanges();
+
+                        orderEditorContainer.model.modelChanged([]);
                     }
                 }
             }

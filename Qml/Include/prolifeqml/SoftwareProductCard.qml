@@ -3,6 +3,7 @@ import Acf 1.0
 import imtgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
+import prolifeOrdersSdl 1.0
 
 Rectangle {
     id: softwareCard;
@@ -15,17 +16,10 @@ Rectangle {
     property int margin: 10;
     property int contentHeight: contentColumn.height;
 
-    property string licenseId: model.LicenseId != undefined && model.LicenseId != null ? model.LicenseId : "";
-    property string licenseName: model.LicenseName != undefined && model.LicenseName != null ? model.LicenseName : "";
-    property string expiration: model.Expiration ? model.Expiration : "";
-    property string productId: model.ProductUuid ? model.ProductUuid : "";
-    property string serialNumber: model.SerialNumber ? model.SerialNumber : "";
+    property ProductItem productItem: model.item;
 
     property bool readOnly: false;
     property bool commmandsVisible: false;
-    property bool inUse: model.InUse ? model.InUse : "";
-
-    property Item productCardRoot: null;
 
     signal clicked();
     signal edited();
@@ -136,10 +130,10 @@ Rectangle {
 
         let index = elementsTableModel.insertNewItem();
         elementsTableModel.setData("Key", qsTr("Software-ID"), index)
-        elementsTableModel.setData("Value", softwareCard.serialNumber, index)
+        elementsTableModel.setData("Value", softwareCard.productItem.m_serialNumber, index)
 
-        let licenseId = softwareCard.licenseId;
-        let licenseName = softwareCard.licenseName;
+        let licenseId = productItem.m_licenseId;
+        let licenseName = productItem.m_licenseName;
 
         let name = licenseName;
         if (licenseId !== ""){
@@ -152,8 +146,8 @@ Rectangle {
 
         let expiration = qsTr("Unlimited");
 
-        if (softwareCard.expiration !== ""){
-            expiration = softwareCard.expiration;
+        if (productItem.m_expiration !== ""){
+            expiration = productItem.m_expiration;
         }
 
         index = elementsTableModel.insertNewItem();

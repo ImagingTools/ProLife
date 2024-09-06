@@ -3,69 +3,59 @@ import Acf 1.0
 import imtgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
+import prolifeOrdersSdl 1.0
+import prolifeLicensesSdl 1.0
+import prolifeSensorsSdl 1.0
 
 Item {
     id: productEditor;
 
     property TreeItemModel licensesModel: TreeItemModel{}
     property TreeItemModel productsModel: TreeItemModel{}
-    property TreeItemModel orderProductsModel: TreeItemModel {}
-
-    property TreeItemModel productModel: TreeItemModel {}
+    property ListModel orderProductsModel: ListModel {}
 
     property TreeItemModel devicesModel: TreeItemModel {}
     property TreeItemModel softwaresModel: TreeItemModel {}
 
     property bool blockUpdatingModel: false;
-    property bool centered: true;
 
     property string orderId;
     property string orderUuid;
 
-    property string productCategory: "";
-    property string productId: "";
-    property string uuid: "";
+    property ProductItem productItem;
+    property int index: -1;
 
-    // ProductEditorDialog reference
-    property Item rootItem: null;
+    property string softwareCategoryId: "Software";
+    property string hardwareCategoryId: "Hardware";
 
-    Component.onDestruction: {
-        productEditor.productModel.modelChanged.disconnect(productEditor.onModelChanged);
-    }
+    Component {
+        id: productFactory;
 
-    onProductIdChanged: {
-        productEditor.productModel.setData("ProductUuid", productEditor.productId);
-    }
-
-    onProductCategoryChanged: {
-        productEditor.productModel.setData("CategoryId", productEditor.productCategory);
+        ProductItem {}
     }
 
     function getSoftwareModel(){
         let excludeIds = []
-        for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
-            let categoryId = orderProductsModel.getData("CategoryId", i);
-            if (categoryId === "Software"){
-                let id = orderProductsModel.getData("Id", i);
+
+        for (let i = 0; i < orderProductsModel.count; i++){
+            let categoryId = orderProductsModel.get(i).item.m_categoryId;
+            if (categoryId === productEditor.softwareCategoryId){
+                let id = orderProductsModel.get(i).item.m_id;
                 if (id !== ""){
                     excludeIds.push(id)
                 }
             }
         }
 
-        if (productEditor.productModel.containsKey("Id")){
-            let id = productEditor.productModel.getData("Id");
-
-            let index = excludeIds.indexOf(id);
-            if (index >= 0){
-                excludeIds.splice(index, 1)
-            }
+        let index = excludeIds.indexOf(productItem.m_id);
+        if (index >= 0){
+            excludeIds.splice(index, 1)
         }
 
         let resultModel = treeItemModelComp.createObject(null);
 
         for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
-            let id = productEditor.softwaresModel.getData("Id", i);
+            let id = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_id, i);
 
             if (!id || id === ""){
                 continue;
@@ -75,14 +65,14 @@ Item {
                 continue;
             }
 
-            let serialNumber = productEditor.softwaresModel.getData("SerialNumber", i);
+            let serialNumber = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_serialNumber, i);
 
-            let orderUuid = productEditor.softwaresModel.getData("OrderUuid", i);
+            let orderUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_orderUuid, i);
 
-            let productUuid = productEditor.softwaresModel.getData("ProductUuid", i);
-            let licenseUuid = productEditor.softwaresModel.getData("LicenseUuid", i);
+            let productUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_productUuid, i);
+            let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_licenseUuid, i);
 
-            if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productEditor.productId){
+            if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
                 let index = resultModel.insertNewItem();
 
                 resultModel.copyItemDataFromModel(index, productEditor.softwaresModel, i);
@@ -94,10 +84,10 @@ Item {
 
     function getDevicesModel(){
         let excludeDeviceIds = []
-        for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
-            let categoryId = orderProductsModel.getData("CategoryId", i);
+        for (let i = 0; i < orderProductsModel.count; i++){
+            let categoryId = orderProductsModel.get(i).item.m_categoryId;
             if (categoryId === "Hardware"){
-                let deviceID = orderProductsModel.getData("Id", i);
+                let deviceID = orderProductsModel.get(i).item.m_id;
                 if (deviceID !== ""){
                     excludeDeviceIds.push(deviceID)
                 }
@@ -105,8 +95,8 @@ Item {
         }
 
         let resultModel = treeItemModelComp.createObject(null);
-        let selectedProductId = productEditor.productModel.getData("ProductUuid");
-        let selectedDeviceId = productEditor.productModel.getData("Id");
+        let selectedProductId = productItem.m_productUuid;
+        let selectedDeviceId = productItem.m_productId;
 
         let index = excludeDeviceIds.indexOf(selectedDeviceId);
         if (index >= 0){
@@ -114,11 +104,11 @@ Item {
         }
 
         for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
-            let status = productEditor.devicesModel.getData("Status", i);
-            let orderId = productEditor.devicesModel.getData("OrderUuid", i);
-            let deviceId = productEditor.devicesModel.getData("Id", i);
-            let deviceType = productEditor.devicesModel.getData("ProductUuid", i);
-            let macAddress = productEditor.devicesModel.getData("MacAddress", i);
+            let status = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_status, i);
+            let orderId = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_orderUuid, i);
+            let deviceId = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_id, i);
+            let deviceType = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_productUuid, i);
+            let macAddress = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_macAddress, i);
 
             if (!deviceId || deviceId === ""){
                 continue;
@@ -147,26 +137,6 @@ Item {
         }
 
         return resultModel;
-    }
-
-    function onModelChanged(){
-        let ok = true;
-
-        let licenseUuid = "";
-        if (productModel.containsKey("LicenseUuid")){
-            licenseUuid = productModel.getData("LicenseUuid");
-        }
-
-        ok = ok && licenseUuid !== "";
-
-        let productUuid = "";
-        if (productModel.containsKey("ProductUuid")){
-            productUuid = productModel.getData("ProductUuid");
-        }
-
-        ok = ok && productUuid !== "";
-
-        productEditor.rootItem.buttons.setButtonState(Enums.ok, ok);
     }
 
     function setHardware(){
@@ -199,22 +169,13 @@ Item {
 
     function updateProductModel(){
         if (productCB.currentIndex >= 0){
-            let productId = productCB.model.getData("Id", productCB.currentIndex);
-            let categoryId = productCB.model.getData("CategoryId", productCB.currentIndex);
-
-            productEditor.productCategory = categoryId;
-            productEditor.productId = productId;
-
             if (!productEditor.blockUpdatingModel){
                 productEditor.clearProduct();
             }
 
-            productEditor.productModel.setData("Id", productEditor.uuid);
-            productEditor.productModel.setData("CategoryId", categoryId);
-            productEditor.productModel.setData("ProductUuid", productEditor.productId);
-
-            let productName = productCB.model.getData("ProductName", productCB.currentIndex);
-            productEditor.productModel.setData("ProductName", productName);
+            productItem.m_productUuid = productCB.model.getData(ProductItem_MetaInfo.s_id, productCB.currentIndex);
+            productItem.m_categoryId = productCB.model.getData(ProductItem_MetaInfo.s_categoryId, productCB.currentIndex);
+            productItem.m_productName = productCB.model.getData(ProductItem_MetaInfo.s_productName, productCB.currentIndex);
 
             contentLoader.item.productLicensesModel = 0;
 
@@ -227,13 +188,12 @@ Item {
                 contentLoader.item.productLicensesModel.refresh()
             }
 
-            if (productEditor.productCategory === "Hardware"){
+            if (productItem.m_categoryId === productEditor.hardwareCategoryId){
                 contentLoader.item.devicesModel = productEditor.getDevicesModel();
             }
 
-            if (productEditor.productCategory === "Software"){
+            if (productItem.m_categoryId === productEditor.softwareCategoryId){
                 contentLoader.item.softwaresModel = productEditor.getSoftwareModel();
-
             }
 
             let productLicensesModel = productEditor.getProductLicensesModel();
@@ -241,7 +201,7 @@ Item {
                 contentLoader.item.productLicensesModel = productLicensesModel;
             }
 
-            contentLoader.item.model = productEditor.productModel;
+            contentLoader.item.model = productItem;
 
             contentLoader.item.doUpdateGui();
         }
@@ -267,7 +227,7 @@ Item {
             name: qsTr("Product Category");
             description: qsTr("Please select the product category you want to create");
 
-            visible: productEditor.rootItem.activeProductIndex === -1;
+            visible: productEditor.index === -1;
 
             property Button softwareProductButton;
             property Button hardwareProductButton;
@@ -372,36 +332,33 @@ Item {
     }
 
     function clearProduct(){
-        productEditor.productModel.clear();
-
-        productEditor.productModel.setData("ProductUuid", "");
-        productEditor.productModel.setData("ProductName", "");
-        productEditor.productModel.setData("LicenseUuid", "");
-        productEditor.productModel.setData("LicenseId", "");
-        productEditor.productModel.setData("LicenseName", "");
-        productEditor.productModel.setData("IsNew", false);
-
-        if (productEditor.productCategory === "Hardware"){
-            productEditor.productModel.setData("MacAddress", "");
-        }
-        else if (productEditor.productCategory === "Software"){
-            productEditor.productModel.setData("SerialNumber", "");
-            productEditor.productModel.setData("Expiration", "");
+        if (productItem){
+            productItem.m_id = ''
+            productItem.m_productUuid = ''
+            productItem.m_licenseUuid = ''
+            productItem.m_categoryId = ''
+            productItem.m_licenseId = ''
+            productItem.m_productName = ''
+            productItem.m_licenseName = ''
+            productItem.m_serialNumber = ''
+            productItem.m_inUse = false
+            productItem.m_isNew = false
+            productItem.m_expiration = ''
+            productItem.m_macAddress = ''
         }
     }
 
     Component {
         id: hardwareProductComponent;
         HardwareProductEditor {
-            model: productEditor.productModel;
-            productIndex: productEditor.rootItem.activeProductIndex;
+            productIndex: productEditor.index;
         }
     }
 
     Component {
         id: softwareProductComponent;
         SoftwareProductEditor {
-            productIndex: productEditor.rootItem.activeProductIndex;
+            productIndex: productEditor.index;
         }
     }
 
@@ -413,7 +370,7 @@ Item {
     function getProductLicensesModel(){
         for (let i = 0; i < productEditor.licensesModel.getItemsCount(); i++){
             let productId = productEditor.licensesModel.getData("Id", i);
-            if (productId === productEditor.productId){
+            if (productId === productItem.m_productUuid){
                 if (productEditor.licensesModel.containsKey("Licenses", i)){
                     return productEditor.licensesModel.getData("Licenses", i);
                 }
@@ -424,49 +381,37 @@ Item {
     }
 
     function started(){
+        console.log("started");
+
+        if (!productItem){
+            return;
+        }
+
         productEditor.blockUpdatingModel = true;
 
-        let uuid;
-        if (productEditor.productModel.containsKey("Id")){
-            uuid = productEditor.productModel.getData("Id");
+        if (productItem.m_categoryId === productEditor.softwareCategoryId){
+            productEditor.setSoftware();
+        }
+        else if (productItem.m_categoryId  === productEditor.hardwareCategoryId){
+            productEditor.setHardware();
         }
         else{
-            uuid = UuidGenerator.generateUUID();
+            console.error("Unknown product type:", productItem.m_categoryId);
+            return;
         }
 
-        productEditor.uuid = uuid;
-
-        if (productEditor.productModel.containsKey("CategoryId")){
-            productEditor.productCategory = productEditor.productModel.getData("CategoryId")
-        }
-
-        // By default
-        productEditor.setSoftware();
-
-        if (productEditor.rootItem.activeProductIndex >= 0){
-            if (productEditor.productCategory === "Software"){
-                productEditor.setSoftware();
-            }
-            else if (productEditor.productCategory === "Hardware"){
-                productEditor.setHardware();
+        for (let i = 0; i < productCB.model.getItemsCount(); i++){
+            let id = productCB.model.getData(ProductItem_MetaInfo.s_id, i);
+            if (id === productItem.m_productUuid){
+                productCB.currentIndex = i;
+                break;
             }
         }
 
-        productCB.currentIndex = -1;
-
-        if (productEditor.productModel.containsKey("ProductUuid")){
-            productEditor.productId = productEditor.productModel.getData("ProductUuid")
-
-            for (let i = 0; i < productCB.model.getItemsCount(); i++){
-                let id = productCB.model.getData("Id", i);
-                if (id === productEditor.productId){
-                    productCB.currentIndex = i;
-                    break;
-                }
-            }
+        if (productCB.currentIndex == -1){
+            console.error("Unable to edit product. Error: This product not found!", productItem.m_categoryId);
+            return;
         }
-
-        productEditor.productModel.modelChanged.connect(productEditor.onModelChanged);
 
         productEditor.blockUpdatingModel = false;
     }

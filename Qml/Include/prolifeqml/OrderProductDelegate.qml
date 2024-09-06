@@ -2,17 +2,23 @@ import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
 import imtlicgui 1.0
+import prolifeOrdersSdl 1.0
 
 ElementView {
     id: root;
 
-    name: model.ProductName != undefined && model.ProductName != null ? model.ProductName : "";
+    property ProductItem productItem: model.item ? model.item : null;
+    name: productItem ? productItem.m_productName : "";
 
     clip: false;
 
     property TreeItemModel activeCommandsModel: TreeItemModel {}
 
     property bool expanded: true;
+
+    onProductItemChanged: {
+        console.log("onProductItemChanged", productItem, model.index)
+    }
 
     controlComp: Component {
         Item {
@@ -104,13 +110,12 @@ ElementView {
     }
 
     property bool readOnly: false;
-    property bool inUse: model.InUse ? model.InUse : false;
-    property bool isNew: model.IsNew ? model.IsNew : false;
+    property bool inUse: productItem ? productItem.m_inUse: false;
+    property bool isNew: productItem ? productItem.m_isNew : false;
+    property string categoryId: productItem ? productItem.m_categoryId : "";
 
     property bool hardwareInUse: softwareCommandsModel.completed && root.inUse;
     property bool softwareInUse: softwareCommandsModel.completed && root.inUse;
-
-    property string categoryId: model.CategoryId ? model.CategoryId : "";
 
     signal removed();
     signal edited();

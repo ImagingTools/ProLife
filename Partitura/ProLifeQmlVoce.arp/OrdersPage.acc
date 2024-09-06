@@ -138,9 +138,6 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OperationContextController"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="OrderFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="OrderInfo"/>
                     </AttributeInfo>

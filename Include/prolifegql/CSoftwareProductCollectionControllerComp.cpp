@@ -35,6 +35,20 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	prolife::sdl::Licenses::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
+
+	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (objectCollectionIterator.GetObjectData(dataPtr)){
+		softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+	}
+
+	if (softwareInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object '%1'").arg(qPrintable(objectId));
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+		return false;
+	}
+
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
 
 	if (requestInfo.items.isTypeIdRequested){
@@ -107,10 +121,6 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.SetInUse(objectCollectionIterator.GetElementInfo("InUse").toBool());
 	}
 
-	if (requestInfo.items.isStatusRequested){
-		representationObject.SetStatus(objectCollectionIterator.GetElementInfo("Status").toString());
-	}
-
 	if (requestInfo.items.isDeviceIdRequested){
 		representationObject.SetDeviceId(objectCollectionIterator.GetElementInfo("DeviceId").toString());
 	}
@@ -131,8 +141,30 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.SetCustomerUuid(objectCollectionIterator.GetElementInfo("CustomerUuid").toString());
 	}
 
+	if (requestInfo.items.isCustomerRequested){
+		representationObject.SetCustomer(objectCollectionIterator.GetElementInfo("Customer").toString());
+	}
+
 	if (requestInfo.items.isProjectRequested){
 		representationObject.SetProject(objectCollectionIterator.GetElementInfo("Project").toString());
+	}
+
+	if (requestInfo.items.isStatusRequested){
+		QByteArray hardwareMacAddress = objectCollectionIterator.GetElementInfo("DeviceId").toByteArray();
+		bool isPaired = !hardwareMacAddress.isEmpty();
+		if (isPaired){
+			representationObject.SetStatus("IsPaired");
+		}
+		else{
+			representationObject.SetStatus("NotPaired");
+		}
+
+		if (isPaired){
+			bool isUse = objectCollectionIterator.GetElementInfo("InUse").toBool();
+			if (isUse){
+				representationObject.SetStatus("InUse");
+			}
+		}
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -337,6 +369,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	if (!serialNumber.isEmpty()){
 		name += " (" + serialNumber + ")";
 	}
+
+	softwareProductData.SetName(name);
 
 	representationPayload.SetSoftwareProductData(softwareProductData);
 
