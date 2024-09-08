@@ -52,6 +52,15 @@ list(APPEND webdirs ${buildwebdir}/src/imtdocgui)
 list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcontrols)
 list(APPEND webdirs ${buildwebdir}/src/imtcontrols)
 
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreGroupsSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtCoreGroupsSdl)
+
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreRolesSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtCoreRolesSdl)
+
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreUsersSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtCoreUsersSdl)
+
 list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeAccountsSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeAccountsSdl)
 

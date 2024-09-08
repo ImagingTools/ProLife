@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtguiTheme);
 	Q_INIT_RESOURCE(imtlicguiTheme);
 
+	Q_INIT_RESOURCE(imtCoreGroupsSdl);
+	Q_INIT_RESOURCE(imtCoreRolesSdl);
+	Q_INIT_RESOURCE(imtCoreUsersSdl);
+
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeAccountsSdl);

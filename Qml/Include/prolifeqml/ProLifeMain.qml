@@ -29,6 +29,12 @@ ApplicationMain{
             CachedOrderCollection.updateModel();
             CachedDeviceCollection.updateModel();
             CachedSoftwareCollection.updateModel();
+
+            CachedGroupCollection.updateModel();
+            CachedUserCollection.updateModel();
+
+            CachedRoleCollection.productId = context.appName;
+            CachedRoleCollection.updateModel();
         }
 
         function onLogoutSignal(){
@@ -38,6 +44,10 @@ ApplicationMain{
             CachedOrderCollection.clearModel();
             CachedDeviceCollection.clearModel();
             CachedSoftwareCollection.clearModel();
+
+            CachedGroupCollection.clearModel();
+            CachedUserCollection.clearModel();
+            CachedRoleCollection.clearModel();
         }
     }
 

@@ -22,11 +22,11 @@ RemoteCollectionView {
             collectionId: container.collectionId;
 
             Component.onCompleted: {
-                additionalFieldIds.push("OrderUuid");
-                additionalFieldIds.push("HardwareUuid");
-                additionalFieldIds.push("InUse");
-                additionalFieldIds.push("ProductUuid");
-                additionalFieldIds.push("CustomerUuid");
+                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_orderUuid);
+                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_hardwareUuid);
+                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_inUse);
+                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_productUuid);
+                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_customerUuid);
             }
         }
     }
@@ -46,13 +46,13 @@ RemoteCollectionView {
 
     Component.onCompleted: {
         collectionFilter.setSortingOrder("DESC");
-        collectionFilter.setSortingInfoId("LastModified");
+        collectionFilter.setSortingInfoId(SoftwareProductItemTypeMetaInfo.s_lastModified);
 
         registerDocumentInfo();
     }
 
     function registerDocumentInfo(){
-        let documentManager = MainDocumentManager.getDocumentManager("SoftwareProducts");
+        let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
         if (documentManager){
             container.commandsDelegate.documentManager = documentManager;
             documentManager.registerDocumentView("SoftwareProduct", "SoftwareProductEditor", softwareEditorComp);
@@ -88,9 +88,9 @@ RemoteCollectionView {
         GqlRequestDocumentDataController {
             id: requestDocumentDataController
 
-            gqlGetCommandId: "SoftwareProductItem";
-            gqlUpdateCommandId: "SoftwareProductUpdate";
-            gqlAddCommandId: "SoftwareProductAdd";
+            gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductItem;
+            gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductUpdate;
+            gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductAdd;
 
             documentModelComp: Component {
                 SoftwareProductData {}

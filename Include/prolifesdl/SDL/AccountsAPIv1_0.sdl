@@ -1,5 +1,6 @@
 import {
-    "../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
+    "../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+	#"../../../../ImtCore/Sdl/ImtCoreSdlAPIv1_0.sdl"
 }
 
 schema {

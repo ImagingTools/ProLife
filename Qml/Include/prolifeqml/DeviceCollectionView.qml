@@ -12,11 +12,8 @@ RemoteCollectionView {
     id: container;
 
     collectionId: "Devices";
-
-    additionalFieldIds: ["OrderUuid", "StatusId", "Licenses"]
-
+    additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
     collectionFilter: DeviceCollectionFilter {}
-
     commandsViewComp: Component {
         id: commandsDecoratorComp;
 
@@ -40,7 +37,7 @@ RemoteCollectionView {
 
     Component.onCompleted: {
         collectionFilter.setSortingOrder("DESC");
-        collectionFilter.setSortingInfoId("LastModified");
+        collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
 
         let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
         if (documentManager){
@@ -125,12 +122,7 @@ RemoteCollectionView {
                                     return;
                                 }
 
-                                let macAddress = "";
-
-                                if (documentModel.containsKey("MacAddress")){
-                                    macAddress = documentModel.getData("MacAddress");
-                                }
-
+                                let macAddress = documentModel.m_macAddress;
                                 if (!macAddressValidator.isValid(macAddress)){
                                     ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
 
@@ -161,7 +153,6 @@ RemoteCollectionView {
 
         ErrorDialog {
             width: 300;
-
             title: qsTr("Warning message");
         }
     }
@@ -191,9 +182,9 @@ RemoteCollectionView {
         GqlRequestDocumentDataController {
             id: requestDocumentDataController
 
-            gqlGetCommandId: "DeviceItem";
-            gqlUpdateCommandId: "DeviceUpdate";
-            gqlAddCommandId: "DeviceAdd";
+            gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
+            gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
+            gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
 
             documentModelComp: Component {
                 DeviceData {}
@@ -257,7 +248,7 @@ RemoteCollectionView {
                 }
 
                 if (rowIndex >= 0){
-                    let statusId = cellDelegate.rowDelegate.tableItem.elements.getData("StatusId", rowIndex);
+                    let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
                     image.source = deviceProductionStatus.getIconPath(statusId);
                     statusLable.text = cellDelegate.getValue();
                 }
