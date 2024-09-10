@@ -13,12 +13,9 @@ ViewBase {
 
     property var productLicensesModel: TreeItemModel{}
     property TreeItemModel devicesModel: TreeItemModel{}
-
     property alias deviceIndex: deviceCB.currentIndex;
-
     property bool isNewDevice: switchNewSensor.checked;
     property int productIndex: -1;
-
     property ProductItem productItem: model ? model : null;
 
     function updateGui(){
@@ -34,7 +31,7 @@ ViewBase {
             let licenseUuid = productItem.m_licenseUuid;
             if (typesCB.model){
                 for (let i = 0; i < typesCB.model.getItemsCount(); i++){
-                    let id = typesCB.model.getData(DeviceItem_MetaInfo.s_id, i);
+                    let id = typesCB.model.getData(DeviceItemTypeMetaInfo.s_id, i);
                     if (id === licenseUuid){
                         typesCB.currentIndex = i;
                         break;
@@ -49,7 +46,7 @@ ViewBase {
             let deviceId = productItem.m_id;
             if (deviceCB.model){
                 for (let i = 0; i < deviceCB.model.getItemsCount(); i++){
-                    let id = deviceCB.model.getData(DeviceItem_MetaInfo.s_id, i);
+                    let id = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_id, i);
                     if (id === deviceId){
                         deviceCB.currentIndex = i;
                         break;
@@ -64,9 +61,9 @@ ViewBase {
 
         if (isNewDevice){
             if (typesCB.currentIndex >= 0){
-                productItem.m_licenseUuid = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_id, typesCB.currentIndex);
-                productItem.m_licenseId = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_licenseId, typesCB.currentIndex);
-                productItem.m_licenseName = root.productLicensesModel.getData(DeviceItem_MetaInfo.s_licenseName, typesCB.currentIndex);
+                productItem.m_licenseUuid = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_id, typesCB.currentIndex);
+                productItem.m_licenseId = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_licenseId, typesCB.currentIndex);
+                productItem.m_licenseName = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_licenseName, typesCB.currentIndex);
             }
             else{
                 productItem.m_licenseUuid = "";
@@ -79,46 +76,46 @@ ViewBase {
         }
         else{
             if (deviceCB.currentIndex >= 0){
-                let deviceId = deviceCB.model.getData(DeviceItem_MetaInfo.s_id, deviceCB.currentIndex);
+                let deviceId = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_id, deviceCB.currentIndex);
                 console.log("deviceCB id", deviceId);
 
                 productItem.m_id = deviceId;
                 console.log("productItem.m_id", productItem.m_id);
 
-                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseUuid, deviceCB.currentIndex)){
-                    let configurationType = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseUuid, deviceCB.currentIndex);
+                if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex)){
+                    let configurationType = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex);
                     productItem.m_licenseUuid = configurationType;
                 }
                 else{
                     productItem.m_licenseUuid = "";
                 }
 
-                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)){
-                    let licenseId = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex);
+                if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)){
+                    let licenseId = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex);
                     productItem.m_licenseId = licenseId;
                 }
                 else{
                     productItem.m_licenseId = "";
                 }
 
-                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)){
-                    let licenseName = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex);
+                if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)){
+                    let licenseName = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex);
                     productItem.m_licenseName = licenseName;
                 }
                 else{
                     productItem.m_licenseName = "";
                 }
 
-                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)){
-                    let macAddress = deviceCB.model.getData(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex);
+                if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)){
+                    let macAddress = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex);
                     productItem.m_macAddress = macAddress;
                 }
                 else{
                     productItem.m_macAddress = "";
                 }
 
-                if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)){
-                    let serialNumber = deviceCB.model.getData(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex);
+                if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)){
+                    let serialNumber = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex);
                     productItem.m_serialNumber = serialNumber;
                 }
                 else{
@@ -137,18 +134,13 @@ ViewBase {
 
     Column {
         id: content;
-
         width: parent.width;
-
         spacing: Style.size_mainMargin;
 
         SwitchElementView {
             id: switchNewSensor;
-
             width: parent.width;
-
             name: qsTr("New Sensor");
-
             visible: root.productIndex == -1 || root.isNewDevice;
 
             onCheckedChanged: {
@@ -167,15 +159,11 @@ ViewBase {
 
         FilterableComboBoxElementView {
             id: deviceCB;
-
             width: parent.width;
             controlWidth: 500;
-
             model: root.devicesModel;
-
             name: qsTr("Hardware-ID");
             nameId: "DeviceType";
-
             bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 
             // SMacAddress1 - sxxxxxxxxxxxx
@@ -189,33 +177,32 @@ ViewBase {
                 FilterableComboBoxDelegate {
                     width: comboBoxRef ? comboBoxRef.width : 0;
                     comboBoxRef: deviceCB.cbRef;
-
                     description: model.MacAddress === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model.MacAddress;
                 }
             }
 
             onCurrentIndexChanged: {
                 if (deviceCB.currentIndex >= 0 && deviceCB.model){
-                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)){
-                        let licenseName = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseName, deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)){
+                        let licenseName = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)
 
                         deviceTypeText.text = licenseName;
                     }
 
-                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)){
-                        let macAddress = deviceCB.model.getData(DeviceItem_MetaInfo.s_macAddress, deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)){
+                        let macAddress = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)
 
                         macAddressText.text = macAddress;
                     }
 
-                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)){
-                        let serialNumber = deviceCB.model.getData(DeviceItem_MetaInfo.s_serialNumber, deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)){
+                        let serialNumber = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)
 
                         serialNumberText.text = serialNumber;
                     }
 
-                    if (deviceCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)){
-                        let licenseId = deviceCB.model.getData(DeviceItem_MetaInfo.s_licenseId, deviceCB.currentIndex)
+                    if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)){
+                        let licenseId = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)
 
                         articulText.text = licenseId;
                     }
@@ -230,7 +217,6 @@ ViewBase {
 
             Text {
                 id: selectSensorText;
-
                 text: qsTr("Please select a sensor");
                 color: Style.errorTextColor;
                 font.family: Style.fontFamily;
@@ -240,30 +226,23 @@ ViewBase {
 
         Column {
             width: parent.width;
-
             spacing: parent.spacing;
-
             visible: root.isNewDevice;
 
             FilterableComboBoxElementView {
                 id: typesCB;
-
                 width: parent.width;
                 controlWidth: 500;
-
                 model: root.productLicensesModel;
-
                 name: qsTr("Types");
-                nameId: DeviceItem_MetaInfo.s_licenseName;
-
+                nameId: DeviceItemTypeMetaInfo.s_licenseName;
                 bottomComp: currentIndex < 0 ? typeSensorErrorComp : undefined;
-                filteringFields: [DeviceItem_MetaInfo.s_licenseName, DeviceItem_MetaInfo.s_licenseId];
+                filteringFields: [DeviceItemTypeMetaInfo.s_licenseName, DeviceItemTypeMetaInfo.s_licenseId];
 
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0){
-                        if (typesCB.model.containsKey(DeviceItem_MetaInfo.s_licenseId, currentIndex)){
-                            let licenseId = typesCB.model.getData(DeviceItem_MetaInfo.s_licenseId, currentIndex)
-
+                        if (typesCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)){
+                            let licenseId = typesCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)
                             newArticulText.text = licenseId;
                         }
                     }
@@ -275,7 +254,6 @@ ViewBase {
                     FilterableComboBoxDelegate {
                         width: comboBoxRef ? comboBoxRef.width : 0;
                         comboBoxRef: typesCB.cbRef;
-
                         text: model.LicenseName;
                         description: model.LicenseId;
                     }
@@ -287,7 +265,6 @@ ViewBase {
 
                 Text {
                     id: selectTypeText;
-
                     text: qsTr("Please select a type sensor");
                     color: Style.errorTextColor;
                     font.family: Style.fontFamily;
@@ -297,12 +274,9 @@ ViewBase {
 
             MacAddressElementView {
                 id: macAddressInput;
-
                 width: parent.width;
                 controlWidth: 500;
-
                 readOnly: root.readOnly;
-
                 visible: parent.visible && typesCB.currentIndex >= 0;
 
                 onEditingFinished: {
@@ -312,15 +286,11 @@ ViewBase {
 
             TextInputElementView {
                 id: serialNumberInput;
-
                 width: parent.width;
                 controlWidth: 500;
-
                 name: qsTr("Serial Number");
                 placeHolderText: qsTr("Enter the serial number");
-
                 readOnly: root.readOnly;
-
                 visible: parent.visible && typesCB.currentIndex >= 0;
 
                 onEditingFinished: {
@@ -330,59 +300,42 @@ ViewBase {
 
             TextElementView {
                 id: newArticulText;
-
                 width: parent.width;
-
                 visible: parent.visible && typesCB.currentIndex >= 0;
-
                 name: qsTr("Article Number");
             }
         }
 
         Column {
             width: parent.width;
-
             spacing: parent.spacing;
-
             visible: !root.isNewDevice;
 
             TextElementView {
                 id: deviceTypeText;
-
                 width: parent.width;
-
                 name: qsTr("Type");
-
                 visible: parent.visible && deviceCB.currentIndex >= 0;
             }
 
             TextElementView {
                 id: macAddressText;
-
                 width: parent.width;
-
                 name: qsTr("MAC Address");
-
                 visible: parent.visible && deviceCB.currentIndex >= 0;
             }
 
             TextElementView {
                 id: serialNumberText;
-
                 width: parent.width;
-
                 name: qsTr("Serial Number");
-
                 visible: parent.visible && deviceCB.currentIndex >= 0;
             }
 
             TextElementView {
                 id: articulText;
-
                 width: parent.width;
-
                 name: qsTr("Article Number");
-
                 visible: parent.visible && deviceCB.currentIndex >= 0;
             }
         }

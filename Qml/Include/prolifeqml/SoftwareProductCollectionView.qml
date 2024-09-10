@@ -88,9 +88,9 @@ RemoteCollectionView {
         GqlRequestDocumentDataController {
             id: requestDocumentDataController
 
-            gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductItem;
-            gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductUpdate;
-            gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_softwareProductAdd;
+            gqlGetCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductItem;
+            gqlUpdateCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductUpdate;
+            gqlAddCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductAdd;
 
             documentModelComp: Component {
                 SoftwareProductData {}

@@ -52,14 +52,23 @@ list(APPEND webdirs ${buildwebdir}/src/imtdocgui)
 list(APPEND webdirs ${IMTCOREDIR}/Qml/imtcontrols)
 list(APPEND webdirs ${buildwebdir}/src/imtcontrols)
 
-list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreGroupsSdl)
-list(APPEND webdirs ${buildwebdir}/src/imtCoreGroupsSdl)
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthsdl/SDL/QML/imtauthGroupsSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtauthGroupsSdl)
 
-list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreRolesSdl)
-list(APPEND webdirs ${buildwebdir}/src/imtCoreRolesSdl)
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthsdl/SDL/QML/imtauthRolesSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtauthRolesSdl)
 
-list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthgql/SDL/QML/imtCoreUsersSdl)
-list(APPEND webdirs ${buildwebdir}/src/imtCoreUsersSdl)
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtauthsdl/SDL/QML/imtauthUsersSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtauthUsersSdl)
+
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtlicsdl/SDL/QML/imtlicFeaturesSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtlicFeaturesSdl)
+
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtlicsdl/SDL/QML/imtlicProductsSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtlicProductsSdl)
+
+list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtlicsdl/SDL/QML/imtlicLicensesSdl)
+list(APPEND webdirs ${buildwebdir}/src/imtlicLicensesSdl)
 
 list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeAccountsSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeAccountsSdl)

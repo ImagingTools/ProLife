@@ -24,8 +24,8 @@ MultiDocWorkspacePageView {
             id: orderEditor;
 
             commandsDelegateComp: Component {ViewCommandsDelegateBase {
-                view: orderEditor;
-            }
+                    view: orderEditor;
+                }
             }
 
             commandsControllerComp: Component {CommandsPanelController {
@@ -49,19 +49,18 @@ MultiDocWorkspacePageView {
         GqlRequestDocumentDataController {
             id: requestDocumentDataController
 
-            gqlGetCommandId: "OrderItem";
-            gqlUpdateCommandId: "OrderUpdate";
-            gqlAddCommandId: "OrderAdd";
+            gqlGetCommandId: ProlifeOrdersSdlCommandIds.s_orderItem;
+            gqlUpdateCommandId: ProlifeOrdersSdlCommandIds.s_orderUpdate;
+            gqlAddCommandId: ProlifeOrdersSdlCommandIds.s_orderAdd;
 
             onSaved: {
-                if (documentModel.containsKey("OrderProducts")){
-                    let orderProductsModel = documentModel.getData("OrderProducts");
-                    for (let i = 0; i < orderProductsModel.getItemsCount(); i++){
-                        let categoryId = orderProductsModel.getData("CategoryId", i);
-                        let isNew = orderProductsModel.getData("IsNew", i);
-                        if (isNew){
-                            orderProductsModel.setData("IsNew", false, i);
-                        }
+                let orderProductsModel = documentModel.m_orderProducts;
+                for (let i = 0; i < orderProductsModel.count; i++){
+                    let productItem = orderProductsModel.get(i).item;
+                    if (productItem.m_isNew){
+                        productItem.m_isNew = false;
+
+                        orderProductsModel.set(i, {item: productItem})
                     }
                 }
             }
