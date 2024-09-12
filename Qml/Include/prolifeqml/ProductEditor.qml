@@ -55,7 +55,7 @@ Item {
         let resultModel = treeItemModelComp.createObject(null);
 
         for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
-            let id = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_id, i);
+            let id = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
 
             if (!id || id === ""){
                 continue;
@@ -65,12 +65,12 @@ Item {
                 continue;
             }
 
-            let serialNumber = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_serialNumber, i);
+            let serialNumber = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, i);
 
-            let orderUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_orderUuid, i);
+            let orderUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, i);
 
-            let productUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_productUuid, i);
-            let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItem_MetaInfo.s_licenseUuid, i);
+            let productUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, i);
+            let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, i);
 
             if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
                 let index = resultModel.insertNewItem();
@@ -173,9 +173,9 @@ Item {
                 productEditor.clearProduct();
             }
 
-            productItem.m_productUuid = productCB.model.getData(ProductItem_MetaInfo.s_id, productCB.currentIndex);
-            productItem.m_categoryId = productCB.model.getData(ProductItem_MetaInfo.s_categoryId, productCB.currentIndex);
-            productItem.m_productName = productCB.model.getData(ProductItem_MetaInfo.s_productName, productCB.currentIndex);
+            productItem.m_productUuid = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex);
+            productItem.m_categoryId = productCB.model.getData(ProductItemTypeMetaInfo.s_categoryId, productCB.currentIndex);
+            productItem.m_productName = productCB.model.getData(ProductItemTypeMetaInfo.s_productName, productCB.currentIndex);
 
             contentLoader.item.productLicensesModel = 0;
 
@@ -401,7 +401,7 @@ Item {
         }
 
         for (let i = 0; i < productCB.model.getItemsCount(); i++){
-            let id = productCB.model.getData(ProductItem_MetaInfo.s_id, i);
+            let id = productCB.model.getData(ProductItemTypeMetaInfo.s_id, i);
             if (id === productItem.m_productUuid){
                 productCB.currentIndex = i;
                 break;
