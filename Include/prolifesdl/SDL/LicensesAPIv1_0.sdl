@@ -1,15 +1,19 @@
-import {
-    "../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
-}
 
 schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	name: Licenses
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
 }
 
 input SoftwareProductsListInput {
-    viewParams: CollectionViewParams
+	viewParams: CollectionViewParams
 }
 
 type SoftwareProductItem {
@@ -41,7 +45,7 @@ type SoftwareProductItem {
 }
 
 type SoftwareProductsListPayload {
-    items: [SoftwareProductItem]
+	items: [SoftwareProductItem]
 	notification: NotificationItem
 }
 
@@ -64,29 +68,29 @@ input SoftwareProductDataInput {
 }
 
 type SoftwareProductDataPayload {
-    SoftwareProductData: SoftwareProductData
+	SoftwareProductData: SoftwareProductData
 }
 
 type Query {
-    SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
+	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
 	SoftwareProductItem (input: InputId): SoftwareProductDataPayload!
 }
 
 type Mutation {
-    SoftwareProductUpdate (input: SoftwareProductDataInput): UpdatedNotificationPayload!
+	SoftwareProductUpdate (input: SoftwareProductDataInput): UpdatedNotificationPayload!
 	SoftwareProductAdd (input: SoftwareProductDataInput): AddedNotificationPayload!
 }
 
 collectionSchema {
-    type SoftwareProduct {
-	    ref: SoftwareProductItem
+	type SoftwareProduct {
+		ref: SoftwareProductItem
 		operations {
-		    list: SoftwareProductsList
+			list: SoftwareProductsList
 		}
 		subtype SoftwareProduct {
-		    ref: SoftwareProductData
+			ref: SoftwareProductData
 			operations {
-			    get: SoftwareProductItem
+				get: SoftwareProductItem
 				update: SoftwareProductUpdate
 				insert: SoftwareProductAdd
 			}

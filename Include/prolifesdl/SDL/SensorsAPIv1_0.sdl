@@ -1,19 +1,23 @@
-import {
-    "../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
-}
 
 schema {
-    query: Query
+	query: Query
 	mutation: Mutation
 	subscription: Subscription
+	name: Sensors
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
 }
 
 input DevicesListInput {
-    viewParams: CollectionViewParams
+	viewParams: CollectionViewParams
 }
 
 type DeviceItem {
-    TypeId: ID!
+	TypeId: ID!
 	Id: ID!
 	Name: String!
 	Description: String
@@ -36,7 +40,7 @@ type DeviceItem {
 }
 
 type DevicesListPayload {
-    items: [DeviceItem]
+	items: [DeviceItem]
 	notification: NotificationItem
 }
 
@@ -59,29 +63,29 @@ input DeviceDataInput {
 }
 
 type DeviceDataPayload {
-    DeviceData: DeviceData
+	DeviceData: DeviceData
 }
 
 type Query {
-    DevicesList (input:DevicesListInput): DevicesListPayload!
+	DevicesList (input:DevicesListInput): DevicesListPayload!
 	DeviceItem (input: InputId): DeviceDataPayload!
 }
 
 type Mutation {
-    DeviceUpdate (input: DeviceDataInput): UpdatedNotificationPayload!
+	DeviceUpdate (input: DeviceDataInput): UpdatedNotificationPayload!
 	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
 }
 
 collectionSchema {
-    type Device {
-	    ref: DeviceItem
+	type Device {
+		ref: DeviceItem
 		operations {
-		    list: DevicesList
+			list: DevicesList
 		}
 		subtype Device {
-		    ref: DeviceData
+			ref: DeviceData
 			operations {
-			    get: DeviceItem
+				get: DeviceItem
 				update: DeviceUpdate
 				insert: DeviceAdd
 			}

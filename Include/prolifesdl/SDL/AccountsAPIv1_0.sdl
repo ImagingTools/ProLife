@@ -1,15 +1,20 @@
-import {
-    "../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
-}
+
 
 schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	name: Accounts
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
 }
 
 input AccountsListInput {
-    viewParams: CollectionViewParams
+	viewParams: CollectionViewParams
 }
 
 type AccountItem {
@@ -24,7 +29,7 @@ type AccountItem {
 }
 
 type AccountsListPayload {
-    items: [AccountItem]
+	items: [AccountItem]
 	notification: NotificationItem
 }
 
@@ -48,29 +53,29 @@ input AccountDataInput {
 }
 
 type AccountDataPayload {
-    AccountData: AccountData
+	AccountData: AccountData
 }
 
 type Query {
-    AccountsList (input:AccountsListInput): AccountsListPayload!
+	AccountsList (input:AccountsListInput): AccountsListPayload!
 	AccountItem (input: InputId): AccountDataPayload!
 }
 
 type Mutation {
-    AccountUpdate (input: AccountDataInput): UpdatedNotificationPayload!
+	AccountUpdate (input: AccountDataInput): UpdatedNotificationPayload!
 	AccountAdd (input: AccountDataInput): AddedNotificationPayload!
 }
 
 collectionSchema {
-    type Account {
-	    ref: AccountItem
+	type Account {
+		ref: AccountItem
 		operations {
-		    list: AccountsList
+			list: AccountsList
 		}
 		subtype Account {
-		    ref: AccountData
+			ref: AccountData
 			operations {
-			    get: AccountItem
+				get: AccountItem
 				update: AccountUpdate
 				insert: AccountAdd
 			}

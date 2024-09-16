@@ -1,15 +1,18 @@
-import {
-    "../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	name: Orders
+	namespace: prolife
+	version: 1.0
 }
 
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
 }
 
 input OrdersListInput {
-    viewParams: CollectionViewParams
+	viewParams: CollectionViewParams
 }
 
 type OrderItem {
@@ -26,12 +29,12 @@ type OrderItem {
 }
 
 type OrdersListPayload {
-    items: [OrderItem]
+	items: [OrderItem]
 	notification: NotificationItem
 }
 
 type ProductItem {
-    Id: ID!
+	Id: ID!
 	ProductUuid: ID
 	LicenseUuid: ID
 	CategoryId: ID
@@ -62,29 +65,29 @@ input OrderDataInput {
 }
 
 type OrderDataPayload {
-    OrderData: OrderData
+	OrderData: OrderData
 }
 
 type Query {
-    OrdersList (input:OrdersListInput): OrdersListPayload!
+	OrdersList (input:OrdersListInput): OrdersListPayload!
 	OrderItem (input: InputId): OrderDataPayload!
 }
 
 type Mutation {
-    OrderUpdate (input: OrderDataInput): UpdatedNotificationPayload!
+	OrderUpdate (input: OrderDataInput): UpdatedNotificationPayload!
 	OrderAdd (input: OrderDataInput): AddedNotificationPayload!
 }
 
 collectionSchema {
-    type Order {
-	    ref: OrderItem
+	type Order {
+		ref: OrderItem
 		operations {
-		    list: OrdersList
+			list: OrdersList
 		}
 		subtype Order {
-		    ref: OrderData
+			ref: OrderData
 			operations {
-			    get: OrderItem
+				get: OrderItem
 				update: OrderUpdate
 				insert: OrderAdd
 			}
