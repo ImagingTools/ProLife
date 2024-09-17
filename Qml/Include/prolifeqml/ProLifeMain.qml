@@ -13,10 +13,11 @@ ApplicationMain{
     useWebSocketSubscription: true;
     loadPageByClick: false;
     canRecoveryPassword: false;
-    authorizationServerConnected: pumaConnected;
+    authorizationServerConnected: pumaConnectionChecker.status === 1;
 
     Component.onCompleted: {
         context.appName = 'ProLife';
+        AuthorizationController.productId = context.appName;
     }
 
     Connections {
@@ -51,91 +52,28 @@ ApplicationMain{
         }
     }
 
-    property bool pumaConnected: false;
-    SubscriptionClient {
-        id: pumaSub;
-
-        property bool ok: window.subscriptionManager.status === 1;
-        onOkChanged: {
-            let subscriptionRequestId = "PumaWsConnection"
-            var query = Gql.GqlRequest("subscription", subscriptionRequestId);
-            var queryFields = Gql.GqlObject("notification");
-            queryFields.InsertField("Id");
-            query.AddField(queryFields);
-
-            window.subscriptionManager.registerSubscription(query, pumaSub)
-        }
-
-        onStateChanged: {
-            if (state === "Ready"){
-                if (pumaSub.containsKey("data")){
-                    let localModel = pumaSub.getData("data")
-
-                    if (localModel.containsKey("PumaWsConnection")){
-                        localModel = localModel.getData("PumaWsConnection")
-
-                        if (localModel.containsKey("status")){
-                            let status = localModel.getData("status")
-                            if (status === "Disconnected"){
-                                window.pumaConnected = false;
-
-                            }
-                            else if (status === "Connected"){
-                                window.pumaConnected = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    WebSocketConnectionChecker {
+        id: pumaConnectionChecker;
+        subscriptionManager: window.subscriptionManager;
+        subscriptionRequestId: "PumaWsConnection";
     }
 
-    property bool lisaConnected: false;
-    SubscriptionClient {
-        id: lisaSub;
+    WebSocketConnectionChecker {
+        id: lisaConnectionChecker;
+        subscriptionManager: window.subscriptionManager;
+        subscriptionRequestId: "LisaWsConnection";
 
-        property bool ok: window.subscriptionManager.status === 1;
-        onOkChanged: {
-            let subscriptionRequestId = "LisaWsConnection"
-            var query = Gql.GqlRequest("subscription", subscriptionRequestId);
-            var queryFields = Gql.GqlObject("notification");
-            queryFields.InsertField("Id");
-            query.AddField(queryFields);
-
-            window.subscriptionManager.registerSubscription(query, lisaSub)
-        }
-
-        onStateChanged: {
-            if (state === "Ready"){
-                if (lisaSub.containsKey("data")){
-                    let localModel = lisaSub.getData("data")
-
-                    if (localModel.containsKey("LisaWsConnection")){
-                        localModel = localModel.getData("LisaWsConnection")
-
-                        if (localModel.containsKey("status")){
-                            let status = localModel.getData("status")
-                            if (status === "Disconnected"){
-                                window.lisaConnected = false;
-
-                                if (!window.wasError){
-                                    ModalDialogManager.openDialog(errorDialog, {});
-
-                                    window.wasError = true;
-                                }
-                            }
-                            else if (status === "Connected"){
-                                window.lisaConnected = true;
-                            }
-                        }
-                    }
+        onStatusChanged: {
+            if (status === 2){
+                if (!window.wasError){
+                    ModalDialogManager.openDialog(errorDialog, {});
+                    window.wasError = true;
                 }
             }
         }
     }
 
     property bool wasError: false;
-
     Component {
         id: errorDialog;
 
