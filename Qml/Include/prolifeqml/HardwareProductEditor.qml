@@ -19,6 +19,7 @@ ViewBase {
     property ProductItem productItem: model ? model : null;
 
     function updateGui(){
+        console.log("HardwareProductEditor.qml updateGui", productItem.toJson());
         let isNew = productItem.m_isNew;
         if (isNew){
             switchNewSensor.checked = true;
@@ -44,9 +45,14 @@ ViewBase {
 
             deviceCB.currentIndex = -1;
             let deviceId = productItem.m_id;
+
+            console.log("deviceId", deviceId);
+
             if (deviceCB.model){
                 for (let i = 0; i < deviceCB.model.getItemsCount(); i++){
                     let id = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_id, i);
+                    console.log("id", id);
+
                     if (id === deviceId){
                         deviceCB.currentIndex = i;
                         break;

@@ -493,9 +493,6 @@ ViewBase {
                         productsDialog.bodyItem.orderProductsModel = orderEditorContainer.orderData.m_orderProducts;
                         if (productsView.activeProductIndex >= 0){
                             let productModel = orderEditorContainer.orderData.m_orderProducts.get(productsView.activeProductIndex).item;
-                            console.log("productModel", productModel);
-                            console.log("productModel", productModel.toJson());
-
                             productsDialog.bodyItem.productItem = productModel.copyMe();
                         }
                         else{

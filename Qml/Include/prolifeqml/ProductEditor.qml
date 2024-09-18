@@ -94,21 +94,25 @@ Item {
             }
         }
 
+        console.log("excludeDeviceIds1", excludeDeviceIds);
+
         let resultModel = treeItemModelComp.createObject(null);
         let selectedProductId = productItem.m_productUuid;
-        let selectedDeviceId = productItem.m_productId;
+        let selectedDeviceId = productItem.m_id;
 
         let index = excludeDeviceIds.indexOf(selectedDeviceId);
         if (index >= 0){
             excludeDeviceIds.splice(index, 1)
         }
 
+        console.log("excludeDeviceIds2", excludeDeviceIds);
+
         for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
-            let status = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_status, i);
-            let orderId = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_orderUuid, i);
-            let deviceId = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_id, i);
-            let deviceType = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_productUuid, i);
-            let macAddress = productEditor.devicesModel.getData(DeviceItem_MetaInfo.s_macAddress, i);
+            let status = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_status, i);
+            let orderId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, i);
+            let deviceId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_id, i);
+            let deviceType = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_productUuid, i);
+            let macAddress = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_macAddress, i);
 
             if (!deviceId || deviceId === ""){
                 continue;
@@ -333,7 +337,7 @@ Item {
 
     function clearProduct(){
         if (productItem){
-            productItem.m_id = ''
+            // productItem.m_id = ''
             productItem.m_productUuid = ''
             productItem.m_licenseUuid = ''
             productItem.m_categoryId = ''

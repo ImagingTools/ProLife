@@ -257,42 +257,31 @@ ViewBase {
 
         Column {
             id: softwareContent;
-
             width: parent.width;
-
             spacing: parent.spacing;
-
             visible: !root.isNewSoftware && createdLicenseCb.currentIndex >= 0;
 
             TextElementView {
                 id: typeValue;
-
                 width: parent.width;
-
                 name: qsTr("License Type");
             }
 
             TextElementView {
                 id: articleValue;
-
                 width: parent.width;
-
                 name: qsTr("Article Number");
             }
 
             TextElementView {
                 id: softwareValue;
-
                 width: parent.width;
-
                 name: qsTr("Software-ID");
             }
 
             TextElementView {
                 id: expirationValue;
-
                 width: parent.width;
-
                 name: qsTr("Expiration");
             }
         }
