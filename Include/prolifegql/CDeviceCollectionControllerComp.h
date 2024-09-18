@@ -1,6 +1,9 @@
 #pragma once
 
 
+// ImtCore includes
+#include <imtgql/IGqlRequestProvider.h>
+
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/CPP/Sensors/SensorsAPIv1_0.h>

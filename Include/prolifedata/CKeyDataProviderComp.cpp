@@ -299,13 +299,16 @@ bool CKeyDataProviderComp::GetData(
 			if (productInstanceInfoPtr != nullptr){
 				productInstanceInfoPtr->SetInUse(true);
 
-				imtbase::IOperationContext* operationContextPtr =  nullptr;
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr =  nullptr;
 
 				if (m_softwareOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1, gqlRequest);
+					operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
+								imtbase::IOperationDescription::OperationType (imtbase::IOperationDescription::OT_USER + 1),
+								softwareId,
+								*productInstanceInfoPtr));
 				}
 
-				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 					SendWarningMessage(0, "Error when trying update software instance", "CKeyDataProviderComp");
 				}
 			}
@@ -313,13 +316,16 @@ bool CKeyDataProviderComp::GetData(
 	}
 
 	{
-		imtbase::IOperationContext* operationContextPtr =  nullptr;
+		istd::TDelPtr<imtbase::IOperationContext> operationContextPtr =  nullptr;
 
 		if (m_deviceOperationContextControllerCompPtr.IsValid()){
-			operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER + 1, gqlRequest);
+			operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
+						imtbase::IOperationDescription::OperationType (imtbase::IOperationDescription::OT_USER + 1),
+						hardwareObjectId,
+						*deviceDataPtr.GetPtr()));
 		}
 
-		if (!m_deviceCollectionCompPtr->SetObjectData(hardwareObjectId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+		if (!m_deviceCollectionCompPtr->SetObjectData(hardwareObjectId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 			SendWarningMessage(0, "Error when trying update hardware product", "CKeyDataProviderComp");
 		}
 	}

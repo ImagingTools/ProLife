@@ -15,19 +15,9 @@ I_EXPORT_PACKAGE(
 		IM_PROJECT("\"ImagingTools Core Framework\"") IM_COMPANY("ImagingTools"));
 
 I_EXPORT_COMPONENT(
-		OrderController,
-		"Order controller for order document",
-		"Order Controller");
-
-I_EXPORT_COMPONENT(
 		OrderCollectionController,
 		"Collection controller for order documents",
 		"Collection Controller Order Document");
-
-I_EXPORT_COMPONENT(
-		DeviceController,
-		"Controller for device document",
-		"Device Controller");
 
 I_EXPORT_COMPONENT(
 		DeviceCollectionController,
@@ -43,11 +33,6 @@ I_EXPORT_COMPONENT(
 		HardwareProductCollectionController,
 		"Hardware product collection controller",
 		"Hardware Product Collection Controller");
-
-I_EXPORT_COMPONENT(
-		SoftwareProductController,
-		"Software product controller",
-		"Software Product Controller");
 
 I_EXPORT_COMPONENT(
 		HardwareProductBindingController,
@@ -73,11 +58,6 @@ I_EXPORT_COMPONENT(
 		HardwareBindingChangeGenerator,
 		"Change generator for hardware binding",
 		"Hardware Binding Bind Change Generator History Document");
-
-I_EXPORT_COMPONENT(
-		CustomerController,
-		"Customer controller",
-		"Customer Controller");
 
 I_EXPORT_COMPONENT(
 		CustomerCollectionController,

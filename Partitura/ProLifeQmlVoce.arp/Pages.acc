@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5233" Description="ACF"/>
-            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5241" Description="ACF"/>
+            <Version Id="1" Number="2216" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -463,6 +463,7 @@
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
                     <Component ExportedId="HardwareProductCollectionController" ComponentId="HardwareProductCollectionController"/>
+                    <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>
                     <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>

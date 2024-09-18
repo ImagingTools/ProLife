@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5233" Description="ACF"/>
-            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5241" Description="ACF"/>
+            <Version Id="1" Number="2216" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -20,12 +20,6 @@
         <Element ComponentName="OrderPermissions" X="125" Y="500" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="OrderCollectionCommands">
-            <PositionMap>
-                <Element ComponentName="CollectionCommandsController" X="575" Y="250" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="OrderCommands">
             <PositionMap>
                 <Element ComponentName="CheckPermissionOr" X="1550" Y="850" Note=""/>
@@ -41,6 +35,12 @@
                 <Element ComponentName="Save" X="250" Y="1200" Note=""/>
                 <Element ComponentName="StandardDocumentCommandsController" X="600" Y="150" Note=""/>
                 <Element ComponentName="Undo" X="250" Y="850" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="OrderCollectionCommands">
+            <PositionMap>
+                <Element ComponentName="CollectionCommandsController" X="575" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

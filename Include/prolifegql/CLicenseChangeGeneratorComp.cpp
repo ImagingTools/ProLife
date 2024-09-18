@@ -23,17 +23,17 @@ namespace prolifegql
 // protected methods
 
 bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
-			int operationType,
+			imtbase::IOperationDescription::OperationType operationType,
 			const QByteArray& documentId,
-			const istd::IChangeable* documentPtr,
+			const istd::IChangeable& document,
 			imtbase::CObjectCollection& documentChangeCollection,
 			QString& errorMessage,
 			const iprm::IParamsSet* paramsPtr)
 {
-	bool retVal = BaseClass::GenerateDocumentChanges(operationType, documentId, documentPtr, documentChangeCollection, errorMessage, paramsPtr);
+	bool retVal = BaseClass::GenerateDocumentChanges(operationType, documentId, document, documentChangeCollection, errorMessage, paramsPtr);
 
 	if (!retVal){
-		if (operationType == OperationType::OT_USER){
+		if (operationType == imtbase::IOperationDescription::OperationType::OT_USER){
 			iprm::TParamsPtr<iprm::ITextParam> addedParamPtr(paramsPtr, "AddedHardwareId");
 			if (addedParamPtr.IsValid()){
 				QString hardwareId = addedParamPtr->GetText();
@@ -50,7 +50,7 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 					}
 				}
 
-				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddHardware", "Hardware", name, hardwareId.toUtf8(), ""));
+				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(operationType, "Hardware", name, hardwareId.toUtf8(), ""));
 			}
 
 			iprm::TParamsPtr<iprm::ITextParam> removedParamPtr(paramsPtr, "RemovedHardwareId");
@@ -69,13 +69,13 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 					}
 				}
 
-				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveHardware", "Hardware", name, hardwareId.toUtf8(), ""));
+				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OperationType (operationType + 2), "Hardware", name, hardwareId.toUtf8(), ""));
 			}
 
 			retVal = true;
 		}
-		else if (operationType == OperationType::OT_USER + 1){
-			documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("CreateLicenseFile", "Hardware", "", "", ""));
+		else if (operationType == imtbase::IOperationDescription::OperationType::OT_USER + 1){
+			documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(operationType, "Hardware", "", "", ""));
 		}
 	}
 
@@ -84,19 +84,19 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 
 
 bool CLicenseChangeGeneratorComp::CompareDocuments(
-			const istd::IChangeable* oldDocumentPtr,
-			const istd::IChangeable* newDocumentPtr,
+			const istd::IChangeable& oldDocument,
+			const istd::IChangeable& newDocument,
 			imtbase::CObjectCollection& documentChangeCollection,
 			QString& errorMessage)
 {
-	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* oldSoftwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(oldDocumentPtr);
+	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* oldSoftwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&oldDocument);
 	if (oldSoftwareInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. Old document is invalid");
 
 		return false;
 	}
 
-	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* newSoftwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(newDocumentPtr);
+	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* newSoftwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&newDocument);
 	if (newSoftwareInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. New document is invalid");
 
@@ -106,7 +106,7 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 	QByteArray oldProject = oldSoftwareInfoPtr->GetProject();
 	QByteArray newProject = newSoftwareInfoPtr->GetProject();
 	if (oldProject != newProject){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Project", QT_TRANSLATE_NOOP("Attribute", "Project"), oldProject, newProject), "Project");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "Project", QT_TRANSLATE_NOOP("Attribute", "Project"), oldProject, newProject), "Project");
 	}
 
 	QByteArray oldProductId = oldSoftwareInfoPtr->GetProductId();
@@ -130,13 +130,13 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "ProductId", QT_TRANSLATE_NOOP("Attribute", "Product-ID"), oldProductId, newProductId), "ProductId");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "ProductId", QT_TRANSLATE_NOOP("Attribute", "Product-ID"), oldProductId, newProductId), "ProductId");
 	}
 
 	QByteArray oldSerialNumber = oldSoftwareInfoPtr->GetSerialNumber();
 	QByteArray newSerialNumber = newSoftwareInfoPtr->GetSerialNumber();
 	if (oldSerialNumber != newSerialNumber){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Software-ID"), oldSerialNumber, newSerialNumber), "SerialNumber");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Software-ID"), oldSerialNumber, newSerialNumber), "SerialNumber");
 	}
 
 	QByteArray oldOrderId = oldSoftwareInfoPtr->GetOrderId();
@@ -161,7 +161,7 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 		}
 
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Order-ID");
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderId", keyName, oldOrderId, newOrderId), "OrderId");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "OrderId", keyName, oldOrderId, newOrderId), "OrderId");
 	}
 
 	QByteArray oldLicenseId;
@@ -196,7 +196,7 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "LicenseId", QT_TRANSLATE_NOOP("Attribute", "License-ID"), oldLicenseId, newLicenseId), "LicenseId");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "LicenseId", QT_TRANSLATE_NOOP("Attribute", "License-ID"), oldLicenseId, newLicenseId), "LicenseId");
 	}
 	else{
 		const imtlic::ILicenseInstance* oldLicenseInstancePtr = oldSoftwareInfoPtr->GetLicenseInstance(oldLicenseId);
@@ -206,7 +206,7 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 			QString oldExpiration = oldLicenseInstancePtr->GetExpiration().toString("yyyy-MM-dd");
 			QString newExpiration = newLicenseInstancePtr->GetExpiration().toString("yyyy-MM-dd");
 			if (oldExpiration != newExpiration){
-				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Expiration", QT_TRANSLATE_NOOP("Attribute", "Expiration"), oldExpiration.toUtf8(), newExpiration.toUtf8()), "Expiration");
+				documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "Expiration", QT_TRANSLATE_NOOP("Attribute", "Expiration"), oldExpiration.toUtf8(), newExpiration.toUtf8()), "Expiration");
 			}
 		}
 	}
@@ -215,7 +215,9 @@ bool CLicenseChangeGeneratorComp::CompareDocuments(
 }
 
 
-QString CLicenseChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId)
+QString CLicenseChangeGeneratorComp::GetOperationDescription(
+			imtbase::CObjectCollection& documentChangeCollection,
+			const QByteArray& languageId)
 {
 	QString retVal = BaseClass::GetOperationDescription(documentChangeCollection, languageId);
 
@@ -226,18 +228,14 @@ QString CLicenseChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCol
 			if (documentChangeCollection.GetObjectData(elementId, dataPtr)){
 				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
 				if (operationDescriptionPtr != nullptr){
-					QByteArray typeId = operationDescriptionPtr->GetOperationTypeId();
-					QByteArray key = operationDescriptionPtr->GetKey();
-					QByteArray oldValue = operationDescriptionPtr->GetOldValue();
-					QByteArray newValue = operationDescriptionPtr->GetNewValue();
-
+					imtbase::IOperationDescription::OperationType type = operationDescriptionPtr->GetOperationType();
 					QString keyName = operationDescriptionPtr->GetKeyName();
 					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
-					if (typeId == QByteArray("AddHardware")){
+					if (type == imtbase::IOperationDescription::OperationType::OT_USER){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("License binded to hardware %1")).toUtf8(),
+									QString(QT_TR_NOOP("License binded to hardware '%1'")).toUtf8(),
 									languageId,
 									"prolifegql::CLicenseChangeGeneratorComp");
 
@@ -245,10 +243,10 @@ QString CLicenseChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCol
 
 						retVal += change + "\n";
 					}
-					else if (typeId == QByteArray("RemoveHardware")){
+					else if (type == imtbase::IOperationDescription::OperationType::OT_USER + 2){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("License unbinded from hardware %1")).toUtf8(),
+									QString(QT_TR_NOOP("License unbinded from hardware '%1'")).toUtf8(),
 									languageId,
 									"prolifegql::CLicenseChangeGeneratorComp");
 
@@ -256,7 +254,7 @@ QString CLicenseChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCol
 
 						retVal += change + "\n";
 					}
-					else if (typeId == QByteArray("CreateLicenseFile")){
+					else if (type == imtbase::IOperationDescription::OperationType::OT_USER + 1){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Created the license file")).toUtf8(),

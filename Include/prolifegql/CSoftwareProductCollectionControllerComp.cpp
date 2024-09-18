@@ -266,13 +266,14 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 			if (productCollectionPtr != nullptr){
 				productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), softwareUuid);
 
-				// istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 
-				// if (m_orderOperationContextControllerCompPtr.IsValid()){
-				// 	operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderUuid, productOrderInfoPtr);
-				// }
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 
-				m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/);
+				if (m_orderOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderUuid, *productOrderInfoPtr);
+				}
+
+				m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());
 			}
 		}
 	}
@@ -415,29 +416,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = nullptr;
-
-	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_REMOVE, gqlRequest);
-	}
-
-	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr)){
-		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
-		imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-		imtbase::CTreeItemModel* notificationModel = dataModelPtr->AddTreeModel("removedNotification");
-
-		notificationModel->SetData("Id", objectId);
-
-		return rootModelPtr.PopPtr();
-	}
-
-	errorMessage = QString(QT_TR_NOOP("Can't remove object: %1")).arg(QString(objectId));
-	SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
-	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
-
-	return nullptr;
+	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
 

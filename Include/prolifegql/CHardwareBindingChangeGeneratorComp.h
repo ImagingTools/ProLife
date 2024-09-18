@@ -23,7 +23,11 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual bool CompareDocuments(const istd::IChangeable* oldDocumentPtr, const istd::IChangeable* newDocumentPtr, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
+	virtual bool CompareDocuments(
+				const istd::IChangeable& oldDocument,
+				const istd::IChangeable& newDocument,
+				imtbase::CObjectCollection& documentChangeCollection,
+				QString& errorMessage) override;
 	virtual QString GetLicenseName(const QByteArray& productUuid) const;
 
 protected:

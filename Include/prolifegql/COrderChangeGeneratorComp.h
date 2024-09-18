@@ -25,8 +25,14 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual bool CompareDocuments(const istd::IChangeable* oldDocumentPtr, const istd::IChangeable* newDocumentPtr, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
-	virtual QString GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId = QByteArray()) override;
+	virtual bool CompareDocuments(
+				const istd::IChangeable& oldDocument,
+				const istd::IChangeable& newDocument,
+				imtbase::CObjectCollection& documentChangeCollection,
+				QString& errorMessage) override;
+	virtual QString GetOperationDescription(
+				imtbase::CObjectCollection& documentChangeCollection,
+				const QByteArray& languageId = QByteArray()) override;
 	void GenerateDifferences(
 				imtbase::IObjectCollection& prevOrderProducts,
 				imtbase::IObjectCollection& currentOrderProducts,

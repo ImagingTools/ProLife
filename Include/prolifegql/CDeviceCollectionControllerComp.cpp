@@ -263,17 +263,16 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 					oldProductCollectionPtr->RemoveElement(deviceId);
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+					if (m_orderOperationContextControllerCompPtr.IsValid()){
+						operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, oldOrderId, *oldOrderInfoPtr);
+					}
 
-					// if (m_orderOperationContextControllerCompPtr.IsValid()){
-					// 	operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, oldOrderId, oldOrderInfoPtr);
-					// }
+					if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+						errorMessage = QString("Unable to update an order info").toUtf8();
+						SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
-					// if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-					// 	errorMessage = QString("Unable to update an order info").toUtf8();
-					// 	SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-
-					// 	return nullptr;
-					// }
+						return nullptr;
+					}
 				}
 			}
 		}
@@ -296,13 +295,12 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 
 						orderProductCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceId);
 
-						// istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+						if (m_orderOperationContextControllerCompPtr.IsValid()){
+							operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderId.toUtf8(), *orderInfoPtr);
+						}
 
-						// if (m_orderOperationContextControllerCompPtr.IsValid()){
-						// 	operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, orderId, orderInfoPtr);
-						// }
-
-						if (!m_orderCollectionCompPtr->SetObjectData(orderId.toUtf8(), *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/)){
+						if (!m_orderCollectionCompPtr->SetObjectData(orderId.toUtf8(), *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 							errorMessage = QString("Unable to update an order info").toUtf8();
 							SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
@@ -439,7 +437,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
-		errorMessage = QObject::tr("No object-ID could not be extracted from the request");
+		errorMessage = QString("No object-ID could not be extracted from the request");
 		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
 
 		return nullptr;
@@ -469,29 +467,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		}
 	}
 
-	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-
-	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_REMOVE, gqlRequest);
-	}
-
-	if (m_objectCollectionCompPtr->RemoveElement(objectId, operationContextPtr.GetPtr())){
-		istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
-		imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-		imtbase::CTreeItemModel* notificationModel = dataModelPtr->AddTreeModel("removedNotification");
-
-		notificationModel->SetData("Id", objectId);
-
-		return rootModelPtr.PopPtr();
-	}
-
-	errorMessage = QString(QT_TR_NOOP("Can't remove object: %1")).arg(QString(objectId));
-	SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-	errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
-
-	return nullptr;
+	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
 

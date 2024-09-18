@@ -163,7 +163,6 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 		if (m_deviceCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
-				imtbase::IOperationContext* operationContextPtr = nullptr;
 
 				QByteArrayList softwareIds = hardwareBindingObjectPtr->GetSoftwareIds();
 
@@ -173,11 +172,16 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 				iprm::CParamsSet paramsSet;
 				paramsSet.SetEditableParameter("AddedProductIds", &textParam);
 
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER, gqlRequest, objectId, deviceInfoPtr, &paramsSet);
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(
+								imtbase::IOperationDescription::OT_USER,
+								objectId,
+								*deviceInfoPtr,
+								&paramsSet);
 				}
 
-				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 					errorMessage = QString("Unable to update device object.");
 					SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
@@ -195,19 +199,18 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					if (!productInstanceInfoPtr->IsInUse()){
-						imtbase::IOperationContext* operationContextPtr = nullptr;
-
 						iprm::CTextParam textParam;
 						textParam.SetText(objectId);
 
 						iprm::CParamsSet paramsSet;
 						paramsSet.SetEditableParameter("AddedHardwareId", &textParam);
 
+						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER, gqlRequest, id, productInstanceInfoPtr, &paramsSet);
+							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
 						}
 
-						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 							errorMessage = QString("Unable to update software instance object.");
 							SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
@@ -219,13 +222,12 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(con
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = nullptr;
-
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_CREATE, gqlRequest);
+		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, objectId, *hardwareBindingObjectPtr);
 	}
 
-	QByteArray newObjectId = m_objectCollectionCompPtr->InsertNewObject("DocumentInfo", name, description, hardwareBindingObjectPtr, objectId, nullptr, nullptr, operationContextPtr);
+	QByteArray newObjectId = m_objectCollectionCompPtr->InsertNewObject("DocumentInfo", name, description, hardwareBindingObjectPtr, objectId, nullptr, nullptr, operationContextPtr.GetPtr());
 	if (newObjectId.isEmpty()){
 		errorMessage = QT_TR_NOOP(QString("Can not insert object: %1").arg(qPrintable(objectId)));
 		SendErrorMessage(0, QString("Can not insert object: %1").arg(qPrintable(objectId)), "CHardwareProductBindingControllerComp");
@@ -339,13 +341,12 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 				paramsSet.SetEditableParameter("AddedProductIds", &addedTextParam);
 				paramsSet.SetEditableParameter("RemovedProductIds", &removedTextParam);
 
-				imtbase::IOperationContext* operationContextPtr =  nullptr;
-
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER, gqlRequest, objectId, deviceInfoPtr, &paramsSet);
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, objectId, *deviceInfoPtr, &paramsSet);
 				}
 
-				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 					errorMessage = QString("Unable to update device object.");
 					SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
@@ -365,13 +366,12 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 				if (productInstanceInfoPtr != nullptr){
 					productInstanceInfoPtr->SetProject(project);
 
-					imtbase::IOperationContext* operationContextPtr = nullptr;
-
+					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, softwareId, productInstanceInfoPtr);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, softwareId, *productInstanceInfoPtr);
 					}
 
-					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 						errorMessage = QString("Unable to update software instance object.");
 						SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
@@ -391,19 +391,18 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 					if (!productInstanceInfoPtr->IsInUse()){
 						productInstanceInfoPtr->SetProject(project);
 
-						imtbase::IOperationContext* operationContextPtr = nullptr;
-
 						iprm::CTextParam textParam;
 						textParam.SetText(objectId);
 
 						iprm::CParamsSet paramsSet;
 						paramsSet.SetEditableParameter("AddedHardwareId", &textParam);
 
+						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER, gqlRequest, id, productInstanceInfoPtr, &paramsSet);
+							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
 						}
 
-						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 							errorMessage = QString("Unable to update software instance object.");
 							SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
@@ -422,19 +421,18 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 					productInstanceInfoPtr->SetInUse(false);
 					productInstanceInfoPtr->SetProject("");
 
-					imtbase::IOperationContext* operationContextPtr = nullptr;
-
 					iprm::CTextParam textParam;
 					textParam.SetText(objectId);
 
 					iprm::CParamsSet paramsSet;
 					paramsSet.SetEditableParameter("RemovedHardwareId", &textParam);
 
+					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_USER, gqlRequest, id, productInstanceInfoPtr, &paramsSet);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
 					}
 
-					if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+					if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 						return nullptr;
 					}
 				}
@@ -442,13 +440,12 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		}
 	}
 
-	imtbase::IOperationContext* operationContextPtr = nullptr;
-
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IDocumentChangeGenerator::OT_UPDATE, gqlRequest, objectId, newHardwareBindingObjectPtr);
+		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, objectId, *newHardwareBindingObjectPtr);
 	}
 
-	if (!m_objectCollectionCompPtr->SetObjectData(objectId, *newHardwareBindingObjectPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr)){
+	if (!m_objectCollectionCompPtr->SetObjectData(objectId, *newHardwareBindingObjectPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 		errorMessage = QString("Can not update object: %1").arg(qPrintable(objectId));
 
 		return nullptr;

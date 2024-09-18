@@ -262,16 +262,9 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	istd::TDelPtr<prolifedata::IOrderInfo> orderInstancePtr = m_orderInfoFactCompPtr.CreateInstance();
-	if (!orderInstancePtr.IsValid()){
-		errorMessage = QString("Unable to create order instance. Error: Invalid object");
-		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(orderInstancePtr.GetPtr());
-	if (orderInfoPtr == nullptr){
+	istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderInfoPtr;
+	orderInfoPtr.SetCastedOrRemove(m_orderInfoFactCompPtr.CreateInstance());
+	if (!orderInfoPtr.IsValid()){
 		errorMessage = QString("Unable to cast order instance to identifable object. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
 
@@ -391,7 +384,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
 
 			if (isNew){
-				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr/*, operationContextPtr*/);
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+				if (m_softwareOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, orderProductUuid, *softwareInstancePtr.GetPtr());
+				}
+
+				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
 				if (result.isEmpty()){
 					errorMessage = QString("Unable to insert new software product with ID: '%1'").arg(orderProductUuid);
 					return nullptr;
@@ -410,7 +408,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 							}
 
 							if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
-								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(orderProductUuid, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/)){
+								istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+								if (m_softwareOperationContextControllerCompPtr.IsValid()){
+									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderProductUuid, *softwareInstancePtr.GetPtr());
+								}
+
+								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(orderProductUuid, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 									errorMessage = QString("Unable to update a software product with ID: '%1'").arg(orderProductUuid);
 
 									return nullptr;
@@ -435,7 +438,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			deviceInstancePtr->SetSerialNumber(serialNumber);
 
 			if (isNew){
-				m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr/*, operationContextPtr*/);
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+				if (m_deviceOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, orderProductUuid, *deviceInstancePtr.GetPtr());
+				}
+
+				m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
 			}
 			else{
 				imtbase::IObjectCollection::DataPtr dataPtr;
@@ -451,7 +459,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 							deviceInfoPtr->SetDeviceType(productUuid);
 							deviceInfoPtr->SetConfigurationType(licenseUuid);
 
-							m_deviceCollectionCompPtr->SetObjectData(orderProductUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/);
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_deviceOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderProductUuid, *deviceInstancePtr.GetPtr());
+							}
+
+							m_deviceCollectionCompPtr->SetObjectData(orderProductUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());
 						}
 					}
 				}
@@ -488,7 +501,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 						if (hardwareInfoPtr != nullptr){
 							hardwareInfoPtr->SetOrderId("");
 
-							if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/)){
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_deviceOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, id, *hardwareInfoPtr);
+							}
+
+							if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 								return nullptr;
 							}
 						}
@@ -500,7 +518,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 						if (softwareInfoPtr != nullptr){
 							softwareInfoPtr->SetOrderId("");
 
-							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS/*, operationContextPtr*/)){
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_softwareOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, id, *softwareInfoPtr);
+							}
+
+							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 								return nullptr;
 							}
 						}
@@ -510,7 +533,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		}
 	}
 
-	return orderInstancePtr.PopPtr();
+	return orderInfoPtr.PopPtr();
 }
 
 

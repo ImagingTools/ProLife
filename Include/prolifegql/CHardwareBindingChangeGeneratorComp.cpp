@@ -17,19 +17,19 @@ namespace prolifegql
 // protected methods
 
 bool CHardwareBindingChangeGeneratorComp::CompareDocuments(
-			const istd::IChangeable* oldDocumentPtr,
-			const istd::IChangeable* newDocumentPtr,
+			const istd::IChangeable& oldDocument,
+			const istd::IChangeable& newDocument,
 			imtbase::CObjectCollection& documentChangeCollection,
 			QString& errorMessage)
 {
-	const prolifedata::CHardwareProductBinding* oldHardwareBindingInfoPtr = dynamic_cast<const prolifedata::CHardwareProductBinding*>(oldDocumentPtr);
+	const prolifedata::CHardwareProductBinding* oldHardwareBindingInfoPtr = dynamic_cast<const prolifedata::CHardwareProductBinding*>(&oldDocument);
 	if (oldHardwareBindingInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. Old document is invalid");
 
 		return false;
 	}
 
-	const prolifedata::CHardwareProductBinding* newHardwareBindingInfoPtr = dynamic_cast<const prolifedata::CHardwareProductBinding*>(newDocumentPtr);
+	const prolifedata::CHardwareProductBinding* newHardwareBindingInfoPtr = dynamic_cast<const prolifedata::CHardwareProductBinding*>(&newDocument);
 	if (newHardwareBindingInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. New document is invalid");
 
@@ -59,12 +59,12 @@ bool CHardwareBindingChangeGeneratorComp::CompareDocuments(
 
 	for (const QByteArray& softwareId : std::as_const(addedIds)){
 		QString name = GetLicenseName(softwareId);
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("Add", "License", name, "", ""));
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_ADD, "License", name, "", ""));
 	}
 
 	for (const QByteArray& softwareId : std::as_const(removedIds)){
 		QString name = GetLicenseName(softwareId);
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("Remove", "License", name, "", ""));
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_REMOVE, "License", name, "", ""));
 	}
 
 	return true;
