@@ -9,6 +9,9 @@ import imtcontrols 1.0
 import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeSensorsSdl 1.0
+import prolifeOrdersSdl 1.0
+import imtlicProductsSdl 1.0
+import imtlicLicensesSdl 1.0
 
 ViewBase {
     id: deviceEditorContainer;
@@ -31,12 +34,7 @@ ViewBase {
     Component.onCompleted: {
         CachedOrderCollection.updateModel();
         CachedProductCollection.updateModel();
-
     }
-
-    // onModelChanged: {
-    //     checkPermissions();
-    // }
 
     onDeviceDataChanged: {
         checkPermissions();
@@ -202,7 +200,7 @@ ViewBase {
         let productModel = productCB.model;
         if (productModel){
             for (let i = 0; i < productModel.getItemsCount(); i++){
-                let id = productModel.getData("Id", i);
+                let id = productModel.getData(ProductItemTypeMetaInfo.s_id, i);
                 if (id === productId){
                     productCB.currentIndex = i;
 
@@ -217,7 +215,7 @@ ViewBase {
         let model = configurationCB.model;
         if (model){
             for (let i = 0; i < model.getItemsCount(); i++){
-                let id = model.getData("Id", i);
+                let id = model.getData(LicenseItemTypeMetaInfo.s_id, i);
                 if (id === licenseName){
                     configurationCB.currentIndex = i;
 
@@ -232,7 +230,7 @@ ViewBase {
         let ordersModel = orderCB.model;
         if (ordersModel){
             for (let i = 0; i < ordersModel.getItemsCount(); i++){
-                let id = ordersModel.getData("Id", i);
+                let id = ordersModel.getData(OrderItemTypeMetaInfo.s_id, i);
                 if (id === orderId){
                     orderCB.currentIndex = i;
                     break;
@@ -247,7 +245,7 @@ ViewBase {
         }
 
         if (productCB.currentIndex >= 0 && productCB.model){
-            let selectedProductId = productCB.model.getData("Id", productCB.currentIndex);
+            let selectedProductId = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex);
             deviceData.m_deviceType = selectedProductId;
         }
         else{
@@ -257,7 +255,7 @@ ViewBase {
         let configurationExists = false;
         if (configurationCB.model){
             if (configurationCB.currentIndex >= 0){
-                let configurationType = configurationCB.model.getData("Id", configurationCB.currentIndex);
+                let configurationType = configurationCB.model.getData(LicenseItemTypeMetaInfo.s_id, configurationCB.currentIndex);
                 deviceData.m_licenseName = configurationType;
                 configurationExists = true;
             }
@@ -270,7 +268,7 @@ ViewBase {
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
-                let selectedOrderId = orderCB.model.getData("Id", orderCB.currentIndex);
+                let selectedOrderId = orderCB.model.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex);
                 deviceData.m_orderId = selectedOrderId;
             }
             else{
@@ -370,7 +368,7 @@ ViewBase {
 
                     model: CachedProductCollection.hardwareProductsModel;
 
-                    nameId: "ProductName";
+                    nameId: ProductItemTypeMetaInfo.s_productName;
 
                     KeyNavigation.tab: configurationCB;
                     KeyNavigation.backtab: projectInput;
@@ -378,7 +376,10 @@ ViewBase {
                     onCurrentIndexChanged: {
                         let ok = false;
                         if (productCB.currentIndex >= 0){
-                            let model = productCB.model.getData("Licenses", productCB.currentIndex);
+                            console.log("productCB.currentIndex", productCB.currentIndex);
+                            console.log("ProductItemTypeMetaInfo.s_licenses", ProductItemTypeMetaInfo.s_licenses);
+                            // console.log("productCB.model", productCB.model.toJson());
+                            let model = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex);
                             if (model){
                                 configurationCB.model = model;
 
@@ -404,7 +405,7 @@ ViewBase {
                     id: configurationCB;
 
                     name: qsTr("Hardware Configuration");
-                    nameId: "LicenseName";
+                    nameId: LicenseItemTypeMetaInfo.s_licenseName;
 
                     KeyNavigation.tab: descriptionInput;
                     KeyNavigation.backtab: productCB;
@@ -478,9 +479,9 @@ ViewBase {
 
                     name: qsTr("Order-ID");
 
-                    nameId: "OrderId";
+                    nameId: OrderItemTypeMetaInfo.s_orderId;
 
-                    filteringFields: ["OrderId", "OrderCustomer"];
+                    filteringFields: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_orderCustomer];
 
                     model: CachedOrderCollection.collectionModel;
 

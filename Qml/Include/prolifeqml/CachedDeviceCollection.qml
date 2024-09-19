@@ -3,16 +3,26 @@ pragma Singleton
 import QtQuick 2.12
 import Acf 1.0
 import imtcolgui 1.0
+import prolifeSensorsSdl 1.0
 
 CollectionDataProvider {
     id: container;
-
-    commandId: "DevicesList";
+    commandId: ProlifeSensorsSdlCommandIds.s_devicesList;
     subscriptionCommandId: "OnDevicesCollectionChanged"
-
-    sortByField: "Name";
-
-    fields: ["Id", "Name", "DeviceType", "OrderId", "OrderUuid", "Status", "MacAddress", "SerialNumber", "ProductUuid", "LicenseUuid", "LicenseId", "LicenseName"];
+    sortByField: DeviceItemTypeMetaInfo.s_name;
+    fields: [
+        DeviceItemTypeMetaInfo.s_id,
+        DeviceItemTypeMetaInfo.s_name,
+        DeviceItemTypeMetaInfo.s_deviceType,
+        DeviceItemTypeMetaInfo.s_orderId,
+        DeviceItemTypeMetaInfo.s_orderUuid,
+        DeviceItemTypeMetaInfo.s_status,
+        DeviceItemTypeMetaInfo.s_macAddress,
+        DeviceItemTypeMetaInfo.s_serialNumber,
+        DeviceItemTypeMetaInfo.s_productUuid,
+        DeviceItemTypeMetaInfo.s_licenseUuid,
+        DeviceItemTypeMetaInfo.s_licenseId,
+        DeviceItemTypeMetaInfo.s_licenseName];
 }
 
 
