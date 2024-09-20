@@ -7,7 +7,7 @@ import prolifeOrdersSdl 1.0
 ElementView {
     id: root;
 
-    property ProductItem productItem: model.item ? model.item : null;
+    property OrderedProduct productItem: model.item ? model.item : null;
     name: productItem ? productItem.m_productName : "";
 
     clip: false;
@@ -15,10 +15,6 @@ ElementView {
     property TreeItemModel activeCommandsModel: TreeItemModel {}
 
     property bool expanded: true;
-
-    onProductItemChanged: {
-        console.log("onProductItemChanged", productItem, model.index)
-    }
 
     controlComp: Component {
         Item {

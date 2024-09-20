@@ -472,7 +472,7 @@ ViewBase {
             Component {
                 id: productFactory;
 
-                ProductItem {}
+                OrderedProduct {}
             }
 
             Component {

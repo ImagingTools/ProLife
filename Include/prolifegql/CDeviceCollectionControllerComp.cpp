@@ -128,6 +128,10 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.SetOrderId(objectCollectionIterator.GetElementInfo("OrderId").toByteArray());
 	}
 
+	if (requestInfo.items.isSoftwareLinksCountRequested){
+		representationObject.SetSoftwareLinksCount(objectCollectionIterator.GetElementInfo("SoftwareLinksCount").toInt());
+	}
+
 	if (requestInfo.items.isOrderUuidRequested){
 		representationObject.SetOrderUuid(objectCollectionIterator.GetElementInfo("OrderUuid").toByteArray());
 	}

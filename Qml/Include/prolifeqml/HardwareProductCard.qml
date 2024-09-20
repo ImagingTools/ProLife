@@ -11,7 +11,7 @@ Rectangle {
 
     color: Style.baseColor;
 
-    property ProductItem productItem: model.item ? model.item : null;
+    property OrderedProduct productItem: model.item ? model.item : null;
 
     property bool readOnly: false;
     property bool commmandsVisible: false;

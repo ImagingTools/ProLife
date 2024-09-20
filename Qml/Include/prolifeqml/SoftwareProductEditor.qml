@@ -23,7 +23,7 @@ ViewBase {
     property bool isNewSoftware: switchNewLicense.checked;
     property int productIndex: -1;
 
-    property ProductItem productItem: model ? model : null;
+    property OrderedProduct productItem: model ? model : null;
 
     function setReadOnly(readOnly){
         serialNumberInput.readOnly = readOnly;
@@ -32,19 +32,14 @@ ViewBase {
     }
 
     function updateGui(){
-        console.log("SoftwareProductEditor updateGui", productItem.m_isNew);
-
         if (productItem.m_isNew){
             switchNewLicense.checked = true;
 
             licenseCB.currentIndex = -1;
             if (licenseCB.model){
-                console.log("productItem.m_licenseUuidi", productItem.m_licenseUuid);
 
                 for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
                     let id = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
-                    console.log("id",  id);
-
                     if (id === productItem.m_licenseUuid){
                         licenseCB.currentIndex = i;
 
@@ -98,8 +93,6 @@ ViewBase {
     }
 
     function updateModel(){
-        console.log("SoftwareProductEditor updateModel", productItem.m_isNew);
-
         productItem.m_isNew = isNewSoftware;
 
         if (isNewSoftware){

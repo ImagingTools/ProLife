@@ -22,17 +22,11 @@ Item {
     property string orderId;
     property string orderUuid;
 
-    property ProductItem productItem;
+    property OrderedProduct productItem;
     property int index: -1;
 
     property string softwareCategoryId: "Software";
     property string hardwareCategoryId: "Hardware";
-
-    Component {
-        id: productFactory;
-
-        ProductItem {}
-    }
 
     function getSoftwareModel(){
         let excludeIds = []
@@ -177,9 +171,9 @@ Item {
                 productEditor.clearProduct();
             }
 
-            productItem.m_productUuid = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex);
-            productItem.m_categoryId = productCB.model.getData(ProductItemTypeMetaInfo.s_categoryId, productCB.currentIndex);
-            productItem.m_productName = productCB.model.getData(ProductItemTypeMetaInfo.s_productName, productCB.currentIndex);
+            productItem.m_productUuid = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, productCB.currentIndex);
+            productItem.m_categoryId = productCB.model.getData(OrderedProductTypeMetaInfo.s_categoryId, productCB.currentIndex);
+            productItem.m_productName = productCB.model.getData(OrderedProductTypeMetaInfo.s_productName, productCB.currentIndex);
 
             contentLoader.item.productLicensesModel = 0;
 
@@ -405,7 +399,7 @@ Item {
         }
 
         for (let i = 0; i < productCB.model.getItemsCount(); i++){
-            let id = productCB.model.getData(ProductItemTypeMetaInfo.s_id, i);
+            let id = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, i);
             if (id === productItem.m_productUuid){
                 productCB.currentIndex = i;
                 break;

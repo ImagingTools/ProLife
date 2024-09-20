@@ -33,7 +33,7 @@ type OrdersListPayload {
 	notification: NotificationItem
 }
 
-type ProductItem {
+type OrderedProduct {
 	Id: ID!
 	ProductUuid: ID
 	LicenseUuid: ID
@@ -56,7 +56,7 @@ type OrderData {
 	PurchaseId: ID
 	CustomerId: ID
 	OrderStatus: ID
-	OrderProducts: [ProductItem]
+	OrderProducts: [OrderedProduct]
 }
 
 input OrderDataInput {

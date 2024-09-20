@@ -36,7 +36,6 @@ Dialog {
                 target: productEditor.productItem;
 
                 function onModelChanged(){
-                    console.log("onModelChanged", productEditor.productItem.toJson());
                     let ok = productEditor.productItem.m_licenseUuid !== "" &&
                             productEditor.productItem.m_productUuid !== "";
                     productEditorDialog.buttons.setButtonState(Enums.ok, ok);

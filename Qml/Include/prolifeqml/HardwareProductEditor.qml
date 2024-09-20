@@ -16,10 +16,9 @@ ViewBase {
     property alias deviceIndex: deviceCB.currentIndex;
     property bool isNewDevice: switchNewSensor.checked;
     property int productIndex: -1;
-    property ProductItem productItem: model ? model : null;
+    property OrderedProduct productItem: model ? model : null;
 
     function updateGui(){
-        console.log("HardwareProductEditor.qml updateGui", productItem.toJson());
         let isNew = productItem.m_isNew;
         if (isNew){
             switchNewSensor.checked = true;

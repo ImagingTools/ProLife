@@ -16,7 +16,7 @@ Rectangle {
     property int margin: 10;
     property int contentHeight: contentColumn.height;
 
-    property ProductItem productItem: model.item;
+    property OrderedProduct productItem: model.item;
 
     property bool readOnly: false;
     property bool commmandsVisible: false;

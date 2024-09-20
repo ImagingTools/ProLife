@@ -376,9 +376,6 @@ ViewBase {
                     onCurrentIndexChanged: {
                         let ok = false;
                         if (productCB.currentIndex >= 0){
-                            console.log("productCB.currentIndex", productCB.currentIndex);
-                            console.log("ProductItemTypeMetaInfo.s_licenses", ProductItemTypeMetaInfo.s_licenses);
-                            // console.log("productCB.model", productCB.model.toJson());
                             let model = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex);
                             if (model){
                                 configurationCB.model = model;
