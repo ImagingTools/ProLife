@@ -37,6 +37,7 @@ ViewBase {
     }
 
     onOrderDataChanged: {
+        console.log("onOrderDataChanged", orderData)
         checkPermissions();
     }
 
@@ -98,6 +99,8 @@ ViewBase {
     }
 
     function syncroniseProducts(){
+        console.log("syncroniseProducts", orderData)
+
         if (!softwaresModel){
             return;
         }
@@ -245,6 +248,8 @@ ViewBase {
     }
 
     function updateModel(){
+        console.log("updateModel", orderData)
+
         orderData.m_orderId = instanceIdInput.text ;
         orderData.m_purchaseId = purchaseIdInput.text;
         orderData.m_description = descriptionInput.text;
@@ -619,22 +624,15 @@ ViewBase {
 
                 delegate: OrderProductDelegate {
                     id: orderProductDelegate;
-
                     width: productsView.width;
-
                     readOnly: productsView.readOnly;
-
                     expanded: productsView.expanded;
-
                     onEdited: {
                         productsView.activeProductIndex = model.index;
-
                         ModalDialogManager.openDialog(productEditorDialog, {});
                     }
-
                     onRemoved: {
                         productsView.activeProductIndex = model.index;
-
                         ModalDialogManager.openDialog(removeDialog, {"message": qsTr("Remove selected product ?")});
                     }
                 }
@@ -654,9 +652,7 @@ ViewBase {
 
                     let orderProducts = orderEditorContainer.orderData.m_orderProducts
                     if (orderProducts){
-                        // orderEditorContainer.model.beginChanges();
                         orderProducts.remove(productsView.activeProductIndex);
-                        // orderEditorContainer.model.endChanges();
 
                         orderEditorContainer.model.modelChanged([]);
                     }

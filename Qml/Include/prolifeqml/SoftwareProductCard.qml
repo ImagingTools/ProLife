@@ -83,6 +83,8 @@ Rectangle {
         anchors.left: parent.left;
         anchors.right: rightPanel.left;
 
+        visible: licensesView.elementsCount !== 0
+
         Table {
             id: licensesView;
 
@@ -97,10 +99,6 @@ Rectangle {
 
             selectable: false;
             separatorVisible: false;
-
-            onElementsCountChanged: {
-                licensesView.visible = elementsCount !== 0;
-            }
 
             itemHeight: 25;
 

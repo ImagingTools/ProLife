@@ -78,10 +78,9 @@ ViewBase {
             projectInput.readOnly = !canChangeProject;
 
             let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration");
-            configurationCB.changeable = canChangeConfiguration;
-
             let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType");
-            productCB.changeable = canChangeDevice;
+            configurationCB.changeable = canChangeConfiguration && canChangeDevice;
+            productCB.changeable = canChangeConfiguration && canChangeDevice;
 
             let ok =
                 canChangeDescription ||

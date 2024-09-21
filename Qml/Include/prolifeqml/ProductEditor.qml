@@ -194,10 +194,10 @@ Item {
                 contentLoader.item.softwaresModel = productEditor.getSoftwareModel();
             }
 
-            let productLicensesModel = productEditor.getProductLicensesModel();
-            if (productLicensesModel){
-                contentLoader.item.productLicensesModel = productLicensesModel;
-            }
+            // let productLicensesModel = productEditor.getProductLicensesModel();
+            // if (productLicensesModel){
+            //     contentLoader.item.productLicensesModel = productLicensesModel;
+            // }
 
             contentLoader.item.model = productItem;
 
@@ -365,18 +365,18 @@ Item {
         TreeItemModel {}
     }
 
-    function getProductLicensesModel(){
-        for (let i = 0; i < productEditor.licensesModel.getItemsCount(); i++){
-            let productId = productEditor.licensesModel.getData("Id", i);
-            if (productId === productItem.m_productUuid){
-                if (productEditor.licensesModel.containsKey("Licenses", i)){
-                    return productEditor.licensesModel.getData("Licenses", i);
-                }
-            }
-        }
+    // function getProductLicensesModel(){
+    //     for (let i = 0; i < productEditor.licensesModel.getItemsCount(); i++){
+    //         let productId = productEditor.licensesModel.getData("Id", i);
+    //         if (productId === productItem.m_productUuid){
+    //             if (productEditor.licensesModel.containsKey("Licenses", i)){
+    //                 return productEditor.licensesModel.getData("Licenses", i);
+    //             }
+    //         }
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
     function started(){
         console.log("started");
