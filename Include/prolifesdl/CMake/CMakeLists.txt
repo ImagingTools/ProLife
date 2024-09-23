@@ -3,6 +3,7 @@ project(prolifesdl)
 include(${ACFDIR}/Config/CMake/StaticConfig.cmake)
 include(${IMTCOREDIR}/Config/CMake/ImtCore.cmake)
 include(${IMTCOREDIR}/Config/CMake/ImtCoreProjectSdlConfig.cmake)
+include(${IMTCOREDIR}/Config/CMake/ImtCoreSdlAutoConfig.cmake)
 
 add_custom_target(${PROJECT_NAME}-SDL-related-files SOURCES
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/Sensors.sdl
