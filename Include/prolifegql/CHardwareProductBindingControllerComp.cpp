@@ -3,6 +3,7 @@
 
 // ACF includes
 #include <iprm/CTextParam.h>
+#include <istd/TOptDelPtr.h>
 #include <iprm/CParamsSet.h>
 
 // ImtCore includes
@@ -18,265 +19,165 @@ namespace prolifegql
 {
 
 
-istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRequest(
-		const imtgql::CGqlRequest& gqlRequest,
-		QByteArray& objectId,
-		QString& /*name*/,
-		QString& /*description*/,
-		QString& errorMessage) const
+imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to get data object. Error: Attribute 'm_objectCollectionCompPtr' was not set").toUtf8();
+		SendErrorMessage(0, errorMessage, "CObjectCollectionControllerCompBase");
+
+		return nullptr;
+	}
+
 	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr == nullptr){
-		errorMessage = QString("GraphQL input params is invalid.").toUtf8();
-		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		errorMessage = QString("Unable to get data object. Error: GraphQL input params is invalid.").toUtf8();
+		SendErrorMessage(0, errorMessage, "CObjectCollectionControllerCompBase");
 
 		return nullptr;
 	}
 
-	QByteArray itemData;
+	QByteArray objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
+	QByteArray objectTypeId = GetObjectTypeIdFromRequest(gqlRequest);
 
-	objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
-	itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
+	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
 
-	imtbase::CTreeItemModel itemModel;
-	if (!itemModel.CreateFromJson(itemData)){
-		errorMessage = QString("Unable to create representation model from json: %1.").arg(qPrintable(itemData));
-		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		hardwareProductBindingPtr.SetCastedOrRemove(dataPtr.GetPtr(), false);
+	}
 
+	if (!hardwareProductBindingPtr.IsValid()){
+		prolifedata::CHardwareProductBinding* infoPtr = new prolifedata::CHardwareProductBinding();
+		infoPtr->SetHardwareId(objectId);
+
+		hardwareProductBindingPtr.SetPtr(infoPtr, true);
+
+		m_objectCollectionCompPtr->InsertNewObject("", "", "", infoPtr, objectId);
+	}
+
+	if (!hardwareProductBindingPtr.IsValid()){
+		errorMessage = QString("Unable to get hardware object '%1'. Error: Object is invalid.").arg(qPrintable(objectId));
 		return nullptr;
 	}
 
+	return BaseClass::GetObject(gqlRequest, errorMessage);
+}
+
+
+bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
+			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& getSensorBindingListRequest,
+			sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& representationObject,
+			QString& errorMessage) const
+{
+	return true;
+}
+
+
+istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepresentation(
+			const sdl::prolife::SensorBinding::V1_0::CSensorBindingData& sensorBindingDataRepresentation,
+			QByteArray& newObjectId,
+			QString& name,
+			QString& description,
+			QString& errorMessage) const
+{
 	istd::TDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
 	hardwareProductBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding());
 
-	if (objectId.isEmpty()){
-		errorMessage = QString(QT_TR_NOOP("Unable to create object with empty ID."));
+	newObjectId = sensorBindingDataRepresentation.GetId();
+	if (newObjectId.isEmpty()){
+		errorMessage = QString(QT_TR_NOOP("Unable to create object with empty ID"));
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
 		return nullptr;
 	}
 
-	hardwareProductBindingPtr->SetHardwareId(objectId);
+	hardwareProductBindingPtr->SetHardwareId(newObjectId);
 
-	if (itemModel.ContainsKey("SoftwareIds")){
-		QByteArray softwareIds = itemModel.GetData("SoftwareIds").toByteArray();
-		if (!softwareIds.isEmpty()){
-			hardwareProductBindingPtr->SetSoftwareIds(softwareIds.split(';'));
-		}
-		else{
-			hardwareProductBindingPtr->SetSoftwareIds(QByteArrayList());
-		}
-	}
+	QByteArray softwareLinkInfos = sensorBindingDataRepresentation.GetSoftwareIds();
+
+	QByteArrayList softwareIds = softwareLinkInfos.split(';');
+	softwareIds.removeAll("");
+	hardwareProductBindingPtr->SetSoftwareIds(softwareIds);
 
 	return hardwareProductBindingPtr.PopPtr();
 }
 
 
-imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
+bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
+			const istd::IChangeable& data,
+			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingGqlRequest& getSensorBindingRequest,
+			sdl::prolife::SensorBinding::V1_0::CSensorBindingDataPayload& representationPayload,
+			QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
-		errorMessage = QString("'m_objectCollectionCompPtr' is invalid").toUtf8();
+	const prolifedata::IHardwareProductBinding* productBindingPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(&data);
+	if (productBindingPtr == nullptr){
+		errorMessage = QString("Unable to create a hardware binding object. Error: Object is invalid.").toUtf8();
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
-		return nullptr;
+		return false;
 	}
 
-	QByteArray objectId;
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
-	if (inputParamPtr != nullptr){
-		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
-	}
+	sdl::prolife::SensorBinding::V1_0::GetSensorBindingRequestArguments arguments = getSensorBindingRequest.GetRequestedArguments();
 
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-	dataModelPtr->SetData("Id", objectId);
-	dataModelPtr->SetData("SoftwareIds", "");
-	dataModelPtr->SetData("ProductUuid", "");
-	dataModelPtr->SetData("Project", "");
+	sdl::prolife::SensorBinding::V1_0::CSensorBindingData sensorBindingData;
 
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		prolifedata::IHardwareProductBinding* productBindingPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
-		if (productBindingPtr != nullptr){
-			const QByteArray hardwareId = productBindingPtr->GetHardwareId();
-			QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
+	QByteArray hardwareId = productBindingPtr->GetHardwareId();
+	sensorBindingData.SetId(hardwareId);
 
-			if (!softwareIds.isEmpty()){
-				dataModelPtr->SetData("SoftwareIds", softwareIds.join(';'));
+	QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
+	sensorBindingData.SetSoftwareIds(softwareIds.join(';'));
 
-				// Get Product-ID from first software ID
-				if (m_softwareProductCollectionCompPtr.IsValid()){
-					QByteArray softwareId = softwareIds[0];
+	if (!softwareIds.isEmpty()){
+		if (m_softwareProductCollectionCompPtr.IsValid()){
+			QByteArray softwareId = softwareIds[0];
 
-					imtbase::IObjectCollection::DataPtr softwareDataPtr;
-					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
-						imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
-						if (productInstanceInfoPtr != nullptr){
-							QByteArray project = productInstanceInfoPtr->GetProject();
-							dataModelPtr->SetData("Project", project);
-
-							QByteArray productId = productInstanceInfoPtr->GetProductId();
-							dataModelPtr->SetData("ProductUuid", productId);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return rootModelPtr.PopPtr();
-}
-
-
-imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::InsertObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
-{
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
-	if (inputParamPtr == nullptr){
-		errorMessage = QString("GraphQL input params is invalid.").toUtf8();
-		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
-
-		return nullptr;
-	}
-
-	QByteArray objectId;
-	QString name;
-	QString description;
-
-	istd::IChangeable* objectPtr = CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage);
-	if (objectPtr == nullptr){
-		errorMessage = QString("Unable to create object from GQL input params.").toUtf8();
-		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
-
-		return nullptr;
-	}
-
-	prolifedata::IHardwareProductBinding* hardwareBindingObjectPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(objectPtr);
-	if (hardwareBindingObjectPtr == nullptr){
-		errorMessage = QString("Hardware binding object is nullptr").toUtf8();
-		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
-
-		return nullptr;
-	}
-
-	if (m_deviceCollectionCompPtr.IsValid()){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_deviceCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
-			if (deviceInfoPtr != nullptr){
-
-				QByteArrayList softwareIds = hardwareBindingObjectPtr->GetSoftwareIds();
-
-				iprm::CTextParam textParam;
-				textParam.SetText(softwareIds.join(';'));
-
-				iprm::CParamsSet paramsSet;
-				paramsSet.SetEditableParameter("AddedProductIds", &textParam);
-
-				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(
-								imtbase::IOperationDescription::OT_USER,
-								objectId,
-								*deviceInfoPtr,
-								&paramsSet);
-				}
-
-				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-					errorMessage = QString("Unable to update device object.");
-					SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
-
-					return nullptr;
-				}
-			}
-		}
-	}
-
-	if (m_softwareProductCollectionCompPtr.IsValid()){
-		QByteArrayList softwareIds = hardwareBindingObjectPtr->GetSoftwareIds();
-		for (const QByteArray& id : std::as_const(softwareIds)){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_softwareProductCollectionCompPtr->GetObjectData(id, dataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			imtbase::IObjectCollection::DataPtr softwareDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
-					if (!productInstanceInfoPtr->IsInUse()){
-						iprm::CTextParam textParam;
-						textParam.SetText(objectId);
+					QByteArray project = productInstanceInfoPtr->GetProject();
+					sensorBindingData.SetProject(project);
 
-						iprm::CParamsSet paramsSet;
-						paramsSet.SetEditableParameter("AddedHardwareId", &textParam);
-
-						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
-						}
-
-						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-							errorMessage = QString("Unable to update software instance object.");
-							SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
-
-							return nullptr;
-						}
-					}
+					QByteArray productId = productInstanceInfoPtr->GetProductId();
+					sensorBindingData.SetProductUuid(productId);
 				}
 			}
 		}
 	}
 
-	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, objectId, *hardwareBindingObjectPtr);
-	}
+	representationPayload.SetSensorBindingData(sensorBindingData);
 
-	QByteArray newObjectId = m_objectCollectionCompPtr->InsertNewObject("DocumentInfo", name, description, hardwareBindingObjectPtr, objectId, nullptr, nullptr, operationContextPtr.GetPtr());
-	if (newObjectId.isEmpty()){
-		errorMessage = QT_TR_NOOP(QString("Can not insert object: %1").arg(qPrintable(objectId)));
-		SendErrorMessage(0, QString("Can not insert object: %1").arg(qPrintable(objectId)), "CHardwareProductBindingControllerComp");
-
-		return nullptr;
-	}
-
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-
-	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-	Q_ASSERT(dataModelPtr != nullptr);
-
-	imtbase::CTreeItemModel* notificationModelPtr = dataModelPtr->AddTreeModel("addedNotification");
-	Q_ASSERT(notificationModelPtr != nullptr);
-
-	notificationModelPtr->SetData("Id", objectId);
-	notificationModelPtr->SetData("Name", name);
-
-	return rootModelPtr.PopPtr();
+	return true;
 }
 
 
 imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	QByteArray itemData;
-	QByteArray objectId;
 	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
-	if (inputParamPtr != nullptr){
-		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
-		itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
-	}
+	if (inputParamPtr == nullptr){
+		errorMessage = QString("Unable to update hardware object. Error: GraphQL input parameters is invalid").toUtf8();
+		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
 
-	QByteArray project;
-	imtbase::CTreeItemModel itemModel;
-	if (itemModel.CreateFromJson(itemData)){
-		if (itemModel.ContainsKey("Project")){
-			project = itemModel.GetData("Project").toByteArray();
-		}
-	}
-
-	QString name;
-	QString description;
-	istd::IChangeable* objectPtr = CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage);
-	if (objectPtr == nullptr){
 		return nullptr;
 	}
 
-	prolifedata::IHardwareProductBinding* newHardwareBindingObjectPtr = dynamic_cast<prolifedata::IHardwareProductBinding*>(objectPtr);
-	if (newHardwareBindingObjectPtr == nullptr){
+	QByteArray objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
+	QByteArray itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
+	QString project = inputParamPtr->GetFieldArgumentValue("Project").toString();
+
+	QString name;
+	QString description;
+
+	istd::TDelPtr<prolifedata::IHardwareProductBinding> newHardwareBindingObjectPtr;
+	newHardwareBindingObjectPtr.SetCastedOrRemove(CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage));
+
+	if (!newHardwareBindingObjectPtr.IsValid()){
+		errorMessage = QString("Unable to update hardware object. Error: Object from request is invalid").toUtf8();
+		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
+
 		return nullptr;
 	}
 
@@ -288,8 +189,8 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	}
 
 	if (hardwareBindingObjectPtr == nullptr){
-		imtbase::CTreeItemModel* resultPtr = InsertObject(gqlRequest, errorMessage);
-		if (resultPtr == nullptr){
+		istd::TDelPtr<imtbase::CTreeItemModel> resultPtr = InsertObject(gqlRequest, errorMessage);
+		if (!resultPtr.IsValid()){
 			return nullptr;
 		}
 
@@ -299,6 +200,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	}
 
 	if (hardwareBindingObjectPtr == nullptr){
+		errorMessage = QString("Unable to update hardware object. Error: Object from request is invalid").toUtf8();
+		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
+
 		return nullptr;
 	}
 
@@ -325,7 +229,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		if (m_deviceCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
 			prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
-				deviceInfoPtr->SetProject(project);
+				deviceInfoPtr->SetProject(project.toUtf8());
 
 				iprm::CTextParam addedTextParam;
 				if (!addedLicenses.isEmpty()){
@@ -362,9 +266,9 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
 			imtbase::IObjectCollection::DataPtr softwareDataPtr;
 			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
-					productInstanceInfoPtr->SetProject(project);
+					productInstanceInfoPtr->SetProject(project.toUtf8());
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
@@ -386,10 +290,10 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		for (const QByteArray& id : addedLicenses){
 			imtbase::IObjectCollection::DataPtr softwareDataPtr;
 			if (m_softwareProductCollectionCompPtr->GetObjectData(id, softwareDataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr =  dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					if (!productInstanceInfoPtr->IsInUse()){
-						productInstanceInfoPtr->SetProject(project);
+						productInstanceInfoPtr->SetProject(project.toUtf8());
 
 						iprm::CTextParam textParam;
 						textParam.SetText(objectId);
@@ -440,56 +344,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 		}
 	}
 
-	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-	if (m_operationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, objectId, *newHardwareBindingObjectPtr);
-	}
-
-	if (!m_objectCollectionCompPtr->SetObjectData(objectId, *newHardwareBindingObjectPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-		errorMessage = QString("Can not update object: %1").arg(qPrintable(objectId));
-
-		return nullptr;
-	}
-
-	// Update project
-
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel());
-	imtbase::CTreeItemModel* notificationModelPtr = rootModelPtr->AddTreeModel("updatedNotification");
-	Q_ASSERT(notificationModelPtr != nullptr);
-
-	notificationModelPtr->SetData("Id", objectId);
-	notificationModelPtr->SetData("Name", name);
-
-	return rootModelPtr.PopPtr();
-}
-
-
-QString CHardwareProductBindingControllerComp::GetLicenseName(const QByteArray& productUuid) const
-{
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_softwareProductCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-		const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-		if (productInstanceInfoPtr != nullptr){
-			imtbase::ICollectionInfo::Ids licenseCollectionIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
-			if (!licenseCollectionIds.isEmpty()){
-				QByteArray licenseDefinitionUuid = licenseCollectionIds[0];
-
-				imtbase::IObjectCollection::DataPtr licenseDataPtr;
-				if (m_licenseCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
-					const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-					if (licenseInfoPtr != nullptr){
-						QByteArray licenseId = licenseInfoPtr->GetLicenseId();
-						QString licenseName = licenseInfoPtr->GetLicenseName();
-
-						QString name = licenseName + " (" + licenseId + ")";
-						return name;
-					}
-				}
-			}
-		}
-	}
-
-	return QString();
+	return BaseClass::UpdateObject(gqlRequest, errorMessage);
 }
 
 

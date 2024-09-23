@@ -3,17 +3,17 @@
 
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
-#include <GeneratedFiles/prolifesdl/SDL/CPP/Orders/OrdersAPIv1_0.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders.h>
 
 
 namespace prolifegql
 {
 
 
-class COrderCollectionControllerComp: public prolife::sdl::Orders::COrderCollectionControllerCompBase
+class COrderCollectionControllerComp: public sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase
 {
 public:
-	typedef prolife::sdl::Orders::COrderCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all orders", true, "");
@@ -28,7 +28,7 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	bool CheckProducts(const QByteArray& orderUuid, const QList<prolife::sdl::Orders::COrderedProduct>& productsModel, QString& errorMessage) const;
+	bool CheckProducts(const QByteArray& orderUuid, const QList<sdl::prolife::Orders::V1_0::COrderedProduct>& productsModel, QString& errorMessage) const;
 	QString GetProductName(const QByteArray& productUuid) const;
 	void GenerateDifferences(
 				prolifedata::IOrderInfo& currentOrder,
@@ -37,22 +37,22 @@ protected:
 				QByteArrayList& removedProducts,
 				QByteArrayList& updatedProducts) const;
 
-	// reimplemented (prolife::sdl::Orders::COrderCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const prolife::sdl::Orders::COrdersListGqlRequest& ordersListRequest,
-				prolife::sdl::Orders::COrderItem& representationObject,
+				const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
+				sdl::prolife::Orders::V1_0::COrderItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const prolife::sdl::Orders::COrderData& orderDataRepresentation,
+				const sdl::prolife::Orders::V1_0::COrderData& orderDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const prolife::sdl::Orders::COrderItemGqlRequest& orderItemRequest,
-				prolife::sdl::Orders::COrderDataPayload& representationPayload,
+				const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
+				sdl::prolife::Orders::V1_0::COrderDataPayload& representationPayload,
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 

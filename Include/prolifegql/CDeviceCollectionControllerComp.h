@@ -6,17 +6,16 @@
 
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
-#include <GeneratedFiles/prolifesdl/SDL/CPP/Sensors/SensorsAPIv1_0.h>
-
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
 
 namespace prolifegql
 {
 
 
-class CDeviceCollectionControllerComp: public prolife::sdl::Sensors::CDeviceCollectionControllerCompBase
+class CDeviceCollectionControllerComp: public sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase
 {
 public:
-	typedef prolife::sdl::Sensors::CDeviceCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -31,22 +30,22 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (prolife::sdl::Sensors::CDeviceCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const prolife::sdl::Sensors::CDevicesListGqlRequest& devicesListRequest,
-				prolife::sdl::Sensors::CDeviceItem& representationObject,
+				const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
+				sdl::prolife::Sensors::V1_0::CDeviceItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const prolife::sdl::Sensors::CDeviceData& deviceDataRepresentation,
+				const sdl::prolife::Sensors::V1_0::CDeviceData& deviceDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const prolife::sdl::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-				prolife::sdl::Sensors::CDeviceDataPayload& representationPayload,
+				const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
+				sdl::prolife::Sensors::V1_0::CDeviceDataPayload& representationPayload,
 				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;

@@ -28,12 +28,12 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (prolife::sdl::Sensors::CDeviceCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const prolife::sdl::Sensors::CDevicesListGqlRequest& devicesListRequest,
-			prolife::sdl::Sensors::CDeviceItem& representationObject,
+			const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
+			sdl::prolife::Sensors::V1_0::CDeviceItem& representationObject,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
@@ -60,7 +60,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
 
-	prolife::sdl::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
+	sdl::prolife::Sensors::V1_0::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
 
 	if (requestInfo.items.isTypeIdRequested){
 		representationObject.SetTypeId(m_objectCollectionCompPtr->GetObjectTypeId(objectId));
@@ -172,7 +172,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
-			const prolife::sdl::Sensors::CDeviceData& deviceDataRepresentation,
+			const sdl::prolife::Sensors::V1_0::CDeviceData& deviceDataRepresentation,
 			QByteArray& newObjectId,
 			QString& name,
 			QString& description,
@@ -358,8 +358,8 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const prolife::sdl::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-			prolife::sdl::Sensors::CDeviceDataPayload& representationPayload,
+			const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
+			sdl::prolife::Sensors::V1_0::CDeviceDataPayload& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&data);
@@ -370,9 +370,9 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Sensors::DeviceItemRequestArguments arguments = deviceItemRequest.GetRequestedArguments();
+	sdl::prolife::Sensors::V1_0::DeviceItemRequestArguments arguments = deviceItemRequest.GetRequestedArguments();
 
-	prolife::sdl::Sensors::CDeviceData deviceData;
+	sdl::prolife::Sensors::V1_0::CDeviceData deviceData;
 
 	QByteArray id = arguments.input.GetId();
 	deviceData.SetId(id);

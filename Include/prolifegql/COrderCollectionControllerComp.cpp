@@ -27,7 +27,7 @@ namespace prolifegql
 
 bool COrderCollectionControllerComp::CheckProducts(
 	const QByteArray& orderUuid,
-	const QList<prolife::sdl::Orders::COrderedProduct>& products,
+	const QList<sdl::prolife::Orders::V1_0::COrderedProduct>& products,
 	QString& errorMessage) const
 {
 	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
@@ -40,7 +40,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 		return false;
 	}
 
-	for (const prolife::sdl::Orders::COrderedProduct& product : products){
+	for (const sdl::prolife::Orders::V1_0::COrderedProduct& product : products){
 		QByteArray objectUuid = product.GetId();
 		QByteArray productUuid = product.GetProductUuid();
 		QByteArray categoryId = product.GetCategoryId();
@@ -155,12 +155,12 @@ void COrderCollectionControllerComp::GenerateDifferences(
 }
 
 
-// reimplemented (prolife::sdl::Orders::COrderCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase)
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const prolife::sdl::Orders::COrdersListGqlRequest& ordersListRequest,
-	prolife::sdl::Orders::COrderItem& representationObject,
+	const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
+	sdl::prolife::Orders::V1_0::COrderItem& representationObject,
 	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
@@ -168,7 +168,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Orders::OrdersListRequestInfo requestInfo = ordersListRequest.GetRequestInfo();
+	sdl::prolife::Orders::V1_0::OrdersListRequestInfo requestInfo = ordersListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -236,7 +236,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentation(
-	const prolife::sdl::Orders::COrderData& orderDataRepresentation,
+	const sdl::prolife::Orders::V1_0::COrderData& orderDataRepresentation,
 	QByteArray& newObjectId,
 	QString& name,
 	QString& description,
@@ -351,14 +351,14 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	QList<prolife::sdl::Orders::COrderedProduct> products = orderDataRepresentation.GetOrderProducts();
+	QList<sdl::prolife::Orders::V1_0::COrderedProduct> products = orderDataRepresentation.GetOrderProducts();
 
 	bool ok = CheckProducts(orderUuid, products, errorMessage);
 	if (!ok){
 		return nullptr;
 	}
 
-	for (const prolife::sdl::Orders::COrderedProduct& product : products){
+	for (const sdl::prolife::Orders::V1_0::COrderedProduct& product : products){
 		QByteArray orderProductUuid = product.GetId();
 		QByteArray categoryId = product.GetCategoryId();
 		QByteArray productUuid = product.GetProductUuid();
@@ -539,8 +539,8 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
-	const prolife::sdl::Orders::COrderItemGqlRequest& orderItemRequest,
-	prolife::sdl::Orders::COrderDataPayload& representationPayload,
+	const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
+	sdl::prolife::Orders::V1_0::COrderDataPayload& representationPayload,
 	QString& errorMessage) const
 {
 	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(data));
@@ -551,8 +551,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Orders::OrderItemRequestArguments arguments = orderItemRequest.GetRequestedArguments();
-	prolife::sdl::Orders::COrderData orderData;
+	sdl::prolife::Orders::V1_0::OrderItemRequestArguments arguments = orderItemRequest.GetRequestedArguments();
+	sdl::prolife::Orders::V1_0::COrderData orderData;
 
 	QByteArray id = arguments.input.GetId();
 	orderData.SetId(id);
@@ -579,7 +579,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	QList<prolife::sdl::Orders::COrderedProduct> products;
+	QList<sdl::prolife::Orders::V1_0::COrderedProduct> products;
 
 	imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
 	for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
@@ -590,7 +590,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 			if (m_softwareInstanceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 				const imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 				if (softwareProductPtr != nullptr){
-					prolife::sdl::Orders::COrderedProduct softwareProduct;
+					sdl::prolife::Orders::V1_0::COrderedProduct softwareProduct;
 					QByteArray productUuid = softwareProductPtr->GetProductId();
 
 					softwareProduct.SetId(productId);
@@ -640,7 +640,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 			if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 				const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
-					prolife::sdl::Orders::COrderedProduct hardwareProduct;
+					sdl::prolife::Orders::V1_0::COrderedProduct hardwareProduct;
 
 					QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 					QByteArray licenseDefinitionUuid = deviceInfoPtr->GetConfigurationType();

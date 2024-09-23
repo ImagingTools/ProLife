@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5241" Description="ACF"/>
+            <Version Id="0" Number="5244" Description="ACF"/>
             <Version Id="1" Number="2216" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
@@ -286,7 +286,6 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>AccountsPage</Value>
-                                            <Value>HardwareProductCollectionController</Value>
                                             <Value>SoftwareProductsPage</Value>
                                             <Value>OrdersPage</Value>
                                             <Value>DevicesPage</Value>
@@ -339,31 +338,6 @@
                                     <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="HardwareProductCollectionController" PackageId="ProLifeGqlPck" ComponentId="HardwareProductCollectionController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>HardwareProductsList</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -462,7 +436,6 @@
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
-                    <Component ExportedId="HardwareProductCollectionController" ComponentId="HardwareProductCollectionController"/>
                     <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
                     <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>

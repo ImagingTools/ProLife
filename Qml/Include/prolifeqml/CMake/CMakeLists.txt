@@ -70,17 +70,20 @@ list(APPEND webdirs ${buildwebdir}/src/imtlicProductsSdl)
 list(APPEND webdirs ${IMTCOREDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles/imtlicsdl/SDL/1.0/QML/imtlicLicensesSdl)
 list(APPEND webdirs ${buildwebdir}/src/imtlicLicensesSdl)
 
-list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeAccountsSdl)
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeAccountsSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeAccountsSdl)
 
-list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeSensorsSdl)
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeSensorsSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeSensorsSdl)
 
-list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeLicensesSdl)
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeLicensesSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeLicensesSdl)
 
-list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/QML/prolifeOrdersSdl)
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeOrdersSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeOrdersSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeSensorBindingSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeSensorBindingSdl)
 
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)

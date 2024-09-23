@@ -17,12 +17,12 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (prolife::sdl::Accounts::CAccountCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase)
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const prolife::sdl::Accounts::CAccountsListGqlRequest& accountsListRequest,
-			prolife::sdl::Accounts::CAccountItem& representationObject,
+			const sdl::prolife::Accounts::V1_0::CAccountsListGqlRequest& accountsListRequest,
+			sdl::prolife::Accounts::V1_0::CAccountItem& representationObject,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
@@ -32,7 +32,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Accounts::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
+	sdl::prolife::Accounts::V1_0::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -94,7 +94,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
-			const prolife::sdl::Accounts::CAccountData& accountDataRepresentation,
+			const sdl::prolife::Accounts::V1_0::CAccountData& accountDataRepresentation,
 			QByteArray& newObjectId,
 			QString& name,
 			QString& description,
@@ -179,8 +179,8 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const prolife::sdl::Accounts::CAccountItemGqlRequest& accountItemRequest,
-			prolife::sdl::Accounts::CAccountDataPayload& representationPayload,
+			const sdl::prolife::Accounts::V1_0::CAccountItemGqlRequest& accountItemRequest,
+			sdl::prolife::Accounts::V1_0::CAccountDataPayload& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&data);
@@ -191,9 +191,9 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Accounts::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
+	sdl::prolife::Accounts::V1_0::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
 
-	prolife::sdl::Accounts::CAccountData accountData;
+	sdl::prolife::Accounts::V1_0::CAccountData accountData;
 
 	QByteArray id = arguments.input.GetId();
 	accountData.SetId(id);

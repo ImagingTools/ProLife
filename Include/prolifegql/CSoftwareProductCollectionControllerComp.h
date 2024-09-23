@@ -5,17 +5,17 @@
 #include <imtlic/IProductInstanceInfo.h>
 
 // ProLife includes
-#include <GeneratedFiles/prolifesdl/SDL/CPP/Licenses/LicensesAPIv1_0.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
 
 
 namespace prolifegql
 {
 
 
-class CSoftwareProductCollectionControllerComp: public  prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase
+class CSoftwareProductCollectionControllerComp: public  sdl::prolife::Licenses::V1_0::CSoftwareProductCollectionControllerCompBase
 {
 public:
-	typedef prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Licenses::V1_0::CSoftwareProductCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -29,22 +29,22 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Licenses::V1_0::CSoftwareProductCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const prolife::sdl::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
-				prolife::sdl::Licenses::CSoftwareProductItem& representationObject,
+				const sdl::prolife::Licenses::V1_0::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+				sdl::prolife::Licenses::V1_0::CSoftwareProductItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const prolife::sdl::Licenses::CSoftwareProductData& softwareProductDataRepresentation,
+				const sdl::prolife::Licenses::V1_0::CSoftwareProductData& softwareProductDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const prolife::sdl::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-				prolife::sdl::Licenses::CSoftwareProductDataPayload& representationPayload,
+				const sdl::prolife::Licenses::V1_0::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+				sdl::prolife::Licenses::V1_0::CSoftwareProductDataPayload& representationPayload,
 				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;

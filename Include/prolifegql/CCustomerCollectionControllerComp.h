@@ -4,17 +4,17 @@
 // ImtCore includes
 #include <imtauth/ICompanyInfo.h>
 #include <imtgql/CObjectCollectionControllerCompBase.h>
-#include <GeneratedFiles/prolifesdl/SDL/CPP/Accounts/AccountsAPIv1_0.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts.h>
 
 
 namespace prolifegql
 {
 
 
-class CCustomerCollectionControllerComp: public prolife::sdl::Accounts::CAccountCollectionControllerCompBase
+class CCustomerCollectionControllerComp: public sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase
 {
 public:
-	typedef prolife::sdl::Accounts::CAccountCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CCustomerCollectionControllerComp);
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission-ID for show all accounts", true, "ViewAllAccounts");
@@ -23,24 +23,24 @@ public:
 
 protected:
 
-	// reimplemented (prolife::sdl::Accounts::CAccountCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const prolife::sdl::Accounts::CAccountsListGqlRequest& accountsListRequest,
-				prolife::sdl::Accounts::CAccountItem& representationObject,
+				const sdl::prolife::Accounts::V1_0::CAccountsListGqlRequest& accountsListRequest,
+				sdl::prolife::Accounts::V1_0::CAccountItem& representationObject,
 				QString& errorMessage) const override;
 
 	// Account methods
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const prolife::sdl::Accounts::CAccountData& accountDataRepresentation,
+				const sdl::prolife::Accounts::V1_0::CAccountData& accountDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const prolife::sdl::Accounts::CAccountItemGqlRequest& accountItemRequest,
-				prolife::sdl::Accounts::CAccountDataPayload& representationPayload,
+				const sdl::prolife::Accounts::V1_0::CAccountItemGqlRequest& accountItemRequest,
+				sdl::prolife::Accounts::V1_0::CAccountDataPayload& representationPayload,
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 

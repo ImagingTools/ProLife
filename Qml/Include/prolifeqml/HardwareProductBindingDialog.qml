@@ -3,6 +3,7 @@ import Acf 1.0
 import imtgui 1.0
 import imtguigql 1.0
 import imtcontrols 1.0
+import prolifeSensorBindingSdl 1.0
 
 Dialog {
     id: productEditorDialog;
@@ -72,8 +73,10 @@ Dialog {
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
 
-                    bindingModel.setData("Id", productEditorDialog.hardwareId);
-                    bindingModel.setData("Project", inputValue);
+                    bindingModel.m_id = productEditorDialog.hardwareId
+
+                    documentController.updateRequestInputParam.InsertField("Project", inputValue);
+                    // bindingModel.setData("Project", inputValue);
 
                     documentController.documentModel = bindingModel;
 
@@ -89,12 +92,22 @@ Dialog {
         }
     }
 
-    GqlDocumentDataController {
+    GqlRequestDocumentDataController {
         id: documentController;
 
-        gqlGetCommandId: "HardwareProductBindingItem";
-        gqlUpdateCommandId: "HardwareProductBindingUpdate";
-        gqlAddCommandId: "HardwareProductBindingAdd";
+        gqlGetCommandId: ProlifeSensorBindingSdlCommandIds.s_getSensorBinding;
+        gqlUpdateCommandId: ProlifeSensorBindingSdlCommandIds.s_updateSensorBinding;
+        gqlAddCommandId: ProlifeSensorBindingSdlCommandIds.s_addSensorBinding;
+
+        documentModelComp: Component {
+            SensorBindingData {}
+        }
+
+        payloadModel: SensorBindingDataPayload {
+            onFinished: {
+                documentController.documentModel = m_sensorBindingData
+            }
+        }
 
         onDocumentModelChanged: {
             productEditorDialog.contentItem.bindingModel = documentModel;

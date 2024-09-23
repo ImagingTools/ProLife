@@ -24,15 +24,15 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (prolife::sdl::Licenses::CSoftwareProductCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Licenses::V1_0::CSoftwareProductCollectionControllerCompBase)
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const prolife::sdl::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
-			prolife::sdl::Licenses::CSoftwareProductItem& representationObject,
+			const sdl::prolife::Licenses::V1_0::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+			sdl::prolife::Licenses::V1_0::CSoftwareProductItem& representationObject,
 			QString& errorMessage) const
 {
-	prolife::sdl::Licenses::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
+	sdl::prolife::Licenses::V1_0::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -188,7 +188,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
-			const prolife::sdl::Licenses::CSoftwareProductData& softwareProductDataRepresentation,
+			const sdl::prolife::Licenses::V1_0::CSoftwareProductData& softwareProductDataRepresentation,
 			QByteArray& newObjectId,
 			QString& name,
 			QString& description,
@@ -307,8 +307,8 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const prolife::sdl::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-			prolife::sdl::Licenses::CSoftwareProductDataPayload& representationPayload,
+			const sdl::prolife::Licenses::V1_0::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+			sdl::prolife::Licenses::V1_0::CSoftwareProductDataPayload& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&data);
@@ -319,9 +319,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	prolife::sdl::Licenses::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
+	sdl::prolife::Licenses::V1_0::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
 
-	prolife::sdl::Licenses::CSoftwareProductData softwareProductData;
+	sdl::prolife::Licenses::V1_0::CSoftwareProductData softwareProductData;
 
 	QByteArray id = arguments.input.GetId();
 	softwareProductData.SetId(id);

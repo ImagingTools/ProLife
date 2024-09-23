@@ -6,6 +6,7 @@ import imtauthgui 1.0
 import imtcolgui 1.0
 import imtguigql 1.0
 import imtlicgui 1.0
+import prolifeSensorBindingSdl 1.0
 
 Item {
     id: productEditor;
@@ -15,7 +16,7 @@ Item {
 
     property int contentHeight: availableLicensesColumn.height + titleLable.height;
 
-    property TreeItemModel bindingModel: TreeItemModel {}
+    property SensorBindingData bindingModel: null;
 
     property string productId: ""
     property string hardwareId: "";
@@ -27,27 +28,17 @@ Item {
     signal modelChanged();
 
     Component.onCompleted: {
-        bindingModel.modelChanged.connect(productEditor.modelChanged);
-
         CachedProductCollection.updateModel();
     }
 
     onBindingModelChanged: {
-        if (productEditor.bindingModel.containsKey("Id")){
-            let id = productEditor.bindingModel.getData("Id")
+        if (bindingModel){
+            productEditor.hardwareId = bindingModel.m_id;
+            productEditor.productId = bindingModel.m_productUuid;
+            bindingModel.modelChanged.connect(productEditor.modelChanged);
 
-            productEditor.hardwareId = id;
+            updateGui();
         }
-
-        if (productEditor.bindingModel.containsKey("ProductUuid")){
-            let productId = productEditor.bindingModel.getData("ProductUuid")
-
-            productEditor.productId = productId;
-        }
-
-        bindingModel.modelChanged.connect(productEditor.modelChanged);
-
-        updateGui();
     }
 
     property bool blockUpdatingModel: false;
@@ -503,7 +494,7 @@ Item {
 
             onClicked: {
                 let selectedProductIds = []
-                let softwareIds = productEditor.bindingModel.getData("SoftwareIds")
+                let softwareIds = productEditor.bindingModel.m_softwareIds;
                 if (softwareIds && softwareIds != ""){
                     selectedProductIds = softwareIds.split(';')
                 }
@@ -523,9 +514,9 @@ Item {
                 }
 
                 let products = selectedProductIds.join(';');
-                productEditor.bindingModel.setData("SoftwareIds", products)
+                productEditor.bindingModel.m_softwareIds = products;
 
-                softwareProductCollection.updateData()
+                softwareProductCollection.updateData();
 
                 softwareProductCollection.table.resetSelection();
             }
@@ -553,8 +544,7 @@ Item {
             }
 
             onClicked: {
-                let selectedProductIds = []
-                selectedProductIds = productEditor.bindingModel.getData("SoftwareIds").split(';')
+                let selectedProductIds = productEditor.bindingModel.m_softwareIds.split(';')
                 let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
                 if (indexes.length === 0){
                     return
@@ -579,7 +569,7 @@ Item {
                 }
 
                 let products = selectedProductIds.join(';');
-                productEditor.bindingModel.setData("SoftwareIds", products)
+                productEditor.bindingModel.m_softwareIds = products;
 
                 bindingProductsCollection.table.resetSelection();
 

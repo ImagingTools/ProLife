@@ -4,6 +4,9 @@
 // ImtCore includes
 #include <imtgql/CObjectCollectionControllerCompBase.h>
 
+// ProLife includes
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/SensorBinding.h>
+
 
 #undef GetObject
 
@@ -12,10 +15,10 @@ namespace prolifegql
 {
 
 
-class CHardwareProductBindingControllerComp: public imtgql::CObjectCollectionControllerCompBase
+class CHardwareProductBindingControllerComp: public sdl::prolife::SensorBinding::V1_0::CSensorBindingCollectionControllerCompBase
 {
 public:
-	typedef imtgql::CObjectCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::SensorBinding::V1_0::CSensorBindingCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CHardwareProductBindingControllerComp)
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
@@ -26,11 +29,25 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual istd::IChangeable* CreateObjectFromRequest(const imtgql::CGqlRequest& gqlRequest, QByteArray &objectId, QString &name, QString &description, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual imtbase::CTreeItemModel* InsertObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual bool CreateRepresentationFromObject(
+				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+				const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& getSensorBindingListRequest,
+				sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& representationObject,
+				QString& errorMessage) const override;
+	virtual istd::IChangeable* CreateObjectFromRepresentation(
+				const sdl::prolife::SensorBinding::V1_0::CSensorBindingData& sensorBindingDataRepresentation,
+				QByteArray& newObjectId,
+				QString& name,
+				QString& description,
+				QString& errorMessage) const override;
+	virtual bool CreateRepresentationFromObject(
+				const istd::IChangeable& data,
+				const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingGqlRequest& getSensorBindingRequest,
+				sdl::prolife::SensorBinding::V1_0::CSensorBindingDataPayload& representationPayload,
+				QString& errorMessage) const override;
+
 	virtual imtbase::CTreeItemModel* UpdateObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual QString GetLicenseName(const QByteArray& productUuid) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);

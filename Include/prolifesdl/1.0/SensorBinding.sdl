@@ -1,0 +1,73 @@
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	name: SensorBinding
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+input SensorBindingListInput {
+	viewParams: CollectionViewParams
+}
+
+type SensorBindingItem {
+	Id: ID!
+	Name: String!
+}
+
+type SensorBindingListPayload {
+	items: [SensorBindingItem]
+	notification: NotificationItem
+}
+
+type SensorBindingData {
+	Id: ID!
+	ProductUuid: ID
+	SoftwareIds: ID
+	Project: String
+}
+
+input SensorBindingDataInput {
+	Id: ID!
+	Item: SensorBindingData!
+	Project: String
+}
+
+type SensorBindingDataPayload {
+	SensorBindingData: SensorBindingData
+}
+
+type Query {
+	GetSensorBindingList (input:SensorBindingListInput): SensorBindingListPayload!
+	GetSensorBinding (input: InputId): SensorBindingDataPayload!
+}
+
+type Mutation {
+	UpdateSensorBinding (input: SensorBindingDataInput): UpdatedNotificationPayload!
+	AddSensorBinding (input: SensorBindingDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+	type SensorBinding {
+		ref: SensorBindingItem
+		operations {
+			list: GetSensorBindingList
+		}
+		subtype SensorBinding {
+			ref: SensorBindingData
+			operations {
+				get: GetSensorBinding
+				update: UpdateSensorBinding
+				insert: AddSensorBinding
+			}
+		}
+	}
+}
+
+
