@@ -12,8 +12,8 @@ RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
 LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql -limtclientgql -limtservice
-LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml
-LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc
+LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml -limtauthsdl -limtappsdl
+LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc -lAcfLoc -lAcfSlnLoc
 
 # Set OS-specific build options:
 win32-msvc*{
@@ -32,12 +32,12 @@ ARXC_OUTDIR = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
 # Conversion of resource templates:
 win*{
 # File transformation
-	ACF_CONVERT_FILES = $$PWD/../VC/ProLifeServerConfigurator.rc.xtracf
+	# ACF_CONVERT_FILES = $$PWD/../VC/ProLifeServerConfigurator.rc.xtracf
 	ACF_CONVERT_OUTDIR = $$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
 	ACF_CONVERT_REGISTRY =  $$PWD/../VC/FileSubstitCopyApp.acc
 	ACF_CONVERT_CONFIG = $$PWD/../../../Config/BaseOnly.awc
 
-RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeServerConfigurator.rc
+# RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeServerConfigurator.rc
 	RC_INCLUDEPATH = $$_PRO_FILE_PWD_
 }
 

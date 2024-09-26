@@ -12,10 +12,10 @@ QT += xml network sql quick qml quickcontrols2
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
-LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlic -limtlicgui -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtcom
+LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlic -limtlicgui -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtcom -limtauthsdl -limtlicsdl -limtappsdl
 LIBS += -limtlicgql -limtguigql -limtgql -limtauthgql -limtclientgql
 LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml
-LIBS += -lprolifeqml -lprolifestyle -lImtCoreLoc -lProLifeLoc -lAcfLoc -lAcfSlnLoc
+LIBS += -lprolifeqml -lprolifestyle -lImtCoreLoc -lProLifeLoc -lAcfLoc -lAcfSlnLoc -lprolifesdl
 
 # Set OS-specific build options:
 win32-msvc*{
@@ -34,12 +34,12 @@ ARXC_OUTDIR = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
 # Conversion of resource templates:
 win*{
 # File transformation
-ACF_CONVERT_FILES = $$PWD/../VC/ProLifeClient.rc.xtracf
+# ACF_CONVERT_FILES = $$PWD/../VC/ProLifeClient.rc.xtracf
 	ACF_CONVERT_OUTDIR = $$AUXINCLUDEPATH/GeneratedFiles/$$TARGET
 	ACF_CONVERT_REGISTRY =  $$PWD/../VC/FileSubstitCopyApp.acc
 	ACF_CONVERT_CONFIG = $$PWD/../../../Config/BaseOnly.awc
 
-RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeClient.rc
+# RC_FILE = $$OUT_PWD/$$AUXINCLUDEPATH/GeneratedFiles/$$TARGET/ProLifeClient.rc
 RC_INCLUDEPATH = $$_PRO_FILE_PWD_
 }
 

@@ -5,6 +5,9 @@ TEMPLATE = subdirs
 SUBDIRS += prolifeqml
 prolifeqml.file = ../../Qml/Include/prolifeqml/QMake/prolifeqml.pro
 
+SUBDIRS += prolifesdl
+prolifesdl.file = ../../Include/prolifesdl/QMake/prolifesdl.pro
+
 SUBDIRS += prolifedata
 prolifedata.file = ../../Include/prolifedata/QMake/prolifedata.pro
 

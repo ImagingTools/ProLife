@@ -5,4 +5,5 @@ include($(ACFDIR)/Config/QMake/AcfQt.pri)
 include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
 
 LIBS += -L../../../Lib/$$COMPILER_DIR  -limtguigql -limtbase -limtauth -limtgui -limtwidgets -limtlic
+LIBS += -L../../../Lib/$$COMPILER_DIR  -lprolifesdl -lprolifedata
 
