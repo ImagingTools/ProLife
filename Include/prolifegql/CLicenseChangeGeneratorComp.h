@@ -24,7 +24,7 @@ public:
 
 protected:
 	virtual bool GenerateDocumentChanges(
-				imtbase::IOperationDescription::OperationType operationType,
+				int operationType,
 				const QByteArray& documentId,
 				const istd::IChangeable& document,
 				imtbase::CObjectCollection& documentChangeCollection,

@@ -195,6 +195,10 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.SetId(objectId);
 	}
 
+	if (requestInfo.items.isNameRequested){
+		representationObject.SetName(orderInfoPtr->GetOrderId());
+	}
+
 	if (requestInfo.items.isDescriptionRequested){
 		representationObject.SetDescription(orderInfoPtr->GetDescription());
 	}

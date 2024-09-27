@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtlicFeaturesSdl);
 	Q_INIT_RESOURCE(imtlicProductsSdl);
 	Q_INIT_RESOURCE(imtlicLicensesSdl);
+	Q_INIT_RESOURCE(imtauthAuthorizationSdl);
 
 	return Run<CProLifeClient, DefaultImtCoreQmlInitializer>(argc, argv);
 }

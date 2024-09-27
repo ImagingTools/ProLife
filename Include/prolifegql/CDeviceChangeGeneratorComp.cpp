@@ -23,9 +23,8 @@ namespace prolifegql
 
 // protected methods
 
-
 bool CDeviceChangeGeneratorComp::GenerateDocumentChanges(
-			imtbase::IOperationDescription::OperationType operationType,
+			int operationType,
 			const QByteArray& documentId,
 			const istd::IChangeable& document,
 			imtbase::CObjectCollection& documentChangeCollection,
@@ -224,7 +223,7 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 			if (documentChangeCollection.GetObjectData(elementId, dataPtr)){
 				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
 				if (operationDescriptionPtr != nullptr){
-					imtbase::IOperationDescription::OperationType type = operationDescriptionPtr->GetOperationType();
+					int type = operationDescriptionPtr->GetOperationType();
 
 					QString keyName = operationDescriptionPtr->GetKeyName();
 					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");

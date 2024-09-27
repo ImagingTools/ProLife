@@ -18,6 +18,7 @@ input OrdersListInput {
 type OrderItem {
 	TypeId: ID!
 	Id: ID!
+	Name: String
 	CustomerId: ID
 	Status: String
 	OrderId: ID

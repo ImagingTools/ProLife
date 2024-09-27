@@ -5,6 +5,9 @@
 #include <iser/IObject.h>
 #include <idoc/IDocumentMetaInfo.h>
 
+// ImtCore includes
+#include <imtbase/IOperationDescription.h>
+
 
 namespace prolifedata
 {
@@ -13,6 +16,15 @@ namespace prolifedata
 class IDeviceInfo: virtual public iser::IObject
 {
 public:
+	enum OperationType
+	{
+		OT_BIND_LICENSE = imtbase::IOperationDescription::OT_USER + 1,
+		OT_UNBIND_LICENSE,
+		OT_CREATE_LICENSE_FILE
+	};
+
+	I_DECLARE_ENUM(OperationType, OT_BIND_LICENSE, OT_UNBIND_LICENSE, OT_CREATE_LICENSE_FILE);
+
 	enum MetaInfoTypes
 	{
 		/**
