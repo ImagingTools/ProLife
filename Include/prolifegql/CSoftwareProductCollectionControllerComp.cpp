@@ -266,11 +266,9 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 			if (productCollectionPtr != nullptr){
 				productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), softwareUuid);
 
-
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-
 				if (m_orderOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderUuid, *productOrderInfoPtr);
+					operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderUuid, *productOrderInfoPtr);
 				}
 
 				m_orderCollectionCompPtr->SetObjectData(orderUuid, *productOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());

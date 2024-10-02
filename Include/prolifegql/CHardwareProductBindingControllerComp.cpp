@@ -247,7 +247,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, objectId, *deviceInfoPtr, &paramsSet);
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("BindLicense", objectId, *deviceInfoPtr, &paramsSet);
 				}
 
 				if (!m_deviceCollectionCompPtr->SetObjectData(objectId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -272,7 +272,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, softwareId, *productInstanceInfoPtr);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, *productInstanceInfoPtr);
 					}
 
 					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -303,7 +303,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
+							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, *productInstanceInfoPtr, &paramsSet);
 						}
 
 						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -333,7 +333,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_USER, id, *productInstanceInfoPtr, &paramsSet);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, *productInstanceInfoPtr, &paramsSet);
 					}
 
 					if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

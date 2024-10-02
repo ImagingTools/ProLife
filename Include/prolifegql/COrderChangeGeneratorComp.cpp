@@ -43,13 +43,13 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 	QByteArray oldOrderId = oldOrderInfoPtr->GetOrderId();
 	QByteArray newOrderId = newOrderInfoPtr->GetOrderId();
 	if (oldOrderId != newOrderId){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderId, newOrderId), "OrderId");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderId, newOrderId), "OrderId");
 	}
 
 	QByteArray oldPurchaseOrderId = oldOrderInfoPtr->GetPurchaseOrderId();
 	QByteArray newPurchaseOrderId = newOrderInfoPtr->GetPurchaseOrderId();
 	if (oldPurchaseOrderId != newPurchaseOrderId){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldPurchaseOrderId, newPurchaseOrderId), "PurchaseId");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldPurchaseOrderId, newPurchaseOrderId), "PurchaseId");
 	}
 
 	QByteArray oldCustomerId = oldOrderInfoPtr->GetCustomerId();
@@ -73,20 +73,20 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId), "OrderCustomer");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId), "OrderCustomer");
 	}
 
 	prolifedata::IOrderInfo::OrderStatus oldStatus = oldOrderInfoPtr->GetOrderStatus();
 	prolifedata::IOrderInfo::OrderStatus newStatus = newOrderInfoPtr->GetOrderStatus();
 	if (oldStatus != newStatus){
 		QStringList statuses = oldOrderInfoPtr->OrderStatusGetStrings();
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "Status", QT_TRANSLATE_NOOP("Attribute", "Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8()), "Status");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Status", QT_TRANSLATE_NOOP("Attribute", "Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8()), "Status");
 	}
 
 	QString oldDescription = oldOrderInfoPtr->GetDescription();
 	QString newDescription = newOrderInfoPtr->GetDescription();
 	if (oldDescription != newDescription){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_UNKNOWN, "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8()), "Description");
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8()), "Description");
 	}
 
 	QByteArrayList addedProducts;
@@ -138,7 +138,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			name = name + " (" + internalId + ")";
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription(imtbase::IOperationDescription::OT_USER, "ProductId", name, "", productId));
+		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddProduct", "ProductId", name, "", productId));
 	}
 
 	for (const QByteArray& productObjectId : std::as_const(removedProducts)){
@@ -184,7 +184,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			"OperationInfo",
 			"",
 			"",
-			CreateOperationDescription(imtbase::IOperationDescription::OperationType (imtbase::IOperationDescription::OT_USER + 1), "ProductId", name, productId, ""));
+			CreateOperationDescription("RemoveProduct", "ProductId", name, productId, ""));
 	}
 
 	return true;
@@ -202,12 +202,12 @@ QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColle
 			if (documentChangeCollection.GetObjectData(elementId, dataPtr)){
 				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
 				if (operationDescriptionPtr != nullptr){
-					int type = operationDescriptionPtr->GetOperationType();
+					QByteArray type = operationDescriptionPtr->GetOperationTypeId();
 
 					QString keyName = operationDescriptionPtr->GetKeyName();
 					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
-					if (type == imtbase::IOperationDescription::OT_USER){
+					if (type == "AddProduct"){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
@@ -218,7 +218,7 @@ QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColle
 
 						retVal += change + "\n";
 					}
-					else if (type == imtbase::IOperationDescription::OT_USER + 1){
+					else if (type == "RemoveProduct"){
 						QString change = imtbase::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Removed the product '%1'")).toUtf8(),

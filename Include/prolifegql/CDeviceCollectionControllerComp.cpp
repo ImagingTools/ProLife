@@ -268,7 +268,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_orderOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, oldOrderId, *oldOrderInfoPtr);
+						operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", oldOrderId, *oldOrderInfoPtr);
 					}
 
 					if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -301,7 +301,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 
 						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 						if (m_orderOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderId.toUtf8(), *orderInfoPtr);
+							operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId.toUtf8(), *orderInfoPtr);
 						}
 
 						if (!m_orderCollectionCompPtr->SetObjectData(orderId.toUtf8(), *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

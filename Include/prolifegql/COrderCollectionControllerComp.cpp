@@ -390,7 +390,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			if (isNew){
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_softwareOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, orderProductUuid, *softwareInstancePtr.GetPtr());
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *softwareInstancePtr.GetPtr());
 				}
 
 				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
@@ -414,7 +414,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 							if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
 								istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 								if (m_softwareOperationContextControllerCompPtr.IsValid()){
-									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderProductUuid, *softwareInstancePtr.GetPtr());
+									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *softwareInstancePtr.GetPtr());
 								}
 
 								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(orderProductUuid, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -444,7 +444,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			if (isNew){
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_CREATE, orderProductUuid, *deviceInstancePtr.GetPtr());
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *deviceInstancePtr.GetPtr());
 				}
 
 				m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
@@ -465,7 +465,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 							if (m_deviceOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, orderProductUuid, *deviceInstancePtr.GetPtr());
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *deviceInstancePtr.GetPtr());
 							}
 
 							m_deviceCollectionCompPtr->SetObjectData(orderProductUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());
@@ -507,7 +507,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 							if (m_deviceOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, id, *hardwareInfoPtr);
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", id, *hardwareInfoPtr);
 							}
 
 							if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -524,7 +524,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 							if (m_softwareOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext(imtbase::IOperationDescription::OT_UPDATE, id, *softwareInfoPtr);
+								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", id, *softwareInfoPtr);
 							}
 
 							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

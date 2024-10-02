@@ -303,7 +303,7 @@ bool CKeyDataProviderComp::GetData(
 
 				if (m_softwareOperationContextControllerCompPtr.IsValid()){
 					operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
-								imtbase::IOperationDescription::OperationType (imtbase::IOperationDescription::OT_USER + 1),
+								"CreateLicenseFile",
 								softwareId,
 								*productInstanceInfoPtr));
 				}
@@ -317,10 +317,9 @@ bool CKeyDataProviderComp::GetData(
 
 	{
 		istd::TDelPtr<imtbase::IOperationContext> operationContextPtr =  nullptr;
-
 		if (m_deviceOperationContextControllerCompPtr.IsValid()){
 			operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
-						imtbase::IOperationDescription::OperationType (imtbase::IOperationDescription::OT_USER + 1),
+						"CreateLicenseFile",
 						hardwareObjectId,
 						*deviceDataPtr.GetPtr()));
 		}
