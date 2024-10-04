@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(ImtCoreLoc);
 	Q_INIT_RESOURCE(ProLifeLoc);
 
+	Q_INIT_RESOURCE(imtdb);
+
 	CProLifeServer instance;
 
 	ibase::IApplication* applicationPtr = instance.GetInterface<ibase::IApplication>();
