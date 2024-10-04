@@ -1,19 +1,6 @@
 TARGET = ProLifeServerConfigurator
 
-include($(ACFDIR)/Config/QMake/ApplicationConfig.pri)
-include($(ACFDIR)/Config/QMake/QtBaseConfig.pri)
-include($(IMTCOREDIR)/Config/QMake/OpenSSL.pri)
 include($(PROLIFEDIR)/Config/QMake/ProLife.pri)
-
-HEADERS =
-QT += quick qml
-
-RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)
-
-LIBS += -L../../../Lib/$$COMPILER_DIR -liauth -liqtgui
-LIBS += -limtbase -limtgui -limtauth -limtauthgui -limtlicgui -limtstyle -limtqml -limtapp -limtcom -limtdb -limtfile -limtguigql -limtclientgql -limtservice
-LIBS += -limtcontrolsqml -limtstylecontrolsqml -limtguigqlqml -limtcolguiqml -limtdocguiqml -limtauthguiqml -limtlicguiqml -limtguiqml -limtauthsdl -limtappsdl
-LIBS += -lprolifeqml -lImtCoreLoc -lProLifeLoc -lAcfLoc -lAcfSlnLoc
 
 # Set OS-specific build options:
 win32-msvc*{

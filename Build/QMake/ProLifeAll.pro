@@ -45,10 +45,6 @@ SUBDIRS += ProLifeServer
 ProLifeServer.file = ../../Impl/ProLifeServer/QMake/ProLifeServer.pro
 # ProLifeServer.depends = ProLifeLoc prolifestyle prolifeqml
 
-SUBDIRS += ProLifeClientServer
-ProLifeClientServer.file = ../../Impl/ProLifeClientServer/QMake/ProLifeClientServer.pro
-ProLifeClientServer.depends = ProLifeLoc prolifestyle
-
 SUBDIRS += ProLifeServerConfigurator
 ProLifeServerConfigurator.file = ../../Impl/ProLifeServerConfigurator/QMake/ProLifeServerConfigurator.pro
 ProLifeServerConfigurator.depends = ProLifeLoc
