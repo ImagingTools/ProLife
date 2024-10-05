@@ -7,9 +7,8 @@ if(QT_VERSION_MAJOR EQUAL 6)
 	target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif()
 
-message("PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
-message("PROJECT_SOURCE_DIR 22 ${PROJECT_SOURCE_DIR}")
+
 
 list(APPEND webdirs ${IMTCOREDIR}/3rdParty/JQML2/Core/dist)
 list(APPEND webdirs ${buildwebdir}/Resources)
@@ -100,6 +99,7 @@ list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
+
 	jqml_compile_web2("${webdirs}", "${buildwebdir}", "${resname}")
 endif()
 
