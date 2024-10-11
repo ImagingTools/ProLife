@@ -724,7 +724,7 @@ void COrderCollectionControllerComp::SetObjectFilter(
 {
 	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
 
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		return;
 	}

@@ -499,7 +499,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 	QByteArray languageId;
 	if (m_translationManagerCompPtr.IsValid()){
-		imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+		const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 		if (gqlContextPtr != nullptr){
 			languageId = gqlContextPtr->GetLanguageId();
 		}
@@ -567,7 +567,7 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 {
 	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
 
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		return;
 	}

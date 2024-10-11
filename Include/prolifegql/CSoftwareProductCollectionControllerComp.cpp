@@ -427,7 +427,7 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 		return;
 	}
 
-	imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
 
