@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5253" Description="ACF"/>
+            <Version Id="1" Number="2217" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -71,6 +71,16 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewSensors</Value>
+                                <Value>AddSensor</Value>
+                                <Value>Remove</Value>
+                                <Value>ChangeProjectForSensor</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
