@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5253" Description="ACF"/>
+            <Version Id="1" Number="2217" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -90,9 +90,9 @@
                             <Values>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
-                                <Value>PumaUrl</Value>
-                                <Value>WebSocketPumaUrl</Value>
-                                <Value>LisaUrl</Value>
+                                <Value>PumaDelegatedUrlParam</Value>
+                                <Value>PumaWsDelegatedUrlParam</Value>
+                                <Value>LisaDelegatedUrlParam</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -202,32 +202,20 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+        <Element Id="LisaDelegatedUrlParam" PackageId="ImtCorePck" ComponentId="DelegatedUrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="7776"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="http"/>
+                    <AttributeInfo Id="DelegateUrlParam" Type="Reference" ExportId="LisaUrlParam">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaWebSocketUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+        <Element Id="LisaWsDelegatedUrlParam" PackageId="ImtCorePck" ComponentId="DelegatedUrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8776"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ws"/>
+                    <AttributeInfo Id="DelegateUrlParam" Type="Reference" ExportId="LisaWebSocketUrlParam">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -266,17 +254,20 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+        <Element Id="PumaDelegatedUrlParam" PackageId="ImtCorePck" ComponentId="DelegatedUrlParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
+                    <AttributeInfo Id="DelegateUrlParam" Type="Reference" ExportId="PumaUrlParam">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="7788"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="http"/>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PumaWsDelegatedUrlParam" PackageId="ImtCorePck" ComponentId="DelegatedUrlParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DelegateUrlParam" Type="Reference" ExportId="PumaWebSocketUrlParam">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -299,8 +290,9 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LisaUrl</Value>
-                                <Value>PumaUrl</Value>
+                                <Value>LisaDelegatedUrlParam</Value>
+                                <Value>PumaDelegatedUrlParam</Value>
+                                <Value>PumaWsDelegatedUrlParam</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                             </Values>
@@ -311,6 +303,7 @@
                             <Values>
                                 <Value>LisaUrl</Value>
                                 <Value>PumaUrl</Value>
+                                <Value>PumaWebSocketUrl</Value>
                                 <Value>ServerPort</Value>
                                 <Value>WebSocketServerPort</Value>
                             </Values>
@@ -333,21 +326,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="http"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="WebSocketPumaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8788"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ws"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -381,13 +359,9 @@
         <Component ExportedId="BackupParamsSet" ComponentId="Backup"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseParam" ComponentId="Database"/>
-        <Component ExportedId="LisaUrlConnection" ComponentId="LisaUrl"/>
-        <Component ExportedId="LisaWebSocketUrl" ComponentId="LisaWebSocketUrl"/>
-        <Component ExportedId="PumaUrlConnection" ComponentId="PumaUrl"/>
         <Component ExportedId="ServerParam" ComponentId="Server"/>
         <Component ExportedId="ServerPort" ComponentId="ServerPort"/>
         <Component ExportedId="TracingConfiguration" ComponentId="LoggingParams/TracingConfiguration"/>
-        <Component ExportedId="WebSocketPumaUrl" ComponentId="WebSocketPumaUrl"/>
         <Component ExportedId="WebSocketServerPort" ComponentId="WebSocketServerPort"/>
     </ExportedComponents>
 </Acf>

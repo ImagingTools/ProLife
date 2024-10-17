@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5244" Description="ACF"/>
-            <Version Id="1" Number="2216" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5253" Description="ACF"/>
+            <Version Id="1" Number="2217" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -31,23 +31,6 @@
         <Element Id="HttpServerFramework" PackageId="ImtHttpServerVoce" ComponentId="HttpServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Subscriptions/DevicesSubscriberController</Value>
-                                <Value>Subscriptions/SoftwareProductsSubscriberController</Value>
-                                <Value>Subscriptions/OrdersSubscriberController</Value>
-                                <Value>Subscriptions/AccountsSubscriberController</Value>
-                                <Value>PumaGQLClientEngine/RolesSubscriberController</Value>
-                                <Value>PumaGQLClientEngine/UsersSubscriberController</Value>
-                                <Value>PumaGQLClientEngine/UserGroupsSubscriberController</Value>
-                                <Value>PumaGQLClientEngine/LoginStatusSubscriberController</Value>
-                                <Value>LisaGQLEngine/LicensesSubscriberController</Value>
-                                <Value>LisaGQLEngine/ProductsSubscriberController</Value>
-                                <Value>LisaGQLEngine/LoginStatusSubscriberController</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -60,9 +43,6 @@
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerPort" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/WebSocketServerPort"/>
-                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -70,25 +50,10 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Constraints" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LanguageOptions"/>
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="0"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LanguageOptions" PackageId="BasePck" ComponentId="SelectionConstraints">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>en_US</Value>
-                                <Value>de_DE</Value>
-                                <Value>ru_RU</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -100,16 +65,10 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
+                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/LisaUrlConnection"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/LisaWebSocketUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -167,6 +126,9 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserSessionRemoteRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Subscriptions/SoftwareProductsSubscriberController"/>
                     </AttributeInfo>
@@ -174,7 +136,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserRepository"/>
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -216,16 +178,10 @@
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
+                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/PumaUrlConnection"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/WebSocketPumaUrl"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -254,11 +210,23 @@
                     <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/ProLifeServer/ProLifeServerSettings.xml"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="LisaUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaGQLEngine/HttpUrlParam"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaWebSocketUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaGQLEngine/WebSocketUrlParam"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="104"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/HttpUrlParam"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaWebSocketUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/WebSocketUrlParam"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
                         <Data IsEnabled="false"/>
@@ -276,10 +244,28 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="HttpServerFramework/WebSocketServer"/>
+                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="WebSocketServerFramework" PackageId="ImtHttpServerVoce" ComponentId="WebSocketServerFramework">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Subscriptions</Value>
+                                <Value>PumaGQLClientEngine</Value>
+                                <Value>LisaGQLEngine</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketServerPort" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ServerSettings/WebSocketServerPort"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -305,9 +291,6 @@
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -325,9 +308,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -349,8 +329,24 @@
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="SlaveSubscriberController" PackageId="ImtGqlPck" ComponentId="SlaveSubscriberController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SubscriberController" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DevicesSubscriberController</Value>
+                                            <Value>SoftwareProductsSubscriberController</Value>
+                                            <Value>OrdersSubscriberController</Value>
+                                            <Value>AccountsSubscriberController</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -371,15 +367,15 @@
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlSubscriberController" ComponentId="SlaveSubscriberController"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="SlaveSubscriberController"/>
+                </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="AccountsSubscriberController" ComponentId="AccountsSubscriberController"/>
                     <Component ExportedId="DevicesSubscriberController" ComponentId="DevicesSubscriberController"/>
@@ -391,7 +387,6 @@
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
         <Interface InterfaceId="imtdb::IDatabaseEngine" ComponentId="DatabaseEngine"/>
-        <Interface InterfaceId="imtrest::IRequestManager" ComponentId="HttpServerFramework"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="HttpServerFramework"/>
     </ExportedInterfaces>
     <ExportedComponents>
@@ -401,5 +396,6 @@
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="ServerSettings" ComponentId="ServerSettings"/>
+        <Component ExportedId="WebSocketServerFramework" ComponentId="WebSocketServerFramework"/>
     </ExportedComponents>
 </Acf>
