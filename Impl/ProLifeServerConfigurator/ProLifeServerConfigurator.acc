@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5222" Description="ACF"/>
-            <Version Id="1" Number="2207" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5270" Description="ACF"/>
+            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -16,9 +16,6 @@
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Client"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -26,9 +23,6 @@
                                 <Value>Application/ObserverQml</Value>
                             </Values>
                         </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LogDefaultPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeClientLog.txt"/>
@@ -38,9 +32,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="MainQmlPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value=":/qml/ProLife/ProLifeServerConfigurator.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="2022"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
