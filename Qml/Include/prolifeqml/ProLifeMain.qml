@@ -7,17 +7,12 @@ import imtcontrols 1.0
 import imtguigql 1.0
 import prolifeqml 1.0
 
-ApplicationMain{
+ApplicationMain {
     id: window;
 
     useWebSocketSubscription: true;
     canRecoveryPassword: false;
     authorizationServerConnected: pumaConnectionChecker.status === 1;
-
-    Component.onCompleted: {
-        context.appName = 'ProLife';
-        AuthorizationController.productId = context.appName;
-    }
 
     Connections {
         target: AuthorizationController;
@@ -29,12 +24,6 @@ ApplicationMain{
             CachedOrderCollection.updateModel();
             CachedDeviceCollection.updateModel();
             CachedSoftwareCollection.updateModel();
-
-            CachedGroupCollection.updateModel();
-            CachedUserCollection.updateModel();
-
-            CachedRoleCollection.productId = context.appName;
-            CachedRoleCollection.updateModel();
         }
 
         function onLogoutSignal(){
@@ -44,10 +33,6 @@ ApplicationMain{
             CachedOrderCollection.clearModel();
             CachedDeviceCollection.clearModel();
             CachedSoftwareCollection.clearModel();
-
-            CachedGroupCollection.clearModel();
-            CachedUserCollection.clearModel();
-            CachedRoleCollection.clearModel();
         }
     }
 
