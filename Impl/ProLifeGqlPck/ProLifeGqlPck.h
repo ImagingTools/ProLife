@@ -6,13 +6,12 @@
 #include <icomp/TMakeComponentWrap.h>
 
 // ImtCore includes
-#include <imtgql/TObjectCollectionControllerSearchCompWrap.h>
+#include <imtservergql/TObjectCollectionControllerSearchCompWrap.h>
 
 // ProLife includes
 #include <prolifegql/COrderCollectionControllerComp.h>
 #include <prolifegql/CDeviceCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
-#include <prolifegql/CHardwareProductCollectionControllerComp.h>
 #include <prolifegql/CHardwareProductBindingControllerComp.h>
 #include <prolifegql/CDeviceChangeGeneratorComp.h>
 #include <prolifegql/CLicenseChangeGeneratorComp.h>
@@ -29,19 +28,18 @@ namespace ProLifeGqlPck
 {
 
 
-typedef imtgql::TObjectCollectionControllerSearchCompWrap<
+typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::COrderCollectionControllerComp> OrderCollectionController;
-typedef imtgql::TObjectCollectionControllerSearchCompWrap<
+typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
-typedef imtgql::TObjectCollectionControllerSearchCompWrap<
+typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
-typedef prolifegql::CHardwareProductCollectionControllerComp HardwareProductCollectionController;
 typedef prolifegql::CHardwareProductBindingControllerComp HardwareProductBindingController;
 typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
-typedef imtgql::TObjectCollectionControllerSearchCompWrap<
+typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CCustomerCollectionControllerComp> CustomerCollectionController;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<

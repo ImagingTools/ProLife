@@ -3,7 +3,6 @@
 
 // ImtCore includes
 #include <imtauth/ICompanyInfo.h>
-#include <imtgql/CObjectCollectionControllerCompBase.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts.h>
 
 

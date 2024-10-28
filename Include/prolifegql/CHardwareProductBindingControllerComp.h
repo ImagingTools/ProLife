@@ -1,9 +1,6 @@
 #pragma once
 
 
-// ImtCore includes
-#include <imtgql/CObjectCollectionControllerCompBase.h>
-
 // ProLife includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/SensorBinding.h>
 

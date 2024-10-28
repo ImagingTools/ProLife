@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5244" Description="ACF"/>
-            <Version Id="1" Number="2216" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5270" Description="ACF"/>
+            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -37,7 +37,7 @@
                 <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
                 <Element ComponentName="DevicesPage" X="150" Y="225" Note=""/>
                 <Element ComponentName="OrdersPage" X="750" Y="225" Note=""/>
-                <Element ComponentName="SoftwareProductsPage" X="425" Y="225" Note=""/>
+                <Element ComponentName="SoftwareProductsPage" X="450" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

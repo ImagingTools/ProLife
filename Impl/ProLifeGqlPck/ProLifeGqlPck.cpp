@@ -30,11 +30,6 @@ I_EXPORT_COMPONENT(
 		"Software Product Collection Controller");
 
 I_EXPORT_COMPONENT(
-		HardwareProductCollectionController,
-		"Hardware product collection controller",
-		"Hardware Product Collection Controller");
-
-I_EXPORT_COMPONENT(
 		HardwareProductBindingController,
 		"Hardware product binding controller",
 		"Hardware Product Binding Controller");

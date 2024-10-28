@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5233" Description="ACF"/>
-            <Version Id="1" Number="2214" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5270" Description="ACF"/>
+            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -15,7 +15,7 @@
         <Element ComponentName="CollectionCommandsController" X="925" Y="100" Note=""/>
         <Element ComponentName="CustomerCollectionController" X="600" Y="250" Note=""/>
         <Element ComponentName="Demultiplexer" X="575" Y="50" Note=""/>
-        <Element ComponentName="StandardDocumentCommandsController" X="250" Y="100" Note=""/>
+        <Element ComponentName="StandardDocumentCommandsController" X="225" Y="100" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>
