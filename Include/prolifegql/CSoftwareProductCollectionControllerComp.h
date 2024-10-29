@@ -55,7 +55,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
-	I_REF(imtgql::IOperationContextController, m_orderOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 };

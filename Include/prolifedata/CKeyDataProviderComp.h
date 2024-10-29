@@ -11,7 +11,7 @@
 #include <imtbase/IObjectCollection.h>
 #include <imtcrypt/IEncryptionKeysProvider.h>
 #include <imtgql/IGqlRequestHandler.h>
-#include <imtgql/IOperationContextController.h>
+#include <imtbase/IOperationContextController.h>
 #include <imtlic/CProductInstanceInfo.h>
 
 
@@ -89,8 +89,8 @@ private:
 	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 
-	I_REF(imtgql::IOperationContextController, m_deviceOperationContextControllerCompPtr);
-	I_REF(imtgql::IOperationContextController, m_softwareOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 };
 
 

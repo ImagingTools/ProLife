@@ -51,8 +51,8 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 
-	I_REF(imtgql::IOperationContextController, m_deviceOperationContextControllerCompPtr);
-	I_REF(imtgql::IOperationContextController, m_softwareOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 };
 
 

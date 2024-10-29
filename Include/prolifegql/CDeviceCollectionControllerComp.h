@@ -60,7 +60,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 	I_FACT(prolifedata::IDeviceInfo, m_deviceInfoFactCompPtr);
-	I_REF(imtgql::IOperationContextController, m_orderOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 };
 
 
