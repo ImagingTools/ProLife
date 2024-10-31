@@ -21,4 +21,4 @@ LIBS += -L$(ACFSLNDIR)/Lib/$$COMPILER_DIR -liauth -liqtgui -liservice -lAcfSlnLo
 LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtbase -limtgui -limtauth -limtauthgui -limtlicdb -limtlic -limtlicgui -lImtCoreLoc -limtwidgets -limtzip -limtrest -limtcrypt -limt3dgui -limtrepo -limtstyle -limtqml -limtdb -limtfile -limtstylecontrolsqml
 LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtlicgql -limtguigql -limtgql -limtauthgql -limtauthdb -limtcom -limtapp -limtclientgql -limtservice -limtlog -limtguiqml -limtcolguiqml -limtdocguiqml -limtcontrolsqml -limtauthguiqml -limtguigqlqml -limtcol -limtbasesdl
 LIBS += -L$(PROLIFEDIR)/Lib/$$COMPILER_DIR -lprolifeqml -lprolifestyle -lProLifeLoc -lprolifedata -lprolifedb -lprolifegql -lprolifesdl
-LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtappsdl -limtauthsdl -lImtCoreLoc
+LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtappsdl -limtauthsdl -lImtCoreLoc -limtservergql

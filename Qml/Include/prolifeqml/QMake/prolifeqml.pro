@@ -26,7 +26,7 @@ copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/
 copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeOrdersSdl, $$buildwebdir/src/prolifeOrdersSdl)
 copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeSensorBindingSdl, $$buildwebdir/src/prolifeSensorBindingSdl)
 
-compyleWeb($$buildwebdir, "prolife")
+# compyleWeb($$buildwebdir, "prolife")
 
 GENERATED_RESOURCES = $$_PRO_FILE_PWD_/../empty
 
@@ -35,7 +35,7 @@ include($(IMTCOREDIR)/Config/QMake/WebQrc.pri)
 include($(ACFDIR)/Config/QMake/StaticConfig.pri)
 include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
 
-DESTDIR = $$OUT_PWD/../../../../Lib/$$COMPILER_DIR
-#AUXINCLUDEPATH = ../../../../$$AUXINCLUDEDIR
+# DESTDIR = $$OUT_PWD/../../../../Lib/$$COMPILER_DIR
+# #AUXINCLUDEPATH = ../../../../$$AUXINCLUDEDIR
 
 RESOURCES += $$files($$_PRO_FILE_PWD_/../*.qrc, false)

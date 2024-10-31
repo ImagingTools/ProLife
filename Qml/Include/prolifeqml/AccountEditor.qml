@@ -19,7 +19,7 @@ ViewBase {
     property AccountData accountData: model ? model : null;
 
     Component.onCompleted: {
-        CachedGroupCollection.updateModel();
+        groupCollectionDataProvider.updateModel();
         Events.subscribeEvent("OnLocalizationChanged", accountEditorContainer.onLocalizationChanged);
     }
 
@@ -119,6 +119,15 @@ ViewBase {
 
         vertical: false;
         targetItem: flickable;
+    }
+
+    GroupCollectionDataProvider {
+        id: groupCollectionDataProvider;
+        onCollectionModelChanged: {
+            if (groupsElement.table){
+                groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
+            }
+        }
     }
 
     Flickable {
@@ -397,20 +406,21 @@ ViewBase {
                 KeyNavigation.tab: customerIdInput;
                 KeyNavigation.backtab: streetInput;
 
+                // table.checkable: true;
+
                 onTableChanged: {
                     if (groupsElement.table){
                         groupsElement.table.checkable = true;
-                        groupsElement.table.elements = CachedGroupCollection.collectionModel;
+                        groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
 
                         let ok = PermissionsController.checkPermission("ChangeAccountGroups");
                         groupsElement.table.readOnly = !ok;
-
-                        tableConn.target = groupsElement.table;
                     }
                 }
 
                 Connections {
                     id: tableConn;
+                    target: groupsElement.table;
 
                     function onCheckedItemsChanged(){
                         accountEditorContainer.doUpdateModel();
