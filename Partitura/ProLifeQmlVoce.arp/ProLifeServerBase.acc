@@ -105,6 +105,9 @@
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/FeatureRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/GroupRemoteRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
@@ -125,6 +128,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaGQLClientEngine/RoleRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PumaGQLClientEngine/UserSessionRemoteRepository"/>

@@ -13,8 +13,14 @@
         <Element Id="Application" PackageId="ImtQmlVoce" ComponentId="QmlClientFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BaseUrlParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Settings/ServerPort"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -35,9 +41,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7778/ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Settings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
@@ -131,7 +134,9 @@
                     <Interface InterfaceId="istd::IChangeable" ComponentId="ServerPageData"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="ServerPageData/AutoPersistence"/>
                 </ExportedInterfaces>
-                <ExportedComponents/>
+                <ExportedComponents>
+                    <Component ExportedId="ServerPort" ComponentId="ServerPageData/ServerPort"/>
+                </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
