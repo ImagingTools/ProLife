@@ -70,6 +70,9 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -188,6 +191,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
