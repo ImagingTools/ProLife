@@ -67,10 +67,10 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(
 
 
 bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
-			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& getSensorBindingListRequest,
-			sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& representationObject,
-			QString& errorMessage) const
+			const imtbase::IObjectCollectionIterator& /*objectCollectionIterator*/,
+			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& /*getSensorBindingListRequest*/,
+			sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& /*representationObject*/,
+			QString& /*errorMessage*/) const
 {
 	return true;
 }
@@ -79,8 +79,8 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::SensorBinding::V1_0::CSensorBindingData& sensorBindingDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
+			QString& /*name*/,
+			QString& /*description*/,
 			QString& errorMessage) const
 {
 	istd::TDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;

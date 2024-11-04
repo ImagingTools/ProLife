@@ -8,7 +8,11 @@ import prolifeSensorBindingSdl 1.0
 Dialog {
     id: productEditorDialog;
 
+    height: ModalDialogManager.activeView.height - 100;
+
     property int rootWidth: root.activeView ? root.activeView.width - 100 : 0;
+
+    canMove: false;
 
     onRootWidthChanged: {
         width = rootWidth;
@@ -53,7 +57,7 @@ Dialog {
             id: productBinding;
 
             width: productEditorDialog.width;
-            height: contentHeight + 40;
+            height: productEditorDialog.height - 100;
 
             onModelChanged: {
                 productEditorDialog.buttons.setButtonState(Enums.ok, true);
@@ -76,7 +80,6 @@ Dialog {
                     bindingModel.m_id = productEditorDialog.hardwareId
 
                     documentController.updateRequestInputParam.InsertField("Project", inputValue);
-                    // bindingModel.setData("Project", inputValue);
 
                     documentController.documentModel = bindingModel;
 

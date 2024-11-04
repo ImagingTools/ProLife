@@ -12,9 +12,7 @@ Item {
     id: productEditor;
     clip: true;
 
-    property int margin: 10;
-
-    property int contentHeight: availableLicensesColumn.height + titleLable.height;
+    property int contentHeight: availableLicensesColumn.height;
 
     property SensorBindingData bindingModel: null;
 
@@ -49,31 +47,34 @@ Item {
     function updateGui(){
         blockUpdatingModel = true;
 
-        productsCB.currentIndex = -1;
-        if (productsCB.model){
-            for (let i = 0; i < productsCB.model.getItemsCount(); i++){
-                let id = productsCB.model.getData("Id", i);
-                if (id === productEditor.productId){
-                    productsCB.currentIndex = i;
-                    break;
+        if (productComboBoxElementView.cbRef){
+            let productsCB = productComboBoxElementView.cbRef;
+
+            productsCB.currentIndex = -1;
+            if (productsCB.model){
+                for (let i = 0; i < productsCB.model.getItemsCount(); i++){
+                    let id = productsCB.model.getData("Id", i);
+                    if (id === productEditor.productId){
+                        productsCB.currentIndex = i;
+                        break;
+                    }
                 }
             }
         }
 
-        if (productsCB.currentIndex < 0){
-            productEditor.setError(productErrorMessage);
+        if (usedLicensesElementView.collection){
+            usedLicensesElementView.collection.updateData();
         }
-        else{
-            productEditor.setError("")
-        }
-
-        bindingProductsCollection.updateData();
 
         blockUpdatingModel = false;
     }
 
     function checkLicenseId(licenseId){
-        let bindingElements = bindingProductsCollection.table.elements;
+        if (!usedLicensesElementView.collection){
+            return false;
+        }
+
+        let bindingElements = usedLicensesElementView.collection.table.elements;
         if (bindingElements){
             for (let i = 0; i < bindingElements.getItemsCount(); i++){
                 let id = bindingElements.getData("LicenseId", i)
@@ -86,614 +87,648 @@ Item {
         return true;
     }
 
-    TreeItemModel {
-        id: productsModel;
+    CustomScrollbar {
+        id: scrollbar;
+        anchors.right: parent.right;
+        anchors.top: flickable.top;
+        anchors.bottom: flickable.bottom;
+        secondSize: Style.size_mainMargin;
+        targetItem: flickable;
     }
 
-    BaseText {
-        id: titleLable
-
-        anchors.horizontalCenter: availableLicensesColumn.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: Style.size_mainMargin
-
-        text: qsTr("Available licenses");
-        font.family: Style.fontFamilyBold;
-    }
-
-    function setError(message){
-        errorText.text = message;
-    }
-
-    Column {
-        id: availableLicensesColumn;
-
-        anchors.top: titleLable.bottom
-        anchors.topMargin: Style.size_mainMargin;
-        anchors.right: parent.horizontalCenter;
-        anchors.rightMargin: buttonsColumn.width;
+    Flickable {
+        id: flickable;
+        anchors.top: parent.top;
+        anchors.topMargin: Style.size_largeMargin;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: Style.size_largeMargin;
         anchors.left: parent.left;
-        anchors.leftMargin: Style.size_mainMargin;
+        anchors.leftMargin: Style.size_largeMargin;
+        anchors.right: scrollbar.left;
+        anchors.rightMargin: Style.size_largeMargin;
+        contentWidth: width;
+        contentHeight: content.height + 2 * Style.size_largeMargin;
+        boundsBehavior: Flickable.StopAtBounds;
+        clip: true;
 
-        spacing: Style.size_mainMargin;
-
-        Item {
+        Column {
+            id: content;
             width: parent.width;
-            height: 25;
 
-            BaseText {
-                id: productLable
-                anchors.verticalCenter: parent.verticalCenter
+            Item {
+                width: parent.width;
+                height: Math.max(availableLicensesColumn.height, bindingLicensesColumn.height, buttonsColumn.height)
+                Column {
+                    id: availableLicensesColumn;
+                    anchors.top: parent.top
+                    anchors.topMargin: Style.size_mainMargin;
+                    anchors.right: parent.horizontalCenter;
+                    anchors.rightMargin: buttonsColumn.width;
+                    anchors.left: parent.left;
+                    anchors.leftMargin: Style.size_mainMargin;
+                    spacing: Style.size_mainMargin;
 
-                text: qsTr("Product");
-                font.family: Style.fontFamilyBold;
-            }
+                    ComboBoxElementView {
+                        id: productComboBoxElementView;
+                        width: parent.width;
+                        name: qsTr("Product");
+                        nameId: "ProductName";
+                        model: CachedProductCollection.softwareProductsModel;
+                        changeable: usedLicensesElementView.collection && usedLicensesElementView.collection.table.elementsList.count === 0;
+                        bottomComp: currentIndex >= 0 ? undefined : productErrorComp
 
-            ComboBox {
-                id: productsCB;
+                        onCurrentIndexChanged: {
+                            if (productEditor.blockUpdatingModel){
+                                return;
+                            }
 
-                anchors.left: productLable.right
-                anchors.leftMargin: Style.size_mainMargin;
-                anchors.right: lockImage.left;
-                anchors.rightMargin: Style.size_mainMargin;
+                            if (currentIndex > -1){
+                                productEditor.productId = model.getData("Id", currentIndex);
+                            }
 
-                height: 30;
-
-                radius: 3;
-                nameId: "ProductName";
-
-                model: CachedProductCollection.softwareProductsModel;
-
-                changeable: bindingProductsCollection.table.elementsList.count === 0;
-
-                Component.onCompleted: {
-                    if (productsCB.currentIndex < 0){
-                        productEditor.setError(productEditor.productErrorMessage);
-                    }
-                }
-
-                onCurrentIndexChanged: {
-                    if (productEditor.blockUpdatingModel){
-                        return;
-                    }
-
-                    if (productsCB.currentIndex < 0){
-                        productEditor.setError(productEditor.productErrorMessage);
-                    }
-                    else{
-                        productEditor.setError("");
+                            if (availableLicensesElementView.collection){
+                                availableLicensesElementView.collection.updateData();
+                            }
+                        }
                     }
 
-                    if (productsCB.currentIndex > -1){
-                        productEditor.productId = productsCB.model.getData("Id", productsCB.currentIndex);
-                    }
-
-                    softwareProductCollection.updateData();
-                }
-            }
-
-            Image {
-                id: lockImage;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.right: parent.right
-
-                width: 18;
-                height: 18;
-
-                source: "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.Off, Icon.Mode.Normal);
-
-                sourceSize.width: width;
-                sourceSize.height: height;
-
-                visible: !productsCB.changeable;
-            }
-        }
-
-        Text {
-            id: errorText;
-
-            width: parent.width;
-            height: 15;
-
-            color: Style.errorTextColor;
-            font.family: Style.fontFamily;
-            font.pixelSize: Style.fontSize_common;
-
-            visible: errorText.text !== "";
-        }
-
-        Rectangle{
-            width: parent.width;
-            height: 400;
-
-            SoftwareProductCollectionView {
-                id: softwareProductCollection;
-
-                anchors.fill: parent
-
-                filterMenu.decorator: Style.filterPanelDecorator;
-
-                commandsControllerComp: null;
-
-                table.checkable: true;
-                table.selectable: false;
-                tableViewParamsStoredServer: false;
-
-                commandsViewComp: undefined;
-
-                dataControllerComp:
                     Component {
-                    CollectionRepresentation {
-                        id: softwareDataController;
+                        id: productErrorComp;
 
-                        Component.onCompleted: {
-                            additionalFieldIds.push("OrderUuid");
-                            additionalFieldIds.push("HardwareUuid");
-                            additionalFieldIds.push("InUse");
-                            additionalFieldIds.push("ProductUuid");
-                            additionalFieldIds.push("CustomerUuid");
+                        BaseText {
+                            color: Style.errorTextColor;
+                            text: qsTr("Please select a product");
+                        }
+                    }
+
+                    ElementView {
+                        id: availableLicensesElementView;
+                        width: parent.width;
+                        name: qsTr("Available licenses");
+
+                        property SoftwareProductCollectionView collection: null;
+
+                        property bool hasSelectedDuplicate: false;
+
+                        topComp: hasSelectedDuplicate ? licenseErrorComp : undefined;
+
+                        Component {
+                            id: licenseErrorComp;
+                            BaseText {
+                                color: Style.errorTextColor;
+                                text: qsTr("Selected licenses with the same License-ID");
+                            }
                         }
 
-                        function updateModel(){}
+                        bottomComp: Component {
+                            Rectangle {
+                                id: rectWrap;
+                                width: availableLicensesColumn.width;
+                                height: 500;
+
+                                Component.onCompleted: {
+                                    availableLicensesElementView.collection = softwareProductCollection;
+                                }
+
+                                TreeItemModel {
+                                    id: collectionHeadersModel2;
+
+                                    Component.onCompleted: {
+                                        rectWrap.updateHeaders2();
+                                    }
+                                }
+
+                                TreeItemModel {
+                                    id: filterHeadersModel;
+
+                                    Component.onCompleted: {
+                                        let index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "LicenseName", index);
+
+                                        index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "LicenseId", index);
+
+                                        index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "OrderId", index);
+
+                                        index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "PurchaseOrderId", index);
+
+                                        index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "SerialNumber", index);
+
+                                        index = filterHeadersModel.insertNewItem();
+                                        filterHeadersModel.setData("Id", "Customer", index);
+
+                                        softwareProductCollection.collectionFilter.setFilteringInfoIds(filterHeadersModel);
+                                    }
+                                }
+
+                                function updateHeaders2(){
+                                    collectionHeadersModel2.clear();
+
+                                    let index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "LicenseName", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Name"), index);
+
+                                    index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "LicenseId", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Article"), index);
+
+                                    index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "OrderId", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Delivery-ID"), index);
+
+                                    index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "PurchaseOrderId", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Purchase Order-ID"), index);
+
+                                    index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "SerialNumber", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Software-ID"), index);
+
+                                    index = collectionHeadersModel2.insertNewItem();
+                                    collectionHeadersModel2.setData("Id", "Customer", index);
+                                    collectionHeadersModel2.setData("Name", qsTr("Customer"), index);
+
+                                    softwareProductCollection.tableViewParamsStoredServer = false;
+                                    softwareProductCollection.dataController.headersModel  = collectionHeadersModel2;
+                                }
+
+                                SoftwareProductCollectionView {
+                                    id: softwareProductCollection;
+                                    anchors.fill: parent
+                                    filterMenu.decorator: Style.filterPanelDecorator;
+                                    commandsControllerComp: null;
+                                    table.checkable: true;
+                                    table.selectable: false;
+                                    tableViewParamsStoredServer: false;
+                                    commandsViewComp: undefined;
+                                    dataControllerComp:
+                                        Component {
+                                        CollectionRepresentation {
+                                            id: softwareDataController;
+
+                                            Component.onCompleted: {
+                                                additionalFieldIds.push("OrderUuid");
+                                                additionalFieldIds.push("HardwareUuid");
+                                                additionalFieldIds.push("InUse");
+                                                additionalFieldIds.push("ProductUuid");
+                                                additionalFieldIds.push("CustomerUuid");
+                                            }
+
+                                            function updateModel(){}
+                                        }
+                                    }
+
+                                    function registerDocumentInfo(){}
+
+                                    onCheckedItemsChanged: {
+                                        let selection = softwareProductCollection.table.getCheckedItems();
+                                        if (selection.length <= 0){
+                                            availableLicensesElementView.hasSelectedDuplicate = false;
+                                            bindButton.enabled = false
+                                        }
+                                        else{
+                                            let ok = true;
+                                            for (let i = 0; i < selection.length; i++){
+                                                let index = selection[i];
+
+                                                let inUse = softwareProductCollection.table.elements.getData("InUse", index);
+                                                if (inUse && !unbindButton.userCanUnbind){
+                                                    ok = false;
+                                                    break;
+                                                }
+
+                                                let licenseId = softwareProductCollection.table.elements.getData("LicenseId", index);
+                                                if (!productEditor.checkLicenseId(licenseId)){
+                                                    let message = productEditor.licenseErrorMessage.replace("%1", licenseId)
+                                                    // productEditor.setError(message)
+                                                    availableLicensesElementView.hasSelectedDuplicate = true;
+                                                    ok = false;
+
+                                                    break;
+                                                }
+
+                                                for (let j = i + 1; j < selection.length; j++){
+                                                    let index2 = selection[j];
+
+                                                    let licenseId2 = softwareProductCollection.table.elements.getData("LicenseId", index2);
+                                                    if (licenseId === licenseId2){
+                                                        let message =  productEditor.duplicateErrorMessage.replace("%1", licenseId);
+                                                        // productEditor.setError(message)
+                                                        availableLicensesElementView.hasSelectedDuplicate = true;
+
+                                                        ok = false;
+
+                                                        break;
+                                                    }
+                                                }
+
+                                                if (!ok){
+                                                    break;
+                                                }
+                                            }
+
+                                            if (ok){
+                                                availableLicensesElementView.hasSelectedDuplicate = false;
+                                                // productEditor.setError("")
+                                            }
+
+                                            bindButton.enabled = ok;
+                                        }
+                                    }
+
+                                    onHeadersChanged: {
+                                        softwareProductCollection.table.setColumnContentComponent(0, null);
+                                        softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
+                                    }
+
+                                    function updateData() {
+                                        if (!dataController){
+                                            return;
+                                        }
+
+                                        if (visible){
+                                            if (productEditor.productId === ""){
+                                                return;
+                                            }
+
+                                            dataController.collectionId = "SoftwareProducts"
+
+                                            if (!usedLicensesElementView.collection){
+                                                return;
+                                            }
+
+                                            let elementsModel = usedLicensesElementView.collection.table.elements;
+
+                                            let products = []
+                                            let licenseIds = []
+
+                                            for(var i = 0; i < usedLicensesElementView.collection.table.elements.getItemsCount(); i++){
+                                                let id = usedLicensesElementView.collection.table.elements.getData("Id", i);
+                                                let licenseId = usedLicensesElementView.collection.table.elements.getData("LicenseId", i);
+
+                                                products.push(id)
+                                                licenseIds.push(licenseId)
+                                            }
+
+                                            let filterModel = softwareProductCollection.collectionFilter.filterModel;
+
+                                            let objectFilter =  filterModel.addTreeModel("ObjectFilter")
+
+                                            let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
+                                            if (productEditor.productId != ""){
+                                                bindingFilterModel.setData("ProductUuid", productEditor.productId);
+                                            }
+
+                                            if (products.length !== 0){
+                                                bindingFilterModel.setData("ExcludeUuids", products.join(';'));
+                                            }
+
+                                            if (licenseIds.length !== 0){
+                                                bindingFilterModel.setData("LicenseIds", licenseIds.join(';'));
+                                            }
+
+                                            bindingFilterModel.setData("HardwareUuidFilter", productEditor.hardwareId);
+
+                                            softwareProductCollection.doUpdateGui();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    BaseText {
+                        id: message;
+                        color: Style.errorTextColor;
+
+                        visible: false;
                     }
                 }
 
-                function registerDocumentInfo(){}
+                Column {
+                    id: bindingLicensesColumn
 
-                onCheckedItemsChanged: {
-                    let selection = softwareProductCollection.table.getCheckedItems();
-                    if (selection.length <= 0){
-                        productEditor.setError("")
-                        bindButton.enabled = false
+                    anchors.bottom: availableLicensesColumn.bottom;
+                    anchors.right: parent.right;
+                    anchors.rightMargin: Style.size_mainMargin;
+                    anchors.left: parent.horizontalCenter;
+                    anchors.leftMargin: buttonsColumn.width;
+
+                    ElementView {
+                        id: usedLicensesElementView;
+                        width: parent.width;
+                        name: qsTr("Used licenses");
+
+                        property SoftwareProductCollectionView collection: null;
+
+                        bottomComp: Component {
+                            Rectangle {
+                                id: rectWrap;
+                                width: parent.width;
+                                height: 500;
+
+                                Component.onCompleted: {
+                                    usedLicensesElementView.collection = bindingProductsCollection;
+                                }
+
+                                Component {
+                                    id: lockIconCellComp;
+
+                                    TableCellDelegateBase {
+                                        id: cellDelegate
+                                        Image {
+                                            id: image;
+
+                                            anchors.verticalCenter: parent.verticalCenter;
+                                            anchors.left: parent.left;
+                                            anchors.leftMargin: Style.size_smallMargin;
+
+                                            width: 18;
+                                            height: width;
+
+                                            sourceSize.width: width;
+                                            sourceSize.height: height;
+                                        }
+
+                                        onRowIndexChanged: {
+                                            if (!rowDelegate){
+                                                return
+                                            }
+
+                                            console.log("lockIconCellComp onRowIndexChanged", cellDelegate.getValue());
+
+                                            let value = cellDelegate.getValue();
+                                            if (value){
+                                                image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
+                                            }
+                                            else{
+                                                image.source = "";
+                                            }
+                                        }
+                                    }
+                                }
+
+                                TreeItemModel {
+                                    id: collectionHeadersModel;
+
+                                    Component.onCompleted: {
+                                        rectWrap.updateHeaders();
+                                    }
+                                }
+
+                                function updateHeaders(){
+                                    collectionHeadersModel.clear();
+
+                                    let index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "InUse", index);
+                                    collectionHeadersModel.setData("Name", "", index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "LicenseName", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Name"), index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "LicenseId", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Article"), index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "OrderId", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Delivery-ID"), index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "PurchaseOrderId", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Purchase Order-ID"), index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "SerialNumber", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Software-ID"), index);
+
+                                    index = collectionHeadersModel.insertNewItem();
+                                    collectionHeadersModel.setData("Id", "Customer", index);
+                                    collectionHeadersModel.setData("Name", qsTr("Customer"), index);
+
+                                    bindingProductsCollection.tableViewParamsStoredServer = false;
+                                    bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
+                                }
+
+                                SoftwareProductCollectionView {
+                                    id: bindingProductsCollection;
+                                    anchors.fill: parent
+                                    commandsControllerComp: null;
+                                    filterMenu.decorator: Style.filterPanelDecorator;
+                                    hasSort: false;
+                                    hasFilter: false;
+                                    filterMenuVisible: false;
+                                    hasPagination: false;
+                                    commandsViewComp: undefined;
+                                    tableViewParamsStoredServer: false;
+
+                                    dataControllerComp:
+                                        Component {CollectionRepresentation {
+                                            id: bindingDataController;
+
+                                            Component.onCompleted: {
+                                                additionalFieldIds.push("OrderUuid");
+                                                additionalFieldIds.push("HardwareUuid");
+                                                additionalFieldIds.push("InUse");
+                                                additionalFieldIds.push("ProductUuid");
+                                                additionalFieldIds.push("CustomerUuid");
+                                            }
+
+                                            function updateModel(){}
+                                        }
+                                    }
+
+                                    function registerDocumentInfo(){}
+
+                                    function updateData(){
+                                        if (!dataController){
+                                            return;
+                                        }
+
+                                        dataController.collectionId = "SoftwareProducts";
+
+                                        let filterModel = bindingProductsCollection.collectionFilter.filterModel;
+                                        let objectFilter =  filterModel.addTreeModel("ObjectFilter")
+                                        let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
+                                        bindingFilterModel.setData("HardwareUuid", productEditor.hardwareId);
+
+                                        bindingProductsCollection.doUpdateGui();
+                                    }
+
+                                    onSelectionChanged: {
+                                        if (selection.length === 0){
+                                            unbindButton.enabled = false
+                                        }
+                                        else{
+                                            if (availableLicensesElementView.collection){
+                                                availableLicensesElementView.collection.table.resetSelection();
+                                            }
+
+                                            let index = selection[0];
+
+                                            let elementsModel = bindingProductsCollection.table.elements;
+                                            let inUse = elementsModel.getData("InUse", index);
+
+                                            if (unbindButton.userCanUnbind){
+                                                unbindButton.enabled = true;
+                                            }
+                                            else{
+                                                unbindButton.enabled = !inUse;
+                                            }
+                                        }
+                                    }
+
+                                    onElementsChanged: {
+                                        if (availableLicensesElementView.collection){
+                                            availableLicensesElementView.collection.updateData();
+                                        }
+                                    }
+
+                                    onHeadersChanged: {
+                                        console.log("bindingProductsCollection onHeadersChanged", lockIconCellComp);
+
+                                        bindingProductsCollection.table.setColumnContentComponent(0, lockIconCellComp);
+                                        bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    else{
-                        let ok = true;
-                        for (let i = 0; i < selection.length; i++){
-                            let index = selection[i];
+                }
 
-                            let inUse = softwareProductCollection.table.elements.getData("InUse", index);
-                            if (inUse && !unbindButton.userCanUnbind){
-                                ok = false;
-                                break;
+                Column {
+                    id: buttonsColumn;
+                    anchors.centerIn: parent;
+                    spacing: Style.size_largeMargin;
+                    width: Style.size_largeMargin;
+
+                    ToolButton {
+                        id: bindButton;
+
+                        anchors.horizontalCenter: parent.horizontalCenter;
+                        enabled: false;
+                        width: 18;
+                        height: 25;
+                        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
+                                              "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
+                        tooltipText: qsTr("Bind to the sensor");
+                        property bool userCanBind: false;
+
+                        Component.onCompleted: {
+                            bindButton.userCanBind = PermissionsController.checkPermission("BindSensor");
+                        }
+
+                        onClicked: {
+                            if (!availableLicensesElementView.collection){
+                                return;
                             }
 
-                            let licenseId = softwareProductCollection.table.elements.getData("LicenseId", index);
-                            if (!productEditor.checkLicenseId(licenseId)){
-                                let message = productEditor.licenseErrorMessage.replace("%1", licenseId)
-                                productEditor.setError(message)
-
-                                ok = false;
-
-                                break;
+                            if (!usedLicensesElementView.collection){
+                                return;
                             }
 
-                            for (let j = i + 1; j < selection.length; j++){
-                                let index2 = selection[j];
+                            let selectedProductIds = []
+                            let softwareIds = productEditor.bindingModel.m_softwareIds;
+                            if (softwareIds && softwareIds != ""){
+                                selectedProductIds = softwareIds.split(';')
+                            }
 
-                                let licenseId2 = softwareProductCollection.table.elements.getData("LicenseId", index2);
-                                if (licenseId === licenseId2){
-                                    let message =  productEditor.duplicateErrorMessage.replace("%1", licenseId);
-                                    productEditor.setError(message)
+                            let indexes = availableLicensesElementView.collection.table.getCheckedItems();
+                            if (indexes.length === 0){
+                                return
+                            }
 
-                                    ok = false;
-
-                                    break;
+                            for (let index of indexes){
+                                let id = availableLicensesElementView.collection.table.elements.getData("Id", index);
+                                if (!selectedProductIds.includes(id)){
+                                    selectedProductIds.push(id)
+                                    let newIndex = usedLicensesElementView.collection.table.elements.insertNewItem()
+                                    usedLicensesElementView.collection.table.elements.copyItemDataFromModel(newIndex, availableLicensesElementView.collection.table.elements, index);
                                 }
                             }
 
-                            if (!ok){
-                                break;
-                            }
+                            let products = selectedProductIds.join(';');
+                            productEditor.bindingModel.m_softwareIds = products;
+
+                            availableLicensesElementView.collection.updateData();
+                            availableLicensesElementView.collection.table.resetSelection();
                         }
-
-                        if (ok){
-                            productEditor.setError("")
-                        }
-
-                        bindButton.enabled = ok;
-                    }
-                }
-
-                onHeadersChanged: {
-                    softwareProductCollection.table.setColumnContentComponent(0, null);
-                    softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
-                }
-
-                function updateData() {
-                    if (!dataController){
-                        return;
                     }
 
-                    if (visible){
-                        if (productEditor.productId === ""){
-                            return;
-                        }
+                    ToolButton {
+                        id: unbindButton;
 
-                        dataController.collectionId = "SoftwareProducts"
+                        anchors.horizontalCenter: parent.horizontalCenter;
 
-                        let elementsModel = bindingProductsCollection.table.elements;
+                        enabled: false;
 
-                        let products = []
-                        let licenseIds = []
+                        width: 18;
+                        height: 25;
 
-                        for(var i = 0; i < bindingProductsCollection.table.elements.getItemsCount(); i++){
-                            let id = bindingProductsCollection.table.elements.getData("Id", i);
-                            let licenseId = bindingProductsCollection.table.elements.getData("LicenseId", i);
+                        iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
+                                              "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
 
-                            products.push(id)
-                            licenseIds.push(licenseId)
-                        }
+                        property bool userCanUnbind: false;
 
-                        let filterModel = softwareProductCollection.collectionFilter.filterModel;
-
-                        let objectFilter =  filterModel.addTreeModel("ObjectFilter")
-
-                        let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
-                        if (productEditor.productId != ""){
-                            bindingFilterModel.setData("ProductUuid", productEditor.productId);
-                        }
-
-                        if (products.length !== 0){
-                            bindingFilterModel.setData("ExcludeUuids", products.join(';'));
-                        }
-
-                        if (licenseIds.length !== 0){
-                            bindingFilterModel.setData("LicenseIds", licenseIds.join(';'));
-                        }
-
-                        bindingFilterModel.setData("HardwareUuidFilter", productEditor.hardwareId);
-
-                        softwareProductCollection.doUpdateGui();
-                    }
-                }
-            }
-        }
-
-        BaseText {
-            id: message;
-            color: Style.errorTextColor;
-
-            visible: false;
-        }
-    }
-
-    BaseText {
-        anchors.horizontalCenter: bindingLicensesColumn.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: Style.size_mainMargin;
-
-        text: qsTr("Used licenses");
-        font.family: Style.fontFamilyBold;
-    }
-
-    Column {
-        id: bindingLicensesColumn
-
-        anchors.bottom: availableLicensesColumn.bottom;
-        anchors.right: parent.right;
-        anchors.rightMargin: Style.size_mainMargin;
-        anchors.left: parent.horizontalCenter;
-        anchors.leftMargin: buttonsColumn.width;
-
-        Rectangle {
-            width: parent.width;
-            height: 400;
-
-            SoftwareProductCollectionView {
-                id: bindingProductsCollection;
-
-                anchors.fill: parent
-
-                commandsControllerComp: null;
-
-                filterMenu.decorator: Style.filterPanelDecorator;
-
-                hasSort: false;
-                hasFilter: false;
-                filterMenuVisible: false;
-                hasPagination: false;
-                commandsViewComp: undefined;
-                tableViewParamsStoredServer: false;
-
-                dataControllerComp:
-                    Component {CollectionRepresentation {
-                        id: bindingDataController;
+                        tooltipText: qsTr("Unbind from the sensor");
 
                         Component.onCompleted: {
-                            additionalFieldIds.push("OrderUuid");
-                            additionalFieldIds.push("HardwareUuid");
-                            additionalFieldIds.push("InUse");
-                            additionalFieldIds.push("ProductUuid");
-                            additionalFieldIds.push("CustomerUuid");
+                            unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");
                         }
 
-                        function updateModel(){}
-                    }
-                }
+                        onClicked: {
+                            if (!usedLicensesElementView.collection){
+                                return;
+                            }
 
-                function registerDocumentInfo(){}
+                            let selectedProductIds = productEditor.bindingModel.m_softwareIds.split(';')
+                            let indexes = usedLicensesElementView.collection.table.tableSelection.selectedIndexes;
+                            if (indexes.length === 0){
+                                return
+                            }
 
-                function updateData(){
-                    if (!dataController){
-                        return;
-                    }
+                            let index = indexes[0];
+                            let elementsModel = usedLicensesElementView.collection.table.elements;
 
-                    dataController.collectionId = "SoftwareProducts";
+                            if (!unbindButton.userCanUnbind){
+                                if (elementsModel.containsKey("InUse", index)){
+                                    let inUse = elementsModel.getData("InUse", index);
+                                    if (inUse){
+                                        return;
+                                    }
+                                }
+                            }
 
-                    let filterModel = bindingProductsCollection.collectionFilter.filterModel;
-                    let objectFilter =  filterModel.addTreeModel("ObjectFilter")
-                    let bindingFilterModel = objectFilter.addTreeModel("BindingFilter");
-                    bindingFilterModel.setData("HardwareUuid", productEditor.hardwareId);
+                            let id = elementsModel.getData("Id", index);
+                            if (selectedProductIds.indexOf(id) > -1){
+                                elementsModel.removeItem(index)
+                                selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
+                            }
 
-                    bindingProductsCollection.doUpdateGui();
-                }
+                            let products = selectedProductIds.join(';');
+                            productEditor.bindingModel.m_softwareIds = products;
 
-                onSelectionChanged: {
-                    if (selection.length === 0){
-                        unbindButton.enabled = false
-                    }
-                    else{
-                        softwareProductCollection.table.resetSelection();
+                            usedLicensesElementView.collection.table.resetSelection();
 
-                        let index = selection[0];
-
-                        let elementsModel = bindingProductsCollection.table.elements;
-                        let inUse = elementsModel.getData("InUse", index);
-
-                        if (unbindButton.userCanUnbind){
-                            unbindButton.enabled = true;
-                        }
-                        else{
-                            unbindButton.enabled = !inUse;
+                            if (availableLicensesElementView.collection){
+                                availableLicensesElementView.collection.updateData();
+                            }
                         }
                     }
                 }
-
-                onElementsChanged: {
-                    softwareProductCollection.updateData();
-                }
-
-                onHeadersChanged: {
-                    bindingProductsCollection.table.setColumnContentComponent(0, pairComp);
-                    bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
-                }
-            }
-        }
-    }
-
-    Column {
-        id: buttonsColumn;
-
-        anchors.centerIn: parent;
-
-        spacing: Style.size_largeMargin;
-
-        width: 20;
-
-        ToolButton {
-            id: bindButton;
-
-            anchors.horizontalCenter: parent.horizontalCenter;
-
-            enabled: false;
-
-            width: 18;
-            height: 25;
-
-            iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Right", Icon.State.On, Icon.Mode.Normal):
-                                  "../../../" + Style.getIconPath("Icons/Right", Icon.State.Off, Icon.Mode.Disabled)
-
-            tooltipText: qsTr("Bind to the sensor");
-
-            property bool userCanBind: false;
-
-            Component.onCompleted: {
-                bindButton.userCanBind = PermissionsController.checkPermission("BindSensor");
-            }
-
-            onClicked: {
-                let selectedProductIds = []
-                let softwareIds = productEditor.bindingModel.m_softwareIds;
-                if (softwareIds && softwareIds != ""){
-                    selectedProductIds = softwareIds.split(';')
-                }
-
-                let indexes = softwareProductCollection.table.getCheckedItems();
-                if (indexes.length === 0){
-                    return
-                }
-
-                for (let index of indexes){
-                    let id = softwareProductCollection.table.elements.getData("Id", index);
-                    if (!selectedProductIds.includes(id)){
-                        selectedProductIds.push(id)
-                        let newIndex = bindingProductsCollection.table.elements.insertNewItem()
-                        bindingProductsCollection.table.elements.copyItemDataFromModel(newIndex, softwareProductCollection.table.elements, index);
-                    }
-                }
-
-                let products = selectedProductIds.join(';');
-                productEditor.bindingModel.m_softwareIds = products;
-
-                softwareProductCollection.updateData();
-
-                softwareProductCollection.table.resetSelection();
-            }
-        }
-
-        ToolButton {
-            id: unbindButton;
-
-            anchors.horizontalCenter: parent.horizontalCenter;
-
-            enabled: false;
-
-            width: 18;
-            height: 25;
-
-            iconSource: enabled ? "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal):
-                                  "../../../" + Style.getIconPath("Icons/Left", Icon.State.Off, Icon.Mode.Disabled)
-
-            property bool userCanUnbind: false;
-
-            tooltipText: qsTr("Unbind from the sensor");
-
-            Component.onCompleted: {
-                unbindButton.userCanUnbind = PermissionsController.checkPermission("UnbindSensor");
-            }
-
-            onClicked: {
-                let selectedProductIds = productEditor.bindingModel.m_softwareIds.split(';')
-                let indexes = bindingProductsCollection.table.tableSelection.selectedIndexes;
-                if (indexes.length === 0){
-                    return
-                }
-
-                let index = indexes[0];
-                let elementsModel = bindingProductsCollection.table.elements;
-
-                if (!unbindButton.userCanUnbind){
-                    if (elementsModel.containsKey("InUse", index)){
-                        let inUse = elementsModel.getData("InUse", index);
-                        if (inUse){
-                            return;
-                        }
-                    }
-                }
-
-                let id = elementsModel.getData("Id", index);
-                if (selectedProductIds.indexOf(id) > -1){
-                    elementsModel.removeItem(index)
-                    selectedProductIds.splice(selectedProductIds.indexOf(id), 1);
-                }
-
-                let products = selectedProductIds.join(';');
-                productEditor.bindingModel.m_softwareIds = products;
-
-                bindingProductsCollection.table.resetSelection();
-
-                softwareProductCollection.updateData()
             }
         }
     }
 
     Loading {
         id: loading;
-
         anchors.fill: parent;
-
         visible: false;
-
-        color: Style.baseColor;
-    }
-
-    TreeItemModel {
-        id: filterHeadersModel;
-
-        Component.onCompleted: {
-            let index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "LicenseName", index);
-
-            index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "LicenseId", index);
-
-            index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "OrderId", index);
-
-            index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "PurchaseOrderId", index);
-
-            index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "SerialNumber", index);
-
-            index = filterHeadersModel.insertNewItem();
-            filterHeadersModel.setData("Id", "Customer", index);
-
-            softwareProductCollection.collectionFilter.setFilteringInfoIds(filterHeadersModel);
-        }
-    }
-
-    TreeItemModel {
-        id: collectionHeadersModel2;
-
-        Component.onCompleted: {
-            productEditor.updateHeaders2();
-        }
-    }
-
-    TreeItemModel {
-        id: collectionHeadersModel;
-
-        Component.onCompleted: {
-            productEditor.updateHeaders();
-        }
-    }
-
-    function updateHeaders2(){
-        collectionHeadersModel2.clear();
-
-        let index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "LicenseName", index);
-        collectionHeadersModel2.setData("Name", qsTr("Name"), index);
-
-        index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "LicenseId", index);
-        collectionHeadersModel2.setData("Name", qsTr("Article"), index);
-
-        index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "OrderId", index);
-        collectionHeadersModel2.setData("Name", qsTr("Delivery-ID"), index);
-
-        index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "PurchaseOrderId", index);
-        collectionHeadersModel2.setData("Name", qsTr("Purchase Order-ID"), index);
-
-        index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "SerialNumber", index);
-        collectionHeadersModel2.setData("Name", qsTr("Software-ID"), index);
-
-        index = collectionHeadersModel2.insertNewItem();
-        collectionHeadersModel2.setData("Id", "Customer", index);
-        collectionHeadersModel2.setData("Name", qsTr("Customer"), index);
-
-        softwareProductCollection.tableViewParamsStoredServer = false;
-        softwareProductCollection.dataController.headersModel  = collectionHeadersModel2;
-    }
-
-    function updateHeaders(){
-        collectionHeadersModel.clear();
-
-        let index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "InUse", index);
-        collectionHeadersModel.setData("Name", "", index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "LicenseName", index);
-        collectionHeadersModel.setData("Name", qsTr("Name"), index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "LicenseId", index);
-        collectionHeadersModel.setData("Name", qsTr("Article"), index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "OrderId", index);
-        collectionHeadersModel.setData("Name", qsTr("Delivery-ID"), index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "PurchaseOrderId", index);
-        collectionHeadersModel.setData("Name", qsTr("Purchase Order-ID"), index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "SerialNumber", index);
-        collectionHeadersModel.setData("Name", qsTr("Software-ID"), index);
-
-        index = collectionHeadersModel.insertNewItem();
-        collectionHeadersModel.setData("Id", "Customer", index);
-        collectionHeadersModel.setData("Name", qsTr("Customer"), index);
-
-        bindingProductsCollection.tableViewParamsStoredServer = false;
-        bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
+        color: Style.backgroundColor2;
     }
 
     TreeItemModel {
@@ -748,41 +783,6 @@ Item {
 
             index = cellWidthModel.insertNewItem();
             cellWidthModel.setData("Width", -1, index);
-        }
-    }
-
-    Component {
-        id: pairComp;
-
-        TableCellDelegateBase {
-            id: cellDelegate
-            Image {
-                id: image;
-
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
-
-                width: 18;
-                height: width;
-
-                sourceSize.width: width;
-                sourceSize.height: height;
-            }
-
-            onRowIndexChanged: {
-                if (!rowDelegate){
-                    return
-                }
-
-                let value = cellDelegate.getValue();
-                if (value){
-                    image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
-                }
-                else{
-                    image.source = "";
-                }
-            }
         }
     }
 }//Container

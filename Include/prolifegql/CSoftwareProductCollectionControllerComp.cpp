@@ -189,9 +189,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Licenses::V1_0::CSoftwareProductData& softwareProductDataRepresentation,
-			QByteArray& newObjectId,
+			QByteArray& /*newObjectId*/,
 			QString& name,
-			QString& description,
+			QString& /*description*/,
 			QString& errorMessage) const
 {
 	if (!m_softwareInfoFactCompPtr.IsValid()){

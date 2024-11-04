@@ -133,7 +133,7 @@ void COrderCollectionControllerComp::GenerateDifferences(
 	prolifedata::IOrderInfo& newOrder,
 	QByteArrayList& addedProducts,
 	QByteArrayList& removedProducts,
-	QByteArrayList& updatedProducts) const
+	QByteArrayList& /*updatedProducts*/) const
 {
 	imtbase::IObjectCollection* currentProductCollectionPtr = currentOrder.GetProducts();
 	imtbase::IObjectCollection* newProductCollectionPtr = newOrder.GetProducts();
@@ -313,9 +313,9 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		if (orderUuid != orderObjectId){
 			imtbase::IObjectCollection::DataPtr dataPtr;
 			if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
-				prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					QByteArray currentOrderId = orderInfoPtr->GetOrderId().toLower();
+				prolifedata::CIdentifiableOrderInfo* objectPrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+				if (objectPrderInfoPtr != nullptr){
+					QByteArray currentOrderId = objectPrderInfoPtr->GetOrderId().toLower();
 					if (currentOrderId == orderId.toLower()){
 						errorMessage = QString("Delivery-ID already exists");
 						SendErrorMessage(0, errorMessage, "COrderControllerComp");
@@ -620,9 +620,9 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 						if (licenseInstancePtr != nullptr){
 							softwareProduct.SetLicenseUuid(activeLicenseId);
 
-							imtbase::IObjectCollection::DataPtr dataPtr;
-							if (m_licenseDefinitionCollectionCompPtr->GetObjectData(activeLicenseId, dataPtr)){
-								const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+							imtbase::IObjectCollection::DataPtr licenseDataPtr;
+							if (m_licenseDefinitionCollectionCompPtr->GetObjectData(activeLicenseId, licenseDataPtr)){
+								const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseInfoPtr != nullptr){
 									softwareProduct.SetLicenseName(licenseInfoPtr->GetLicenseName());
 									softwareProduct.SetLicenseId(licenseInfoPtr->GetLicenseId());
