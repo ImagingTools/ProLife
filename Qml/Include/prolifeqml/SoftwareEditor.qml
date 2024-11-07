@@ -548,61 +548,70 @@ ViewBase {
                     Component {
                         id: datePickerComp;
 
-                        Item {
-                            width: 300;
+                        DateTimePicker {
+                            width: 200;
                             height: 30;
-
-                            DatePicker {
-                                id: datePicker_;
-
-                                anchors.right: parent.right;
-
-                                readOnly: expirationEditor.readOnly;
-
-                                width: contentWidth;
-                                height: parent.height;
-
-                                currentDayButtonVisible: false;
-                                startWithCurrentDay: true;
-
-                                hasDayCombo: false;
-                                hasMonthCombo: false;
-                                hasYearCombo: false;
-
-                                textFieldBorderColor: Style.borderColor;
-
-                                textFieldWidthDay: 30;
-                                textFieldWidthYear: 45;
-                                textFieldWidthMonth: 90;
-
-                                textFieldHeight: height;
-
-                                mainMargin: Style.size_mainMargin;
-
-                                Component.onCompleted: {
-                                    datePicker_.readOnly = expirationEditor.readOnly
-
-                                    expirationEditor.datePicker = datePicker_;
-                                }
-
-                                onDateChanged: {
-                                    root.doUpdateModel()
-                                }
-
-                                onCompletedChanged: {
-                                    if (completed){
-                                        var date_ = new Date();
-
-                                        let day = date_.getDay();
-                                        let year = date_.getFullYear() + 1;
-                                        let month = date_.getMonth();
-
-                                        datePicker_.setDate(year, month, day)
-                                    }
-                                }
-                            }
                         }
                     }
+
+                    // Component {
+                    //     id: datePickerComp;
+
+                    //     Item {
+                    //         width: 300;
+                    //         height: 30;
+
+                    //         DatePicker {
+                    //             id: datePicker_;
+
+                    //             anchors.right: parent.right;
+
+                    //             readOnly: expirationEditor.readOnly;
+
+                    //             width: contentWidth;
+                    //             height: parent.height;
+
+                    //             currentDayButtonVisible: false;
+                    //             startWithCurrentDay: true;
+
+                    //             hasDayCombo: false;
+                    //             hasMonthCombo: false;
+                    //             hasYearCombo: false;
+
+                    //             textFieldBorderColor: Style.borderColor;
+
+                    //             textFieldWidthDay: 30;
+                    //             textFieldWidthYear: 45;
+                    //             textFieldWidthMonth: 90;
+
+                    //             textFieldHeight: height;
+
+                    //             mainMargin: Style.size_mainMargin;
+
+                    //             Component.onCompleted: {
+                    //                 datePicker_.readOnly = expirationEditor.readOnly
+
+                    //                 expirationEditor.datePicker = datePicker_;
+                    //             }
+
+                    //             onDateChanged: {
+                    //                 root.doUpdateModel()
+                    //             }
+
+                    //             onCompletedChanged: {
+                    //                 if (completed){
+                    //                     var date_ = new Date();
+
+                    //                     let day = date_.getDay();
+                    //                     let year = date_.getFullYear() + 1;
+                    //                     let month = date_.getMonth();
+
+                    //                     datePicker_.setDate(year, month, day)
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
         }

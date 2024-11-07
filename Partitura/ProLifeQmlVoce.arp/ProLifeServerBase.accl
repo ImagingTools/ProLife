@@ -8,16 +8,12 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="DatabaseEngine" X="200" Y="350" Note=""/>
-        <Element ComponentName="HttpServerFramework" X="600" Y="100" Note=""/>
-        <Element ComponentName="Language" X="1100" Y="225" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="825" Y="650" Note=""/>
-        <Element ComponentName="ProLifeHandlers" X="600" Y="375" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="1000" Y="100" Note=""/>
-        <Element ComponentName="PumaGQLClientEngine" X="325" Y="650" Note=""/>
-        <Element ComponentName="ServerSettings" X="150" Y="100" Note=""/>
-        <Element ComponentName="Subscriptions" X="975" Y="550" Note=""/>
-        <Element ComponentName="WebSocketServerFramework" X="600" Y="225" Note=""/>
+        <Element ComponentName="AuthorizableServerFramework" X="575" Y="125" Note=""/>
+        <Element ComponentName="Language" X="275" Y="675" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="600" Y="500" Note=""/>
+        <Element ComponentName="ProLifeHandlers" X="600" Y="300" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="250" Y="500" Note=""/>
+        <Element ComponentName="Subscriptions" X="1025" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="Subscriptions">

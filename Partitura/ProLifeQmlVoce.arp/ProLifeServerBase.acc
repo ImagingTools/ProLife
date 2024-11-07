@@ -10,38 +10,57 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
+        <Element Id="AuthorizableServerFramework" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/DatabaseAccessSettings"/>
+                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultSettingsPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Subscriptions</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LocationSettingsType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="105"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/TracingConfiguration"/>
+                    <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
                     </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="HttpServerFramework" PackageId="ImtHttpServerVoce" ComponentId="HttpServerFramework">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="ProductId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestHandler" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeHandlers"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerPort" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/ServerPort"/>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/TracingConfiguration"/>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketDefaultPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -65,7 +84,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerFramework"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -86,13 +105,13 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/BackupParamsSet"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/Backup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine/DatabaseAccessSettings"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseAccessSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceSessionChangeNotifier" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Subscriptions/DevicesSubscriberController"/>
@@ -100,7 +119,7 @@
                     <AttributeInfo Id="ExternRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>PumaGQLClientEngine</Value>
+                                <Value>AuthorizableServerFramework/PumaGQLClientEngine</Value>
                                 <Value>LisaGQLEngine</Value>
                             </Values>
                         </Data>
@@ -108,8 +127,11 @@
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/FeatureRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="FeatureContainer" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/FeatureContainer"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/GroupRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/GroupRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -133,10 +155,10 @@
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/RoleRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RoleRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserSessionRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserSessionRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Subscriptions/SoftwareProductsSubscriberController"/>
@@ -145,13 +167,13 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/UserRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketPortModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/WebSocketServerPort"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerPort"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -177,78 +199,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaGQLClientEngine" PackageId="ImtGraphQlVoce" ComponentId="PumaGQLClientEngine">
-            <Data IsEnabled="true" Flags="1">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="ServerSettings" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseHost" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="prolife"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabasePassword" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="root"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabasePort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="5432"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultDatabaseUserName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="postgres"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLife/ProLifeServer/ProLifeServerSettings.xml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine/HttpUrlParam"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaWebSocketUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine/WebSocketUrlParam"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="104"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PumaUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/HttpUrlParam"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PumaWebSocketUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="PumaGQLClientEngine/WebSocketUrlParam"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -256,28 +206,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="WebSocketServerFramework"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="WebSocketServerFramework" PackageId="ImtHttpServerVoce" ComponentId="WebSocketServerFramework">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Subscriptions</Value>
-                                <Value>PumaGQLClientEngine</Value>
-                                <Value>LisaGQLEngine</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerPort" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ServerSettings/WebSocketServerPort"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerFramework"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -397,17 +326,15 @@
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
-    <ExportedInterfaces>
-        <Interface InterfaceId="imtdb::IDatabaseEngine" ComponentId="DatabaseEngine"/>
-        <Interface InterfaceId="istd::IPolymorphic" ComponentId="HttpServerFramework"/>
-    </ExportedInterfaces>
+    <ExportedInterfaces/>
     <ExportedComponents>
         <Component ExportedId="AutoPersistence" ComponentId="ServerSettings/AutoPersistence"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettings/DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseAccessSettings2" ComponentId="DatabaseEngine/DatabaseAccessSettings"/>
+        <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>
+        <Component ExportedId="HttpServerFramework" ComponentId="AuthorizableServerFramework/HttpServerFramework"/>
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
-        <Component ExportedId="ServerSettings" ComponentId="ServerSettings"/>
-        <Component ExportedId="WebSocketServerFramework" ComponentId="WebSocketServerFramework"/>
+        <Component ExportedId="WebSocketServerFramework" ComponentId="AuthorizableServerFramework/WebSocketServerFramework"/>
     </ExportedComponents>
 </Acf>

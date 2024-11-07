@@ -34,6 +34,9 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="FeatureContainer" Type="Reference" ExportId="FeatureContainer">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/files/*"/>
                     </AttributeInfo>
@@ -79,23 +82,6 @@
                                 <Value>Pages/SoftwareProductsPage</Value>
                                 <Value>Pages/OrdersPage</Value>
                                 <Value>Pages/AccountsPage</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductId" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ProLife</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductName" Type="String[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ProLife</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -459,5 +445,7 @@
         <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="ApplicationHandlers"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationHandlers"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="FeatureContainer" ComponentId="ApplicationHandlers/FeatureContainer"/>
+    </ExportedComponents>
 </Acf>
