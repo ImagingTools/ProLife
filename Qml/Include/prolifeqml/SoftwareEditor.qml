@@ -18,7 +18,6 @@ ViewBase {
     property var productLicensesModel: TreeItemModel{}
 
     property string alertMessage: "";
-    property int comboBoxHeight: 27;
 
     property SoftwareProductData softwareProductData: model ? model : null;
 
@@ -36,11 +35,6 @@ ViewBase {
             Events.sendEvent("SetAlertPanel", parameters);
         }
     }
-
-    // onModelChanged: {
-    //     checkPermissions();
-    //     checkInUse();
-    // }
 
     onSoftwareProductDataChanged: {
         checkPermissions();
@@ -379,16 +373,11 @@ ViewBase {
                         unlimitedSwitch.switchRef.setChecked(true);
                     }
 
-                    if (expirationEditor.datePicker){
-                        if (expiration){
-                            let currentDate = expirationEditor.datePicker.getDateAsString()
+                    if (expiration){
+                        let currentDate = expirationEditor.getDateAsString()
 
-                            if (expiration !== "" && expiration !== currentDate){
-                                let date = expiration;
-                                let data = date.split("-");
-
-                                expirationEditor.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-                            }
+                        if (expiration !== "" && expiration !== currentDate){
+                            expirationEditor.datePicker.setDateAsString(expiration);
                         }
                     }
                 }
@@ -396,13 +385,11 @@ ViewBase {
                 function updateModel(){
                     root.softwareProductData.m_serialNumber = serialNumberInput.text;
 
-                    if (expirationEditor.datePicker){
-                        if (!unlimitedSwitch.checked){
-                            root.softwareProductData.m_expiration = expirationEditor.datePicker.getDateAsString();
-                        }
-                        else{
-                            root.softwareProductData.m_expiration = "";
-                        }
+                    if (!unlimitedSwitch.checked){
+                        root.softwareProductData.m_expiration = expirationEditor.getDateAsString();
+                    }
+                    else{
+                        root.softwareProductData.m_expiration = "";
                     }
 
                     if (licenseCB.currentIndex >= 0 && licenseCB.model){
@@ -517,101 +504,25 @@ ViewBase {
                     }
                 }
 
-                ElementView {
+                DateTimePickerElementView {
                     id: expirationEditor;
 
                     name: qsTr("Expiration");
-
-                    property bool readOnly: root.readOnly;
-
-                    property DatePicker datePicker: null;
-
-                    onReadOnlyChanged: {
-                        if (datePicker){
-                            datePicker.readOnly = readOnly;
-                        }
-                    }
-
                     visible: !unlimitedSwitch.checked;
-
-                    controlComp: datePickerComp;
 
                     KeyNavigation.tab: projectInput;
                     KeyNavigation.backtab: unlimitedSwitch;
 
                     onDatePickerChanged: {
                         if (datePicker){
-                            datePicker.readOnly = readOnly;
+                            let currentDate = new Date();
+                            datePicker.selectedDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
                         }
                     }
 
-                    Component {
-                        id: datePickerComp;
-
-                        DateTimePicker {
-                            width: 200;
-                            height: 30;
-                        }
+                    onEditingFinished: {
+                        root.doUpdateModel();
                     }
-
-                    // Component {
-                    //     id: datePickerComp;
-
-                    //     Item {
-                    //         width: 300;
-                    //         height: 30;
-
-                    //         DatePicker {
-                    //             id: datePicker_;
-
-                    //             anchors.right: parent.right;
-
-                    //             readOnly: expirationEditor.readOnly;
-
-                    //             width: contentWidth;
-                    //             height: parent.height;
-
-                    //             currentDayButtonVisible: false;
-                    //             startWithCurrentDay: true;
-
-                    //             hasDayCombo: false;
-                    //             hasMonthCombo: false;
-                    //             hasYearCombo: false;
-
-                    //             textFieldBorderColor: Style.borderColor;
-
-                    //             textFieldWidthDay: 30;
-                    //             textFieldWidthYear: 45;
-                    //             textFieldWidthMonth: 90;
-
-                    //             textFieldHeight: height;
-
-                    //             mainMargin: Style.size_mainMargin;
-
-                    //             Component.onCompleted: {
-                    //                 datePicker_.readOnly = expirationEditor.readOnly
-
-                    //                 expirationEditor.datePicker = datePicker_;
-                    //             }
-
-                    //             onDateChanged: {
-                    //                 root.doUpdateModel()
-                    //             }
-
-                    //             onCompletedChanged: {
-                    //                 if (completed){
-                    //                     var date_ = new Date();
-
-                    //                     let day = date_.getDay();
-                    //                     let year = date_.getFullYear() + 1;
-                    //                     let month = date_.getMonth();
-
-                    //                     datePicker_.setDate(year, month, day)
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-                    // }
                 }
             }
         }

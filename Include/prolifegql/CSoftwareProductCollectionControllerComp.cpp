@@ -281,7 +281,7 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 	QByteArray licenseUuid = softwareProductDataRepresentation.GetLicenseUuid();
 	QString expiration = softwareProductDataRepresentation.GetExpiration();
 
-	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "yyyy-MM-dd"));
+	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
 
 	name = productId;
 
@@ -349,7 +349,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 		if (licenseInstancePtr != nullptr){
 			softwareProductData.SetLicenseUuid(licenseInstancePtr->GetLicenseId());
-			softwareProductData.SetExpiration(licenseInstancePtr->GetExpiration().toString("yyyy-MM-dd"));
+			softwareProductData.SetExpiration(licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 		}
 	}
 
