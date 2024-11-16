@@ -175,7 +175,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 			const sdl::prolife::Sensors::V1_0::CDeviceData& deviceDataRepresentation,
 			QByteArray& newObjectId,
 			QString& name,
-			QString& description,
+			QString& /*description*/,
 			QString& errorMessage) const
 {
 	if (!m_deviceInfoFactCompPtr.IsValid()){
@@ -531,15 +531,15 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
 
 						for (const QByteArray& licenseId : elementsIds){
-							imtbase::IObjectCollection::DataPtr dataPtr;
-							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
-								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+							imtbase::IObjectCollection::DataPtr licenseDataPtr;
+							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
-									QByteArray licenseId = licenseDefinitionPtr->GetLicenseId();
+									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
 
 									int childrenIndex = childrenModelPtr->InsertNewItem();
-									childrenModelPtr->SetData("Value", licenseName + " (" + licenseId + ")", childrenIndex);
+									childrenModelPtr->SetData("Value", licenseName + " (" + licenseDefinitionId + ")", childrenIndex);
 								}
 							}
 						}
