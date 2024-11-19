@@ -128,7 +128,7 @@
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
                     <Interface InterfaceId="imod::IModel" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="imtbase::IRepresentationController" ComponentId="ServerPageRepresentation"/>
+                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="ServerPageRepresentation"/>
                     <Interface InterfaceId="iprm::IParamsSet" ComponentId="ServerPageData"/>
                     <Interface InterfaceId="iser::ISerializable" ComponentId="ServerPageData"/>
                     <Interface InterfaceId="istd::IChangeable" ComponentId="ServerPageData"/>

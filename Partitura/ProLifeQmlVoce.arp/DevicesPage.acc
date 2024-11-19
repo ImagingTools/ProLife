@@ -553,7 +553,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtbase::IRepresentationController" ComponentId="CommandsController"/>
+                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
                 </ExportedInterfaces>
@@ -563,7 +563,7 @@
         <EmbeddedRegistry Id="DeviceCollectionCommands">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="Bind" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="Bind" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -584,7 +584,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="BindPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="BindPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -611,7 +611,7 @@
                             <AttributeInfoMap/>
                         </Data>
                     </Element>
-                    <Element Id="Commands" PackageId="ImtGuiPck" ComponentId="GuiElementContainer">
+                    <Element Id="Commands" PackageId="ImtRestPck" ComponentId="GuiElementContainer">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
@@ -631,7 +631,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandsJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
+                    <Element Id="CommandsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
@@ -649,7 +649,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandsRepresentation" PackageId="ImtCorePck" ComponentId="GuiElementRepresentationController">
+                    <Element Id="CommandsRepresentation" PackageId="ImtRestPck" ComponentId="GuiElementRepresentationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
@@ -670,7 +670,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CreateLicenseFile" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="CreateLicenseFile" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -691,7 +691,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CreateLicenseFilePermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="CreateLicenseFilePermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -741,7 +741,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="Edit" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="Edit" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -762,7 +762,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="EditPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="EditPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -792,7 +792,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="Empty" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="Empty" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
@@ -801,7 +801,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="New" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="New" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -822,7 +822,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="NewPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="NewPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -844,7 +844,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="OpenOrder" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="OpenOrder" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -865,7 +865,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="OpenOrderPermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="OpenOrderPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -893,7 +893,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="Remove" PackageId="ImtGuiPck" ComponentId="GuiElementModel">
+                    <Element Id="Remove" PackageId="ImtRestPck" ComponentId="GuiElementModel">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -914,7 +914,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="RemovePermissions" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+                    <Element Id="RemovePermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">

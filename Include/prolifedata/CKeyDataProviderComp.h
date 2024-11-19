@@ -7,7 +7,7 @@
 #include <iprm/IIdParam.h>
 
 // ImtCore includes
-#include <imtbase/IBinaryDataProvider.h>
+#include <imtrest/IBinaryDataProvider.h>
 #include <imtbase/IObjectCollection.h>
 #include <imtcrypt/IEncryptionKeysProvider.h>
 #include <imtgql/IGqlRequestHandler.h>
@@ -23,7 +23,7 @@ namespace prolifedata
 	This component accepts data and returns it in encrypted form
 */
 class CKeyDataProviderComp:
-			public imtbase::IBinaryDataProvider,
+			public imtrest::IBinaryDataProvider,
 			public ilog::CLoggerComponentBase,
 			virtual public imtcrypt::IEncryptionKeysProvider
 {
@@ -31,7 +31,7 @@ public:
 	typedef ilog::CLoggerComponentBase BaseClass;
 
 	I_BEGIN_COMPONENT(CKeyDataProviderComp);
-		I_REGISTER_INTERFACE(imtbase::IBinaryDataProvider);
+		I_REGISTER_INTERFACE(imtrest::IBinaryDataProvider);
 		I_REGISTER_INTERFACE(imtcrypt::IEncryptionKeysProvider);
 		I_ASSIGN(m_licensePersistenceCompPtr, "LicensePersistence", "Persistence used for license export", false, "LicensePersistence");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
@@ -51,7 +51,7 @@ public:
 		CG_LICENSE = 2150
 	};
 
-	// reimplemented (imtbase::IBinaryDataProvider)
+	// reimplemented (imtrest::IBinaryDataProvider)
 	virtual bool GetData(
 				QByteArray& data,
 				const QByteArray& dataId,

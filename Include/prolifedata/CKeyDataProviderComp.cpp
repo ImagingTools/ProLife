@@ -30,7 +30,7 @@ namespace prolifedata
 
 // public methods
 
-// reimplemented (imtbase::IBinaryDataProvider)
+// reimplemented (imtrest::IBinaryDataProvider)
 
 bool CKeyDataProviderComp::GetData(
 			QByteArray& data,

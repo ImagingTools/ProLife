@@ -376,7 +376,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtbase::IBinaryDataProvider" ComponentId="KeyDataProvider"/>
+                    <Interface InterfaceId="imtrest::IBinaryDataProvider" ComponentId="KeyDataProvider"/>
                     <Interface InterfaceId="imtcrypt::IEncryptionKeysProvider" ComponentId="KeyDataProvider"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>

@@ -10,7 +10,7 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="DeviceUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DeviceUpdate" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -39,7 +39,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DevicesAdd" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -61,7 +61,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesInfo" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DevicesInfo" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -93,7 +93,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesList" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DevicesList" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -115,7 +115,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesRemove" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DevicesRemove" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -137,7 +137,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesSetDescription" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="DevicesSetDescription" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -159,7 +159,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareProductBindingAdd" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="HardwareProductBindingAdd" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -181,7 +181,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareProductBindingUpdate" PackageId="ImtCorePck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="HardwareProductBindingUpdate" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -203,7 +203,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PermissionsJoiner" PackageId="ImtCorePck" ComponentId="CommandPermissionsProviderJoiner">
+        <Element Id="PermissionsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
@@ -226,7 +226,7 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtbase::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+        <Interface InterfaceId="imtrest::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
     </ExportedInterfaces>
     <ExportedComponents/>
 </Acf>
