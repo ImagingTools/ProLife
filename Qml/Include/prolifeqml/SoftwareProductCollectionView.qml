@@ -294,16 +294,11 @@ RemoteCollectionView {
 
                 ComboBox {
                     id: accountComboBox;
-
-                    width: 200;
+                    width: 300;
                     height: filtermenu.height;
-
                     currentIndex: 0;
-
                     radius: 3;
-
                     shownItemsCount: 15;
-
                     onCurrentIndexChanged: {
                         if (accountComboBox.currentIndex > 0){
                             let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);

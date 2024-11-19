@@ -137,16 +137,11 @@ DecoratorBase {
 
         ComboBox {
             id: accountComboBox;
-
+            width: 300;
             height: filtermenu.height;
-            width: 200;
-
             currentIndex: 0;
-
             radius: 3;
-
             shownItemsCount: 15;
-
             onCurrentIndexChanged: {
                 if (accountComboBox.currentIndex > 0){
                     let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);

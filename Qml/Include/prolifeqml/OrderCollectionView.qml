@@ -137,7 +137,7 @@ RemoteCollectionView {
                 ComboBox {
                     id: accountComboBox;
 
-                    width: 200;
+                    width: 300;
                     height: filtermenu.height;
 
                     currentIndex: 0;
