@@ -3,7 +3,7 @@
 
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
-#include <imtbase/imtbase.h>
+#include <iqt/iqt.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
 #include <imtlic/CHardwareInstanceInfo.h>
@@ -205,10 +205,10 @@ QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColle
 					QByteArray type = operationDescriptionPtr->GetOperationTypeId();
 
 					QString keyName = operationDescriptionPtr->GetKeyName();
-					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
+					keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
 					if (type == "AddProduct"){
-						QString change = imtbase::GetTranslation(
+						QString change = iqt::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
 									languageId,
@@ -219,7 +219,7 @@ QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColle
 						retVal += change + "\n";
 					}
 					else if (type == "RemoveProduct"){
-						QString change = imtbase::GetTranslation(
+						QString change = iqt::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Removed the product '%1'")).toUtf8(),
 									languageId,

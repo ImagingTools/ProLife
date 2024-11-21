@@ -5,7 +5,7 @@
 #include <iprm/CTextParam.h>
 
 // ImtCore includes
-#include <imtbase/imtbase.h>
+#include <iqt/iqt.h>
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>

@@ -7,7 +7,7 @@
 #include <iprm/CParamsSet.h>
 
 // ImtCore includes
-#include <imtbase/imtbase.h>
+#include <iqt/iqt.h>
 #include <imtbase/CObjectLink.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtgql/imtgql.h>
@@ -504,7 +504,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 			languageId = gqlContextPtr->GetLanguageId();
 		}
 
-		QString elementNameTr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), name.toUtf8(), languageId, "prolifegql::CDeviceCollectionControllerComp");
+		QString elementNameTr = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), name.toUtf8(), languageId, "prolifegql::CDeviceCollectionControllerComp");
 
 		name = elementNameTr;
 	}
@@ -551,7 +551,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 	if (!ok){
 		int childrenIndex = childrenModelPtr->InsertNewItem();
-		QString elementNameTr = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("No Licenses"), languageId, "prolifegql::CDeviceCollectionControllerComp");
+		QString elementNameTr = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("No Licenses"), languageId, "prolifegql::CDeviceCollectionControllerComp");
 
 		childrenModelPtr->SetData("Value", elementNameTr, childrenIndex);
 	}

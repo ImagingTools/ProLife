@@ -6,7 +6,7 @@
 #include <iprm/TParamsPtr.h>
 
 // ImtCore includes
-#include <imtbase/imtbase.h>
+#include <iqt/iqt.h>
 #include <imtbase/COperationDescription.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
@@ -219,10 +219,10 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 					QByteArray typeId = operationDescriptionPtr->GetOperationTypeId();
 
 					QString keyName = operationDescriptionPtr->GetKeyName();
-					keyName = imtbase::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
+					keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
 					if (typeId == "CreateLicenseFile"){
-						QString change = imtbase::GetTranslation(
+						QString change = iqt::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Added the license '%1'")).toUtf8(),
 									languageId,
@@ -233,7 +233,7 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 						retVal += change + "\n";
 					}
 					else if (typeId == "UnbindLicense"){
-						QString change = imtbase::GetTranslation(
+						QString change = iqt::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Removed the license '%1'")).toUtf8(),
 									languageId,
@@ -244,7 +244,7 @@ QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectColl
 						retVal += change + "\n";
 					}
 					else if (typeId == "BindLicense"){
-						QString change = imtbase::GetTranslation(
+						QString change = iqt::GetTranslation(
 									m_translationManagerCompPtr.GetPtr(),
 									QString(QT_TR_NOOP("Created the license file")).toUtf8(),
 									languageId,
