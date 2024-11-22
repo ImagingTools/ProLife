@@ -340,7 +340,7 @@ Item {
                                     }
 
                                     onHeadersChanged: {
-                                        softwareProductCollection.table.setColumnContentComponent(0, null);
+                                        softwareProductCollection.table.setColumnContentById("LicenseName", null);
                                         softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
                                     }
 
@@ -591,7 +591,7 @@ Item {
                                     onHeadersChanged: {
                                         console.log("bindingProductsCollection onHeadersChanged", lockIconCellComp);
 
-                                        bindingProductsCollection.table.setColumnContentComponent(0, lockIconCellComp);
+                                        bindingProductsCollection.table.setColumnContentById("InUse", lockIconCellComp);
                                         bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                                     }
                                 }

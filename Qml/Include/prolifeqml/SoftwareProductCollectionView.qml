@@ -39,9 +39,7 @@ RemoteCollectionView {
     visibleMetaInfo: false;
 
     onHeadersChanged: {
-        if (container.table.headers.getItemsCount() > 0){
-            container.table.setColumnContentComponent(0, pairComp);
-        }
+        container.table.setColumnContentById(SoftwareProductItemTypeMetaInfo.s_status, pairComp);
     }
 
     Component.onCompleted: {

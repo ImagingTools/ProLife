@@ -72,7 +72,7 @@ RemoteCollectionView {
     }
 
     onHeadersChanged: {
-        container.table.setColumnContentComponent(0, pairComp);
+        container.table.setColumnContentById(DeviceItemTypeMetaInfo.s_status, pairComp);
     }
 
     Component {
