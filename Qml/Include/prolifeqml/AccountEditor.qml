@@ -84,11 +84,7 @@ ViewBase {
         }
 
         selectedGroupIds.sort()
-
-        console.log("accountData.m_groups", accountData.m_groups);
         let groups = selectedGroupIds.join(';');
-        console.log("groups", groups);
-
         accountData.m_groups = groups;
     }
 
@@ -100,7 +96,7 @@ ViewBase {
         anchors.top: flickable.top;
         anchors.bottom: flickable.bottom;
 
-        secondSize: 10;
+        secondSize: Style.size_mainMargin;
         targetItem: flickable;
 
         visible: accountEditorContainer.visible;
@@ -115,7 +111,7 @@ ViewBase {
         anchors.right: flickable.right;
         anchors.bottom: flickable.bottom;
 
-        secondSize: 10;
+        secondSize: Style.size_mainMargin;
 
         vertical: false;
         targetItem: flickable;
@@ -126,6 +122,8 @@ ViewBase {
         onCollectionModelChanged: {
             if (groupsElement.table){
                 groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
+
+                accountEditorContainer.doUpdateGui();
             }
         }
     }
