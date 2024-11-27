@@ -341,7 +341,7 @@ Item {
 
                                     onHeadersChanged: {
                                         softwareProductCollection.table.setColumnContentById("LicenseName", null);
-                                        softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
+                                        // softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
                                     }
 
                                     function updateData() {
@@ -458,8 +458,6 @@ Item {
                                                 return
                                             }
 
-                                            console.log("lockIconCellComp onRowIndexChanged", cellDelegate.getValue());
-
                                             let value = cellDelegate.getValue();
                                             if (value){
                                                 image.source = "../../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal);
@@ -510,13 +508,12 @@ Item {
                                     collectionHeadersModel.setData("Id", "Customer", index);
                                     collectionHeadersModel.setData("Name", qsTr("Customer"), index);
 
-                                    bindingProductsCollection.tableViewParamsStoredServer = false;
                                     bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
                                 }
 
                                 SoftwareProductCollectionView {
                                     id: bindingProductsCollection;
-                                    anchors.fill: parent
+                                    anchors.fill: parent;
                                     commandsControllerComp: null;
                                     filterMenu.decorator: Style.filterPanelDecorator;
                                     hasSort: false;
@@ -525,6 +522,7 @@ Item {
                                     hasPagination: false;
                                     commandsViewComp: undefined;
                                     tableViewParamsStoredServer: false;
+                                    // additionalFieldIds: ["OrderUuid","HardwareUuid", "InUse", "ProductUuid", "CustomerUuid"]
 
                                     dataControllerComp:
                                         Component {CollectionRepresentation {
@@ -592,7 +590,7 @@ Item {
                                         console.log("bindingProductsCollection onHeadersChanged", lockIconCellComp);
 
                                         bindingProductsCollection.table.setColumnContentById("InUse", lockIconCellComp);
-                                        bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
+                                        // bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                                     }
                                 }
                             }

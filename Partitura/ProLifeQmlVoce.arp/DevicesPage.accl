@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -22,6 +22,16 @@
         <Element ComponentName="OperationContextController" X="575" Y="600" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="CollectionCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
+                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="75" Y="650" Note=""/>
@@ -47,16 +57,6 @@
         </EmbededRegistry>
         <EmbededRegistry Id="Permissions">
             <PositionMap/>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="CollectionCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="600" Y="275" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
-                <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
-                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-            </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
