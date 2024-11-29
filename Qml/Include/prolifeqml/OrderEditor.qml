@@ -21,11 +21,25 @@ ViewBase {
     property OrderData orderData: model ? model : null;
 
     Component.onCompleted: {
-        CachedAccountCollection.updateModel();
-        CachedLicenseCollection.updateModel();
-        CachedDeviceCollection.updateModel();
-        CachedProductCollection.updateModel();
-        CachedSoftwareCollection.updateModel();
+        if (!CachedAccountCollection.completed){
+            CachedAccountCollection.updateModel();
+        }
+
+        if (!CachedLicenseCollection.completed){
+            CachedLicenseCollection.updateModel();
+        }
+
+        if (!CachedDeviceCollection.completed){
+            CachedDeviceCollection.updateModel();
+        }
+
+        if (!CachedProductCollection.completed){
+            CachedProductCollection.updateModel();
+        }
+
+        if (!CachedSoftwareCollection.completed){
+            CachedSoftwareCollection.updateModel();
+        }
 
         CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
         CachedSoftwareCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
@@ -37,7 +51,6 @@ ViewBase {
     }
 
     onOrderDataChanged: {
-        console.log("onOrderDataChanged", orderData)
         checkPermissions();
     }
 
@@ -99,8 +112,6 @@ ViewBase {
     }
 
     function syncroniseProducts(){
-        console.log("syncroniseProducts", orderData)
-
         if (!softwaresModel){
             return;
         }
@@ -211,6 +222,7 @@ ViewBase {
     }
 
     function updateGui(){
+        console.log("updateGui", orderData.toJson())
         instanceIdInput.text = orderData.m_orderId;
         purchaseIdInput.text = orderData.m_purchaseId;
         descriptionInput.text = orderData.m_description;
@@ -243,13 +255,11 @@ ViewBase {
         }
 
         //        syncroniseProducts();
-
+        productsView.model = 0;
         productsView.model = orderData.m_orderProducts;
     }
 
     function updateModel(){
-        console.log("updateModel", orderData)
-
         orderData.m_orderId = instanceIdInput.text ;
         orderData.m_purchaseId = purchaseIdInput.text;
         orderData.m_description = descriptionInput.text;
@@ -381,7 +391,15 @@ ViewBase {
 
                     bottomComp: acceptableInput ? undefined : errorComp;
 
+                    Component.onCompleted: {
+                        validate();
+                    }
+
                     onTextChanged: {
+                        validate();
+                    }
+
+                    function validate(){
                         let len = instanceIdInput.text.length;
 
                         let ok1 = instanceIdInput.test("\\d{5}", instanceIdInput.text) && len === 5;
@@ -439,6 +457,8 @@ ViewBase {
 
                     model: orderEditorContainer.accountsModel;
                     changeable: !orderEditorContainer.readOnly;
+                    isSelectionRequired: true;
+                    errorText: qsTr("Please select a customer");
 
                     onCurrentIndexChanged: {
                         orderEditorContainer.doUpdateModel();
@@ -513,11 +533,9 @@ ViewBase {
 
                     onFinished: {
                         if (buttonId == Enums.ok){
-                            // orderEditorContainer.model.beginChanges();
 
                             let productModel = productsDialog.bodyItem.productItem.copyMe();
                             let actualOrderProducts = orderEditorContainer.orderData.m_orderProducts;
-                            console.log("productModel", productModel.toJson());
 
                             let index = productsView.activeProductIndex;
                             if (index < 0){
@@ -534,7 +552,6 @@ ViewBase {
                             productsView.model = 0;
                             productsView.model = actualOrderProducts;
 
-                            // orderEditorContainer.model.endChanges();
                             orderEditorContainer.model.modelChanged([]);
                         }
                     }

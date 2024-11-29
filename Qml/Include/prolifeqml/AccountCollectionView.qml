@@ -68,6 +68,7 @@ RemoteCollectionView {
 
             documentManager.registerDocumentView("Account", "AccountEditor", accountEditorComp);
             documentManager.registerDocumentDataController("Account", dataControllerComp);
+            documentManager.registerDocumentValidator("Account", accountValidatorComp);
         }
     }
 
@@ -87,6 +88,26 @@ RemoteCollectionView {
                     uuid: accountEditor.viewId;
                     commandsView: accountEditor.commandsView;
                 }
+            }
+        }
+    }
+
+    Component {
+        id: accountValidatorComp;
+
+        DocumentValidator {
+            property AccountData accountData: documentModel
+            function isValid(data){
+                if (!accountData){
+                    return false;
+                }
+
+                if (accountData.m_name === ""){
+                    data.message = qsTr("Account name cannot be empty");
+                    return false;
+                }
+
+                return true;
             }
         }
     }

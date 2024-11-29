@@ -1,4 +1,5 @@
-import QtQuick 2.0
+//import QtQuick 2.0
+import QtQml
 import Acf 1.0
 import imtgui 1.0
 import imtlicgui 1.0
@@ -50,23 +51,23 @@ ApplicationMain {
         onStatusChanged: {
             if (status === 2){
                 if (!window.wasError){
-                    ModalDialogManager.openDialog(errorDialog, {});
+//                    ModalDialogManager.openDialog(errorDialog, {});
                     window.wasError = true;
                 }
             }
         }
     }
 
-    property bool wasError: false;
-    Component {
-        id: errorDialog;
+//    property bool wasError: false;
 
-        ErrorDialog {
-            title: qsTr("Warning Message");
-            message: qsTr("Lisa server connection error");
+//    Component {
+//        id: errorDialog;
+//        ErrorDialog {
+//            title: qsTr("Warning Message");
+//            message: qsTr("Lisa server connection error");
 
-            onFinished: {}
-        }
-    }
+//            onFinished: {}
+//        }
+//    }
 }
 

@@ -45,12 +45,9 @@ ViewBase {
             deviceCB.currentIndex = -1;
             let deviceId = productItem.m_id;
 
-            console.log("deviceId", deviceId);
-
             if (deviceCB.model){
                 for (let i = 0; i < deviceCB.model.getItemsCount(); i++){
                     let id = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_id, i);
-                    console.log("id", id);
 
                     if (id === deviceId){
                         deviceCB.currentIndex = i;
@@ -82,10 +79,8 @@ ViewBase {
         else{
             if (deviceCB.currentIndex >= 0){
                 let deviceId = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_id, deviceCB.currentIndex);
-                console.log("deviceCB id", deviceId);
 
                 productItem.m_id = deviceId;
-                console.log("productItem.m_id", productItem.m_id);
 
                 if (deviceCB.model.containsKey(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex)){
                     let configurationType = deviceCB.model.getData(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex);

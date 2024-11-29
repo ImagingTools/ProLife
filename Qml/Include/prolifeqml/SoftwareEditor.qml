@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import Acf 1.0
 import imtgui 1.0
 import imtauthgui 1.0
@@ -22,8 +22,13 @@ ViewBase {
     property SoftwareProductData softwareProductData: model ? model : null;
 
     Component.onCompleted: {
-        CachedProductCollection.updateModel();
-        CachedOrderCollection.updateModel();
+        if (!CachedProductCollection.completed){
+            CachedProductCollection.updateModel();
+        }
+
+        if (!CachedOrderCollection.completed){
+            CachedOrderCollection.updateModel();
+        }
     }
 
     onVisibleChanged: {
@@ -275,7 +280,6 @@ ViewBase {
 
             GroupHeaderView {
                 width: parent.width;
-
                 title: qsTr("Software Information");
                 groupView: group;
             }
@@ -414,6 +418,9 @@ ViewBase {
                     KeyNavigation.tab: licenseCB;
                     KeyNavigation.backtab: ordersCB;
 
+                    isSelectionRequired: true;
+                    errorText: qsTr("Please select a product");
+
                     onModelChanged: {
                         root.doUpdateGui();
                     }
@@ -448,6 +455,9 @@ ViewBase {
                     KeyNavigation.tab: serialNumberInput;
                     KeyNavigation.backtab: productCB;
 
+                    isSelectionRequired: true;
+                    errorText: qsTr("Please select a license");
+
                     onCurrentIndexChanged: {
                         if (currentIndex >= 0){
                             root.doUpdateModel();
@@ -464,9 +474,17 @@ ViewBase {
                     KeyNavigation.tab: unlimitedSwitch;
                     KeyNavigation.backtab: licenseCB;
 
+                    textInputValidator: serialNumberRegexp;
+                    showErrorWhenInvalid: true;
+                    errorText: qsTr("Please enter the software-ID");
                     onEditingFinished: {
                         root.doUpdateModel();
                     }
+                }
+
+                RegularExpressionValidator {
+                    id: serialNumberRegexp;
+                    regularExpression: /^(?!\s*$).+/;
                 }
             }
 

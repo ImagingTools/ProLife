@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/Images">
-        <file alias="ProLifeSplashScreen">Resources/Images/ProLifeSplashScreen.svg</file>
-    </qresource>
-    <qresource prefix="/Icons">
-        <file alias="ProLifeIcon">Resources/Icons/ProLifeIcon.svg</file>
-    </qresource>
-</RCC>

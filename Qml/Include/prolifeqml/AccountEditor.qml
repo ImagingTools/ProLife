@@ -206,6 +206,9 @@ ViewBase {
 
                     name: qsTr("Account Name");
                     placeHolderText: qsTr("Enter the account name");
+                    textInputValidator: accountNameRegexp;
+                    showErrorWhenInvalid: true;
+                    errorText: qsTr("Please enter the account name");
 
                     onEditingFinished: {
                         accountEditorContainer.doUpdateModel();
@@ -218,6 +221,11 @@ ViewBase {
                         let ok = PermissionsController.checkPermission("ChangeAccountName");
 
                         accountNameInput.readOnly = !ok;
+                    }
+
+                    RegularExpressionValidator {
+                        id: accountNameRegexp;
+                        regularExpression: /^(?!\s*$).+/;
                     }
                 }
 

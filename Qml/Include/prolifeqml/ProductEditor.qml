@@ -88,8 +88,6 @@ Item {
             }
         }
 
-        console.log("excludeDeviceIds1", excludeDeviceIds);
-
         let resultModel = treeItemModelComp.createObject(null);
         let selectedProductId = productItem.m_productUuid;
         let selectedDeviceId = productItem.m_id;
@@ -98,8 +96,6 @@ Item {
         if (index >= 0){
             excludeDeviceIds.splice(index, 1)
         }
-
-        console.log("excludeDeviceIds2", excludeDeviceIds);
 
         for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
             let status = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_status, i);
@@ -230,12 +226,24 @@ Item {
             property Button softwareProductButton;
             property Button hardwareProductButton;
 
+            property int selectedIndex: 0;
+
+            bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
+
+            Component {
+                id: selectedComp;
+
+                BaseText {
+                    font.family: Style.fontFamilyBold;
+                    text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
+                }
+            }
+
             controlComp: Component {
                 SegmentedButton {
                     anchors.centerIn: parent;
-
                     height: 40;
-
+                    selectedIndex: 0;
                     isExclusive: true;
 
                     onSelectedIndexChanged: {
@@ -247,6 +255,8 @@ Item {
                         else if (selectedIndex == 1){
                             productEditor.setHardware();
                         }
+
+                        segmentedElementView.selectedIndex = selectedIndex;
                     }
 
                     Button {
@@ -365,22 +375,7 @@ Item {
         TreeItemModel {}
     }
 
-    // function getProductLicensesModel(){
-    //     for (let i = 0; i < productEditor.licensesModel.getItemsCount(); i++){
-    //         let productId = productEditor.licensesModel.getData("Id", i);
-    //         if (productId === productItem.m_productUuid){
-    //             if (productEditor.licensesModel.containsKey("Licenses", i)){
-    //                 return productEditor.licensesModel.getData("Licenses", i);
-    //             }
-    //         }
-    //     }
-
-    //     return null;
-    // }
-
     function started(){
-        console.log("started");
-
         if (!productItem){
             return;
         }

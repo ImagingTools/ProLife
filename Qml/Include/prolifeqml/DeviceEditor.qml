@@ -32,8 +32,13 @@ ViewBase {
     property DeviceData deviceData: model ? model : null;
 
     Component.onCompleted: {
-        CachedOrderCollection.updateModel();
-        CachedProductCollection.updateModel();
+        if (!CachedProductCollection.completed){
+            CachedProductCollection.updateModel();
+        }
+
+        if (!CachedOrderCollection.completed){
+            CachedOrderCollection.updateModel();
+        }
     }
 
     onDeviceDataChanged: {
@@ -371,6 +376,8 @@ ViewBase {
 
                     KeyNavigation.tab: configurationCB;
                     KeyNavigation.backtab: projectInput;
+                    isSelectionRequired: true;
+                    errorText: qsTr("Please select a device type");
 
                     onCurrentIndexChanged: {
                         let ok = false;
@@ -405,6 +412,8 @@ ViewBase {
 
                     KeyNavigation.tab: descriptionInput;
                     KeyNavigation.backtab: productCB;
+                    isSelectionRequired: true;
+                    errorText: qsTr("Please select a configuration");
 
                     onCurrentIndexChanged: {
                         if (configurationCB.currentIndex >= 0){

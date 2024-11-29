@@ -508,6 +508,7 @@ Item {
                                     collectionHeadersModel.setData("Id", "Customer", index);
                                     collectionHeadersModel.setData("Name", qsTr("Customer"), index);
 
+                                    bindingProductsCollection.tableViewParamsStoredServer = false;
                                     bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
                                 }
 
@@ -587,10 +588,7 @@ Item {
                                     }
 
                                     onHeadersChanged: {
-                                        console.log("bindingProductsCollection onHeadersChanged", lockIconCellComp);
-
                                         bindingProductsCollection.table.setColumnContentById("InUse", lockIconCellComp);
-                                        // bindingProductsCollection.table.tableDecorator = tableDecoratorModel;
                                     }
                                 }
                             }
