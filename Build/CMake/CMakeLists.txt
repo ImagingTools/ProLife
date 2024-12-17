@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.15)
 
 project(ProLifeAll)
 
@@ -15,7 +15,9 @@ if(NOT DEFINED WEB_COMPILE)
 endif()
 
 if(NOT DEFINED BUILDDIR)
-	set(BUILDDIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+	get_filename_component(BUILDDIR "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+else()
+	get_filename_component(BUILDDIR "${BUILDDIR}" ABSOLUTE)
 endif()
 
 if(NOT DEFINED IMTCOREDIR)
@@ -32,14 +34,24 @@ endif()
 
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
 
-set(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include")
-set(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl")
+get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
+get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
 
 set(AUX_INCLUDE_DIR "${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/GeneratedFiles")
 
 include_directories("${AUX_INCLUDE_DIR}/../")
 
 # Sdl
+include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")
+# initialize SDL
+if (NOT IMT_DevAll_BUILD)
+	get_filename_component(CACHE_BASE_DIR_PATH "${IMTCOREDIR}/AuxInclude/${TARGETNAME}" ABSOLUTE)
+	ImtCoreAddSdlSearchPath("${CACHE_BASE_DIR_PATH}/GeneratedFiles")
+	ImtCoreAddSdlSearchPath("${AUX_INCLUDE_DIR}")
+	ImtCoreSetSdlMainCacheFile("${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/SDL_CACHE/cache.jcache")
+	ImtCoreAddSdlCacheFile("${CACHE_BASE_DIR_PATH}/SDL_CACHE/cache.jcache")
+	make_directory("${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/SDL_CACHE")
+endif()
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
 
 # Include

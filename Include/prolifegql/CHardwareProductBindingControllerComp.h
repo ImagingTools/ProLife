@@ -30,10 +30,10 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
 				const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& getSensorBindingListRequest,
-				sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& representationObject,
+				sdl::prolife::SensorBinding::CSensorBindingItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const sdl::prolife::SensorBinding::V1_0::CSensorBindingData& sensorBindingDataRepresentation,
+				const sdl::prolife::SensorBinding::CSensorBindingData::V1_0& sensorBindingDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
@@ -41,7 +41,12 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingGqlRequest& getSensorBindingRequest,
-				sdl::prolife::SensorBinding::V1_0::CSensorBindingDataPayload& representationPayload,
+				sdl::prolife::SensorBinding::CSensorBindingDataPayload::V1_0& representationPayload,
+				QString& errorMessage) const override;
+	virtual bool UpdateObjectFromRepresentationRequest(
+				const ::imtgql::CGqlRequest& rawGqlRequest,
+				const sdl::prolife::SensorBinding::V1_0::CUpdateSensorBindingGqlRequest& updateSensorBindingRequest,
+				istd::IChangeable& object,
 				QString& errorMessage) const override;
 
 	virtual imtbase::CTreeItemModel* UpdateObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;

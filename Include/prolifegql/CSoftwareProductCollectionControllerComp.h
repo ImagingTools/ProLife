@@ -33,10 +33,10 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
 				const sdl::prolife::Licenses::V1_0::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
-				sdl::prolife::Licenses::V1_0::CSoftwareProductItem& representationObject,
+				sdl::prolife::Licenses::CSoftwareProductItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const sdl::prolife::Licenses::V1_0::CSoftwareProductData& softwareProductDataRepresentation,
+				const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
@@ -44,8 +44,13 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::Licenses::V1_0::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-				sdl::prolife::Licenses::V1_0::CSoftwareProductDataPayload& representationPayload,
+				sdl::prolife::Licenses::CSoftwareProductDataPayload::V1_0& representationPayload,
 				QString& errorMessage) const override;
+	virtual bool UpdateObjectFromRepresentationRequest(
+		const ::imtgql::CGqlRequest& rawGqlRequest,
+		const sdl::prolife::Licenses::V1_0::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
+		istd::IChangeable& object,
+		QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 

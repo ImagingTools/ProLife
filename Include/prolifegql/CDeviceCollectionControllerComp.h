@@ -32,12 +32,12 @@ public:
 protected:
 	// reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
-				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+				const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
 				const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
-				sdl::prolife::Sensors::V1_0::CDeviceItem& representationObject,
+				sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
-				const sdl::prolife::Sensors::V1_0::CDeviceData& deviceDataRepresentation,
+				const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
 				QByteArray& newObjectId,
 				QString& name,
 				QString& description,
@@ -45,7 +45,12 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
-				sdl::prolife::Sensors::V1_0::CDeviceDataPayload& representationPayload,
+				sdl::prolife::Sensors::CDeviceDataPayload::V1_0& representationPayload,
+				QString& errorMessage) const override;
+	virtual bool UpdateObjectFromRepresentationRequest(
+				const ::imtgql::CGqlRequest& rawGqlRequest,
+				const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;

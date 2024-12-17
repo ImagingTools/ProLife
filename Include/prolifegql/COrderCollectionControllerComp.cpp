@@ -27,7 +27,7 @@ namespace prolifegql
 
 bool COrderCollectionControllerComp::CheckProducts(
 	const QByteArray& orderUuid,
-	const QList<sdl::prolife::Orders::V1_0::COrderedProduct>& products,
+	const QList<sdl::prolife::Orders::COrderedProduct::V1_0>& products,
 	QString& errorMessage) const
 {
 	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
@@ -40,14 +40,14 @@ bool COrderCollectionControllerComp::CheckProducts(
 		return false;
 	}
 
-	for (const sdl::prolife::Orders::V1_0::COrderedProduct& product : products){
-		QByteArray objectUuid = product.GetId();
-		QByteArray productUuid = product.GetProductUuid();
-		QByteArray categoryId = product.GetCategoryId();
+	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+		QByteArray objectUuid = *product.Id;
+		QByteArray productUuid = *product.ProductUuid;
+		QByteArray categoryId = *product.CategoryId;
 		QString productName = GetProductName(productUuid);
 
 		if (categoryId == "Software"){
-			QByteArray serialNumber = product.GetSerialNumber();
+			QByteArray serialNumber = *product.SerialNumber;
 
 			bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectUuid, serialNumber, *m_softwareInstanceCollectionCompPtr);
 			if (!ok){
@@ -69,7 +69,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 			}
 		}
 		else if (categoryId == "Hardware"){
-			QByteArray macAddress = product.GetMacAddress();
+			QByteArray macAddress = *product.MacAddress;
 			if (!macAddress.isEmpty()){
 				bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
 				if (!ok){
@@ -90,7 +90,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 				}
 			}
 
-			QByteArray serialNumber = product.GetSerialNumber();
+			QByteArray serialNumber = *product.SerialNumber;
 			if (!serialNumber.isEmpty()){
 				bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
 				if (!serialNumberIsValid){
@@ -158,10 +158,10 @@ void COrderCollectionControllerComp::GenerateDifferences(
 // reimplemented (sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase)
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
-	const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
-	sdl::prolife::Orders::V1_0::COrderItem& representationObject,
-	QString& errorMessage) const
+			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
+			const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
+			sdl::prolife::Orders::COrderItem::V1_0& representationObject,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set", "COrderCollectionControllerComp");
@@ -187,36 +187,37 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
 
-	if (requestInfo.items.isTypeIdRequested){
-		representationObject.SetTypeId(m_objectCollectionCompPtr->GetObjectTypeId(objectId));
+	if (requestInfo.items.isIdRequested){
+		representationObject.Id = std::make_unique<QByteArray>(objectId);
 	}
 
-	if (requestInfo.items.isIdRequested){
-		representationObject.SetId(objectId);
+	if (requestInfo.items.isTypeIdRequested){
+		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
+		representationObject.TypeId = std::make_unique<QByteArray>(collectionObjectId);
 	}
 
 	if (requestInfo.items.isNameRequested){
-		representationObject.SetName(orderInfoPtr->GetOrderId());
+		representationObject.Name = std::make_unique<QString>(orderInfoPtr->GetOrderId());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.SetDescription(orderInfoPtr->GetDescription());
+		representationObject.Description = std::make_unique<QString>(orderInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isStatusRequested){
-		representationObject.SetStatus(prolifedata::GetNameFromOrderStatus(orderInfoPtr->GetOrderStatus()));
+		representationObject.Status = std::make_unique<QString>(prolifedata::GetNameFromOrderStatus(orderInfoPtr->GetOrderStatus()));
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.SetOrderId(orderInfoPtr->GetOrderId());
+		representationObject.OrderId = std::make_unique<QByteArray>(orderInfoPtr->GetOrderId());
 	}
 
 	if (requestInfo.items.isOrderCustomerRequested){
-		representationObject.SetOrderCustomer(objectCollectionIterator.GetElementInfo("OrderCustomer").toByteArray());
+		representationObject.OrderCustomer = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("OrderCustomer").toString());
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.SetPurchaseId(orderInfoPtr->GetPurchaseOrderId());
+		representationObject.PurchaseId = std::make_unique<QByteArray>(orderInfoPtr->GetPurchaseOrderId());
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -224,7 +225,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.SetAdded(added);
+		representationObject.Added = std::make_unique<QString>(added);
 	}
 
 	if (requestInfo.items.isLastModifiedRequested){
@@ -232,7 +233,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.SetLastModified(lastModified);
+		representationObject.LastModified = std::make_unique<QString>(lastModified);
 	}
 
 	return true;
@@ -240,11 +241,11 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentation(
-	const sdl::prolife::Orders::V1_0::COrderData& orderDataRepresentation,
-	QByteArray& newObjectId,
-	QString& name,
-	QString& description,
-	QString& errorMessage) const
+			const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
+			QByteArray& newObjectId,
+			QString& name,
+			QString& description,
+			QString& errorMessage) const
 {
 	if (!m_orderInfoFactCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Error: Attribute 'm_orderInfoFactCompPtr' was not set", "COrderCollectionControllerComp");
@@ -275,14 +276,22 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	QByteArray orderUuid = orderDataRepresentation.GetId();
-	if (orderUuid.isEmpty()){
-		orderUuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	if (orderDataRepresentation.Id){
+		newObjectId = *orderDataRepresentation.Id;
 	}
-	orderInfoPtr->SetObjectUuid(orderUuid);
-	newObjectId = orderUuid;
 
-	QString orderId = orderDataRepresentation.GetOrderId();
+	if (newObjectId.isEmpty()){
+		newObjectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+
+	QByteArray orderUuid = newObjectId;
+	orderInfoPtr->SetObjectUuid(orderUuid);
+
+	QString orderId;
+	if (orderDataRepresentation.OrderId){
+		orderId = *orderDataRepresentation.OrderId;
+	}
+
 	if (orderId.isEmpty()){
 		errorMessage = QString("Delivery-ID cannot be empty");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
@@ -330,8 +339,12 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 	orderInfoPtr->SetOrderId(orderId.toUtf8());
 	name = orderId;
 
-	QByteArray customerId = orderDataRepresentation.GetCustomerId();
-	orderInfoPtr->SetCustomerId(customerId);
+	QByteArray customerId;
+	if (orderDataRepresentation.CustomerId){
+		customerId = *orderDataRepresentation.CustomerId;
+		orderInfoPtr->SetCustomerId(customerId);
+	}
+
 	if (customerId.isEmpty()){
 		errorMessage = QString("Customer can not be empty!");
 		SendErrorMessage(0, errorMessage, "COrderControllerComp");
@@ -339,15 +352,20 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	QByteArray purchaseOrderId = orderDataRepresentation.GetPurchaseId();
-	orderInfoPtr->SetPurchaseOrderId(purchaseOrderId);
+	if (orderDataRepresentation.PurchaseId){
+		QByteArray purchaseOrderId = *orderDataRepresentation.PurchaseId;
+		orderInfoPtr->SetPurchaseOrderId(purchaseOrderId);
+	}
 
-	QString orderDescription = orderDataRepresentation.GetDescription();
-	orderInfoPtr->SetDescription(orderDescription);
-	description = orderDescription;
+	if (orderDataRepresentation.Description){
+		description = *orderDataRepresentation.Description;
+		orderInfoPtr->SetDescription(description);
+	}
 
-	QByteArray status = orderDataRepresentation.GetOrderStatus();
-	orderInfoPtr->SetOrderStatus(prolifedata::GetOrderStatusFromId(status));
+	if (orderDataRepresentation.OrderStatus){
+		QByteArray status = *orderDataRepresentation.OrderStatus;
+		orderInfoPtr->SetOrderStatus(prolifedata::GetOrderStatusFromId(status));
+	}
 
 	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
 	if (productCollectionPtr == nullptr){
@@ -355,20 +373,23 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	QList<sdl::prolife::Orders::V1_0::COrderedProduct> products = orderDataRepresentation.GetOrderProducts();
+	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
+	if (orderDataRepresentation.OrderProducts){
+		products = *orderDataRepresentation.OrderProducts;
+	}
 
 	bool ok = CheckProducts(orderUuid, products, errorMessage);
 	if (!ok){
 		return nullptr;
 	}
 
-	for (const sdl::prolife::Orders::V1_0::COrderedProduct& product : products){
-		QByteArray orderProductUuid = product.GetId();
-		QByteArray categoryId = product.GetCategoryId();
-		QByteArray productUuid = product.GetProductUuid();
-		QByteArray serialNumber = product.GetSerialNumber();
-		QByteArray licenseUuid = product.GetLicenseUuid();
-		bool isNew = product.GetIsNew();
+	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+		QByteArray orderProductUuid = *product.Id;
+		QByteArray categoryId = *product.CategoryId;
+		QByteArray productUuid = *product.ProductUuid;
+		QByteArray serialNumber = *product.SerialNumber;
+		QByteArray licenseUuid = *product.LicenseUuid;
+		bool isNew = *product.IsNew;
 
 		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
@@ -383,7 +404,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			softwareInstancePtr->SetupProductInstance(productUuid, "", "");
 			softwareInstancePtr->SetSerialNumber(serialNumber);
 
-			QString expiration = product.GetExpiration();
+			QString expiration = *product.Expiration;
 			QDateTime expirationDate = QDateTime::fromString(expiration, "yyyy-MM-dd");
 			softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
 
@@ -438,7 +459,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			deviceInstancePtr->SetOrderId(orderUuid);
 			deviceInstancePtr->SetDeviceType(productUuid);
 			deviceInstancePtr->SetConfigurationType(licenseUuid);
-			deviceInstancePtr->SetMacAddress(product.GetMacAddress());
+			deviceInstancePtr->SetMacAddress(*product.MacAddress);
 			deviceInstancePtr->SetSerialNumber(serialNumber);
 
 			if (isNew){
@@ -542,10 +563,10 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
-	const istd::IChangeable& data,
-	const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
-	sdl::prolife::Orders::V1_0::COrderDataPayload& representationPayload,
-	QString& errorMessage) const
+			const istd::IChangeable& data,
+			const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
+			sdl::prolife::Orders::COrderDataPayload::V1_0& representationPayload,
+			QString& errorMessage) const
 {
 	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(data));
 	if (orderInfoPtr == nullptr){
@@ -556,34 +577,37 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	sdl::prolife::Orders::V1_0::OrderItemRequestArguments arguments = orderItemRequest.GetRequestedArguments();
-	sdl::prolife::Orders::V1_0::COrderData orderData;
+	sdl::prolife::Orders::COrderData::V1_0 orderData;
 
-	QByteArray id = arguments.input.GetId();
-	orderData.SetId(id);
+	QByteArray id;
+	if (arguments.input.Id){
+		id = *arguments.input.Id;
+	}
+	orderData.Id = std::make_unique<QByteArray>(id);
 
 	QByteArray orderId = orderInfoPtr->GetOrderId();
-	orderData.SetName(orderId);
-	orderData.SetOrderId(orderId);
+	orderData.Name = std::make_unique<QString>(orderId);
+	orderData.OrderId = std::make_unique<QByteArray>(orderId);
 
 	QByteArray purchaseOrderId = orderInfoPtr->GetPurchaseOrderId();
-	orderData.SetPurchaseId(purchaseOrderId);
+	orderData.PurchaseId = std::make_unique<QByteArray>(purchaseOrderId);
 
 	QByteArray customerId = orderInfoPtr->GetCustomerId();
-	orderData.SetCustomerId(customerId);
+	orderData.CustomerId = std::make_unique<QByteArray>(customerId);
 
 	QString description = orderInfoPtr->GetDescription();
-	orderData.SetDescription(description);
+	orderData.Description = std::make_unique<QString>(description);
 
 	prolifedata::IOrderInfo::OrderStatus status = orderInfoPtr->GetOrderStatus();
 	QByteArray orderStatus = prolifedata::GetIdFromOrderStatus(status);
-	orderData.SetOrderStatus(orderStatus);
+	orderData.OrderStatus = std::make_unique<QByteArray>(orderStatus);
 
 	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
 	if (productCollectionPtr == nullptr){
 		return false;
 	}
 
-	QList<sdl::prolife::Orders::V1_0::COrderedProduct> products;
+	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
 
 	imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
 	for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
@@ -594,21 +618,21 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 			if (m_softwareInstanceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 				const imtlic::IProductInstanceInfo* softwareProductPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 				if (softwareProductPtr != nullptr){
-					sdl::prolife::Orders::V1_0::COrderedProduct softwareProduct;
+					sdl::prolife::Orders::COrderedProduct::V1_0 softwareProduct;
 					QByteArray productUuid = softwareProductPtr->GetProductId();
 
-					softwareProduct.SetId(productId);
-					softwareProduct.SetCategoryId(softwareProductPtr->GetFactoryId());
-					softwareProduct.SetProductUuid(softwareProductPtr->GetProductId());
-					softwareProduct.SetSerialNumber(softwareProductPtr->GetSerialNumber());
-					softwareProduct.SetInUse(softwareProductPtr->IsInUse());
-					softwareProduct.SetIsNew(false);
+					softwareProduct.Id = std::make_unique<QByteArray>(productId);
+					softwareProduct.CategoryId = std::make_unique<QByteArray>(softwareProductPtr->GetFactoryId());
+					softwareProduct.ProductUuid = std::make_unique<QByteArray>(softwareProductPtr->GetProductId());
+					softwareProduct.SerialNumber = std::make_unique<QByteArray>(softwareProductPtr->GetSerialNumber());
+					softwareProduct.InUse = std::make_unique<bool>(softwareProductPtr->IsInUse());
+					softwareProduct.IsNew = std::make_unique<bool>(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
 						const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
 						if (productInfoPtr != nullptr){
-							softwareProduct.SetProductName(productInfoPtr->GetName());
+							softwareProduct.ProductName = std::make_unique<QString>(productInfoPtr->GetName());
 						}
 					}
 
@@ -618,21 +642,20 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 						QByteArray activeLicenseId = activeLicenseIds[0];
 						const imtlic::ILicenseInstance* licenseInstancePtr = softwareProductPtr->GetLicenseInstance(activeLicenseId);
 						if (licenseInstancePtr != nullptr){
-							softwareProduct.SetLicenseUuid(activeLicenseId);
+							softwareProduct.LicenseUuid = std::make_unique<QByteArray>(activeLicenseId);
 
 							imtbase::IObjectCollection::DataPtr licenseDataPtr;
 							if (m_licenseDefinitionCollectionCompPtr->GetObjectData(activeLicenseId, licenseDataPtr)){
 								const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseInfoPtr != nullptr){
-									softwareProduct.SetLicenseName(licenseInfoPtr->GetLicenseName());
-									softwareProduct.SetLicenseId(licenseInfoPtr->GetLicenseId());
+									softwareProduct.LicenseName = std::make_unique<QString>(licenseInfoPtr->GetLicenseName());
+									softwareProduct.LicenseUuid = std::make_unique<QByteArray>(licenseInfoPtr->GetLicenseId());
 								}
 							}
 
 							QDate date = licenseInstancePtr->GetExpiration().date();
 							QString licenseExpiration = date.toString("yyyy-MM-dd");
-
-							softwareProduct.SetExpiration(licenseExpiration);
+							softwareProduct.Expiration = std::make_unique<QString>(licenseExpiration);
 						}
 					}
 
@@ -644,22 +667,22 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 			if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 				const prolifedata::CIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::CIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
-					sdl::prolife::Orders::V1_0::COrderedProduct hardwareProduct;
+					sdl::prolife::Orders::COrderedProduct::V1_0 hardwareProduct;
 
 					QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 					QByteArray licenseDefinitionUuid = deviceInfoPtr->GetConfigurationType();
 
-					hardwareProduct.SetId(productId);
-					hardwareProduct.SetProductUuid(productUuid);
-					hardwareProduct.SetCategoryId(QByteArray("Hardware"));
-					hardwareProduct.SetLicenseUuid(licenseDefinitionUuid);
-					hardwareProduct.SetIsNew(false);
+					hardwareProduct.Id = std::make_unique<QByteArray>(productId);
+					hardwareProduct.ProductUuid = std::make_unique<QByteArray>(productUuid);
+					hardwareProduct.CategoryId = std::make_unique<QByteArray>(QByteArray("Hardware"));
+					hardwareProduct.LicenseUuid = std::make_unique<QByteArray>(licenseDefinitionUuid);
+					hardwareProduct.IsNew = std::make_unique<bool>(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
 						const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
 						if (productInfoPtr != nullptr){
-							hardwareProduct.SetProductName(productInfoPtr->GetName());
+							hardwareProduct.ProductName = std::make_unique<QString>(productInfoPtr->GetName());
 						}
 					}
 
@@ -667,8 +690,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_licenseDefinitionCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
 						const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 						if (licenseInfoPtr != nullptr){
-							hardwareProduct.SetLicenseName(licenseInfoPtr->GetLicenseName());
-							hardwareProduct.SetLicenseId(licenseInfoPtr->GetLicenseId());
+							hardwareProduct.LicenseName = std::make_unique<QString>(licenseInfoPtr->GetLicenseName());
+							hardwareProduct.LicenseId = std::make_unique<QByteArray>(licenseInfoPtr->GetLicenseId());
 						}
 					}
 
@@ -676,8 +699,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_deviceCollectionCompPtr->GetObjectData(productId, deviceDataPtr)){
 						const prolifedata::IDeviceInfo* deviceInfoInstancePtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 						if (deviceInfoInstancePtr != nullptr){
-							hardwareProduct.SetMacAddress(deviceInfoInstancePtr->GetMacAddress());
-							hardwareProduct.SetSerialNumber(deviceInfoInstancePtr->GetSerialNumber());
+							hardwareProduct.MacAddress = std::make_unique<QByteArray>(deviceInfoInstancePtr->GetMacAddress());
+							hardwareProduct.SerialNumber = std::make_unique<QByteArray>(deviceInfoInstancePtr->GetSerialNumber());
 						}
 					}
 
@@ -685,7 +708,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_bindingCollectionCompPtr->GetObjectData(productId, bindingDataPtr)){
 						const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(bindingDataPtr.GetPtr());
 						if (bindingInfoPtr != nullptr){
-							hardwareProduct.SetInUse(false);
+							hardwareProduct.InUse = std::make_unique<bool>(false);
 
 							QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
 							for (const QByteArray& softwareId : softwareIds){
@@ -695,7 +718,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 									if (productInstanceInfoPtr != nullptr){
 										bool isUse = productInstanceInfoPtr->IsInUse();
 										if (isUse){
-											hardwareProduct.SetInUse(true);
+											hardwareProduct.InUse = std::make_unique<bool>(true);
 											break;
 										}
 									}
@@ -710,8 +733,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
-	orderData.SetOrderProducts(products);
-	representationPayload.SetOrderData(orderData);
+	orderData.OrderProducts = std::make_unique<QList<sdl::prolife::Orders::COrderedProduct::V1_0>>(products);
+	representationPayload.OrderData = std::make_unique<sdl::prolife::Orders::COrderData::V1_0>(orderData);
 
 	return true;
 }
@@ -770,6 +793,15 @@ void COrderCollectionControllerComp::SetObjectFilter(
 
 		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
 	}
+}
+
+bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
+{
+	SendCriticalMessage(0, "Unimplemented method call!", __func__);
+
+	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
+
+	return false;
 }
 
 

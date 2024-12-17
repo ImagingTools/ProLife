@@ -69,7 +69,7 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::GetObject(
 bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& /*objectCollectionIterator*/,
 			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingListGqlRequest& /*getSensorBindingListRequest*/,
-			sdl::prolife::SensorBinding::V1_0::CSensorBindingItem& /*representationObject*/,
+			sdl::prolife::SensorBinding::CSensorBindingItem::V1_0& /*representationObject*/,
 			QString& /*errorMessage*/) const
 {
 	return true;
@@ -77,16 +77,19 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepresentation(
-			const sdl::prolife::SensorBinding::V1_0::CSensorBindingData& sensorBindingDataRepresentation,
+			const sdl::prolife::SensorBinding::CSensorBindingData::V1_0& sensorBindingDataRepresentation,
 			QByteArray& newObjectId,
-			QString& /*name*/,
-			QString& /*description*/,
+			QString& name,
+			QString& description,
 			QString& errorMessage) const
 {
 	istd::TDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
 	hardwareProductBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding());
 
-	newObjectId = sensorBindingDataRepresentation.GetId();
+	if (sensorBindingDataRepresentation.Id){
+		newObjectId = *sensorBindingDataRepresentation.Id;
+	}
+
 	if (newObjectId.isEmpty()){
 		errorMessage = QString(QT_TR_NOOP("Unable to create object with empty ID"));
 		SendErrorMessage(0, errorMessage, "CHardwareProductBindingControllerComp");
@@ -96,7 +99,10 @@ istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepres
 
 	hardwareProductBindingPtr->SetHardwareId(newObjectId);
 
-	QByteArray softwareLinkInfos = sensorBindingDataRepresentation.GetSoftwareIds();
+	QByteArray softwareLinkInfos;
+	if (sensorBindingDataRepresentation.SoftwareIds){
+		softwareLinkInfos = *sensorBindingDataRepresentation.SoftwareIds;
+	}
 
 	QByteArrayList softwareIds = softwareLinkInfos.split(';');
 	softwareIds.removeAll("");
@@ -109,7 +115,7 @@ istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepres
 bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
 			const sdl::prolife::SensorBinding::V1_0::CGetSensorBindingGqlRequest& getSensorBindingRequest,
-			sdl::prolife::SensorBinding::V1_0::CSensorBindingDataPayload& representationPayload,
+			sdl::prolife::SensorBinding::CSensorBindingDataPayload::V1_0& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::IHardwareProductBinding* productBindingPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(&data);
@@ -122,13 +128,13 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 
 	sdl::prolife::SensorBinding::V1_0::GetSensorBindingRequestArguments arguments = getSensorBindingRequest.GetRequestedArguments();
 
-	sdl::prolife::SensorBinding::V1_0::CSensorBindingData sensorBindingData;
+	sdl::prolife::SensorBinding::CSensorBindingData::V1_0 sensorBindingData;
 
 	QByteArray hardwareId = productBindingPtr->GetHardwareId();
-	sensorBindingData.SetId(hardwareId);
+	sensorBindingData.Id = std::make_unique<QByteArray>(hardwareId);
 
 	QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
-	sensorBindingData.SetSoftwareIds(softwareIds.join(';'));
+	sensorBindingData.SoftwareIds = std::make_unique<QByteArray>(softwareIds.join(';'));
 
 	if (!softwareIds.isEmpty()){
 		if (m_softwareProductCollectionCompPtr.IsValid()){
@@ -139,16 +145,16 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					QByteArray project = productInstanceInfoPtr->GetProject();
-					sensorBindingData.SetProject(project);
+					sensorBindingData.Project = std::make_unique<QString>(project);
 
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
-					sensorBindingData.SetProductUuid(productId);
+					sensorBindingData.ProductUuid = std::make_unique<QByteArray>(productId);
 				}
 			}
 		}
 	}
 
-	representationPayload.SetSensorBindingData(sensorBindingData);
+	representationPayload.SensorBindingData = std::make_unique<sdl::prolife::SensorBinding::CSensorBindingData::V1_0>(sensorBindingData);
 
 	return true;
 }
@@ -345,6 +351,16 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	}
 
 	return BaseClass::UpdateObject(gqlRequest, errorMessage);
+}
+
+
+bool CHardwareProductBindingControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::SensorBinding::V1_0::CUpdateSensorBindingGqlRequest& updateSensorBindingRequest, istd::IChangeable& object, QString& errorMessage) const
+{
+	SendCriticalMessage(0, "Unimplemented method call!", __func__);
+
+	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
+
+	return false;
 }
 
 
