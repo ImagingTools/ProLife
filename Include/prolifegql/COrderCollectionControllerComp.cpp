@@ -797,10 +797,6 @@ void COrderCollectionControllerComp::SetObjectFilter(
 
 bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
 {
-	SendCriticalMessage(0, "Unimplemented method call!", __func__);
-
-	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
-
 	return false;
 }
 

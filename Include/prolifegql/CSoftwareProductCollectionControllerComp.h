@@ -47,10 +47,10 @@ protected:
 				sdl::prolife::Licenses::CSoftwareProductDataPayload::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
-		const ::imtgql::CGqlRequest& rawGqlRequest,
-		const sdl::prolife::Licenses::V1_0::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
-		istd::IChangeable& object,
-		QString& errorMessage) const override;
+				const ::imtgql::CGqlRequest& rawGqlRequest,
+				const sdl::prolife::Licenses::V1_0::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
+				istd::IChangeable& object,
+				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 

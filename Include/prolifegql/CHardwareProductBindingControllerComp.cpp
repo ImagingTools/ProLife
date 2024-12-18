@@ -356,10 +356,6 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 
 bool CHardwareProductBindingControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::SensorBinding::V1_0::CUpdateSensorBindingGqlRequest& updateSensorBindingRequest, istd::IChangeable& object, QString& errorMessage) const
 {
-	SendCriticalMessage(0, "Unimplemented method call!", __func__);
-
-	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
-
 	return false;
 }
 

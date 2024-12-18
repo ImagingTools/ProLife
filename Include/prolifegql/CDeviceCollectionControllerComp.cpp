@@ -644,12 +644,12 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 	}
 }
 
-bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
+bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
+			const imtgql::CGqlRequest& rawGqlRequest,
+			const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+			istd::IChangeable& object,
+			QString& errorMessage) const
 {
-	SendCriticalMessage(0, "Unimplemented method call!", __func__);
-
-	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
-
 	return false;
 }
 

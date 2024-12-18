@@ -8,6 +8,7 @@
 #include <prolifedata/IDeviceInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
 
+
 namespace prolifegql
 {
 
@@ -52,6 +53,7 @@ protected:
 				const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
+
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;

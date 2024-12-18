@@ -328,10 +328,6 @@ void CCustomerCollectionControllerComp::SetObjectFilter(
 
 bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Accounts::V1_0::CAccountUpdateGqlRequest& accountUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
 {
-	SendCriticalMessage(0, "Unimplemented method call!", __func__);
-
-	Q_ASSERT_X(false, "Unimplemented method call!", __func__);
-
 	return false;
 }
 
