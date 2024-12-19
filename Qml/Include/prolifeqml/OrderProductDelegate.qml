@@ -54,55 +54,18 @@ ElementView {
 
         spacing: Style.size_mainMargin;
 
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter;
+		StickerView {
+			anchors.verticalCenter: parent.verticalCenter;
+			color: root.categoryId == "Software" ? "orange" : Style.iconColorOnSelected;
+			text: root.categoryId;
+		}
 
-            width: productCategoryText.width + 2* Style.size_smallMargin;
-            height: 20;
-
-            color: root.categoryId == "Software" ? "orange" : Style.iconColorOnSelected;
-
-            radius: Style.buttonRadius;
-
-            Text {
-                id: productCategoryText;
-
-                anchors.centerIn: parent;
-
-                text: root.categoryId;
-
-                color: Style.baseColor;
-
-                font.family:Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-        }
-
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter;
-
-            width: newText.width + 2* Style.size_smallMargin;
-            height: 20;
-
-            color: Style.errorColor;
-
-            radius: Style.buttonRadius;
-
-            visible: root.isNew
-
-            Text {
-                id: newText;
-
-                anchors.centerIn: parent;
-
-                text: qsTr("New");
-
-                color: Style.baseColor;
-
-                font.family:Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
-            }
-        }
+		StickerView {
+			anchors.verticalCenter: parent.verticalCenter;
+			color: Style.errorColor;
+			text: qsTr("New");
+			visible: root.isNew
+		}
     }
 
     property bool readOnly: false;

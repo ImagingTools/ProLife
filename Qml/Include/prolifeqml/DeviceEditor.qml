@@ -294,6 +294,11 @@ ViewBase {
         }
     }
 
+	DocumentHistoryPanel {
+		id: historyPanel;
+		documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : "";
+	}
+
     CustomScrollbar {
         id: scrollbar;
 
@@ -493,14 +498,14 @@ ViewBase {
                     KeyNavigation.tab: statusCB;
                     KeyNavigation.backtab: macAddressInput;
 
-                    delegate: Component {
-                        FilterableComboBoxDelegate {
-                            width: comboBoxRef ? comboBoxRef.width : 0;
-                            comboBoxRef: orderCB.cbRef;
+					// delegate: Component {
+					//     FilterableComboBoxDelegate {
+					//         width: comboBoxRef ? comboBoxRef.width : 0;
+					//         comboBoxRef: orderCB.cbRef;
 
-                            description: qsTr("Customer") + ": " + model.OrderCustomer;
-                        }
-                    }
+					//         description: qsTr("Customer") + ": " + model.OrderCustomer;
+					//     }
+					// }
 
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();

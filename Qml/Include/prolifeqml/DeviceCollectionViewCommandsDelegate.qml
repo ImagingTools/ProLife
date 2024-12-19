@@ -52,11 +52,12 @@ DocumentCollectionViewDelegate {
 
             let commandsController = container.collectionView.commandsController;
             if(commandsController){
-                commandsController.setCommandIsEnabled("Remove", isEnabled);
-                commandsController.setCommandIsEnabled("Edit", isEnabled);
+				commandsController.setCommandIsEnabled("Remove", selectedItems.length > 0);
+				commandsController.setCommandIsEnabled("Edit", selectedItems.length > 0);
                 commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
                 commandsController.setCommandIsEnabled("Bind", isBindEnabled);
                 commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
+				commandsController.setCommandIsEnabled("Revision", isEnabled);
             }
         }
     }

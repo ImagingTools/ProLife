@@ -9,250 +9,342 @@ import imtdocgui 1.0
 import prolifeSensorsSdl 1.0
 
 RemoteCollectionView {
-    id: container;
+	id: container;
 
-    collectionId: "Devices";
-    additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
-    collectionFilter: DeviceCollectionFilter {}
-    commandsViewComp: Component {
-        id: commandsDecoratorComp;
+	anchors.fill: parent;
 
-        CommandsPanel {
-            commandId: container.viewId;
+	collectionId: "Devices";
+	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
+	collectionFilter: DeviceCollectionFilter {}
+	commandsViewComp: Component {
+		id: commandsDecoratorComp;
 
-            onCommandActivated: {
-                if (container.commandsDelegate){
-                    container.commandsDelegate.commandHandle(commandId);
-                }
-            }
-        }
-    }
+		CommandsPanel {
+			commandId: container.viewId;
 
-    commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
-            collectionView: container;
-        }
-    }
+			onCommandActivated: {
+				if (container.commandsDelegate){
+					container.commandsDelegate.commandHandle(commandId);
+				}
+			}
+		}
+	}
 
-    visibleMetaInfo: true;
+	commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
+			collectionView: container;
+		}
+	}
 
-    Component.onCompleted: {
-        collectionFilter.setSortingOrder("DESC");
-        collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
+	Component {
+		id: tableDelegate;
+		TablePainterRowDelegateBase{
+			id: tableRowDelegateBase
+			tableItem: container.table
+			width: container.table.width
+			minHeight: container.table.itemHeight
+			readOnly: container.table.readOnly;
+		}
+	}
 
-        let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-        if (documentManager){
-            container.commandsDelegate.documentManager = documentManager;
+	function drawStatusColumnDelegate(ctx, x, y, cellWidth, cellHeight, columnIndex, canvas){
+		let statusId = canvas.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, canvas.rowDelegate.rowIndex);
+		let source = deviceProductionStatus.getIconPath(statusId);
 
-            documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
-            documentManager.registerDocumentDataController("Device", dataControllerComp);
-            documentManager.registerDocumentValidator("Device", deviceValidatorComp);
-        }
+		let ratio = 0.5;
+		ctx.save();
+		ctx.scale(ratio, ratio);
+		ctx.drawImage(source, x, y, 20 *1/ratio, 20*1/ratio);
+		// ctx.drawImage(source, x, y, 20, 20);
+		ctx.restore();
+	}
 
-        filterMenu.decorator = deviceCollectionFilterComp;
-    }
+	visibleMetaInfo: true;
 
-    Component {
-        id: deviceCollectionFilterComp;
+	Component.onCompleted: {
+		collectionFilter.setSortingOrder("DESC");
+		collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
 
-        DeviceCollectionFilterDecorator {}
-    }
+		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+		if (documentManager){
+			container.commandsDelegate.documentManager = documentManager;
 
-    function onFilterChanged(filterId, filterValue){
-        if (filterId == "AccountFilter"){
-            container.collectionFilter.setAccountFilter(filterValue);
-        }
-        else if (filterId == "LicenseFilter"){
-            container.collectionFilter.setLicenseFilter(filterValue);
-        }
-        else if (filterId == "StatusFilter"){
-            container.collectionFilter.setDeviceStatusFilter(filterValue);
-        }
+			documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
+			documentManager.registerDocumentDataController("Device", dataControllerComp);
+			documentManager.registerDocumentValidator("Device", deviceValidatorComp);
+		}
 
-        container.doUpdateGui();
-    }
+		filterMenu.decorator = deviceCollectionFilterComp;
 
-    onHeadersChanged: {
-        container.table.setColumnContentById(DeviceItemTypeMetaInfo.s_status, pairComp);
-    }
+		container.table.registerFunctionDrawCellDelegate(DeviceItemTypeMetaInfo.s_status, drawStatusColumnDelegate);
+		// container.table.rowDelegate = tableDelegate;
 
-    Component {
-        id: deviceEditorComp;
+		// container.filterMenu.addFilterComp(10, "right", textFilterComp);
+		// container.filterMenu.addFilterComp(0, "left", accountFilterComp);
+		// container.filterMenu.addFilterComp(1, "left", licenseFilterComp);
+	}
 
-        DeviceEditor {
-            id: deviceEditor;
+	Component {
+		id: textFilterComp;
+		CustomTextField {
+			id: tfc;
+			textFieldRightMargin: iconClear.width + 2 * margin;
+			width: 270;
+			height: 30;
+			placeHolderText: qsTr("Enter some text to filter the item list");
+			ToolButton {
+				id: iconClear;
 
-            commandsControllerComp:
-                Component {CommandsPanelController {
-                    commandId: "Device";
-                    uuid: deviceEditor.viewId;
-                }}
+				z: 999;
 
-            commandsDelegateComp: Component {ViewCommandsDelegateBase {
-                    view: deviceEditor;
-                    onCommandActivated: {
-                        if (commandId == "Bind"){
-                            let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-                            if (documentManager){
-                                let documentData = documentManager.getDocumentDataByView(deviceEditor);
-                                if (!documentData){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+				anchors.verticalCenter: tfc.verticalCenter;
+				anchors.right: tfc.right;
+				anchors.rightMargin: Style.margin;
 
-                                    return;
-                                }
+				width: Style.buttonWidthSmall;
+				height: width;
 
-                                let documentIndex = documentData.documentIndex;
-                                if (documentIndex < 0){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+				visible: tfc.text != "";
 
-                                    return;
-                                }
+				iconSource: "../../../" + Style.getIconPath("Icons/Close", Icon.State.On, Icon.Mode.Normal);
+				decorator: Component {
+					ToolButtonDecorator {
+						color: "transparent";
+						icon.width: 16;
+					}
+				}
 
-                                let isDirty = documentData.isDirty;
-                                let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
-                                if (isNew || isDirty){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
+				onClicked: {
+					tfc.text = "";
+				}
+			}
+		}
+	}
 
-                                    return;
-                                }
+	Component {
+		id: accountFilterComp;
 
-                                let documentModel = documentData.documentDataController.documentModel;
-                                if (!documentModel){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+		CustomTextField {
+			id: tfc;
+			width: 270;
+			height: 30;
+			placeHolderText: qsTr("Account");
+		}
+	}
 
-                                    return;
-                                }
+	Component {
+		id: licenseFilterComp;
 
-                                let macAddress = documentModel.m_macAddress;
-                                if (!macAddressValidator.isValid(macAddress)){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
+		CustomTextField {
+			id: tfc;
+			width: 270;
+			height: 30;
+			placeHolderText: qsTr("License");
+		}
+	}
 
-                                    return;
-                                }
+	Component {
+		id: deviceCollectionFilterComp;
 
-                                let title = qsTr("Add license to sensor '%1'");
-                                title = title.replace("%1", macAddress);
+		DeviceCollectionFilterDecorator {}
+	}
 
-                                let documentId = documentData.documentId;
-                                if (documentId === ""){
-                                    ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+	function onFilterChanged(filterId, filterValue){
+		if (filterId == "AccountFilter"){
+			container.collectionFilter.setAccountFilter(filterValue);
+		}
+		else if (filterId == "LicenseFilter"){
+			container.collectionFilter.setLicenseFilter(filterValue);
+		}
+		else if (filterId == "StatusFilter"){
+			container.collectionFilter.setDeviceStatusFilter(filterValue);
+		}
 
-                                    return;
-                                }
+		container.doUpdateGui();
+	}
 
-                                ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	onHeadersChanged: {
+		container.table.setColumnContentById(DeviceItemTypeMetaInfo.s_status, pairComp);
+	}
 
-    Component {
-        id: saveDialogComp;
+	Component {
+		id: deviceEditorComp;
 
-        ErrorDialog {
-            width: 300;
-            title: qsTr("Warning message");
-        }
-    }
+		DeviceEditor {
+			id: deviceEditor;
 
-    Component {
-        id: productPairEditorDialog;
+			commandsControllerComp:
+				Component {CommandsPanelController {
+					commandId: "Device";
+					uuid: deviceEditor.viewId;
+				}}
 
-        HardwareProductBindingDialog {
-        }
-    }
+			commandsDelegateComp: Component {ViewCommandsDelegateBase {
+					view: deviceEditor;
+					onCommandActivated: {
+						if (commandId == "Bind"){
+							let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+							if (documentManager){
+								let documentData = documentManager.getDocumentDataByView(deviceEditor);
+								if (!documentData){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
 
-    MacAddressValidator {
-        id: macAddressValidator;
-    }
+									return;
+								}
 
-    MetaInfoProvider {
-        id: metaInfoProvider;
+								let documentIndex = documentData.documentIndex;
+								if (documentIndex < 0){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
 
-        onMetaInfoModelChanged: {
-            container.setMetaInfoModel(metaInfoModel);
-        }
-    }
+									return;
+								}
 
-    Component {
-        id: dataControllerComp;
+								let isDirty = documentData.isDirty;
+								let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
+								if (isNew || isDirty){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
 
-        GqlRequestDocumentDataController {
-            id: requestDocumentDataController
+									return;
+								}
 
-            gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
-            gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
-            gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
+								let documentModel = documentData.documentDataController.documentModel;
+								if (!documentModel){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
 
-            documentModelComp: Component {
-                DeviceData {}
-            }
+									return;
+								}
 
-            payloadModel: DeviceDataPayload {
-                onFinished: {
-                    requestDocumentDataController.documentModel = m_deviceData
-                }
-            }
-        }
-    }
+								let macAddress = documentModel.m_macAddress;
+								if (!macAddressValidator.isValid(macAddress)){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
 
-    Component {
-        id: deviceValidatorComp;
+									return;
+								}
 
-        DeviceValidator {
-        }
-    }
+								let title = qsTr("Add license to sensor '%1'");
+								title = title.replace("%1", macAddress);
 
-    DeviceProductionStatus {
-        id: deviceProductionStatus;
-    }
+								let documentId = documentData.documentId;
+								if (documentId === ""){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
 
-    Component {
-        id: pairComp;
-        TableCellDelegateBase {
-            id: cellDelegate
-            Image {
-                id: image;
+									return;
+								}
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: parent.left;
-                anchors.leftMargin: 5;
+								ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
-                width: 20;
-                height: width;
+	Component {
+		id: saveDialogComp;
 
-                sourceSize.width: width;
-                sourceSize.height: height;
-            }
+		ErrorDialog {
+			width: 300;
+			title: qsTr("Warning message");
+		}
+	}
 
-            Text {
-                id: statusLable;
+	Component {
+		id: productPairEditorDialog;
 
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.left: image.right
-                anchors.leftMargin: Style.size_mainMargin;
-                anchors.right: parent.right
+		HardwareProductBindingDialog {
+		}
+	}
 
-                font.pixelSize: Style.fontSize_common;
-                font.family: Style.fontFamily;
-                color: Style.textColor;
+	MacAddressValidator {
+		id: macAddressValidator;
+	}
 
-                elide: Text.ElideRight;
-            }
+	MetaInfoProvider {
+		id: metaInfoProvider;
 
-            onRowIndexChanged: {
-                if (!rowDelegate){
-                    return
-                }
+		onMetaInfoModelChanged: {
+			container.setMetaInfoModel(metaInfoModel);
+		}
+	}
 
-                if (rowIndex >= 0){
-                    let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
-                    image.source = deviceProductionStatus.getIconPath(statusId);
-                    statusLable.text = cellDelegate.getValue();
-                }
-            }
-        }
-    }
+	Component {
+		id: dataControllerComp;
+
+		GqlRequestDocumentDataController {
+			id: requestDocumentDataController
+
+			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
+			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
+			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
+
+			documentModelComp: Component {
+				DeviceData {}
+			}
+
+			payloadModel: DeviceDataPayload {
+				onFinished: {
+					requestDocumentDataController.documentModel = m_deviceData
+				}
+			}
+		}
+	}
+
+	Component {
+		id: deviceValidatorComp;
+
+		DeviceValidator {
+		}
+	}
+
+	DeviceProductionStatus {
+		id: deviceProductionStatus;
+	}
+
+	Component {
+		id: pairComp;
+		TableCellDelegateBase {
+			id: cellDelegate
+
+			Image {
+				id: image;
+
+				anchors.verticalCenter: parent.verticalCenter;
+				anchors.left: parent.left;
+				anchors.leftMargin: 5;
+
+				width: 20;
+				height: width;
+
+				sourceSize.width: width;
+				sourceSize.height: height;
+			}
+
+			Text {
+				id: statusLable;
+
+				anchors.verticalCenter: parent.verticalCenter;
+				anchors.left: image.right
+				anchors.leftMargin: Style.size_mainMargin;
+				anchors.right: parent.right
+
+				font.pixelSize: Style.fontSize_common;
+				font.family: Style.fontFamily;
+				color: Style.textColor;
+
+				elide: Text.ElideRight;
+			}
+
+			onRowIndexChanged: {
+				if (!rowDelegate){
+					return
+				}
+
+				if (rowIndex >= 0){
+					let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
+					image.source = deviceProductionStatus.getIconPath(statusId);
+					statusLable.text = cellDelegate.getValue();
+				}
+			}
+		}
+	}
 }
