@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -162,6 +162,32 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="PermissionsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>SoftwarePermissions</Value>
+                                <Value>RevisionPermissions</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="RevisionPermissions" PackageId="ImtCoreVoce" ComponentId="RevisionPermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SoftwareInstanceInfo" PackageId="ProLifeDataPck" ComponentId="OrderedIdentifiableSoftwareInstanceInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
@@ -171,6 +197,9 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -197,7 +226,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwarePermissions"/>
+                        <Data IsEnabled="true" Value="PermissionsJoiner"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
@@ -278,6 +307,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>OpenOrder</Value>
+                                            <Value>Revision</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -330,6 +360,43 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="Revision" PackageId="ImtCoreVoce" ComponentId="Command">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Revision"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewRevisions</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/Restore"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Revision"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="StandardCollectionCommands" PackageId="ImtCoreVoce" ComponentId="StandardCollectionCommands">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -350,7 +417,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="NewCommandName" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="New software"/>
+                                    <Data IsEnabled="true" Value="New Software"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
@@ -378,9 +445,9 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
+                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="istd::IChangeable" ComponentId="CommandsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>
@@ -473,9 +540,9 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="StandardDocumentCommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="StandardDocumentCommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="StandardDocumentCommandsController"/>
+                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="StandardDocumentCommandsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>
             </Data>

@@ -2,19 +2,23 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountInfo" X="200" Y="250" Note=""/>
-        <Element ComponentName="AccountPermissions" X="525" Y="475" Note=""/>
-        <Element ComponentName="AccountsHeadersDataProvider" X="975" Y="250" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="525" Y="600" Note=""/>
-        <Element ComponentName="CollectionCommandsController" X="925" Y="100" Note=""/>
-        <Element ComponentName="CustomerCollectionController" X="600" Y="250" Note=""/>
-        <Element ComponentName="Demultiplexer" X="575" Y="50" Note=""/>
+        <Element ComponentName="AccountInfo" X="150" Y="375" Note=""/>
+        <Element ComponentName="AccountPermissions" X="525" Y="625" Note=""/>
+        <Element ComponentName="AccountsHeadersDataProvider" X="950" Y="375" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="175" Y="625" Note=""/>
+        <Element ComponentName="CollectionCommands" X="1000" Y="225" Note=""/>
+        <Element ComponentName="CollectionCommandsController" X="850" Y="100" Note=""/>
+        <Element ComponentName="CustomerCollectionController" X="600" Y="375" Note=""/>
+        <Element ComponentName="Demultiplexer" X="550" Y="100" Note=""/>
+        <Element ComponentName="PermissionsJoiner" X="650" Y="475" Note=""/>
+        <Element ComponentName="Revision" X="1100" Y="100" Note=""/>
+        <Element ComponentName="RevisionPermissions" X="775" Y="625" Note=""/>
         <Element ComponentName="StandardDocumentCommandsController" X="225" Y="100" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

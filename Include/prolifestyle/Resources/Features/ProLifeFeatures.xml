@@ -2,12 +2,12 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
-            <Version Id="10" Number="915" Description="IACF"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="10" Number="916" Description="IACF"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
-            <Version Id="1977" Number="11828" Description="ImtCore"/>
-            <Version Id="1983" Number="11809" Description="Lisa"/>
+            <Version Id="1977" Number="12372" Description="ImtCore"/>
+            <Version Id="1983" Number="12337" Description="Lisa"/>
         </VersionInfos>
     </AcfHeader>
     <Uuid>0d91fc85-ccea-45fc-9e6c-f053caf8cdbc</Uuid>
@@ -450,6 +450,48 @@
                 <SubFeatures>
                     <Object FeatureId="ViewSearch" FeatureName="View Search" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
+                </SubFeatures>
+            </Data>
+        </Object>
+        <Object ID="c52f36c9-0dbe-49f0-84a7-f59116bd7225" Description="" TypeId="Feature" Name="">
+            <CollectionItemMeta>
+                <MetaInfoMap/>
+            </CollectionItemMeta>
+            <Data Uuid="c52f36c9-0dbe-49f0-84a7-f59116bd7225" FeatureId="RevisionManagement" FeatureName="Revision Management" FeatureDescription="" Optional="false" IsPermission="true">
+                <Dependencies>
+                    <Dependency></Dependency>
+                </Dependencies>
+                <SubFeatures>
+                    <Object FeatureId="DeleteRevision" FeatureName="Delete Revision" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency></Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ExportRevision" FeatureName="Export Revision" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency></Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ViewRevisions" FeatureName="View Revisions" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency></Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="BackupRevision" FeatureName="Backup Revision" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency></Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="RestoreRevision" FeatureName="Restore Revision" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency></Dependency>
+                        </Dependencies>
                         <SubFeatures/>
                     </Object>
                 </SubFeatures>

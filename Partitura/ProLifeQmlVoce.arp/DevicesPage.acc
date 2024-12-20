@@ -46,6 +46,9 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -96,18 +99,19 @@
                                 <Value>DeviceAdd</Value>
                                 <Value>DeviceUpdate</Value>
                                 <Value>DeviceItem</Value>
-                                <Value>DeviceHistory</Value>
                                 <Value>DevicesObjectView</Value>
                                 <Value>DevicesRemove</Value>
                                 <Value>DevicesMetaInfo</Value>
                                 <Value>GetRevisionInfoList</Value>
                                 <Value>RestoreRevision</Value>
                                 <Value>DeleteRevision</Value>
+                                <Value>BackupRevision</Value>
+                                <Value>ExportRevision</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DevicePermissions"/>
+                        <Data IsEnabled="true" Value="Permissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="DeviceInfo"/>
@@ -161,6 +165,9 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -245,15 +252,6 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="DevicePermissions" PackageId="ProLifeVoce" ComponentId="DevicePermissions">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="HardwareBindingChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="HardwareBindingChangeGenerator">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -294,7 +292,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DevicePermissions"/>
+                        <Data IsEnabled="true" Value="Permissions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
@@ -339,6 +337,18 @@
                         <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Permissions" PackageId="" ComponentId="Permissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -513,6 +523,13 @@
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Revision"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewRevisions</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Restore"/>
                                 </AttributeInfo>
@@ -559,7 +576,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="NewCommandName" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="New hardware"/>
+                                    <Data IsEnabled="true" Value="New Hardware"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
@@ -590,392 +607,6 @@
                     <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="CommandsController"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="DeviceCollectionCommands">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="Bind" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Link"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Bind"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Bind"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="BindPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Bind"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>BindSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="Commands" PackageId="ImtRestPck" ComponentId="GuiElementContainer">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="GuiElementModels" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>New</Value>
-                                            <Value>Remove</Value>
-                                            <Value>Edit</Value>
-                                            <Value>Empty</Value>
-                                            <Value>Bind</Value>
-                                            <Value>CreateLicenseFile</Value>
-                                            <Value>Empty</Value>
-                                            <Value>OpenOrder</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>NewPermissions</Value>
-                                            <Value>EditPermissions</Value>
-                                            <Value>RemovePermissions</Value>
-                                            <Value>OpenOrderPermissions</Value>
-                                            <Value>CreateLicenseFilePermissions</Value>
-                                            <Value>BindPermissions</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CommandsRepresentation" PackageId="ImtRestPck" ComponentId="GuiElementRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CommandsJoiner"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Devices"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CreateLicenseFile" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Key"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="CreateLicenseFile"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Create License File"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CreateLicenseFilePermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="CreateLicenseFile"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>CreateLicenseFile</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="DeviceCollectionCommandsController" PackageId="ImtGqlPck" ComponentId="GqlRepresentationDataController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>DevicesCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DataModel" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="Commands"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RepresentationController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CommandsRepresentation"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Edit" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Edit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Edit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Edit"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="EditPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Edit"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewSensors</Value>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Empty" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="New" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Add"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="New"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="New sensor"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="NewPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="New"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>AddSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OpenOrder" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Deployment"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OpenOrder"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Open Order"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OpenOrderPermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OpenOrder"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="Remove" PackageId="ImtRestPck" ComponentId="GuiElementModel">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Delete"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Id" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Remove"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Remove"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="RemovePermissions" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="Remove"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>RemoveSensor</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="DeviceCollectionCommandsController"/>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="DeviceCollectionCommandsController"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="DeviceCollectionCommandsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>
             </Data>
@@ -1051,13 +682,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="RightAlignmentCommands" Type="Reference[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>StandardDocumentCommands/History</Value>
-                                        </Values>
-                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
@@ -1165,9 +789,51 @@
         </EmbeddedRegistry>
         <EmbeddedRegistry Id="Permissions">
             <Data Description="" Keywords="">
-                <ElementsList/>
+                <ElementsList>
+                    <Element Id="DevicePermissions" PackageId="ProLifeVoce" ComponentId="DevicePermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PermissionsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DevicePermissions</Value>
+                                            <Value>RevisionPermissions</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="RevisionPermissions" PackageId="ImtCoreVoce" ComponentId="RevisionPermissions">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
                 <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtrest::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="PermissionsJoiner"/>
+                </ExportedInterfaces>
                 <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>
