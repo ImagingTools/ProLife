@@ -102,11 +102,6 @@
                                 <Value>DevicesObjectView</Value>
                                 <Value>DevicesRemove</Value>
                                 <Value>DevicesMetaInfo</Value>
-                                <Value>GetRevisionInfoList</Value>
-                                <Value>RestoreRevision</Value>
-                                <Value>DeleteRevision</Value>
-                                <Value>BackupRevision</Value>
-                                <Value>ExportRevision</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -844,6 +839,7 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="DeviceChangeGenerator" ComponentId="DeviceChangeGenerator"/>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
     </ExportedComponents>
 </Acf>

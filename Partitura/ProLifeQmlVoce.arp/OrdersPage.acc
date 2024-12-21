@@ -511,5 +511,6 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
+        <Component ExportedId="OrderChangeGenerator" ComponentId="OrderChangeGenerator"/>
     </ExportedComponents>
 </Acf>

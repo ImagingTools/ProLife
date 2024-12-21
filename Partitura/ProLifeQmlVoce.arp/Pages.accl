@@ -2,14 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="AccountsPage" X="200" Y="500" Note=""/>
         <Element ComponentName="DevicesPage" X="200" Y="200" Note=""/>
+        <Element ComponentName="DocumentRevisionController" X="550" Y="525" Note=""/>
         <Element ComponentName="OrdersPage" X="200" Y="400" Note=""/>
         <Element ComponentName="PageData" X="925" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="925" Y="200" Note=""/>

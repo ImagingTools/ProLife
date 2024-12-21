@@ -555,5 +555,6 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
+        <Component ExportedId="SoftwareChangeGenerator" ComponentId="LicenseChangeGenerator"/>
     </ExportedComponents>
 </Acf>

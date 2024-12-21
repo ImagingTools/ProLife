@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5323" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
             <Version Id="1023" Number="393732" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -86,6 +86,61 @@
                                 <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DocumentRevisionController" PackageId="ImtServerGqlPck" ComponentId="DocumentRevisionController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Devices</Value>
+                                <Value>SoftwareProducts</Value>
+                                <Value>Orders</Value>
+                                <Value>Accounts</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>GetRevisionInfoList</Value>
+                                <Value>RestoreRevision</Value>
+                                <Value>DeleteRevision</Value>
+                                <Value>BackupRevision</Value>
+                                <Value>ExportRevision</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentChangeGenerators" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>PageData/DeviceChangeGenerator</Value>
+                                <Value>PageData/SoftwareChangeGenerator</Value>
+                                <Value>PageData/OrderChangeGenerator</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -184,6 +239,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>PageData</Value>
+                                <Value>DocumentRevisionController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -434,10 +490,13 @@
                 </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
+                    <Component ExportedId="DeviceChangeGenerator" ComponentId="DevicesPage/DeviceChangeGenerator"/>
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
+                    <Component ExportedId="OrderChangeGenerator" ComponentId="OrdersPage/OrderChangeGenerator"/>
                     <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController"/>
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
+                    <Component ExportedId="SoftwareChangeGenerator" ComponentId="SoftwareProductsPage/SoftwareChangeGenerator"/>
                     <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>
                     <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
                 </ExportedComponents>

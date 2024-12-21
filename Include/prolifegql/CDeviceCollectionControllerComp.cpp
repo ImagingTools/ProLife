@@ -644,6 +644,7 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 	}
 }
 
+
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
