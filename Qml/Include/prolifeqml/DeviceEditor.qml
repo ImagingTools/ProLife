@@ -297,6 +297,8 @@ ViewBase {
 	DocumentHistoryPanel {
 		id: historyPanel;
 		documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : "";
+		collectionId: "Devices";
+		editorFlickable: flickable;
 	}
 
     CustomScrollbar {
@@ -345,7 +347,7 @@ ViewBase {
         anchors.rightMargin: Style.size_largeMargin;
 
         contentWidth: bodyColumn.width;
-        contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
+		contentHeight: Math.max(bodyColumn.height + 2 * Style.size_largeMargin, historyPanel.contentHeight + 2 * Style.size_largeMargin);
 
         boundsBehavior: Flickable.StopAtBounds;
 
