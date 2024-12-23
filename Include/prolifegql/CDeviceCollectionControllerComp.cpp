@@ -63,90 +63,90 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	sdl::prolife::Sensors::V1_0::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = std::make_unique<QByteArray>(objectId);
+		representationObject.Id = std::make_optional<QByteArray>(objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = std::make_unique<QByteArray>(collectionObjectId);
+		representationObject.TypeId = std::make_optional<QByteArray>(collectionObjectId);
 	}
 
 	if (requestInfo.items.isNameRequested){
 		QByteArray deviceType = objectCollectionIterator.GetElementInfo("DeviceType").toByteArray();
-		representationObject.Name = std::make_unique<QString>(deviceType);
+		representationObject.Name = std::make_optional<QString>(deviceType);
 
 		QByteArray macAddress = objectCollectionIterator.GetElementInfo("MacAddress").toByteArray();
 		if (!macAddress.isEmpty()){
-			representationObject.Name = std::make_unique<QString>(deviceType + " (" + macAddress + ")");
+			representationObject.Name = std::make_optional<QString>(deviceType + " (" + macAddress + ")");
 		}
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = std::make_unique<QString>(metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
+		representationObject.Description = std::make_optional<QString>(metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
 	}
 
 	if (requestInfo.items.isPurchaseOrderIdRequested){
-		representationObject.PurchaseOrderId = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("PurchaseOrderId").toByteArray());
+		representationObject.PurchaseOrderId = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("PurchaseOrderId").toByteArray());
 	}
 
 	if (requestInfo.items.isCustomerRequested){
-		representationObject.Customer = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("Customer").toByteArray());
+		representationObject.Customer = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("Customer").toByteArray());
 	}
 
 	if (requestInfo.items.isMacAddressRequested){
-		representationObject.MacAddress = std::make_unique<QString>(deviceInfoPtr->GetMacAddress());
+		representationObject.MacAddress = std::make_optional<QString>(deviceInfoPtr->GetMacAddress());
 	}
 
 	if (requestInfo.items.isSerialNumberRequested){
-		representationObject.SerialNumber = std::make_unique<QString>(deviceInfoPtr->GetSerialNumber());
+		representationObject.SerialNumber = std::make_optional<QString>(deviceInfoPtr->GetSerialNumber());
 	}
 
 	if (requestInfo.items.isProjectRequested){
-		representationObject.Project = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("Project").toString());
+		representationObject.Project = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("Project").toString());
 	}
 
 	if (requestInfo.items.isDeviceTypeRequested){
-		representationObject.DeviceType = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("DeviceType").toString());
+		representationObject.DeviceType = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("DeviceType").toString());
 	}
 
 	if (requestInfo.items.isProductUuidRequested){
-		representationObject.ProductUuid = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("ProductUuid").toByteArray());
+		representationObject.ProductUuid = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("ProductUuid").toByteArray());
 	}
 
 	if (requestInfo.items.isLicenseUuidRequested){
-		representationObject.LicenseUuid = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("LicenseUuid").toByteArray());
+		representationObject.LicenseUuid = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("LicenseUuid").toByteArray());
 	}
 
 	if (requestInfo.items.isLicenseIdRequested){
-		representationObject.LicenseId = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("LicenseId").toByteArray());
+		representationObject.LicenseId = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("LicenseId").toByteArray());
 	}
 
 	if (requestInfo.items.isLicenseNameRequested){
-		representationObject.LicenseName = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("LicenseName").toString());
+		representationObject.LicenseName = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("LicenseName").toString());
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("OrderId").toByteArray());
+		representationObject.OrderId = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("OrderId").toByteArray());
 	}
 
 	if (requestInfo.items.isSoftwareLinksCountRequested){
-		representationObject.SoftwareLinksCount = std::make_unique<int>(objectCollectionIterator.GetElementInfo("SoftwareLinksCount").toInt());
+		representationObject.SoftwareLinksCount = std::make_optional<int>(objectCollectionIterator.GetElementInfo("SoftwareLinksCount").toInt());
 	}
 
 	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.OrderUuid = std::make_unique<QByteArray>(objectCollectionIterator.GetElementInfo("OrderUuid").toByteArray());
+		representationObject.OrderUuid = std::make_optional<QByteArray>(objectCollectionIterator.GetElementInfo("OrderUuid").toByteArray());
 	}
 
 	if (requestInfo.items.isStatusRequested){
 		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 		QString statusName = prolifedata::GetNameFromDeviceProductionStatus(status);
-		representationObject.Status = std::make_unique<QString>(statusName);
+		representationObject.Status = std::make_optional<QString>(statusName);
 	}
 
 	if (requestInfo.items.isStatusIdRequested){
 		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 		QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
-		representationObject.StatusId = std::make_unique<QString>(statusId);
+		representationObject.StatusId = std::make_optional<QString>(statusId);
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -154,7 +154,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = std::make_unique<QString>(added);
+		representationObject.Added = std::make_optional<QString>(added);
 	}
 
 	if (requestInfo.items.isLastModifiedRequested){
@@ -162,7 +162,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = std::make_unique<QString>(lastModified);
+		representationObject.LastModified = std::make_optional<QString>(lastModified);
 	}
 
 	return true;
@@ -403,32 +403,32 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		id = *arguments.input.Id;
 	}
 
-	deviceData.Id = std::make_unique<QByteArray>(id);
+	deviceData.Id = std::make_optional<QByteArray>(id);
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-	deviceData.MacAddress = std::make_unique<QString>(macAddress);
+	deviceData.MacAddress = std::make_optional<QString>(macAddress);
 
 	QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
-	deviceData.SerialNumber = std::make_unique<QString>(serialNumber);
+	deviceData.SerialNumber = std::make_optional<QString>(serialNumber);
 
 	QByteArray orderId = deviceInfoPtr->GetOrderId();
-	deviceData.OrderId = std::make_unique<QString>(orderId);
+	deviceData.OrderId = std::make_optional<QString>(orderId);
 
 	QString description = deviceInfoPtr->GetDescription();
-	deviceData.Description = std::make_unique<QString>(description);
+	deviceData.Description = std::make_optional<QString>(description);
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 	QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
-	deviceData.ProductionStatus = std::make_unique<QString>(statusId);
+	deviceData.ProductionStatus = std::make_optional<QString>(statusId);
 
 	QByteArray project = deviceInfoPtr->GetProject();
-	deviceData.Project = std::make_unique<QString>(project);
+	deviceData.Project = std::make_optional<QString>(project);
 
 	QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
-	deviceData.LicenseName = std::make_unique<QString>(configurationType);
+	deviceData.LicenseName = std::make_optional<QString>(configurationType);
 
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
-	deviceData.DeviceType = std::make_unique<QString>(productUuid);
+	deviceData.DeviceType = std::make_optional<QString>(productUuid);
 
 	QString name = productUuid;
 
@@ -446,9 +446,9 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		name = name + " (" + macAddress + ")";
 	}
 
-	deviceData.Name = std::make_unique<QString>(name);
+	deviceData.Name = std::make_optional<QString>(name);
 
-	representationPayload.DeviceData = std::make_unique<sdl::prolife::Sensors::CDeviceData::V1_0>(deviceData);
+	representationPayload.DeviceData = std::make_optional<sdl::prolife::Sensors::CDeviceData::V1_0>(deviceData);
 
 	return true;
 }

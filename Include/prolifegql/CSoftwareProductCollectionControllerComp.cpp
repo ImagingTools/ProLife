@@ -52,118 +52,118 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = std::make_unique<QByteArray>(objectId);
+		representationObject.Id = std::make_optional<QByteArray>(objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = std::make_unique<QByteArray>(collectionObjectId);
+		representationObject.TypeId = std::make_optional<QByteArray>(collectionObjectId);
 	}
 
 	if (requestInfo.items.isNameRequested){
 		QString productName = objectCollectionIterator.GetElementInfo("ProductName").toString();
-		representationObject.Name = std::make_unique<QString>(productName);
+		representationObject.Name = std::make_optional<QString>(productName);
 
 		QByteArray serialNumber = objectCollectionIterator.GetElementInfo("SerialNumber").toByteArray();
 		if (!serialNumber.isEmpty()){
-			representationObject.Name = std::make_unique<QString>(productName + " (" + serialNumber + ")");
+			representationObject.Name = std::make_optional<QString>(productName + " (" + serialNumber + ")");
 		}
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = std::make_unique<QString>(metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
+		representationObject.Description = std::make_optional<QString>(metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("OrderId").toString());
+		representationObject.OrderId = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("OrderId").toString());
 	}
 
 	if (requestInfo.items.isPurchaseOrderIdRequested){
-		representationObject.PurchaseOrderId = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("PurchaseOrderId").toString());
+		representationObject.PurchaseOrderId = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("PurchaseOrderId").toString());
 	}
 
 	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.OrderUuid = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("OrderUuid").toString());
+		representationObject.OrderUuid = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("OrderUuid").toString());
 	}
 
 	if (requestInfo.items.isHardwareUuidRequested){
-		representationObject.HardwareUuid = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("HardwareUuid").toString());
+		representationObject.HardwareUuid = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("HardwareUuid").toString());
 	}
 
 	if (requestInfo.items.isProductIdRequested){
-		representationObject.ProductId = std::make_unique<QString>(objectCollectionIterator.GetElementInfo("ProductId").toString());
+		representationObject.ProductId = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("ProductId").toString());
 	}
 
 	if (requestInfo.items.isProductNameRequested) {
-		representationObject.ProductName = std::make_unique<QString>(
+		representationObject.ProductName = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("ProductName").toString()
 			);
 	}
 
 	if (requestInfo.items.isProductUuidRequested) {
-		representationObject.ProductUuid = std::make_unique<QString>(
+		representationObject.ProductUuid = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("ProductUuid").toString()
 			);
 	}
 
 	if (requestInfo.items.isSerialNumberRequested) {
-		representationObject.SerialNumber = std::make_unique<QString>(
+		representationObject.SerialNumber = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("SerialNumber").toString()
 			);
 	}
 
 	if (requestInfo.items.isExpirationRequested) {
-		representationObject.Expiration = std::make_unique<QString>(
+		representationObject.Expiration = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("Expiration").toString()
 			);
 	}
 
 	if (requestInfo.items.isIsPairedRequested) {
-		representationObject.IsPaired = std::make_unique<bool>(objectCollectionIterator.GetElementInfo("IsPaired").toBool());
+		representationObject.IsPaired = std::make_optional<bool>(objectCollectionIterator.GetElementInfo("IsPaired").toBool());
 	}
 
 	if (requestInfo.items.isInUseRequested) {
-		representationObject.InUse = std::make_unique<bool>(objectCollectionIterator.GetElementInfo("InUse").toBool());
+		representationObject.InUse = std::make_optional<bool>(objectCollectionIterator.GetElementInfo("InUse").toBool());
 	}
 
 	if (requestInfo.items.isDeviceIdRequested) {
-		representationObject.DeviceId = std::make_unique<QString>(
+		representationObject.DeviceId = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("DeviceId").toString()
 			);
 	}
 
 	if (requestInfo.items.isLicenseNameRequested) {
-		representationObject.LicenseName = std::make_unique<QString>(
+		representationObject.LicenseName = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("LicenseName").toString()
 			);
 	}
 
 	if (requestInfo.items.isLicenseIdRequested) {
-		representationObject.LicenseId = std::make_unique<QString>(
+		representationObject.LicenseId = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("LicenseId").toString()
 			);
 	}
 
 	if (requestInfo.items.isLicenseUuidRequested) {
-		representationObject.LicenseUuid = std::make_unique<QString>(
+		representationObject.LicenseUuid = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("LicenseUuid").toString()
 			);
 	}
 
 	if (requestInfo.items.isCustomerUuidRequested) {
-		representationObject.CustomerUuid = std::make_unique<QString>(
+		representationObject.CustomerUuid = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("CustomerUuid").toString()
 			);
 	}
 
 	if (requestInfo.items.isCustomerRequested) {
-		representationObject.Customer = std::make_unique<QString>(
+		representationObject.Customer = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("Customer").toString()
 			);
 	}
 
 	if (requestInfo.items.isProjectRequested) {
-		representationObject.Project = std::make_unique<QString>(
+		representationObject.Project = std::make_optional<QString>(
 			objectCollectionIterator.GetElementInfo("Project").toString()
 			);
 	}
@@ -173,16 +173,16 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		QByteArray hardwareMacAddress = objectCollectionIterator.GetElementInfo("DeviceId").toByteArray();
 		bool isPaired = !hardwareMacAddress.isEmpty();
 		if (isPaired){
-			representationObject.Status = std::make_unique<QString>("IsPaired");
+			representationObject.Status = std::make_optional<QString>("IsPaired");
 		}
 		else{
-			representationObject.Status = std::make_unique<QString>("NotPaired");
+			representationObject.Status = std::make_optional<QString>("NotPaired");
 		}
 
 		if (isPaired){
 			bool isUse = objectCollectionIterator.GetElementInfo("InUse").toBool();
 			if (isUse){
-				representationObject.Status = std::make_unique<QString>("InUse");
+				representationObject.Status = std::make_optional<QString>("InUse");
 			}
 		}
 	}
@@ -192,7 +192,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = std::make_unique<QString>(added);
+		representationObject.Added = std::make_optional<QString>(added);
 	}
 
 	if (requestInfo.items.isLastModifiedRequested){
@@ -200,7 +200,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = std::make_unique<QString>(lastModified);
+		representationObject.LastModified = std::make_optional<QString>(lastModified);
 	}
 
 	return true;
@@ -368,25 +368,25 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		id = *arguments.input.Id;
 	}
 
-	softwareProductData.Id = std::make_unique<QByteArray>(id);
+	softwareProductData.Id = std::make_optional<QByteArray>(id);
 
 	QByteArray productId = softwareInfoPtr->GetProductId();
-	softwareProductData.ProductId = std::make_unique<QByteArray>(productId);
+	softwareProductData.ProductId = std::make_optional<QByteArray>(productId);
 
 	QByteArray factoryId = softwareInfoPtr->GetFactoryId();
-	softwareProductData.CategoryId = std::make_unique<QByteArray>(factoryId);
+	softwareProductData.CategoryId = std::make_optional<QByteArray>(factoryId);
 
 	QByteArray serialNumber = softwareInfoPtr->GetSerialNumber();
-	softwareProductData.SerialNumber = std::make_unique<QByteArray>(serialNumber);
+	softwareProductData.SerialNumber = std::make_optional<QByteArray>(serialNumber);
 
 	QByteArray project = softwareInfoPtr->GetProject();
-	softwareProductData.Project = std::make_unique<QString>(project);
+	softwareProductData.Project = std::make_optional<QString>(project);
 
 	bool inUse = softwareInfoPtr->IsInUse();
-	softwareProductData.InUse = std::make_unique<bool>(inUse);
+	softwareProductData.InUse = std::make_optional<bool>(inUse);
 
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
-	softwareProductData.OrderUuid = std::make_unique<QByteArray>(orderId);
+	softwareProductData.OrderUuid = std::make_optional<QByteArray>(orderId);
 
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
@@ -394,8 +394,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 		const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 		if (licenseInstancePtr != nullptr){
-			softwareProductData.LicenseUuid = std::make_unique<QByteArray>(licenseInstancePtr->GetLicenseId());
-			softwareProductData.Expiration = std::make_unique<QString>(licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
+			softwareProductData.LicenseUuid = std::make_optional<QByteArray>(licenseInstancePtr->GetLicenseId());
+			softwareProductData.Expiration = std::make_optional<QString>(licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 		}
 	}
 
@@ -415,9 +415,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		name += " (" + serialNumber + ")";
 	}
 
-	softwareProductData.Name = std::make_unique<QString>(name);
+	softwareProductData.Name = std::make_optional<QString>(name);
 
-	representationPayload.SoftwareProductData = std::make_unique<sdl::prolife::Licenses::CSoftwareProductData::V1_0>(softwareProductData);
+	representationPayload.SoftwareProductData = std::make_optional<sdl::prolife::Licenses::CSoftwareProductData::V1_0>(softwareProductData);
 
 	return true;
 }

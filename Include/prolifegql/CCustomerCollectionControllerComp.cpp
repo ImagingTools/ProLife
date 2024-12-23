@@ -48,28 +48,28 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = std::make_unique<QByteArray>(objectId);
+		representationObject.Id = std::make_optional<QByteArray>(objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = std::make_unique<QByteArray>(collectionObjectId);
+		representationObject.TypeId = std::make_optional<QByteArray>(collectionObjectId);
 	}
 
 	if (requestInfo.items.isCustomerIdRequested){
-		representationObject.CustomerId = std::make_unique<QByteArray>(customerInfoPtr->GetCustomerId());
+		representationObject.CustomerId = std::make_optional<QByteArray>(customerInfoPtr->GetCustomerId());
 	}
 
 	if (requestInfo.items.isNameRequested){
-		representationObject.Name = std::make_unique<QString>(customerInfoPtr->GetName());
+		representationObject.Name = std::make_optional<QString>(customerInfoPtr->GetName());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = std::make_unique<QString>(customerInfoPtr->GetDescription());
+		representationObject.Description = std::make_optional<QString>(customerInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isEmailRequested){
-		representationObject.Email = std::make_unique<QString>(customerInfoPtr->GetEmail());
+		representationObject.Email = std::make_optional<QString>(customerInfoPtr->GetEmail());
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -77,7 +77,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = std::make_unique<QString>(added);
+		representationObject.Added = std::make_optional<QString>(added);
 	}
 
 	if (requestInfo.items.isLastModifiedRequested){
@@ -85,7 +85,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = std::make_unique<QString>(lastModified);
+		representationObject.LastModified = std::make_optional<QString>(lastModified);
 	}
 
 	return true;
@@ -219,23 +219,23 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		id = *arguments.input.Id;
 	}
 
-	accountData.Id = std::make_unique<QByteArray>(id);
+	accountData.Id = std::make_optional<QByteArray>(id);
 
 	QString name = customerInfoPtr->GetName();
-	accountData.Name = std::make_unique<QString>(name);
+	accountData.Name = std::make_optional<QString>(name);
 
 	QString description = customerInfoPtr->GetDescription();
-	accountData.Description = std::make_unique<QString>(description);
+	accountData.Description = std::make_optional<QString>(description);
 
 	QString email = customerInfoPtr->GetEmail();
-	accountData.Email = std::make_unique<QString>(email);
+	accountData.Email = std::make_optional<QString>(email);
 
 	QByteArray customerId = customerInfoPtr->GetCustomerId();
-	accountData.CustomerId = std::make_unique<QByteArray>(customerId);
+	accountData.CustomerId = std::make_optional<QByteArray>(customerId);
 
 	QByteArrayList groups = customerInfoPtr->GetGroups();
 	std::sort(groups.begin(), groups.end());
-	accountData.Groups = std::make_unique<QString>(groups.join(';'));
+	accountData.Groups = std::make_optional<QString>(groups.join(';'));
 
 	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
 	if (addressProviderPtr != nullptr){
@@ -244,25 +244,25 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
 			if (addressPtr != nullptr){
 				QString city = addressPtr->GetCity();
-				accountData.City = std::make_unique<QString>(city);
+				accountData.City = std::make_optional<QString>(city);
 
 				QString country = addressPtr->GetCountry();
-				accountData.Country = std::make_unique<QString>(country);
+				accountData.Country = std::make_optional<QString>(country);
 
 				QString street = addressPtr->GetStreet();
-				accountData.Street = std::make_unique<QString>(street);
+				accountData.Street = std::make_optional<QString>(street);
 
 				QString postalCodeStr;
 				int postalCode = addressPtr->GetPostalCode();
 				if (postalCode > 0){
 					postalCodeStr = QString::number(postalCode);
 				}
-				accountData.PostalCode = std::make_unique<QString>(postalCodeStr);
+				accountData.PostalCode = std::make_optional<QString>(postalCodeStr);
 			}
 		}
 	}
 
-	representationPayload.AccountData = std::make_unique<sdl::prolife::Accounts::CAccountData::V1_0>(accountData);
+	representationPayload.AccountData = std::make_optional<sdl::prolife::Accounts::CAccountData::V1_0>(accountData);
 
 	return true;
 }

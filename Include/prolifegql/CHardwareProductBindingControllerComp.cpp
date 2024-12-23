@@ -131,10 +131,10 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 	sdl::prolife::SensorBinding::CSensorBindingData::V1_0 sensorBindingData;
 
 	QByteArray hardwareId = productBindingPtr->GetHardwareId();
-	sensorBindingData.Id = std::make_unique<QByteArray>(hardwareId);
+	sensorBindingData.Id = std::make_optional<QByteArray>(hardwareId);
 
 	QByteArrayList softwareIds = productBindingPtr->GetSoftwareIds();
-	sensorBindingData.SoftwareIds = std::make_unique<QByteArray>(softwareIds.join(';'));
+	sensorBindingData.SoftwareIds = std::make_optional<QByteArray>(softwareIds.join(';'));
 
 	if (!softwareIds.isEmpty()){
 		if (m_softwareProductCollectionCompPtr.IsValid()){
@@ -145,16 +145,16 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					QByteArray project = productInstanceInfoPtr->GetProject();
-					sensorBindingData.Project = std::make_unique<QString>(project);
+					sensorBindingData.Project = std::make_optional<QString>(project);
 
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
-					sensorBindingData.ProductUuid = std::make_unique<QByteArray>(productId);
+					sensorBindingData.ProductUuid = std::make_optional<QByteArray>(productId);
 				}
 			}
 		}
 	}
 
-	representationPayload.SensorBindingData = std::make_unique<sdl::prolife::SensorBinding::CSensorBindingData::V1_0>(sensorBindingData);
+	representationPayload.SensorBindingData = std::make_optional<sdl::prolife::SensorBinding::CSensorBindingData::V1_0>(sensorBindingData);
 
 	return true;
 }
