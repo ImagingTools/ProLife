@@ -11,29 +11,29 @@ add_custom_target(${PROJECT_NAME}-SDL-related-files SOURCES
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/Orders.sdl
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/SensorBinding.sdl)
 
-ImtCoreCustomConfigureSdlCppQml(
+ImtCoreCustomConfigureSdlCppQml(CXX
 			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/Sensors.sdl"
 			VERSION		"1.0"
-			SOURCE_NAME	"Sensors"
 			QML_NAME	"prolifeSensorsSdl")
-ImtCoreCustomConfigureSdlCppQml(
+
+ImtCoreCustomConfigureSdlCppQml(CXX
 			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/Licenses.sdl"
 			VERSION		"1.0"
 			SOURCE_NAME	"Licenses"
 			QML_NAME	"prolifeLicensesSdl")
-ImtCoreCustomConfigureSdlCppQml(
+
+ImtCoreCustomConfigureSdlCppQml(CXX
 			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/Orders.sdl"
 			VERSION		"1.0"
-			SOURCE_NAME	"Orders"
 			QML_NAME	"prolifeOrdersSdl")
-ImtCoreCustomConfigureSdlCppQml(
+
+ImtCoreCustomConfigureSdlCppQml(CXX
 			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/Accounts.sdl"
 			VERSION		"1.0"
-			SOURCE_NAME	"Accounts"
 			QML_NAME	"prolifeAccountsSdl")
-ImtCoreCustomConfigureSdlCppQml(
+
+ImtCoreCustomConfigureSdlCppQml(CXX
 			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/SensorBinding.sdl"
 			VERSION		"1.0"
-			SOURCE_NAME	"SensorBinding"
 			QML_NAME	"prolifeSensorBindingSdl")
 
