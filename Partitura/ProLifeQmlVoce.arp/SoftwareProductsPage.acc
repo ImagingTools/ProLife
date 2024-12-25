@@ -221,7 +221,6 @@
                                 <Value>SoftwareProductItem</Value>
                                 <Value>SoftwareProductUpdate</Value>
                                 <Value>SoftwareProductAdd</Value>
-                                <Value>SoftwareProductHistory</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -248,6 +247,20 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectIconPaths" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Icons/Key</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>SoftwareProduct</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>

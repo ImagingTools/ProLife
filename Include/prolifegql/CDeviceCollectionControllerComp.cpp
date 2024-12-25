@@ -172,8 +172,6 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
 			QString& errorMessage) const
 {
 	if (!m_deviceInfoFactCompPtr.IsValid()){
@@ -329,6 +327,9 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 			}
 		}
 	}
+
+	QString name;
+	QString description;
 
 	if (deviceDataRepresentation.Description){
 		description = *deviceDataRepresentation.Description;

@@ -22,19 +22,10 @@
         <Element ComponentName="Permissions" X="650" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DeviceCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="1000" Y="250" Note=""/>
-                <Element ComponentName="CommandsController" X="625" Y="75" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="225" Y="250" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="DevicePermissions" X="350" Y="350" Note=""/>
+                <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
                 <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
-                <Element ComponentName="RevisionPermissions" X="875" Y="350" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -46,6 +37,14 @@
                 <Element ComponentName="OpenOrder" X="950" Y="300" Note=""/>
                 <Element ComponentName="Revision" X="950" Y="425" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DeviceCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="1000" Y="250" Note=""/>
+                <Element ComponentName="CommandsController" X="625" Y="75" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="225" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

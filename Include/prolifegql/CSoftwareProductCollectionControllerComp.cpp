@@ -210,8 +210,6 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
 			QString& errorMessage) const
 {
 	if (!m_softwareInfoFactCompPtr.IsValid()){
@@ -324,6 +322,9 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 	QString expiration = *softwareProductDataRepresentation.Expiration;
 
 	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
+
+	QString name;
+	QString description;
 
 	name = productId;
 

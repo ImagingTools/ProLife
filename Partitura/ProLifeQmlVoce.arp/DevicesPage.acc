@@ -102,6 +102,7 @@
                                 <Value>DevicesObjectView</Value>
                                 <Value>DevicesRemove</Value>
                                 <Value>DevicesMetaInfo</Value>
+                                <Value>GetObjectVisualStatus</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -128,6 +129,20 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectIconPaths" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Icons/Sensor</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Device</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="OperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
@@ -804,21 +819,8 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>DevicePermissions</Value>
-                                            <Value>RevisionPermissions</Value>
                                         </Values>
                                     </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="RevisionPermissions" PackageId="ImtCoreVoce" ComponentId="RevisionPermissions">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

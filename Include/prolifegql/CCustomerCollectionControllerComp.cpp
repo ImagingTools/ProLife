@@ -95,8 +95,6 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
 			QString& errorMessage) const
 {
 	if (!m_accountInfoFactCompPtr.IsValid()){
@@ -139,6 +137,9 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 		errorMessage = QString("Account name cannnot be empty");
 		return nullptr;
 	}
+
+	QString name;
+	QString description;
 
 	customerInfoPtr->SetName(accountName);
 	name = accountName;

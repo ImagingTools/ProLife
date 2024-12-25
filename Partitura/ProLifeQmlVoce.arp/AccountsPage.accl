@@ -9,7 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="AccountInfo" X="150" Y="375" Note=""/>
-        <Element ComponentName="AccountPermissions" X="525" Y="625" Note=""/>
+        <Element ComponentName="AccountPermissions" X="625" Y="625" Note=""/>
         <Element ComponentName="AccountsHeadersDataProvider" X="950" Y="375" Note=""/>
         <Element ComponentName="CheckPermissionOr" X="175" Y="625" Note=""/>
         <Element ComponentName="CollectionCommands" X="1000" Y="225" Note=""/>
@@ -18,7 +18,6 @@
         <Element ComponentName="Demultiplexer" X="550" Y="100" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="650" Y="475" Note=""/>
         <Element ComponentName="Revision" X="1100" Y="100" Note=""/>
-        <Element ComponentName="RevisionPermissions" X="775" Y="625" Note=""/>
         <Element ComponentName="StandardDocumentCommandsController" X="225" Y="100" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

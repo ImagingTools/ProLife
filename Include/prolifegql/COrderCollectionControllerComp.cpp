@@ -243,8 +243,6 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
 			QString& errorMessage) const
 {
 	if (!m_orderInfoFactCompPtr.IsValid()){
@@ -335,6 +333,9 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 			}
 		}
 	}
+
+	QString name;
+	QString description;
 
 	orderInfoPtr->SetOrderId(orderId.toUtf8());
 	name = orderId;

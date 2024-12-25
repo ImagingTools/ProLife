@@ -79,8 +79,6 @@ bool CHardwareProductBindingControllerComp::CreateRepresentationFromObject(
 istd::IChangeable* CHardwareProductBindingControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::SensorBinding::CSensorBindingData::V1_0& sensorBindingDataRepresentation,
 			QByteArray& newObjectId,
-			QString& name,
-			QString& description,
 			QString& errorMessage) const
 {
 	istd::TDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
@@ -174,11 +172,8 @@ imtbase::CTreeItemModel* CHardwareProductBindingControllerComp::UpdateObject(con
 	QByteArray itemData = inputParamPtr->GetFieldArgumentValue("Item").toByteArray();
 	QString project = inputParamPtr->GetFieldArgumentValue("Project").toString();
 
-	QString name;
-	QString description;
-
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> newHardwareBindingObjectPtr;
-	newHardwareBindingObjectPtr.SetCastedOrRemove(CreateObjectFromRequest(gqlRequest, objectId, name, description, errorMessage));
+	newHardwareBindingObjectPtr.SetCastedOrRemove(CreateObjectFromRequest(gqlRequest, objectId, errorMessage));
 
 	if (!newHardwareBindingObjectPtr.IsValid()){
 		errorMessage = QString("Unable to update hardware object. Error: Object from request is invalid").toUtf8();
