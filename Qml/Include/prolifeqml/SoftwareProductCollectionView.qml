@@ -16,20 +16,13 @@ RemoteCollectionView {
 
     filterMenu.decorator: licenseCollectionFilterComp;
 
-    dataControllerComp:
-        Component {
-        CollectionRepresentation {
-            collectionId: container.collectionId;
-
-            Component.onCompleted: {
-                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_orderUuid);
-                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_hardwareUuid);
-                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_inUse);
-                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_productUuid);
-                additionalFieldIds.push(SoftwareProductItemTypeMetaInfo.s_customerUuid);
-            }
-        }
-    }
+	additionalFieldIds: [
+		SoftwareProductItemTypeMetaInfo.s_orderUuid,
+		SoftwareProductItemTypeMetaInfo.s_hardwareUuid,
+		SoftwareProductItemTypeMetaInfo.s_inUse,
+		SoftwareProductItemTypeMetaInfo.s_productUuid,
+		SoftwareProductItemTypeMetaInfo.s_customerUuid,
+	]
 
     commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
             collectionView: container;

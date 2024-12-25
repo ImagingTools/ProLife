@@ -523,6 +523,7 @@ Item {
                                     hasPagination: false;
                                     commandsViewComp: undefined;
                                     tableViewParamsStoredServer: false;
+									table.isMultiSelect: false;
                                     // additionalFieldIds: ["OrderUuid","HardwareUuid", "InUse", "ProductUuid", "CustomerUuid"]
 
                                     dataControllerComp:

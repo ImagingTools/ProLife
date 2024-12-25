@@ -28,39 +28,32 @@ DocumentCollectionViewDelegate {
     function onLocalizationChanged(languageId){
     }
 
-    function updateItemSelection(selectedItems){
-        if (container.collectionView && container.collectionView.commandsController){
-            let elementsModel = container.collectionView.table.elements;
-            if (!elementsModel){
-                return;
-            }
+	function updateStateCustomCommands(selection, commandsController, elementsModel){
+		if (!elementsModel){
+			return;
+		}
 
-            let macAddress = elementsModel.getData("MacAddress", selectedItems[0]);
+		let macAddress = elementsModel.getData("MacAddress", selection[0]);
 
-            let isEnabled = selectedItems.length === 1;
+		let isEnabled = selection.length === 1;
 
-            let isOpenOrderEnabled = isEnabled;
-            if (isOpenOrderEnabled){
-                let orderId = elementsModel.getData("OrderId", selectedItems[0]);
-                isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
-            }
+		let isOpenOrderEnabled = isEnabled;
+		if (isOpenOrderEnabled){
+			let orderId = elementsModel.getData("OrderId", selection[0]);
+			isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
+		}
 
-            let isBindEnabled = isEnabled;
-            if (isBindEnabled){
-                isBindEnabled = isBindEnabled && macAddress !== "";
-            }
+		let isBindEnabled = isEnabled;
+		if (isBindEnabled){
+			isBindEnabled = isBindEnabled && macAddress !== "";
+		}
 
-            let commandsController = container.collectionView.commandsController;
-            if(commandsController){
-				commandsController.setCommandIsEnabled("Remove", selectedItems.length > 0);
-				commandsController.setCommandIsEnabled("Edit", selectedItems.length > 0);
-                commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
-                commandsController.setCommandIsEnabled("Bind", isBindEnabled);
-                commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
-				commandsController.setCommandIsEnabled("Revision", isEnabled);
-            }
-        }
-    }
+		if(commandsController){
+			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
+			commandsController.setCommandIsEnabled("Bind", isBindEnabled);
+			commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
+		}
+	}
 
     function setupContextMenu(){
         let commandsController = collectionView.commandsController;

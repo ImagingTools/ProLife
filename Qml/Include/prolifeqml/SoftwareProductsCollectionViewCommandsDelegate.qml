@@ -14,39 +14,30 @@ DocumentCollectionViewDelegate {
     removeDialogTitle: qsTr("Removing the software instance");
     removeMessage: qsTr("Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.");
 
-    function updateItemSelection(selectedItems){
-        if (container.collectionView && container.collectionView.commandsController){
-            let indexes = container.collectionView.table.getSelectedIndexes();
-            let isEnabled = indexes.length === 1;
+	function updateStateCustomCommands(selection, commandsController, elementsModel){
+		let isEnabled = selection.length === 1;
 
-            let elementsModel = container.collectionView.table.elements;
-            let createLicenseFileIsEnabled = isEnabled;
-            if (createLicenseFileIsEnabled){
-                let deviceId = elementsModel.getData("DeviceId", indexes[0]);
-                let licenseNumber = elementsModel.getData("SerialNumber", indexes[0]);
+		let createLicenseFileIsEnabled = isEnabled;
+		if (createLicenseFileIsEnabled){
+			let deviceId = elementsModel.getData("DeviceId", selection[0]);
+			let licenseNumber = elementsModel.getData("SerialNumber", selection[0]);
 
-                createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
-            }
+			createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
+		}
 
-            let openOrderEnabled = isEnabled;
-            if (openOrderEnabled){
-                let orderUuid = elementsModel.getData("OrderUuid", indexes[0]);
-                let orderId = elementsModel.getData("OrderId", indexes[0]);
+		let openOrderEnabled = isEnabled;
+		if (openOrderEnabled){
+			let orderUuid = elementsModel.getData("OrderUuid", selection[0]);
+			if (orderUuid == "undefined" || orderUuid == ""){
+				openOrderEnabled = false;
+			}
+		}
 
-                if (orderUuid == "undefined" || orderUuid == ""){
-                    openOrderEnabled = false;
-                }
-            }
-
-            let commandsController = container.collectionView.commandsController;
-            if(commandsController){
-                commandsController.setCommandIsEnabled("Remove", isEnabled);
-                commandsController.setCommandIsEnabled("Edit", isEnabled);
-                commandsController.setCommandIsEnabled("OpenOrder", openOrderEnabled);
-                commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
-            }
-        }
-    }
+		if(commandsController){
+			commandsController.setCommandIsEnabled("OpenOrder", openOrderEnabled);
+			commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
+		}
+	}
 
     function setupContextMenu(){
         let commandsController = collectionView.commandsController;
