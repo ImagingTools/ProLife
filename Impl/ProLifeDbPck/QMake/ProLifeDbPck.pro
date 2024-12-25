@@ -5,7 +5,7 @@ include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
 
 QT += sql
 
-LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtbase -limtdb -limtlic
+LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtbase -limtdb -limtlic -limtcol
 LIBS += -L$(PROLIFEDIR)/Lib/$$COMPILER_DIR -lprolifedb -lprolifedata
 
 include($(ACFDIR)/Config/QMake/AcfQt.pri)
