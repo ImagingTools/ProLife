@@ -36,8 +36,7 @@ ViewBase {
             checkInUse()
         }
         else{
-            let parameters = {"Id": "SoftwareProducts", "AlertPanelComp": undefined};
-            Events.sendEvent("SetAlertPanel", parameters);
+			setAlertPanel(undefined);
         }
     }
 
@@ -113,17 +112,13 @@ ViewBase {
             return;
         }
 
-        let parameters = {"Id": "SoftwareProducts"};
-
         if (softwareProductData.m_inUse){
             root.readOnly = true;
-            parameters["AlertPanelComp"] = alertComp
-            Events.sendEvent("SetAlertPanel", parameters);
+			setAlertPanel(alertComp);
         }
         else{
             root.readOnly = false;
-            parameters["AlertPanelComp"] = undefined
-            Events.sendEvent("SetAlertPanel", parameters);
+			setAlertPanel(undefined);
         }
     }
 
