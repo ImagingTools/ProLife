@@ -31,6 +31,12 @@ public:
 	I_END_COMPONENT;
 
 protected:
+	// reimplemented (sdl::imtbase::ImtCollection::V1_0::CGraphQlHandlerCompBase)
+	virtual sdl::imtbase::ImtCollection::CVisualStatus::V1_0 OnGetObjectVisualStatus(
+				const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 	// reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,

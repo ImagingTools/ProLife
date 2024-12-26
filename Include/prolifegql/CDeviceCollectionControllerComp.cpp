@@ -28,6 +28,43 @@ namespace prolifegql
 
 // protected methods
 
+sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceCollectionControllerComp::OnGetObjectVisualStatus(
+			const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	sdl::imtbase::ImtCollection::CVisualStatus::V1_0 response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(*response.ObjectId, dataPtr)){
+		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+		if (deviceInfoPtr != nullptr){
+			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
+
+			QString name = deviceType;
+
+			if (m_productCollectionCompPtr.IsValid()){
+				imtbase::IObjectCollection::DataPtr productDataPtr;
+				if (m_productCollectionCompPtr->GetObjectData(deviceType, productDataPtr)){
+					imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productDataPtr.GetPtr());
+					if (remoteProductInfoPtr != nullptr){
+						name = remoteProductInfoPtr->GetName();
+					}
+				}
+			}
+
+			if (!macAddress.isEmpty()){
+				name += " (" + macAddress + ")";
+			}
+
+			response.Text = name;
+		}
+	}
+
+	return response;
+}
+
 // reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
