@@ -64,6 +64,12 @@ I_EXPORT_COMPONENT(
 		"Customer info",
 		"Customer Info");
 
+I_EXPORT_COMPONENT(
+		DeviceController,
+		"Device controller",
+		"Device Controller");
+
+
 
 } // namespace ProLifeGqlPck
 

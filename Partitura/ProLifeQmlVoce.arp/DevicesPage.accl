@@ -14,10 +14,11 @@
         <Element ComponentName="DeviceChangeGenerator" X="425" Y="700" Note=""/>
         <Element ComponentName="DeviceCollectionController" X="350" Y="200" Note=""/>
         <Element ComponentName="DeviceCommands" X="1000" Y="75" Note=""/>
+        <Element ComponentName="DeviceController" X="950" Y="375" Note=""/>
         <Element ComponentName="DeviceHeadersDataProvider" X="125" Y="525" Note=""/>
         <Element ComponentName="DeviceInfo" X="200" Y="600" Note=""/>
         <Element ComponentName="HardwareBindingChangeGenerator" X="950" Y="600" Note=""/>
-        <Element ComponentName="HardwareProductBindingController" X="875" Y="475" Note=""/>
+        <Element ComponentName="HardwareProductBindingController" X="850" Y="475" Note=""/>
         <Element ComponentName="OperationContextController" X="575" Y="600" Note=""/>
         <Element ComponentName="Permissions" X="650" Y="325" Note=""/>
     </PositionMap>
@@ -37,6 +38,7 @@
                 <Element ComponentName="OpenOrder" X="950" Y="300" Note=""/>
                 <Element ComponentName="Revision" X="950" Y="425" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+                <Element ComponentName="TransferLicenses" X="950" Y="550" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

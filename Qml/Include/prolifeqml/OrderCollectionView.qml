@@ -66,11 +66,6 @@ RemoteCollectionView {
     Component.onCompleted: {
         collectionFilter.setSortingOrder("DESC");
         collectionFilter.setSortingInfoId("LastModified");
-
-        let documentManager = MainDocumentManager.getDocumentManager("Orders");
-        if (documentManager){
-            container.commandsDelegate.documentManager = documentManager;
-        }
     }
 
     Component {

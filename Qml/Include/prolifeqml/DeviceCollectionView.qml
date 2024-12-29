@@ -48,7 +48,7 @@ RemoteCollectionView {
 
 	function drawStatusColumnDelegate(ctx, x, y, cellWidth, cellHeight, columnIndex, canvas){
 		let statusId = canvas.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, canvas.rowDelegate.rowIndex);
-		let source = deviceProductionStatus.getIconPath(statusId);
+		let source = deviceProductionStatus.getStatusIcon(statusId);
 
 		let ratio = 0.5;
 		ctx.save();
@@ -64,23 +64,7 @@ RemoteCollectionView {
 		collectionFilter.setSortingOrder("DESC");
 		collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
 
-		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-		if (documentManager){
-			container.commandsDelegate.documentManager = documentManager;
-
-			documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
-			documentManager.registerDocumentDataController("Device", dataControllerComp);
-			documentManager.registerDocumentValidator("Device", deviceValidatorComp);
-		}
-
 		filterMenu.decorator = deviceCollectionFilterComp;
-
-		container.table.registerFunctionDrawCellDelegate(DeviceItemTypeMetaInfo.s_status, drawStatusColumnDelegate);
-		// container.table.rowDelegate = tableDelegate;
-
-		// container.filterMenu.addFilterComp(10, "right", textFilterComp);
-		// container.filterMenu.addFilterComp(0, "left", accountFilterComp);
-		// container.filterMenu.addFilterComp(1, "left", licenseFilterComp);
 	}
 
 	Component {
@@ -167,96 +151,10 @@ RemoteCollectionView {
 	}
 
 	Component {
-		id: deviceEditorComp;
-
-		DeviceEditor {
-			id: deviceEditor;
-
-			commandsControllerComp:
-				Component {CommandsPanelController {
-					commandId: "Device";
-					uuid: deviceEditor.viewId;
-				}}
-
-			commandsDelegateComp: Component {ViewCommandsDelegateBase {
-					view: deviceEditor;
-					onCommandActivated: {
-						if (commandId == "Bind"){
-							let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-							if (documentManager){
-								let documentData = documentManager.getDocumentDataByView(deviceEditor);
-								if (!documentData){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-
-									return;
-								}
-
-								let documentIndex = documentData.documentIndex;
-								if (documentIndex < 0){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-
-									return;
-								}
-
-								let isDirty = documentData.isDirty;
-								let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
-								if (isNew || isDirty){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
-
-									return;
-								}
-
-								let documentModel = documentData.documentDataController.documentModel;
-								if (!documentModel){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-
-									return;
-								}
-
-								let macAddress = documentModel.m_macAddress;
-								if (!macAddressValidator.isValid(macAddress)){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
-
-									return;
-								}
-
-								let title = qsTr("Add license to sensor '%1'");
-								title = title.replace("%1", macAddress);
-
-								let documentId = documentData.documentId;
-								if (documentId === ""){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-
-									return;
-								}
-
-								ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	Component {
-		id: saveDialogComp;
-
-		ErrorDialog {
-			width: 300;
-			title: qsTr("Warning message");
-		}
-	}
-
-	Component {
 		id: productPairEditorDialog;
 
 		HardwareProductBindingDialog {
 		}
-	}
-
-	MacAddressValidator {
-		id: macAddressValidator;
 	}
 
 	MetaInfoProvider {
@@ -264,35 +162,6 @@ RemoteCollectionView {
 
 		onMetaInfoModelChanged: {
 			container.setMetaInfoModel(metaInfoModel);
-		}
-	}
-
-	Component {
-		id: dataControllerComp;
-
-		GqlRequestDocumentDataController {
-			id: requestDocumentDataController
-
-			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
-			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
-			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
-
-			documentModelComp: Component {
-				DeviceData {}
-			}
-
-			payloadModel: DeviceDataPayload {
-				onFinished: {
-					requestDocumentDataController.documentModel = m_deviceData
-				}
-			}
-		}
-	}
-
-	Component {
-		id: deviceValidatorComp;
-
-		DeviceValidator {
 		}
 	}
 
@@ -341,7 +210,7 @@ RemoteCollectionView {
 
 				if (rowIndex >= 0){
 					let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
-					image.source = deviceProductionStatus.getIconPath(statusId);
+					image.source = deviceProductionStatus.getStatusIcon(statusId);
 					statusLable.text = cellDelegate.getValue();
 				}
 			}

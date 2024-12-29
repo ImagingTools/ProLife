@@ -4,6 +4,8 @@ import imtgui 1.0
 import imtcolgui 1.0
 import imtdocgui 1.0
 import imtcontrols 1.0
+import prolifeSensorsSdl 1.0
+import imtguigql 1.0
 
 DocumentCollectionViewDelegate {
     id: container;
@@ -25,6 +27,132 @@ DocumentCollectionViewDelegate {
         Events.unSubscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
     }
 
+	onCollectionIdChanged: {
+		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+		if (documentManager){
+			container.documentManager = documentManager;
+
+			documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
+			documentManager.registerDocumentDataController("Device", dataControllerComp);
+			documentManager.registerDocumentValidator("Device", deviceValidatorComp);
+		}
+	}
+
+	Component {
+		id: saveDialogComp;
+
+		ErrorDialog {
+			width: 300;
+			title: qsTr("Warning message");
+		}
+	}
+
+	Component {
+		id: dataControllerComp;
+
+		GqlRequestDocumentDataController {
+			id: requestDocumentDataController
+
+			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
+			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
+			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
+
+			documentModelComp: Component {
+				DeviceData {}
+			}
+
+			payloadModel: DeviceDataPayload {
+				onFinished: {
+					requestDocumentDataController.documentModel = m_deviceData
+				}
+			}
+		}
+	}
+
+	Component {
+		id: deviceValidatorComp;
+
+		DeviceValidator {
+		}
+	}
+
+	MacAddressValidator {
+		id: macAddressValidator;
+	}
+
+	Component {
+		id: deviceEditorComp;
+
+		DeviceEditor {
+			id: deviceEditor;
+
+			commandsControllerComp:
+				Component {CommandsPanelController {
+					commandId: "Device";
+					uuid: deviceEditor.viewId;
+				}}
+
+			commandsDelegateComp: Component {ViewCommandsDelegateBase {
+					view: deviceEditor;
+					onCommandActivated: {
+						if (commandId == "Bind"){
+							let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+							if (documentManager){
+								let documentData = documentManager.getDocumentDataByView(deviceEditor);
+								if (!documentData){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+									return;
+								}
+
+								let documentIndex = documentData.documentIndex;
+								if (documentIndex < 0){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+									return;
+								}
+
+								let isDirty = documentData.isDirty;
+								let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
+								if (isNew || isDirty){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
+
+									return;
+								}
+
+								let documentModel = documentData.documentDataController.documentModel;
+								if (!documentModel){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+									return;
+								}
+
+								let macAddress = documentModel.m_macAddress;
+								if (!macAddressValidator.isValid(macAddress)){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
+
+									return;
+								}
+
+								let title = qsTr("Add license to sensor '%1'");
+								title = title.replace("%1", macAddress);
+
+								let documentId = documentData.documentId;
+								if (documentId === ""){
+									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
+
+									return;
+								}
+
+								ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
     function onLocalizationChanged(languageId){
     }
 
@@ -33,9 +161,8 @@ DocumentCollectionViewDelegate {
 			return;
 		}
 
-		let macAddress = elementsModel.getData("MacAddress", selection[0]);
-
 		let isEnabled = selection.length === 1;
+		let macAddress = elementsModel.getData("MacAddress", selection[0]);
 
 		let isOpenOrderEnabled = isEnabled;
 		if (isOpenOrderEnabled){
@@ -48,10 +175,18 @@ DocumentCollectionViewDelegate {
 			isBindEnabled = isBindEnabled && macAddress !== "";
 		}
 
+		let isTransferLicensesEnabled = isEnabled;
+		if (isTransferLicensesEnabled){
+			let status = elementsModel.getData("StatusId", selection[0])
+
+			isTransferLicensesEnabled = status === "Defected";
+		}
+
 		if(commandsController){
 			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
 			commandsController.setCommandIsEnabled("Bind", isBindEnabled);
 			commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
+			commandsController.setCommandIsEnabled("TransferLicenses", isTransferLicensesEnabled);
 		}
 	}
 
@@ -135,6 +270,13 @@ DocumentCollectionViewDelegate {
             let hardwareId = elementsModel.getData("Id", indexes[0]);
             licenseFileController.createLicenseFile(hardwareId);
         }
+		else if (commandId === "TransferLicenses"){
+			let hardwareId = elementsModel.getData("Id", indexes[0]);
+			let productId = elementsModel.getData("ProductUuid", indexes[0]);
+
+			console.log("TransferLicenses", hardwareId, productId);
+			ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId});
+		}
     }
 
     Component {
@@ -161,4 +303,77 @@ DocumentCollectionViewDelegate {
             }
         }
     }
+
+	Component {
+		id: deviceCollectionViewComp;
+
+		Dialog {
+			id: dialog;
+			title: qsTr("Select device for license transfer");
+			canMove: false;
+			width: ModalDialogManager.activeView.width - 100;
+			height: ModalDialogManager.activeView.height - 100;
+
+			property string productUuid;
+			property string fromDeviceId;
+			property string toDeviceId;
+
+			onFinished: {
+				if (buttonId === Enums.ok){
+					transferLicensesRequest.send({"m_fromDeviceId": dialog.fromDeviceId, "m_toDeviceId": dialog.toDeviceId});
+				}
+			}
+
+			GqlSdlRequestSender {
+				id: transferLicensesRequest;
+				gqlCommandId: ProlifeSensorsSdlCommandIds.s_transferLicenses;
+				inputObjectComp: Component {
+					TransferLicensesInput {
+					}
+				}
+
+				sdlObjectComp: Component {
+					TransferLicensesPayload {
+						onFinished: {
+						}
+					}
+				}
+			}
+
+			contentComp: Component {
+				Item {
+					width: dialog.width;
+					height: dialog.height - 100;
+
+					Connections {
+						target: dialog;
+
+						function onStarted(){
+							deviceCollectionView.collectionFilter.addAdditionalFilter("LicenseStatus", "WithoutLicense");
+							deviceCollectionView.collectionFilter.addAdditionalFilter("ProductUuid", dialog.productUuid);
+							deviceCollectionView.doUpdateGui();
+						}
+					}
+
+					DeviceCollectionView {
+						id: deviceCollectionView;
+						commandsControllerComp: null;
+						visibleMetaInfo: false;
+						table.isMultiSelect: false;
+						commandsDelegateComp: null;
+
+						onSelectionChanged: {
+							dialog.buttons.setButtonState(Enums.ok, selection.length > 0);
+							dialog.toDeviceId = table.elements.getData("Id", selection[0]);
+						}
+					}
+				}
+			}
+
+			Component.onCompleted: {
+				buttonsModel.append({"Id": Enums.ok, "Name": qsTr("Transfer"), "Enabled": false});
+				buttonsModel.append({"Id": Enums.cancel, "Name": qsTr("Close"), "Enabled": true});
+			}
+		}
+	}
 }

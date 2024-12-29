@@ -16,6 +16,16 @@ input DevicesListInput {
 	viewParams: CollectionViewParams
 }
 
+type ProductionStatus {
+	Id: ID!
+	Name: String!
+	Icon: String
+}
+
+type ProductionStatusModel {
+	Model: [ProductionStatus]
+}
+
 type DeviceItem {
 	TypeId: ID!
 	Id: ID!
@@ -58,9 +68,35 @@ type DeviceData {
 	ProductionStatus: String
 }
 
+type DeviceBindingData {
+	Id: ID!
+	ProductUuid: ID
+	SoftwareIds: ID
+	Project: String
+}
+
 input DeviceDataInput {
 	Id: ID!
 	Item: DeviceData!
+}
+
+input DeviceBindingInput {
+	DeviceId: ID!
+	Item: DeviceBindingData!
+	Project: String
+}
+
+input GetDeviceBindingInput {
+	Id: ID!
+}
+
+input TransferLicensesInput {
+	FromDeviceId: ID!
+	ToDeviceId: ID!
+}
+
+type TransferLicensesPayload {
+	Status: String
 }
 
 type DeviceDataPayload {
@@ -70,11 +106,14 @@ type DeviceDataPayload {
 type Query {
 	DevicesList (input:DevicesListInput): DevicesListPayload!
 	DeviceItem (input: InputId): DeviceDataPayload!
+	GetDeviceBinding (input: GetDeviceBindingInput): DeviceBindingData!
 }
 
 type Mutation {
 	DeviceUpdate (input: DeviceDataInput): UpdatedNotificationPayload!
 	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
+	UpdateDeviceBinding (input: DeviceBindingInput): UpdatedNotificationPayload!
+	TransferLicenses (input: TransferLicensesInput): TransferLicensesPayload!
 }
 
 collectionSchema {

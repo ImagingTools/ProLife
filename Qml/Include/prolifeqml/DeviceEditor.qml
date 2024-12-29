@@ -140,21 +140,6 @@ ViewBase {
         id: productionStatus;
     }
 
-    StateMachine {
-        id: stateMachine;
-
-        Component.onCompleted: {
-            stateMachine.registerModel(productionStatus.statusModel);
-
-            stateMachine.addState("None", ["None", "Accepted"]);
-            stateMachine.addState("Accepted", ["Accepted", "InProgress", "Canceled", "OnHold"]);
-            stateMachine.addState("InProgress", ["InProgress", "Finished"]);
-            stateMachine.addState("Canceled", ["Canceled", "None"]);
-            stateMachine.addState("OnHold", ["OnHold", "Accepted", "InProgress"]);
-            stateMachine.addState("Finished", ["Finished"]);
-        }
-    }
-
     MouseArea {
         anchors.fill: parent;
 
@@ -188,14 +173,10 @@ ViewBase {
         let status = deviceData.m_productionStatus;
         let statusModel = statusCB.model;
         if (statusModel){
-            for (let i = 0; i < statusModel.getItemsCount(); i++){
-                let id = statusModel.getData("Id", i);
-                if (id === status){
-                    statusCB.currentIndex = i;
-
-                    break;
-                }
-            }
+			let index = productionStatus.getStatusIndex(status);
+			if (index >= 0){
+				statusCB.currentIndex = index;
+			}
         }
 
         productCB.currentIndex = -1;
@@ -286,8 +267,7 @@ ViewBase {
         deviceData.m_project = projectInput.text;
 
         if (statusCB.currentIndex >= 0 && statusCB.model){
-            let selectedStatus = statusCB.model.getData("Id", statusCB.currentIndex);
-            deviceData.m_productionStatus = selectedStatus;
+			deviceData.m_productionStatus = productionStatus.getStatusId(statusCB.currentIndex);
         }
         else{
             deviceData.m_productionStatus = "";
@@ -522,7 +502,8 @@ ViewBase {
                     id: statusCB;
 
                     name: qsTr("Production Status");
-                    model: productionStatus.statusModel;
+					model: productionStatus.m_model;
+					nameId: "m_name";
 
                     property bool blockingIndexChanged: false;
 
@@ -532,13 +513,30 @@ ViewBase {
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
 
+						// let status = productionStatus.getStatusId(statusCB.currentIndex);
+						// if (status === "Defected"){
+
+						// }
+						// buttonElementView.visible
+
                         if (statusCB.currentIndex >= 0){
                         }
                         else{
-                            statusCB.model = productionStatus.statusModel;
+							statusCB.model = productionStatus.m_model;
                         }
                     }
                 }
+
+				// ButtonElementView {
+				// 	id: buttonElementView;
+				// 	name: qsTr("Transfer Licenses");
+				// 	text: qsTr("Transfer");
+				// 	// visible:
+
+				// 	onClicked: {
+
+				// 	}
+				// }
 
                 TextInputElementView {
                     id: projectInput;

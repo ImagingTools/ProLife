@@ -271,7 +271,21 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
 
-			if (key == "CustomerUuid"){
+			if (key == "ProductUuid"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
+
+				QString value = textParamPtr->GetText();
+
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += QString(R"((root."ProductUuid" = '%1'))").arg(value);
+			}
+			else if (key == "CustomerUuid"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;

@@ -3,7 +3,9 @@ import Acf 1.0
 import imtgui 1.0
 import imtguigql 1.0
 import imtcontrols 1.0
-import prolifeSensorBindingSdl 1.0
+// import prolifeSensorBindingSdl 1.0
+import prolifeSensorsSdl 1.0
+import imtbaseImtCollectionSdl 1.0
 
 Dialog {
     id: productEditorDialog;
@@ -26,8 +28,7 @@ Dialog {
     signal saved();
 
     onHardwareIdChanged: {
-        documentController.documentId = hardwareId;
-        documentController.updateDocumentModel();
+		getDeviceBindingRequest.send();
     }
 
     Component.onCompleted: {
@@ -76,46 +77,65 @@ Dialog {
             onFinished: {
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
-
                     bindingModel.m_id = productEditorDialog.hardwareId
 
-                    documentController.updateRequestInputParam.InsertField("Project", inputValue);
+					// documentController.updateRequestInputParam.InsertField("Project", inputValue);
 
-                    documentController.documentModel = bindingModel;
+					// documentController.documentModel = bindingModel;
 
-                    documentController.saveDocument();
+					// documentController.saveDocument();
 
-                    productEditorDialog.buttons.setButtonState(Enums.ok, false);
-                    productEditorDialog.buttonsModel.setProperty(1, "Name", qsTr("Close"));
+					updateDeviceBindingRequest.send({
+														"m_deviceId": productEditorDialog.hardwareId,
+														"m_project": inputValue,
+														"m_item": bindingModel
+													})
 
-                    productEditorDialog.saved();
-                    productEditorDialog.finished(Enums.cancel);
                 }
             }
         }
     }
 
-    GqlRequestDocumentDataController {
-        id: documentController;
+	GqlSdlRequestSender {
+		id: getDeviceBindingRequest;
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_getDeviceBinding;
+		inputObjectComp: Component {
+			GetDeviceBindingInput {
+				m_id: productEditorDialog.hardwareId;
+			}
+		}
 
-        gqlGetCommandId: ProlifeSensorBindingSdlCommandIds.s_getSensorBinding;
-        gqlUpdateCommandId: ProlifeSensorBindingSdlCommandIds.s_updateSensorBinding;
-        gqlAddCommandId: ProlifeSensorBindingSdlCommandIds.s_addSensorBinding;
+		sdlObjectComp: Component {
+			DeviceBindingData {
+				onFinished: {
+					productEditorDialog.contentItem.bindingModel = this;
+				}
+			}
+		}
+	}
 
-        documentModelComp: Component {
-            SensorBindingData {}
-        }
+	GqlSdlRequestSender {
+		id: updateDeviceBindingRequest
+		requestType: 1;
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding;
 
-        payloadModel: SensorBindingDataPayload {
-            onFinished: {
-                documentController.documentModel = m_sensorBindingData
-            }
-        }
+		inputObjectComp: Component {
+			DeviceBindingInput {
+				m_deviceId: productEditorDialog.hardwareId;
+			}
+		}
 
-        onDocumentModelChanged: {
-            productEditorDialog.contentItem.bindingModel = documentModel;
-        }
-    }
+		sdlObjectComp: Component {
+			UpdatedNotificationPayload {
+				onFinished: {
+					if (m_id != ''){
+						productEditorDialog.saved();
+						productEditorDialog.finished(Enums.cancel);
+					}
+				}
+			}
+		}
+	}
 }//Container
 
 

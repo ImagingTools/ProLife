@@ -29,6 +29,12 @@ QString GetNameFromDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProduc
 		return QString("On Hold");
 	case prolifedata::IDeviceInfo::DPS_FINISHED:
 		return QString("Finished");
+	case prolifedata::IDeviceInfo::DPS_DEFECTED:
+		return QString("Defected");
+	case prolifedata::IDeviceInfo::DPS_IN_REPAIR:
+		return QString("In Repair");
+	case prolifedata::IDeviceInfo::DPS_DECOMMISSIONED:
+		return QString("Decommissioned");
 	default:
 		return QByteArray("None");
 	}
@@ -50,6 +56,12 @@ QByteArray GetIdFromDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProdu
 		return QByteArray("OnHold");
 	case prolifedata::IDeviceInfo::DPS_FINISHED:
 		return QByteArray("Finished");
+	case prolifedata::IDeviceInfo::DPS_DEFECTED:
+		return QByteArray("Defected");
+	case prolifedata::IDeviceInfo::DPS_IN_REPAIR:
+		return QByteArray("InRepair");
+	case prolifedata::IDeviceInfo::DPS_DECOMMISSIONED:
+		return QByteArray("Decommissioned");
 	default:
 		return QByteArray("None");
 	}
@@ -75,6 +87,15 @@ prolifedata::IDeviceInfo::DeviceProductionStatus GetProductionStatusFromId(const
 	}
 	else if (statusId == "Finished"){
 		return prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_FINISHED;
+	}
+	else if (statusId == "Defected"){
+		return prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_DEFECTED;
+	}
+	else if (statusId == "InRepair"){
+		return prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_IN_REPAIR;
+	}
+	else if (statusId == "Decommissioned"){
+		return prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_DECOMMISSIONED;
 	}
 
 	return prolifedata::IDeviceInfo::DeviceProductionStatus::DPS_NONE;

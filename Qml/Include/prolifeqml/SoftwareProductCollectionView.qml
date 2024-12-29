@@ -45,7 +45,6 @@ RemoteCollectionView {
     function registerDocumentInfo(){
         let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
         if (documentManager){
-            container.commandsDelegate.documentManager = documentManager;
             documentManager.registerDocumentView("SoftwareProduct", "SoftwareProductEditor", softwareEditorComp);
             documentManager.registerDocumentDataController("SoftwareProduct", documentDataControllerComp);
             documentManager.registerDocumentValidator("SoftwareProduct", licenseValidatorComp);

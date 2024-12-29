@@ -16,8 +16,11 @@ RemoteCollectionView {
     commandsDelegateComp: Component {DocumentCollectionViewDelegate {
             collectionView: container;
 
-            documentTypeId: "Account";
-            viewTypeId: "AccountEditor";
+			documentTypeIds: ["Account"]
+			documentViewTypeIds: ["AccountEditor"]
+			documentViewsComp: [accountEditorComp]
+			documentDataControllersComp: [dataControllerComp]
+			documentValidatorsComp: [accountValidatorComp]
 
             function setupContextMenu(){
                 let commandsController = collectionView.commandsController;
@@ -61,15 +64,6 @@ RemoteCollectionView {
     Component.onCompleted: {
         collectionFilter.setSortingOrder("ASC");
         collectionFilter.setSortingInfoId("Name");
-
-        let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-        if (documentManager){
-            container.commandsDelegate.documentManager = documentManager;
-
-            documentManager.registerDocumentView("Account", "AccountEditor", accountEditorComp);
-            documentManager.registerDocumentDataController("Account", dataControllerComp);
-            documentManager.registerDocumentValidator("Account", accountValidatorComp);
-        }
     }
 
     Component {
@@ -118,9 +112,9 @@ RemoteCollectionView {
         GqlRequestDocumentDataController {
             id: requestDocumentDataController
 
-            gqlGetCommandId: "AccountItem";
-            gqlUpdateCommandId: "AccountUpdate";
-            gqlAddCommandId: "AccountAdd";
+			gqlGetCommandId: ProlifeAccountsSdlCommandIds.s_accountItem;
+			gqlUpdateCommandId: ProlifeAccountsSdlCommandIds.s_accountUpdate;
+			gqlAddCommandId: ProlifeAccountsSdlCommandIds.s_accountAdd;
 
             documentModelComp: Component {
                 AccountData {}

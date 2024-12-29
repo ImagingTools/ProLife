@@ -9,16 +9,17 @@
 #include <imtservergql/TObjectCollectionControllerSearchCompWrap.h>
 
 // ProLife includes
+#include <prolifedata/CCustomerInfo.h>
 #include <prolifegql/COrderCollectionControllerComp.h>
 #include <prolifegql/CDeviceCollectionControllerComp.h>
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
-#include <prolifegql/CHardwareProductBindingControllerComp.h>
+#include <prolifegql/CDeviceControllerComp.h>
 #include <prolifegql/CDeviceChangeGeneratorComp.h>
 #include <prolifegql/CLicenseChangeGeneratorComp.h>
 #include <prolifegql/COrderChangeGeneratorComp.h>
 #include <prolifegql/CHardwareBindingChangeGeneratorComp.h>
 #include <prolifegql/CCustomerCollectionControllerComp.h>
-#include <prolifedata/CCustomerInfo.h>
+#include <prolifegql/CDeviceControllerComp.h>
 
 
 /**
@@ -34,7 +35,7 @@ typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
 typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
-typedef prolifegql::CHardwareProductBindingControllerComp HardwareProductBindingController;
+typedef prolifegql::CDeviceControllerComp HardwareProductBindingController;
 typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
@@ -49,6 +50,7 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> CustomerInfo;
+typedef prolifegql::CDeviceControllerComp DeviceController;
 
 
 } // namespace ImtLicenseGqlPck

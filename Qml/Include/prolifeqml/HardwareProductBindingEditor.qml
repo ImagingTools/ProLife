@@ -7,6 +7,7 @@ import imtcolgui 1.0
 import imtguigql 1.0
 import imtlicgui 1.0
 import prolifeSensorBindingSdl 1.0
+import prolifeSensorsSdl 1.0
 
 Item {
     id: productEditor;
@@ -14,7 +15,7 @@ Item {
 
     property int contentHeight: availableLicensesColumn.height;
 
-    property SensorBindingData bindingModel: null;
+	property DeviceBindingData bindingModel: null;
 
     property string productId: ""
     property string hardwareId: "";
