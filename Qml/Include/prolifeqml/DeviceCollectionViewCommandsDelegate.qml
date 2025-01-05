@@ -8,24 +8,24 @@ import prolifeSensorsSdl 1.0
 import imtguigql 1.0
 
 DocumentCollectionViewDelegate {
-    id: container;
+	id: container;
 
-    property bool filterByNewActive: false;
-    property string filterLicense: "";
+	property bool filterByNewActive: false;
+	property string filterLicense: "";
 
-    documentTypeId: "Device";
-    viewTypeId: "DeviceEditor";
+	documentTypeId: "Device";
+	viewTypeId: "DeviceEditor";
 
-    removeDialogTitle: qsTr("Removing the sensor");
-    removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
+	removeDialogTitle: qsTr("Removing the sensor");
+	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
 
-    Component.onCompleted: {
-        Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
-    }
+	Component.onCompleted: {
+		Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
+	}
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
-    }
+	Component.onDestruction: {
+		Events.unSubscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
+	}
 
 	onCollectionIdChanged: {
 		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
@@ -153,8 +153,8 @@ DocumentCollectionViewDelegate {
 		}
 	}
 
-    function onLocalizationChanged(languageId){
-    }
+	function onLocalizationChanged(languageId){
+	}
 
 	function updateStateCustomCommands(selection, commandsController, elementsModel){
 		if (!elementsModel){
@@ -190,119 +190,135 @@ DocumentCollectionViewDelegate {
 		}
 	}
 
-    function setupContextMenu(){
-        let commandsController = collectionView.commandsController;
-        if (commandsController){
-            container.contextMenuModel.clear();
+	function setupContextMenu(){
+		let commandsController = collectionView.commandsController;
+		if (commandsController){
+			container.contextMenuModel.clear();
 
-            let canEdit = commandsController.commandExists("Edit");
-            let canRemove = commandsController.commandExists("Remove");
+			let canEdit = commandsController.commandExists("Edit");
+			let canRemove = commandsController.commandExists("Remove");
 
-            if (canEdit){
-                let index = container.contextMenuModel.insertNewItem();
+			if (canEdit){
+				let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.setData("Id", "Edit", index);
-                container.contextMenuModel.setData("Name", qsTr("Edit"), index);
-                container.contextMenuModel.setData("Icon", "Icons/Edit", index);
-            }
+				container.contextMenuModel.setData("Id", "Edit", index);
+				container.contextMenuModel.setData("Name", qsTr("Edit"), index);
+				container.contextMenuModel.setData("Icon", "Icons/Edit", index);
+			}
 
-            if (canRemove){
-                let index = container.contextMenuModel.insertNewItem();
+			if (canRemove){
+				let index = container.contextMenuModel.insertNewItem();
 
-                container.contextMenuModel.setData("Id", "Remove", index);
-                container.contextMenuModel.setData("Name", qsTr("Remove"), index);
-                container.contextMenuModel.setData("Icon", "Icons/Delete", index);
-            }
+				container.contextMenuModel.setData("Id", "Remove", index);
+				container.contextMenuModel.setData("Name", qsTr("Remove"), index);
+				container.contextMenuModel.setData("Icon", "Icons/Delete", index);
+			}
 
-            container.contextMenuModel.refresh();
-        }
-    }
+			container.contextMenuModel.refresh();
+		}
+	}
 
-    onCommandActivated: {
-        let indexes = container.collectionView.table.getSelectedIndexes();
-        let elementsModel = container.collectionView.table.elements;
+	onCommandActivated: {
+		let indexes = container.collectionView.table.getSelectedIndexes();
+		let elementsModel = container.collectionView.table.elements;
 
-        if (commandId === "Bind"){
-            let hardwareId = elementsModel.getData("Id", indexes[0]);
-            let macAddress = elementsModel.getData("MacAddress", indexes[0]);
+		if (commandId === "Bind"){
+			let hardwareId = elementsModel.getData("Id", indexes[0]);
+			let macAddress = elementsModel.getData("MacAddress", indexes[0]);
 
-            let title = qsTr("Add license to sensor '%1'");
-            title = title.replace("%1", macAddress);
+			let title = qsTr("Add license to sensor '%1'");
+			title = title.replace("%1", macAddress);
 
-            ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
-        }
-        else if (commandId === "OpenOrder"){
-            let orderId = elementsModel.getData("OrderUuid", indexes[0]);
-            if (orderId !== ""){
-                MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
-            }
-        }
-        else if (commandId === "CreateLicenseFile"){
-            let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
-            if (count <= 0){
-                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
-                return;
-            }
+			ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
+		}
+		else if (commandId === "OpenOrder"){
+			let orderId = elementsModel.getData("OrderUuid", indexes[0]);
+			if (orderId !== ""){
+				MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
+			}
+		}
+		else if (commandId === "CreateLicenseFile"){
+			let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
+			if (count <= 0){
+				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
+				return;
+			}
 
-            let macAddress = elementsModel.getData("MacAddress", indexes[0])
-            if (macAddress === ""){
-                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The MAC-Address is not set")})
-                return;
-            }
+			let macAddress = elementsModel.getData("MacAddress", indexes[0])
+			if (macAddress === ""){
+				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The MAC-Address is not set")})
+				return;
+			}
 
-            let serialNumber = elementsModel.getData("SerialNumber", indexes[0])
-            if (serialNumber === ""){
-                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The Serial Number is not set")})
-                return;
-            }
+			let serialNumber = elementsModel.getData("SerialNumber", indexes[0])
+			if (serialNumber === ""){
+				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The Serial Number is not set")})
+				return;
+			}
 
-            let status = elementsModel.getData("Status", indexes[0])
-            if (status !== "Finished"){
-                ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The production status must be 'Finished'")})
-                return;
-            }
+			let status = elementsModel.getData("Status", indexes[0])
+			if (status !== "Finished"){
+				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The production status must be 'Finished'")})
+				return;
+			}
 
-            let data = macAddress.split(':');
-            let fileName = data.join('_') + "_" + licenseFileController.defaultName;
+			let data = macAddress.split(':');
+			let fileName = data.join('_') + "_" + licenseFileController.defaultName;
 
-            licenseFileController.fileName = fileName;
+			licenseFileController.fileName = fileName;
 
-            let hardwareId = elementsModel.getData("Id", indexes[0]);
-            licenseFileController.createLicenseFile(hardwareId);
-        }
+			let hardwareId = elementsModel.getData("Id", indexes[0]);
+			licenseFileController.createLicenseFile(hardwareId);
+		}
 		else if (commandId === "TransferLicenses"){
+			let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
+			if (count <= 0){
+				ModalDialogManager.openDialog(transferErrorDialogComp, {})
+				return;
+			}
+
 			let hardwareId = elementsModel.getData("Id", indexes[0]);
 			let productId = elementsModel.getData("ProductUuid", indexes[0]);
 
 			console.log("TransferLicenses", hardwareId, productId);
 			ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId});
 		}
-    }
+	}
 
-    Component {
-        id: errorDialogComp;
+	Component {
+		id: errorDialogComp;
 
-        ErrorDialog {
-            width: 450;
-            title: qsTr("The license file could not be created");
-        }
-    }
+		ErrorDialog {
+			width: 450;
+			title: qsTr("The license file could not be created");
+		}
+	}
 
-    LicenseFileController {
-        id: licenseFileController;
-    }
+	Component {
+		id: transferErrorDialogComp;
 
-    Component {
-        id: productPairEditorDialog;
+		ErrorDialog {
+			width: 450;
+			title: qsTr("License transfer error");
+			message: qsTr("No license is linked");
+		}
+	}
 
-        HardwareProductBindingDialog {
-            id: dialog;
+	LicenseFileController {
+		id: licenseFileController;
+	}
 
-            onSaved: {
-                container.collectionView.doUpdateGui();
-            }
-        }
-    }
+	Component {
+		id: productPairEditorDialog;
+
+		HardwareProductBindingDialog {
+			id: dialog;
+
+			onSaved: {
+				container.collectionView.doUpdateGui();
+			}
+		}
+	}
 
 	Component {
 		id: deviceCollectionViewComp;
@@ -351,6 +367,7 @@ DocumentCollectionViewDelegate {
 						function onStarted(){
 							deviceCollectionView.collectionFilter.addAdditionalFilter("LicenseStatus", "WithoutLicense");
 							deviceCollectionView.collectionFilter.addAdditionalFilter("ProductUuid", dialog.productUuid);
+							deviceCollectionView.collectionFilter.addAdditionalFilter("ExcludeIds", dialog.fromDeviceId);
 							deviceCollectionView.doUpdateGui();
 						}
 					}
@@ -365,6 +382,19 @@ DocumentCollectionViewDelegate {
 						onSelectionChanged: {
 							dialog.buttons.setButtonState(Enums.ok, selection.length > 0);
 							dialog.toDeviceId = table.elements.getData("Id", selection[0]);
+						}
+
+						Component.onCompleted: {
+							filterMenu.decorator = filterComp;
+
+						}
+
+						Component {
+							id: filterComp;
+							DeviceCollectionFilterDecorator {
+								licenseCb.currentIndex: 1;
+								licenseCb.changeable: false;
+							}
 						}
 					}
 				}

@@ -184,6 +184,9 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 		}
 	}
 
+	deviceBindingInfoPtr->SetHardwareId(deviceId);
+	deviceBindingInfoPtr->SetSoftwareIds(newHardwareBindingSoftwareIds);
+
 	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){

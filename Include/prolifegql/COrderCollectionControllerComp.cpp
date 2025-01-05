@@ -250,21 +250,6 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	if (!m_objectCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Error: Attribute 'm_objectCollectionCompPtr' was not set", "COrderCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_deviceCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Error: Attribute 'm_deviceCollectionCompPtr' was not set", "COrderCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Error: Attribute 'm_softwareInstanceCollectionCompPtr' was not set", "COrderCollectionControllerComp");
-		return nullptr;
-	}
-
 	istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderInfoPtr;
 	orderInfoPtr.SetCastedOrRemove(m_orderInfoFactCompPtr.CreateInstance());
 	if (!orderInfoPtr.IsValid()){
@@ -274,289 +259,9 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	if (orderDataRepresentation.Id){
-		newObjectId = *orderDataRepresentation.Id;
-	}
-
-	if (newObjectId.isEmpty()){
-		newObjectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
-	}
-
-	QByteArray orderUuid = newObjectId;
-	orderInfoPtr->SetObjectUuid(orderUuid);
-
-	QString orderId;
-	if (orderDataRepresentation.OrderId){
-		orderId = *orderDataRepresentation.OrderId;
-	}
-
-	if (orderId.isEmpty()){
-		errorMessage = QString("Delivery-ID cannot be empty");
-		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
-
+	if (!FillObjectFromRepresentation(orderDataRepresentation, *orderInfoPtr, newObjectId, errorMessage)){
+		errorMessage = QString("Unable to create order from representatiom. Error: '%1'").arg(errorMessage);
 		return nullptr;
-	}
-
-	iprm::CTextParam valueParam;
-	valueParam.SetText(orderId);
-
-	iprm::CEnableableParam isEqualParam;
-	isEqualParam.SetEnabled(true);
-
-	iprm::CParamsSet valueParamsSet;
-	valueParamsSet.SetEditableParameter("Value", &valueParam);
-	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
-	iprm::CParamsSet paramsSet1;
-	paramsSet1.SetEditableParameter("OrderId", &valueParamsSet);
-
-	iprm::CParamsSet filterParam;
-	filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
-
-	// Check Order-ID exists
-	imtbase::ICollectionInfo::Ids collectionIds1 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-	if (!collectionIds1.isEmpty()){
-		QByteArray orderObjectId = collectionIds1[0];
-		if (orderUuid != orderObjectId){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
-				prolifedata::CIdentifiableOrderInfo* objectPrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-				if (objectPrderInfoPtr != nullptr){
-					QByteArray currentOrderId = objectPrderInfoPtr->GetOrderId().toLower();
-					if (currentOrderId == orderId.toLower()){
-						errorMessage = QString("Delivery-ID already exists");
-						SendErrorMessage(0, errorMessage, "COrderControllerComp");
-
-						return nullptr;
-					}
-				}
-			}
-		}
-	}
-
-	QString name;
-	QString description;
-
-	orderInfoPtr->SetOrderId(orderId.toUtf8());
-	name = orderId;
-
-	QByteArray customerId;
-	if (orderDataRepresentation.CustomerId){
-		customerId = *orderDataRepresentation.CustomerId;
-		orderInfoPtr->SetCustomerId(customerId);
-	}
-
-	if (customerId.isEmpty()){
-		errorMessage = QString("Customer can not be empty!");
-		SendErrorMessage(0, errorMessage, "COrderControllerComp");
-
-		return nullptr;
-	}
-
-	if (orderDataRepresentation.PurchaseId){
-		QByteArray purchaseOrderId = *orderDataRepresentation.PurchaseId;
-		orderInfoPtr->SetPurchaseOrderId(purchaseOrderId);
-	}
-
-	if (orderDataRepresentation.Description){
-		description = *orderDataRepresentation.Description;
-		orderInfoPtr->SetDescription(description);
-	}
-
-	if (orderDataRepresentation.OrderStatus){
-		QByteArray status = *orderDataRepresentation.OrderStatus;
-		orderInfoPtr->SetOrderStatus(prolifedata::GetOrderStatusFromId(status));
-	}
-
-	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
-	if (productCollectionPtr == nullptr){
-		Q_ASSERT(false);
-		return nullptr;
-	}
-
-	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
-	if (orderDataRepresentation.OrderProducts){
-		products = *orderDataRepresentation.OrderProducts;
-	}
-
-	bool ok = CheckProducts(orderUuid, products, errorMessage);
-	if (!ok){
-		return nullptr;
-	}
-
-	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
-		QByteArray orderProductUuid = *product.Id;
-		QByteArray categoryId = *product.CategoryId;
-		QByteArray productUuid = *product.ProductUuid;
-		QByteArray serialNumber = *product.SerialNumber;
-		QByteArray licenseUuid = *product.LicenseUuid;
-		bool isNew = *product.IsNew;
-
-		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-
-		objectLinkPtr->SetObjectUuid(orderUuid);
-
-		if (categoryId == "Software"){
-			istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> softwareInstancePtr;
-			softwareInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
-
-			softwareInstancePtr->SetObjectUuid(orderProductUuid);
-			softwareInstancePtr->SetupProductInstance(productUuid, "", "");
-			softwareInstancePtr->SetSerialNumber(serialNumber);
-
-			QString expiration = *product.Expiration;
-			QDateTime expirationDate = QDateTime::fromString(expiration, "yyyy-MM-dd");
-			softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
-
-			if (isNew){
-				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-				if (m_softwareOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *softwareInstancePtr.GetPtr());
-				}
-
-				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
-				if (result.isEmpty()){
-					errorMessage = QString("Unable to insert new software product with ID: '%1'").arg(orderProductUuid);
-					return nullptr;
-				}
-			}
-			else{
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_softwareInstanceCollectionCompPtr->GetObjectData(orderProductUuid, dataPtr)){
-					prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-					if (productInfoPtr != nullptr){
-						bool isInUse = productInfoPtr->IsInUse();
-						if (!isInUse){
-							QByteArray oldOrderId = productInfoPtr->GetOrderId();
-							if (!oldOrderId.isEmpty() && oldOrderId != orderUuid){
-								return nullptr;
-							}
-
-							if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
-								istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-								if (m_softwareOperationContextControllerCompPtr.IsValid()){
-									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *softwareInstancePtr.GetPtr());
-								}
-
-								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(orderProductUuid, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-									errorMessage = QString("Unable to update a software product with ID: '%1'").arg(orderProductUuid);
-
-									return nullptr;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			objectLinkPtr->SetFactoryId("SoftwareInfo");
-		}
-		else if (categoryId == "Hardware"){
-			istd::TDelPtr<prolifedata::COrderedIdentifiableDeviceInfo> deviceInstancePtr;
-			deviceInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableDeviceInfo);
-
-			deviceInstancePtr->SetObjectUuid(orderProductUuid);
-			deviceInstancePtr->SetOrderId(orderUuid);
-			deviceInstancePtr->SetDeviceType(productUuid);
-			deviceInstancePtr->SetConfigurationType(licenseUuid);
-			deviceInstancePtr->SetMacAddress(*product.MacAddress);
-			deviceInstancePtr->SetSerialNumber(serialNumber);
-
-			if (isNew){
-				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *deviceInstancePtr.GetPtr());
-				}
-
-				m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
-			}
-			else{
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_deviceCollectionCompPtr->GetObjectData(orderProductUuid, dataPtr)){
-					prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
-					if (deviceInfoPtr != nullptr){
-						QByteArray deviceOrderUuid = deviceInfoPtr->GetOrderId();
-						QByteArray deviceType = deviceInfoPtr->GetDeviceType();
-						QByteArray deviceConfigurationType = deviceInfoPtr->GetConfigurationType();
-
-						if (deviceOrderUuid != orderUuid || deviceType != productUuid || deviceConfigurationType != licenseUuid){
-							deviceInfoPtr->SetOrderId(orderUuid);
-							deviceInfoPtr->SetDeviceType(productUuid);
-							deviceInfoPtr->SetConfigurationType(licenseUuid);
-
-							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-							if (m_deviceOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *deviceInstancePtr.GetPtr());
-							}
-
-							m_deviceCollectionCompPtr->SetObjectData(orderProductUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());
-						}
-					}
-				}
-			}
-
-			objectLinkPtr->SetFactoryId("HardwareInfo");
-		}
-
-		productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), orderProductUuid);
-	}
-
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
-		prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-		if (oldOrderInfoPtr != nullptr){
-			QByteArrayList addedProducts;
-			QByteArrayList removedProducts;
-			QByteArrayList updatedProducts;
-
-			GenerateDifferences(*oldOrderInfoPtr, *orderInfoPtr, addedProducts, removedProducts, updatedProducts);
-
-			imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
-			if (oldProductCollectionPtr == nullptr){
-				return nullptr;
-			}
-
-			for (const QByteArray& id : removedProducts){
-				imtbase::ICollectionInfo::Id typeId = oldProductCollectionPtr->GetObjectTypeId(id);
-
-				imtbase::IObjectCollection::DataPtr productDataPtr;
-				if (typeId == QByteArray("HardwareInfo")){
-					if (m_deviceCollectionCompPtr->GetObjectData(id, productDataPtr)){
-						prolifedata::COrderedIdentifiableDeviceInfo* hardwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
-						if (hardwareInfoPtr != nullptr){
-							hardwareInfoPtr->SetOrderId("");
-
-							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-							if (m_deviceOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", id, *hardwareInfoPtr);
-							}
-
-							if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-								return nullptr;
-							}
-						}
-					}
-				}
-				else if (typeId == QByteArray("SoftwareInfo")){
-					if (m_softwareInstanceCollectionCompPtr->GetObjectData(id, productDataPtr)){
-						prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
-						if (softwareInfoPtr != nullptr){
-							softwareInfoPtr->SetOrderId("");
-
-							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-							if (m_softwareOperationContextControllerCompPtr.IsValid()){
-								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", id, *softwareInfoPtr);
-							}
-
-							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-								return nullptr;
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	return orderInfoPtr.PopPtr();
@@ -741,6 +446,34 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
+bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
+			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest,
+			istd::IChangeable& object,
+			QString& errorMessage) const
+{
+	sdl::prolife::Orders::COrderData::V1_0 orderData = *orderUpdateRequest.GetRequestedArguments().input.Item;
+	QByteArray objectId = *orderUpdateRequest.GetRequestedArguments().input.Id;
+
+	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(object));
+	if (orderInfoPtr == nullptr){
+		errorMessage = QString("Object is invalid");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
+		return false;
+	}
+
+	orderInfoPtr->ResetData();
+
+	if (!FillObjectFromRepresentation(orderData, object, objectId, errorMessage)){
+		errorMessage = QString("Unable to create order from representatiom. Error: '%1'").arg(errorMessage);
+		return false;
+	}
+
+	return true;
+}
+
+
 void COrderCollectionControllerComp::SetObjectFilter(
 	const imtgql::CGqlRequest& gqlRequest,
 	const imtbase::CTreeItemModel& objectFilterModel,
@@ -796,9 +529,320 @@ void COrderCollectionControllerComp::SetObjectFilter(
 	}
 }
 
-bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
+
+// private methods
+
+bool COrderCollectionControllerComp::FillObjectFromRepresentation(
+			const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
+			istd::IChangeable& object,
+			QByteArray& objectId,
+			QString& errorMessage) const
 {
-	return false;
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Error: Attribute 'm_objectCollectionCompPtr' was not set", "COrderCollectionControllerComp");
+		return false;
+	}
+
+	if (!m_deviceCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Error: Attribute 'm_deviceCollectionCompPtr' was not set", "COrderCollectionControllerComp");
+		return false;
+	}
+
+	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Error: Attribute 'm_softwareInstanceCollectionCompPtr' was not set", "COrderCollectionControllerComp");
+		return false;
+	}
+
+	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(object));
+	if (orderInfoPtr == nullptr){
+		errorMessage = QString("Object is invalid");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
+		return false;
+	}
+
+	if (orderDataRepresentation.Id){
+		objectId = *orderDataRepresentation.Id;
+	}
+
+	if (objectId.isEmpty()){
+		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+
+	QByteArray orderUuid = objectId;
+	orderInfoPtr->SetObjectUuid(orderUuid);
+
+	QString orderId;
+	if (orderDataRepresentation.OrderId){
+		orderId = *orderDataRepresentation.OrderId;
+	}
+
+	if (orderId.isEmpty()){
+		errorMessage = QString("Delivery-ID cannot be empty");
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
+		return false;
+	}
+
+	iprm::CTextParam valueParam;
+	valueParam.SetText(orderId);
+
+	iprm::CEnableableParam isEqualParam;
+	isEqualParam.SetEnabled(true);
+
+	iprm::CParamsSet valueParamsSet;
+	valueParamsSet.SetEditableParameter("Value", &valueParam);
+	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
+
+	iprm::CParamsSet paramsSet1;
+	paramsSet1.SetEditableParameter("OrderId", &valueParamsSet);
+
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+
+	// Check Order-ID exists
+	imtbase::ICollectionInfo::Ids collectionIds1 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+	if (!collectionIds1.isEmpty()){
+		QByteArray orderObjectId = collectionIds1[0];
+		if (orderUuid != orderObjectId){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
+				prolifedata::CIdentifiableOrderInfo* objectPrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+				if (objectPrderInfoPtr != nullptr){
+					QByteArray currentOrderId = objectPrderInfoPtr->GetOrderId().toLower();
+					if (currentOrderId == orderId.toLower()){
+						errorMessage = QString("Delivery-ID already exists");
+						SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	orderInfoPtr->SetOrderId(orderId.toUtf8());
+
+	QByteArray customerId;
+	if (orderDataRepresentation.CustomerId){
+		customerId = *orderDataRepresentation.CustomerId;
+		orderInfoPtr->SetCustomerId(customerId);
+	}
+
+	if (customerId.isEmpty()){
+		errorMessage = QString("Customer can not be empty!");
+		SendErrorMessage(0, errorMessage, "COrderControllerComp");
+
+		return false;
+	}
+
+	if (orderDataRepresentation.PurchaseId){
+		QByteArray purchaseOrderId = *orderDataRepresentation.PurchaseId;
+		orderInfoPtr->SetPurchaseOrderId(purchaseOrderId);
+	}
+
+	if (orderDataRepresentation.Description){
+		QString description = *orderDataRepresentation.Description;
+		orderInfoPtr->SetDescription(description);
+	}
+
+	if (orderDataRepresentation.OrderStatus){
+		QByteArray status = *orderDataRepresentation.OrderStatus;
+		orderInfoPtr->SetOrderStatus(prolifedata::GetOrderStatusFromId(status));
+	}
+
+	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
+	if (productCollectionPtr == nullptr){
+		Q_ASSERT(false);
+		return false;
+	}
+
+	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
+	if (orderDataRepresentation.OrderProducts){
+		products = *orderDataRepresentation.OrderProducts;
+	}
+
+	bool ok = CheckProducts(orderUuid, products, errorMessage);
+	if (!ok){
+		return false;
+	}
+
+	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+		QByteArray orderProductUuid = *product.Id;
+		QByteArray categoryId = *product.CategoryId;
+		QByteArray productUuid = *product.ProductUuid;
+		QByteArray serialNumber = *product.SerialNumber;
+		QByteArray licenseUuid = *product.LicenseUuid;
+		bool isNew = *product.IsNew;
+
+		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+		objectLinkPtr->SetObjectUuid(orderUuid);
+
+		if (categoryId == "Software"){
+			istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> softwareInstancePtr;
+			softwareInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
+
+			softwareInstancePtr->SetObjectUuid(orderProductUuid);
+			softwareInstancePtr->SetupProductInstance(productUuid, "", "");
+			softwareInstancePtr->SetSerialNumber(serialNumber);
+
+			QString expiration = *product.Expiration;
+			QDateTime expirationDate = QDateTime::fromString(expiration, "yyyy-MM-dd");
+			softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
+
+			if (isNew){
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+				if (m_softwareOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *softwareInstancePtr.GetPtr());
+				}
+
+				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
+				if (result.isEmpty()){
+					errorMessage = QString("Unable to insert new software product with ID: '%1'").arg(orderProductUuid);
+					return false;
+				}
+			}
+			else{
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_softwareInstanceCollectionCompPtr->GetObjectData(orderProductUuid, dataPtr)){
+					prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+					if (productInfoPtr != nullptr){
+						bool isInUse = productInfoPtr->IsInUse();
+						if (!isInUse){
+							QByteArray oldOrderId = productInfoPtr->GetOrderId();
+							if (!oldOrderId.isEmpty() && oldOrderId != orderUuid){
+								return false;
+							}
+
+							if (!isInUse && !productInfoPtr->IsEqual(*softwareInstancePtr)){
+								istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+								if (m_softwareOperationContextControllerCompPtr.IsValid()){
+									operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *softwareInstancePtr.GetPtr());
+								}
+
+								if (!m_softwareInstanceCollectionCompPtr->SetObjectData(orderProductUuid, *softwareInstancePtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+									errorMessage = QString("Unable to update a software product with ID: '%1'").arg(orderProductUuid);
+
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			objectLinkPtr->SetFactoryId("SoftwareInfo");
+		}
+		else if (categoryId == "Hardware"){
+			istd::TDelPtr<prolifedata::COrderedIdentifiableDeviceInfo> deviceInstancePtr;
+			deviceInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableDeviceInfo);
+
+			deviceInstancePtr->SetObjectUuid(orderProductUuid);
+			deviceInstancePtr->SetOrderId(orderUuid);
+			deviceInstancePtr->SetDeviceType(productUuid);
+			deviceInstancePtr->SetConfigurationType(licenseUuid);
+			deviceInstancePtr->SetMacAddress(*product.MacAddress);
+			deviceInstancePtr->SetSerialNumber(serialNumber);
+
+			if (isNew){
+				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+				if (m_deviceOperationContextControllerCompPtr.IsValid()){
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *deviceInstancePtr.GetPtr());
+				}
+
+				m_deviceCollectionCompPtr->InsertNewObject("DocumentInfo", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
+			}
+			else{
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_deviceCollectionCompPtr->GetObjectData(orderProductUuid, dataPtr)){
+					prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* deviceInfoPtr = dynamic_cast<prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(dataPtr.GetPtr());
+					if (deviceInfoPtr != nullptr){
+						QByteArray deviceOrderUuid = deviceInfoPtr->GetOrderId();
+						QByteArray deviceType = deviceInfoPtr->GetDeviceType();
+						QByteArray deviceConfigurationType = deviceInfoPtr->GetConfigurationType();
+
+						if (deviceOrderUuid != orderUuid || deviceType != productUuid || deviceConfigurationType != licenseUuid){
+							deviceInfoPtr->SetOrderId(orderUuid);
+							deviceInfoPtr->SetDeviceType(productUuid);
+							deviceInfoPtr->SetConfigurationType(licenseUuid);
+
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_deviceOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", orderProductUuid, *deviceInstancePtr.GetPtr());
+							}
+
+							m_deviceCollectionCompPtr->SetObjectData(orderProductUuid, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr());
+						}
+					}
+				}
+			}
+
+			objectLinkPtr->SetFactoryId("HardwareInfo");
+		}
+
+		productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), orderProductUuid);
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(orderUuid, dataPtr)){
+		prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+		if (oldOrderInfoPtr != nullptr){
+			QByteArrayList addedProducts;
+			QByteArrayList removedProducts;
+			QByteArrayList updatedProducts;
+
+			GenerateDifferences(*oldOrderInfoPtr, *orderInfoPtr, addedProducts, removedProducts, updatedProducts);
+
+			imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
+			if (oldProductCollectionPtr == nullptr){
+				return false;
+			}
+
+			for (const QByteArray& id : removedProducts){
+				imtbase::ICollectionInfo::Id typeId = oldProductCollectionPtr->GetObjectTypeId(id);
+
+				imtbase::IObjectCollection::DataPtr productDataPtr;
+				if (typeId == QByteArray("HardwareInfo")){
+					if (m_deviceCollectionCompPtr->GetObjectData(id, productDataPtr)){
+						prolifedata::COrderedIdentifiableDeviceInfo* hardwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
+						if (hardwareInfoPtr != nullptr){
+							hardwareInfoPtr->SetOrderId("");
+
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_deviceOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", id, *hardwareInfoPtr);
+							}
+
+							if (!m_deviceCollectionCompPtr->SetObjectData(id, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+								return false;
+							}
+						}
+					}
+				}
+				else if (typeId == QByteArray("SoftwareInfo")){
+					if (m_softwareInstanceCollectionCompPtr->GetObjectData(id, productDataPtr)){
+						prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
+						if (softwareInfoPtr != nullptr){
+							softwareInfoPtr->SetOrderId("");
+
+							istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+							if (m_softwareOperationContextControllerCompPtr.IsValid()){
+								operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", id, *softwareInfoPtr);
+							}
+
+							if (!m_softwareInstanceCollectionCompPtr->SetObjectData(id, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true;
 }
 
 

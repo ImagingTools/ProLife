@@ -11,6 +11,9 @@ DecoratorBase {
     width: baseElement ? baseElement.width: 0;
     height: 40;
 
+	property alias licenseCb: licenseComboBox;
+	property alias accountCb: accountComboBox;
+
     Component.onCompleted: {
         Events.subscribeEvent("OnLocalizationChanged", onLocalizationChanged);
         updateText();

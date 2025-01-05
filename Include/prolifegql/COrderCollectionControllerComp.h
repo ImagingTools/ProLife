@@ -59,6 +59,13 @@ protected:
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
+private:
+	bool FillObjectFromRepresentation(
+				const sdl::prolife::Orders::COrderData::V1_0& representation,
+				istd::IChangeable& object,
+				QByteArray& objectId,
+				QString& errorMessage) const;
+
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);

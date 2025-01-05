@@ -48,28 +48,28 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = std::make_optional<QByteArray>(objectId);
+		representationObject.Id = (objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = std::make_optional<QByteArray>(collectionObjectId);
+		representationObject.TypeId = (collectionObjectId);
 	}
 
 	if (requestInfo.items.isCustomerIdRequested){
-		representationObject.CustomerId = std::make_optional<QByteArray>(customerInfoPtr->GetCustomerId());
+		representationObject.CustomerId = (customerInfoPtr->GetCustomerId());
 	}
 
 	if (requestInfo.items.isNameRequested){
-		representationObject.Name = std::make_optional<QString>(customerInfoPtr->GetName());
+		representationObject.Name = (customerInfoPtr->GetName());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = std::make_optional<QString>(customerInfoPtr->GetDescription());
+		representationObject.Description = (customerInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isEmailRequested){
-		representationObject.Email = std::make_optional<QString>(customerInfoPtr->GetEmail());
+		representationObject.Email = (customerInfoPtr->GetEmail());
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -77,7 +77,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = std::make_optional<QString>(added);
+		representationObject.Added = (added);
 	}
 
 	if (requestInfo.items.isLastModifiedRequested){
@@ -85,7 +85,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = std::make_optional<QString>(lastModified);
+		representationObject.LastModified = (lastModified);
 	}
 
 	return true;
@@ -120,78 +120,10 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 		return nullptr;
 	}
 
-	if (accountDataRepresentation.Id){
-		newObjectId = *accountDataRepresentation.Id;
-	}
-	if (newObjectId.isEmpty()){
-		newObjectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
-	}
-	customerInfoPtr->SetObjectUuid(newObjectId);
-
-	QString accountName;
-	if (accountDataRepresentation.Name){
-		accountName = *accountDataRepresentation.Name;
-	}
-
-	if (accountName.isEmpty()){
-		errorMessage = QString("Account name cannnot be empty");
+	if (!FillObjectFromRepresentation(accountDataRepresentation, *customerInfoPtr, newObjectId, errorMessage)){
+		errorMessage = QString("Unable to create customer from representation. Error: '%1'");
 		return nullptr;
 	}
-
-	QString name;
-	QString description;
-
-	customerInfoPtr->SetName(accountName);
-	name = accountName;
-
-	if (accountDataRepresentation.Description){
-		description = *accountDataRepresentation.Description;
-		customerInfoPtr->SetDescription(description);
-	}
-
-	if (accountDataRepresentation.Email){
-		QString accountEmail = *accountDataRepresentation.Email;
-		customerInfoPtr->SetEmail(accountEmail);
-	}
-
-	if (accountDataRepresentation.Groups){
-		QString accountGroups = *accountDataRepresentation.Groups;
-		if (!accountGroups.isEmpty()){
-			QByteArrayList groupIds = accountGroups.toUtf8().split(';');
-			for (const QByteArray& groupId : groupIds){
-				customerInfoPtr->AddGroup(groupId);
-			}
-		}
-	}
-
-	if (accountDataRepresentation.CustomerId){
-		QByteArray accountCustomerId = *accountDataRepresentation.CustomerId;
-		customerInfoPtr->SetCustomerId(accountCustomerId);
-	}
-
-	imtauth::CAddress address;
-
-	if (accountDataRepresentation.City){
-		QString accountCity = *accountDataRepresentation.City;
-		address.SetCity(accountCity);
-	}
-
-	if (accountDataRepresentation.Street){
-		QString accountStreet = *accountDataRepresentation.Street;
-		address.SetStreet(accountStreet);
-	}
-
-	if (accountDataRepresentation.PostalCode){
-		QString accountPostalCode = *accountDataRepresentation.PostalCode;
-		address.SetPostalCode(accountPostalCode.toInt());
-	}
-
-	if (accountDataRepresentation.Country){
-		QString accountCountry = *accountDataRepresentation.Country;
-		address.SetCountry(accountCountry);
-	}
-
-	customerInfoPtr->AddAddress(address);
 
 	return companyInstancePtr.PopPtr();
 }
@@ -220,23 +152,23 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		id = *arguments.input.Id;
 	}
 
-	accountData.Id = std::make_optional<QByteArray>(id);
+	accountData.Id = (id);
 
 	QString name = customerInfoPtr->GetName();
-	accountData.Name = std::make_optional<QString>(name);
+	accountData.Name = (name);
 
 	QString description = customerInfoPtr->GetDescription();
-	accountData.Description = std::make_optional<QString>(description);
+	accountData.Description = (description);
 
 	QString email = customerInfoPtr->GetEmail();
-	accountData.Email = std::make_optional<QString>(email);
+	accountData.Email = (email);
 
 	QByteArray customerId = customerInfoPtr->GetCustomerId();
-	accountData.CustomerId = std::make_optional<QByteArray>(customerId);
+	accountData.CustomerId = (customerId);
 
 	QByteArrayList groups = customerInfoPtr->GetGroups();
 	std::sort(groups.begin(), groups.end());
-	accountData.Groups = std::make_optional<QString>(groups.join(';'));
+	accountData.Groups = (groups.join(';'));
 
 	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
 	if (addressProviderPtr != nullptr){
@@ -245,25 +177,25 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
 			if (addressPtr != nullptr){
 				QString city = addressPtr->GetCity();
-				accountData.City = std::make_optional<QString>(city);
+				accountData.City = (city);
 
 				QString country = addressPtr->GetCountry();
-				accountData.Country = std::make_optional<QString>(country);
+				accountData.Country = (country);
 
 				QString street = addressPtr->GetStreet();
-				accountData.Street = std::make_optional<QString>(street);
+				accountData.Street = (street);
 
 				QString postalCodeStr;
 				int postalCode = addressPtr->GetPostalCode();
 				if (postalCode > 0){
 					postalCodeStr = QString::number(postalCode);
 				}
-				accountData.PostalCode = std::make_optional<QString>(postalCodeStr);
+				accountData.PostalCode = (postalCodeStr);
 			}
 		}
 	}
 
-	representationPayload.AccountData = std::make_optional<sdl::prolife::Accounts::CAccountData::V1_0>(accountData);
+	representationPayload.AccountData = accountData;
 
 	return true;
 }
@@ -327,9 +259,121 @@ void CCustomerCollectionControllerComp::SetObjectFilter(
 	}
 }
 
-bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(const imtgql::CGqlRequest& rawGqlRequest, const sdl::prolife::Accounts::V1_0::CAccountUpdateGqlRequest& accountUpdateRequest, istd::IChangeable& object, QString& errorMessage) const
+
+bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
+			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const sdl::prolife::Accounts::V1_0::CAccountUpdateGqlRequest& accountUpdateRequest,
+			istd::IChangeable& object,
+			QString& errorMessage) const
 {
-	return false;
+	sdl::prolife::Accounts::CAccountData::V1_0 accountData = *accountUpdateRequest.GetRequestedArguments().input.Item;
+	QByteArray objectId = *accountUpdateRequest.GetRequestedArguments().input.Id;
+
+	prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(&object);
+	if (customerInfoPtr == nullptr){
+		errorMessage = QString("Unable to cast company info to customer info. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return false;
+	}
+
+	customerInfoPtr->ResetData();
+
+	if (!FillObjectFromRepresentation(accountData, object, objectId, errorMessage)){
+		errorMessage = QString("Unable to create customer from representation. Error: '%1'");
+		return false;
+	}
+
+	return true;
+}
+
+
+// private methods
+
+bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
+			const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
+			istd::IChangeable& object,
+			QByteArray& objectId,
+			QString& errorMessage) const
+{
+	prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(&object);
+	if (customerInfoPtr == nullptr){
+		errorMessage = QString("Unable to cast company info to customer info. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return false;
+	}
+
+	if (accountDataRepresentation.Id){
+		objectId = *accountDataRepresentation.Id;
+	}
+	if (objectId.isEmpty()){
+		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+	}
+	customerInfoPtr->SetObjectUuid(objectId);
+
+	QString accountName;
+	if (accountDataRepresentation.Name){
+		accountName = *accountDataRepresentation.Name;
+	}
+
+	if (accountName.isEmpty()){
+		errorMessage = QString("Account name cannnot be empty");
+		return false;
+	}
+
+	customerInfoPtr->SetName(accountName);
+
+	if (accountDataRepresentation.Description){
+		QString description = *accountDataRepresentation.Description;
+		customerInfoPtr->SetDescription(description);
+	}
+
+	if (accountDataRepresentation.Email){
+		QString accountEmail = *accountDataRepresentation.Email;
+		customerInfoPtr->SetEmail(accountEmail);
+	}
+
+	if (accountDataRepresentation.Groups){
+		QString accountGroups = *accountDataRepresentation.Groups;
+		if (!accountGroups.isEmpty()){
+			QByteArrayList groupIds = accountGroups.toUtf8().split(';');
+			for (const QByteArray& groupId : groupIds){
+				customerInfoPtr->AddGroup(groupId);
+			}
+		}
+	}
+
+	if (accountDataRepresentation.CustomerId){
+		QByteArray accountCustomerId = *accountDataRepresentation.CustomerId;
+		customerInfoPtr->SetCustomerId(accountCustomerId);
+	}
+
+	imtauth::CAddress address;
+
+	if (accountDataRepresentation.City){
+		QString accountCity = *accountDataRepresentation.City;
+		address.SetCity(accountCity);
+	}
+
+	if (accountDataRepresentation.Street){
+		QString accountStreet = *accountDataRepresentation.Street;
+		address.SetStreet(accountStreet);
+	}
+
+	if (accountDataRepresentation.PostalCode){
+		QString accountPostalCode = *accountDataRepresentation.PostalCode;
+		address.SetPostalCode(accountPostalCode.toInt());
+	}
+
+	if (accountDataRepresentation.Country){
+		QString accountCountry = *accountDataRepresentation.Country;
+		address.SetCountry(accountCountry);
+	}
+
+	customerInfoPtr->AddAddress(address);
+
+	return true;
 }
 
 

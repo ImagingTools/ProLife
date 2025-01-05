@@ -47,6 +47,13 @@ protected:
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
 private:
+	bool FillObjectFromRepresentation(
+				const sdl::prolife::Accounts::CAccountData::V1_0& representation,
+				istd::IChangeable& object,
+				QByteArray& objectId,
+				QString& errorMessage) const;
+
+private:
 	I_FACT(imtauth::ICompanyInfo, m_accountInfoFactCompPtr);
 	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 };

@@ -29,9 +29,9 @@ namespace prolifegql
 // protected methods
 
 sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceCollectionControllerComp::OnGetObjectVisualStatus(
-			const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
+	const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+	const ::imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
 {
 	sdl::imtbase::ImtCollection::CVisualStatus::V1_0 response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 
@@ -68,10 +68,10 @@ sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceCollectionControllerComp
 // reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
-			const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
-			sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
-			QString& errorMessage) const
+	const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
+	const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
+	sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
+	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		errorMessage = QString("Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set");
@@ -207,9 +207,9 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
-			const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
-			QByteArray& newObjectId,
-			QString& errorMessage) const
+	const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
+	QByteArray& newObjectId,
+	QString& errorMessage) const
 {
 	if (!m_deviceInfoFactCompPtr.IsValid()){
 		errorMessage = QString("Unable to create object from representation. Error: Attribute 'm_deviceInfoFactCompPtr' was not set");
@@ -234,6 +234,12 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		return nullptr;
 	}
 
+	prolifedata::COrderedIdentifiableDeviceInfo* oldDeviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr oldDeviceDataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(newObjectId, oldDeviceDataPtr)){
+		oldDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(oldDeviceDataPtr.GetPtr());
+	}
+
 	if (deviceDataRepresentation.Id){
 		newObjectId = *deviceDataRepresentation.Id;
 	}
@@ -244,59 +250,14 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 
 	deviceInfoPtr->SetObjectUuid(newObjectId);
 
-	prolifedata::COrderedIdentifiableDeviceInfo* oldDeviceInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr oldDeviceDataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(newObjectId, oldDeviceDataPtr)){
-		oldDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(oldDeviceDataPtr.GetPtr());
-	}
+	if (!FillObjectFromRepresentation(deviceDataRepresentation, *deviceInfoPtr, newObjectId, errorMessage)){
+		errorMessage = QString("Unable to create device from representaion. Error: '%1'").arg(errorMessage);
 
-	QString macAddress;
-	if (deviceDataRepresentation.MacAddress){
-		macAddress = *deviceDataRepresentation.MacAddress;
-	}
-
-	if (!macAddress.isEmpty()){
-		bool ok = prolifedata::CheckDeviceMacAddressExists(newObjectId, macAddress.toUtf8(), *m_objectCollectionCompPtr);
-		if (!ok){
-			errorMessage = QString("MAC-Address already exists");
-			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-
-			return nullptr;
-		}
-	}
-
-	deviceInfoPtr->SetMacAddress(macAddress.toUtf8());
-
-	QString serialNumber;
-	if (deviceDataRepresentation.SerialNumber){
-		macAddress = *deviceDataRepresentation.SerialNumber;
-	}
-
-	if (!serialNumber.isEmpty()){
-		bool ok = prolifedata::CheckDeviceSerialNumberExists(newObjectId, serialNumber.toUtf8(), *m_objectCollectionCompPtr);
-		if (!ok){
-			errorMessage = QT_TR_NOOP("Serial Number already exists");
-			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-
-			return nullptr;
-		}
-	}
-
-	deviceInfoPtr->SetSerialNumber(serialNumber.toUtf8());
-
-	QString project;
-	if (deviceDataRepresentation.Project){
-		project = *deviceDataRepresentation.Project;
-		deviceInfoPtr->SetProject(project.toUtf8());
-	}
-
-	QString orderId;
-	if (deviceDataRepresentation.OrderId){
-		orderId = *deviceDataRepresentation.OrderId;
-		deviceInfoPtr->SetOrderId(orderId.toUtf8());
+		return nullptr;
 	}
 
 	QByteArray oldOrderId;
+	QString orderId = *deviceDataRepresentation.OrderId;
 
 	if (oldDeviceInfoPtr != nullptr){
 		oldOrderId = oldDeviceInfoPtr->GetOrderId();
@@ -365,64 +326,15 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		}
 	}
 
-	QString name;
-	QString description;
-
-	if (deviceDataRepresentation.Description){
-		description = *deviceDataRepresentation.Description;
-		deviceInfoPtr->SetDescription(description);
-	}
-
-	if (deviceDataRepresentation.ProductionStatus){
-		QString status = *deviceDataRepresentation.ProductionStatus;
-		prolifedata::IDeviceInfo::DeviceProductionStatus productionStatus = prolifedata::GetProductionStatusFromId(status.toUtf8());
-		deviceInfoPtr->SetDeviceProductionStatus(productionStatus);
-	}
-
-	if (deviceDataRepresentation.LicenseName){
-		QString licenseName = *deviceDataRepresentation.LicenseName;
-		deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
-	}
-
-	QString deviceType;
-	if (deviceDataRepresentation.DeviceType){
-		deviceType = *deviceDataRepresentation.DeviceType;
-	}
-
-	if (deviceType.isEmpty()){
-		errorMessage = QString("Device type cannot be empty");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	deviceInfoPtr->SetDeviceType(deviceType.toUtf8());
-
-	name = deviceType;
-
-	if (m_productCollectionCompPtr.IsValid()){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_productCollectionCompPtr->GetObjectData(deviceType.toUtf8(), dataPtr)){
-			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
-			if (remoteProductInfoPtr != nullptr){
-				name = remoteProductInfoPtr->GetName();
-			}
-		}
-	}
-
-	if (!macAddress.isEmpty()){
-		name += " (" + macAddress + ")";
-	}
-
 	return deviceInstancePtr.PopPtr();
 }
 
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
-			const istd::IChangeable& data,
-			const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
-			sdl::prolife::Sensors::CDeviceDataPayload::V1_0& representationPayload,
-			QString& errorMessage) const
+	const istd::IChangeable& data,
+	const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
+	sdl::prolife::Sensors::CDeviceDataPayload::V1_0& representationPayload,
+	QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&data);
 	if (deviceInfoPtr == nullptr){
@@ -492,9 +404,27 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
-			const imtgql::CGqlRequest& gqlRequest,
+bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
+			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+			istd::IChangeable& object,
 			QString& errorMessage) const
+{
+	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *deviceUpdateRequest.GetRequestedArguments().input.Item;
+	QByteArray objectId = *deviceUpdateRequest.GetRequestedArguments().input.Id;
+
+	if (!FillObjectFromRepresentation(deviceData, object, objectId, errorMessage)){
+		errorMessage = QString("Unable to update device object from representation. Error: '%1'").arg(errorMessage);
+		return false;
+	}
+
+	return true;
+}
+
+
+imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
+	const imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid() || !m_bindingCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("No collection component was set");
@@ -627,9 +557,9 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 
 void CDeviceCollectionControllerComp::SetObjectFilter(
-			const imtgql::CGqlRequest& gqlRequest,
-			const imtbase::CTreeItemModel& objectFilterModel,
-			iprm::CParamsSet& filterParams) const
+	const imtgql::CGqlRequest& gqlRequest,
+	const imtbase::CTreeItemModel& objectFilterModel,
+	iprm::CParamsSet& filterParams) const
 {
 	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
 
@@ -683,13 +613,98 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 }
 
 
-bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& rawGqlRequest,
-			const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+// private methods
+
+bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
+			const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
 			istd::IChangeable& object,
+			QByteArray& objectId,
 			QString& errorMessage) const
 {
-	return false;
+	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
+	if (deviceInfoPtr == nullptr){
+		errorMessage = QString("Unable to create representation from object. Error: Object is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	QString macAddress;
+	if (representation.MacAddress){
+		macAddress = *representation.MacAddress;
+	}
+
+	if (!macAddress.isEmpty()){
+		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress.toUtf8(), *m_objectCollectionCompPtr);
+		if (!ok){
+			errorMessage = QString("MAC-Address already exists");
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+			return false;
+		}
+	}
+
+	deviceInfoPtr->SetMacAddress(macAddress.toUtf8());
+
+	QString serialNumber;
+	if (representation.SerialNumber){
+		serialNumber = *representation.SerialNumber;
+	}
+
+	if (!serialNumber.isEmpty()){
+		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber.toUtf8(), *m_objectCollectionCompPtr);
+		if (!ok){
+			errorMessage = QT_TR_NOOP("Serial Number already exists");
+			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+
+			return false;
+		}
+	}
+
+	deviceInfoPtr->SetSerialNumber(serialNumber.toUtf8());
+
+	QString project;
+	if (representation.Project){
+		project = *representation.Project;
+		deviceInfoPtr->SetProject(project.toUtf8());
+	}
+
+	QString orderId;
+	if (representation.OrderId){
+		orderId = *representation.OrderId;
+		deviceInfoPtr->SetOrderId(orderId.toUtf8());
+	}
+
+	if (representation.Description){
+		deviceInfoPtr->SetDescription(*representation.Description);
+	}
+
+	if (representation.ProductionStatus){
+		QString status = *representation.ProductionStatus;
+		prolifedata::IDeviceInfo::DeviceProductionStatus productionStatus = prolifedata::GetProductionStatusFromId(status.toUtf8());
+		deviceInfoPtr->SetDeviceProductionStatus(productionStatus);
+	}
+
+	if (representation.LicenseName){
+		QString licenseName = *representation.LicenseName;
+		deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
+	}
+
+	QString deviceType;
+	if (representation.DeviceType){
+		deviceType = *representation.DeviceType;
+	}
+
+	if (deviceType.isEmpty()){
+		errorMessage = QString("Device type cannot be empty");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	deviceInfoPtr->SetDeviceType(deviceType.toUtf8());
+
+	return true;
 }
 
 

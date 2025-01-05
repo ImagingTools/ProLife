@@ -270,8 +270,28 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 
 		for (int i = 0; i < idsList.size(); i++){
 			QByteArray key = idsList[i];
+			if (key == "ExcludeIds"){
+				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
+				if (textParamPtr == nullptr){
+					return false;
+				}
 
-			if (key == "ProductUuid"){
+				QString value = textParamPtr->GetText();
+				QStringList excludeIds = value.split(';');
+
+				QStringList resultUuids;
+				for (const QString& uuid : excludeIds){
+					QString result = "'" + uuid + "'";
+					resultUuids << result;
+				}
+
+				if (!filterQuery.isEmpty()){
+					filterQuery += " AND ";
+				}
+
+				filterQuery += QString(R"((root."DocumentId" NOT IN (%1)))").arg(resultUuids.join(','));
+			}
+			else if (key == "ProductUuid"){
 				const iprm::ITextParam* textParamPtr = dynamic_cast<const iprm::ITextParam*>(filterParams.GetParameter(key));
 				if (textParamPtr == nullptr){
 					return false;

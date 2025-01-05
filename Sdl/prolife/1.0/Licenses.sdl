@@ -52,7 +52,6 @@ type SoftwareProductsListPayload {
 type SoftwareProductData {
 	Id: ID!
 	ProductId: ID!
-	Name: String!
 	CategoryId: ID
 	SerialNumber: ID
 	Project: String

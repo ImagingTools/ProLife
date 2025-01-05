@@ -63,6 +63,13 @@ protected:
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 
 private:
+	bool FillObjectFromRepresentation(
+				const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
+				istd::IChangeable& object,
+				QByteArray& objectId,
+				QString& errorMessage) const;
+
+private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
