@@ -126,8 +126,6 @@ bool CKeyDataProviderComp::GetData(
 		return false;
 	}
 
-	qDebug() << "productListResponseModelPtr" << productListResponseModelPtr->ToJson();
-
 	imtbase::CTreeItemModel* productItemsModelPtr = ExtractItemsFromResponseModel(*productListResponseModelPtr.GetPtr());
 	if (productItemsModelPtr == nullptr){
 		return false;
@@ -148,8 +146,6 @@ bool CKeyDataProviderComp::GetData(
 
 		return false;
 	}
-
-	qDebug() << "licenseListResponseModelPtr" << licenseListResponseModelPtr->ToJson();
 
 	imtbase::CTreeItemModel* licenseItemsModelPtr = ExtractItemsFromResponseModel(*licenseListResponseModelPtr.GetPtr());
 	if (licenseItemsModelPtr == nullptr){
@@ -173,8 +169,6 @@ bool CKeyDataProviderComp::GetData(
 	if (featureItemsModelPtr == nullptr){
 		return false;
 	}
-
-	qDebug() << "featureItemsModelPtr" << featureItemsModelPtr->ToJson();
 
 	for (int i = 0; i < productItemsModelPtr->GetItemsCount(); i++){
 		QByteArray currentProductUuid = productItemsModelPtr->GetData("Id", i).toByteArray();
@@ -248,7 +242,7 @@ bool CKeyDataProviderComp::GetData(
 											resultFeatureInfo.id = featureId;
 											resultFeatureInfo.name = featureName;
 
-											if (!featureInfos.contains(resultFeatureInfo)){
+											if (!featureInfos.contains(resultFeatureInfo) && !featureId.isEmpty()){
 												featureInfos.append(resultFeatureInfo);
 											}
 										}

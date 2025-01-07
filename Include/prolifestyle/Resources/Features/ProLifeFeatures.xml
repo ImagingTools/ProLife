@@ -147,6 +147,10 @@
             <Data Uuid="06d570ef-170c-48fc-bf81-fab890b8d9da" FeatureId="SensorManagement" FeatureName="Sensor Management" FeatureDescription="" Optional="false" IsPermission="true">
                 <Dependencies/>
                 <SubFeatures>
+                    <Object FeatureId="TransferLicenses" FeatureName="Transfer Licenses" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
                     <Object FeatureId="ViewSensorHistory" FeatureName="View Sensor History" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies/>
                         <SubFeatures/>
