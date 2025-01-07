@@ -113,7 +113,7 @@ DocumentCollectionViewDelegate {
 								}
 
 								let isDirty = documentData.isDirty;
-								let isNew = documentManager.documentsModel.get(documentIndex).IsNew;
+								let isNew = documentData.isNew;
 								if (isNew || isDirty){
 									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
 

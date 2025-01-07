@@ -657,6 +657,13 @@
                                 <AttributeInfo Id="CommandId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="TransferLicenses"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>TransferLicenses</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="IconPath" Type="String" ExportId="">
                                     <Data IsEnabled="true" Value="Icons/Switch"/>
                                 </AttributeInfo>
