@@ -133,7 +133,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 	}
 
 	if (deviceBindingInfoPtr == nullptr){
-		errorMessage = QString();
+		errorMessage = QString("Unable to update device binding. Error: Device is invalid");
 		return response;
 	}
 

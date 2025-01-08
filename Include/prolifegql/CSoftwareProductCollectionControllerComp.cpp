@@ -16,6 +16,7 @@
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/CHardwareProductBinding.h>
 
 
 namespace prolifegql
@@ -390,6 +391,26 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		}
 	}
 
+	imtbase::IObjectCollection::Ids elementIds = m_bindingCollectionCompPtr->GetElementIds();
+	for (const imtbase::IObjectCollection::Id& elementId: elementIds){
+		imtbase::IObjectCollection::DataPtr bindingDataPtr;
+		if (m_bindingCollectionCompPtr->GetObjectData(elementId, bindingDataPtr)){
+			prolifedata::CHardwareProductBinding* deviceBindingInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(bindingDataPtr.GetPtr());
+			if (deviceBindingInfoPtr != nullptr){
+				QByteArrayList softwareIds = deviceBindingInfoPtr->GetSoftwareIds();
+				if (softwareIds.contains(objectId)){
+					deviceBindingInfoPtr->Unbind(objectId);
+
+					if (!m_bindingCollectionCompPtr->SetObjectData(elementId, *deviceBindingInfoPtr)){
+						SendWarningMessage(0, QString("Unable to update hardware binding object after software removing"));
+					}
+
+					break;
+				}
+			}
+		}
+	}
+
 	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
@@ -497,10 +518,6 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 			const imtbase::CTreeItemModel& objectFilterModel,
 			iprm::CParamsSet& filterParams) const
 {
-	if (!m_accountCollectionCompPtr.IsValid() || !m_orderCollectionCompPtr.IsValid()){
-		return;
-	}
-
 	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");

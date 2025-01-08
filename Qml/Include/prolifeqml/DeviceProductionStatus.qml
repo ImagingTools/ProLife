@@ -67,7 +67,7 @@ ProductionStatusModel {
 		m_model.addElement(createStatus("Canceled", qsTr("Canceled"), "../../../../" + Style.getIconPath("Icons/Cancel", Icon.State.On, Icon.Mode.Active)));
 		m_model.addElement(createStatus("OnHold", qsTr("On Hold"), "../../../../" + Style.getIconPath("Icons/Pause", Icon.State.On, Icon.Mode.Active)));
 		m_model.addElement(createStatus("Finished", qsTr("Finished"), "../../../../" + Style.getIconPath("Icons/StateOk", Icon.State.On, Icon.Mode.Active)));
-		m_model.addElement(createStatus("Defected", qsTr("Defected"), "../../../../" + Style.getIconPath("Icons/Defect", Icon.State.On, Icon.Mode.Active)));
+		m_model.addElement(createStatus("Defected", qsTr("Defect"), "../../../../" + Style.getIconPath("Icons/Defect", Icon.State.On, Icon.Mode.Active)));
 		m_model.addElement(createStatus("InRepair", qsTr("In Repair"), "../../../../" + Style.getIconPath("Icons/Wrench", Icon.State.On, Icon.Mode.Active)));
 		m_model.addElement(createStatus("Decommissioned", qsTr("Decommissioned"), "../../../../" + Style.getIconPath("Icons/Garbage", Icon.State.On, Icon.Mode.Active)));
 	}

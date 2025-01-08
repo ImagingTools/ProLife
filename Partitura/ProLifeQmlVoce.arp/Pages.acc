@@ -439,10 +439,10 @@
                     <Element Id="SoftwareProductsPage" PackageId="ProLifeQmlVoce" ComponentId="SoftwareProductsPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
+                                <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="HardwareProductBindingRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">

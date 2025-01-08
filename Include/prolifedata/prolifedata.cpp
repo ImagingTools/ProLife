@@ -30,7 +30,7 @@ QString GetNameFromDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProduc
 	case prolifedata::IDeviceInfo::DPS_FINISHED:
 		return QString("Finished");
 	case prolifedata::IDeviceInfo::DPS_DEFECTED:
-		return QString("Defected");
+		return QString("Defect");
 	case prolifedata::IDeviceInfo::DPS_IN_REPAIR:
 		return QString("In Repair");
 	case prolifedata::IDeviceInfo::DPS_DECOMMISSIONED:

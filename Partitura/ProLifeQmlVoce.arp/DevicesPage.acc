@@ -343,6 +343,9 @@
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Permissions"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -668,7 +671,7 @@
                                     <Data IsEnabled="true" Value="Icons/Switch"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
+                                    <Data IsEnabled="true" Value="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
                                     <Data IsEnabled="true" Value="true"/>

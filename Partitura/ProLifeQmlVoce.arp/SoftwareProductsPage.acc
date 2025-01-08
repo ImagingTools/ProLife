@@ -208,7 +208,7 @@
         <Element Id="SoftwareProductCollectionController" PackageId="ProLifeGqlPck" ComponentId="SoftwareProductCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
+                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -227,17 +227,11 @@
                     <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="PermissionsJoiner"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LicenseChangeGenerator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="HeadersDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="SoftwareProductsList"/>
