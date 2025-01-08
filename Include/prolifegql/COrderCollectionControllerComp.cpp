@@ -47,7 +47,10 @@ bool COrderCollectionControllerComp::CheckProducts(
 		QString productName = GetProductName(productUuid);
 
 		if (categoryId == "Software"){
-			QByteArray serialNumber = *product.SerialNumber;
+			QByteArray serialNumber;
+			if (product.SerialNumber){
+				serialNumber = *product.SerialNumber;
+			}
 
 			bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectUuid, serialNumber, *m_softwareInstanceCollectionCompPtr);
 			if (!ok){
@@ -69,12 +72,14 @@ bool COrderCollectionControllerComp::CheckProducts(
 			}
 		}
 		else if (categoryId == "Hardware"){
-			QByteArray macAddress = *product.MacAddress;
-			if (!macAddress.isEmpty()){
-				bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
-				if (!ok){
-					errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName).arg(qPrintable(macAddress));
-					return false;
+			if (product.MacAddress){
+				QByteArray macAddress = *product.MacAddress;
+				if (!macAddress.isEmpty()){
+					bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
+					if (!ok){
+						errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName).arg(qPrintable(macAddress));
+						return false;
+					}
 				}
 			}
 
@@ -90,12 +95,14 @@ bool COrderCollectionControllerComp::CheckProducts(
 				}
 			}
 
-			QByteArray serialNumber = *product.SerialNumber;
-			if (!serialNumber.isEmpty()){
-				bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
-				if (!serialNumberIsValid){
-					errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
-					return false;
+			if (product.SerialNumber){
+				QByteArray serialNumber = *product.SerialNumber;
+				if (!serialNumber.isEmpty()){
+					bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
+					if (!serialNumberIsValid){
+						errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
+						return false;
+					}
 				}
 			}
 		}
@@ -467,6 +474,8 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	if (!FillObjectFromRepresentation(orderData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to create order from representatiom. Error: '%1'").arg(errorMessage);
+		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
+
 		return false;
 	}
 
@@ -668,12 +677,35 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
-		QByteArray orderProductUuid = *product.Id;
-		QByteArray categoryId = *product.CategoryId;
-		QByteArray productUuid = *product.ProductUuid;
-		QByteArray serialNumber = *product.SerialNumber;
-		QByteArray licenseUuid = *product.LicenseUuid;
-		bool isNew = *product.IsNew;
+		QByteArray orderProductUuid;
+		if (product.Id){
+			orderProductUuid = *product.Id;
+		}
+
+		QByteArray categoryId;
+		if (product.CategoryId){
+			categoryId = *product.CategoryId;
+		}
+
+		QByteArray productUuid;
+		if (product.ProductUuid){
+			productUuid = *product.ProductUuid;
+		}
+
+		QByteArray serialNumber;
+		if (product.SerialNumber){
+			serialNumber = *product.SerialNumber;
+		}
+
+		QByteArray licenseUuid;
+		if (product.LicenseUuid){
+			licenseUuid = *product.LicenseUuid;
+		}
+
+		bool isNew = false;
+		if (product.IsNew){
+			isNew = *product.IsNew;
+		}
 
 		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
@@ -688,7 +720,11 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 			softwareInstancePtr->SetupProductInstance(productUuid, "", "");
 			softwareInstancePtr->SetSerialNumber(serialNumber);
 
-			QString expiration = *product.Expiration;
+			QString expiration;
+			if (product.Expiration){
+				expiration = *product.Expiration;
+			}
+
 			QDateTime expirationDate = QDateTime::fromString(expiration, "yyyy-MM-dd");
 			softwareInstancePtr->AddLicense(licenseUuid, expirationDate);
 
@@ -743,7 +779,11 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 			deviceInstancePtr->SetOrderId(orderUuid);
 			deviceInstancePtr->SetDeviceType(productUuid);
 			deviceInstancePtr->SetConfigurationType(licenseUuid);
-			deviceInstancePtr->SetMacAddress(*product.MacAddress);
+
+			if (product.MacAddress){
+				deviceInstancePtr->SetMacAddress(*product.MacAddress);
+			}
+
 			deviceInstancePtr->SetSerialNumber(serialNumber);
 
 			if (isNew){

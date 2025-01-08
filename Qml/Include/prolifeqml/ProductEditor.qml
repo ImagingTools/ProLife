@@ -46,7 +46,7 @@ Item {
             excludeIds.splice(index, 1)
         }
 
-        let resultModel = treeItemModelComp.createObject(null);
+		let resultModel = treeItemModelComp.createObject(productEditor);
 
         for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
             let id = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
@@ -66,7 +66,7 @@ Item {
             let productUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, i);
             let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, i);
 
-            if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
+			if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
                 let index = resultModel.insertNewItem();
 
                 resultModel.copyItemDataFromModel(index, productEditor.softwaresModel, i);
@@ -88,7 +88,7 @@ Item {
             }
         }
 
-        let resultModel = treeItemModelComp.createObject(null);
+		let resultModel = treeItemModelComp.createObject(productEditor);
         let selectedProductId = productItem.m_productUuid;
         let selectedDeviceId = productItem.m_id;
 
