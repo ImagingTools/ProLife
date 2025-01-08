@@ -340,6 +340,10 @@ Item {
                                         }
                                     }
 
+									onElementsChanged: {
+										table.uncheckAll();
+									}
+
                                     onHeadersChanged: {
                                         softwareProductCollection.table.setColumnContentById("LicenseName", null);
                                         // softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
