@@ -290,6 +290,13 @@ ViewBase {
         color: Style.backgroundColor2;
     }
 
+	DocumentHistoryPanel {
+		id: historyPanel;
+		documentId: orderEditorContainer.orderData ? orderEditorContainer.orderData.m_id : "";
+		collectionId: "Orders";
+		editorFlickable: flickable;
+	}
+
     CustomScrollbar {
         id: scrollbar;
         z: parent.z + 1;

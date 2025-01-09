@@ -217,6 +217,13 @@ ViewBase {
         return null;
     }
 
+	DocumentHistoryPanel {
+		id: historyPanel;
+		documentId: root.softwareProductData ? root.softwareProductData.m_id : "";
+		collectionId: "SoftwareProducts";
+		editorFlickable: flickable;
+	}
+
     CustomScrollbar {
         id: scrollbar;
 

@@ -29,27 +29,25 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 	prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(const_cast<istd::IChangeable*>(&oldDocument));
 	if (oldOrderInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. Old document is invalid");
-
 		return false;
 	}
 
 	prolifedata::CIdentifiableOrderInfo* newOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(const_cast<istd::IChangeable*>(&newDocument));
 	if (newOrderInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. New document is invalid");
-
 		return false;
 	}
 
 	QByteArray oldOrderId = oldOrderInfoPtr->GetOrderId();
 	QByteArray newOrderId = newOrderInfoPtr->GetOrderId();
 	if (oldOrderId != newOrderId){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderId, newOrderId), "OrderId");
+		InsertOperationDescription(documentChangeCollection, "", "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderId, newOrderId);
 	}
 
 	QByteArray oldPurchaseOrderId = oldOrderInfoPtr->GetPurchaseOrderId();
 	QByteArray newPurchaseOrderId = newOrderInfoPtr->GetPurchaseOrderId();
 	if (oldPurchaseOrderId != newPurchaseOrderId){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldPurchaseOrderId, newPurchaseOrderId), "PurchaseId");
+		InsertOperationDescription(documentChangeCollection, "", "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldPurchaseOrderId, newPurchaseOrderId);
 	}
 
 	QByteArray oldCustomerId = oldOrderInfoPtr->GetCustomerId();
@@ -73,20 +71,20 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			}
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId), "OrderCustomer");
+		InsertOperationDescription(documentChangeCollection, "", "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId);
 	}
 
 	prolifedata::IOrderInfo::OrderStatus oldStatus = oldOrderInfoPtr->GetOrderStatus();
 	prolifedata::IOrderInfo::OrderStatus newStatus = newOrderInfoPtr->GetOrderStatus();
 	if (oldStatus != newStatus){
 		QStringList statuses = oldOrderInfoPtr->OrderStatusGetStrings();
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Status", QT_TRANSLATE_NOOP("Attribute", "Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8()), "Status");
+		InsertOperationDescription(documentChangeCollection, "", "Status", QT_TRANSLATE_NOOP("Attribute", "Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8());
 	}
 
 	QString oldDescription = oldOrderInfoPtr->GetDescription();
 	QString newDescription = newOrderInfoPtr->GetDescription();
 	if (oldDescription != newDescription){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8()), "Description");
+		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8());
 	}
 
 	QByteArrayList addedProducts;
@@ -138,7 +136,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			name = name + " (" + internalId + ")";
 		}
 
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddProduct", "ProductId", name, "", productId));
+		InsertOperationDescription(documentChangeCollection, "AddProduct", "ProductId", name, "", productId);
 	}
 
 	for (const QByteArray& productObjectId : std::as_const(removedProducts)){
@@ -180,11 +178,7 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 			name = name + " (" + internalId + ")";
 		}
 
-		documentChangeCollection.InsertNewObject(
-			"OperationInfo",
-			"",
-			"",
-			CreateOperationDescription("RemoveProduct", "ProductId", name, productId, ""));
+		InsertOperationDescription(documentChangeCollection, "RemoveProduct", "ProductId", name, productId, "");
 	}
 
 	return true;

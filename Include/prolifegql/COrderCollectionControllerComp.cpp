@@ -710,7 +710,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
 
-		objectLinkPtr->SetObjectUuid(orderUuid);
+		objectLinkPtr->SetObjectUuid(orderProductUuid);
 
 		if (categoryId == "Software"){
 			istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> softwareInstancePtr;
@@ -719,6 +719,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 			softwareInstancePtr->SetObjectUuid(orderProductUuid);
 			softwareInstancePtr->SetupProductInstance(productUuid, "", "");
 			softwareInstancePtr->SetSerialNumber(serialNumber);
+			softwareInstancePtr->SetOrderId(orderUuid);
 
 			QString expiration;
 			if (product.Expiration){
