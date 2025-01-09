@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import Acf 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtcolgui 1.0
 import imtdocgui 1.0
 import imtcontrols 1.0
@@ -73,6 +74,44 @@ DocumentCollectionViewDelegate {
 		id: deviceValidatorComp;
 
 		DeviceValidator {
+		}
+	}
+
+	PopupMenuModel {
+		id: encryptPopupMenuModel;
+
+		Component.onCompleted: {
+			addItem("Encrypt", "Encrypt", "", true);
+			addItem("NotEncrypt", "Not Encrypt", "", true);
+		}
+	}
+
+	Component {
+		id: encryptPopupMenuDialog;
+
+		PopupMenuDialog {
+			itemWidth: 150;
+			model: encryptPopupMenuModel;
+			centered: true;
+			hiddenBackground: false;
+
+			property string hardwareId;
+
+			onFinished: {
+				if (commandId == ""){
+					return;
+				}
+
+				let encrypt = true;
+				if (commandId == "Encrypt"){
+					encrypt = true;
+				}
+				else if (commandId == "NotEncrypt"){
+					encrypt = false;
+				}
+
+				createLicenseFileRequest.send({"m_deviceId": hardwareId, "m_encrypt":encrypt})
+			}
 		}
 	}
 
@@ -265,10 +304,17 @@ DocumentCollectionViewDelegate {
 			let data = macAddress.split(':');
 			let fileName = data.join('_') + "_" + licenseFileController.defaultName;
 
-			licenseFileController.fileName = fileName;
+			// licenseFileController.fileName = fileName;
 
 			let hardwareId = elementsModel.getData("Id", indexes[0]);
-			licenseFileController.createLicenseFile(hardwareId);
+			// licenseFileController.createLicenseFile(hardwareId);
+
+			if (AuthorizationController.loggedUserIsSuperuser()){
+				ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
+			}
+			else{
+				createLicenseFileRequest.send({"m_deviceId": hardwareId})
+			}
 		}
 		else if (commandId === "TransferLicenses"){
 			let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
@@ -317,6 +363,33 @@ DocumentCollectionViewDelegate {
 			onSaved: {
 				container.collectionView.doUpdateGui();
 			}
+		}
+	}
+
+	GqlSdlRequestSender {
+		id: createLicenseFileRequest;
+		requestType: 1;
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_createLicenseFile;
+		inputObjectComp: Component {
+			CreateLicenseFileInput {
+			}
+		}
+
+		sdlObjectComp: Component {
+			CreateLicenseFilePayload {
+				onFinished: {
+					if (Qt.platform.os == "web"){
+						fileIO.source = m_name;
+					}
+
+					let encodedStr = Qt.atob(m_data);
+					fileIO.write(encodedStr);
+				}
+			}
+		}
+
+		FileIO {
+			id: fileIO
 		}
 	}
 

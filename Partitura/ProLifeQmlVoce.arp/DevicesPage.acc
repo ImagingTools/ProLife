@@ -195,6 +195,7 @@
                                 <Value>GetDeviceBinding</Value>
                                 <Value>UpdateDeviceBinding</Value>
                                 <Value>TransferLicenses</Value>
+                                <Value>CreateLicenseFile</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -207,7 +208,22 @@
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="EncryptionBasedPersistence" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicensePersistence" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="XmlFileSerializer"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
@@ -221,6 +237,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Encryption"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -299,6 +318,43 @@
         <Element Id="DeviceInfo" PackageId="ProLifeDataPck" ComponentId="DeviceInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="Encryption" PackageId="ImtCryptPck" ComponentId="Encryption">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="EncryptionBasePersistence" PackageId="ImtCryptPck" ComponentId="EncryptionBasePersistence">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="BasePersistence" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="XmlFileSerializer"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Encryption" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Encryption"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EncryptionKeysProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="FileExtensions" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>lic</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeDescriptions" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>License Files</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="HardwareBindingChangeGenerator" PackageId="ProLifeGqlPck" ComponentId="HardwareBindingChangeGenerator">
@@ -401,6 +457,31 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="XmlFileSerializer" PackageId="FilePck" ComponentId="CompactXmlFileSerializer">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AutoCreatePath" Type="Boolean" ExportId="AutoCreatePath">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="FileExtensions" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>xml</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>

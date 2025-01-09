@@ -95,8 +95,18 @@ input TransferLicensesInput {
 	ToDeviceId: ID!
 }
 
+input CreateLicenseFileInput {
+    DeviceId: ID!
+    Encrypt: Bool
+}
+
 type TransferLicensesPayload {
 	Status: String
+}
+
+type CreateLicenseFilePayload {
+    Name: String!
+    Data: String!
 }
 
 type DeviceDataPayload {
@@ -114,6 +124,7 @@ type Mutation {
 	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
 	UpdateDeviceBinding (input: DeviceBindingInput): UpdatedNotificationPayload!
 	TransferLicenses (input: TransferLicensesInput): TransferLicensesPayload!
+        CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
 }
 
 collectionSchema {

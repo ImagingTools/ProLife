@@ -342,7 +342,7 @@ ViewBase {
         anchors.rightMargin: Style.size_largeMargin;
 
         contentWidth: content.width;
-        contentHeight: content.height + 2 * Style.size_largeMargin;
+		contentHeight: Math.max(content.height + 2 * Style.size_largeMargin + 100, historyPanel.contentHeight + 2 * Style.size_largeMargin);
 
         boundsBehavior: Flickable.StopAtBounds;
 
