@@ -122,7 +122,7 @@ RemoteCollectionView {
                 sourceSize.height: height;
             }
 
-            onRowIndexChanged: {
+			onDraw: {
                 if (!rowDelegate){
                     return
                 }

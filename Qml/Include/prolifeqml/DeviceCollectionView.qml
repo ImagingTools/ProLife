@@ -203,7 +203,7 @@ RemoteCollectionView {
 				elide: Text.ElideRight;
 			}
 
-			onRowIndexChanged: {
+			onDraw: {
 				if (!rowDelegate){
 					return
 				}
