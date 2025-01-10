@@ -88,6 +88,13 @@ ViewBase {
         accountData.m_groups = groups;
     }
 
+	DocumentHistoryPanel {
+		id: historyPanel;
+		documentId: accountEditorContainer.accountData ? accountEditorContainer.accountData.m_id : "";
+		collectionId: "Accounts";
+		editorFlickable: flickable;
+	}
+
     CustomScrollbar {
         id: scrollbar;
         z: parent.z + 1;
@@ -144,7 +151,7 @@ ViewBase {
         anchors.rightMargin: Style.size_largeMargin;
 
         contentWidth: bodyColumn.width;
-        contentHeight: bodyColumn.height + 2 * Style.size_largeMargin;
+		contentHeight: Math.max(bodyColumn.height + 2 * Style.size_largeMargin + 100, historyPanel.contentHeight + 2 * Style.size_largeMargin);
 
         boundsBehavior: Flickable.StopAtBounds;
         clip: true;

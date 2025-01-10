@@ -69,6 +69,10 @@ I_EXPORT_COMPONENT(
 		"Device controller",
 		"Device Controller");
 
+I_EXPORT_COMPONENT(
+		CustomerChangeGenerator,
+		"Customer change generator",
+		"Customer Change Generator");
 
 
 } // namespace ProLifeGqlPck

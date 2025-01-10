@@ -112,6 +112,7 @@
                                 <Value>PageData/DeviceChangeGenerator</Value>
                                 <Value>PageData/SoftwareChangeGenerator</Value>
                                 <Value>PageData/OrderChangeGenerator</Value>
+                                <Value>PageData/CustomerChangeGenerator</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -195,6 +196,9 @@
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="">
@@ -319,6 +323,9 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -491,6 +498,8 @@
                 </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
+                    <Component ExportedId="CustomerChangeGenerator" ComponentId="AccountsPage/CustomerChangeGenerator"/>
+                    <Component ExportedId="CustomerOperationContextController" ComponentId="AccountsPage/OperationContextController"/>
                     <Component ExportedId="DeviceChangeGenerator" ComponentId="DevicesPage/DeviceChangeGenerator"/>
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>

@@ -20,6 +20,7 @@
 #include <prolifegql/CHardwareBindingChangeGeneratorComp.h>
 #include <prolifegql/CCustomerCollectionControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
+#include <prolifegql/CCustomerChangeGeneratorComp.h>
 
 
 /**
@@ -51,6 +52,7 @@ typedef icomp::TModelCompWrap<
 						iser::ISerializable,
 						istd::IChangeable>> CustomerInfo;
 typedef prolifegql::CDeviceControllerComp DeviceController;
+typedef prolifegql::CCustomerChangeGeneratorComp CustomerChangeGenerator;
 
 
 } // namespace ImtLicenseGqlPck
