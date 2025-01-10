@@ -528,7 +528,7 @@ ViewBase {
                             productsDialog.bodyItem.productItem = productModel.copyMe();
                         }
                         else{
-                            let productItem = productFactory.createObject();
+							let productItem = productFactory.createObject(orderEditorContainer);
                             productItem.m_id = UuidGenerator.generateUUID();
                             productItem.m_categoryId = "Software";
 
