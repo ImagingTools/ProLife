@@ -59,7 +59,7 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 		}
 	}
 
-	if (!TableIsExists("LicensesTemp")){
+	if (!TableExists("LicensesTemp")){
 		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "LicensesTemp";)";
 		beforeSelectionQuery += R"(CREATE TEMP TABLE "LicensesTemp"("DocumentId" varchar, "LicenseId" varchar, "LicenseName" varchar);)";
 
@@ -82,7 +82,7 @@ QByteArray CDeviceDatabaseDelegateComp::GetSelectionQuery(
 		}
 	}
 
-	if (!TableIsExists("ProductsTemp")){
+	if (!TableExists("ProductsTemp")){
 		beforeSelectionQuery += R"(DROP TABLE IF EXISTS "ProductsTemp";)";
 		beforeSelectionQuery += R"(CREATE TEMP TABLE "ProductsTemp"("DocumentId" varchar, "ProductId" varchar, "ProductName" varchar);)";
 
