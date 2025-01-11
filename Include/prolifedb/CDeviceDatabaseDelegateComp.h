@@ -5,7 +5,6 @@
 #include <ifile/IFilePersistence.h>
 
 // ImtCore includes
-#include <imtdb/IMetaInfoTableDelegate.h>
 #include <imtdb/CSqlJsonDatabaseDelegateComp.h>
 
 
