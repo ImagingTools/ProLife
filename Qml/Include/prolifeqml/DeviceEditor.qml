@@ -513,12 +513,6 @@ ViewBase {
                     onCurrentIndexChanged: {
                         deviceEditorContainer.doUpdateModel();
 
-						// let status = productionStatus.getStatusId(statusCB.currentIndex);
-						// if (status === "Defected"){
-
-						// }
-						// buttonElementView.visible
-
                         if (statusCB.currentIndex >= 0){
                         }
                         else{

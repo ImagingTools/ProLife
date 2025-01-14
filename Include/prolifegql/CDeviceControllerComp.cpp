@@ -560,6 +560,65 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 }
 
 
+sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 CDeviceControllerComp::OnDecryptLicenseFile(
+	const sdl::prolife::Sensors::V1_0::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+	const ::imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
+{
+	sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 response;
+
+	if (!m_encryptionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'Encryption' was not set", "CDeviceControllerComp");
+		return response;
+	}
+
+	const imtgql::IGqlContext* gqlContextPtr = decryptLicenseFileRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr){
+		errorMessage = QString("Unable to decrypt license file. Error: GraphQL context is invalid");
+		return response;
+	}
+
+	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr){
+		errorMessage = QString("Unable to decrypt license file. Error: User info is invalid");
+		return response;
+	}
+
+	if (!userInfoPtr->IsAdmin()){
+		errorMessage = QString("Unable to decrypt license file. Error: Permission denied");
+		return response;
+	}
+
+	sdl::prolife::Sensors::V1_0::DecryptLicenseFileRequestArguments arguments = decryptLicenseFileRequest.GetRequestedArguments();
+
+	QByteArray encryptedData;
+	if (arguments.input.FileData){
+		encryptedData = *arguments.input.FileData;
+	}
+
+	QByteArray encryptionKey;
+	if (arguments.input.Key){
+		encryptionKey = *arguments.input.Key;
+	}
+
+	m_productInstanceId = encryptionKey;
+
+	encryptedData = QByteArray::fromBase64(encryptedData);
+
+	QByteArray decryptedData;
+	if (!m_encryptionCompPtr->DecryptData(encryptedData, imtcrypt::IEncryption::EA_AES, *this, decryptedData)){
+		errorMessage = QString("Unable to decrypt license file. Error: Decryption data failed");
+		return response;
+	}
+
+	QString name = encryptionKey.split(':').join('_') + "_" + "Decrypted.lic";
+	response.DecryptedData = decryptedData.toBase64();
+	response.FileName = name;
+
+	return response;
+}
+
+
 // reimplemented (imtcrypt::IEncryptionKeysProvider)
 
 QByteArray CDeviceControllerComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const

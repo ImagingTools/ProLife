@@ -196,6 +196,7 @@
                                 <Value>UpdateDeviceBinding</Value>
                                 <Value>TransferLicenses</Value>
                                 <Value>CreateLicenseFile</Value>
+                                <Value>DecryptLicenseFile</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -207,6 +208,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Encryption" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Encryption"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EncryptionBasedPersistence" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
@@ -534,6 +538,7 @@
                                         <Values>
                                             <Value>Bind</Value>
                                             <Value>CreateLicenseFile</Value>
+                                            <Value>DecryptFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -604,6 +609,43 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Priority" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="1"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DecryptFile" PackageId="ImtCoreVoce" ComponentId="Command">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="DecryptFile"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DecryptLicenseFile</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/Unlock"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Decrypt License File"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="0"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>

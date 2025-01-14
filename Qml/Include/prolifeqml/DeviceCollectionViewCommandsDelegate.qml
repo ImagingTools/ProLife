@@ -329,6 +329,95 @@ DocumentCollectionViewDelegate {
 			console.log("TransferLicenses", hardwareId, productId);
 			ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId});
 		}
+		else if (commandId === "DecryptFile"){
+			licenseFileDialog.open();
+		}
+	}
+
+	FileDialog {
+		id: licenseFileDialog;
+		title: qsTr("Select license file")
+		fileMode: FileDialog.OpenFile
+		nameFilters: ["License files (*.lic)"]
+
+		onAccepted: {
+			let filePath;
+			if (Qt.platform.os == "web"){
+				filePath = licenseFileDialog.file.toString()
+			}
+			else{
+				filePath = licenseFileDialog.file.toString()
+			}
+
+			filePath = filePath.replace('file:///', '')
+
+			if (Qt.platform.os == "web"){
+				let reader = new FileReader()
+
+				reader.readAsDataURL(filePath)
+
+				reader.onload = function(){
+					let encodedContentWithHeader = reader.result
+					let encodedContent = encodedContentWithHeader.replace(/^.{0,}base64,/, '')
+
+					ModalDialogManager.openDialog(enterKeyDialog, {"encodedContent": encodedContent});
+				}.bind(this)
+			}
+			else {
+				fileIO.source = filePath
+				let fileData = fileIO.read()
+				let encodedData = Qt.btoa(fileData);
+
+				ModalDialogManager.openDialog(enterKeyDialog, {"encodedContent": encodedData});
+			}
+		}
+
+		FileIO {
+			id: fileIO
+		}
+	}
+
+	Component {
+		id: enterKeyDialog;
+		InputDialog {
+			title: qsTr("Decryption key");
+			message: qsTr("Enter the decryption key");
+
+			property string encodedContent;
+
+			onFinished: {
+				if (buttonId == Enums.ok){
+					decryptLicenseFileRequest.send({"m_fileData": encodedContent, "m_key": inputValue});
+				}
+			}
+		}
+	}
+
+	GqlSdlRequestSender {
+		id: decryptLicenseFileRequest;
+		requestType: 1;
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_decryptLicenseFile;
+		inputObjectComp: Component {
+			DecryptLicenseFileInput {
+			}
+		}
+
+		sdlObjectComp: Component {
+			DecryptLicenseFilePayload {
+				onFinished: {
+					if (Qt.platform.os == "web"){
+						decryptFileIO.source = m_fileName;
+					}
+
+					let encodedStr = Qt.atob(m_decryptedData);
+					decryptFileIO.write(encodedStr);
+				}
+			}
+		}
+
+		FileIO {
+			id: decryptFileIO;
+		}
 	}
 
 	Component {
@@ -379,17 +468,17 @@ DocumentCollectionViewDelegate {
 			CreateLicenseFilePayload {
 				onFinished: {
 					if (Qt.platform.os == "web"){
-						fileIO.source = m_name;
+						createLicenseFileIO.source = m_name;
 					}
 
 					let encodedStr = Qt.atob(m_data);
-					fileIO.write(encodedStr);
+					createLicenseFileIO.write(encodedStr);
 				}
 			}
 		}
 
 		FileIO {
-			id: fileIO
+			id: createLicenseFileIO;
 		}
 	}
 

@@ -6,6 +6,7 @@
 
 // ImtCore includes
 #include <imtcrypt/IEncryptionKeysProvider.h>
+#include <imtcrypt/IEncryption.h>
 
 // ProLife includes
 #include <prolifedata/IHardwareProductBinding.h>
@@ -39,6 +40,7 @@ public:
 		I_ASSIGN(m_deviceBindingCollectionCompPtr, "DeviceBindingCollection", "Device binding collection", true, "DeviceBindingCollection");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
+		I_ASSIGN(m_encryptionCompPtr, "Encryption", "Encrypt/Decrypt instances", true, "Encryption");
 	I_END_COMPONENT
 
 protected:
@@ -51,6 +53,10 @@ protected:
 	virtual sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 OnUpdateDeviceBinding(const sdl::prolife::Sensors::V1_0::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 OnTransferLicenses(const sdl::prolife::Sensors::V1_0::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 OnCreateLicenseFile(const sdl::prolife::Sensors::V1_0::CCreateLicenseFileGqlRequest& createLicenseFileRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 OnDecryptLicenseFile(
+		const sdl::prolife::Sensors::V1_0::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+		const ::imtgql::CGqlRequest& gqlRequest,
+		QString& errorMessage) const override;
 
 	// reimplemented (imtcrypt::IEncryptionKeysProvider)
 	virtual QByteArray GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const override;
@@ -74,6 +80,7 @@ protected:
 
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
+	I_REF(imtcrypt::IEncryption, m_encryptionCompPtr);
 
 private:
 	mutable QByteArray m_productInstanceId;

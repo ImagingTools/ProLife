@@ -96,8 +96,13 @@ input TransferLicensesInput {
 }
 
 input CreateLicenseFileInput {
-    DeviceId: ID!
-    Encrypt: Bool
+	DeviceId: ID!
+	Encrypt: Bool
+}
+
+input DecryptLicenseFileInput {
+	Key: ID!
+	FileData: ID!
 }
 
 type TransferLicensesPayload {
@@ -105,12 +110,17 @@ type TransferLicensesPayload {
 }
 
 type CreateLicenseFilePayload {
-    Name: String!
-    Data: String!
+	Name: String!
+	Data: String!
 }
 
 type DeviceDataPayload {
 	DeviceData: DeviceData
+}
+
+type DecryptLicenseFilePayload {
+	FileName: String!
+	DecryptedData: ID!
 }
 
 type Query {
@@ -124,7 +134,8 @@ type Mutation {
 	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
 	UpdateDeviceBinding (input: DeviceBindingInput): UpdatedNotificationPayload!
 	TransferLicenses (input: TransferLicensesInput): TransferLicensesPayload!
-        CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
+	CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
+	DecryptLicenseFile (input: DecryptLicenseFileInput): DecryptLicenseFilePayload!
 }
 
 collectionSchema {
