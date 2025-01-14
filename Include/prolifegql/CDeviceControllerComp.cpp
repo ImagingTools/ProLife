@@ -509,11 +509,13 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		return response;
 	}
 
-	QByteArray data = file.readAll().toBase64();
+	QByteArray originalData = file.readAll();
+
+	QByteArray returnedData = originalData.toBase64();
 
 	QString name = macAddress.split(':').join('_') + "_" + "License.lic";
 
-	response.Data = data;
+	response.Data = returnedData;
 	response.Name = name;
 
 	file.close();

@@ -282,16 +282,6 @@ bool CKeyDataProviderComp::GetData(
 
 	file.close();
 
-	imtgql::CGqlRequest gqlRequest;
-	imtgql::IGqlRequestProvider* gqlRequestProviderPtr = QueryInterface<imtgql::IGqlRequestProvider>(dynamic_cast<istd::IPolymorphic*>(const_cast<CKeyDataProviderComp*>(this)));
-	if (gqlRequestProviderPtr != nullptr){
-		const imtgql::IGqlRequest* gqlRequestPtr = gqlRequestProviderPtr->GetGqlRequest();
-		if (gqlRequestPtr != nullptr){
-			if (!gqlRequest.CopyFrom(*gqlRequestPtr)){
-			}
-		}
-	}
-
 	for (const QByteArray& softwareId : softwareIds){
 		imtbase::IObjectCollection::DataPtr softwareProductDataPtr;
 		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareProductDataPtr)){

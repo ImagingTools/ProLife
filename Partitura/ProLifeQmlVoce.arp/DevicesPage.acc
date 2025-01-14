@@ -10,6 +10,11 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="AesInitVector" PackageId="ImtLicenseVoce" ComponentId="AesInitVector">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
@@ -243,7 +248,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Encryption"/>
+                        <Data IsEnabled="true" Value="AesInitVector"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

@@ -334,7 +334,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicensePersistence" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="XmlFileSerializer"/>
+                                    <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
