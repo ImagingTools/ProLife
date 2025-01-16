@@ -12,7 +12,7 @@ ApplicationMain {
     id: window;
 
     useWebSocketSubscription: true;
-    canRecoveryPassword: false;
+	// canRecoveryPassword: false;
     authorizationServerConnected: pumaConnectionChecker.status === 1;
 
     Connections {
