@@ -32,6 +32,8 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Subscriptions</Value>
+                                <Value>LisaGQLEngine</Value>
+                                <Value>AuthorizableServerFramework/PumaGQLClientEngine</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

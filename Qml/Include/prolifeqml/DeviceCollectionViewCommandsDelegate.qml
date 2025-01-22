@@ -7,6 +7,7 @@ import imtdocgui 1.0
 import imtcontrols 1.0
 import prolifeSensorsSdl 1.0
 import imtguigql 1.0
+import Qt.labs.platform 1.0
 
 DocumentCollectionViewDelegate {
 	id: container;
@@ -81,8 +82,8 @@ DocumentCollectionViewDelegate {
 		id: encryptPopupMenuModel;
 
 		Component.onCompleted: {
-			addItem("Encrypt", "Encrypt", "", true);
-			addItem("NotEncrypt", "Not Encrypt", "", true);
+			addItem("Encrypt", qsTr("Encrypted"), "", true);
+			addItem("NotEncrypt", qsTr("Unencrypted"), "", true);
 		}
 	}
 

@@ -29,7 +29,7 @@ ApplicationMain {
 
         function onLogoutSignal(){
             CachedProductCollection.clearModel();
-            CachedLicenseCollection.clearModel();
+			CachedLicenseCollection.clearModel();
             CachedAccountCollection.clearModel();
             CachedOrderCollection.clearModel();
             CachedDeviceCollection.clearModel();
@@ -50,24 +50,9 @@ ApplicationMain {
 
         onStatusChanged: {
             if (status === 2){
-                if (!window.wasError){
-//                    ModalDialogManager.openDialog(errorDialog, {});
-                    window.wasError = true;
-                }
+				PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false);
             }
         }
     }
-
-//    property bool wasError: false;
-
-//    Component {
-//        id: errorDialog;
-//        ErrorDialog {
-//            title: qsTr("Warning Message");
-//            message: qsTr("Lisa server connection error");
-
-//            onFinished: {}
-//        }
-//    }
 }
 
