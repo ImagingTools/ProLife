@@ -39,9 +39,7 @@ bool CDeviceChangeGeneratorComp::GenerateDocumentChanges(
 				QStringList idList = ids.split(';');
 
 				for (const QString& id : idList){
-					QString licenseName = GetLicenseName(id.toUtf8());
-
-					documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("BindLicense", "License", licenseName, "", id.toUtf8()));
+					InsertOperationDescription(documentChangeCollection, "BindLicense", "License", id.toUtf8(), id.toUtf8(), id.toUtf8());
 				}
 			}
 		}
@@ -53,9 +51,7 @@ bool CDeviceChangeGeneratorComp::GenerateDocumentChanges(
 				QStringList idList = ids.split(';');
 
 				for (const QString& id : idList){
-					QString licenseName = GetLicenseName(id.toUtf8());
-
-					documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("UnbindLicense", "License", licenseName, id.toUtf8(), ""));
+					InsertOperationDescription(documentChangeCollection, "UnbindLicense", "License", id.toUtf8(), id.toUtf8(), id.toUtf8());
 				}
 			}
 		}
@@ -88,205 +84,189 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(const istd::IChangeable& oldDo
 	QByteArray newProject = newDeviceInfoPtr->GetProject();
 	if (oldProject != newProject){
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Project");
-		documentChangeCollection.InsertNewObject(
-			"OperationInfo",
-			"",
-			"",
-			CreateOperationDescription("", "Project", keyName, oldProject, newProject), "Project");
+		InsertOperationDescription(documentChangeCollection, "", "Project", keyName, oldProject, newProject);
 	}
 
 	QByteArray oldSerialNumber = oldDeviceInfoPtr->GetSerialNumber();
 	QByteArray newSerialNumber = newDeviceInfoPtr->GetSerialNumber();
 	if (oldSerialNumber != newSerialNumber){
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Serial Number");
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "SerialNumber", keyName, oldSerialNumber, newSerialNumber), "SerialNumber");
+		InsertOperationDescription(documentChangeCollection, "", "SerialNumber", keyName, oldSerialNumber, newSerialNumber);
 	}
 
 	QByteArray oldMacAddress = oldDeviceInfoPtr->GetMacAddress();
 	QByteArray newMacAddress = newDeviceInfoPtr->GetMacAddress();
 	if (oldMacAddress != newMacAddress){
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "MAC-Address");
-
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "MacAddress", keyName, oldMacAddress, newMacAddress), "MacAddress");
+		InsertOperationDescription(documentChangeCollection, "", "MacAddress", keyName, oldMacAddress, newMacAddress);
 	}
 
 	QByteArray oldDeviceType = oldDeviceInfoPtr->GetDeviceType();
 	QByteArray newDeviceType = newDeviceInfoPtr->GetDeviceType();
 	if (oldDeviceType != newDeviceType){
-		if (m_productCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr oldDataPtr;
-			if (m_productCollectionCompPtr->GetObjectData(oldDeviceType, oldDataPtr)){
-				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(oldDataPtr.GetPtr());
-				if (productInfoPtr != nullptr){
-					oldDeviceType = productInfoPtr->GetName().toUtf8();
-				}
-			}
-
-			imtbase::IObjectCollection::DataPtr newDataPtr;
-			if (m_productCollectionCompPtr->GetObjectData(newDeviceType, newDataPtr)){
-				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(newDataPtr.GetPtr());
-				if (productInfoPtr != nullptr){
-					newDeviceType = productInfoPtr->GetName().toUtf8();
-				}
-			}
-		}
-
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Device Type");
-
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "DeviceType", keyName, oldDeviceType, newDeviceType), "DeviceType");
+		InsertOperationDescription(documentChangeCollection, "", "DeviceType", keyName, oldDeviceType, newDeviceType);
 	}
 
 	QByteArray oldConfigurationType = oldDeviceInfoPtr->GetConfigurationType();
 	QByteArray newConfigurationType = newDeviceInfoPtr->GetConfigurationType();
 	if (oldConfigurationType != newConfigurationType){
-		if (m_licenseCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr oldDataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(oldConfigurationType, oldDataPtr)){
-				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(oldDataPtr.GetPtr());
-				if (licenseInfoPtr != nullptr){
-					oldConfigurationType = licenseInfoPtr->GetLicenseName().toUtf8();
-				}
-			}
-
-			imtbase::IObjectCollection::DataPtr newDataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(newConfigurationType, newDataPtr)){
-				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(newDataPtr.GetPtr());
-				if (licenseInfoPtr != nullptr){
-					newConfigurationType = licenseInfoPtr->GetLicenseName().toUtf8();
-				}
-			}
-		}
-
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Hardware Configuration");
-
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "ConfigurationType", keyName, oldConfigurationType, newConfigurationType), "ConfigurationType");
+		InsertOperationDescription(documentChangeCollection, "", "ConfigurationType", keyName, oldConfigurationType, newConfigurationType);
 	}
 
 	QByteArray oldOrderId = oldDeviceInfoPtr->GetOrderId();
 	QByteArray newOrderId = newDeviceInfoPtr->GetOrderId();
 	if (oldOrderId != newOrderId){
-		if (m_orderCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr oldDataPtr;
-			if (m_orderCollectionCompPtr->GetObjectData(oldOrderId, oldDataPtr)){
-				const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(oldDataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					oldOrderId = orderInfoPtr->GetOrderId();
-				}
-			}
-
-			imtbase::IObjectCollection::DataPtr newDataPtr;
-			if (m_orderCollectionCompPtr->GetObjectData(newOrderId, newDataPtr)){
-				const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(newDataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					newOrderId = orderInfoPtr->GetOrderId();
-				}
-			}
-		}
-
 		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Order-ID");
-
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "OrderId", keyName, oldOrderId, newOrderId), "OrderId");
+		InsertOperationDescription(documentChangeCollection, "", "OrderId", keyName, oldOrderId, newOrderId);
 	}
 
 	QString oldDescription = oldDeviceInfoPtr->GetDescription();
 	QString newDescription = newDeviceInfoPtr->GetDescription();
 	if (oldDescription != newDescription){
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "Description", QT_TRANSLATE_NOOP("Attribute","Description"), oldDescription.toUtf8(), newDescription.toUtf8()), "Description");
+		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute","Description"), oldDescription.toUtf8(), newDescription.toUtf8());
 	}
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus oldStatus = oldDeviceInfoPtr->GetDeviceProductionStatus();
 	prolifedata::IDeviceInfo::DeviceProductionStatus newStatus = newDeviceInfoPtr->GetDeviceProductionStatus();
 	if (oldStatus != newStatus){
 		QStringList statuses = oldDeviceInfoPtr->DeviceProductionStatusGetStrings();
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("", "ProductionStatus", QT_TRANSLATE_NOOP("Attribute","Production Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8()), "ProductionStatus");
+		InsertOperationDescription(documentChangeCollection, "", "ProductionStatus", QT_TRANSLATE_NOOP("Attribute","Production Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8());
 	}
 
 	return true;
 }
 
 
-QString CDeviceChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId)
+
+QString CDeviceChangeGeneratorComp::CreateCustomOperationDescription(
+	const imtbase::COperationDescription& operationDescription,
+	const QByteArray& languageId) const
 {
-	QString retVal = BaseClass::GetOperationDescription(documentChangeCollection, languageId);
+	QString retVal;
 
-	if (retVal.isEmpty()){
-		imtbase::ICollectionInfo::Ids elementIds = documentChangeCollection.GetElementIds();
-		for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (documentChangeCollection.GetObjectData(elementId, dataPtr)){
-				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
-				if (operationDescriptionPtr != nullptr){
-					QByteArray typeId = operationDescriptionPtr->GetOperationTypeId();
+	QByteArray typeId = operationDescription.GetOperationTypeId();
 
-					QString keyName = operationDescriptionPtr->GetKeyName();
-					keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
+	QByteArray key = operationDescription.GetKey();
+	QByteArray oldValue = operationDescription.GetOldValue();
+	QByteArray newValue = operationDescription.GetNewValue();
+	QString keyName = operationDescription.GetKeyName();
+	keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
-					if (typeId == "CreateLicenseFile"){
-						QString change = iqt::GetTranslation(
-									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Created the license file")).toUtf8(),
-									languageId,
-									"prolifegql::CDeviceChangeGeneratorComp");
+	if (typeId == "CreateLicenseFile"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Created the license file")).toUtf8(),
+			languageId,
+			"prolifegql::CDeviceChangeGeneratorComp");
 
 
-						retVal += change + "\n";
-					}
-					else if (typeId == "UnbindLicense"){
-						QString change = iqt::GetTranslation(
-									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Removed the license '%1'")).toUtf8(),
-									languageId,
-									"prolifegql::CDeviceChangeGeneratorComp");
+		retVal += change + "\n";
+	}
+	else if (typeId == "UnbindLicense"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Removed the license '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::CDeviceChangeGeneratorComp");
 
-						change = change.arg(keyName);
+		change = change.arg(GetSoftwareName(oldValue));
 
-						retVal += change + "\n";
-					}
-					else if (typeId == "BindLicense"){
-						QString change = iqt::GetTranslation(
-									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Added the license '%1'")).toUtf8(),
-									languageId,
-									"prolifegql::CDeviceChangeGeneratorComp");
-						change = change.arg(keyName);
+		retVal += change + "\n";
+	}
+	else if (typeId == "BindLicense"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Added the license '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::CDeviceChangeGeneratorComp");
+		change = change.arg(GetSoftwareName(newValue));
 
-						retVal += change + "\n";
-					}
-				}
-			}
-		}
+		retVal += change + "\n";
 	}
 
 	return retVal;
 }
 
 
+QString CDeviceChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const
+{
+	if (key == "DeviceType"){
+		return GetProductName(value);
+	}
+	else if (key == "ConfigurationType"){
+		return GetLicenseName(value);
+	}
+	else if (key == "OrderId"){
+		return GetOrderName(value);
+	}
+	else{
+		return BaseClass::GetKeyNameForOperation(key, value);
+	}
+}
+
+
 QString CDeviceChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid) const
 {
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_softwareInstanceCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-		const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-		if (productInstanceInfoPtr != nullptr){
-			imtbase::ICollectionInfo::Ids licenseCollectionIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
-			if (!licenseCollectionIds.isEmpty()){
-				QByteArray licenseDefinitionUuid = licenseCollectionIds[0];
-
-				imtbase::IObjectCollection::DataPtr licenseDataPtr;
-				if (m_licenseCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
-					const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-					if (licenseInfoPtr != nullptr){
-						QByteArray licenseId = licenseInfoPtr->GetLicenseId();
-						QString licenseName = licenseInfoPtr->GetLicenseName();
-
-						QString name = licenseName + " (" + licenseId + ")";
-						return name;
-					}
-				}
+	if (m_licenseCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+			const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+			if (licenseInfoPtr != nullptr){
+				return licenseInfoPtr->GetLicenseId();
 			}
 		}
 	}
 
-	return QString();
+	return productUuid;
+}
+
+
+QString CDeviceChangeGeneratorComp::GetSoftwareName(const QByteArray& softwareId) const
+{
+	if (m_softwareInstanceCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				return productInstanceInfoPtr->GetSerialNumber();
+			}
+		}
+	}
+	return softwareId;
+}
+
+
+QString CDeviceChangeGeneratorComp::GetProductName(const QByteArray& productId) const
+{
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
+			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				return productInfoPtr->GetName();
+			}
+		}
+	}
+
+	return productId;
+}
+
+
+QString CDeviceChangeGeneratorComp::GetOrderName(const QByteArray& orderId) const
+{
+	if (m_orderCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_orderCollectionCompPtr->GetObjectData(orderId, dataPtr)){
+			const prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<const prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+			if (orderInfoPtr != nullptr){
+				return orderInfoPtr->GetOrderId();
+			}
+		}
+	}
+
+	return orderId;
 }
 
 

@@ -35,9 +35,14 @@ protected:
 				const istd::IChangeable& newDocument,
 				imtbase::CObjectCollection& documentChangeCollection,
 				QString& errorMessage) override;
-	virtual QString GetOperationDescription(
-				imtbase::CObjectCollection& documentChangeCollection,
-				const QByteArray& languageId = QByteArray()) override;
+	virtual QString CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId = QByteArray()) const override;
+	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
+
+private:
+	QString GetProductName(const QByteArray& productId) const;
+	QString GetOrderName(const QByteArray& orderId) const;
+	QString GetLicenseName(const QByteArray& licenseId) const;
+	QString GetHardwareName(const QByteArray& hardwareId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);

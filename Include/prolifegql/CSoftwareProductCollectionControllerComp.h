@@ -62,6 +62,8 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
+	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
+	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

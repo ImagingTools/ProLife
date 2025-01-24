@@ -77,7 +77,7 @@ sdl::prolife::Sensors::CDeviceBindingData::V1_0 CDeviceControllerComp::OnGetDevi
 
 		hardwareProductBindingPtr.SetPtr(deviceBindingPtr, true);
 
-		m_deviceBindingCollectionCompPtr->InsertNewObject("", "", "", deviceBindingPtr, deviceId);
+		m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
 	}
 
 	QByteArrayList softwareIds = hardwareProductBindingPtr->GetSoftwareIds();

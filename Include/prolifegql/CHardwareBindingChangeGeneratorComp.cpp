@@ -59,12 +59,12 @@ bool CHardwareBindingChangeGeneratorComp::CompareDocuments(
 
 	for (const QByteArray& softwareId : std::as_const(addedIds)){
 		QString name = GetLicenseName(softwareId);
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("AddLicense", "License", name, "", ""));
+		InsertOperationDescription(documentChangeCollection, "AddLicense", "License", name);
 	}
 
 	for (const QByteArray& softwareId : std::as_const(removedIds)){
 		QString name = GetLicenseName(softwareId);
-		documentChangeCollection.InsertNewObject("OperationInfo", "", "", CreateOperationDescription("RemoveLicense", "License", name, "", ""));
+		InsertOperationDescription(documentChangeCollection, "RemoveLicense", "License", name);
 	}
 
 	return true;

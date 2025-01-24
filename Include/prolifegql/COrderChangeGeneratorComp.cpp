@@ -53,24 +53,6 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 	QByteArray oldCustomerId = oldOrderInfoPtr->GetCustomerId();
 	QByteArray newCustomerId = newOrderInfoPtr->GetCustomerId();
 	if (oldCustomerId != newCustomerId){
-		if (m_accountCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr oldDataPtr;
-			if (m_accountCollectionCompPtr->GetObjectData(oldCustomerId, oldDataPtr)){
-				const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(oldDataPtr.GetPtr());
-				if (companyInfoPtr != nullptr){
-					oldCustomerId = companyInfoPtr->GetName().toUtf8();
-				}
-			}
-
-			imtbase::IObjectCollection::DataPtr newDataPtr;
-			if (m_accountCollectionCompPtr->GetObjectData(newCustomerId, newDataPtr)){
-				const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(newDataPtr.GetPtr());
-				if (companyInfoPtr != nullptr){
-					newCustomerId = companyInfoPtr->GetName().toUtf8();
-				}
-			}
-		}
-
 		InsertOperationDescription(documentChangeCollection, "", "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId);
 	}
 
@@ -99,136 +81,64 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 	}
 
 	for (const QByteArray& productObjectId : std::as_const(addedProducts)){
-		QByteArray productUuid;
-		QByteArray internalId;
-
-		imtbase::IObjectCollection::DataPtr productDataPtr;
-		if (m_softwareCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
-			const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-			if (productInfoPtr != nullptr){
-				productUuid = productInfoPtr->GetProductId();
-				internalId = productInfoPtr->GetSerialNumber();
-			}
-		}
-		else{
-			if (m_deviceCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
-				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
-				if (deviceInfoPtr != nullptr){
-					productUuid = deviceInfoPtr->GetDeviceType();
-					internalId = deviceInfoPtr->GetMacAddress();
-				}
-			}
-		}
-
-		QByteArray productId;
-		if (m_productCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
-				if (productInfoPtr != nullptr){
-					productId = productInfoPtr->GetName().toUtf8();
-				}
-			}
-		}
-
-		QString name = productId;
-		if (!internalId.isEmpty()){
-			name = name + " (" + internalId + ")";
-		}
-
-		InsertOperationDescription(documentChangeCollection, "AddProduct", "ProductId", name, "", productId);
+		InsertOperationDescription(documentChangeCollection, "AddProduct", "ProductId", "Product-ID", "", productObjectId);
 	}
 
 	for (const QByteArray& productObjectId : std::as_const(removedProducts)){
-		QByteArray productId;
-		QByteArray internalId;
-
-		imtbase::IObjectCollection::DataPtr productDataPtr;
-		if (m_softwareCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
-			const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-			if (productInfoPtr != nullptr){
-				productId = productInfoPtr->GetProductId();
-
-				internalId = productInfoPtr->GetSerialNumber();
-			}
-		}
-		else{
-			if (m_deviceCollectionCompPtr->GetObjectData(productObjectId, productDataPtr)){
-				const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
-				if (deviceInfoPtr != nullptr){
-					productId = deviceInfoPtr->GetDeviceType();
-
-					internalId = deviceInfoPtr->GetMacAddress();
-				}
-			}
-		}
-
-		if (m_productCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
-				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
-				if (productInfoPtr != nullptr){
-					productId = productInfoPtr->GetName().toUtf8();
-				}
-			}
-		}
-
-		QString name = productId;
-		if (!internalId.isEmpty()){
-			name = name + " (" + internalId + ")";
-		}
-
-		InsertOperationDescription(documentChangeCollection, "RemoveProduct", "ProductId", name, productId, "");
+		InsertOperationDescription(documentChangeCollection, "RemoveProduct", "ProductId", "Product-ID", productObjectId, "");
 	}
 
 	return true;
 }
 
 
-QString COrderChangeGeneratorComp::GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId)
+QString COrderChangeGeneratorComp::CreateCustomOperationDescription(
+	const imtbase::COperationDescription& operationDescription,
+	const QByteArray& languageId) const
 {
-	QString retVal = BaseClass::GetOperationDescription(documentChangeCollection, languageId);
+	QString retVal;
 
-	if (retVal.isEmpty()){
-		imtbase::ICollectionInfo::Ids elementIds = documentChangeCollection.GetElementIds();
-		for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (documentChangeCollection.GetObjectData(elementId, dataPtr)){
-				const imtbase::COperationDescription* operationDescriptionPtr = dynamic_cast<const imtbase::COperationDescription*>(dataPtr.GetPtr());
-				if (operationDescriptionPtr != nullptr){
-					QByteArray type = operationDescriptionPtr->GetOperationTypeId();
+	QByteArray type = operationDescription.GetOperationTypeId();
+	QByteArray oldValue = operationDescription.GetOldValue();
+	QByteArray newValue = operationDescription.GetNewValue();
+	QString keyName = operationDescription.GetKeyName();
+	keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
 
-					QString keyName = operationDescriptionPtr->GetKeyName();
-					keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
+	if (type == "AddProduct"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::COrderChangeGeneratorComp");
 
-					if (type == "AddProduct"){
-						QString change = iqt::GetTranslation(
-									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
-									languageId,
-									"prolifegql::COrderChangeGeneratorComp");
+		change = change.arg(GetProductName(newValue));
 
-						change = change.arg(keyName);
+		retVal += change + "\n";
+	}
+	else if (type == "RemoveProduct"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Removed the product '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::COrderChangeGeneratorComp");
 
-						retVal += change + "\n";
-					}
-					else if (type == "RemoveProduct"){
-						QString change = iqt::GetTranslation(
-									m_translationManagerCompPtr.GetPtr(),
-									QString(QT_TR_NOOP("Removed the product '%1'")).toUtf8(),
-									languageId,
-									"prolifegql::COrderChangeGeneratorComp");
+		change = change.arg(GetProductName(oldValue));
 
-						change = change.arg(keyName);
-
-						retVal += change + "\n";
-					}
-				}
-			}
-		}
+		retVal += change + "\n";
 	}
 
 	return retVal;
+}
+
+
+QString COrderChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const
+{
+	if (key == "OrderCustomer"){
+		return GetAccountName(value);
+	}
+	else{
+		return BaseClass::GetKeyNameForOperation(key, value);
+	}
 }
 
 
@@ -276,6 +186,68 @@ void COrderChangeGeneratorComp::GenerateDifferences(
 			removedProducts << productId;
 		}
 	}
+}
+
+
+// private methods
+
+QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) const
+{
+	imtbase::IObjectCollection::DataPtr newDataPtr;
+	if (m_accountCollectionCompPtr->GetObjectData(accountId, newDataPtr)){
+		const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(newDataPtr.GetPtr());
+		if (companyInfoPtr != nullptr){
+			return companyInfoPtr->GetName();
+		}
+	}
+
+	return accountId;
+}
+
+
+QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) const
+{
+	QByteArray lisaProductId;
+	QByteArray productName;
+
+	imtbase::IObjectCollection::DataPtr productDataPtr;
+	if (m_softwareCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+		const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
+		if (productInfoPtr != nullptr){
+			lisaProductId = productInfoPtr->GetProductId();
+
+			productName = productInfoPtr->GetSerialNumber();
+		}
+	}
+	else{
+		if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+			const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
+			if (deviceInfoPtr != nullptr){
+				lisaProductId = deviceInfoPtr->GetDeviceType();
+
+				productName = deviceInfoPtr->GetMacAddress();
+			}
+		}
+	}
+
+	QString lisaProductName;
+
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(lisaProductId, dataPtr)){
+			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				lisaProductName = productInfoPtr->GetName().toUtf8();
+			}
+		}
+	}
+
+	if (!lisaProductName.isEmpty() && !productName.isEmpty()){
+		return lisaProductName + " (" + productName + ")";
+	}
+
+
+	return productId;
 }
 
 

@@ -1,6 +1,9 @@
 #pragma once
 
 
+// ImtCore includes
+#include <imtbase/CObjectLink.h>
+
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders.h>
@@ -58,6 +61,7 @@ protected:
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
+	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 
 private:
 	bool FillObjectFromRepresentation(
@@ -65,6 +69,12 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
+
+	bool UpdateOrderForHardware(const QByteArray& deviceId, const QByteArray& orderId) const;
+	bool UpdateOrderForSoftware(const QByteArray& softwareId, const QByteArray& orderId) const;
+	bool CheckNewProducts(QList<sdl::prolife::Orders::COrderedProduct::V1_0> orderProducts, const QByteArray& orderId) const;
+	bool CreateNewHardware(const sdl::prolife::Orders::COrderedProduct::V1_0& product, const QByteArray& orderId) const;
+	bool CreateNewSoftware(const sdl::prolife::Orders::COrderedProduct::V1_0& product, const QByteArray& orderId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);

@@ -32,9 +32,14 @@ protected:
 				QString& errorMessage,
 				const iprm::IParamsSet* paramsPtr) override;
 	virtual bool CompareDocuments(const istd::IChangeable& oldDocument, const istd::IChangeable& newDocument, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
-	virtual QString GetOperationDescription(imtbase::CObjectCollection& documentChangeCollection, const QByteArray& languageId = QByteArray()) override;
+	virtual QString CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId = QByteArray()) const override;
+	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
 
-	virtual QString GetLicenseName(const QByteArray& productUuid) const;
+private:
+	QString GetLicenseName(const QByteArray& productUuid) const;
+	QString GetSoftwareName(const QByteArray& softwareId) const;
+	QString GetProductName(const QByteArray& productId) const;
+	QString GetOrderName(const QByteArray& orderId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);

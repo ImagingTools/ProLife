@@ -68,6 +68,8 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
+	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
+	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

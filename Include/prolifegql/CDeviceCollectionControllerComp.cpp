@@ -33,6 +33,11 @@ sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceCollectionControllerComp
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
+		return sdl::imtbase::ImtCollection::CVisualStatus::V1_0();
+	}
+
 	sdl::imtbase::ImtCollection::CVisualStatus::V1_0 response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
@@ -74,9 +79,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
-		errorMessage = QString("Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
+		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
 		return false;
 	}
 
@@ -211,10 +214,13 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 	QByteArray& newObjectId,
 	QString& errorMessage) const
 {
-	if (!m_deviceInfoFactCompPtr.IsValid()){
-		errorMessage = QString("Unable to create object from representation. Error: Attribute 'm_deviceInfoFactCompPtr' was not set");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
+		return nullptr;
+	}
 
+	if (!m_deviceInfoFactCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'DeviceInfoFactory' was not set", "CDeviceCollectionControllerComp");
 		return nullptr;
 	}
 
@@ -256,73 +262,11 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		return nullptr;
 	}
 
-	QByteArray oldOrderId;
 	QString orderId = *deviceDataRepresentation.OrderId;
-
-	if (oldDeviceInfoPtr != nullptr){
-		oldOrderId = oldDeviceInfoPtr->GetOrderId();
-
-		prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
-		imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
-		if (m_orderCollectionCompPtr->GetObjectData(oldOrderId, oldOrderDataPtr)){
-			oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
-		}
-
-		// Remove device from the old order
-		if (oldOrderInfoPtr != nullptr){
-			imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
-
-			if (oldProductCollectionPtr != nullptr && orderId != oldOrderId){
-				if (oldProductCollectionPtr->GetElementIds().contains(newObjectId)){
-					oldProductCollectionPtr->RemoveElement(newObjectId);
-
-					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-					if (m_orderOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", oldOrderId, *oldOrderInfoPtr);
-					}
-
-					if (!m_orderCollectionCompPtr->SetObjectData(oldOrderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-						errorMessage = QString("Unable to update an order info").toUtf8();
-						SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-
-						return nullptr;
-					}
-				}
-			}
-		}
-	}
-
-	if (oldOrderId != orderId){
-		// Add device to the new order info
-		if (m_orderCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr orderDataPtr;
-			if (m_orderCollectionCompPtr->GetObjectData(orderId.toUtf8(), orderDataPtr)){
-				prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-				if (orderInfoPtr != nullptr){
-					imtbase::IObjectCollection* orderProductCollectionPtr = orderInfoPtr->GetProducts();
-					if (orderProductCollectionPtr != nullptr){
-						istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-						objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-
-						objectLinkPtr->SetObjectUuid(newObjectId);
-						objectLinkPtr->SetFactoryId("HardwareInfo");
-
-						orderProductCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), newObjectId);
-
-						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-						if (m_orderOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId.toUtf8(), *orderInfoPtr);
-						}
-
-						if (!m_orderCollectionCompPtr->SetObjectData(orderId.toUtf8(), *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-							errorMessage = QString("Unable to update an order info").toUtf8();
-							SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-
-							return nullptr;
-						}
-					}
-				}
-			}
+	if (!orderId.isEmpty()){
+		if (!AddDeviceToOrder(newObjectId, orderId.toUtf8())){
+			errorMessage = QString("Unable to add device. Error: Add device to order failed");
+			return nullptr;
 		}
 	}
 
@@ -405,17 +349,62 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
-			const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
-			istd::IChangeable& object,
-			QString& errorMessage) const
+	const imtgql::CGqlRequest& /*rawGqlRequest*/,
+	const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+	istd::IChangeable& object,
+	QString& errorMessage) const
 {
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
+		return false;
+	}
+
 	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *deviceUpdateRequest.GetRequestedArguments().input.Item;
 	QByteArray objectId = *deviceUpdateRequest.GetRequestedArguments().input.Id;
 
-	if (!FillObjectFromRepresentation(deviceData, object, objectId, errorMessage)){
-		errorMessage = QString("Unable to update device object from representation. Error: '%1'").arg(errorMessage);
+	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
+	Q_ASSERT(deviceInfoPtr != nullptr);
+
+	deviceInfoPtr->ResetData();
+
+	if (!FillObjectFromRepresentation(deviceData, *deviceInfoPtr, objectId, errorMessage)){
+		errorMessage = QString("Unable to update device. Error: '%1'").arg(errorMessage);
 		return false;
+	}
+
+	prolifedata::COrderedIdentifiableDeviceInfo* oldDeviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr oldDeviceDataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, oldDeviceDataPtr)){
+		oldDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(oldDeviceDataPtr.GetPtr());
+	}
+
+	if (deviceInfoPtr != nullptr && oldDeviceInfoPtr != nullptr){
+		QByteArray newOrderId = deviceInfoPtr->GetOrderId();
+		QByteArray oldOrderId = oldDeviceInfoPtr->GetOrderId();
+
+		if (newOrderId.isEmpty() && !oldOrderId.isEmpty()){
+			if (!RemoveDeviceFromOrder(objectId, oldOrderId)){
+				errorMessage = QString("Unable to update device. Error: Remove device from order failed");
+				return false;
+			}
+		}
+		else if (!newOrderId.isEmpty() && oldOrderId.isEmpty()){
+			if (!AddDeviceToOrder(objectId, newOrderId)){
+				errorMessage = QString("Unable to add device. Error: Add device to order failed");
+				return false;
+			}
+		}
+		else if (!newOrderId.isEmpty() && !oldOrderId.isEmpty() && newOrderId != oldOrderId){
+			if (!AddDeviceToOrder(objectId, newOrderId)){
+				errorMessage = QString("Unable to add device. Error: Add device to order failed");
+				return false;
+			}
+
+			if (!RemoveDeviceFromOrder(objectId, oldOrderId)){
+				errorMessage = QString("Unable to update device. Error: Remove device from order failed");
+				return false;
+			}
+		}
 	}
 
 	return true;
@@ -426,10 +415,18 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 	const imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid() || !m_bindingCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
-		errorMessage = QString("No collection component was set");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
+		return nullptr;
+	}
 
+	if (!m_bindingCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'BindingCollection' was not set", "CDeviceCollectionControllerComp");
+		return nullptr;
+	}
+
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
 		return nullptr;
 	}
 
@@ -467,16 +464,42 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		}
 	}
 
+	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr deviceDataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
+		deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
+	}
+
+	if (deviceInfoPtr != nullptr){
+		QByteArray orderId = deviceInfoPtr->GetOrderId();
+		if (!orderId.isEmpty()){
+			if (!RemoveDeviceFromOrder(objectId, orderId)){
+				SendWarningMessage(0,
+								   QString("Remove device '%1' from order '%2' failed")
+									   .arg(qPrintable(objectId), qPrintable(orderId)),
+								   "CDeviceCollectionControllerComp");
+			}
+		}
+	}
+
 	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
 {
-	if (!m_bindingCollectionCompPtr.IsValid() || !m_licenseCollectionCompPtr.IsValid() || !m_softwareProductCollectionCompPtr.IsValid()){
-		errorMessage = QString("Internal error.");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+	if (!m_licenseCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'LicenseCollection' was not set", "CDeviceCollectionControllerComp");
+		return nullptr;
+	}
 
+	if (!m_bindingCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'BindingCollection' was not set", "CDeviceCollectionControllerComp");
+		return nullptr;
+	}
+
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
 		return nullptr;
 	}
 
@@ -616,10 +639,10 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 // private methods
 
 bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
-			const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
-			istd::IChangeable& object,
-			QByteArray& objectId,
-			QString& errorMessage) const
+	const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
+	istd::IChangeable& object,
+	QByteArray& objectId,
+	QString& errorMessage) const
 {
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
 	if (deviceInfoPtr == nullptr){
@@ -703,6 +726,141 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	deviceInfoPtr->SetDeviceType(deviceType.toUtf8());
+
+	return true;
+}
+
+
+bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const
+{
+	if (!m_orderCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
+	if (m_orderCollectionCompPtr->GetObjectData(orderId, oldOrderDataPtr)){
+		oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
+	}
+
+	if (oldOrderInfoPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Order does not exists")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
+	if (productCollectionPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Product collection from order is invalid")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
+	if (!elementIds.contains(deviceId)){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: The device does not exist in this order")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	if (!productCollectionPtr->RemoveElement(deviceId)){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Removing element from product collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+	if (m_orderOperationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *oldOrderInfoPtr);
+	}
+
+	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Updating an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	return true;
+}
+
+
+bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const
+{
+	if (!m_orderCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	prolifedata::IOrderInfo* orderInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr orderDataPtr;
+	if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+		orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+	}
+
+	if (orderInfoPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Order does not exists")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
+	if (orderInfoPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Product collection from order is invalid")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
+	if (elementIds.contains(deviceId)){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: The device already exists in this order")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+	objectLinkPtr->SetObjectUuid(deviceId);
+	objectLinkPtr->SetFactoryId("HardwareInfo");
+
+	QByteArray objectId = productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceId);
+	if (objectId.isEmpty()){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Adding an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+	if (m_orderOperationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *orderInfoPtr);
+	}
+
+	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Updating an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionControllerComp");
+		return false;
+	}
 
 	return true;
 }
