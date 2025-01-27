@@ -212,7 +212,7 @@ ViewBase {
         orderCB.currentIndex = -1;
 
         let orderId = deviceData.m_orderId;
-        let ordersModel = orderCB.model;
+		let ordersModel = orderCB.sourceModel;
         if (ordersModel){
             for (let i = 0; i < ordersModel.getItemsCount(); i++){
                 let id = ordersModel.getData(OrderItemTypeMetaInfo.s_id, i);
@@ -253,7 +253,7 @@ ViewBase {
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
         if (canChangeOrder){
             if (orderCB.currentIndex >= 0){
-                let selectedOrderId = orderCB.model.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex);
+				let selectedOrderId = orderCB.sourceModel.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex);
                 deviceData.m_orderId = selectedOrderId;
             }
             else{
@@ -475,7 +475,7 @@ ViewBase {
 
                     filteringFields: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_orderCustomer];
 
-                    model: CachedOrderCollection.collectionModel;
+					sourceModel: CachedOrderCollection.collectionModel;
 
                     KeyNavigation.tab: statusCB;
                     KeyNavigation.backtab: macAddressInput;
@@ -489,9 +489,9 @@ ViewBase {
 						}
 					}
 
-                    onCurrentIndexChanged: {
-                        deviceEditorContainer.doUpdateModel();
-                    }
+					onFinished: {
+						deviceEditorContainer.doUpdateModel();
+					}
 
                     onModelChanged: {
                         deviceEditorContainer.doUpdateGui();

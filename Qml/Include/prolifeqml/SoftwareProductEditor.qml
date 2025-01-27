@@ -17,7 +17,7 @@ ViewBase {
     property TreeItemModel softwaresModel: TreeItemModel{}
 
     //    property alias tableElements: licensesTable.elements;
-    property alias tableElements: licenseCB.model;
+	property alias tableElements: licenseCB.sourceModel;
     property bool readOnly: false;
 
     property bool isNewSoftware: switchNewLicense.checked;
@@ -36,10 +36,10 @@ ViewBase {
             switchNewLicense.checked = true;
 
             licenseCB.currentIndex = -1;
-            if (licenseCB.model){
+			if (licenseCB.sourceModel){
 
-                for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
-                    let id = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
+				for (let i = 0; i < licenseCB.sourceModel.getItemsCount(); i++){
+					let id = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
                     if (id === productItem.m_licenseUuid){
                         licenseCB.currentIndex = i;
 
@@ -76,9 +76,9 @@ ViewBase {
 
             let licenseUuid = productItem.m_id;
 
-            if (createdLicenseCb.model){
-                for (let i = 0; i < createdLicenseCb.model.getItemsCount(); i++){
-                    let id = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
+			if (createdLicenseCb.sourceModel){
+				for (let i = 0; i < createdLicenseCb.sourceModel.getItemsCount(); i++){
+					let id = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
 
                     if (id === licenseUuid){
                         createdLicenseCb.currentIndex = i;
@@ -96,14 +96,14 @@ ViewBase {
         productItem.m_isNew = isNewSoftware;
 
         if (isNewSoftware){
-            if (licenseCB.currentIndex >= 0 && licenseCB.model){
-                let selectedId = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_id, licenseCB.currentIndex);
+			if (licenseCB.currentIndex >= 0 && licenseCB.sourceModel){
+				let selectedId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, licenseCB.currentIndex);
                 productItem.m_licenseUuid = selectedId;
 
-                let licenseId = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, licenseCB.currentIndex);
+				let licenseId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, licenseCB.currentIndex);
                 productItem.m_licenseId = licenseId;
 
-                let licenseName = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, licenseCB.currentIndex);
+				let licenseName = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, licenseCB.currentIndex);
                 productItem.m_licenseName = licenseName;
             }
             else{
@@ -129,22 +129,22 @@ ViewBase {
             productItem.m_expiration = "";
 
             if (createdLicenseCb.currentIndex >= 0){
-                let id = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_id, createdLicenseCb.currentIndex);
+				let id = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, createdLicenseCb.currentIndex);
                 productItem.m_id = id;
 
-                let licenseUuid = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, createdLicenseCb.currentIndex);
+				let licenseUuid = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, createdLicenseCb.currentIndex);
                 productItem.m_licenseUuid = licenseUuid;
 
-                let licenseID = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, createdLicenseCb.currentIndex);
+				let licenseID = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, createdLicenseCb.currentIndex);
                 productItem.m_licenseId = licenseID;
 
-                let licenseName = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, createdLicenseCb.currentIndex);
+				let licenseName = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, createdLicenseCb.currentIndex);
                 productItem.m_licenseName = licenseName;
 
-                let serialNumber = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, createdLicenseCb.currentIndex);
+				let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, createdLicenseCb.currentIndex);
                 productItem.m_serialNumber = serialNumber;
 
-                let expiration = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_expiration, createdLicenseCb.currentIndex);
+				let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, createdLicenseCb.currentIndex);
                 productItem.m_expiration = expiration;
             }
         }
@@ -186,7 +186,7 @@ ViewBase {
             width: parent.width;
             controlWidth: 500;
 
-            model: root.softwaresModel;
+			sourceModel: root.softwaresModel;
 
             changeable: !root.readOnly;
 
@@ -214,26 +214,26 @@ ViewBase {
 
             onCurrentIndexChanged: {
                 if (currentIndex >= 0){
-                    if (createdLicenseCb.model.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)){
-                        let licenseName = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)
+					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)){
+						let licenseName = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)
 
                         typeValue.text = licenseName;
                     }
 
-                    if (createdLicenseCb.model.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
-                        let licenseId = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
+					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
+						let licenseId = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
 
                         articleValue.text = licenseId;
                     }
 
-                    if (createdLicenseCb.model.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)){
-                        let serialNumber = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)
+					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)){
+						let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)
 
                         softwareValue.text = serialNumber;
                     }
 
-                    if (createdLicenseCb.model.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)){
-                        let expiration = createdLicenseCb.model.getData(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)
+					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)){
+						let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)
 
                         if (expiration === ""){
                             expirationValue.text = qsTr("Unlimited");
@@ -297,7 +297,7 @@ ViewBase {
                 name: qsTr("License Types");
                 nameId: SoftwareProductItemTypeMetaInfo.s_licenseName;
 
-                model: root.productLicensesModel;
+				sourceModel: root.productLicensesModel;
 
                 changeable: !root.readOnly;
 
@@ -316,8 +316,8 @@ ViewBase {
 
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0){
-                        if (licenseCB.model.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
-                            let licenseId = licenseCB.model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
+						if (licenseCB.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
+							let licenseId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
 
                             newArticleValue.text = licenseId
                         }
@@ -352,18 +352,6 @@ ViewBase {
                 readOnly: root.readOnly;
 
                 visible: licenseCB.currentIndex >= 0;
-
-//                Component.onCompleted: {
-//                    if (!root.readOnly){
-//                        let ok = PermissionsController.checkPermission("ChangeLicenseNumber");
-//                        let canEditOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
-//                        if (canEditOrder){
-//                            ok = true;
-//                        }
-
-//                        serialNumberInput.readOnly = !ok;
-//                    }
-//                }
 
                 onEditingFinished: {
                     root.doUpdateModel();

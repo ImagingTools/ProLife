@@ -145,9 +145,9 @@ ViewBase {
         ordersCB.currentIndex = -1;
 
         let orderUuid = softwareProductData.m_orderUuid;
-        if (ordersCB.model){
-            for (let i = 0; i < ordersCB.model.getItemsCount(); i++){
-                let id = ordersCB.model.getData("Id", i);
+		if (ordersCB.sourceModel){
+			for (let i = 0; i < ordersCB.sourceModel.getItemsCount(); i++){
+				let id = ordersCB.sourceModel.getData("Id", i);
                 if (id === orderUuid){
                     ordersCB.currentIndex = i;
                     break;
@@ -181,9 +181,9 @@ ViewBase {
 
         let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense");
         if (canChangeOrder){
-            if (ordersCB.model){
+			if (ordersCB.sourceModel){
                 if (ordersCB.currentIndex >= 0){
-                    let orderUuid = ordersCB.model.getData("Id", ordersCB.currentIndex);
+					let orderUuid = ordersCB.sourceModel.getData("Id", ordersCB.currentIndex);
                     softwareProductData.m_orderUuid = orderUuid;
                 }
                 else{
@@ -313,9 +313,10 @@ ViewBase {
                     nameId: "OrderId";
                     name: qsTr("Order");
 
-                    filteringFields: ["OrderId", "OrderCustomer"];
+					filteringFields: ["OrderId", "OrderCustomer"];
 
-                    model: CachedOrderCollection.collectionModel;
+					// model: CachedOrderCollection.collectionModel;
+					sourceModel: CachedOrderCollection.collectionModel;
 
                     changeable: !root.readOnly;
 
@@ -323,17 +324,16 @@ ViewBase {
                     KeyNavigation.backtab: projectInput;
 
                     delegate: Component {
-                        FilterableComboBoxDelegate {
-                            width: comboBoxRef ? comboBoxRef.width : 0;
-                            comboBoxRef: ordersCB.cbRef;
-
+						FilterableComboBoxDelegate {
+							width: ordersCB.cbRef ? ordersCB.cbRef.width : 0;
                             description: qsTr("Customer") + ": " + model.OrderCustomer;
+							comboBoxRef: ordersCB.cbRef;
                         }
                     }
 
-                    onCurrentIndexChanged: {
-                        root.doUpdateModel();
-                    }
+					onFinished: {
+						root.doUpdateModel();
+					}
 
                     onModelChanged: {
                         root.doUpdateGui();

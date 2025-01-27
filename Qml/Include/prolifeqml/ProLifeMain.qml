@@ -39,18 +39,33 @@ ApplicationMain {
 
     WebSocketConnectionChecker {
         id: pumaConnectionChecker;
-        subscriptionManager: window.subscriptionManager;
-        subscriptionRequestId: "PumaWsConnection";
+		gqlCommandId: "PumaWsConnection";
+		subscriptionManager: window.subscriptionManager;
     }
 
     WebSocketConnectionChecker {
         id: lisaConnectionChecker;
-        subscriptionManager: window.subscriptionManager;
-        subscriptionRequestId: "LisaWsConnection";
-
+		gqlCommandId: "LisaWsConnection";
+		subscriptionManager: window.subscriptionManager;
         onStatusChanged: {
-            if (status === 2){
-				PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false);
+			if (status === 1){
+				if (!CachedProductCollection.completed){
+					CachedProductCollection.updateModel();
+				}
+
+				if (!CachedLicenseCollection.completed){
+					CachedLicenseCollection.updateModel();
+				}
+
+				console.log("Lisa connected");
+				if (PopupManager.messageIsOpened(gqlCommandId)){
+					PopupManager.closeMessage(gqlCommandId);
+				}
+			}
+			else if (status === 2){
+				if (!PopupManager.messageIsOpened(gqlCommandId)){
+					PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false, gqlCommandId);
+				}
             }
         }
     }
