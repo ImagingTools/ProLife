@@ -35,29 +35,6 @@ RemoteCollectionView {
 		}
 	}
 
-	Component {
-		id: tableDelegate;
-		TablePainterRowDelegateBase{
-			id: tableRowDelegateBase
-			tableItem: container.table
-			width: container.table.width
-			minHeight: container.table.itemHeight
-			readOnly: container.table.readOnly;
-		}
-	}
-
-	function drawStatusColumnDelegate(ctx, x, y, cellWidth, cellHeight, columnIndex, canvas){
-		let statusId = canvas.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, canvas.rowDelegate.rowIndex);
-		let source = deviceProductionStatus.getStatusIcon(statusId);
-
-		let ratio = 0.5;
-		ctx.save();
-		ctx.scale(ratio, ratio);
-		ctx.drawImage(source, x, y, 20 *1/ratio, 20*1/ratio);
-		// ctx.drawImage(source, x, y, 20, 20);
-		ctx.restore();
-	}
-
 	visibleMetaInfo: true;
 
 	Component.onCompleted: {
@@ -65,65 +42,6 @@ RemoteCollectionView {
 		collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
 
 		filterMenu.decorator = deviceCollectionFilterComp;
-	}
-
-	Component {
-		id: textFilterComp;
-		CustomTextField {
-			id: tfc;
-			textFieldRightMargin: iconClear.width + 2 * margin;
-			width: 270;
-			height: 30;
-			placeHolderText: qsTr("Enter some text to filter the item list");
-			ToolButton {
-				id: iconClear;
-
-				z: 999;
-
-				anchors.verticalCenter: tfc.verticalCenter;
-				anchors.right: tfc.right;
-				anchors.rightMargin: Style.margin;
-
-				width: Style.buttonWidthSmall;
-				height: width;
-
-				visible: tfc.text != "";
-
-				iconSource: "../../../" + Style.getIconPath("Icons/Close", Icon.State.On, Icon.Mode.Normal);
-				decorator: Component {
-					ToolButtonDecorator {
-						color: "transparent";
-						icon.width: 16;
-					}
-				}
-
-				onClicked: {
-					tfc.text = "";
-				}
-			}
-		}
-	}
-
-	Component {
-		id: accountFilterComp;
-
-		CustomTextField {
-			id: tfc;
-			width: 270;
-			height: 30;
-			placeHolderText: qsTr("Account");
-		}
-	}
-
-	Component {
-		id: licenseFilterComp;
-
-		CustomTextField {
-			id: tfc;
-			width: 270;
-			height: 30;
-			placeHolderText: qsTr("License");
-		}
 	}
 
 	Component {
@@ -203,11 +121,8 @@ RemoteCollectionView {
 				elide: Text.ElideRight;
 			}
 
-			onDraw: {
-				if (!rowDelegate){
-					return
-				}
-
+			onReused: {
+				console.log("onReused", rowIndex, rowDelegate);
 				if (rowIndex >= 0){
 					let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
 					image.source = deviceProductionStatus.getStatusIcon(statusId);
