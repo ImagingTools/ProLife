@@ -45,11 +45,7 @@ public:
 
 protected:
 	virtual sdl::imtbase::ImtCollection::CVisualStatus::V1_0 OnGetObjectVisualStatus(const sdl::prolife::Sensors::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CDevicesListPayload::V1_0 OnDevicesList(const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CDeviceDataPayload::V1_0 OnDeviceItem(const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CDeviceBindingData::V1_0 OnGetDeviceBinding(const sdl::prolife::Sensors::V1_0::CGetDeviceBindingGqlRequest& getDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 OnDeviceUpdate(const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::imtbase::ImtCollection::CAddedNotificationPayload::V1_0 OnDeviceAdd(const sdl::prolife::Sensors::V1_0::CDeviceAddGqlRequest& deviceAddRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 OnUpdateDeviceBinding(const sdl::prolife::Sensors::V1_0::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 OnTransferLicenses(const sdl::prolife::Sensors::V1_0::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 OnCreateLicenseFile(const sdl::prolife::Sensors::V1_0::CCreateLicenseFileGqlRequest& createLicenseFileRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;

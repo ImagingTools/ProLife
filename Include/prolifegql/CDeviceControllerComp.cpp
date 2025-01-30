@@ -38,24 +38,6 @@ sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceControllerComp::OnGetObj
 }
 
 
-sdl::prolife::Sensors::CDevicesListPayload::V1_0 CDeviceControllerComp::OnDevicesList(
-	const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& /*devicesListRequest*/,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
-{
-	return sdl::prolife::Sensors::CDevicesListPayload::V1_0();
-}
-
-
-sdl::prolife::Sensors::CDeviceDataPayload::V1_0 CDeviceControllerComp::OnDeviceItem(
-	const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& /*deviceItemRequest*/,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
-{
-	return sdl::prolife::Sensors::CDeviceDataPayload::V1_0();
-}
-
-
 sdl::prolife::Sensors::CDeviceBindingData::V1_0 CDeviceControllerComp::OnGetDeviceBinding(
 	const sdl::prolife::Sensors::V1_0::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
 	const ::imtgql::CGqlRequest& /*gqlRequest*/,
@@ -102,24 +84,6 @@ sdl::prolife::Sensors::CDeviceBindingData::V1_0 CDeviceControllerComp::OnGetDevi
 	response.SoftwareIds = softwareIds.join(';');
 
 	return response;
-}
-
-
-sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceControllerComp::OnDeviceUpdate(
-	const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& /*deviceUpdateRequest*/,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
-{
-	return sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0();
-}
-
-
-sdl::imtbase::ImtCollection::CAddedNotificationPayload::V1_0 CDeviceControllerComp::OnDeviceAdd(
-	const sdl::prolife::Sensors::V1_0::CDeviceAddGqlRequest& /*deviceAddRequest*/,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
-{
-	return sdl::imtbase::ImtCollection::CAddedNotificationPayload::V1_0();
 }
 
 
