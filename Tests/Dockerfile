@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 # Создаём рабочую папку
-WORKDIR C:\app
+WORKDIR C:\app\
 
 # Копируем файлы
 COPY D:\Temp\Qt6\ProLife\Tests\TestRunner.bat C:\app\TestRunner.bat
