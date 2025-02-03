@@ -1,8 +1,11 @@
 @echo off
 
-set PROLIFE_BACKUP_FILE="C:\Sybnavigation\ITDevelopment\ProLife\Tests\prolifetest.backup"
-set LISA_BACKUP_FILE="C:\Sybnavigation\ITDevelopment\ProLife\Tests\lisatest.backup"
-set PUMA_BACKUP_FILE="C:\Sybnavigation\ITDevelopment\ProLife\Tests\pumatest.backup"
+:: Запуск PostgreSQL
+NET START postgresql-x64-17
+
+set PROLIFE_BACKUP_FILE="C:\app\backups\prolifetest.backup"
+set LISA_BACKUP_FILE="C:\app\backups\lisatest.backup"
+set PUMA_BACKUP_FILE="C:\app\backups\pumatest.backup"
 set PROLIFE_DB_NAME="prolifetest"
 set LISA_DB_NAME="lisatest"
 set PUMA_DB_NAME="pumatest"
@@ -29,20 +32,20 @@ pg_restore -h localhost -p 5432 -U postgres -d %PUMA_DB_NAME% --verbose %PUMA_BA
 timeout /t 5
 
 rem Запуск процессов в отдельных окнах
-start "" "C:\Sybnavigation\ITDevelopment\Lisa\Bin\Debug_Qt6_VC17_x64\LisaServer.exe"
-start "" "C:\Sybnavigation\ITDevelopment\ProLife\Bin\Debug_Qt6_VC17_x64\ProLifeServer.exe"
-start "" "C:\Sybnavigation\ITDevelopment\Puma\Bin\Debug_Qt6_VC17_x64\PumaServer.exe"
+start "" "C:\app\Lisa\LisaServer.exe"
+start "" "C:\app\ProLife\ProLifeServer.exe"
+start "" "C:\app\Puma\PumaServer.exe"
 
 timeout /t 5
 
 echo Newman started
 rem Запуск тестов в Postman с помощью Newman
-call newman run "C:\Sybnavigation\ITDevelopment\ProLife\Tests\postman_collection.json"
+call newman run "C:\app\postman_collection.json"
 echo Newman ended
 
 rem Завершение процессов
-taskkill /IM "LisaServer.exe" /F
-taskkill /IM "ProLifeServer.exe" /F
-taskkill /IM "PumaServer.exe" /F
+taskkill /IM "C:\app\Lisa\LisaServer.exe" /F
+taskkill /IM "C:\app\ProLife\ProLifeServer.exe" /F
+taskkill /IM "C:\app\Puma\PumaServer.exe" /F
 
 pause
