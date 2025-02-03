@@ -475,6 +475,13 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		serialNumber = *representation.SerialNumber;
 	}
 
+	if (serialNumber.isEmpty()){
+		errorMessage = QString("Serial Number cannot be empty");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+		return false;
+	}
+
 	if (!serialNumber.isEmpty()){
 		bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectId, serialNumber, *m_objectCollectionCompPtr);
 		if (!ok){
@@ -494,6 +501,26 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 
 	if (productId.isEmpty()){
 		errorMessage = QString("Product cannot be empty!");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+		return false;
+	}
+
+	bool ok = false;
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr productDataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+			imtlic::IProductInfo* remoteProductInfoPtr = dynamic_cast<imtlic::IProductInfo*>(productDataPtr.GetPtr());
+			if (remoteProductInfoPtr != nullptr){
+				if (remoteProductInfoPtr->GetCategoryId() == "Software"){
+					ok = true;
+				}
+			}
+		}
+	}
+
+	if (!ok){
+		errorMessage = QString("Product category should be 'Software'");
 		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
 
 		return false;
@@ -535,6 +562,13 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	QByteArray licenseUuid;
 	if (representation.LicenseUuid){
 		licenseUuid = *representation.LicenseUuid;
+	}
+
+	if (licenseUuid.isEmpty()){
+		errorMessage = QString("License cannot be empty");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+		return false;
 	}
 
 	QString expiration = *representation.Expiration;

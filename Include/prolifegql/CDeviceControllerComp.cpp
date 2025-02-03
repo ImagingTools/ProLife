@@ -98,13 +98,25 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData = *updateDeviceBindingRequest.GetRequestedArguments().input.Item;
 	QString project = *updateDeviceBindingRequest.GetRequestedArguments().input.Project;
 
-	prolifedata::CHardwareProductBinding* deviceBindingInfoPtr = nullptr;
+	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
-		deviceBindingInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(dataPtr.GetPtr());
+		deviceBindingInfoPtr.SetCastedOrRemove(dataPtr.GetPtr(), false);
 	}
 
-	if (deviceBindingInfoPtr == nullptr){
+	if (!deviceBindingInfoPtr.IsValid()){
+		prolifedata::CHardwareProductBinding* deviceBindingPtr = new prolifedata::CHardwareProductBinding();
+		deviceBindingPtr->SetHardwareId(deviceId);
+
+		deviceBindingInfoPtr.SetPtr(deviceBindingPtr, true);
+
+		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
+		if (result.isEmpty()){
+			SendWarningMessage(0, QString("Unable to insert hardware binding object to collection"), "CDeviceControllerComp");
+		}
+	}
+
+	if (!deviceBindingInfoPtr.IsValid()){
 		errorMessage = QString("Unable to update device binding. Error: Device is invalid");
 		return response;
 	}
@@ -126,6 +138,57 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 	for (const QByteArray& id : hardwareBindingSoftwareIds){
 		if (!newHardwareBindingSoftwareIds.contains(id)){
 			removedLicenses << id;
+		}
+	}
+
+	// Check product-ID
+	QByteArray prevProductId;
+	for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
+		imtbase::IObjectCollection::DataPtr softwareDataPtr;
+		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+			const imtlic::IProductInstanceInfo* productInstanceInfoPtr
+				= dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				QByteArray productId = productInstanceInfoPtr->GetProductId();
+				if (prevProductId.isEmpty()){
+					prevProductId = productId;
+				}
+				else{
+					if (prevProductId != productId){
+						errorMessage = QString("Unable to update device binding. Error: Licenses must be of the same product");
+						return response;
+					}
+				}
+			}
+		}
+	}
+
+	// Check licenses
+	for (int i = 0; i < newHardwareBindingSoftwareIds.size(); i++){
+		imtbase::IObjectCollection::DataPtr softwareDataPtr;
+		if (m_softwareProductCollectionCompPtr->GetObjectData(newHardwareBindingSoftwareIds[i], softwareDataPtr)){
+			const imtlic::IProductInstanceInfo* productInstanceInfoPtr
+				= dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				imtbase::ICollectionInfo::Ids licenseIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
+
+				for (int j = i + 1; j < newHardwareBindingSoftwareIds.size(); j++){
+					imtbase::IObjectCollection::DataPtr softwareDataPtr2;
+					if (m_softwareProductCollectionCompPtr->GetObjectData(newHardwareBindingSoftwareIds[j], softwareDataPtr2)){
+						const imtlic::IProductInstanceInfo* productInstanceInfoPtr2
+							= dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr2.GetPtr());
+						if (productInstanceInfoPtr2 != nullptr){
+							imtbase::ICollectionInfo::Ids licenseIds2 = productInstanceInfoPtr2->GetLicenseInstances().GetElementIds();
+							for (const imtbase::ICollectionInfo::Id& licenseId: licenseIds){
+								if (licenseIds2.contains(licenseId)){
+									errorMessage = QString("Unable to update device binding. Error: The same licenses are selected");
+									return response;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -202,6 +265,18 @@ sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 CDeviceControllerComp::OnT
 		return response;
 	}
 
+	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = fromDeviceInfoPtr->GetDeviceProductionStatus();
+	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_DEFECTED){
+		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Production status for device '%1' should be 'Defected'")
+						   .arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
+		return response;
+	}
+
+	if (fromDeviceId == toDeviceId){
+		errorMessage = QString("It is not possible to transfer licenses to the same device");
+		return response;
+	}
+
 	QByteArray projectId = fromDeviceInfoPtr->GetProject();
 
 	QByteArrayList fromDeviceSoftwareIds = fromDeviceBindingInfoPtr->GetSoftwareIds();
@@ -266,6 +341,13 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 	prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 	if (deviceInfoPtr == nullptr){
 		Q_ASSERT(false);
+		return response;
+	}
+
+	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = deviceInfoPtr->GetDeviceProductionStatus();
+	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_FINISHED){
+		errorMessage = QString("Unable to create license file for hardware '%1'. Error: Production status should be 'Finished'").arg(qPrintable(deviceId));
+		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 		return response;
 	}
 

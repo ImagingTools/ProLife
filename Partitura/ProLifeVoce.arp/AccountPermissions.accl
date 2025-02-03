@@ -2,14 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="AccountCommands" X="875" Y="375" Note=""/>
+        <Element ComponentName="AccountItem" X="550" Y="475" Note=""/>
         <Element ComponentName="AccountUpdate" X="875" Y="275" Note=""/>
         <Element ComponentName="AccountsAdd" X="200" Y="275" Note=""/>
+        <Element ComponentName="AccountsCommands" X="875" Y="475" Note=""/>
         <Element ComponentName="AccountsInfo" X="550" Y="275" Note=""/>
         <Element ComponentName="AccountsList" X="550" Y="375" Note=""/>
         <Element ComponentName="AccountsRemove" X="200" Y="375" Note=""/>

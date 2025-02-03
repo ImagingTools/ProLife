@@ -708,10 +708,19 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 		deviceInfoPtr->SetDeviceProductionStatus(productionStatus);
 	}
 
+	QString licenseName;
 	if (representation.LicenseName){
-		QString licenseName = *representation.LicenseName;
-		deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
+		licenseName = *representation.LicenseName;
 	}
+
+	if (licenseName.isEmpty()){
+		errorMessage = QString("Configuration cannot be empty");
+		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+
+		return false;
+	}
+
+	deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
 
 	QString deviceType;
 	if (representation.DeviceType){

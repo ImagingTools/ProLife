@@ -230,7 +230,9 @@ bool CDeviceDatabaseDelegateComp::CreateSortQuery(const imtbase::ICollectionFilt
 						WHEN "Document"->>'Status' = 'canceled' THEN 3
 						WHEN "Document"->>'Status' = 'onHold' THEN 4
 						WHEN "Document"->>'Status' = 'finished' THEN 5
-						ELSE 6 END %1)")
+						WHEN "Document"->>'Status' = 'inRepair' THEN 6
+						WHEN "Document"->>'Status' = 'decommissioned' THEN 7
+						ELSE 8 END %1)")
 					.arg(qPrintable(sortOrder));
 		}
 		else{

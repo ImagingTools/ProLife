@@ -230,7 +230,22 @@ QString CDeviceChangeGeneratorComp::GetSoftwareName(const QByteArray& softwareId
 		if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
 			const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
 			if (productInstanceInfoPtr != nullptr){
-				return productInstanceInfoPtr->GetSerialNumber();
+				QByteArray productId = productInstanceInfoPtr->GetProductId();
+				QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
+				QString productName = GetProductName(productId);
+
+				if (!productName.isEmpty() && !serialNumber.isEmpty()){
+					return productName + " (" + serialNumber + ")";
+				}
+				else if (!productName.isEmpty() && serialNumber.isEmpty()){
+					return productName;
+				}
+
+				else if (productName.isEmpty() && !serialNumber.isEmpty()){
+					return serialNumber;
+				}
+
+				return softwareId;
 			}
 		}
 	}
