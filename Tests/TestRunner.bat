@@ -41,8 +41,8 @@ call newman run "D:\Temp\Qt6\ProLife\Tests\postman_collection.json"
 echo Newman ended
 
 rem Завершение процессов
-taskkill /IM "D:\Temp\Qt6\Lisa\Bin\Release_Qt6_VC17_x64\LisaServer.exe" /F
-taskkill /IM "D:\Temp\Qt6\ProLife\Bin\Release_Qt6_VC17_x64\ProLifeServer.exe" /F
-taskkill /IM "D:\Temp\Qt6\Puma\Bin\Release_Qt6_VC17_x64\PumaServer.exe" /F
+taskkill /IM "LisaServer.exe" /F
+taskkill /IM "ProLifeServer.exe" /F
+taskkill /IM "PumaServer.exe" /F
 
 pause
