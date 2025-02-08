@@ -15,11 +15,11 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const sdl::prolife::Accounts::V1_0::CAccountsListGqlRequest& accountsListRequest,
+			const sdl::prolife::Accounts::CAccountsListGqlRequest& accountsListRequest,
 			sdl::prolife::Accounts::CAccountItem::V1_0& representationObject,
 			QString& errorMessage) const
 {
@@ -30,7 +30,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Accounts::V1_0::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
+	sdl::prolife::Accounts::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -131,7 +131,7 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const sdl::prolife::Accounts::V1_0::CAccountItemGqlRequest& accountItemRequest,
+			const sdl::prolife::Accounts::CAccountItemGqlRequest& accountItemRequest,
 			sdl::prolife::Accounts::CAccountDataPayload::V1_0& representationPayload,
 			QString& errorMessage) const
 {
@@ -143,13 +143,18 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Accounts::V1_0::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
+	sdl::prolife::Accounts::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return false;
+	}
 
 	sdl::prolife::Accounts::CAccountData::V1_0 accountData;
 
 	QByteArray id;
-	if (arguments.input.Id){
-		id = *arguments.input.Id;
+	if (arguments.input.Version_1_0->Id){
+		id = *arguments.input.Version_1_0->Id;
 	}
 
 	accountData.Id = (id);
@@ -262,16 +267,25 @@ void CCustomerCollectionControllerComp::SetObjectFilter(
 
 bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 			const imtgql::CGqlRequest& /*rawGqlRequest*/,
-			const sdl::prolife::Accounts::V1_0::CAccountUpdateGqlRequest& accountUpdateRequest,
+			const sdl::prolife::Accounts::CAccountUpdateGqlRequest& accountUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
 {
-	sdl::prolife::Accounts::CAccountData::V1_0 accountData = *accountUpdateRequest.GetRequestedArguments().input.Item;
-	QByteArray objectId = *accountUpdateRequest.GetRequestedArguments().input.Id;
+	sdl::prolife::Accounts::AccountUpdateRequestArguments requestArguments = accountUpdateRequest.GetRequestedArguments();
+	if (!requestArguments.input.Version_1_0){
+		I_CRITICAL();
 
-	prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(&object);
-	if (customerInfoPtr == nullptr){
-		errorMessage = QString("Unable to cast company info to customer info. Error: Invalid object");
+		return false;
+	}
+
+	const sdl::prolife::Accounts::CAccountData::V1_0& accountData = *accountUpdateRequest.GetRequestedArguments().input.Version_1_0->Item;
+	QByteArray objectId = *accountData.Id;
+
+	prolifedata::CCustomerInfo *customerInfoPtr =
+		dynamic_cast<prolifedata::CCustomerInfo *>(&object);
+	if (customerInfoPtr == nullptr) {
+		errorMessage = QString(
+			"Unable to cast company info to customer info. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 
 		return false;

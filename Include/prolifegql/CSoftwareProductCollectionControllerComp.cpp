@@ -25,17 +25,23 @@ namespace prolifegql
 
 // protected methods
 
-sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CSoftwareProductCollectionControllerComp::OnGetObjectVisualStatus(
-	const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerComp::OnGetObjectVisualStatus(
+	const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CSoftwareProductCollectionControllerComp");
-		return sdl::imtbase::ImtCollection::CVisualStatus::V1_0();
+		return sdl::imtbase::ImtCollection::CVisualStatus();
 	}
 
-	sdl::imtbase::ImtCollection::CVisualStatus::V1_0 response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	if (!retVal.Version_1_0){
+		I_CRITICAL();
+
+		return retVal;
+	}
+	sdl::imtbase::ImtCollection::CVisualStatus::V1_0& response = *retVal.Version_1_0;
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(*response.ObjectId, dataPtr)){
@@ -64,19 +70,19 @@ sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CSoftwareProductCollectionContr
 		}
 	}
 
-	return response;
+	return retVal;
 }
 
 
-// reimplemented (sdl::prolife::Licenses::V1_0::CSoftwareProductCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase)
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const sdl::prolife::Licenses::V1_0::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+	const sdl::prolife::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
 	sdl::prolife::Licenses::CSoftwareProductItem::V1_0& representationObject,
 	QString& errorMessage) const
 {
-	sdl::prolife::Licenses::V1_0::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
+	sdl::prolife::Licenses::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -311,7 +317,7 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
-	const sdl::prolife::Licenses::V1_0::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+	const sdl::prolife::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
 	sdl::prolife::Licenses::CSoftwareProductDataPayload::V1_0& representationPayload,
 	QString& errorMessage) const
 {
@@ -323,13 +329,18 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Licenses::V1_0::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
+	sdl::prolife::Licenses::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return false;
+	}
 
 	sdl::prolife::Licenses::CSoftwareProductData::V1_0 softwareProductData;
 
 	QByteArray id;
-	if (arguments.input.Id){
-		id = *arguments.input.Id;
+	if (arguments.input.Version_1_0->Id){
+		id = *arguments.input.Version_1_0->Id;
 	}
 
 	softwareProductData.Id = (id);
@@ -811,7 +822,7 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 
 bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	const imtgql::CGqlRequest& /*rawGqlRequest*/,
-	const sdl::prolife::Licenses::V1_0::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
+	const sdl::prolife::Licenses::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
 {
@@ -820,8 +831,15 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		return false;
 	}
 
-	sdl::prolife::Licenses::CSoftwareProductData::V1_0 softwareData = *softwareProductUpdateRequest.GetRequestedArguments().input.Item;
-	QByteArray objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Id;
+	sdl::prolife::Licenses::SoftwareProductUpdateRequestArguments requestArguments = softwareProductUpdateRequest.GetRequestedArguments();
+	if (!requestArguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return false;
+	}
+
+	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareData = *requestArguments.input.Version_1_0->Item;
+	QByteArray objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
 
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&object);
 	if (softwareInfoPtr == nullptr){

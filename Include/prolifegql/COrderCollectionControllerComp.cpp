@@ -162,11 +162,11 @@ void COrderCollectionControllerComp::GenerateDifferences(
 }
 
 
-// reimplemented (sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase)
+// reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
+	const sdl::prolife::Orders::COrdersListGqlRequest& ordersListRequest,
 	sdl::prolife::Orders::COrderItem::V1_0& representationObject,
 	QString& errorMessage) const
 {
@@ -175,7 +175,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Orders::V1_0::OrdersListRequestInfo requestInfo = ordersListRequest.GetRequestInfo();
+	sdl::prolife::Orders::OrdersListRequestInfo requestInfo = ordersListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -316,7 +316,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
-	const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
+	const sdl::prolife::Orders::COrderItemGqlRequest& orderItemRequest,
 	sdl::prolife::Orders::COrderDataPayload::V1_0& representationPayload,
 	QString& errorMessage) const
 {
@@ -328,12 +328,18 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Orders::V1_0::OrderItemRequestArguments arguments = orderItemRequest.GetRequestedArguments();
+	sdl::prolife::Orders::OrderItemRequestArguments arguments = orderItemRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return false;
+	}
+
 	sdl::prolife::Orders::COrderData::V1_0 orderData;
 
 	QByteArray id;
-	if (arguments.input.Id){
-		id = *arguments.input.Id;
+	if (arguments.input.Version_1_0->Id){
+		id = *arguments.input.Version_1_0->Id;
 	}
 	orderData.Id = std::make_optional<QByteArray>(id);
 
@@ -494,15 +500,24 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	const imtgql::CGqlRequest& /*rawGqlRequest*/,
-	const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest,
+	const sdl::prolife::Orders::COrderUpdateGqlRequest& orderUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
 {
-	sdl::prolife::Orders::COrderData::V1_0 orderData = *orderUpdateRequest.GetRequestedArguments().input.Item;
-	QByteArray objectId = *orderUpdateRequest.GetRequestedArguments().input.Id;
+	sdl::prolife::Orders::OrderUpdateRequestArguments inputArguments = orderUpdateRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		I_CRITICAL();
 
-	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(object));
-	if (orderInfoPtr == nullptr){
+		return false;
+	}
+
+	sdl::prolife::Orders::COrderData::V1_0 orderData = *inputArguments.input.Version_1_0->Item;
+	QByteArray objectId = *orderUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
+
+	prolifedata::CIdentifiableOrderInfo *orderInfoPtr =
+		dynamic_cast<prolifedata::CIdentifiableOrderInfo *>(
+		&const_cast<istd::IChangeable &>(object));
+	if (orderInfoPtr == nullptr) {
 		errorMessage = QString("Object is invalid");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
 

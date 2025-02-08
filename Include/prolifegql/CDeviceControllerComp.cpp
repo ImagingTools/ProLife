@@ -29,23 +29,32 @@ namespace prolifegql
 
 // protected methods
 
-sdl::imtbase::ImtCollection::CVisualStatus::V1_0 CDeviceControllerComp::OnGetObjectVisualStatus(
-	const sdl::prolife::Sensors::V1_0::CGetObjectVisualStatusGqlRequest& /*getObjectVisualStatusRequest*/,
+sdl::imtbase::ImtCollection::CVisualStatus CDeviceControllerComp::OnGetObjectVisualStatus(
+	const sdl::prolife::Sensors::CGetObjectVisualStatusGqlRequest& /*getObjectVisualStatusRequest*/,
 	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& /*errorMessage*/) const
 {
-	return sdl::imtbase::ImtCollection::CVisualStatus::V1_0();
+	return sdl::imtbase::ImtCollection::CVisualStatus();
 }
 
 
-sdl::prolife::Sensors::CDeviceBindingData::V1_0 CDeviceControllerComp::OnGetDeviceBinding(
-	const sdl::prolife::Sensors::V1_0::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
+sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
+	const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
 	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& /*errorMessage*/) const
 {
-	sdl::prolife::Sensors::CDeviceBindingData::V1_0 response;
+	sdl::prolife::Sensors::CDeviceBindingData retVal;
 
-	QByteArray deviceId = *getDeviceBindingRequest.GetRequestedArguments().input.Id;
+	auto inputArguments = getDeviceBindingRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return retVal;
+	}
+
+	sdl::prolife::Sensors::CDeviceBindingData::V1_0& response = retVal.Version_1_0.emplace();
+
+	QByteArray deviceId = *inputArguments.input.Version_1_0->Id;
 
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
@@ -83,20 +92,29 @@ sdl::prolife::Sensors::CDeviceBindingData::V1_0 CDeviceControllerComp::OnGetDevi
 	response.Id = deviceId;
 	response.SoftwareIds = softwareIds.join(';');
 
-	return response;
+	return retVal;
 }
 
 
-sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceControllerComp::OnUpdateDeviceBinding(
-	const sdl::prolife::Sensors::V1_0::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
+sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
+	const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 response;
+	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload retVal;
 
-	QByteArray deviceId = *updateDeviceBindingRequest.GetRequestedArguments().input.DeviceId;
-	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData = *updateDeviceBindingRequest.GetRequestedArguments().input.Item;
-	QString project = *updateDeviceBindingRequest.GetRequestedArguments().input.Project;
+	sdl::prolife::Sensors::UpdateDeviceBindingRequestArguments inputArguments = updateDeviceBindingRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return retVal;
+	}
+
+	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0& response = retVal.Version_1_0.emplace();
+
+	QByteArray deviceId = *inputArguments.input.Version_1_0->DeviceId;
+	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData = *inputArguments.input.Version_1_0->Item;
+	QString project = *inputArguments.input.Version_1_0->Project;
 
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
@@ -118,7 +136,8 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 
 	if (!deviceBindingInfoPtr.IsValid()){
 		errorMessage = QString("Unable to update device binding. Error: Device is invalid");
-		return response;
+
+		return retVal;
 	}
 
 	response.Id = deviceId;
@@ -156,7 +175,8 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 				else{
 					if (prevProductId != productId){
 						errorMessage = QString("Unable to update device binding. Error: Licenses must be of the same product");
-						return response;
+
+						return retVal;
 					}
 				}
 			}
@@ -182,7 +202,8 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 							for (const imtbase::ICollectionInfo::Id& licenseId: licenseIds){
 								if (licenseIds2.contains(licenseId)){
 									errorMessage = QString("Unable to update device binding. Error: The same licenses are selected");
-									return response;
+
+									return retVal;
 								}
 							}
 						}
@@ -212,7 +233,8 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 						errorMessage = QString("Unable to update software instance object.");
 						SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-						return response;
+
+						return retVal;
 					}
 				}
 			}
@@ -227,31 +249,40 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0 CDeviceController
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
-	return response;
+	return retVal;
 }
 
 
-sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 CDeviceControllerComp::OnTransferLicenses(
-	const sdl::prolife::Sensors::V1_0::CTransferLicensesGqlRequest& transferLicensesRequest,
+sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
+	const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 response;
+	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
+	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		I_CRITICAL();
 
-	QByteArray fromDeviceId = *transferLicensesRequest.GetRequestedArguments().input.FromDeviceId;
-	QByteArray toDeviceId = *transferLicensesRequest.GetRequestedArguments().input.ToDeviceId;
+		return retVal;
+	}
+
+	sdl::prolife::Sensors::CTransferLicensesPayload::V1_0& response = retVal.Version_1_0.emplace();
+
+	QByteArray fromDeviceId = *inputArguments.input.Version_1_0->FromDeviceId;
+	QByteArray toDeviceId = *inputArguments.input.Version_1_0->ToDeviceId;
 
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
 	if (!fromDeviceBindingInfoPtr.IsValid()){
-		return response;
+		return retVal;
 	}
 
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> toDeviceBindingInfoPtr = GetOrCreateDeviceBinding(toDeviceId);
 	if (!toDeviceBindingInfoPtr.IsValid()){
-		return response;
+		return retVal;
 	}
 
 	prolifedata::IDeviceInfo* fromDeviceInfoPtr = nullptr;
@@ -262,19 +293,22 @@ sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 CDeviceControllerComp::OnT
 
 	if (fromDeviceInfoPtr == nullptr){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%1' not exists").arg(qPrintable(fromDeviceId)).arg(qPrintable(toDeviceId));
-		return response;
+
+		return retVal;
 	}
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = fromDeviceInfoPtr->GetDeviceProductionStatus();
 	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_DEFECTED){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Production status for device '%1' should be 'Defected'")
 						   .arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
-		return response;
+
+		return retVal;
 	}
 
 	if (fromDeviceId == toDeviceId){
 		errorMessage = QString("It is not possible to transfer licenses to the same device");
-		return response;
+
+		return retVal;
 	}
 
 	QByteArray projectId = fromDeviceInfoPtr->GetProject();
@@ -284,7 +318,8 @@ sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 CDeviceControllerComp::OnT
 
 	if (!toDeviceSoftwareIds.isEmpty()){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%2' already contains licenses").arg(qPrintable(fromDeviceId)).arg(qPrintable(toDeviceId));
-		return response;
+
+		return retVal;
 	}
 
 	CreateDeviceOperationContext(fromDeviceId, "", QByteArrayList(), fromDeviceSoftwareIds);
@@ -299,35 +334,44 @@ sdl::prolife::Sensors::CTransferLicensesPayload::V1_0 CDeviceControllerComp::OnT
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
-	return response;
+	return retVal;
 }
 
 
-sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::OnCreateLicenseFile(
-	const sdl::prolife::Sensors::V1_0::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
+sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLicenseFile(
+	const sdl::prolife::Sensors::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 response;
+	sdl::prolife::Sensors::CCreateLicenseFilePayload retVal;
+	sdl::prolife::Sensors::CreateLicenseFileRequestArguments arguments = createLicenseFileRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		I_CRITICAL();
 
-	sdl::prolife::Sensors::V1_0::CreateLicenseFileRequestArguments arguments = createLicenseFileRequest.GetRequestedArguments();
+		return retVal;
+	}
+
+	sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 response = retVal.Version_1_0.emplace();
+
 	QByteArray deviceId;
-	if (arguments.input.DeviceId){
-		deviceId = *arguments.input.DeviceId;
+	if (arguments.input.Version_1_0->DeviceId){
+		deviceId = *arguments.input.Version_1_0->DeviceId;
 	}
 
 	bool encrypt = true;
-	if (arguments.input.Encrypt){
-		encrypt = *arguments.input.Encrypt;
+	if (arguments.input.Version_1_0->Encrypt){
+		encrypt = *arguments.input.Version_1_0->Encrypt;
 	}
 
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
@@ -335,20 +379,22 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: Hardware object is invalid").arg(qPrintable(deviceId));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 	if (deviceInfoPtr == nullptr){
 		Q_ASSERT(false);
-		return response;
+
+		return retVal;
 	}
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = deviceInfoPtr->GetDeviceProductionStatus();
 	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_FINISHED){
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: Production status should be 'Finished'").arg(qPrintable(deviceId));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
@@ -356,7 +402,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: MAC Address is invalid").arg(qPrintable(deviceId));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	prolifedata::IHardwareProductBinding* bindingInfoPtr = nullptr;
@@ -369,7 +415,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: There are no licenses for this sensor").arg(qPrintable(deviceId));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
@@ -377,7 +423,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: There are no licenses for this sensor").arg(qPrintable(deviceId));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	QByteArray productUuid;
@@ -394,7 +440,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 					errorMessage = QString("Unable to create license file for hardware '%1'. Error: Licenses are linked to different products").arg(qPrintable(deviceId));
 					SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-					return response;
+					return retVal;
 				}
 			}
 		}
@@ -425,7 +471,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		if (productInstanceInfoPtr == nullptr){
 			errorMessage = QString("Unable to create license file for hardware '%1'. Error: Linked software '%2' is invalid").arg(qPrintable(deviceId)).arg(qPrintable(softwareId));
 			SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
-			return response;
+
+			return retVal;
 		}
 
 		const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
@@ -434,7 +481,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 			if (licenseInstancePtr == nullptr){
 				errorMessage = QString("Unable to create license file for hardware '%1'. Error: License '%2' is invalid").arg(qPrintable(deviceId)).arg(qPrintable(licenseCollectionId));
 				SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
-				return response;
+
+				return retVal;
 			}
 
 			imtlic::ILicenseDefinition* licenseDefinitionPtr = nullptr;
@@ -446,7 +494,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 			if (licenseDefinitionPtr == nullptr){
 				errorMessage = QString("Unable to create license file for hardware '%1'. Error: License '%2' is invalid").arg(qPrintable(deviceId)).arg(qPrintable(licenseCollectionId));
 				SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
-				return response;
+
+				return retVal;
 			}
 
 			QByteArray licenseId = licenseDefinitionPtr->GetLicenseId();
@@ -458,7 +507,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 			imtlic::ILicenseInstance* productLicenseInstancePtr = const_cast<imtlic::ILicenseInstance*>(productInstancePtr->GetLicenseInstance(licenseId));
 			if (productLicenseInstancePtr == nullptr){
 				Q_ASSERT(false);
-				return response;
+
+				return retVal;
 			}
 
 			productLicenseInstancePtr->SetLicenseName(licenseName);
@@ -536,14 +586,15 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 	if (filePersistencePtr == nullptr){
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: File persistence is invalid").arg(qPrintable(macAddress));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
 	int state = filePersistencePtr->SaveToFile(*productInstancePtr, filePathTmp);
 	if (state != ifile::IFilePersistence::OS_OK){
 		SendErrorMessage(0, "License file could not be saved", "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	QFile file(filePathTmp);
@@ -552,7 +603,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: File '%1' could not be open").arg(qPrintable(deviceId)).arg(qPrintable(filePathTmp));
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 
-		return response;
+		return retVal;
 	}
 
 	QByteArray originalData = file.readAll();
@@ -604,49 +655,57 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 CDeviceControllerComp::On
 
 	SendInfoMessage(0, QString("License file for hardware '%1' successfully created. User: '%2'").arg(QString(macAddress)).arg(username), "CDeviceControllerComp");
 
-	return response;
+	return retVal;
 }
 
 
-sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 CDeviceControllerComp::OnDecryptLicenseFile(
-	const sdl::prolife::Sensors::V1_0::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecryptLicenseFile(
+	const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 response;
+	sdl::prolife::Sensors::CDecryptLicenseFilePayload retVal;
+	sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0& response = retVal.Version_1_0.emplace();
 
 	if (!m_encryptionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'Encryption' was not set", "CDeviceControllerComp");
-		return response;
+
+		return retVal;
 	}
 
 	const imtgql::IGqlContext* gqlContextPtr = decryptLicenseFileRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr){
 		errorMessage = QString("Unable to decrypt license file. Error: GraphQL context is invalid");
-		return response;
+		return retVal;
 	}
 
 	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr == nullptr){
 		errorMessage = QString("Unable to decrypt license file. Error: User info is invalid");
-		return response;
+		return retVal;
 	}
 
 	if (!userInfoPtr->IsAdmin()){
 		errorMessage = QString("Unable to decrypt license file. Error: Permission denied");
-		return response;
+		return retVal;
 	}
 
-	sdl::prolife::Sensors::V1_0::DecryptLicenseFileRequestArguments arguments = decryptLicenseFileRequest.GetRequestedArguments();
+	sdl::prolife::Sensors::DecryptLicenseFileRequestArguments arguments = decryptLicenseFileRequest.GetRequestedArguments();
+
+	if (!arguments.input.Version_1_0){
+		I_CRITICAL();
+
+		return retVal;
+	}
 
 	QByteArray encryptedData;
-	if (arguments.input.FileData){
-		encryptedData = *arguments.input.FileData;
+	if (arguments.input.Version_1_0->FileData){
+		encryptedData = *arguments.input.Version_1_0->FileData;
 	}
 
 	QByteArray encryptionKey;
-	if (arguments.input.Key){
-		encryptionKey = *arguments.input.Key;
+	if (arguments.input.Version_1_0->Key){
+		encryptionKey = *arguments.input.Version_1_0->Key;
 	}
 
 	m_productInstanceId = encryptionKey;
@@ -656,14 +715,14 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0 CDeviceControllerComp::O
 	QByteArray decryptedData;
 	if (!m_encryptionCompPtr->DecryptData(encryptedData, imtcrypt::IEncryption::EA_AES, *this, decryptedData)){
 		errorMessage = QString("Unable to decrypt license file. Error: Decryption data failed");
-		return response;
+		return retVal;
 	}
 
 	QString name = encryptionKey.split(':').join('_') + "_" + "Decrypted.lic";
 	response.DecryptedData = decryptedData.toBase64();
 	response.FileName = name;
 
-	return response;
+	return retVal;
 }
 
 

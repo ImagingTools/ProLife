@@ -10,10 +10,10 @@ namespace prolifegql
 {
 
 
-class CCustomerCollectionControllerComp: public sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase
+class CCustomerCollectionControllerComp: public sdl::prolife::Accounts::CAccountCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Accounts::CAccountCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CCustomerCollectionControllerComp);
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission-ID for show all accounts", true, "ViewAllAccounts");
@@ -22,10 +22,10 @@ public:
 
 protected:
 
-	// reimplemented (sdl::prolife::Accounts::V1_0::CAccountCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Accounts::V1_0::CAccountsListGqlRequest& accountsListRequest,
+				const sdl::prolife::Accounts::CAccountsListGqlRequest& accountsListRequest,
 				sdl::prolife::Accounts::CAccountItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 
@@ -36,12 +36,12 @@ protected:
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Accounts::V1_0::CAccountItemGqlRequest& accountItemRequest,
+				const sdl::prolife::Accounts::CAccountItemGqlRequest& accountItemRequest,
 				sdl::prolife::Accounts::CAccountDataPayload::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Accounts::V1_0::CAccountUpdateGqlRequest& accountUpdateRequest,
+				const sdl::prolife::Accounts::CAccountUpdateGqlRequest& accountUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;

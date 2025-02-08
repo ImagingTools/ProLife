@@ -13,10 +13,10 @@ namespace prolifegql
 {
 
 
-class COrderCollectionControllerComp: public sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase
+class COrderCollectionControllerComp: public sdl::prolife::Orders::COrderCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Orders::COrderCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
 		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all orders", true, "");
@@ -40,10 +40,10 @@ protected:
 				QByteArrayList& removedProducts,
 				QByteArrayList& updatedProducts) const;
 
-	// reimplemented (sdl::prolife::Orders::V1_0::COrderCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Orders::V1_0::COrdersListGqlRequest& ordersListRequest,
+				const sdl::prolife::Orders::COrdersListGqlRequest& ordersListRequest,
 				sdl::prolife::Orders::COrderItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
@@ -52,12 +52,12 @@ protected:
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Orders::V1_0::COrderItemGqlRequest& orderItemRequest,
+				const sdl::prolife::Orders::COrderItemGqlRequest& orderItemRequest,
 				sdl::prolife::Orders::COrderDataPayload::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Orders::V1_0::COrderUpdateGqlRequest& orderUpdateRequest,
+				const sdl::prolife::Orders::COrderUpdateGqlRequest& orderUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;

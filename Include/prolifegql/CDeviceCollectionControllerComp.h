@@ -13,10 +13,10 @@ namespace prolifegql
 {
 
 
-class CDeviceCollectionControllerComp: public sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase
+class CDeviceCollectionControllerComp: public sdl::prolife::Sensors::CDeviceCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase BaseClass;
+	typedef sdl::prolife::Sensors::CDeviceCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -31,16 +31,16 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (sdl::imtbase::ImtCollection::V1_0::CGraphQlHandlerCompBase)
-	virtual sdl::imtbase::ImtCollection::CVisualStatus::V1_0 OnGetObjectVisualStatus(
-				const sdl::imtbase::ImtCollection::V1_0::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+	// reimplemented (sdl::imtbase::ImtCollection::CGraphQlHandlerCompBase)
+	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(
+				const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
-	// reimplemented (sdl::prolife::Sensors::V1_0::CDeviceCollectionControllerCompBase)
+	// reimplemented (sdl::prolife::Sensors::CDeviceCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Sensors::V1_0::CDevicesListGqlRequest& devicesListRequest,
+				const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
 				sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeable* CreateObjectFromRepresentation(
@@ -49,12 +49,12 @@ protected:
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Sensors::V1_0::CDeviceItemGqlRequest& deviceItemRequest,
+				const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
 				sdl::prolife::Sensors::CDeviceDataPayload::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Sensors::V1_0::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+				const sdl::prolife::Sensors::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 
