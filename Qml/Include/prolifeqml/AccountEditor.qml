@@ -8,438 +8,382 @@ import imtcolgui 1.0
 import prolifeAccountsSdl 1.0
 
 ViewBase {
-    id: accountEditorContainer;
+	id: accountEditorContainer;
 
-    anchors.fill: parent;
+	width: bodyColumn.width;
+	height: bodyColumn.height;
 
-    property int radius: 3;
+	// anchors.fill: parent;
 
-    property int textInputHeight: 30;
+	property int radius: 3;
 
-    property AccountData accountData: model ? model : null;
+	property int textInputHeight: 30;
 
-    Component.onCompleted: {
-        groupCollectionDataProvider.updateModel();
-        Events.subscribeEvent("OnLocalizationChanged", accountEditorContainer.onLocalizationChanged);
-    }
+	property AccountData accountData: model ? model : null;
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", accountEditorContainer.onLocalizationChanged);
-    }
-
-    function onLocalizationChanged(language){
-        bodyColumn.updateHeaders();
-    }
-
-    function setReadOnly(readOnly){
-        accountNameInput.readOnly = readOnly;
-        accountDescriptionInput.readOnly = readOnly;
-        countryInput.readOnly = readOnly;
-        streetInput.readOnly = readOnly;
-        postalCodeInput.readOnly = readOnly;
-        cityInput.readOnly = readOnly;
-        emailInput.readOnly = readOnly;
-        groupsElement.table.readOnly = readOnly;
-    }
-
-    function updateGui(){
-        accountNameInput.text = accountData.m_name;
-        accountDescriptionInput.text = accountData.m_description;
-        emailInput.text = accountData.m_email;
-        customerIdInput.text = accountData.m_customerId;
-
-        countryInput.text = accountData.m_country;
-        postalCodeInput.text = accountData.m_postalCode;
-        cityInput.text = accountData.m_city;
-        streetInput.text = accountData.m_street;
-
-        let groupIds = accountData.m_groups.split(';');
-        groupsElement.table.uncheckAll();
-        if (groupsElement.table.elements){
-            for (let i = 0; i < groupsElement.table.elements.getItemsCount(); i++){
-                let id = groupsElement.table.elements.getData("Id", i);
-                if (groupIds.includes(id)){
-                    groupsElement.table.checkItem(i);
-                }
-            }
-        }
-    }
-
-    function updateModel(){
-        accountData.m_name = accountNameInput.text;
-        accountData.m_description = accountDescriptionInput.text;
-        accountData.m_email = emailInput.text;
-        accountData.m_customerId = customerIdInput.text;
-
-        accountData.m_country = countryInput.text;
-        accountData.m_postalCode = postalCodeInput.text;
-        accountData.m_city = cityInput.text;
-        accountData.m_street = streetInput.text;
-
-        let selectedGroupIds = []
-        let indexes = groupsElement.table.getCheckedItems();
-        for (let index of indexes){
-            let id = groupsElement.table.elements.getData("Id", index);
-            selectedGroupIds.push(id)
-        }
-
-        selectedGroupIds.sort()
-        let groups = selectedGroupIds.join(';');
-        accountData.m_groups = groups;
-    }
-
-	DocumentHistoryPanel {
-		id: historyPanel;
-		documentId: accountEditorContainer.accountData ? accountEditorContainer.accountData.m_id : "";
-		collectionId: "Accounts";
-		editorFlickable: flickable;
+	Component.onCompleted: {
+		groupCollectionDataProvider.updateModel();
 	}
 
-    CustomScrollbar {
-        id: scrollbar;
-        z: parent.z + 1;
+	LocalizationEvent {
+		onLocalizationChanged: {
+			bodyColumn.updateHeaders();
+		}
+	}
+
+	function setReadOnly(readOnly){
+		accountNameInput.readOnly = readOnly;
+		accountDescriptionInput.readOnly = readOnly;
+		countryInput.readOnly = readOnly;
+		streetInput.readOnly = readOnly;
+		postalCodeInput.readOnly = readOnly;
+		cityInput.readOnly = readOnly;
+		emailInput.readOnly = readOnly;
+		groupsElement.table.readOnly = readOnly;
+	}
+
+	function updateGui(){
+		console.log("AccountEditor.qml updateGui", accountData);
+
+		accountNameInput.text = accountData.m_name;
+		accountDescriptionInput.text = accountData.m_description;
+		emailInput.text = accountData.m_email;
+		customerIdInput.text = accountData.m_customerId;
+
+		countryInput.text = accountData.m_country;
+		postalCodeInput.text = accountData.m_postalCode;
+		cityInput.text = accountData.m_city;
+		streetInput.text = accountData.m_street;
+
+		let groupIds = accountData.m_groups.split(';');
+		groupsElement.table.uncheckAll();
+		if (groupsElement.table.elements){
+			for (let i = 0; i < groupsElement.table.elements.getItemsCount(); i++){
+				let id = groupsElement.table.elements.getData("Id", i);
+				if (groupIds.includes(id)){
+					groupsElement.table.checkItem(i);
+				}
+			}
+		}
+	}
+
+	function updateModel(){
+		accountData.m_name = accountNameInput.text;
+		accountData.m_description = accountDescriptionInput.text;
+		accountData.m_email = emailInput.text;
+		accountData.m_customerId = customerIdInput.text;
+
+		accountData.m_country = countryInput.text;
+		accountData.m_postalCode = postalCodeInput.text;
+		accountData.m_city = cityInput.text;
+		accountData.m_street = streetInput.text;
+
+		let selectedGroupIds = []
+		let indexes = groupsElement.table.getCheckedItems();
+		for (let index of indexes){
+			let id = groupsElement.table.elements.getData("Id", index);
+			selectedGroupIds.push(id)
+		}
+
+		selectedGroupIds.sort()
+		let groups = selectedGroupIds.join(';');
+		accountData.m_groups = groups;
+	}
+
+	GroupCollectionDataProvider {
+		id: groupCollectionDataProvider;
+		onCollectionModelChanged: {
+			if (groupsElement.table){
+				groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
+
+				accountEditorContainer.doUpdateGui();
+			}
+		}
+	}
+
+	Column {
+		id: bodyColumn;
+
+		width: 700;
+
+		spacing: Style.size_largeMargin;
+
+		GroupHeaderView {
+			width: parent.width;
+
+			title: qsTr("Customer Information");
+			groupView: customerInformationGroup;
+		}
+
+		GroupElementView {
+			id: customerInformationGroup;
+
+			width: parent.width;
+
+			TextInputElementView {
+				id: customerIdInput;
+
+				name: qsTr("Customer-ID");
+				placeHolderText: qsTr("Enter the customer-ID");
 
-        anchors.right: parent.right;
-        anchors.top: flickable.top;
-        anchors.bottom: flickable.bottom;
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-        secondSize: Style.size_mainMargin;
-        targetItem: flickable;
+				KeyNavigation.tab: accountNameInput;
+				KeyNavigation.backtab: groupsElement;
 
-        visible: accountEditorContainer.visible;
-    }
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeCustomerId");
 
-    CustomScrollbar{
-        id: scrollHoriz;
+					customerIdInput.readOnly = !ok;
+				}
+			}
+		}
 
-        z: parent.z + 1;
+		GroupHeaderView {
+			width: parent.width;
 
-        anchors.left: flickable.left;
-        anchors.right: flickable.right;
-        anchors.bottom: flickable.bottom;
+			title: qsTr("Account Information");
+			groupView: accountInformationGroup;
+		}
 
-        secondSize: Style.size_mainMargin;
+		GroupElementView {
+			id: accountInformationGroup;
 
-        vertical: false;
-        targetItem: flickable;
-    }
+			width: parent.width;
 
-    GroupCollectionDataProvider {
-        id: groupCollectionDataProvider;
-        onCollectionModelChanged: {
-            if (groupsElement.table){
-                groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
+			TextInputElementView {
+				id: accountNameInput;
 
-                accountEditorContainer.doUpdateGui();
-            }
-        }
-    }
+				name: qsTr("Account Name");
+				placeHolderText: qsTr("Enter the account name");
+				textInputValidator: accountNameRegexp;
+				showErrorWhenInvalid: true;
+				errorText: qsTr("Please enter the account name");
 
-    Flickable {
-        id: flickable;
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-        anchors.top: parent.top;
-        anchors.topMargin: Style.size_largeMargin;
+				KeyNavigation.tab: accountDescriptionInput;
+				KeyNavigation.backtab: customerIdInput;
 
-        anchors.bottom: parent.bottom;
-        anchors.bottomMargin: Style.size_largeMargin;
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeAccountName");
 
-        anchors.left: parent.left;
-        anchors.leftMargin: Style.size_largeMargin;
+					accountNameInput.readOnly = !ok;
+				}
 
-        anchors.right: scrollbar.left;
-        anchors.rightMargin: Style.size_largeMargin;
+				RegularExpressionValidator {
+					id: accountNameRegexp;
+					regularExpression: /^(?!\s*$).+/;
+				}
+			}
 
-        contentWidth: bodyColumn.width;
-		contentHeight: Math.max(bodyColumn.height + 2 * Style.size_largeMargin + 100, historyPanel.contentHeight + 2 * Style.size_largeMargin);
+			TextInputElementView {
+				id: accountDescriptionInput;
 
-        boundsBehavior: Flickable.StopAtBounds;
-        clip: true;
+				name: qsTr("Account Description");
+				placeHolderText: qsTr("Enter the account description");
 
-        Column {
-            id: bodyColumn;
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-            width: 700;
+				KeyNavigation.tab: emailInput;
+				KeyNavigation.backtab: accountNameInput;
 
-            spacing: Style.size_largeMargin;
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeAccountDescription");
 
-            GroupHeaderView {
-                width: parent.width;
+					accountDescriptionInput.readOnly = !ok;
+				}
+			}
 
-                title: qsTr("Customer Information");
-                groupView: customerInformationGroup;
-            }
+			TextInputElementView {
+				id: emailInput;
 
-            GroupElementView {
-                id: customerInformationGroup;
+				width: parent.width;
 
-                width: parent.width;
+				name: qsTr("Email");
+				placeHolderText: qsTr("Enter the email");
 
-                TextInputElementView {
-                    id: customerIdInput;
+				textInputValidator: mailValid;
 
-                    name: qsTr("Customer-ID");
-                    placeHolderText: qsTr("Enter the customer-ID");
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+				KeyNavigation.tab: countryInput;
+				KeyNavigation.backtab: accountDescriptionInput;
 
-                    KeyNavigation.tab: accountNameInput;
-                    KeyNavigation.backtab: groupsElement;
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeAccountEmail");
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCustomerId");
+					emailInput.readOnly = !ok;
+				}
+			}
 
-                        customerIdInput.readOnly = !ok;
-                    }
-                }
-            }
+			RegularExpressionValidator {
+				id: mailValid;
 
-            GroupHeaderView {
-                width: parent.width;
+				regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+			}
+		}
 
-                title: qsTr("Account Information");
-                groupView: accountInformationGroup;
-            }
+		GroupHeaderView {
+			width: parent.width;
 
-            GroupElementView {
-                id: accountInformationGroup;
+			title: qsTr("Company Address");
+			groupView: companyAddressGroup;
+		}
 
-                width: parent.width;
+		GroupElementView {
+			id: companyAddressGroup;
 
-                TextInputElementView {
-                    id: accountNameInput;
+			width: parent.width;
 
-                    name: qsTr("Account Name");
-                    placeHolderText: qsTr("Enter the account name");
-                    textInputValidator: accountNameRegexp;
-                    showErrorWhenInvalid: true;
-                    errorText: qsTr("Please enter the account name");
+			TextInputElementView {
+				id: countryInput;
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+				name: qsTr("Country");
+				placeHolderText: qsTr("Enter the country");
 
-                    KeyNavigation.tab: accountDescriptionInput;
-                    KeyNavigation.backtab: customerIdInput;
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeAccountName");
+				KeyNavigation.tab: cityInput;
+				KeyNavigation.backtab: emailInput;
 
-                        accountNameInput.readOnly = !ok;
-                    }
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
 
-                    RegularExpressionValidator {
-                        id: accountNameRegexp;
-                        regularExpression: /^(?!\s*$).+/;
-                    }
-                }
+					countryInput.readOnly = !ok;
+				}
+			}
 
-                TextInputElementView {
-                    id: accountDescriptionInput;
+			TextInputElementView {
+				id: cityInput;
 
-                    name: qsTr("Account Description");
-                    placeHolderText: qsTr("Enter the account description");
+				name: qsTr("City");
+				placeHolderText: qsTr("Enter the city");
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-                    KeyNavigation.tab: emailInput;
-                    KeyNavigation.backtab: accountNameInput;
+				KeyNavigation.tab: postalCodeInput;
+				KeyNavigation.backtab: countryInput;
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeAccountDescription");
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
 
-                        accountDescriptionInput.readOnly = !ok;
-                    }
-                }
+					cityInput.readOnly = !ok;
+				}
+			}
 
-                TextInputElementView {
-                    id: emailInput;
+			TextInputElementView {
+				id: postalCodeInput;
 
-                    width: parent.width;
+				name: qsTr("Postal Code");
+				placeHolderText: qsTr("Enter the postal code");
 
-                    name: qsTr("Email");
-                    placeHolderText: qsTr("Enter the email");
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-                    textInputValidator: mailValid;
+				KeyNavigation.tab: streetInput;
+				KeyNavigation.backtab: cityInput;
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
 
-                    KeyNavigation.tab: countryInput;
-                    KeyNavigation.backtab: accountDescriptionInput;
+					postalCodeInput.readOnly = !ok;
+				}
+			}
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeAccountEmail");
+			TextInputElementView {
+				id: streetInput;
 
-                        emailInput.readOnly = !ok;
-                    }
-                }
+				name: qsTr("Street");
+				placeHolderText: qsTr("Enter the street");
 
-                RegularExpressionValidator {
-                    id: mailValid;
+				onEditingFinished: {
+					accountEditorContainer.doUpdateModel();
+				}
 
-                    regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-                }
-            }
+				KeyNavigation.tab: groupsElement;
+				KeyNavigation.backtab: postalCodeInput;
 
-            GroupHeaderView {
-                width: parent.width;
+				Component.onCompleted: {
+					let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
 
-                title: qsTr("Company Address");
-                groupView: companyAddressGroup;
-            }
+					streetInput.readOnly = !ok;
+				}
+			}
+		}
 
-            GroupElementView {
-                id: companyAddressGroup;
+		TreeItemModel {
+			id: headersModel;
 
-                width: parent.width;
+			Component.onCompleted: {
+				bodyColumn.updateHeaders();
+			}
+		}
 
-                TextInputElementView {
-                    id: countryInput;
+		function updateHeaders(){
+			headersModel.clear();
 
-                    name: qsTr("Country");
-                    placeHolderText: qsTr("Enter the country");
+			headersModel.insertNewItem();
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+			headersModel.setData("Id", "Name");
+			headersModel.setData("Name", qsTr("Group Name"));
 
-                    KeyNavigation.tab: cityInput;
-                    KeyNavigation.backtab: emailInput;
+			groupsElement.table.headers = headersModel;
+		}
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+		Text {
+			id: titleText;
 
-                        countryInput.readOnly = !ok;
-                    }
-                }
+			color: Style.textColor;
+			font.family: Style.fontFamilyBold;
+			font.pixelSize: Style.fontSize_title;
 
-                TextInputElementView {
-                    id: cityInput;
+			text: qsTr("Group Information");
+		}
 
-                    name: qsTr("City");
-                    placeHolderText: qsTr("Enter the city");
+		TableElementView {
+			id: groupsElement;
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+			width: parent.width;
 
-                    KeyNavigation.tab: postalCodeInput;
-                    KeyNavigation.backtab: countryInput;
+			name: qsTr("Groups");
 
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+			KeyNavigation.tab: customerIdInput;
+			KeyNavigation.backtab: streetInput;
 
-                        cityInput.readOnly = !ok;
-                    }
-                }
+			// table.checkable: true;
 
-                TextInputElementView {
-                    id: postalCodeInput;
+			onTableChanged: {
+				if (groupsElement.table){
+					groupsElement.table.checkable = true;
+					groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
 
-                    name: qsTr("Postal Code");
-                    placeHolderText: qsTr("Enter the postal code");
+					let ok = PermissionsController.checkPermission("ChangeAccountGroups");
+					groupsElement.table.readOnly = !ok;
+				}
+			}
 
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
+			Connections {
+				id: tableConn;
+				target: groupsElement.table;
 
-                    KeyNavigation.tab: streetInput;
-                    KeyNavigation.backtab: cityInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
-
-                        postalCodeInput.readOnly = !ok;
-                    }
-                }
-
-                TextInputElementView {
-                    id: streetInput;
-
-                    name: qsTr("Street");
-                    placeHolderText: qsTr("Enter the street");
-
-                    onEditingFinished: {
-                        accountEditorContainer.doUpdateModel();
-                    }
-
-                    KeyNavigation.tab: groupsElement;
-                    KeyNavigation.backtab: postalCodeInput;
-
-                    Component.onCompleted: {
-                        let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
-
-                        streetInput.readOnly = !ok;
-                    }
-                }
-            }
-
-            TreeItemModel {
-                id: headersModel;
-
-                Component.onCompleted: {
-                    bodyColumn.updateHeaders();
-                }
-            }
-
-            function updateHeaders(){
-                headersModel.clear();
-
-                headersModel.insertNewItem();
-
-                headersModel.setData("Id", "Name");
-                headersModel.setData("Name", qsTr("Group Name"));
-
-                groupsElement.table.headers = headersModel;
-            }
-
-            Text {
-                id: titleText;
-
-                color: Style.textColor;
-                font.family: Style.fontFamilyBold;
-                font.pixelSize: Style.fontSize_title;
-
-                text: qsTr("Group Information");
-            }
-
-            TableElementView {
-                id: groupsElement;
-
-                width: parent.width;
-
-                name: qsTr("Groups");
-
-                KeyNavigation.tab: customerIdInput;
-                KeyNavigation.backtab: streetInput;
-
-                // table.checkable: true;
-
-                onTableChanged: {
-                    if (groupsElement.table){
-                        groupsElement.table.checkable = true;
-                        groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
-
-                        let ok = PermissionsController.checkPermission("ChangeAccountGroups");
-                        groupsElement.table.readOnly = !ok;
-                    }
-                }
-
-                Connections {
-                    id: tableConn;
-                    target: groupsElement.table;
-
-                    function onCheckedItemsChanged(){
-                        accountEditorContainer.doUpdateModel();
-                    }
-                }
-            }
-        }//Body column
-    }//Flickable
+				function onCheckedItemsChanged(){
+					accountEditorContainer.doUpdateModel();
+				}
+			}
+		}
+	}//Body column
 }// Account Editor container

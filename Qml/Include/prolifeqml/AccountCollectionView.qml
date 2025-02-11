@@ -66,30 +66,42 @@ RemoteCollectionView {
         collectionFilter.setSortingInfoId("Name");
     }
 
-    Component {
-        id: accountEditorComp;
+	Component {
+		id: accountEditorComp
 
-        AccountEditor {
-            id: accountEditor;
+		DocumentView {
+			id: accountEditor;
+			commandsControllerComp: Component {CommandsPanelController {
+					commandId: "Account";
+					uuid: accountEditor.viewId
+					commandsView: accountEditor.commandsView
+				}
+			}
 
-            commandsDelegateComp: Component {ViewCommandsDelegateBase {
-                view: accountEditor;
-            }
-            }
+			viewComp: Component {
+				AccountEditor {}
+			}
+		}
+	}
 
-            commandsControllerComp: Component {CommandsPanelController {
-                    commandId: "Account";
-                    uuid: accountEditor.viewId;
-                    commandsView: accountEditor.commandsView;
-                }
-            }
-        }
-    }
+	// Component {
+	//     id: accountEditorComp;
+
+	//     AccountEditor {
+	//         id: accountEditor;
+	//         commandsControllerComp: Component {CommandsPanelController {
+	//                 commandId: "Account";
+	//                 uuid: accountEditor.viewId;
+	//                 commandsView: accountEditor.commandsView;
+	//             }
+	//         }
+	//     }
+	// }
 
     Component {
         id: accountValidatorComp;
 
-        DocumentValidator {
+		DocumentValidator {
             property AccountData accountData: documentModel
             function isValid(data){
                 if (!accountData){
