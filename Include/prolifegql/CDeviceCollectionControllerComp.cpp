@@ -39,11 +39,8 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 	}
 
 	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
-	sdl::imtbase::ImtCollection::CVisualStatus::V1_0& response = retVal.Version_1_0.emplace();
-
-
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(*response.ObjectId, dataPtr)){
+	if (m_objectCollectionCompPtr->GetObjectData(*retVal.Version_1_0->ObjectId, dataPtr)){
 		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
@@ -65,7 +62,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 				name += " (" + macAddress + ")";
 			}
 
-			response.Text = name;
+			retVal.Version_1_0->Text = name;
 		}
 	}
 

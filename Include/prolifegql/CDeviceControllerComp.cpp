@@ -362,7 +362,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 		return retVal;
 	}
 
-	sdl::prolife::Sensors::CCreateLicenseFilePayload::V1_0 response = retVal.Version_1_0.emplace();
+	retVal.Version_1_0.emplace();
 
 	QByteArray deviceId;
 	if (arguments.input.Version_1_0->DeviceId){
@@ -612,8 +612,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 
 	QString name = macAddress.split(':').join('_') + "_" + "License.lic";
 
-	response.Data = returnedData;
-	response.Name = name;
+	retVal.Version_1_0->Data = returnedData;
+	retVal.Version_1_0->Name = name;
 
 	file.close();
 

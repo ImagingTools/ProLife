@@ -18,7 +18,7 @@ ApplicationMain {
     Connections {
         target: AuthorizationController;
 
-        function onLoginSuccessful(){
+		function onLoggedIn(){
             CachedProductCollection.updateModel();
             CachedLicenseCollection.updateModel();
             CachedAccountCollection.updateModel();
@@ -27,7 +27,7 @@ ApplicationMain {
             CachedSoftwareCollection.updateModel();
         }
 
-        function onLogoutSignal(){
+		function onLoggedOut(){
             CachedProductCollection.clearModel();
 			CachedLicenseCollection.clearModel();
             CachedAccountCollection.clearModel();

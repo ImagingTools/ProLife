@@ -36,7 +36,6 @@ typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
 typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
 			prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
-typedef prolifegql::CDeviceControllerComp HardwareProductBindingController;
 typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
