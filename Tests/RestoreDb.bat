@@ -24,3 +24,5 @@ pg_restore -h localhost -p 5432 -U postgres -d %PROLIFE_DB_NAME% --verbose %PROL
 pg_restore -h localhost -p 5432 -U postgres -d %LISA_DB_NAME% --verbose %LISA_BACKUP_FILE%
 pg_restore -h localhost -p 5432 -U postgres -d %PUMA_DB_NAME% --verbose %PUMA_BACKUP_FILE%
 
+pause
+
