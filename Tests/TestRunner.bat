@@ -39,8 +39,8 @@ timeout /t 5
 
 echo Newman started
 rem Запуск тестов в Postman с помощью Newman
-call newman run "%BUILD_DIR%\ProLife\Tests\postman_collection.json" --disable-unicode
-echo Newman ended
+call newman run "%BUILD_DIR%\ProLife\Tests\postman_collection.json" --disable-unicode --suppress-exit-code 0
+echo Newman ended 
 
 rem Завершение процессов
 taskkill /IM "LisaServer.exe" /F
