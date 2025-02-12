@@ -43,7 +43,7 @@ timeout /t 5
 
 echo Newman started
 
-call newman run "%BUILD_DIR%\ProLife\Tests\postman_collection.json" --disable-unicode --suppress-exit-code 1
+call newman run "%BUILD_DIR%\ProLife\Tests\postman_collection.json" --disable-unicode
 set NEWMAN_EXIT_CODE=%ERRORLEVEL%
 echo Newman ended
 
@@ -52,6 +52,7 @@ taskkill /IM "LisaServer.exe" /F
 taskkill /IM "ProLifeServer.exe" /F
 taskkill /IM "PumaServer.exe" /F
 
+echo NEWMAN_EXIT_CODE %NEWMAN_EXIT_CODE%
 :: Проверяем результат тестов
 if %NEWMAN_EXIT_CODE% neq 0 (
     exit /b %NEWMAN_EXIT_CODE%
