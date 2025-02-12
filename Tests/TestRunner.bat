@@ -1,7 +1,5 @@
 @echo off
-
 set BUILD_DIR=%1
-
 chcp 65001 > nul
 
 :: Пути к бэкапам БД
@@ -44,13 +42,19 @@ start "" "%BUILD_DIR%\Puma\Bin\Release_Qt6_VC17_x64\PumaServer.exe"
 timeout /t 5
 
 echo Newman started
+
 call newman run "%BUILD_DIR%\ProLife\Tests\postman_collection.json" --disable-unicode --suppress-exit-code 1
-if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+set NEWMAN_EXIT_CODE=%ERRORLEVEL%
 echo Newman ended
 
 :: Завершаем процессы
 taskkill /IM "LisaServer.exe" /F
 taskkill /IM "ProLifeServer.exe" /F
 taskkill /IM "PumaServer.exe" /F
+
+:: Проверяем результат тестов
+if %NEWMAN_EXIT_CODE% neq 0 (
+    exit /b %NEWMAN_EXIT_CODE%
+)
 
 exit /b 0
