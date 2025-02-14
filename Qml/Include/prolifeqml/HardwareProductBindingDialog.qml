@@ -77,20 +77,13 @@ Dialog {
             onFinished: {
                 if (buttonId == Enums.ok){
                     let bindingModel = productEditorDialog.contentItem.bindingModel;
-                    bindingModel.m_id = productEditorDialog.hardwareId
-
-					// documentController.updateRequestInputParam.InsertField("Project", inputValue);
-
-					// documentController.documentModel = bindingModel;
-
-					// documentController.saveDocument();
-
-					updateDeviceBindingRequest.send({
-														"m_deviceId": productEditorDialog.hardwareId,
-														"m_project": inputValue,
-														"m_item": bindingModel
-													})
-
+                    bindingModel.m_id = productEditorDialog.hardwareId;
+					
+					deviceBindingInput.m_deviceId = productEditorDialog.hardwareId
+					deviceBindingInput.m_project = inputValue
+					deviceBindingInput.m_item = bindingModel
+					
+					updateDeviceBindingRequest.send(deviceBindingInput)
                 }
             }
         }
@@ -113,17 +106,15 @@ Dialog {
 			}
 		}
 	}
+	
+	DeviceBindingInput {
+		id: deviceBindingInput;
+	}
 
 	GqlSdlRequestSender {
 		id: updateDeviceBindingRequest
 		requestType: 1;
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding;
-
-		inputObjectComp: Component {
-			DeviceBindingInput {
-				m_deviceId: productEditorDialog.hardwareId;
-			}
-		}
 
 		sdlObjectComp: Component {
 			UpdatedNotificationPayload {

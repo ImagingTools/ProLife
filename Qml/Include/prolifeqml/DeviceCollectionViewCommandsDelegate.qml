@@ -110,8 +110,11 @@ DocumentCollectionViewDelegate {
 				else if (commandId == "NotEncrypt"){
 					encrypt = false;
 				}
+				
+				createLicenseFileInput.m_deviceId = hardwareId;
+				createLicenseFileInput.m_encrypt = encrypt;
 
-				createLicenseFileRequest.send({"m_deviceId": hardwareId, "m_encrypt":encrypt})
+				createLicenseFileRequest.send(createLicenseFileInput)
 			}
 		}
 	}
@@ -314,7 +317,8 @@ DocumentCollectionViewDelegate {
 				ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
 			}
 			else{
-				createLicenseFileRequest.send({"m_deviceId": hardwareId})
+				createLicenseFileInput.m_deviceId = hardwareId;
+				createLicenseFileRequest.send(createLicenseFileInput)
 			}
 		}
 		else if (commandId === "TransferLicenses"){
@@ -388,20 +392,22 @@ DocumentCollectionViewDelegate {
 
 			onFinished: {
 				if (buttonId == Enums.ok){
-					decryptLicenseFileRequest.send({"m_fileData": encodedContent, "m_key": inputValue});
+					decryptLicenseFileInput.m_fileData = encodedContent
+					decryptLicenseFileInput.m_key = inputValue
+					decryptLicenseFileRequest.send(decryptLicenseFileInput);
 				}
 			}
 		}
 	}
-
+	
+	DecryptLicenseFileInput {
+		id: decryptLicenseFileInput;
+	}
+	
 	GqlSdlRequestSender {
 		id: decryptLicenseFileRequest;
 		requestType: 1;
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_decryptLicenseFile;
-		inputObjectComp: Component {
-			DecryptLicenseFileInput {
-			}
-		}
 
 		sdlObjectComp: Component {
 			DecryptLicenseFilePayload {
@@ -455,15 +461,15 @@ DocumentCollectionViewDelegate {
 			}
 		}
 	}
+	
+	CreateLicenseFileInput {
+		id: createLicenseFileInput;
+	}
 
 	GqlSdlRequestSender {
 		id: createLicenseFileRequest;
 		requestType: 1;
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_createLicenseFile;
-		inputObjectComp: Component {
-			CreateLicenseFileInput {
-			}
-		}
 
 		sdlObjectComp: Component {
 			CreateLicenseFilePayload {
@@ -499,17 +505,19 @@ DocumentCollectionViewDelegate {
 
 			onFinished: {
 				if (buttonId === Enums.ok){
-					transferLicensesRequest.send({"m_fromDeviceId": dialog.fromDeviceId, "m_toDeviceId": dialog.toDeviceId});
+					transferLicensesInput.m_fromDeviceId = dialog.fromDeviceId;
+					transferLicensesInput.m_toDeviceId = dialog.toDeviceId;
+					transferLicensesRequest.send(transferLicensesInput);
 				}
+			}
+			
+			TransferLicensesInput {
+				id: transferLicensesInput;
 			}
 
 			GqlSdlRequestSender {
 				id: transferLicensesRequest;
 				gqlCommandId: ProlifeSensorsSdlCommandIds.s_transferLicenses;
-				inputObjectComp: Component {
-					TransferLicensesInput {
-					}
-				}
 
 				sdlObjectComp: Component {
 					TransferLicensesPayload {
