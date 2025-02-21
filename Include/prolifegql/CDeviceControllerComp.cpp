@@ -29,15 +29,6 @@ namespace prolifegql
 
 // protected methods
 
-sdl::imtbase::ImtCollection::CVisualStatus CDeviceControllerComp::OnGetObjectVisualStatus(
-	const sdl::prolife::Sensors::CGetObjectVisualStatusGqlRequest& /*getObjectVisualStatusRequest*/,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
-{
-	return sdl::imtbase::ImtCollection::CVisualStatus();
-}
-
-
 sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
 	const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
 	const ::imtgql::CGqlRequest& /*gqlRequest*/,

@@ -44,7 +44,6 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(const sdl::prolife::Sensors::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CDeviceBindingData OnGetDeviceBinding(const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::imtbase::ImtCollection::CUpdatedNotificationPayload OnUpdateDeviceBinding(const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CTransferLicensesPayload OnTransferLicenses(const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
