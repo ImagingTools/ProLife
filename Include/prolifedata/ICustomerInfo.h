@@ -12,6 +12,11 @@ namespace prolifedata
 class ICustomerInfo: virtual public imtauth::ICompanyInfo
 {
 public:
+	enum MetaInfoTypes
+	{
+		MIT_CUSTOMER_ID = IContactBaseInfo::MIT_GROUPS + 1
+	};
+	
 	/**
 		Get customer-ID.
 	*/

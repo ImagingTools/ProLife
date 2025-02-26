@@ -48,6 +48,9 @@ if (NOT IMT_DevAll_BUILD)
 	get_filename_component(CACHE_BASE_DIR_PATH "${IMTCOREDIR}/AuxInclude/${TARGETNAME}" ABSOLUTE)
         ImtCoreAddSdlSearchPath("${CACHE_BASE_DIR_PATH}")
         ImtCoreAddSdlSearchPath("${AUX_INCLUDE_DIR}/..")
+		
+		message("PROLIFE CACHE_BASE_DIR_PATH ${CACHE_BASE_DIR_PATH}")
+		message("PROLIFE AUX_INCLUDE_DIR ${AUX_INCLUDE_DIR}/..")
 endif()
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
 

@@ -2,14 +2,16 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="DeviceDatabaseDelegate" X="600" Y="200" Note=""/>
         <Element ComponentName="DeviceInfo" X="950" Y="200" Note=""/>
+        <Element ComponentName="DeviceMetaInfoCreator" X="125" Y="100" Note=""/>
+        <Element ComponentName="DeviceMetaInfoDelegate" X="400" Y="100" Note=""/>
         <Element ComponentName="Devices" X="600" Y="450" Note=""/>
         <Element ComponentName="JsonSerializer" X="225" Y="200" Note=""/>
         <Element ComponentName="ObjectCollection" X="250" Y="450" Note=""/>

@@ -139,7 +139,6 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(const istd::IChangeable& oldDo
 }
 
 
-
 QString CDeviceChangeGeneratorComp::CreateCustomOperationDescription(
 	const imtbase::COperationDescription& operationDescription,
 	const QByteArray& languageId) const

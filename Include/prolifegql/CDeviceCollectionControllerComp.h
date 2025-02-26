@@ -31,6 +31,12 @@ public:
 	I_END_COMPONENT;
 
 protected:
+	struct ElementInfo
+	{
+		QByteArray id;
+		QString name;
+	};
+	
 	// reimplemented (sdl::imtbase::ImtCollection::CGraphQlHandlerCompBase)
 	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(
 				const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
@@ -70,6 +76,10 @@ private:
 				QString& errorMessage) const;
 	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
+	
+	ElementInfo GetProductInfo(const QByteArray& productId) const;
+	ElementInfo GetLicenseInfo(const QByteArray& licenseId) const;
+	QByteArray GetOrderId(const QByteArray& orderUuid) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

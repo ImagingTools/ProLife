@@ -25,7 +25,7 @@ type AccountItem {
 	Description: String
 	Email: String
 	Added: String
-	LastModified: String
+	TimeStamp: String
 }
 
 type AccountsListPayload {
@@ -34,8 +34,8 @@ type AccountsListPayload {
 }
 
 type AccountData {
-	Id: ID!
-	Name: String!
+	Id: ID
+	Name: String
 	CustomerId: ID
 	Description: String
 	Email: String

@@ -47,7 +47,7 @@ type DeviceItem {
 	SoftwareLinksCount: Integer
 	Customer: ID
 	Added: String
-	LastModified: String
+	TimeStamp: String
 }
 
 type DevicesListPayload {
@@ -56,8 +56,8 @@ type DevicesListPayload {
 }
 
 type DeviceData {
-	Id: ID!
-	Name: String!
+	Id: ID
+	Name: String
 	Description: String
 	MacAddress: String
 	SerialNumber: String

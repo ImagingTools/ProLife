@@ -69,6 +69,31 @@ I_EXPORT_COMPONENT(
 		"Customer change generator",
 		"Customer Change Generator");
 
+I_EXPORT_COMPONENT(
+		DeviceMetaInfoDelegate,
+		"Device meta info delegate",
+		"Device Meta Info Delegate");
+
+I_EXPORT_COMPONENT(
+		SoftwareMetaInfoDelegate,
+		"Software meta info delegate",
+		"Software Meta Info Delegate");
+
+I_EXPORT_COMPONENT(
+		OrderMetaInfoDelegate,
+		"Order meta info delegate",
+		"Order Meta Info Delegate");
+
+I_EXPORT_COMPONENT(
+		CustomerMetaInfoDelegate,
+		"Customer meta info delegate",
+		"Customer Meta Info Delegate");
+
+I_EXPORT_COMPONENT(
+		HardwareBindingMetaInfoDelegate,
+		"Hardware meta info delegate",
+		"Hardware Meta Info Delegate");
+
 
 } // namespace ProLifeGqlPck
 

@@ -3,10 +3,10 @@
 
 // ACF includes
 #include <iprm/CTextParam.h>
-#include <iprm/CEnableableParam.h>
 #include <iprm/CParamsSet.h>
 
 // ImtCore includes
+#include <imtbase/CComplexCollectionFilter.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
@@ -193,54 +193,55 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
+	
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = std::make_optional<QByteArray>(objectId);
+		representationObject.Id = (objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = std::make_optional<QByteArray>(collectionObjectId);
+		representationObject.TypeId = (collectionObjectId);
 	}
 
 	if (requestInfo.items.isNameRequested){
-		representationObject.Name = std::make_optional<QString>(orderInfoPtr->GetOrderId());
+		representationObject.Name = (orderInfoPtr->GetOrderId());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = std::make_optional<QString>(orderInfoPtr->GetDescription());
+		representationObject.Description = (orderInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isStatusRequested){
-		representationObject.Status = std::make_optional<QString>(prolifedata::GetNameFromOrderStatus(orderInfoPtr->GetOrderStatus()));
+		representationObject.Status = (prolifedata::GetNameFromOrderStatus(orderInfoPtr->GetOrderStatus()));
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = std::make_optional<QByteArray>(orderInfoPtr->GetOrderId());
+		representationObject.OrderId = (orderInfoPtr->GetOrderId());
 	}
 
 	if (requestInfo.items.isOrderCustomerRequested){
-		representationObject.OrderCustomer = std::make_optional<QString>(objectCollectionIterator.GetElementInfo("OrderCustomer").toString());
+		if (metaInfo.IsValid()){
+			representationObject.OrderCustomer = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_CUSTOMER).toString();
+		}
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.PurchaseId = std::make_optional<QByteArray>(orderInfoPtr->GetPurchaseOrderId());
+		representationObject.PurchaseId = (orderInfoPtr->GetPurchaseOrderId());
 	}
 
 	if (requestInfo.items.isAddedRequested){
-		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime();
-		addedTime.setTimeSpec(Qt::UTC);
+		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime().toUTC();
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = std::make_optional<QString>(added);
+		representationObject.Added = (added);
 	}
 
-	if (requestInfo.items.isLastModifiedRequested){
-		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("LastModified").toDateTime();
-		lastModifiedTime.setTimeSpec(Qt::UTC);
+	if (requestInfo.items.isTimeStampRequested){
+		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = std::make_optional<QString>(lastModified);
+		representationObject.TimeStamp = (lastModified);
 	}
 
 	return true;
@@ -341,24 +342,24 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	if (arguments.input.Version_1_0->Id){
 		id = *arguments.input.Version_1_0->Id;
 	}
-	orderData.Id = std::make_optional<QByteArray>(id);
+	orderData.Id = (id);
 
 	QByteArray orderId = orderInfoPtr->GetOrderId();
-	orderData.Name = std::make_optional<QString>(orderId);
-	orderData.OrderId = std::make_optional<QByteArray>(orderId);
+	orderData.Name = (orderId);
+	orderData.OrderId = (orderId);
 
 	QByteArray purchaseOrderId = orderInfoPtr->GetPurchaseOrderId();
-	orderData.PurchaseId = std::make_optional<QByteArray>(purchaseOrderId);
+	orderData.PurchaseId = (purchaseOrderId);
 
 	QByteArray customerId = orderInfoPtr->GetCustomerId();
-	orderData.CustomerId = std::make_optional<QByteArray>(customerId);
+	orderData.CustomerId = (customerId);
 
 	QString description = orderInfoPtr->GetDescription();
-	orderData.Description = std::make_optional<QString>(description);
+	orderData.Description = (description);
 
 	prolifedata::IOrderInfo::OrderStatus status = orderInfoPtr->GetOrderStatus();
 	QByteArray orderStatus = prolifedata::GetIdFromOrderStatus(status);
-	orderData.OrderStatus = std::make_optional<QByteArray>(orderStatus);
+	orderData.OrderStatus = (orderStatus);
 
 	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
 	if (productCollectionPtr == nullptr){
@@ -379,10 +380,10 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					sdl::prolife::Orders::COrderedProduct::V1_0 softwareProduct;
 					QByteArray productUuid = softwareProductPtr->GetProductId();
 
-					softwareProduct.Id = std::make_optional<QByteArray>(productId);
-					softwareProduct.CategoryId = std::make_optional<QByteArray>(softwareProductPtr->GetFactoryId());
-					softwareProduct.ProductUuid = std::make_optional<QByteArray>(softwareProductPtr->GetProductId());
-					softwareProduct.SerialNumber = std::make_optional<QByteArray>(softwareProductPtr->GetSerialNumber());
+					softwareProduct.Id = (productId);
+					softwareProduct.CategoryId = (softwareProductPtr->GetFactoryId());
+					softwareProduct.ProductUuid = (softwareProductPtr->GetProductId());
+					softwareProduct.SerialNumber = (softwareProductPtr->GetSerialNumber());
 					softwareProduct.InUse = std::make_optional<bool>(softwareProductPtr->IsInUse());
 					softwareProduct.IsNew = std::make_optional<bool>(false);
 
@@ -390,7 +391,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
 						const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
 						if (productInfoPtr != nullptr){
-							softwareProduct.ProductName = std::make_optional<QString>(productInfoPtr->GetName());
+							softwareProduct.ProductName = (productInfoPtr->GetName());
 						}
 					}
 
@@ -400,20 +401,20 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 						QByteArray activeLicenseId = activeLicenseIds[0];
 						const imtlic::ILicenseInstance* licenseInstancePtr = softwareProductPtr->GetLicenseInstance(activeLicenseId);
 						if (licenseInstancePtr != nullptr){
-							softwareProduct.LicenseUuid = std::make_optional<QByteArray>(activeLicenseId);
+							softwareProduct.LicenseUuid = (activeLicenseId);
 
 							imtbase::IObjectCollection::DataPtr licenseDataPtr;
 							if (m_licenseDefinitionCollectionCompPtr->GetObjectData(activeLicenseId, licenseDataPtr)){
 								const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseInfoPtr != nullptr){
-									softwareProduct.LicenseName = std::make_optional<QString>(licenseInfoPtr->GetLicenseName());
-									softwareProduct.LicenseUuid = std::make_optional<QByteArray>(licenseInfoPtr->GetLicenseId());
+									softwareProduct.LicenseName = (licenseInfoPtr->GetLicenseName());
+									softwareProduct.LicenseUuid = (licenseInfoPtr->GetLicenseId());
 								}
 							}
 
 							QDate date = licenseInstancePtr->GetExpiration().date();
 							QString licenseExpiration = date.toString("yyyy-MM-dd");
-							softwareProduct.Expiration = std::make_optional<QString>(licenseExpiration);
+							softwareProduct.Expiration = (licenseExpiration);
 						}
 					}
 
@@ -430,17 +431,17 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 					QByteArray licenseDefinitionUuid = deviceInfoPtr->GetConfigurationType();
 
-					hardwareProduct.Id = std::make_optional<QByteArray>(productId);
-					hardwareProduct.ProductUuid = std::make_optional<QByteArray>(productUuid);
-					hardwareProduct.CategoryId = std::make_optional<QByteArray>(QByteArray("Hardware"));
-					hardwareProduct.LicenseUuid = std::make_optional<QByteArray>(licenseDefinitionUuid);
+					hardwareProduct.Id = (productId);
+					hardwareProduct.ProductUuid = (productUuid);
+					hardwareProduct.CategoryId = (QByteArray("Hardware"));
+					hardwareProduct.LicenseUuid = (licenseDefinitionUuid);
 					hardwareProduct.IsNew = std::make_optional<bool>(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
 						const imtlic::IProductInfo* productInfoPtr = dynamic_cast<imtlic::IProductInfo*>(dataPtr.GetPtr());
 						if (productInfoPtr != nullptr){
-							hardwareProduct.ProductName = std::make_optional<QString>(productInfoPtr->GetName());
+							hardwareProduct.ProductName = (productInfoPtr->GetName());
 						}
 					}
 
@@ -448,8 +449,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_licenseDefinitionCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
 						const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 						if (licenseInfoPtr != nullptr){
-							hardwareProduct.LicenseName = std::make_optional<QString>(licenseInfoPtr->GetLicenseName());
-							hardwareProduct.LicenseId = std::make_optional<QByteArray>(licenseInfoPtr->GetLicenseId());
+							hardwareProduct.LicenseName = (licenseInfoPtr->GetLicenseName());
+							hardwareProduct.LicenseId = (licenseInfoPtr->GetLicenseId());
 						}
 					}
 
@@ -457,8 +458,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_deviceCollectionCompPtr->GetObjectData(productId, deviceDataPtr)){
 						const prolifedata::IDeviceInfo* deviceInfoInstancePtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 						if (deviceInfoInstancePtr != nullptr){
-							hardwareProduct.MacAddress = std::make_optional<QByteArray>(deviceInfoInstancePtr->GetMacAddress());
-							hardwareProduct.SerialNumber = std::make_optional<QByteArray>(deviceInfoInstancePtr->GetSerialNumber());
+							hardwareProduct.MacAddress = (deviceInfoInstancePtr->GetMacAddress());
+							hardwareProduct.SerialNumber = (deviceInfoInstancePtr->GetSerialNumber());
 						}
 					}
 
@@ -778,22 +779,19 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 
 		return false;
 	}
-
-	iprm::CTextParam valueParam;
-	valueParam.SetText(orderId);
-
-	iprm::CEnableableParam isEqualParam;
-	isEqualParam.SetEnabled(true);
-
-	iprm::CParamsSet valueParamsSet;
-	valueParamsSet.SetEditableParameter("Value", &valueParam);
-	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
-	iprm::CParamsSet paramsSet1;
-	paramsSet1.SetEditableParameter("OrderId", &valueParamsSet);
-
+	
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "OrderId";
+	fieldFilter.filterValue = orderId;
+	
+	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+	
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.SetFieldsFilter(groupFilter);
+	
 	iprm::CParamsSet filterParam;
-	filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	// Check Order-ID exists
 	imtbase::ICollectionInfo::Ids collectionIds1 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);

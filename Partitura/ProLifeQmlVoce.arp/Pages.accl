@@ -14,24 +14,9 @@
         <Element ComponentName="OrdersPage" X="200" Y="400" Note=""/>
         <Element ComponentName="PageData" X="925" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="925" Y="200" Note=""/>
-        <Element ComponentName="Repositories" X="925" Y="525" Note=""/>
         <Element ComponentName="SoftwareProductsPage" X="200" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
-                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
-                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="PageData">
             <PositionMap>
                 <Element ComponentName="AccountsPage" X="1000" Y="225" Note=""/>

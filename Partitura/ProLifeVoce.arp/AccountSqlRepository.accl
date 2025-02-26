@@ -2,14 +2,16 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="AccountDatabaseDelegate" X="700" Y="350" Note=""/>
         <Element ComponentName="CompanyInfo" X="600" Y="100" Note=""/>
+        <Element ComponentName="CustomerMetaInfoCreator" X="175" Y="275" Note=""/>
+        <Element ComponentName="CustomerMetaInfoDelegate" X="165" Y="393" Note=""/>
         <Element ComponentName="JsonSerializer" X="425" Y="350" Note=""/>
         <Element ComponentName="ObjectCollection" X="200" Y="100" Note=""/>
         <Element ComponentName="Repository" X="500" Y="575" Note=""/>

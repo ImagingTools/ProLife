@@ -100,6 +100,14 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
+	if (!metaInfo.IsValid()){
+		errorMessage = QString("Unable to create representation from object '%1'. Error: Meta info is invalid").arg(qPrintable(objectId));
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+		
+		return false;
+	}
+	
+	QString hardwareId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toString();
 
 	if (requestInfo.items.isIdRequested){
 		representationObject.Id = (objectId);
@@ -125,29 +133,27 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = (objectCollectionIterator.GetElementInfo("OrderId").toString());
+		representationObject.OrderId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
 	}
 
 	if (requestInfo.items.isPurchaseOrderIdRequested){
-		representationObject.PurchaseOrderId = (objectCollectionIterator.GetElementInfo("PurchaseOrderId").toString());
+		representationObject.PurchaseOrderId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
 	}
 
 	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.OrderUuid = (objectCollectionIterator.GetElementInfo("OrderUuid").toString());
+		representationObject.OrderUuid = softwareInfoPtr->GetOrderId();
 	}
 
 	if (requestInfo.items.isHardwareUuidRequested){
-		representationObject.HardwareUuid = (objectCollectionIterator.GetElementInfo("HardwareUuid").toString());
+		// representationObject.HardwareUuid = (objectCollectionIterator.GetElementInfo("HardwareUuid").toString());
 	}
 
 	if (requestInfo.items.isProductIdRequested){
-		representationObject.ProductId = (objectCollectionIterator.GetElementInfo("ProductId").toString());
+		representationObject.ProductId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toString();
 	}
 
 	if (requestInfo.items.isProductNameRequested) {
-		representationObject.ProductName = (
-			objectCollectionIterator.GetElementInfo("ProductName").toString()
-			);
+		representationObject.ProductName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	}
 
 	if (requestInfo.items.isProductUuidRequested) {
@@ -157,9 +163,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isSerialNumberRequested) {
-		representationObject.SerialNumber = (
-			objectCollectionIterator.GetElementInfo("SerialNumber").toString()
-			);
+		representationObject.SerialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 	}
 
 	if (requestInfo.items.isExpirationRequested) {
@@ -169,58 +173,43 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isIsPairedRequested) {
-		representationObject.IsPaired = (objectCollectionIterator.GetElementInfo("IsPaired").toBool());
+		representationObject.IsPaired = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
 	}
 
 	if (requestInfo.items.isInUseRequested) {
-		representationObject.InUse = (objectCollectionIterator.GetElementInfo("InUse").toBool());
+		representationObject.InUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	}
 
 	if (requestInfo.items.isDeviceIdRequested) {
-		representationObject.DeviceId = (
-			objectCollectionIterator.GetElementInfo("DeviceId").toString()
-			);
+		representationObject.DeviceId = hardwareId;
 	}
 
 	if (requestInfo.items.isLicenseNameRequested) {
-		representationObject.LicenseName = (
-			objectCollectionIterator.GetElementInfo("LicenseName").toString()
-			);
+		representationObject.LicenseName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
 	}
 
 	if (requestInfo.items.isLicenseIdRequested) {
-		representationObject.LicenseId = (
-			objectCollectionIterator.GetElementInfo("LicenseId").toString()
-			);
+		representationObject.LicenseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
 	}
 
 	if (requestInfo.items.isLicenseUuidRequested) {
-		representationObject.LicenseUuid = (
-			objectCollectionIterator.GetElementInfo("LicenseUuid").toString()
-			);
+		representationObject.LicenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
 	}
 
 	if (requestInfo.items.isCustomerUuidRequested) {
-		representationObject.CustomerUuid = (
-			objectCollectionIterator.GetElementInfo("CustomerUuid").toString()
-			);
+		representationObject.CustomerUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
 	}
 
 	if (requestInfo.items.isCustomerRequested) {
-		representationObject.Customer = (
-			objectCollectionIterator.GetElementInfo("Customer").toString()
-			);
+		representationObject.Customer = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 	}
 
 	if (requestInfo.items.isProjectRequested) {
-		representationObject.Project = (
-			objectCollectionIterator.GetElementInfo("Project").toString()
-			);
+		representationObject.Project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
 	}
 
-
 	if (requestInfo.items.isStatusRequested){
-		QByteArray hardwareMacAddress = objectCollectionIterator.GetElementInfo("DeviceId").toByteArray();
+		QByteArray hardwareMacAddress = hardwareId.toUtf8();
 		bool isPaired = !hardwareMacAddress.isEmpty();
 		if (isPaired){
 			representationObject.Status = ("IsPaired");
@@ -230,7 +219,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		}
 
 		if (isPaired){
-			bool isUse = objectCollectionIterator.GetElementInfo("InUse").toBool();
+			bool isUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 			if (isUse){
 				representationObject.Status = ("InUse");
 			}
@@ -238,19 +227,17 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isAddedRequested){
-		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime();
-		addedTime.setTimeSpec(Qt::UTC);
+		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime().toUTC();
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 		representationObject.Added = (added);
 	}
 
-	if (requestInfo.items.isLastModifiedRequested){
-		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("LastModified").toDateTime();
-		lastModifiedTime.setTimeSpec(Qt::UTC);
+	if (requestInfo.items.isTimeStampRequested){
+		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = (lastModified);
+		representationObject.TimeStamp = (lastModified);
 	}
 
 	return true;
@@ -834,13 +821,21 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	sdl::prolife::Licenses::SoftwareProductUpdateRequestArguments requestArguments = softwareProductUpdateRequest.GetRequestedArguments();
 	if (!requestArguments.input.Version_1_0){
 		I_CRITICAL();
-
+		return false;
+	}
+	
+	if (!requestArguments.input.Version_1_0->Item){
+		I_CRITICAL();
 		return false;
 	}
 
 	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareData = *requestArguments.input.Version_1_0->Item;
-	QByteArray objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
-
+	
+	QByteArray objectId;
+	if (requestArguments.input.Version_1_0->Id){
+		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
+	}
+	
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&object);
 	if (softwareInfoPtr == nullptr){
 		errorMessage = QString("Object is invalid");

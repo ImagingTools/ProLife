@@ -81,6 +81,8 @@ RemoteCollectionView {
             gqlGetCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductItem;
             gqlUpdateCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductUpdate;
             gqlAddCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductAdd;
+			
+			typeId: "SoftwareProduct";
 
             documentModelComp: Component {
                 SoftwareProductData {}

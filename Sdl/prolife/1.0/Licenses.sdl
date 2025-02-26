@@ -41,7 +41,7 @@ type SoftwareProductItem {
 	Project: String
 	Status: String
 	Added: String
-	LastModified: String
+	TimeStamp: String
 }
 
 type SoftwareProductsListPayload {
@@ -50,8 +50,8 @@ type SoftwareProductsListPayload {
 }
 
 type SoftwareProductData {
-	Id: ID!
-	ProductId: ID!
+	Id: ID
+	ProductId: ID
 	CategoryId: ID
 	SerialNumber: ID
 	Project: String

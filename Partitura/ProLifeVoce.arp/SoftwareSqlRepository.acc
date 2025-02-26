@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -57,6 +57,51 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SoftwareMetaInfoCreator" PackageId="ProLifeDataPck" ComponentId="SoftwareMetaInfoCreator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HardwareBindingCollection" Type="Reference" ExportId="HardwareBindingCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProduct"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareMetaInfoDelegate" PackageId="ProLifeGqlPck" ComponentId="SoftwareMetaInfoDelegate">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SoftwareProductDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="SoftwareProductDatabaseDelegate">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -77,11 +122,14 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="JsonBasedMetaInfoDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareMetaInfoDelegate"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoCreator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareMetaInfoCreator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="DocumentId"/>
@@ -89,14 +137,14 @@
                     <AttributeInfo Id="ObjectTypes" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Types"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="SoftwareInstances"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -136,5 +184,7 @@
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="SoftwareProductDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Repository"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="SoftwareProductDatabaseDelegate" ComponentId="SoftwareProductDatabaseDelegate"/>
+    </ExportedComponents>
 </Acf>

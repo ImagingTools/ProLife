@@ -21,20 +21,10 @@ class IOrderInfo: virtual public iser::IObject, virtual public prolifedata::IOrd
 public:
 	enum MetaInfoTypes
 	{
-		/**
-			Order Id given as QString.
-		*/
-		MIT_ORDER_ID = idoc::IDocumentMetaInfo::MIT_USER,
-
-		/**
-			Order customer given as QString.
-		*/
+		MIT_ORDER_ID = idoc::IDocumentMetaInfo::MIT_USER + 1,
 		MIT_ORDER_CUSTOMER,
-
-		/**
-			Order status given as OrderStatus.
-		*/
-		MIT_ORDER_STATUS
+		MIT_ORDER_STATUS,
+		MIT_PURCHASE_ORDER_ID
 	};
 
 	enum OrderStatus

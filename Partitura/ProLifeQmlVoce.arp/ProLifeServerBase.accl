@@ -8,21 +8,37 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AuthorizableServerFramework" X="575" Y="125" Note=""/>
+        <Element ComponentName="AuthorizableServerFramework" X="625" Y="125" Note=""/>
         <Element ComponentName="Language" X="275" Y="675" Note=""/>
         <Element ComponentName="LisaGQLEngine" X="600" Y="500" Note=""/>
+        <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="125" Note=""/>
         <Element ComponentName="ProLifeHandlers" X="600" Y="300" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="250" Y="500" Note=""/>
-        <Element ComponentName="Subscriptions" X="1025" Y="325" Note=""/>
+        <Element ComponentName="Repositories" X="1025" Y="500" Note=""/>
+        <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="Subscriptions">
             <PositionMap>
-                <Element ComponentName="AccountsSubscriberController" X="1000" Y="325" Note=""/>
-                <Element ComponentName="DevicesSubscriberController" X="200" Y="325" Note=""/>
-                <Element ComponentName="OrdersSubscriberController" X="600" Y="550" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="600" Y="325" Note=""/>
-                <Element ComponentName="SoftwareProductsSubscriberController" X="600" Y="150" Note=""/>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
+                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
+                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
+                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
+                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

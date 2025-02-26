@@ -21,6 +21,11 @@
 #include <prolifegql/CCustomerCollectionControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
 #include <prolifegql/CCustomerChangeGeneratorComp.h>
+#include <prolifegql/CDeviceMetaInfoDelegateComp.h>
+#include <prolifegql/CSoftwareMetaInfoDelegateComp.h>
+#include <prolifegql/COrderMetaInfoDelegateComp.h>
+#include <prolifegql/CCustomerMetaInfoDelegateComp.h>
+#include <prolifegql/CHardwareBindingMetaInfoDelegateComp.h>
 
 
 /**
@@ -52,6 +57,11 @@ typedef icomp::TModelCompWrap<
 						istd::IChangeable>> CustomerInfo;
 typedef prolifegql::CDeviceControllerComp DeviceController;
 typedef prolifegql::CCustomerChangeGeneratorComp CustomerChangeGenerator;
+typedef prolifegql::CDeviceMetaInfoDelegateComp DeviceMetaInfoDelegate;
+typedef prolifegql::CSoftwareMetaInfoDelegateComp SoftwareMetaInfoDelegate;
+typedef prolifegql::COrderMetaInfoDelegateComp OrderMetaInfoDelegate;
+typedef prolifegql::CCustomerMetaInfoDelegateComp CustomerMetaInfoDelegate;
+typedef prolifegql::CHardwareBindingMetaInfoDelegateComp HardwareBindingMetaInfoDelegate;
 
 
 } // namespace ImtLicenseGqlPck

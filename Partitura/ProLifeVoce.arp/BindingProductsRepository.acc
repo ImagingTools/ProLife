@@ -25,13 +25,49 @@
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SqlDatabaseJsonDelegate"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="CompactXmlFileSerializer" PackageId="FilePck" ComponentId="JsonFileSerializer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="HardwareBindingMetaInfoCreator" PackageId="ProLifeDataPck" ComponentId="HardwareBindingMetaInfoCreator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareBinding"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="HardwareBindingMetaInfoDelegate" PackageId="ProLifeGqlPck" ComponentId="HardwareBindingMetaInfoDelegate">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -42,7 +78,7 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="SqlDatabaseJsonDelegate" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseJsonDelegate">
+        <Element Id="SqlDatabaseJsonDelegate" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseDocumentDelegate">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -62,8 +98,14 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="JsonBasedMetaInfoDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareBindingMetaInfoDelegate"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoCreator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareBindingMetaInfoCreator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="DocumentId"/>
@@ -73,6 +115,12 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="BindingProducts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -108,5 +156,7 @@
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="BindingProducts"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="SqlDatabaseJsonDelegate"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="SqlDatabaseJsonDelegate" ComponentId="SqlDatabaseJsonDelegate"/>
+    </ExportedComponents>
 </Acf>

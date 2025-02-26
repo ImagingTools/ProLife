@@ -3,7 +3,7 @@
 
 // ACF includes
 #include <iser/IObject.h>
-
+#include <idoc/IDocumentMetaInfo.h>
 
 namespace prolifedata
 {
@@ -12,6 +12,12 @@ namespace prolifedata
 class IHardwareProductBinding: virtual public iser::IObject
 {
 public:
+	enum MetaInfoTypes
+	{
+		MIT_HARDWARE_ID = idoc::IDocumentMetaInfo::MIT_USER + 1,
+		MIT_SOFTWARE_IDS
+	};
+	
 	/**
 		Get hardware-ID.
 	*/

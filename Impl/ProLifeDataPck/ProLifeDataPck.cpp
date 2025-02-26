@@ -39,6 +39,31 @@ I_EXPORT_COMPONENT(
 			"Key data provider",
 			"License Key Provider Order Product");
 
+I_EXPORT_COMPONENT(
+			DeviceMetaInfoCreator,
+			"Device meta info creator",
+			"Device Meta Info Creator");
+
+I_EXPORT_COMPONENT(
+			SoftwareMetaInfoCreator,
+			"Software meta info creator",
+			"Software Meta Info Creator");
+
+I_EXPORT_COMPONENT(
+			OrderMetaInfoCreator,
+			"Order meta info creator",
+			"Order Meta Info Creator");
+
+I_EXPORT_COMPONENT(
+			CustomerMetaInfoCreator,
+			"Customer meta info creator",
+			"Customer Meta Info Creator");
+
+I_EXPORT_COMPONENT(
+			HardwareBindingMetaInfoCreator,
+			"Hardware meta info creator",
+			"Hardware Meta Info Creator");
+
 
 } // namespace ProLifeDataPck
 

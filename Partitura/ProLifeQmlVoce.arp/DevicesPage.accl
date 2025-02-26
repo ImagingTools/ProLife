@@ -26,16 +26,10 @@
         <Element ComponentName="XmlFileSerializer" X="650" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="CollectionCommands">
+        <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="Bind" X="600" Y="250" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
-                <Element ComponentName="DecryptFile" X="600" Y="600" Note=""/>
-                <Element ComponentName="OpenOrder" X="1025" Y="250" Note=""/>
-                <Element ComponentName="Revision" X="1025" Y="425" Note=""/>
-                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-                <Element ComponentName="TransferLicenses" X="1025" Y="600" Note=""/>
+                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
+                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -47,10 +41,16 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
+        <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
-                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
-                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
+                <Element ComponentName="Bind" X="600" Y="250" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
+                <Element ComponentName="DecryptFile" X="600" Y="600" Note=""/>
+                <Element ComponentName="OpenOrder" X="1025" Y="250" Note=""/>
+                <Element ComponentName="Revision" X="1025" Y="425" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+                <Element ComponentName="TransferLicenses" X="1025" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

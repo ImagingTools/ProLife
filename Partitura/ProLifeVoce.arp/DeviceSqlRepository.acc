@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -30,11 +30,14 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="JsonBasedMetaInfoDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceMetaInfoDelegate"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoCreator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceMetaInfoCreator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="DocumentId"/>
@@ -42,20 +45,14 @@
                     <AttributeInfo Id="ObjectTypes" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Types"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderDatabaseSqlDelegate" Type="Reference" ExportId="OrderDatabaseSqlDelegate">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -66,6 +63,45 @@
         <Element Id="DeviceInfo" PackageId="ProLifeDataPck" ComponentId="DeviceInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="DeviceMetaInfoCreator" PackageId="ProLifeDataPck" ComponentId="DeviceMetaInfoCreator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Device"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DeviceMetaInfoDelegate" PackageId="ProLifeGqlPck" ComponentId="DeviceMetaInfoDelegate">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="Devices" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
@@ -193,6 +229,7 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Devices"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="DeviceDatabaseDelegate" ComponentId="DeviceDatabaseDelegate"/>
         <Component ExportedId="DeviceSqlCollection" ComponentId="Devices"/>
     </ExportedComponents>
 </Acf>

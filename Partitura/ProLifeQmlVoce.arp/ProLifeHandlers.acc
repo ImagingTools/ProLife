@@ -26,7 +26,6 @@
                     <AttributeInfo Id="BinaryDataProviders" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>KeyDataProviders</Value>
                                 <Value>RestoringDatabaseController</Value>
                             </Values>
                         </Data>
@@ -145,82 +144,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="KeyDataProviders" PackageId="" ComponentId="KeyDataProviders">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/BindingProductsRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/DeviceSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/DeviceOperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="LisaGqlEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/SoftwareOperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/SoftwareSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="Observers" PackageId="" ComponentId="Observers">
-            <Data IsEnabled="true" Flags="1">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="AccountCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/AccountSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="AccountSessionChangeNotifier" Type="Reference" ExportId="AccountSessionChangeNotifier">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/DeviceSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceSessionChangeNotifier" Type="Reference" ExportId="DeviceSessionChangeNotifier">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/OrderSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderSessionChangeNotifier" Type="Reference" ExportId="OrderSessionChangeNotifier">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareProductCollectionModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Pages/SoftwareSqlRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="SoftwareProductSessionChangeNotifier">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="Pages" PackageId="ProLifeQmlVoce" ComponentId="Pages">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                    <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                    <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="BindingProductRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
@@ -235,13 +168,22 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="ObjectCollections">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                    <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -388,63 +330,6 @@
                     <Interface InterfaceId="imtcrypt::IEncryptionKeysProvider" ComponentId="KeyDataProvider"/>
                     <Interface InterfaceId="imtrest::IBinaryDataProvider" ComponentId="KeyDataProvider"/>
                 </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-        <EmbeddedRegistry Id="Observers">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AccountCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="AccountCollectionModel">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="AccountSessionChangeNotifier">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="DeviceCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="DeviceCollectionModel">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="DeviceSessionChangeNotifier">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="LicenseCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="SoftwareProductCollectionModel">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="SoftwareProductSessionChangeNotifier">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OrderCollectionObserver" PackageId="ImtAuthGqlPck" ComponentId="SessionModelObserver">
-                        <Data IsEnabled="true" Flags="1">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Model" Type="Reference" ExportId="OrderCollectionModel">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SessionChangeNotifier" Type="Reference" ExportId="OrderSessionChangeNotifier">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces/>
                 <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>

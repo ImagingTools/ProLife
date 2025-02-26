@@ -33,7 +33,6 @@
                             <Values>
                                 <Value>Subscriptions</Value>
                                 <Value>LisaGQLEngine</Value>
-                                <Value>AuthorizableServerFramework/PumaGQLClientEngine</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -42,6 +41,13 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ObjectCollectionMigrationController</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
@@ -100,11 +106,43 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="ObjectCollectionMigrationController" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="From" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="15"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/DeviceDatabaseDelegate</Value>
+                                <Value>Repositories/SoftwareProductDatabaseDelegate</Value>
+                                <Value>Repositories/OrderDatabaseDelegate</Value>
+                                <Value>Repositories/AccountDatabaseDelegate</Value>
+                                <Value>Repositories/BindingProductsDatabaseDelegate</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="To" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="15"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ProLifeHandlers" PackageId="ProLifeQmlVoce" ComponentId="ProLifeHandlers">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountSessionChangeNotifier" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Subscriptions/AccountsSubscriberController"/>
+                    <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
@@ -112,14 +150,17 @@
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/Backup"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseAccessSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceSessionChangeNotifier" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Subscriptions/DevicesSubscriberController"/>
+                    <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ExternRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -147,17 +188,24 @@
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaGqlEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LogPath" Type="Reference" ExportId="LogPath">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="OrderSessionChangeNotifier" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Subscriptions/OrdersSubscriberController"/>
+                    <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
@@ -168,8 +216,11 @@
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/UserSessionRemoteRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SoftwareProductSessionChangeNotifier" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Subscriptions/SoftwareProductsSubscriberController"/>
+                    <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -207,24 +258,249 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">
+        <Element Id="Repositories" PackageId="" ComponentId="Repositories">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerFramework"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="Repositories">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="AccountSqlRepository" PackageId="ProLifeVoce" ComponentId="AccountSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="BindingProductsRepository" PackageId="ProLifeVoce" ComponentId="BindingProductsRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedAccountRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedDeviceRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DeviceSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedOrderRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CachedSoftwareRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareSqlRepository"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DeviceSqlRepository" PackageId="ProLifeVoce" ComponentId="DeviceSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="LicenseRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="ProductRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="SoftwareSqlRepository" PackageId="ProLifeVoce" ComponentId="SoftwareSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DeviceSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HardwareBindingCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="BindingProductsRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces/>
+                <ExportedComponents>
+                    <Component ExportedId="AccountDatabaseDelegate" ComponentId="AccountSqlRepository/AccountDatabaseDelegate"/>
+                    <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
+                    <Component ExportedId="BindingProductsDatabaseDelegate" ComponentId="BindingProductsRepository/SqlDatabaseJsonDelegate"/>
+                    <Component ExportedId="BindingProductsRepository" ComponentId="BindingProductsRepository"/>
+                    <Component ExportedId="CachedAccountRepository" ComponentId="CachedAccountRepository"/>
+                    <Component ExportedId="CachedDeviceRepository" ComponentId="CachedDeviceRepository"/>
+                    <Component ExportedId="CachedOrderRepository" ComponentId="CachedOrderRepository"/>
+                    <Component ExportedId="CachedSoftwareRepository" ComponentId="CachedSoftwareRepository"/>
+                    <Component ExportedId="DeviceDatabaseDelegate" ComponentId="DeviceSqlRepository/DeviceDatabaseDelegate"/>
+                    <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
+                    <Component ExportedId="OrderDatabaseDelegate" ComponentId="OrderSqlRepository/OrderDatabaseDelegate"/>
+                    <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
+                    <Component ExportedId="SoftwareProductDatabaseDelegate" ComponentId="SoftwareSqlRepository/SoftwareProductDatabaseDelegate"/>
+                    <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
         <EmbeddedRegistry Id="Subscriptions">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="AccountsSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
+                    <Element Id="AccountCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -237,13 +513,19 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="DevicesSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
+                    <Element Id="DeviceCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -256,13 +538,19 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="OrdersSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
+                    <Element Id="OrderCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -275,7 +563,13 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -290,17 +584,17 @@
                                 <AttributeInfo Id="SubscriberController" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>DevicesSubscriberController</Value>
-                                            <Value>SoftwareProductsSubscriberController</Value>
-                                            <Value>OrdersSubscriberController</Value>
-                                            <Value>AccountsSubscriberController</Value>
+                                            <Value>DeviceCollectionChangeNotifier</Value>
+                                            <Value>SoftwareCollectionChangeNotifier</Value>
+                                            <Value>OrderCollectionChangeNotifier</Value>
+                                            <Value>AccountCollectionChangeNotifier</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="SoftwareProductsSubscriberController" PackageId="ImtAuthGqlPck" ComponentId="SessionModelSubscriberController">
+                    <Element Id="SoftwareCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
@@ -313,7 +607,13 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="SoftwareRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -325,12 +625,7 @@
                     <Interface InterfaceId="imtgql::IGqlSubscriberController" ComponentId="SlaveSubscriberController"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="SlaveSubscriberController"/>
                 </ExportedInterfaces>
-                <ExportedComponents>
-                    <Component ExportedId="AccountsSubscriberController" ComponentId="AccountsSubscriberController"/>
-                    <Component ExportedId="DevicesSubscriberController" ComponentId="DevicesSubscriberController"/>
-                    <Component ExportedId="OrdersSubscriberController" ComponentId="OrdersSubscriberController"/>
-                    <Component ExportedId="SoftwareProductsSubscriberController" ComponentId="SoftwareProductsSubscriberController"/>
-                </ExportedComponents>
+                <ExportedComponents/>
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>

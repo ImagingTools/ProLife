@@ -80,12 +80,12 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.Added = (added);
 	}
 
-	if (requestInfo.items.isLastModifiedRequested){
-		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("LastModified").toDateTime();
+	if (requestInfo.items.isTimeStampRequested){
+		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime();
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.LastModified = (lastModified);
+		representationObject.TimeStamp = (lastModified);
 	}
 
 	return true;

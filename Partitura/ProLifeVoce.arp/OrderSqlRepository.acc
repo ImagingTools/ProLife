@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5225" Description="ACF"/>
-            <Version Id="1" Number="2208" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description>Acula's data repository containing all resources need for the execution of the production workflow</Description>
@@ -59,12 +59,6 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceDatabaseSqlDelegate" Type="Reference" ExportId="DeviceDatabaseSqlDelegate">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -79,8 +73,14 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="JsonBasedMetaInfoDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderMetaInfoDelegate"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoCreator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderMetaInfoCreator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectIdColumn" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="DocumentId"/>
@@ -91,8 +91,11 @@
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -103,6 +106,33 @@
         <Element Id="OrderInfo" PackageId="ProLifeDataPck" ComponentId="OrderInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="OrderMetaInfoCreator" PackageId="ProLifeDataPck" ComponentId="OrderMetaInfoCreator">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Order"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderMetaInfoDelegate" PackageId="ProLifeGqlPck" ComponentId="OrderMetaInfoDelegate">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="Orders" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
@@ -174,6 +204,7 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Orders"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="OrderDatabaseDelegate" ComponentId="OrderDatabaseDelegate"/>
         <Component ExportedId="ProductsCollection" ComponentId="Orders"/>
     </ExportedComponents>
 </Acf>

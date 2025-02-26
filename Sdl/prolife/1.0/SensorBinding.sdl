@@ -27,7 +27,7 @@ type SensorBindingListPayload {
 }
 
 type SensorBindingData {
-	Id: ID!
+	Id: ID
 	ProductUuid: ID
 	SoftwareIds: ID
 	Project: String

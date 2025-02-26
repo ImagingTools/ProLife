@@ -1,0 +1,44 @@
+#pragma once
+
+
+// ACF includes
+#include <idoc/CStandardDocumentMetaInfo.h>
+
+// ImtCore includes
+#include <imtbase/CObjectMetaInfoCreatorCompBase.h>
+
+
+namespace prolifedata
+{
+
+
+/**
+	Meta-info creator for customer information object.
+*/
+class CCustomerMetaInfoCreatorComp: public imtbase::CObjectMetaInfoCreatorCompBase
+{
+public:
+	typedef imtbase::CObjectMetaInfoCreatorCompBase BaseClass;
+
+	I_BEGIN_COMPONENT(CCustomerMetaInfoCreatorComp);
+	I_END_COMPONENT;
+
+protected:
+	// reimplemented (imtbase::IMetaInfoCreator)
+	virtual bool CreateMetaInfo(const istd::IChangeable* dataPtr, const QByteArray& typeId, idoc::MetaInfoPtr& metaInfoPtr) const override;
+
+private:
+	class MetaInfo: public idoc::CStandardDocumentMetaInfo
+	{
+	public:
+		typedef idoc::CStandardDocumentMetaInfo BaseClass;
+
+		// reimplemented (idoc::IDocumentMetaInfo)
+		virtual QString GetMetaInfoName(int metaInfoType) const override;
+	};
+};
+
+
+} // namespace prolifedata
+
+

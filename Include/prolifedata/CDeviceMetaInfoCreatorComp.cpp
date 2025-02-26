@@ -1,0 +1,128 @@
+#include <prolifedata/CDeviceMetaInfoCreatorComp.h>
+
+
+// ACF includes
+#include <imod/TModelWrap.h>
+
+// ImtCore includes
+#include <imtlic/IProductInfo.h>
+#include <imtlic/ILicenseDefinition.h>
+
+// ProLife includes
+#include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/IOrderInfo.h>
+#include <prolifedata/ICustomerInfo.h>
+
+
+namespace prolifedata
+{
+
+
+// protected methods
+
+// reimplemented (imtbase::IMetaInfoCreator)
+
+bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
+			const istd::IChangeable* dataPtr,
+			const QByteArray& typeId,
+			idoc::MetaInfoPtr& metaInfoPtr) const
+{
+	if (typeId != *m_objectTypeIdAttrPtr){
+		return false;
+	}
+
+	metaInfoPtr.SetPtr(new imod::TModelWrap<MetaInfo>);
+
+	if (dataPtr == nullptr){
+		return true;
+	}
+
+	const COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const COrderedIdentifiableDeviceInfo*>(dataPtr);
+	if (deviceInfoPtr == nullptr){
+		return false;
+	}
+	
+	QByteArray orderId = deviceInfoPtr->GetOrderId();
+	QByteArray productId = deviceInfoPtr->GetDeviceType();
+	QByteArray licenseId = deviceInfoPtr->GetConfigurationType();
+	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_TYPE, productId);
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, licenseId);
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_MAC_ADDRESS, deviceInfoPtr->GetMacAddress());
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, deviceInfoPtr->GetSerialNumber());
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_STATUS, deviceInfoPtr->GetDeviceProductionStatus());
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_PROJECT, deviceInfoPtr->GetProject());
+	
+	QByteArray customerId;
+	if (m_orderCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr orderDataPtr;
+		if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+			const IOrderInfo* orderInfoPtr = dynamic_cast<const IOrderInfo*>(orderDataPtr.GetPtr());
+			if (orderInfoPtr != nullptr){
+				QByteArray deliveryId = orderInfoPtr->GetOrderId();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DELIVERY_ID, deliveryId);
+
+				QByteArray purchaseId = orderInfoPtr->GetPurchaseOrderId();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PURCHASE_ID, purchaseId);
+
+				customerId = orderInfoPtr->GetCustomerId();
+			}
+		}
+	}
+	
+	if (m_accountCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr customerDataPtr;
+		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
+			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
+			if (customerInfoPtr != nullptr){
+				QString customerName = customerInfoPtr->GetName();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER, customerName);
+			}
+		}
+	}
+	
+	if (m_productCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr productDataPtr;
+		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
+			if (productInfoPtr != nullptr){
+				QByteArray id = productInfoPtr->GetProductId();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PRODUCT_ID, id);
+				
+				QString productName = productInfoPtr->GetName();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PRODUCT_NAME, productName);
+			}
+		}
+	}
+	
+	if (m_licenseCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr licenseDataPtr;
+		if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+			const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+			if (licenseInfoPtr != nullptr){
+				QByteArray id = licenseInfoPtr->GetLicenseId();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_ID, id);
+				
+				QString licenseName = licenseInfoPtr->GetLicenseName();
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_NAME, licenseName);
+			}
+		}
+	}
+
+	return true;
+}
+
+
+// public methods of embedded class MetaInfo
+
+QString CDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*metaInfoType*/) const
+{
+	return QString();
+}
+
+
+
+} // namespace imtauth
+
+

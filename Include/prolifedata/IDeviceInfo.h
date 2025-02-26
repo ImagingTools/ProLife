@@ -5,9 +5,6 @@
 #include <iser/IObject.h>
 #include <idoc/IDocumentMetaInfo.h>
 
-// ImtCore includes
-#include <imtbase/IOperationDescription.h>
-
 
 namespace prolifedata
 {
@@ -18,25 +15,20 @@ class IDeviceInfo: virtual public iser::IObject
 public:
 	enum MetaInfoTypes
 	{
-		/**
-			Device customer given as QString.
-		*/
-		MIT_DEVICE_CUSTOMER,
-
-		/**
-			Device MAC-Address given as QByteArray.
-		*/
+		MIT_DEVICE_TYPE = idoc::IDocumentMetaInfo::MIT_USER + 1,
 		MIT_DEVICE_MAC_ADDRESS,
-
-		/**
-			Device MAC-Address given as QByteArray.
-		*/
 		MIT_DEVICE_SERIAL_NUMBER,
-
-		/**
-			Device status given as DeviceProductionStatus.
-		*/
-		MIT_DEVICE_STATUS
+		MIT_DEVICE_STATUS,
+		MIT_DEVICE_PROJECT,
+		MIT_CONFIGURATION_TYPE,
+		MIT_ORDER_ID,
+		MIT_DELIVERY_ID,
+		MIT_PURCHASE_ID,
+		MIT_CUSTOMER,
+		MIT_PRODUCT_NAME,
+		MIT_PRODUCT_ID,
+		MIT_LICENSE_NAME,
+		MIT_LICENSE_ID
 	};
 
 	enum DeviceProductionStatus

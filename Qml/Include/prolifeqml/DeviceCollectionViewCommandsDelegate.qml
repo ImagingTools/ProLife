@@ -55,9 +55,15 @@ DocumentCollectionViewDelegate {
 		GqlRequestDocumentDataController {
 			id: requestDocumentDataController
 
+			property DeviceData deviceData: documentModel;
+			
 			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
 			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
 			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
+			
+			typeId: "Device";
+			// documentName: deviceData ? deviceData.m_name: "";
+			// documentDescription: deviceData ? deviceData.m_description: "";
 
 			documentModelComp: Component {
 				DeviceData {}

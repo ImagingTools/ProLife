@@ -212,7 +212,7 @@
                                 <Value>Description</Value>
                                 <Value>OrderCustomer</Value>
                                 <Value>Added</Value>
-                                <Value>LastModified</Value>
+                                <Value>TimeStamp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

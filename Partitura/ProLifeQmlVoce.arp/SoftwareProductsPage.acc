@@ -68,7 +68,7 @@
                                 <Value>Customer</Value>
                                 <Value>DeviceId</Value>
                                 <Value>Added</Value>
-                                <Value>LastModified</Value>
+                                <Value>TimeStamp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

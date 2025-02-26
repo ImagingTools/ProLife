@@ -12,7 +12,11 @@
 #include <prolifedata/CKeyDataProviderComp.h>
 #include <prolifedata/CDeviceInfoComp.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
-
+#include <prolifedata/CDeviceMetaInfoCreatorComp.h>
+#include <prolifedata/CSoftwareMetaInfoCreatorComp.h>
+#include <prolifedata/COrderMetaInfoCreatorComp.h>
+#include <prolifedata/CCustomerMetaInfoCreatorComp.h>
+#include <prolifedata/CHardwareBindingMetaInfoCreatorComp.h>
 
 
 namespace ProLifeDataPck
@@ -44,6 +48,11 @@ typedef icomp::TModelCompWrap<
 						istd::IChangeable>> OrderedIdentifiableSoftwareInstanceInfo;
 typedef prolifedata::CKeyDataProviderComp KeyDataProvider;
 typedef icomp::TModelCompWrap<prolifedata::CDeviceInfoComp> DeviceInfo;
+typedef prolifedata::CDeviceMetaInfoCreatorComp DeviceMetaInfoCreator;
+typedef prolifedata::CSoftwareMetaInfoCreatorComp SoftwareMetaInfoCreator;
+typedef prolifedata::COrderMetaInfoCreatorComp OrderMetaInfoCreator;
+typedef prolifedata::CCustomerMetaInfoCreatorComp CustomerMetaInfoCreator;
+typedef prolifedata::CHardwareBindingMetaInfoCreatorComp HardwareBindingMetaInfoCreator;
 
 
 } // namespace ProLifeDataPck

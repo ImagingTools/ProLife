@@ -10,21 +10,10 @@
     <PositionMap>
         <Element ComponentName="ApplicationHandlers" X="600" Y="75" Note=""/>
         <Element ComponentName="Demultiplexer" X="150" Y="75" Note=""/>
-        <Element ComponentName="KeyDataProviders" X="975" Y="325" Note=""/>
-        <Element ComponentName="Observers" X="600" Y="625" Note=""/>
         <Element ComponentName="Pages" X="600" Y="325" Note=""/>
         <Element ComponentName="RestoringDatabaseController" X="225" Y="325" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Observers">
-            <PositionMap>
-                <Element ComponentName="AccountCollectionObserver" X="575" Y="450" Note=""/>
-                <Element ComponentName="DeviceCollectionObserver" X="575" Y="75" Note=""/>
-                <Element ComponentName="LicenseCollectionObserver" X="575" Y="200" Note=""/>
-                <Element ComponentName="OrderCollectionObserver" X="575" Y="325" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="KeyDataProviders">
             <PositionMap>
                 <Element ComponentName="AesInitVector" X="575" Y="100" Note=""/>

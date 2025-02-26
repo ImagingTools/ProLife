@@ -2,24 +2,23 @@
 
 
 // ImtCore includes
-#include <imtdb/CSqlJsonDatabaseDelegateComp.h>
+#include <imtdb/CSqlDatabaseDocumentDelegateComp.h>
 
 
 namespace prolifedb
 {
 
 
-class CAccountDatabaseDelegateComp: public imtdb::CSqlJsonDatabaseDelegateComp
+class CAccountDatabaseDelegateComp: public imtdb::CSqlDatabaseDocumentDelegateComp
 {
 public:
-	typedef imtdb::CSqlJsonDatabaseDelegateComp BaseClass;
+	typedef imtdb::CSqlDatabaseDocumentDelegateComp BaseClass;
 
 	I_BEGIN_COMPONENT(CAccountDatabaseDelegateComp)
 	I_END_COMPONENT
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual bool CreateObjectFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const override;
-	virtual bool SetCollectionItemMetaInfoFromRecord(const QSqlRecord& record, idoc::IDocumentMetaInfo& metaInfo) const override;
 };
 
 

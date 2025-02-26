@@ -2,9 +2,10 @@
 
 
 // ACF includes
-#include <iprm/CTextParam.h>
-#include <iprm/CEnableableParam.h>
 #include <iprm/CParamsSet.h>
+
+// ImtCore includes
+#include <imtbase/CComplexCollectionFilter.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
@@ -166,21 +167,18 @@ prolifedata::IOrderInfo::OrderStatus GetOrderStatusFromId(const QByteArray& stat
 
 bool CheckDeviceMacAddressExists(const QByteArray& deviceUuid, const QByteArray& macAddress, const imtbase::IObjectCollection& collection)
 {
-	iprm::CTextParam valueParam;
-	valueParam.SetText(macAddress);
-
-	iprm::CEnableableParam isEqualParam;
-	isEqualParam.SetEnabled(true);
-
-	iprm::CParamsSet valueParamsSet;
-	valueParamsSet.SetEditableParameter("Value", &valueParam);
-	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
-	iprm::CParamsSet paramsSet1;
-	paramsSet1.SetEditableParameter("MacAddress", &valueParamsSet);
-
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "MacAddress";
+	fieldFilter.filterValue = macAddress;
+	
+	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+	
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.SetFieldsFilter(groupFilter);
+	
 	iprm::CParamsSet filterParam;
-	filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	imtbase::ICollectionInfo::Ids collectionIds = collection.GetElementIds(0, -1, &filterParam);
 	if (!collectionIds.isEmpty()){
@@ -205,21 +203,18 @@ bool CheckDeviceMacAddressExists(const QByteArray& deviceUuid, const QByteArray&
 
 bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection)
 {
-	iprm::CTextParam valueParam;
-	valueParam.SetText(serialNumber);
-
-	iprm::CEnableableParam isEqualParam;
-	isEqualParam.SetEnabled(true);
-
-	iprm::CParamsSet valueParamsSet;
-	valueParamsSet.SetEditableParameter("Value", &valueParam);
-	valueParamsSet.SetEditableParameter("IsEqual", &isEqualParam);
-
-	iprm::CParamsSet paramsSet1;
-	paramsSet1.SetEditableParameter("SerialNumber", &valueParamsSet);
-
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "SerialNumber";
+	fieldFilter.filterValue = serialNumber;
+	
+	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+	
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.SetFieldsFilter(groupFilter);
+	
 	iprm::CParamsSet filterParam;
-	filterParam.SetEditableParameter("ObjectFilter", &paramsSet1);
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	imtbase::ICollectionInfo::Ids collectionIds = collection.GetElementIds(0, -1, &filterParam);
 	if (!collectionIds.isEmpty()){
@@ -244,14 +239,18 @@ bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArra
 
 bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection)
 {
-	iprm::CTextParam valueParam;
-	valueParam.SetText(serialNumber);
-
-	iprm::CParamsSet paramsSet;
-	paramsSet.SetEditableParameter("SerialNumber", &valueParam);
-
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "SerialNumber";
+	fieldFilter.filterValue = serialNumber;
+	
+	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+	
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.SetFieldsFilter(groupFilter);
+	
 	iprm::CParamsSet filterParam;
-	filterParam.SetEditableParameter("ObjectFilter", &paramsSet);
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	imtbase::IObjectCollection::Ids collectionIds = collection.GetElementIds(0, -1, &filterParam);
 	if (!collectionIds.isEmpty() && !serialNumber.isEmpty()){
