@@ -169,29 +169,6 @@ bool CDeviceDatabaseDelegateComp::CreateObjectFilterQuery(
 					}
 				}
 			}
-			else if (key == "MacAddress" || key == "SerialNumber"){
-				iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, key);
-				if (filterParamPtr.IsValid()){
-					QString value;
-					iprm::TParamsPtr<iprm::ITextParam> valueParamPtr(filterParamPtr.GetPtr(), "Value");
-					if (valueParamPtr.IsValid()){
-						value = valueParamPtr->GetText();
-					}
-
-					bool isEqual = true;
-					iprm::TParamsPtr<iprm::IEnableableParam> enableableParamPtr(filterParamPtr.GetPtr(), "IsEqual");
-					if (enableableParamPtr.IsValid()){
-						isEqual = enableableParamPtr->IsEnabled();
-					}
-
-					if (isEqual){
-						filterQuery += QString("(\"Document\"->>'%1' = '%2')").arg(qPrintable(key)).arg(value);
-					}
-					else{
-						filterQuery += QString("(\"Document\"->>'%1' != '%1')").arg(qPrintable(key)).arg(value);
-					}
-				}
-			}
 		}
 	}
 

@@ -45,7 +45,7 @@
                     <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ObjectCollectionMigrationController</Value>
+                                <Value>DatabaseConverterComp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -72,6 +72,45 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketDefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="8778"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DatabaseConverterComp" PackageId="ProLifeDbPck" ComponentId="DatabaseConverterComp">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CustomerDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/AccountDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/BindingProductsDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="From" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="14"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollectionMigrationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ObjectCollectionMigrationController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareInstanceDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareProductDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="To" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="14"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -113,7 +152,7 @@
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="From" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="15"/>
+                        <Data IsEnabled="true" Value="14"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -130,7 +169,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="To" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="15"/>
+                        <Data IsEnabled="true" Value="14"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -422,6 +461,9 @@
                     <Element Id="OrderSqlRepository" PackageId="ProLifeVoce" ComponentId="OrderSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>

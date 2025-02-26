@@ -65,7 +65,7 @@ RemoteCollectionView {
 	
 	Component.onCompleted: {
 		collectionFilter.setSortingOrder("DESC");
-		collectionFilter.setSortingInfoId("LastModified");
+		collectionFilter.setSortingInfoId("TimeStamp");
 	}
 	
 	Component {

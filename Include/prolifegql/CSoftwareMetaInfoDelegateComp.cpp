@@ -37,6 +37,9 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	QByteArray deliveryId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toByteArray();
 	representation["DeliveryId"] = QString(deliveryId);
 	
+	QByteArray purchaseId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toByteArray();
+	representation["PurchaseId"] = QString(purchaseId);
+	
 	QByteArray licenseId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toByteArray();
 	representation["LicenseId"] = QString(licenseId);
 	
@@ -77,7 +80,11 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 	}
 	
 	if (representation.contains("DeliveryId")){
-		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID, representation.value("DeliveryId"));
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID, representation.value("DeliveryId"));
+	}
+	
+	if (representation.contains("PurchaseId")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID, representation.value("PurchaseId"));
 	}
 	
 	if (representation.contains("LicenseId")){

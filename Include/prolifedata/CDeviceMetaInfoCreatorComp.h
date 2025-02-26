@@ -37,7 +37,6 @@ private:
 
 		// reimplemented (idoc::IDocumentMetaInfo)
 		virtual QString GetMetaInfoName(int metaInfoType) const override;
-		
 	};
 	
 private:
