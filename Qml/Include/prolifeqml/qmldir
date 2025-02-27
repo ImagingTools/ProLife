@@ -7,10 +7,8 @@ singleton CachedSoftwareCollection 1.0 CachedSoftwareCollection.qml
 DeviceValidator 1.0 DeviceValidator.qml
 LicenseValidator 1.0 LicenseValidator.qml
 OrderValidator 1.0 OrderValidator.qml
-DeviceCollectionFilter 1.0 DeviceCollectionFilter.qml
 DeviceCollectionFilterDecorator 1.0 DeviceCollectionFilterDecorator.qml
-LicenseCollectionFilter 1.0 LicenseCollectionFilter.qml
-OrderCollectionFilter 1.0 OrderCollectionFilter.qml
 
 AccountEditor 1.0 AccountEditor.qml
 AccountCollectionView 1.0 AccountCollectionView.qml
+AccountFilterComboBox 1.0 AccountFilterComboBox.qml

@@ -129,12 +129,12 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.Description = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
 	}
 
-	if (requestInfo.items.isPurchaseOrderIdRequested){
-		representationObject.PurchaseOrderId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+	if (requestInfo.items.isPurchaseIdRequested){
+		representationObject.PurchaseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
 	}
 
-	if (requestInfo.items.isCustomerRequested){
-		representationObject.Customer = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER).toString().toUtf8();
+	if (requestInfo.items.isCustomerNameRequested){
+		representationObject.CustomerName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isMacAddressRequested){
@@ -169,8 +169,8 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.LicenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString().toUtf8();
 	}
 
-	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+	if (requestInfo.items.isDeliveryIdRequested){
+		representationObject.DeliveryId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isSoftwareLinksCountRequested){

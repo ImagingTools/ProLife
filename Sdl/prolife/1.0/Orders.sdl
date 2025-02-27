@@ -23,7 +23,7 @@ type OrderItem {
 	Status: String
 	OrderId: ID
 	PurchaseId: ID
-	OrderCustomer: String
+	CustomerName: String
 	Description: String
 	Added: String
 	TimeStamp: String

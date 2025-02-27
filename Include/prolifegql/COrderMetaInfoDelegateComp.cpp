@@ -1,6 +1,9 @@
 #include <prolifegql/COrderMetaInfoDelegateComp.h>
 
 
+// Qt includes
+#include <QJsonObject>
+
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
 
@@ -11,37 +14,48 @@ namespace prolifegql
 
 // protected methods
 
-bool COrderMetaInfoDelegateComp::FillRepresentation(
-	sdl::prolife::Orders::COrderData::V1_0& metaInfoRepresentation,
-	const idoc::IDocumentMetaInfo& metaInfo) const
+
+bool COrderMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
 {
-	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_CUSTOMER).toByteArray();
-	metaInfoRepresentation.CustomerId = customerId;
+	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toByteArray();
+	representation["CustomerId"] = QString(customerId);
+	
+	QString customerName = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+	representation["CustomerName"] = customerName;
 	
 	QByteArray orderId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_ID).toByteArray();
-	metaInfoRepresentation.OrderId = orderId;
-	
-	QByteArray purchaseId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_PURCHASE_ORDER_ID).toByteArray();
-	metaInfoRepresentation.PurchaseId = purchaseId;
+	representation["OrderId"] = QString(orderId);
 
+	QByteArray purchaseId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_PURCHASE_ORDER_ID).toByteArray();
+	representation["PurchaseId"] = QString(purchaseId);
+	
+	int status = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_STATUS).toInt();
+	representation["Status"] = status;
+	
 	return true;
 }
 
 
-bool COrderMetaInfoDelegateComp::FillMetaInfo(
-	idoc::IDocumentMetaInfo& metaInfo,
-	const sdl::prolife::Orders::COrderData::V1_0& metaInfoRepresentation) const
+bool COrderMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
 {
-	if (metaInfoRepresentation.CustomerId){
-		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_CUSTOMER, *metaInfoRepresentation.CustomerId);
+	if (representation.contains("CustomerId")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID, representation.value("CustomerId"));
 	}
 	
-	if (metaInfoRepresentation.OrderId){
-		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_ID, *metaInfoRepresentation.OrderId);
+	if (representation.contains("CustomerName")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME, representation.value("CustomerName"));
 	}
 	
-	if (metaInfoRepresentation.PurchaseId){
-		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_PURCHASE_ORDER_ID, *metaInfoRepresentation.PurchaseId);
+	if (representation.contains("OrderId")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_ID, representation.value("OrderId"));
+	}
+	
+	if (representation.contains("PurchaseId")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_PURCHASE_ORDER_ID, representation.value("PurchaseId"));
+	}
+	
+	if (representation.contains("Status")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_STATUS, representation.value("Status"));
 	}
 	
 	return true;

@@ -210,7 +210,7 @@
                                 <Value>OrderId</Value>
                                 <Value>PurchaseId</Value>
                                 <Value>Description</Value>
-                                <Value>OrderCustomer</Value>
+                                <Value>CustomerName</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
                             </Values>
@@ -239,7 +239,7 @@
                                 <Value>PurchaseId</Value>
                                 <Value>Description</Value>
                                 <Value>Status</Value>
-                                <Value>OrderCustomer</Value>
+                                <Value>CustomerName</Value>
                                 <Value>MacAddress</Value>
                             </Values>
                         </Data>

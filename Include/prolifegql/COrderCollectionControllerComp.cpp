@@ -194,7 +194,6 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 	idoc::MetaInfoPtr metaInfo = objectCollectionIterator.GetDataMetaInfo();
 	
-
 	if (requestInfo.items.isIdRequested){
 		representationObject.Id = (objectId);
 	}
@@ -220,9 +219,9 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.OrderId = (orderInfoPtr->GetOrderId());
 	}
 
-	if (requestInfo.items.isOrderCustomerRequested){
+	if (requestInfo.items.isCustomerNameRequested){
 		if (metaInfo.IsValid()){
-			representationObject.OrderCustomer = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_CUSTOMER).toString();
+			representationObject.CustomerName = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
 		}
 	}
 

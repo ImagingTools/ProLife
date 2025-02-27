@@ -71,6 +71,9 @@
                     <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="DeviceBindingCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

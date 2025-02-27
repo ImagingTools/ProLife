@@ -15,7 +15,6 @@ public:
 	typedef imtdb::CJsonBasedMetaInfoDelegateComp BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceMetaInfoDelegateComp);
-		I_REGISTER_INTERFACE(imtdb::IJsonBasedMetaInfoDelegate);
 	I_END_COMPONENT;
 
 protected:

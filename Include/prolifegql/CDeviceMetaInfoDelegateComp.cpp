@@ -43,8 +43,11 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 	QByteArray purchaseId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toByteArray();
 	representation["PurchaseId"] = QString(purchaseId);
 	
-	QByteArray customer = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER).toByteArray();
-	representation["Customer"] = QString(customer);
+	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toByteArray();
+	representation["CustomerId"] = QString(customerId);
+	
+	QString customerName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString();
+	representation["CustomerName"] = customerName;
 	
 	QString productName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toByteArray();
 	representation["ProductName"] = productName;
@@ -57,6 +60,9 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 	
 	QString licenseName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toByteArray();
 	representation["LicenseName"] = licenseName;
+	
+	int softwareCount = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
+	representation["SoftwareCount"] = softwareCount;
 	
 	return true;
 }
@@ -100,8 +106,12 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID, representation.value("PurchaseId"));
 	}
 	
-	if (representation.contains("Customer")){
-		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER, representation.value("Customer"));
+	if (representation.contains("CustomerId")){
+		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID, representation.value("CustomerId"));
+	}
+	
+	if (representation.contains("CustomerName")){
+		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME, representation.value("CustomerName"));
 	}
 	
 	if (representation.contains("ProductName")){
@@ -118,6 +128,10 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 	
 	if (representation.contains("LicenseId")){
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID, representation.value("LicenseId"));
+	}
+	
+	if (representation.contains("SoftwareCount")){
+		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES, representation.value("SoftwareCount"));
 	}
 	
 	return true;

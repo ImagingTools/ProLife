@@ -149,7 +149,6 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 
-	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID, softwareInfoPtr->GetCustomerId());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT, softwareInfoPtr->GetProject());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE, softwareInfoPtr->IsInUse());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER, softwareInfoPtr->GetSerialNumber());

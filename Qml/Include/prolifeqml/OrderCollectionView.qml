@@ -16,8 +16,6 @@ RemoteCollectionView {
 	
 	filterMenu.decorator: orderCollectionFilterComp;
 	
-	collectionFilter: OrderCollectionFilter {}
-	
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
 			collectionView: container;
 			
@@ -64,8 +62,7 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		collectionFilter.setSortingOrder("DESC");
-		collectionFilter.setSortingInfoId("TimeStamp");
+		collectionFilter.setSortingInfo("TimeStamp", "DESC");
 	}
 	
 	Component {
@@ -77,44 +74,13 @@ RemoteCollectionView {
 			width: baseElement ? baseElement.width: 0;
 			height: 40;
 			
+			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;			
+			
 			LocalizationEvent {
 				onLocalizationChanged: {
-					accountsList.updateComboBoxModel();
 				}
 			}
-			
-			CollectionDataProvider {
-				id: accountsList;
-				
-				commandId: "AccountsList";
-				subscriptionCommandId: "OnAccountsCollectionChanged"
-				
-				fields: ["Id", "Name"];
-				
-				Component.onCompleted: {
-					let ok = PermissionsController.checkPermission("ViewAllOrders")
-					
-					accountComboBox.visible = ok;
-					
-					if (ok){
-						accountsList.updateModel();
-					}
-				}
-				
-				onCollectionModelChanged: {
-					accountsList.collectionModel.insertNewItem(0);
-					
-					accountsList.updateComboBoxModel();
-				}
-				
-				function updateComboBoxModel(){
-					accountsList.collectionModel.setData("Id", "All");
-					accountsList.collectionModel.setData("Name", qsTr("All customers"))
-					
-					accountComboBox.model = accountsList.collectionModel;
-				}
-			}
-			
+
 			Row {
 				id: content;
 				
@@ -123,29 +89,11 @@ RemoteCollectionView {
 				
 				spacing: Style.size_mainMargin;
 				
-				ComboBox {
+				AccountFilterComboBox {
 					id: accountComboBox;
-					
 					width: 300;
 					height: filtermenu.height;
-					
-					currentIndex: 0;
-					
-					radius: 3;
-					
-					shownItemsCount: 15;
-					
-					onCurrentIndexChanged: {
-						if (accountComboBox.currentIndex > 0){
-							let value = accountComboBox.model.getData("Id", accountComboBox.currentIndex);
-							container.collectionFilter.setAccountFilter(value);
-						}
-						else{
-							container.collectionFilter.setAccountFilter("");
-						}
-						
-						container.doUpdateGui();
-					}
+					complexFilter: mainItem.complexFilter;
 				}
 			}
 			
@@ -156,6 +104,7 @@ RemoteCollectionView {
 				anchors.right: parent.right;
 				
 				baseElement: mainItem.baseElement;
+				complexFilter: mainItem.complexFilter;
 				
 				width: 325;
 			}

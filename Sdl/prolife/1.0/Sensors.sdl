@@ -31,8 +31,8 @@ type DeviceItem {
 	Id: ID!
 	Name: String!
 	Description: String
-	OrderId: ID
-	PurchaseOrderId: ID
+	DeliveryId: ID
+	PurchaseId: ID
 	LicenseId: ID
 	ProductUuid: ID
 	LicenseUuid: ID
@@ -45,7 +45,7 @@ type DeviceItem {
 	SerialNumber: String
 	Project: String
 	SoftwareLinksCount: Integer
-	Customer: ID
+	CustomerName: String
 	Added: String
 	TimeStamp: String
 }

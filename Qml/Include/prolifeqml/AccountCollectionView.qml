@@ -116,7 +116,7 @@ RemoteCollectionView {
 			gqlUpdateCommandId: ProlifeAccountsSdlCommandIds.s_accountUpdate;
 			gqlAddCommandId: ProlifeAccountsSdlCommandIds.s_accountAdd;
 			
-			typeId: "Order";
+			typeId: "Account";
 			documentName: accountData ? accountData.m_name: "";
 			documentDescription: accountData ? accountData.m_description: "";
 			

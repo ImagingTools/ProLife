@@ -62,11 +62,11 @@
                                 <Value>LicenseId</Value>
                                 <Value>LicenseName</Value>
                                 <Value>SerialNumber</Value>
-                                <Value>OrderId</Value>
-                                <Value>PurchaseOrderId</Value>
+                                <Value>DeliveryId</Value>
+                                <Value>PurchaseId</Value>
                                 <Value>Project</Value>
-                                <Value>Customer</Value>
-                                <Value>DeviceId</Value>
+                                <Value>CustomerName</Value>
+                                <Value>HardwareId</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
                             </Values>
@@ -97,14 +97,14 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProductName</Value>
-                                <Value>OrderId</Value>
+                                <Value>DeliveryId</Value>
                                 <Value>SerialNumber</Value>
-                                <Value>DeviceId</Value>
-                                <Value>Customer</Value>
+                                <Value>HardwareId</Value>
+                                <Value>CustomerName</Value>
                                 <Value>LicenseId</Value>
                                 <Value>Project</Value>
                                 <Value>LicenseName</Value>
-                                <Value>PurchaseOrderId</Value>
+                                <Value>PurchaseId</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

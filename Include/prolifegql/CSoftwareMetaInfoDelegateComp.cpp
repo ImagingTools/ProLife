@@ -25,6 +25,9 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	bool inUse = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	representation["InUse"] = inUse;
 	
+	bool isPaired = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
+	representation["IsPaired"] = isPaired;
+	
 	QByteArray customerId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toByteArray();
 	representation["CustomerId"] = QString(customerId);
 	
@@ -65,6 +68,10 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 	
 	if (representation.contains("InUse")){
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE, representation.value("InUse"));
+	}
+	
+	if (representation.contains("IsPaired")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED, representation.value("IsPaired"));
 	}
 	
 	if (representation.contains("CustomerId")){

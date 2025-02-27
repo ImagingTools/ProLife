@@ -132,12 +132,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.Description = (metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
 	}
 
-	if (requestInfo.items.isOrderIdRequested){
-		representationObject.OrderId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
+	if (requestInfo.items.isDeliveryIdRequested){
+		representationObject.DeliveryId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
 	}
 
-	if (requestInfo.items.isPurchaseOrderIdRequested){
-		representationObject.PurchaseOrderId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
+	if (requestInfo.items.isPurchaseIdRequested){
+		representationObject.PurchaseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
 	}
 
 	if (requestInfo.items.isOrderUuidRequested){
@@ -180,8 +180,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.InUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	}
 
-	if (requestInfo.items.isDeviceIdRequested) {
-		representationObject.DeviceId = hardwareId;
+	if (requestInfo.items.isHardwareIdRequested) {
+		representationObject.HardwareId = hardwareId;
 	}
 
 	if (requestInfo.items.isLicenseNameRequested) {
@@ -196,12 +196,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.LicenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
 	}
 
-	if (requestInfo.items.isCustomerUuidRequested) {
-		representationObject.CustomerUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
+	if (requestInfo.items.isCustomerIdRequested) {
+		representationObject.CustomerId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
 	}
 
-	if (requestInfo.items.isCustomerRequested) {
-		representationObject.Customer = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
+	if (requestInfo.items.isCustomerNameRequested) {
+		representationObject.CustomerName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 	}
 
 	if (requestInfo.items.isProjectRequested) {

@@ -21,9 +21,10 @@ type SoftwareProductItem {
 	Id: ID!
 	Name: String!
 	Description: String
-	OrderId: String
-	PurchaseOrderId: String
-	Customer: String
+	DeliveryId: String
+	PurchaseId: String
+	CustomerId: String
+	CustomerName: String
 	OrderUuid: String
 	HardwareUuid: String
 	ProductId: String
@@ -33,11 +34,10 @@ type SoftwareProductItem {
 	Expiration: String
 	IsPaired: Bool
 	InUse: Bool
-	DeviceId: String
+	HardwareId: String
 	LicenseName: String
 	LicenseId: String
 	LicenseUuid: String
-	CustomerUuid: String
 	Project: String
 	Status: String
 	Added: String

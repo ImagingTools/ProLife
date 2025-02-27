@@ -15,7 +15,6 @@ RemoteCollectionView {
 
 	collectionId: "Devices";
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
-	collectionFilter: DeviceCollectionFilter {}
 	commandsViewComp: Component {
 		id: commandsDecoratorComp;
 
@@ -38,9 +37,7 @@ RemoteCollectionView {
 	visibleMetaInfo: true;
 
 	Component.onCompleted: {
-		collectionFilter.setSortingOrder("DESC");
-		collectionFilter.setSortingInfoId(DeviceItemTypeMetaInfo.s_lastModified);
-
+		collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_lastModified, "DESC")
 		filterMenu.decorator = deviceCollectionFilterComp;
 	}
 
@@ -122,7 +119,6 @@ RemoteCollectionView {
 			}
 
 			onReused: {
-				console.log("onReused", rowIndex, rowDelegate);
 				if (rowIndex >= 0){
 					let statusId = cellDelegate.rowDelegate.tableItem.elements.getData(DeviceItemTypeMetaInfo.s_statusId, rowIndex);
 					image.source = deviceProductionStatus.getStatusIcon(statusId);

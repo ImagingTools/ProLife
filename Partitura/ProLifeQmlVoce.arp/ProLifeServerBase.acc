@@ -437,6 +437,9 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="BindingProductsRepository"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="LicenseRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>

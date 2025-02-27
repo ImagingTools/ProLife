@@ -12,6 +12,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/ICustomerInfo.h>
+#include <prolifedata/IHardwareProductBinding.h>
 
 
 namespace prolifedata
@@ -42,6 +43,8 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		return false;
 	}
 	
+	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
+	
 	QByteArray orderId = deviceInfoPtr->GetOrderId();
 	QByteArray productId = deviceInfoPtr->GetDeviceType();
 	QByteArray licenseId = deviceInfoPtr->GetConfigurationType();
@@ -71,13 +74,15 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_ID, customerId);
+
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
 				QString customerName = customerInfoPtr->GetName();
-				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER, customerName);
+				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_NAME, customerName);
 			}
 		}
 	}
@@ -109,6 +114,22 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	}
+	
+	int softwareCount = 0;
+	if (m_deviceBindingCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr bindingDataPtr;
+		if (m_deviceBindingCollectionCompPtr->GetObjectData(objectId, bindingDataPtr)){
+			const IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const IHardwareProductBinding*>(bindingDataPtr.GetPtr());
+			if (bindingInfoPtr != nullptr){
+				QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+				softwareIds.removeAll("");
+				
+				softwareCount = softwareIds.size();
+			}
+		}
+	}
+	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_COUNT_BINDED_LICENSES, softwareCount);
 
 	return true;
 }

@@ -272,10 +272,10 @@
                                 <Value>LicenseName</Value>
                                 <Value>MacAddress</Value>
                                 <Value>SerialNumber</Value>
-                                <Value>OrderId</Value>
-                                <Value>PurchaseOrderId</Value>
+                                <Value>DeliveryId</Value>
+                                <Value>PurchaseId</Value>
                                 <Value>Project</Value>
-                                <Value>Customer</Value>
+                                <Value>CustomerName</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
                             </Values>
@@ -310,11 +310,11 @@
                                 <Value>SerialNumber</Value>
                                 <Value>Status</Value>
                                 <Value>Project</Value>
-                                <Value>OrderId</Value>
+                                <Value>DeliveryId</Value>
                                 <Value>LicenseName</Value>
                                 <Value>LicenseId</Value>
-                                <Value>Customer</Value>
-                                <Value>PurchaseOrderId</Value>
+                                <Value>CustomerName</Value>
+                                <Value>PurchaseId</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

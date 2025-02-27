@@ -19,6 +19,16 @@
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -30,16 +40,6 @@
                 <Element ComponentName="DeviceSqlRepository" X="600" Y="375" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

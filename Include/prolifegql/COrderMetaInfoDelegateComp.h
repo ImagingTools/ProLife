@@ -5,28 +5,24 @@
 #include <ilog/TLoggerCompWrap.h>
 
 // ImtCore includes
-#include <imtdbgql/TSdlBasedMetaInfoDelegate.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders.h>
+#include <imtdb/CJsonBasedMetaInfoDelegateComp.h>
 
 
 namespace prolifegql
 {
 
 
-class COrderMetaInfoDelegateComp:
-			public ilog::CLoggerComponentBase,
-			public imtdbgql::TSdlBasedMetaInfoDelegate<sdl::prolife::Orders::COrderData::V1_0>
+class COrderMetaInfoDelegateComp: public imtdb::CJsonBasedMetaInfoDelegateComp
 {
 public:
-	typedef ilog::CLoggerComponentBase BaseClass;
+	typedef imtdb::CJsonBasedMetaInfoDelegateComp BaseClass;
 
 	I_BEGIN_COMPONENT(COrderMetaInfoDelegateComp);
-		I_REGISTER_INTERFACE(imtdb::IJsonBasedMetaInfoDelegate);
 	I_END_COMPONENT;
 
 protected:
-	virtual bool FillRepresentation(sdl::prolife::Orders::COrderData::V1_0& metaInfoRepresentation, const idoc::IDocumentMetaInfo& metaInfo) const override;
-	virtual bool FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const sdl::prolife::Orders::COrderData::V1_0& metaInfoRepresentation) const override;
+	virtual bool FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const override;
+	virtual bool FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const override;
 };
 
 

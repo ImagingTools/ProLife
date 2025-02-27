@@ -22,7 +22,8 @@ public:
 	enum MetaInfoTypes
 	{
 		MIT_ORDER_ID = idoc::IDocumentMetaInfo::MIT_USER + 1,
-		MIT_ORDER_CUSTOMER,
+		MIT_CUSTOMER_ID,
+		MIT_CUSTOMER_NAME,
 		MIT_ORDER_STATUS,
 		MIT_PURCHASE_ORDER_ID
 	};
