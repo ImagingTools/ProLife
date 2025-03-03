@@ -1,15 +1,11 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
 
 
-// ACF includes
-#include <iprm/CTextParam.h>
-#include <iprm/CIdParam.h>
-
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
-#include <imtgql/imtgql.h>
 #include <imtlic/IProductInfo.h>
+#include <imtgql/imtgql.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -17,6 +13,7 @@
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CHardwareProductBinding.h>
+#include <prolifedata/CGroupFilter.h>
 
 
 namespace prolifegql
@@ -626,7 +623,7 @@ bool CSoftwareProductCollectionControllerComp::RemoveSoftwareFromOrder(const QBy
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *oldOrderInfoPtr);
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, oldOrderInfoPtr);
 	}
 
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -697,7 +694,7 @@ bool CSoftwareProductCollectionControllerComp::AddSoftwareToOrder(const QByteArr
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *orderInfoPtr);
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, orderInfoPtr);
 	}
 
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -748,61 +745,10 @@ void CSoftwareProductCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
-		userParamPtr->SetText(userId);
-
-		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
-		QByteArray groups;
-		if (!userGroupIds.isEmpty()){
-			groups = userGroupIds.join(';');
-		}
-		groupParamPtr->SetText(groups);
-
-		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
-
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
-
-		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
-	}
-
-	if (objectFilterModel.ContainsKey("BindingFilter")){
-		imtbase::CTreeItemModel* bindingFilterPtr = objectFilterModel.GetTreeItemModel("BindingFilter");
-		if (bindingFilterPtr != nullptr){
-			iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
-			QStringList keys = bindingFilterPtr->GetKeys(0);
-
-			for (const QString& key : keys){
-				QByteArray value = bindingFilterPtr->GetData(key.toUtf8()).toByteArray();
-
-				iprm::CIdParam* textParamPtr = new iprm::CIdParam();
-				textParamPtr->SetId(value);
-
-				paramsSetPtr->SetEditableParameter(key.toUtf8(), textParamPtr, true);
-			}
-
-			filterParams.SetEditableParameter("BindingFilter", paramsSetPtr, true);
-		}
-	}
-
-	if (objectFilterModel.ContainsKey("LicenseFilter")){
-		QString licenseFilter = objectFilterModel.GetData("LicenseFilter").toString();
-		if (!licenseFilter.isEmpty()){
-			iprm::CIdParam* textParamPtr = new iprm::CIdParam();
-			textParamPtr->SetId(licenseFilter.toUtf8());
-
-			filterParams.SetEditableParameter("LicenseFilter", textParamPtr, true);
-		}
-	}
-
-	if (objectFilterModel.ContainsKey("CustomerUuid")){
-		QString filter = objectFilterModel.GetData("CustomerUuid").toString();
-		if (!filter.isEmpty()){
-			iprm::CIdParam* textParamPtr = new iprm::CIdParam();
-			textParamPtr->SetId(filter.toUtf8());
-
-			filterParams.SetEditableParameter("CustomerUuid", textParamPtr, true);
-		}
+		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
+		groupFilterPtr->SetUserId(userId);
+		groupFilterPtr->SetGroupIds(userGroupIds);
+		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
 	}
 }
 

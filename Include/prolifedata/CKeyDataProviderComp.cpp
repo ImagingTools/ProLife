@@ -295,7 +295,7 @@ bool CKeyDataProviderComp::GetData(
 					operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
 								"CreateLicenseFile",
 								softwareId,
-								*productInstanceInfoPtr));
+								productInstanceInfoPtr));
 				}
 
 				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -311,7 +311,7 @@ bool CKeyDataProviderComp::GetData(
 			operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
 						"CreateLicenseFile",
 						hardwareObjectId,
-						*deviceDataPtr.GetPtr()));
+						deviceDataPtr.GetPtr()));
 		}
 
 		if (!m_deviceCollectionCompPtr->SetObjectData(hardwareObjectId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

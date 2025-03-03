@@ -1,10 +1,6 @@
 #include <prolifegql/COrderCollectionControllerComp.h>
 
 
-// ACF includes
-#include <iprm/CTextParam.h>
-#include <iprm/CParamsSet.h>
-
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtbase/IObjectCollectionIterator.h>
@@ -17,6 +13,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifedata/CGroupFilter.h>
 
 
 namespace prolifegql
@@ -654,22 +651,10 @@ void COrderCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
-		userParamPtr->SetText(userId);
-
-		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
-		QByteArray groups;
-		if (!groupIds.isEmpty()){
-			groups = groupIds.join(';');
-		}
-		groupParamPtr->SetText(groups);
-
-		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
-
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
-
-		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
+		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
+		groupFilterPtr->SetUserId(userId);
+		groupFilterPtr->SetGroupIds(groupIds);
+		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
 	}
 }
 
@@ -918,7 +903,7 @@ bool COrderCollectionControllerComp::UpdateOrderForHardware(const QByteArray& de
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", deviceId, *hardwareInfoPtr);
+		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", deviceId, hardwareInfoPtr);
 	}
 
 	if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -946,7 +931,7 @@ bool COrderCollectionControllerComp::UpdateOrderForSoftware(const QByteArray& so
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_softwareOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, *softwareInfoPtr);
+		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, softwareInfoPtr);
 	}
 
 	if (!m_softwareInstanceCollectionCompPtr->SetObjectData(softwareId, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -1000,7 +985,7 @@ bool COrderCollectionControllerComp::CheckNewProducts(
 
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *deviceInstancePtr.GetPtr());
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, deviceInstancePtr.GetPtr());
 				}
 
 				QByteArray result = m_deviceCollectionCompPtr->InsertNewObject("Device", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
@@ -1027,7 +1012,7 @@ bool COrderCollectionControllerComp::CheckNewProducts(
 
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_softwareOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *softwareInstancePtr.GetPtr());
+					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, softwareInstancePtr.GetPtr());
 				}
 
 				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
@@ -1083,7 +1068,7 @@ bool COrderCollectionControllerComp::CreateNewHardware(
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *deviceInstancePtr.GetPtr());
+		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, deviceInstancePtr.GetPtr());
 	}
 
 	QByteArray result = m_deviceCollectionCompPtr->InsertNewObject("Device", "", "", deviceInstancePtr.GetPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
@@ -1137,7 +1122,7 @@ bool COrderCollectionControllerComp::CreateNewSoftware(
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_softwareOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, *softwareInstancePtr.GetPtr());
+		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, softwareInstancePtr.GetPtr());
 	}
 
 	QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());

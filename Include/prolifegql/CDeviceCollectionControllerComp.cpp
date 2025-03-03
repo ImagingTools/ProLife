@@ -1,10 +1,6 @@
 #include <prolifegql/CDeviceCollectionControllerComp.h>
 
 
-// ACF includes
-#include <iprm/CTextParam.h>
-#include <iprm/CParamsSet.h>
-
 // ImtCore includes
 #include <iqt/iqt.h>
 #include <imtbase/CObjectLink.h>
@@ -19,6 +15,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifedata/CGroupFilter.h>
 
 
 namespace prolifegql
@@ -632,22 +629,10 @@ void CDeviceCollectionControllerComp::SetObjectFilter(
 	}
 
 	if (filterByGroup){
-		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
-		userParamPtr->SetText(userId);
-
-		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
-		QByteArray groups;
-		if (!userGroupIds.isEmpty()){
-			groups = userGroupIds.join(';');
-		}
-		groupParamPtr->SetText(groups);
-
-		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
-
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
-
-		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
+		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
+		groupFilterPtr->SetUserId(userId);
+		groupFilterPtr->SetGroupIds(userGroupIds);
+		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
 	}
 }
 
@@ -805,7 +790,7 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *oldOrderInfoPtr);
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, oldOrderInfoPtr);
 	}
 
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -876,7 +861,7 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, *orderInfoPtr);
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, orderInfoPtr);
 	}
 
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

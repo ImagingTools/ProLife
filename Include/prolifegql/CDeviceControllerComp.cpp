@@ -218,7 +218,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, *productInstanceInfoPtr);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, productInstanceInfoPtr);
 					}
 
 					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -620,7 +620,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 					operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
 						"CreateLicenseFile",
 						softwareId,
-						*productInstanceInfoPtr));
+						productInstanceInfoPtr));
 				}
 
 				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -636,7 +636,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 			operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
 				"CreateLicenseFile",
 				deviceId,
-				*deviceDataPtr.GetPtr()));
+				deviceDataPtr.GetPtr()));
 		}
 
 		if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -783,7 +783,7 @@ void CDeviceControllerComp::CreateDeviceOperationContext(const QByteArray& devic
 
 				istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 				if (m_deviceOperationContextControllerCompPtr.IsValid()){
-					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("BindLicense", deviceId, *deviceInfoPtr, &paramsSet);
+					operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("BindLicense", deviceId, deviceInfoPtr, &paramsSet);
 				}
 
 				if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -814,7 +814,7 @@ void CDeviceControllerComp::CreateSoftwareOperationContext(const QByteArray& dev
 
 						istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 						if (m_softwareOperationContextControllerCompPtr.IsValid()){
-							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, *productInstanceInfoPtr, &paramsSet);
+							operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, productInstanceInfoPtr, &paramsSet);
 						}
 
 						if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
@@ -841,7 +841,7 @@ void CDeviceControllerComp::CreateSoftwareOperationContext(const QByteArray& dev
 
 					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, *productInstanceInfoPtr, &paramsSet);
+						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Bind", id, productInstanceInfoPtr, &paramsSet);
 					}
 
 					if (!m_softwareProductCollectionCompPtr->SetObjectData(id, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){

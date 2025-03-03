@@ -25,7 +25,7 @@ namespace prolifegql
 bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 	const QByteArray& operationTypeId,
 	const QByteArray& documentId,
-	const istd::IChangeable& document,
+	const istd::IChangeable* documentPtr,
 	imtbase::CObjectCollection& documentChangeCollection,
 	QString& errorMessage,
 	const iprm::IParamsSet* paramsPtr)
@@ -44,7 +44,7 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 		}
 	}
 	else{
-		return BaseClass::GenerateDocumentChanges(operationTypeId, documentId, document, documentChangeCollection, errorMessage, paramsPtr);
+		return BaseClass::GenerateDocumentChanges(operationTypeId, documentId, documentPtr, documentChangeCollection, errorMessage, paramsPtr);
 	}
 
 	return true;
