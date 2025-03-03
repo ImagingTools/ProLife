@@ -144,8 +144,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.OrderUuid = softwareInfoPtr->GetOrderId();
 	}
 
-	if (requestInfo.items.isHardwareUuidRequested){
-		// representationObject.HardwareUuid = (objectCollectionIterator.GetElementInfo("HardwareUuid").toString());
+	if (requestInfo.items.isMacAddressRequested){
+		representationObject.MacAddress = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
 	}
 
 	if (requestInfo.items.isProductIdRequested){
@@ -845,6 +845,9 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	}
 
 	softwareInfoPtr->ResetData();
+	
+	// ResetData clear UUID 
+	softwareInfoPtr->SetObjectUuid(objectId);
 
 	if (!FillObjectFromRepresentation(softwareData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to update software from representation. Error: '%1'").arg(errorMessage);

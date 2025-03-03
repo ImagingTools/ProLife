@@ -138,13 +138,19 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Orders" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
+        <Element Id="Orders" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="DependentCollections">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="DependentMetaInfoList">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
@@ -158,18 +164,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>OrderId</Value>
-                                <Value>PurchaseId</Value>
-                                <Value>Description</Value>
-                                <Value>Status</Value>
-                                <Value>OrderCustomer</Value>
-                                <Value>MacAddress</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

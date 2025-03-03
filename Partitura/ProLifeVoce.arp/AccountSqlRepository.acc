@@ -135,10 +135,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
+        <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="DependentCollections">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="DependentMetaInfoList">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
@@ -152,16 +158,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AccountDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>CustomerId</Value>
-                                <Value>Name</Value>
-                                <Value>Mail</Value>
-                                <Value>Description</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

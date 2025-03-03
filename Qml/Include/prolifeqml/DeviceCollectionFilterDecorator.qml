@@ -25,7 +25,6 @@ DecoratorBase {
 	LocalizationEvent {
 		onLocalizationChanged: {
 			mainItem.updateModel();
-			// accountsList.updateComboBoxModel();
 			mainItem.updateText()
 		}
 	}

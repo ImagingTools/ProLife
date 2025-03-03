@@ -115,6 +115,22 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="DeviceDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OrderId</Value>
+                                <Value>DeviceType</Value>
+                                <Value>ConfigurationType</Value>
+                                <Value>CustomerId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Language" PackageId="BasePck" ComponentId="SelectionParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -173,6 +189,19 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CustomerId</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -306,20 +335,74 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceDependentCollections" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>LisaGQLEngine/ProductRepository</Value>
+                                <Value>LisaGQLEngine/LicenseRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceDependentMetaInfoList" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceDependentMetaInfoIds"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OrderDependentCollections" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderDependentMetaInfoList" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderDependentMetaInfoIds"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareDependentCollections" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>LisaGQLEngine/ProductRepository</Value>
+                                <Value>LisaGQLEngine/LicenseRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareDependentMetaInfoList" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareDependentMetaInfoIds"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OrderId</Value>
+                                <Value>HardwareId</Value>
+                                <Value>ProductUuid</Value>
+                                <Value>LicenseUuid</Value>
+                                <Value>CustomerId</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -437,6 +520,12 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="DeviceDependentCollections">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="DeviceDependentMetaInfoList">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="BindingProductsRepository"/>
                                 </AttributeInfo>
@@ -473,6 +562,12 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="OrderDependentCollections">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="OrderDependentMetaInfoList">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -492,6 +587,12 @@
                                     <Data IsEnabled="true" Value="AccountSqlRepository"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="SoftwareDependentCollections">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="SoftwareDependentMetaInfoList">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">

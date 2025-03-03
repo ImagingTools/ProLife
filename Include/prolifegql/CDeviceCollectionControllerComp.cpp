@@ -362,15 +362,27 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 		return false;
 	}
-
+	
+	if (!inputArguments.input.Version_1_0->Item){
+		I_CRITICAL();
+		
+		return false;
+	}
+	
 	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *inputArguments.input.Version_1_0->Item;
-	QByteArray objectId = *inputArguments.input.Version_1_0->Id;
+	
+	QByteArray objectId;
+	if (inputArguments.input.Version_1_0->Id){
+		objectId = *inputArguments.input.Version_1_0->Id;
+	}
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
 	Q_ASSERT(deviceInfoPtr != nullptr);
 
 	deviceInfoPtr->ResetData();
-
+	
+	deviceInfoPtr->SetObjectUuid(objectId);
+	
 	if (!FillObjectFromRepresentation(deviceData, *deviceInfoPtr, objectId, errorMessage)){
 		errorMessage = QString("Unable to update device. Error: '%1'").arg(errorMessage);
 		return false;

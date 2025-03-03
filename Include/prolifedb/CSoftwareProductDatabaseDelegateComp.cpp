@@ -140,57 +140,6 @@ bool CSoftwareProductDatabaseDelegateComp::CreateObjectFilterQuery(
 			}
 		}
 
-		if (paramIdsList.contains("CustomerUuid")){
-			iprm::TParamsPtr<iprm::IIdParam> filterParamPtr(&filterParams, "CustomerUuid");
-			if (filterParamPtr.IsValid()){
-				if (!filterQuery.isEmpty()){
-					filterQuery += " AND ";
-				}
-
-				QString value = filterParamPtr->GetId();
-
-				filterQuery += QString(R"((acc."DocumentId" = '%1'))").arg(value);
-			}
-		}
-
-		if (paramIdsList.contains("LicenseFilter")){
-			iprm::TParamsPtr<iprm::IIdParam> filterParamPtr(&filterParams, "LicenseFilter");
-			if (filterParamPtr.IsValid()){
-				QString value = filterParamPtr->GetId();
-
-				QString filter;
-				if (value == "OnlyPaired"){
-					filter = QString(R"(((dev."Document"->>'MacAddress' != '') AND ((root."Document"->>'InUse')::boolean = false)))");
-				}
-				else if (value == "OnlyUnpaired"){
-					filter = QString(R"(((dev."Document"->>'MacAddress' = '' OR dev."Document"->>'MacAddress' IS NULL) AND ((root."Document"->>'InUse')::boolean = false)))");
-				}
-				else if (value == "OnlyInUse"){
-					filter = QString(R"(((root."Document"->>'InUse')::boolean = true))");
-				}
-
-				if (!filterQuery.isEmpty()){
-					filterQuery += " AND ";
-				}
-
-				filterQuery += filter;
-			}
-		}
-
-		if (paramIdsList.contains("SerialNumber")){
-			iprm::TParamsPtr<iprm::ITextParam> filterParamPtr(&filterParams, "SerialNumber");
-			if (filterParamPtr.IsValid()){
-				QString value = filterParamPtr->GetText();
-				QString filter = QString(R"((root."Document"->>'SerialNumber' = '%1'))").arg(value);
-
-				if (!filterQuery.isEmpty()){
-					filterQuery += " AND ";
-				}
-
-				filterQuery += filter;
-			}
-		}
-
 		if (paramIdsList.contains("Groups")){
 			iprm::TParamsPtr<iprm::IParamsSet> filterParamPtr(&filterParams, "Groups");
 			if (filterParamPtr.IsValid()){

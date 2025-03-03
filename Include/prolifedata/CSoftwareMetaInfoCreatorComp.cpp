@@ -67,13 +67,14 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, orderId);
+
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
 				QString customerName = customerInfoPtr->GetName();
-				QByteArray customerId = customerInfoPtr->GetCustomerId();
 				
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID, customerId);
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME, customerName);
@@ -82,6 +83,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	}
 	
 	QByteArray productId = softwareInfoPtr->GetProductId();
+	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID, productId);
 	
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
@@ -100,6 +102,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
 		QByteArray licenseId = licenseIds[0];
+		metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID, licenseId);
 		
 		if (m_licenseCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr licenseDataPtr;
@@ -143,7 +146,8 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 				const IDeviceInfo* deviceInfoPtr = dynamic_cast<const IDeviceInfo*>(hardwareDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
 					QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-					metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID, macAddress);
+					metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID, hardwareId);
+					metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS, macAddress);
 				}
 			}
 		}

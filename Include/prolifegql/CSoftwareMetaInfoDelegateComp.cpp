@@ -37,17 +37,32 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	QByteArray hardwareId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toByteArray();
 	representation["HardwareId"] = QString(hardwareId);
 	
+	QByteArray macAddress = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toByteArray();
+	representation["MacAddress"] = QString(macAddress);
+	
+	QByteArray orderId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toByteArray();
+	representation["OrderId"] = QString(orderId);
+	
 	QByteArray deliveryId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toByteArray();
 	representation["DeliveryId"] = QString(deliveryId);
 	
 	QByteArray purchaseId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toByteArray();
 	representation["PurchaseId"] = QString(purchaseId);
 	
+	QByteArray licenseUuid = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toByteArray();
+	representation["LicenseUuid"] = QString(licenseUuid);
+	
 	QByteArray licenseId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toByteArray();
 	representation["LicenseId"] = QString(licenseId);
 	
 	QString licenseName = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
 	representation["LicenseName"] = QString(licenseName);
+	
+	QByteArray productUuid = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toByteArray();
+	representation["ProductUuid"] = QString(productUuid);
+	
+	QByteArray productId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toByteArray();
+	representation["ProductId"] = QString(productId);
 	
 	QString productName = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	representation["ProductName"] = QString(productName);
@@ -86,12 +101,24 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID, representation.value("HardwareId"));
 	}
 	
+	if (representation.contains("MacAddress")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS, representation.value("MacAddress"));
+	}
+	
+	if (representation.contains("OrderId")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, representation.value("OrderId"));
+	}
+	
 	if (representation.contains("DeliveryId")){
-		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID, representation.value("DeliveryId"));
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID, representation.value("DeliveryId"));
 	}
 	
 	if (representation.contains("PurchaseId")){
-		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID, representation.value("PurchaseId"));
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID, representation.value("PurchaseId"));
+	}
+	
+	if (representation.contains("LicenseUuid")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID, representation.value("LicenseUuid"));
 	}
 	
 	if (representation.contains("LicenseId")){
@@ -100,6 +127,14 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 	
 	if (representation.contains("LicenseName")){
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME, representation.value("LicenseName"));
+	}
+	
+	if (representation.contains("ProductUuid")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID, representation.value("ProductUuid"));
+	}
+	
+	if (representation.contains("ProductId")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID, representation.value("ProductId"));
 	}
 	
 	if (representation.contains("ProductName")){

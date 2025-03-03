@@ -18,7 +18,7 @@ RemoteCollectionView {
 	
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_orderUuid,
-		SoftwareProductItemTypeMetaInfo.s_hardwareUuid,
+		SoftwareProductItemTypeMetaInfo.s_macAddress,
 		SoftwareProductItemTypeMetaInfo.s_inUse,
 		SoftwareProductItemTypeMetaInfo.s_productUuid,
 		SoftwareProductItemTypeMetaInfo.s_customerId,

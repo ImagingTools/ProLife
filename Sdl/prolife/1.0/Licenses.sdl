@@ -26,7 +26,7 @@ type SoftwareProductItem {
 	CustomerId: String
 	CustomerName: String
 	OrderUuid: String
-	HardwareUuid: String
+	MacAddress: String
 	ProductId: String
 	ProductName: String
 	ProductUuid: String

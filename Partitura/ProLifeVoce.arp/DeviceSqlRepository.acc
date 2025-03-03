@@ -107,19 +107,19 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="Devices" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollectionSearchController">
+        <Element Id="Devices" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CollectionName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="DependentCollections">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="DependentMetaInfoList">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
@@ -133,22 +133,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SearchableHeadersIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>DeviceType</Value>
-                                <Value>MacAddress</Value>
-                                <Value>SerialNumber</Value>
-                                <Value>Status</Value>
-                                <Value>Project</Value>
-                                <Value>OrderId</Value>
-                                <Value>LicenseName</Value>
-                                <Value>LicenseId</Value>
-                                <Value>Customer</Value>
-                                <Value>PurchaseOrderId</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

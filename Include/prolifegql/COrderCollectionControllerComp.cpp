@@ -507,12 +507,19 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	sdl::prolife::Orders::OrderUpdateRequestArguments inputArguments = orderUpdateRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		I_CRITICAL();
-
+		return false;
+	}
+	
+	if (!inputArguments.input.Version_1_0->Item){
+		I_CRITICAL();
 		return false;
 	}
 
 	sdl::prolife::Orders::COrderData::V1_0 orderData = *inputArguments.input.Version_1_0->Item;
-	QByteArray objectId = *orderUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
+	QByteArray objectId;
+	if (inputArguments.input.Version_1_0->Id){
+		objectId = *inputArguments.input.Version_1_0->Id;
+	}
 
 	prolifedata::CIdentifiableOrderInfo *orderInfoPtr =
 		dynamic_cast<prolifedata::CIdentifiableOrderInfo *>(
@@ -525,6 +532,8 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	orderInfoPtr->ResetData();
+	
+	orderInfoPtr->SetObjectUuid(objectId);
 
 	if (!FillObjectFromRepresentation(orderData, object, objectId, errorMessage)){
 		if (errorMessage.isEmpty()){
