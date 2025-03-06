@@ -125,6 +125,8 @@ bool CDatabaseConverterComp::DoMigration(int& resultRevision, const istd::CIntRa
 	SendInfoMessage(0, infoMessage, "CDatabaseConverterComp");
 	qDebug() << infoMessage;
 	
+	resultRevision = GetMigrationRange().GetMaxValue();
+	
 	return true;
 }
 
@@ -201,7 +203,7 @@ bool CDatabaseConverterComp::UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObj
 	while (sqlQuery.next()){
 		QSqlRecord record = sqlQuery.record();
 		
-		QByteArray objectId = record.value(qPrintable("DocumentId")).toByteArray();		
+		QByteArray objectId = record.value(qPrintable("DocumentId")).toByteArray();
 		QByteArray updateMetaInfoQuery = databaseDelegate.CreateUpdateMetaInfoQuery(record);
 		updateMetaInfoQuery = updateMetaInfoQuery.replace('\b', ';');
 		if (!ExecQuery(updateMetaInfoQuery)){

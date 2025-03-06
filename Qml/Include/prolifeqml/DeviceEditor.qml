@@ -473,7 +473,7 @@ ViewBase {
 
                     nameId: OrderItemTypeMetaInfo.s_orderId;
 
-                    filteringFields: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_orderCustomer];
+                    filteringFields: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerName];
 
 					sourceModel: CachedOrderCollection.collectionModel;
 
@@ -485,7 +485,7 @@ ViewBase {
 							width: comboBoxRef ? comboBoxRef.width : 0;
 							comboBoxRef: orderCB.cbRef;
 
-							description: qsTr("Customer") + ": " + model.OrderCustomer;
+							description: qsTr("Customer") + ": " + model.CustomerName;
 						}
 					}
 

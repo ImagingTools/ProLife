@@ -3,10 +3,10 @@
 
 // ACF includes
 #include <iqt/iqt.h>
-#include <iprm/CTextParam.h>
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
+#include <prolifedata/CGroupFilter.h>
 
 
 namespace prolifegql
@@ -206,61 +206,15 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-void CCustomerCollectionControllerComp::SetObjectFilter(
-			const imtgql::CGqlRequest& gqlRequest,
-			const imtbase::CTreeItemModel& objectFilterModel,
-			iprm::CParamsSet& filterParams) const
+void CCustomerCollectionControllerComp::SetAdditionalFilters(
+	const imtgql::CGqlRequest& gqlRequest,
+	const imtgql::CGqlObject& /*viewParamsGql*/,
+	iprm::CParamsSet* filterParams) const
 {
-	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
-
-	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr == nullptr){
-		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
-
-		return;
-	}
-
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr == nullptr){
-		SendErrorMessage(0, QString("Unable to create an object filter. Error: user from GraphQL is invalid."), "CSoftwareProductCollectionControllerComp");
-
-		return;
-	}
-
-	bool filterByGroup = true;
-
-	QByteArray userId = userInfoPtr->GetId();
-	QByteArrayList userGroupIds = userInfoPtr->GetGroups();
-	QByteArrayList userPermissions = userInfoPtr->GetPermissions();
-
-	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList permissions;
-		permissions << *m_permissionIdAttrPtr;
-
-		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-	}
-
-	if (userInfoPtr->IsAdmin()){
-		filterByGroup = false;
-	}
-
-	if (filterByGroup){
-		iprm::CTextParam* userParamPtr = new iprm::CTextParam();
-		userParamPtr->SetText(userId);
-
-		iprm::CTextParam* groupParamPtr = new iprm::CTextParam();
-		QByteArray groups;
-		if (!userGroupIds.isEmpty()){
-			groups = userGroupIds.join(';');
+	if (m_groupFilterParamJoinerCompPtr.IsValid()){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+			SendWarningMessage(0, QString("Unable to join group filter param"), "COrderCollectionControllerComp");
 		}
-		groupParamPtr->SetText(groups);
-
-		iprm::CParamsSet* paramsSetPtr = new iprm::CParamsSet();
-
-		paramsSetPtr->SetEditableParameter("UserParam", userParamPtr, true);
-		paramsSetPtr->SetEditableParameter("GroupParam", groupParamPtr, true);
-
-		filterParams.SetEditableParameter("Groups", paramsSetPtr, true);
 	}
 }
 

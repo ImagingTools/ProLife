@@ -709,46 +709,15 @@ bool CSoftwareProductCollectionControllerComp::AddSoftwareToOrder(const QByteArr
 }
 
 
-void CSoftwareProductCollectionControllerComp::SetObjectFilter(
+void CSoftwareProductCollectionControllerComp::SetAdditionalFilters(
 	const imtgql::CGqlRequest& gqlRequest,
-	const imtbase::CTreeItemModel& objectFilterModel,
-	iprm::CParamsSet& filterParams) const
+	const imtgql::CGqlObject& /*viewParamsGql*/,
+	iprm::CParamsSet* filterParams) const
 {
-	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr == nullptr){
-		SendErrorMessage(0, QString("Unable to create an object filter. GraphQL context is nullptr."), "CSoftwareProductCollectionControllerComp");
-
-		return;
-	}
-
-	bool filterByGroup = true;
-
-	QByteArray userId;
-	QByteArrayList userGroupIds;
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr != nullptr){
-		userGroupIds = userInfoPtr->GetGroups();
-		userId = userInfoPtr->GetId();
-
-		if (userInfoPtr->IsAdmin()){
-			filterByGroup = false;
+	if (m_groupFilterParamJoinerCompPtr.IsValid()){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+			SendWarningMessage(0, QString("Unable to join group filter param"), "CSoftwareProductCollectionControllerComp");
 		}
-		else{
-			if (m_checkPermissionCompPtr.IsValid()){
-				QByteArrayList userPermissions = userInfoPtr->GetPermissions();
-
-				QByteArrayList permissions;
-				permissions << *m_permissionIdAttrPtr;
-				filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-			}
-		}
-	}
-
-	if (filterByGroup){
-		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
-		groupFilterPtr->SetUserId(userId);
-		groupFilterPtr->SetGroupIds(userGroupIds);
-		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
 	}
 }
 

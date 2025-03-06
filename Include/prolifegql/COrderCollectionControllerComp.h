@@ -2,6 +2,7 @@
 
 
 // ProLife includes
+#include <prolifedata/IGroupFilterParamJoiner.h>
 #include <prolifedata/IOrderInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders.h>
 
@@ -16,7 +17,6 @@ public:
 	typedef sdl::prolife::Orders::COrderCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
-		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all orders", true, "");
 		I_ASSIGN(m_orderInfoFactCompPtr, "OrderFactory", "Factory for order instance", true, "OrderFactory");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
@@ -25,6 +25,7 @@ public:
 		I_ASSIGN(m_licenseDefinitionCollectionCompPtr, "LicenseDefinitionCollection", "License definition collection", true, "LicenseDefinitionCollection");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
+		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 	I_END_COMPONENT;
 
 protected:
@@ -57,8 +58,8 @@ protected:
 				const sdl::prolife::Orders::COrderUpdateGqlRequest& orderUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
 	bool FillObjectFromRepresentation(
@@ -82,7 +83,8 @@ protected:
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 	I_FACT(prolifedata::IOrderInfo, m_orderInfoFactCompPtr);
-	I_ATTR(QByteArray, m_permissionIdAttrPtr);
+	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
+	
 };
 
 

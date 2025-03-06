@@ -592,47 +592,15 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 }
 
 
-void CDeviceCollectionControllerComp::SetObjectFilter(
-	const imtgql::CGqlRequest& gqlRequest,
-	const imtbase::CTreeItemModel& objectFilterModel,
-	iprm::CParamsSet& filterParams) const
+void CDeviceCollectionControllerComp::SetAdditionalFilters(
+			const imtgql::CGqlRequest& gqlRequest,
+			const imtgql::CGqlObject& /*viewParamsGql*/,
+			iprm::CParamsSet* filterParams) const
 {
-	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
-
-	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr == nullptr){
-		return;
-	}
-
-	bool isAdmin = false;
-	QByteArray userId;
-	QByteArrayList userGroupIds;
-	QByteArrayList userPermissions;
-
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr != nullptr){
-		userPermissions = userInfoPtr->GetPermissions();
-		userId = userInfoPtr->GetId();
-		isAdmin = userInfoPtr->IsAdmin();
-		userGroupIds = userInfoPtr->GetGroups();
-	}
-
-	bool filterByGroup = false;
-	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList permissions;
-		permissions << *m_permissionIdAttrPtr;
-		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-	}
-
-	if (isAdmin){
-		filterByGroup = false;
-	}
-
-	if (filterByGroup){
-		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
-		groupFilterPtr->SetUserId(userId);
-		groupFilterPtr->SetGroupIds(userGroupIds);
-		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
+	if (m_groupFilterParamJoinerCompPtr.IsValid()){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+			SendWarningMessage(0, QString("Unable to join group filter param"), "CDeviceCollectionControllerComp");
+		}
 	}
 }
 

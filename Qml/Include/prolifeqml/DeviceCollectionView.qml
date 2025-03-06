@@ -37,7 +37,7 @@ RemoteCollectionView {
 	visibleMetaInfo: true;
 
 	Component.onCompleted: {
-		collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_lastModified, "DESC")
+		collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 		filterMenu.decorator = deviceCollectionFilterComp;
 	}
 
@@ -45,20 +45,6 @@ RemoteCollectionView {
 		id: deviceCollectionFilterComp;
 
 		DeviceCollectionFilterDecorator {}
-	}
-
-	function onFilterChanged(filterId, filterValue){
-		if (filterId == "AccountFilter"){
-			container.collectionFilter.setAccountFilter(filterValue);
-		}
-		else if (filterId == "LicenseFilter"){
-			container.collectionFilter.setLicenseFilter(filterValue);
-		}
-		else if (filterId == "StatusFilter"){
-			container.collectionFilter.setDeviceStatusFilter(filterValue);
-		}
-
-		container.doUpdateGui();
 	}
 
 	onHeadersChanged: {

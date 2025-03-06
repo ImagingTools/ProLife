@@ -5,6 +5,9 @@
 #include <imtauth/ICompanyInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts.h>
 
+// ProLife includes
+#include <prolifedata/IGroupFilterParamJoiner.h>
+
 
 namespace prolifegql
 {
@@ -16,12 +19,11 @@ public:
 	typedef sdl::prolife::Accounts::CAccountCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CCustomerCollectionControllerComp);
-		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission-ID for show all accounts", true, "ViewAllAccounts");
 		I_ASSIGN(m_accountInfoFactCompPtr, "AccountFactory", "Factory used for creation of the new account instance", true, "AccountFactory");
+		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 	I_END_COMPONENT;
 
 protected:
-
 	// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
@@ -44,7 +46,7 @@ protected:
 				const sdl::prolife::Accounts::CAccountUpdateGqlRequest& accountUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
 	bool FillObjectFromRepresentation(
@@ -55,7 +57,7 @@ private:
 
 private:
 	I_FACT(imtauth::ICompanyInfo, m_accountInfoFactCompPtr);
-	I_ATTR(QByteArray, m_permissionIdAttrPtr);
+	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
 };
 
 

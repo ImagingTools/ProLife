@@ -19,6 +19,44 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CustomerMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OrderDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Accounts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoId" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="CustomerId"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CustomerName</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ObjectCollection" PackageId="ImtCorePck" ComponentId="ObjectCollection">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap>
@@ -195,7 +233,6 @@
         <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Orders"/>
         <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Orders"/>
-        <Interface InterfaceId="imtbase::ISearchController" ComponentId="Orders"/>
         <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="OrderDatabaseDelegate"/>
         <Interface InterfaceId="istd::IChangeable" ComponentId="Orders"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Orders"/>

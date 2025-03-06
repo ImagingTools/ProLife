@@ -9,6 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CompactXmlFileSerializer" X="275" Y="200" Note=""/>
+        <Element ComponentName="CustomerMetaInfoController" X="325" Y="700" Note=""/>
         <Element ComponentName="ObjectCollection" X="650" Y="575" Note=""/>
         <Element ComponentName="OrderDatabaseDelegate" X="650" Y="225" Note=""/>
         <Element ComponentName="OrderInfo" X="975" Y="200" Note=""/>

@@ -18,8 +18,7 @@ public:
 	I_END_COMPONENT
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
-	virtual bool CreateObjectFilterQuery(const iprm::IParamsSet& filterParams, QString& filterQuery) const override;
-
+	virtual QString CreateAdditionalFiltersQuery(const iprm::IParamsSet& filterParams) const override;
 };
 
 

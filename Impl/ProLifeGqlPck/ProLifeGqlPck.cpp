@@ -94,6 +94,11 @@ I_EXPORT_COMPONENT(
 		"Hardware meta info delegate",
 		"Hardware Meta Info Delegate");
 
+I_EXPORT_COMPONENT(
+		GroupFilterParamJoiner,
+		"Group filter param joiner",
+		"Group Filter Param Joiner");
+
 
 } // namespace ProLifeGqlPck
 

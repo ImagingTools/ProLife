@@ -14,7 +14,8 @@ CollectionDataProvider {
         OrderItemTypeMetaInfo.s_id,
         OrderItemTypeMetaInfo.s_orderId,
         OrderItemTypeMetaInfo.s_description,
-        OrderItemTypeMetaInfo.s_orderCustomer
+        OrderItemTypeMetaInfo.s_customerId,
+		OrderItemTypeMetaInfo.s_customerName
     ];
 }
 

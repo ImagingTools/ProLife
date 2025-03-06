@@ -313,7 +313,7 @@ ViewBase {
                     nameId: "OrderId";
                     name: qsTr("Order");
 
-					filteringFields: ["OrderId", "OrderCustomer"];
+					filteringFields: ["OrderId", "CustomerName"];
 
 					// model: CachedOrderCollection.collectionModel;
 					sourceModel: CachedOrderCollection.collectionModel;
@@ -326,7 +326,7 @@ ViewBase {
                     delegate: Component {
 						FilterableComboBoxDelegate {
 							width: ordersCB.cbRef ? ordersCB.cbRef.width : 0;
-                            description: qsTr("Customer") + ": " + model.OrderCustomer;
+                            description: qsTr("Customer") + ": " + model.CustomerName;
 							comboBoxRef: ordersCB.cbRef;
                         }
                     }

@@ -615,50 +615,6 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 }
 
 
-void COrderCollectionControllerComp::SetObjectFilter(
-	const imtgql::CGqlRequest& gqlRequest,
-	const imtbase::CTreeItemModel& objectFilterModel,
-	iprm::CParamsSet& filterParams) const
-{
-	BaseClass::SetObjectFilter(gqlRequest, objectFilterModel, filterParams);
-
-	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-	if (gqlContextPtr == nullptr){
-		return;
-	}
-
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-	if (userInfoPtr == nullptr){
-		return;
-	}
-
-	QByteArray userId = userInfoPtr->GetId();
-	QByteArrayList groupIds = userInfoPtr->GetGroups();
-	QByteArrayList userPermissions = userInfoPtr->GetPermissions();
-
-	bool isAdmin = userInfoPtr->IsAdmin();
-	bool filterByGroup = true;
-
-	if (m_checkPermissionCompPtr.IsValid()){
-		QByteArrayList permissions;
-		permissions << *m_permissionIdAttrPtr;
-
-		filterByGroup = !m_checkPermissionCompPtr->CheckPermission(userPermissions, permissions);
-	}
-
-	if (isAdmin){
-		filterByGroup = false;
-	}
-
-	if (filterByGroup){
-		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
-		groupFilterPtr->SetUserId(userId);
-		groupFilterPtr->SetGroupIds(groupIds);
-		filterParams.SetEditableParameter("GroupFilter", groupFilterPtr, true);
-	}
-}
-
-
 imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
 		const imtgql::CGqlRequest& gqlRequest,
 		QString& errorMessage) const
@@ -717,6 +673,18 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
 	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
+
+void COrderCollectionControllerComp::SetAdditionalFilters(
+	const imtgql::CGqlRequest& gqlRequest,
+	const imtgql::CGqlObject& /*viewParamsGql*/,
+	iprm::CParamsSet* filterParams) const
+{
+	if (m_groupFilterParamJoinerCompPtr.IsValid()){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+			SendWarningMessage(0, QString("Unable to join group filter param"), "COrderCollectionControllerComp");
+		}
+	}
+}
 
 
 // private methods

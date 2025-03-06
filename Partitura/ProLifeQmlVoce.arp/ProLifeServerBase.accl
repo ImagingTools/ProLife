@@ -10,18 +10,29 @@
     <PositionMap>
         <Element ComponentName="AuthorizableServerFramework" X="625" Y="125" Note=""/>
         <Element ComponentName="DatabaseConverterComp" X="275" Y="225" Note=""/>
-        <Element ComponentName="DeviceDependentMetaInfoIds" X="675" Y="700" Note=""/>
-        <Element ComponentName="Language" X="275" Y="675" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="600" Y="500" Note=""/>
+        <Element ComponentName="Language" X="525" Y="650" Note=""/>
+        <Element ComponentName="LisaDatabaseAccessSettings" X="150" Y="575" Note=""/>
+        <Element ComponentName="LisaDatabaseConnector" X="375" Y="400" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="775" Y="500" Note=""/>
         <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="125" Note=""/>
-        <Element ComponentName="OrderDependentMetaInfoIds" X="673.585786438" Y="800" Note=""/>
         <Element ComponentName="ProLifeHandlers" X="600" Y="300" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="250" Y="500" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="500" Y="500" Note=""/>
+        <Element ComponentName="PumaDatabaseAccessSettings" X="150" Y="500" Note=""/>
+        <Element ComponentName="PumaDatabaseConnector" X="149" Y="325" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="500" Note=""/>
-        <Element ComponentName="SoftwareDependentMetaInfoIds" X="975" Y="700" Note=""/>
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -33,16 +44,6 @@
                 <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
                 <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

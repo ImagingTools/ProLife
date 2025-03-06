@@ -8,8 +8,13 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="AccountMetaInfoController" X="600" Y="575" Note=""/>
+        <Element ComponentName="HardwareMetaInfoController" X="975" Y="575" Note=""/>
         <Element ComponentName="JsonSerializer" X="1025" Y="325" Note=""/>
+        <Element ComponentName="LicenseMetaInfoController" X="975" Y="675" Note=""/>
+        <Element ComponentName="OrderIdMetaInfoController" X="225" Y="575" Note=""/>
         <Element ComponentName="OrderedIdentifiableSoftwareInstanceInfo" X="625" Y="450" Note=""/>
+        <Element ComponentName="ProductMetaInfoController" X="625" Y="675" Note=""/>
         <Element ComponentName="Repository" X="200" Y="325" Note=""/>
         <Element ComponentName="SoftwareMetaInfoCreator" X="250" Y="175" Note=""/>
         <Element ComponentName="SoftwareMetaInfoDelegate" X="225" Y="450" Note=""/>

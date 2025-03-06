@@ -8,6 +8,7 @@ import imtcontrols 1.0
 import prolifeSensorsSdl 1.0
 import imtguigql 1.0
 import Qt.labs.platform 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 DocumentCollectionViewDelegate {
 	id: container;
@@ -62,8 +63,6 @@ DocumentCollectionViewDelegate {
 			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
 			
 			typeId: "Device";
-			// documentName: deviceData ? deviceData.m_name: "";
-			// documentDescription: deviceData ? deviceData.m_description: "";
 
 			documentModelComp: Component {
 				DeviceData {}
@@ -537,15 +536,39 @@ DocumentCollectionViewDelegate {
 				Item {
 					width: dialog.width;
 					height: dialog.height - 100;
+					
+					FieldFilter {
+						id: licenseFilter
+						m_fieldId: "SoftwareCount"
+						m_filterValue: '0';
+						m_filterValueType: "Integer"
+						m_filterOperations: ["Equal"]
+					}
+					
+					FieldFilter {
+						id: productFilter
+						m_fieldId: "DeviceType"
+						m_filterValue: dialog.productUuid;
+						m_filterValueType: "String"
+						m_filterOperations: ["Equal"]
+					}
+					
+					FieldFilter {
+						id: excludeFilter
+						m_fieldId: "DocumentId"
+						m_filterValue: dialog.fromDeviceId;
+						m_filterValueType: "String"
+						m_filterOperations: ["Not","Equal"]
+					}
 
 					Connections {
 						target: dialog;
 
 						function onStarted(){
-							deviceCollectionView.collectionFilter.addAdditionalFilter("LicenseStatus", "WithoutLicense");
-							deviceCollectionView.collectionFilter.addAdditionalFilter("ProductUuid", dialog.productUuid);
-							deviceCollectionView.collectionFilter.addAdditionalFilter("ExcludeIds", dialog.fromDeviceId);
-							deviceCollectionView.doUpdateGui();
+							deviceCollectionView.collectionFilter.addFieldFilter(licenseFilter)
+							deviceCollectionView.collectionFilter.addFieldFilter(productFilter)
+							deviceCollectionView.collectionFilter.addFieldFilter(excludeFilter)
+							// deviceCollectionView.collectionFilter.filterChanged()
 						}
 					}
 

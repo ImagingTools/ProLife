@@ -26,6 +26,7 @@
 #include <prolifegql/COrderMetaInfoDelegateComp.h>
 #include <prolifegql/CCustomerMetaInfoDelegateComp.h>
 #include <prolifegql/CHardwareBindingMetaInfoDelegateComp.h>
+#include <prolifegql/CGroupFilterParamJoinerComp.h>
 
 
 /**
@@ -62,6 +63,7 @@ typedef prolifegql::CSoftwareMetaInfoDelegateComp SoftwareMetaInfoDelegate;
 typedef prolifegql::COrderMetaInfoDelegateComp OrderMetaInfoDelegate;
 typedef prolifegql::CCustomerMetaInfoDelegateComp CustomerMetaInfoDelegate;
 typedef prolifegql::CHardwareBindingMetaInfoDelegateComp HardwareBindingMetaInfoDelegate;
+typedef prolifegql::CGroupFilterParamJoinerComp GroupFilterParamJoiner;
 
 
 } // namespace ImtLicenseGqlPck

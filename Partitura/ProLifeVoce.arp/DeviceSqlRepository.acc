@@ -10,6 +10,44 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="AccountNameMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Name</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Accounts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoId" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="CustomerId"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CustomerName</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="AccountCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DeviceDatabaseDelegate" PackageId="ProLifeDbPck" ComponentId="DeviceDatabaseDelegate">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -53,6 +91,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="UserCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -149,6 +190,49 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LicenseNameMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>LicenseName</Value>
+                                <Value>LicenseId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Licenses"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoId" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ConfigurationType"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>LicenseName</Value>
+                                <Value>LicenseId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ObjectCollection" PackageId="ImtCorePck" ComponentId="ObjectCollection">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap>
@@ -179,6 +263,86 @@
                                 <Value>DocumentInfo</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="OrderIdMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>OrderId</Value>
+                                <Value>PurchaseId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Orders"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoId" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="OrderId"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DeliveryId</Value>
+                                <Value>PurchaseId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="OrderCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProductNameMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProductName</Value>
+                                <Value>ProductId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="Products"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoId" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="DeviceType"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MetaInfoNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProductName</Value>
+                                <Value>ProductId</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

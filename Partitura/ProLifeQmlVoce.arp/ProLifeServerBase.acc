@@ -64,8 +64,8 @@
                     <AttributeInfo Id="ThreadsLimit" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="100"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -115,22 +115,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DeviceDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>OrderId</Value>
-                                <Value>DeviceType</Value>
-                                <Value>ConfigurationType</Value>
-                                <Value>CustomerId</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="Language" PackageId="BasePck" ComponentId="SelectionParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -139,6 +123,59 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LisaDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="lisa"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="postgres"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LisaDatabaseConnector" PackageId="ImtDatabasePck" ComponentId="DatabaseConnector">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RemoteDatabaseLoginSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LisaDatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SchemaName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="public"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="LisaServer"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TableNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Products</Value>
+                                <Value>Licenses</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -189,19 +226,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="OrderDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>CustomerId</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -326,6 +350,58 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="PumaDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="puma"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="postgres"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PumaDatabaseConnector" PackageId="ImtDatabasePck" ComponentId="DatabaseConnector">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RemoteDatabaseLoginSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PumaDatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SchemaName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="public"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerName" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="PumaServer"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TableNames" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Users</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Repositories" PackageId="" ComponentId="Repositories">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -335,74 +411,23 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceDependentCollections" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Repositories/OrderSqlRepository</Value>
-                                <Value>LisaGQLEngine/ProductRepository</Value>
-                                <Value>LisaGQLEngine/LicenseRepository</Value>
-                                <Value>Repositories/AccountSqlRepository</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceDependentMetaInfoList" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceDependentMetaInfoIds"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="OrderDependentCollections" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Repositories/AccountSqlRepository</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderDependentMetaInfoList" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OrderDependentMetaInfoIds"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareDependentCollections" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Repositories/OrderSqlRepository</Value>
-                                <Value>Repositories/DeviceSqlRepository</Value>
-                                <Value>LisaGQLEngine/ProductRepository</Value>
-                                <Value>LisaGQLEngine/LicenseRepository</Value>
-                                <Value>Repositories/AccountSqlRepository</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareDependentMetaInfoList" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareDependentMetaInfoIds"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="SoftwareDependentMetaInfoIds" PackageId="BasePck" ComponentId="SelectionConstraints">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>OrderId</Value>
-                                <Value>HardwareId</Value>
-                                <Value>ProductUuid</Value>
-                                <Value>LicenseUuid</Value>
-                                <Value>CustomerId</Value>
-                            </Values>
-                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -466,6 +491,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -511,6 +539,9 @@
                     <Element Id="DeviceSqlRepository" PackageId="ProLifeVoce" ComponentId="DeviceSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="AccountSqlRepository"/>
                                 </AttributeInfo>
@@ -520,14 +551,11 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="DeviceDependentCollections">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="DeviceDependentMetaInfoList">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="BindingProductsRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseRepository">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="LicenseRepository">
                                     <Data IsEnabled="false"/>
@@ -535,8 +563,14 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductRepository">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="ProductRepository">
                                     <Data IsEnabled="false"/>
@@ -583,16 +617,13 @@
                     <Element Id="SoftwareSqlRepository" PackageId="ProLifeVoce" ComponentId="SoftwareSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="AccountSqlRepository"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="AccountSqlRepository"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="SoftwareDependentCollections">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="SoftwareDependentMetaInfoList">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="">
@@ -782,8 +813,10 @@
         <Component ExportedId="DatabaseAccessSettings2" ComponentId="DatabaseEngine/DatabaseAccessSettings"/>
         <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>
         <Component ExportedId="HttpServerFramework" ComponentId="AuthorizableServerFramework/HttpServerFramework"/>
+        <Component ExportedId="LisaDatabaseConnector" ComponentId="LisaDatabaseConnector"/>
         <Component ExportedId="PgSqlDatabaseEngine" ComponentId="DatabaseEngine/PgSqlDatabaseEngine"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
+        <Component ExportedId="PumaDatabaseConnector" ComponentId="PumaDatabaseConnector"/>
         <Component ExportedId="WebSocketServerFramework" ComponentId="AuthorizableServerFramework/WebSocketServerFramework"/>
     </ExportedComponents>
 </Acf>

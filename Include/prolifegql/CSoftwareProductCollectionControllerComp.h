@@ -5,6 +5,7 @@
 #include <imtlic/IProductInstanceInfo.h>
 
 // ProLife includes
+#include <prolifedata/IGroupFilterParamJoiner.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
 
 
@@ -21,9 +22,9 @@ public:
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
-		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all licenses", true, "ViewAllLicenses");
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Operation context controller for order info", true, "OrderOperationContextController");
+		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 	I_END_COMPONENT;
 
 protected:
@@ -54,7 +55,7 @@ protected:
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual void SetObjectFilter(const imtgql::CGqlRequest& gqlRequest, const imtbase::CTreeItemModel& objectFilterModel, iprm::CParamsSet& filterParams) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
 	bool FillObjectFromRepresentation(
@@ -64,13 +65,14 @@ private:
 				QString& errorMessage) const;
 	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
+	
 private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
-	I_ATTR(QByteArray, m_permissionIdAttrPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
+	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
 };
 
 
