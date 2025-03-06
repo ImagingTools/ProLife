@@ -381,7 +381,7 @@ ViewBase {
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: parent.left;
 
-                            onClicked: {
+							function nextCheckState() {
                                 checkBox.checkState = Qt.Checked - checkBox.checkState;
                             }
 

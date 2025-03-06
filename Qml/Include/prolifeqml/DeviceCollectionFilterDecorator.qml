@@ -153,7 +153,7 @@ DecoratorBase {
 			CheckBox {
 				anchors.verticalCenter: parent.verticalCenter;
 				widthFromDecorator: true;
-				onClicked: {
+				function nextCheckState() {
 					mainItem.complexFilter.removeFieldFilter(statusFilter)
 					
 					if (checkState == Qt.Checked){
