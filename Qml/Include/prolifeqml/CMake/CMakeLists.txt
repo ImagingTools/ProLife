@@ -4,7 +4,7 @@ include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/StaticConfig.cmake)
 
 if(QT_VERSION_MAJOR EQUAL 6)
-	target_link_libraries(${PROJECT_NAME}  Qt${QT_VERSION_MAJOR}::Core5Compat)
+	target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif()
 
 set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
@@ -37,7 +37,7 @@ list(APPEND webdirs ${buildwebdir}/src/prolifeSensorBindingSdl)
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 
-if(DEFINED WEB_COMPILE AND  WEB_COMPILE)
+if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
 
