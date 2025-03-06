@@ -89,7 +89,7 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 
 sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
 	const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
-	const ::imtgql::CGqlRequest& gqlRequest,
+	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& errorMessage) const
 {
 	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload retVal;
@@ -250,18 +250,18 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 
 sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
 	const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest,
-	const ::imtgql::CGqlRequest& gqlRequest,
+	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& errorMessage) const
 {
 	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
+	retVal.Version_1_0.emplace();
+
 	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		I_CRITICAL();
 
 		return retVal;
 	}
-
-	sdl::prolife::Sensors::CTransferLicensesPayload::V1_0& response = retVal.Version_1_0.emplace();
 
 	QByteArray fromDeviceId = *inputArguments.input.Version_1_0->FromDeviceId;
 	QByteArray toDeviceId = *inputArguments.input.Version_1_0->ToDeviceId;
@@ -342,7 +342,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 
 sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLicenseFile(
 	const sdl::prolife::Sensors::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
-	const ::imtgql::CGqlRequest& gqlRequest,
+	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& errorMessage) const
 {
 	sdl::prolife::Sensors::CCreateLicenseFilePayload retVal;
@@ -652,7 +652,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 
 sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecryptLicenseFile(
 	const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
-	const ::imtgql::CGqlRequest& gqlRequest,
+	const ::imtgql::CGqlRequest& /*gqlRequest*/,
 	QString& errorMessage) const
 {
 	sdl::prolife::Sensors::CDecryptLicenseFilePayload retVal;
@@ -873,8 +873,8 @@ QByteArrayList CDeviceControllerComp::GetAllLicenseDependencies(const QByteArray
 
 	QByteArrayList dependencies = licenseInfoPtr->GetDependencies();
 
-	for (const QByteArray& licenseId : dependencies){
-		retVal << GetAllLicenseDependencies(licenseId);
+	for (const QByteArray& depId : dependencies){
+		retVal << GetAllLicenseDependencies(depId);
 	}
 
 	retVal << dependencies;

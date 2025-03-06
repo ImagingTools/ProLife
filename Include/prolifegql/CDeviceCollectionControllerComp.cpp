@@ -499,7 +499,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 }
 
 
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const
+imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& /*errorMessage*/) const
 {
 	if (!m_licenseCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'LicenseCollection' was not set", "CDeviceCollectionControllerComp");
