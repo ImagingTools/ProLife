@@ -135,7 +135,7 @@ ViewBase {
     Column {
         id: content;
         width: parent.width;
-        spacing: Style.size_mainMargin;
+        spacing: Style.sizeMainMargin;
 
         SwitchElementView {
             id: switchNewSensor;
@@ -221,7 +221,7 @@ ViewBase {
                 text: qsTr("Please select a sensor");
                 color: Style.errorTextColor;
                 font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
+                font.pixelSize: Style.fontSizeXSmall;
             }
         }
 
@@ -269,7 +269,7 @@ ViewBase {
                     text: qsTr("Please select a type sensor");
                     color: Style.errorTextColor;
                     font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
+                    font.pixelSize: Style.fontSizeXSmall;
                 }
             }
 

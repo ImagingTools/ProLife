@@ -205,13 +205,13 @@ Item {
         id: contentColumn;
 
         anchors.top: parent.top;
-        anchors.topMargin: Style.size_mainMargin;
+        anchors.topMargin: Style.sizeMainMargin;
         anchors.left: parent.left;
-        anchors.leftMargin: Style.size_mainMargin;
+        anchors.leftMargin: Style.sizeMainMargin;
         anchors.right: parent.right;
-        anchors.rightMargin: Style.size_mainMargin;
+        anchors.rightMargin: Style.sizeMainMargin;
 
-        spacing: Style.size_mainMargin;
+        spacing: Style.sizeMainMargin;
 
         ElementView {
             id: segmentedElementView;
@@ -320,7 +320,7 @@ Item {
                 text: qsTr("Please select a product");
                 color: Style.errorTextColor;
                 font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSize_common;
+                font.pixelSize: Style.fontSizeXSmall;
             }
         }
     }
@@ -332,7 +332,7 @@ Item {
         anchors.bottom: parent.bottom;
         anchors.left: parent.left;
         anchors.right: parent.right;
-        anchors.margins: Style.size_mainMargin;
+        anchors.margins: Style.sizeMainMargin;
 
         width: parent.width;
 

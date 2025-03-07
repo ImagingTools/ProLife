@@ -50,9 +50,9 @@ ElementView {
 
         anchors.verticalCenter: parent.top;
         anchors.left: parent.left;
-        anchors.leftMargin: Style.size_mainMargin;
+        anchors.leftMargin: Style.sizeMainMargin;
 
-        spacing: Style.size_mainMargin;
+        spacing: Style.sizeMainMargin;
 
 		StickerView {
 			anchors.verticalCenter: parent.verticalCenter;

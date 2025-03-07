@@ -349,7 +349,7 @@ ViewBase {
 
 			color: Style.textColor;
 			font.family: Style.fontFamilyBold;
-			font.pixelSize: Style.fontSize_title;
+			font.pixelSize: Style.fontSizeLarge;
 
 			text: qsTr("Group Information");
 		}

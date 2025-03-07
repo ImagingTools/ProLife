@@ -80,7 +80,7 @@ DecoratorBase {
 		anchors.left: parent.left;
 		anchors.verticalCenter: parent.verticalCenter;
 		
-		spacing: Style.size_mainMargin;
+		spacing: Style.sizeMainMargin;
 		
 		ComboBox {
 			id: licenseComboBox;
@@ -140,14 +140,14 @@ DecoratorBase {
 			id: row;
 			anchors.verticalCenter: parent.verticalCenter;
 			height: filtermenu.height;
-			spacing: Style.size_mainMargin;
+			spacing: Style.sizeMainMargin;
 			
 			Text {
 				id: onlyNewSensorsText;
 				anchors.verticalCenter: parent.verticalCenter;
 				color: Style.textColor;
 				font.family: Style.fontFamily;
-				font.pixelSize: Style.fontSize_common;
+				font.pixelSize: Style.fontSizeXSmall;
 			}
 			
 			CheckBox {

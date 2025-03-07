@@ -94,7 +94,7 @@ Item {
 		anchors.right: parent.right;
 		anchors.top: flickable.top;
 		anchors.bottom: flickable.bottom;
-		secondSize: Style.size_mainMargin;
+		secondSize: Style.sizeMainMargin;
 		targetItem: flickable;
 	}
 	
@@ -123,12 +123,12 @@ Item {
 				Column {
 					id: availableLicensesColumn;
 					anchors.top: parent.top
-					anchors.topMargin: Style.size_mainMargin;
+					anchors.topMargin: Style.sizeMainMargin;
 					anchors.right: parent.horizontalCenter;
 					anchors.rightMargin: buttonsColumn.width;
 					anchors.left: parent.left;
-					anchors.leftMargin: Style.size_mainMargin;
-					spacing: Style.size_mainMargin;
+					anchors.leftMargin: Style.sizeMainMargin;
+					spacing: Style.sizeMainMargin;
 					
 					ComboBoxElementView {
 						id: productComboBoxElementView;
@@ -418,7 +418,7 @@ Item {
 					
 					anchors.bottom: availableLicensesColumn.bottom;
 					anchors.right: parent.right;
-					anchors.rightMargin: Style.size_mainMargin;
+					anchors.rightMargin: Style.sizeMainMargin;
 					anchors.left: parent.horizontalCenter;
 					anchors.leftMargin: buttonsColumn.width;
 					
@@ -449,7 +449,7 @@ Item {
 											
 											anchors.verticalCenter: parent.verticalCenter;
 											anchors.left: parent.left;
-											anchors.leftMargin: Style.size_smallMargin;
+											anchors.leftMargin: Style.sizeSmallMargin;
 											
 											width: 18;
 											height: width;

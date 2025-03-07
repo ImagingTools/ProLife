@@ -94,10 +94,10 @@ RemoteCollectionView {
 
 				anchors.verticalCenter: parent.verticalCenter;
 				anchors.left: image.right
-				anchors.leftMargin: Style.size_mainMargin;
+				anchors.leftMargin: Style.sizeMainMargin;
 				anchors.right: parent.right
 
-				font.pixelSize: Style.fontSize_common;
+				font.pixelSize: Style.fontSizeXSmall;
 				font.family: Style.fontFamily;
 				color: Style.textColor;
 

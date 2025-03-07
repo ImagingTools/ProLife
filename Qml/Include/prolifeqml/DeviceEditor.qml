@@ -25,7 +25,7 @@ ViewBase {
     property alias deviceTypeComboBoxEnabled: productCB.enabled;
 
     property int radius: 3;
-    property int spacing: Style.size_mainMargin;
+    property int spacing: Style.sizeMainMargin;
 
     property int comboBoxHeight: 27;
 

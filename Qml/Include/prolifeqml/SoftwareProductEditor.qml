@@ -155,7 +155,7 @@ ViewBase {
 
         width: parent.width;
 
-        spacing: Style.size_mainMargin;
+        spacing: Style.sizeMainMargin;
 
         SwitchElementView {
             id: switchNewLicense;
@@ -336,7 +336,7 @@ ViewBase {
                     text: qsTr("Please select a license");
                     color: Style.errorTextColor;
                     font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSize_common;
+                    font.pixelSize: Style.fontSizeXSmall;
                 }
             }
 
@@ -401,12 +401,12 @@ ViewBase {
 
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: checkBox.right;
-                            anchors.leftMargin: Style.size_mainMargin;
+                            anchors.leftMargin: Style.sizeMainMargin;
 
                             visible: checkBox.checkState === Qt.Unchecked;
 
                             font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSize_common;
+                            font.pixelSize: Style.fontSizeXSmall;
                             color: Style.textColor;
 
                             text: qsTr("Unlimited");
@@ -417,7 +417,7 @@ ViewBase {
 
                             anchors.verticalCenter: parent.verticalCenter;
                             anchors.left: checkBox.right;
-                            anchors.leftMargin: Style.size_mainMargin;
+                            anchors.leftMargin: Style.sizeMainMargin;
 
                             visible: checkBox.checkState === Qt.Checked;
 
@@ -440,7 +440,7 @@ ViewBase {
                             textFieldHeight: height;
 
                             textFieldBorderColor: Style.borderColor;
-                            mainMargin: Style.size_mainMargin;
+                            mainMargin: Style.sizeMainMargin;
 
                             Component.onCompleted: {
                                 expirationElementView.datePicker = datePicker_;

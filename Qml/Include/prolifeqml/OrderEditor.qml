@@ -376,7 +376,7 @@ ViewBase {
 
                         color: Style.errorTextColor;
                         font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSize_common;
+                        font.pixelSize: Style.fontSizeXSmall;
                     }
                 }
 
@@ -577,7 +577,7 @@ ViewBase {
 
                     height: parent.height;
 
-                    spacing: Style.size_mainMargin;
+                    spacing: Style.sizeMainMargin;
 
                     ToolButton {
                         id: expandButton;
@@ -625,7 +625,7 @@ ViewBase {
                     text: qsTr("Products") + " (" + productsView.count + ")";
                     color: Style.textColor;
                     font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSize_title;
+                    font.pixelSize: Style.fontSizeLarge;
                 }
             }
 
