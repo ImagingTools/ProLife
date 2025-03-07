@@ -101,15 +101,15 @@ Item {
 	Flickable {
 		id: flickable;
 		anchors.top: parent.top;
-		anchors.topMargin: Style.size_largeMargin;
+		anchors.topMargin: Style.sizeLargeMargin;
 		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: Style.size_largeMargin;
+		anchors.bottomMargin: Style.sizeLargeMargin;
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.size_largeMargin;
+		anchors.leftMargin: Style.sizeLargeMargin;
 		anchors.right: scrollbar.left;
-		anchors.rightMargin: Style.size_largeMargin;
+		anchors.rightMargin: Style.sizeLargeMargin;
 		contentWidth: width;
-		contentHeight: content.height + 2 * Style.size_largeMargin;
+		contentHeight: content.height + 2 * Style.sizeLargeMargin;
 		boundsBehavior: Flickable.StopAtBounds;
 		clip: true;
 		
@@ -610,8 +610,8 @@ Item {
 				Column {
 					id: buttonsColumn;
 					anchors.centerIn: parent;
-					spacing: Style.size_largeMargin;
-					width: Style.size_largeMargin;
+					spacing: Style.sizeLargeMargin;
+					width: Style.sizeLargeMargin;
 					
 					ToolButton {
 						id: bindButton;

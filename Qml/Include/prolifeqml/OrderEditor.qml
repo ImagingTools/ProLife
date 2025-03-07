@@ -330,19 +330,19 @@ ViewBase {
         id: flickable;
 
         anchors.left: parent.left;
-        anchors.leftMargin: Style.size_largeMargin;
+        anchors.leftMargin: Style.sizeLargeMargin;
 
         anchors.top: parent.top;
-        anchors.topMargin: Style.size_largeMargin;
+        anchors.topMargin: Style.sizeLargeMargin;
 
         anchors.bottom: parent.bottom;
-        anchors.bottomMargin: Style.size_largeMargin;
+        anchors.bottomMargin: Style.sizeLargeMargin;
 
         anchors.right: scrollbar.left;
-        anchors.rightMargin: Style.size_largeMargin;
+        anchors.rightMargin: Style.sizeLargeMargin;
 
         contentWidth: content.width;
-		contentHeight: Math.max(content.height + 2 * Style.size_largeMargin + 100, historyPanel.contentHeight + 2 * Style.size_largeMargin);
+		contentHeight: Math.max(content.height + 2 * Style.sizeLargeMargin + 100, historyPanel.contentHeight + 2 * Style.sizeLargeMargin);
 
         boundsBehavior: Flickable.StopAtBounds;
 
@@ -353,7 +353,7 @@ ViewBase {
 
             width: 700;
 
-            spacing: Style.size_largeMargin;
+            spacing: Style.sizeLargeMargin;
 
             GroupHeaderView {
                 title: qsTr("Order Information");
@@ -636,7 +636,7 @@ ViewBase {
                 height: contentHeight;
 
                 boundsBehavior: Flickable.StopAtBounds;
-                spacing: Style.size_largeMargin;
+                spacing: Style.sizeLargeMargin;
 
                 cacheBuffer: 1000;
 

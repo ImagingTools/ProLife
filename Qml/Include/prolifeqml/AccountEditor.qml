@@ -106,7 +106,7 @@ ViewBase {
 
 		width: 700;
 
-		spacing: Style.size_largeMargin;
+		spacing: Style.sizeLargeMargin;
 
 		GroupHeaderView {
 			width: parent.width;
