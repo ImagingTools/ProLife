@@ -97,7 +97,7 @@ RemoteCollectionView {
 				anchors.leftMargin: Style.sizeMainMargin;
 				anchors.right: parent.right
 
-				font.pixelSize: Style.fontSizeXSmall;
+				font.pixelSize: Style.fontSizeNormal;
 				font.family: Style.fontFamily;
 				color: Style.textColor;
 

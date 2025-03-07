@@ -336,7 +336,7 @@ ViewBase {
                     text: qsTr("Please select a license");
                     color: Style.errorTextColor;
                     font.family: Style.fontFamily;
-                    font.pixelSize: Style.fontSizeXSmall;
+                    font.pixelSize: Style.fontSizeNormal;
                 }
             }
 
@@ -406,7 +406,7 @@ ViewBase {
                             visible: checkBox.checkState === Qt.Unchecked;
 
                             font.family: Style.fontFamily;
-                            font.pixelSize: Style.fontSizeXSmall;
+                            font.pixelSize: Style.fontSizeNormal;
                             color: Style.textColor;
 
                             text: qsTr("Unlimited");

@@ -376,7 +376,7 @@ ViewBase {
 
                         color: Style.errorTextColor;
                         font.family: Style.fontFamily;
-                        font.pixelSize: Style.fontSizeXSmall;
+                        font.pixelSize: Style.fontSizeNormal;
                     }
                 }
 
@@ -625,7 +625,7 @@ ViewBase {
                     text: qsTr("Products") + " (" + productsView.count + ")";
                     color: Style.textColor;
                     font.family: Style.fontFamilyBold;
-                    font.pixelSize: Style.fontSizeLarge;
+                    font.pixelSize: Style.fontSizeXXLarge;
                 }
             }
 

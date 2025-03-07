@@ -147,7 +147,7 @@ DecoratorBase {
 				anchors.verticalCenter: parent.verticalCenter;
 				color: Style.textColor;
 				font.family: Style.fontFamily;
-				font.pixelSize: Style.fontSizeXSmall;
+				font.pixelSize: Style.fontSizeNormal;
 			}
 			
 			CheckBox {
