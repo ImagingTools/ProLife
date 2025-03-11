@@ -116,10 +116,10 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isNameRequested){
-		QString productName = objectCollectionIterator.GetElementInfo("ProductName").toString();
+		QString productName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 		representationObject.Name = (productName);
 
-		QByteArray serialNumber = objectCollectionIterator.GetElementInfo("SerialNumber").toByteArray();
+		QString serialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 		if (!serialNumber.isEmpty()){
 			representationObject.Name = (productName + " (" + serialNumber + ")");
 		}
@@ -154,19 +154,11 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isProductUuidRequested) {
-		representationObject.ProductUuid = (
-			objectCollectionIterator.GetElementInfo("ProductUuid").toString()
-			);
+		representationObject.ProductUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toString();
 	}
 
 	if (requestInfo.items.isSerialNumberRequested) {
 		representationObject.SerialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
-	}
-
-	if (requestInfo.items.isExpirationRequested) {
-		representationObject.Expiration = (
-			objectCollectionIterator.GetElementInfo("Expiration").toString()
-			);
 	}
 
 	if (requestInfo.items.isIsPairedRequested) {
@@ -302,7 +294,7 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
 	const sdl::prolife::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-	sdl::prolife::Licenses::CSoftwareProductDataPayload::V1_0& representationPayload,
+	sdl::prolife::Licenses::CSoftwareProductData::V1_0& representationPayload,
 	QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&data);
@@ -320,32 +312,30 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Licenses::CSoftwareProductData::V1_0 softwareProductData;
-
 	QByteArray id;
 	if (arguments.input.Version_1_0->Id){
 		id = *arguments.input.Version_1_0->Id;
 	}
 
-	softwareProductData.Id = (id);
+	representationPayload.Id = (id);
 
 	QByteArray productId = softwareInfoPtr->GetProductId();
-	softwareProductData.ProductId = (productId);
+	representationPayload.ProductId = (productId);
 
 	QByteArray factoryId = softwareInfoPtr->GetFactoryId();
-	softwareProductData.CategoryId = (factoryId);
+	representationPayload.CategoryId = (factoryId);
 
 	QByteArray serialNumber = softwareInfoPtr->GetSerialNumber();
-	softwareProductData.SerialNumber = (serialNumber);
+	representationPayload.SerialNumber = (serialNumber);
 
 	QByteArray project = softwareInfoPtr->GetProject();
-	softwareProductData.Project = (project);
+	representationPayload.Project = (project);
 
 	bool inUse = softwareInfoPtr->IsInUse();
-	softwareProductData.InUse = (inUse);
+	representationPayload.InUse = (inUse);
 
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
-	softwareProductData.OrderUuid = (orderId);
+	representationPayload.OrderUuid = (orderId);
 
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
@@ -353,12 +343,10 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 		const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 		if (licenseInstancePtr != nullptr){
-			softwareProductData.LicenseUuid = (licenseInstancePtr->GetLicenseId());
-			softwareProductData.Expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
+			representationPayload.LicenseUuid = (licenseInstancePtr->GetLicenseId());
+			representationPayload.Expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 		}
 	}
-
-	representationPayload.SoftwareProductData = std::make_optional<sdl::prolife::Licenses::CSoftwareProductData::V1_0>(softwareProductData);
 
 	return true;
 }

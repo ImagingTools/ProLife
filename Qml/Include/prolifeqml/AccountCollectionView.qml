@@ -62,8 +62,7 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		collectionFilter.setSortingOrder("ASC");
-		collectionFilter.setSortingInfoId("Name");
+		collectionFilter.setSortingInfo("Name", "ASC");
 	}
 	
 	Component {
@@ -71,10 +70,8 @@ RemoteCollectionView {
 		
 		DocumentView {
 			id: accountEditor;
-			commandsControllerComp: Component {CommandsPanelController {
-					commandId: "Account";
-					uuid: accountEditor.viewId
-					commandsView: accountEditor.commandsView
+			commandsControllerComp: Component {GqlBasedCommandsController {
+					typeId: "Account";
 				}
 			}
 			
@@ -122,12 +119,6 @@ RemoteCollectionView {
 			
 			documentModelComp: Component {
 				AccountData {}
-			}
-			
-			payloadModel: AccountDataPayload {
-				onFinished: {
-					requestDocumentDataController.documentModel = m_accountData
-				}
 			}
 		}
 	}

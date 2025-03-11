@@ -22,14 +22,6 @@ DocumentCollectionViewDelegate {
 	removeDialogTitle: qsTr("Removing the sensor");
 	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
 
-	Component.onCompleted: {
-		Events.subscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
-	}
-
-	Component.onDestruction: {
-		Events.unSubscribeEvent("OnLocalizationChanged", container.onLocalizationChanged);
-	}
-
 	onCollectionIdChanged: {
 		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
 		if (documentManager){
@@ -55,8 +47,6 @@ DocumentCollectionViewDelegate {
 
 		GqlRequestDocumentDataController {
 			id: requestDocumentDataController
-
-			property DeviceData deviceData: documentModel;
 			
 			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
 			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
@@ -66,12 +56,6 @@ DocumentCollectionViewDelegate {
 
 			documentModelComp: Component {
 				DeviceData {}
-			}
-
-			payloadModel: DeviceDataPayload {
-				onFinished: {
-					requestDocumentDataController.documentModel = m_deviceData
-				}
 			}
 		}
 	}
@@ -135,9 +119,8 @@ DocumentCollectionViewDelegate {
 			id: deviceEditor;
 
 			commandsControllerComp:
-				Component {CommandsPanelController {
-					commandId: "Device";
-					uuid: deviceEditor.viewId;
+				Component { GqlBasedCommandsController {
+					typeId: "Device";
 				}}
 
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
@@ -199,9 +182,6 @@ DocumentCollectionViewDelegate {
 				}
 			}
 		}
-	}
-
-	function onLocalizationChanged(languageId){
 	}
 
 	function updateStateCustomCommands(selection, commandsController, elementsModel){

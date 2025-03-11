@@ -6,23 +6,24 @@ import imtcolgui 1.0
 import prolifeLicensesSdl 1.0
 
 CollectionDataProvider {
-    id: container;
-    commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList;
-    subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-    sortByField: SoftwareProductItemTypeMetaInfo.s_name;
-    fields: [
-        SoftwareProductItemTypeMetaInfo.s_id,
-        SoftwareProductItemTypeMetaInfo.s_name,
-        SoftwareProductItemTypeMetaInfo.s_productName,
-        SoftwareProductItemTypeMetaInfo.s_licenseUuid,
-        SoftwareProductItemTypeMetaInfo.s_licenseId,
-        SoftwareProductItemTypeMetaInfo.s_licenseName,
-        SoftwareProductItemTypeMetaInfo.s_serialNumber,
-        SoftwareProductItemTypeMetaInfo.s_customer,
-        SoftwareProductItemTypeMetaInfo.s_productUuid,
-        SoftwareProductItemTypeMetaInfo.s_orderUuid,
-        SoftwareProductItemTypeMetaInfo.s_expiration
-    ];
+	id: container;
+	commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList;
+	subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+	sortByField: SoftwareProductItemTypeMetaInfo.s_name;
+	fields: [
+		SoftwareProductItemTypeMetaInfo.s_id,
+		SoftwareProductItemTypeMetaInfo.s_name,
+		SoftwareProductItemTypeMetaInfo.s_productName,
+		SoftwareProductItemTypeMetaInfo.s_licenseUuid,
+		SoftwareProductItemTypeMetaInfo.s_licenseId,
+		SoftwareProductItemTypeMetaInfo.s_licenseName,
+		SoftwareProductItemTypeMetaInfo.s_serialNumber,
+		SoftwareProductItemTypeMetaInfo.s_customerName,
+		SoftwareProductItemTypeMetaInfo.s_customerId,
+		SoftwareProductItemTypeMetaInfo.s_productUuid,
+		SoftwareProductItemTypeMetaInfo.s_orderUuid,
+		SoftwareProductItemTypeMetaInfo.s_expiration
+	];
 }
 
 

@@ -65,13 +65,9 @@ input OrderDataInput {
 	Item: OrderData!
 }
 
-type OrderDataPayload {
-	OrderData: OrderData
-}
-
 type Query {
 	OrdersList (input:OrdersListInput): OrdersListPayload!
-	OrderItem (input: InputId): OrderDataPayload!
+	OrderItem (input: InputId): OrderData!
 }
 
 type Mutation {

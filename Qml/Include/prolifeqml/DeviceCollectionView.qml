@@ -15,6 +15,7 @@ RemoteCollectionView {
 
 	collectionId: "Devices";
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
+	
 	commandsViewComp: Component {
 		id: commandsDecoratorComp;
 
@@ -54,16 +55,7 @@ RemoteCollectionView {
 	Component {
 		id: productPairEditorDialog;
 
-		HardwareProductBindingDialog {
-		}
-	}
-
-	MetaInfoProvider {
-		id: metaInfoProvider;
-
-		onMetaInfoModelChanged: {
-			container.setMetaInfoModel(metaInfoModel);
-		}
+		HardwareProductBindingDialog {}
 	}
 
 	DeviceProductionStatus {

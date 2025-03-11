@@ -40,18 +40,18 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap>
-                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
-                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="1000" Y="250" Note=""/>
                 <Element ComponentName="CommandsController" X="625" Y="75" Note=""/>
                 <Element ComponentName="StandardDocumentCommands" X="225" Y="250" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap>
+                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
+                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

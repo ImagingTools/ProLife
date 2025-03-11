@@ -14,7 +14,7 @@ CollectionDataProvider {
         DeviceItemTypeMetaInfo.s_id,
         DeviceItemTypeMetaInfo.s_name,
         DeviceItemTypeMetaInfo.s_deviceType,
-        DeviceItemTypeMetaInfo.s_orderId,
+        DeviceItemTypeMetaInfo.s_deliveryId,
         DeviceItemTypeMetaInfo.s_orderUuid,
         DeviceItemTypeMetaInfo.s_status,
         DeviceItemTypeMetaInfo.s_macAddress,

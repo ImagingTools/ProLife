@@ -21,23 +21,15 @@ public:
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
-		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
-		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_deviceInfoFactCompPtr, "DeviceFactory", "Factory used for creation of the new device instance", true, "DeviceFactory");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Order operation context controller", true, "OrderOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 	I_END_COMPONENT;
 
 protected:
-	struct ElementInfo
-	{
-		QByteArray id;
-		QString name;
-	};
-	
 	// reimplemented (sdl::imtbase::ImtCollection::CGraphQlHandlerCompBase)
 	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(
 				const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
@@ -57,7 +49,7 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-				sdl::prolife::Sensors::CDeviceDataPayload::V1_0& representationPayload,
+				sdl::prolife::Sensors::CDeviceData::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
@@ -77,18 +69,12 @@ private:
 				QString& errorMessage) const;
 	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
-	
-	ElementInfo GetProductInfo(const QByteArray& productId) const;
-	ElementInfo GetLicenseInfo(const QByteArray& licenseId) const;
-	QByteArray GetOrderId(const QByteArray& orderUuid) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_FACT(prolifedata::IDeviceInfo, m_deviceInfoFactCompPtr);
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);

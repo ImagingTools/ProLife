@@ -33,6 +33,24 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="GroupFilterParamJoiner" PackageId="ProLifeGqlPck" ComponentId="GroupFilterParamJoiner">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ViewAllOrders"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="OperationContextController" PackageId="ImtServerGqlPck" ComponentId="OperationContextController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -126,6 +144,9 @@
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="DeviceOperationContextController">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="GroupFilterParamJoiner" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="GroupFilterParamJoiner"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderHeadersDataProvider"/>
                     </AttributeInfo>
@@ -163,9 +184,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllOrders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
@@ -291,13 +309,6 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OrdersCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="LeftAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -325,6 +336,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Orders"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -447,13 +461,6 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OrderCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="HistoryPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -498,6 +505,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Order"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">

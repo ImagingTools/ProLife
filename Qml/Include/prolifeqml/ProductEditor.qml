@@ -3,411 +3,559 @@ import Acf 1.0
 import imtgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
+import imtcolgui 1.0
 import prolifeOrdersSdl 1.0
 import prolifeLicensesSdl 1.0
 import prolifeSensorsSdl 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 Item {
-    id: productEditor;
-
-    property TreeItemModel licensesModel: TreeItemModel{}
-    property TreeItemModel productsModel: TreeItemModel{}
-    property ListModel orderProductsModel: ListModel {}
-
-    property TreeItemModel devicesModel: TreeItemModel {}
-    property TreeItemModel softwaresModel: TreeItemModel {}
-
-    property bool blockUpdatingModel: false;
-
-    property string orderId;
-    property string orderUuid;
-
-    property OrderedProduct productItem;
-    property int index: -1;
-
-    property string softwareCategoryId: "Software";
-    property string hardwareCategoryId: "Hardware";
-
-    function getSoftwareModel(){
-        let excludeIds = []
-
-        for (let i = 0; i < orderProductsModel.count; i++){
-            let categoryId = orderProductsModel.get(i).item.m_categoryId;
-            if (categoryId === productEditor.softwareCategoryId){
-                let id = orderProductsModel.get(i).item.m_id;
-                if (id !== ""){
-                    excludeIds.push(id)
-                }
-            }
-        }
-
-        let index = excludeIds.indexOf(productItem.m_id);
-        if (index >= 0){
-            excludeIds.splice(index, 1)
-        }
-
-		let resultModel = treeItemModelComp.createObject(productEditor);
-
-        for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
-            let id = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
-
-            if (!id || id === ""){
-                continue;
-            }
-
-            if (excludeIds.includes(id)){
-                continue;
-            }
-
-            let serialNumber = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, i);
-
-            let orderUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, i);
-
-            let productUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, i);
-            let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, i);
-
-			if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
-                let index = resultModel.insertNewItem();
-
-                resultModel.copyItemDataFromModel(index, productEditor.softwaresModel, i);
-            }
-        }
-
-        return resultModel;
-    }
-
-    function getDevicesModel(){
-        let excludeDeviceIds = []
-        for (let i = 0; i < orderProductsModel.count; i++){
-            let categoryId = orderProductsModel.get(i).item.m_categoryId;
-            if (categoryId === "Hardware"){
-                let deviceID = orderProductsModel.get(i).item.m_id;
-                if (deviceID !== ""){
-                    excludeDeviceIds.push(deviceID)
-                }
-            }
-        }
-
-		let resultModel = treeItemModelComp.createObject(productEditor);
-        let selectedProductId = productItem.m_productUuid;
-        let selectedDeviceId = productItem.m_id;
-
-        let index = excludeDeviceIds.indexOf(selectedDeviceId);
-        if (index >= 0){
-            excludeDeviceIds.splice(index, 1)
-        }
-
-        for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
-            let status = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_status, i);
-            let orderId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, i);
-            let deviceId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_id, i);
-            let deviceType = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_productUuid, i);
-            let macAddress = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_macAddress, i);
-
-            if (!deviceId || deviceId === ""){
-                continue;
-            }
-
-            if (excludeDeviceIds.includes(deviceId)){
-                continue;
-            }
-
-            if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId)){
-                let index = resultModel.insertNewItem();
-                resultModel.copyItemDataFromModel(index, productEditor.devicesModel, i);
-
-                let sMacAddress = "s" + macAddress.split(':').join('');
-                resultModel.setData("SMacAddress1", sMacAddress, index);
-
-                let sMacAddress2 = "s:" + macAddress.split(':').join('');
-                resultModel.setData("SMacAddress2", sMacAddress2, index);
-
-                let sMacAddress3 = "s:" + macAddress;
-                resultModel.setData("SMacAddress3", sMacAddress3, index);
-
-                let sMacAddress4 = "s" + macAddress;
-                resultModel.setData("SMacAddress4", sMacAddress4, index);
-            }
-        }
-
-        return resultModel;
-    }
-
-    function setHardware(){
-        segmentedElementView.softwareProductButton.checkable = false;
-        segmentedElementView.softwareProductButton.checked = false;
-
-        segmentedElementView.hardwareProductButton.checkable = true;
-        segmentedElementView.hardwareProductButton.checked = true;
-
-        productCB.model = CachedProductCollection.hardwareProductsModel;
-
-        productCB.currentIndex = -1;
-
-        contentLoader.sourceComponent = hardwareProductComponent;
-    }
-
-    function setSoftware(){
-        segmentedElementView.softwareProductButton.checkable = true;
-        segmentedElementView.softwareProductButton.checked = true;
-
-        segmentedElementView.hardwareProductButton.checkable = false;
-        segmentedElementView.hardwareProductButton.checked = false;
-
-        productCB.model = CachedProductCollection.softwareProductsModel;
-
-        productCB.currentIndex = -1;
-
-        contentLoader.sourceComponent = softwareProductComponent;
-    }
-
-    function updateProductModel(){
-        if (productCB.currentIndex >= 0){
-            if (!productEditor.blockUpdatingModel){
-                productEditor.clearProduct();
-            }
-
-            productItem.m_productUuid = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, productCB.currentIndex);
-            productItem.m_categoryId = productCB.model.getData(OrderedProductTypeMetaInfo.s_categoryId, productCB.currentIndex);
-            productItem.m_productName = productCB.model.getData(OrderedProductTypeMetaInfo.s_productName, productCB.currentIndex);
-
-            contentLoader.item.productLicensesModel = 0;
-
-            let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
-            if (licensesModel){
-                contentLoader.item.productLicensesModel = licensesModel;
-            }
-
-            if (contentLoader.item.productLicensesModel){
-                contentLoader.item.productLicensesModel.refresh()
-            }
-
-            if (productItem.m_categoryId === productEditor.hardwareCategoryId){
-                contentLoader.item.devicesModel = productEditor.getDevicesModel();
-            }
-
-            if (productItem.m_categoryId === productEditor.softwareCategoryId){
-                contentLoader.item.softwaresModel = productEditor.getSoftwareModel();
-            }
-
-            // let productLicensesModel = productEditor.getProductLicensesModel();
-            // if (productLicensesModel){
-            //     contentLoader.item.productLicensesModel = productLicensesModel;
-            // }
-
-            contentLoader.item.model = productItem;
-
-            contentLoader.item.doUpdateGui();
-        }
-    }
-
-    Column {
-        id: contentColumn;
-
-        anchors.top: parent.top;
-        anchors.topMargin: Style.sizeMainMargin;
-        anchors.left: parent.left;
-        anchors.leftMargin: Style.sizeMainMargin;
-        anchors.right: parent.right;
-        anchors.rightMargin: Style.sizeMainMargin;
-
-        spacing: Style.sizeMainMargin;
-
-        ElementView {
-            id: segmentedElementView;
-
-            width: parent.width;
-
-            name: qsTr("Product Category");
-            description: qsTr("Please select the product category you want to create");
-
-            visible: productEditor.index === -1;
-
-            property Button softwareProductButton;
-            property Button hardwareProductButton;
-
-            property int selectedIndex: 0;
-
-            bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
-
-            Component {
-                id: selectedComp;
-
-                BaseText {
-                    font.family: Style.fontFamilyBold;
-                    text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
-                }
-            }
-
-            controlComp: Component {
-                SegmentedButton {
-                    anchors.centerIn: parent;
-                    height: 40;
-                    selectedIndex: 0;
-                    isExclusive: true;
-
-                    onSelectedIndexChanged: {
-                        productEditor.clearProduct();
-
-                        if (selectedIndex == 0){
-                            productEditor.setSoftware();
-                        }
-                        else if (selectedIndex == 1){
-                            productEditor.setHardware();
-                        }
-
-                        segmentedElementView.selectedIndex = selectedIndex;
-                    }
-
-                    Button {
-                        id: softwareProductButton;
-
-                        anchors.verticalCenter: parent.verticalCenter;
-
-                        checkable: true
-                        checked: true
-
-                        iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
-                        text: qsTr("Software");
-
-                        Component.onCompleted: {
-                            segmentedElementView.softwareProductButton = softwareProductButton;
-                        }
-                    }
-
-                    Button {
-                        id: hardwareProductButton;
-
-                        anchors.verticalCenter: parent.verticalCenter;
-
-                        checkable: true
-                        checked: false;
-
-                        iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
-
-                        text: qsTr("Hardware");
-
-                        Component.onCompleted: {
-                            segmentedElementView.hardwareProductButton = hardwareProductButton;
-                        }
-                    }
-                }
-            }
-        }
-
-        ComboBoxElementView {
-            id: productCB;
-
-            width: parent.width;
-            controlWidth: 500;
-
-            name: qsTr("Product");
-            nameId: "ProductName";
-
-            onCurrentIndexChanged: {
-                productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
-
-                productEditor.updateProductModel();
-            }
-        }
-
-        Component {
-            id: productErrorComp;
-
-            Text {
-                id: selectProductText;
-
-                text: qsTr("Please select a product");
-                color: Style.errorTextColor;
-                font.family: Style.fontFamily;
-                font.pixelSize: Style.fontSizeNormal;
-            }
-        }
-    }
-
-    Loader {
-        id: contentLoader;
-
-        anchors.top: contentColumn.bottom;
-        anchors.bottom: parent.bottom;
-        anchors.left: parent.left;
-        anchors.right: parent.right;
-        anchors.margins: Style.sizeMainMargin;
-
-        width: parent.width;
-
-        visible: productCB.currentIndex >= 0;
-    }
-
-    function clearProduct(){
-        if (productItem){
-            // productItem.m_id = ''
-            productItem.m_productUuid = ''
-            productItem.m_licenseUuid = ''
-            productItem.m_categoryId = ''
-            productItem.m_licenseId = ''
-            productItem.m_productName = ''
-            productItem.m_licenseName = ''
-            productItem.m_serialNumber = ''
-            productItem.m_inUse = false
-            productItem.m_isNew = false
-            productItem.m_expiration = ''
-            productItem.m_macAddress = ''
-        }
-    }
-
-    Component {
-        id: hardwareProductComponent;
-        HardwareProductEditor {
-            productIndex: productEditor.index;
-        }
-    }
-
-    Component {
-        id: softwareProductComponent;
-        SoftwareProductEditor {
-            productIndex: productEditor.index;
-        }
-    }
-
-    Component {
-        id: treeItemModelComp;
-        TreeItemModel {}
-    }
-
-    function started(){
-        if (!productItem){
-            return;
-        }
-
-        productEditor.blockUpdatingModel = true;
-
-        if (productItem.m_categoryId === productEditor.softwareCategoryId){
-            productEditor.setSoftware();
-        }
-        else if (productItem.m_categoryId  === productEditor.hardwareCategoryId){
-            productEditor.setHardware();
-        }
-        else{
-            console.error("Unknown product type:", productItem.m_categoryId);
-            return;
-        }
-
-        for (let i = 0; i < productCB.model.getItemsCount(); i++){
-            let id = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, i);
-            if (id === productItem.m_productUuid){
-                productCB.currentIndex = i;
-                break;
-            }
-        }
-
-        if (productCB.currentIndex == -1){
-            console.error("Unable to edit product. Error: This product not found!", productItem.m_categoryId);
-            return;
-        }
-
-        productEditor.blockUpdatingModel = false;
-    }
+	id: productEditor;
+	
+	property TreeItemModel licensesModel: TreeItemModel{}
+	property TreeItemModel productsModel: TreeItemModel{}
+	property ListModel orderProductsModel: ListModel {}
+	
+	property TreeItemModel devicesModel: TreeItemModel {}
+	property TreeItemModel softwaresModel: TreeItemModel {}
+	
+	property bool blockUpdatingModel: false;
+	
+	property string orderId;
+	property string orderUuid;
+	
+	property OrderedProduct productItem;
+	property int index: -1;
+	
+	property string softwareCategoryId: "Software";
+	property string hardwareCategoryId: "Hardware";
+	
+	CollectionDataProvider {
+		id: softwareCollection;
+		commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList;
+		fields: [
+			SoftwareProductItemTypeMetaInfo.s_id,
+			SoftwareProductItemTypeMetaInfo.s_name,
+			SoftwareProductItemTypeMetaInfo.s_productName,
+			SoftwareProductItemTypeMetaInfo.s_licenseUuid,
+			SoftwareProductItemTypeMetaInfo.s_licenseId,
+			SoftwareProductItemTypeMetaInfo.s_licenseName,
+			SoftwareProductItemTypeMetaInfo.s_serialNumber,
+			SoftwareProductItemTypeMetaInfo.s_customerName,
+			SoftwareProductItemTypeMetaInfo.s_customerId,
+			SoftwareProductItemTypeMetaInfo.s_productUuid,
+			SoftwareProductItemTypeMetaInfo.s_orderUuid,
+			SoftwareProductItemTypeMetaInfo.s_expiration
+		];
+		onCollectionModelChanged: {
+			contentLoader.item.softwaresModel = collectionModel;
+			contentLoader.item.doUpdateGui();
+		}
+		
+		onStateChanged: {
+			loading.visible = state == "Loading";
+		}
+	}
+	
+	// function getSoftwareModel(){
+	// 	let excludeIds = []
+		
+	// 	for (let i = 0; i < orderProductsModel.count; i++){
+	// 		let categoryId = orderProductsModel.get(i).item.m_categoryId;
+	// 		if (categoryId === productEditor.softwareCategoryId){
+	// 			let id = orderProductsModel.get(i).item.m_id;
+	// 			if (id !== ""){
+	// 				excludeIds.push(id)
+	// 			}
+	// 		}
+	// 	}
+		
+	// 	let index = excludeIds.indexOf(productItem.m_id);
+	// 	if (index >= 0){
+	// 		excludeIds.splice(index, 1)
+	// 	}
+		
+	// 	let resultModel = treeItemModelComp.createObject(productEditor);
+		
+	// 	for (let i = 0; i < productEditor.softwaresModel.getItemsCount(); i++){
+	// 		let id = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
+			
+	// 		if (!id || id === ""){
+	// 			continue;
+	// 		}
+			
+	// 		if (excludeIds.includes(id)){
+	// 			continue;
+	// 		}
+			
+	// 		let serialNumber = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, i);
+			
+	// 		let orderUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, i);
+			
+	// 		let productUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, i);
+	// 		let licenseUuid = productEditor.softwaresModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, i);
+			
+	// 		if ((orderUuid === "" || orderUuid === productEditor.orderUuid) && productUuid === productItem.m_productUuid){
+	// 			let index = resultModel.insertNewItem();
+				
+	// 			resultModel.copyItemDataFromModel(index, productEditor.softwaresModel, i);
+	// 		}
+	// 	}
+		
+	// 	return resultModel;
+	// }
+	
+	CollectionDataProvider {
+		id: deviceCollection;
+		commandId: ProlifeSensorsSdlCommandIds.s_devicesList;
+		fields: [
+			DeviceItemTypeMetaInfo.s_id,
+			DeviceItemTypeMetaInfo.s_name,
+			DeviceItemTypeMetaInfo.s_deviceType,
+			DeviceItemTypeMetaInfo.s_orderUuid,
+			DeviceItemTypeMetaInfo.s_productUuid,
+			DeviceItemTypeMetaInfo.s_licenseUuid,
+			DeviceItemTypeMetaInfo.s_macAddress,
+			DeviceItemTypeMetaInfo.s_serialNumber
+		]
+		
+		onCollectionModelChanged: {
+			contentLoader.item.devicesModel = collectionModel;
+			contentLoader.item.doUpdateGui();
+		}
+		
+		onStateChanged: {
+			loading.visible = state == "Loading";
+		}
+	}
+	
+	FieldFilter {
+		id: excludeDocumentIdFilter;
+		m_fieldId: "DocumentId";
+		m_filterValueType: "String";
+		m_filterOperations: ["Not", "Equal"];
+	}
+	
+	GroupFilter {
+		id: excludesGroup;
+		m_logicalOperation: deviceCollection.filter.logicalOperation.AND;
+	}
+	
+	GroupFilter {
+		id: orderGroupFilter;
+		m_logicalOperation: deviceCollection.filter.logicalOperation.OR;
+		
+		Component.onCompleted: {
+			m_fieldFilters.addElement(orderUuidFilter);
+			m_fieldFilters.addElement(emptyOrderFilter);
+			
+			deviceCollection.filter.addGroupFilter(orderGroupFilter)
+			softwareCollection.filter.addGroupFilter(orderGroupFilter)
+		}
+	}
+	
+	FieldFilter {
+		id: productIdFilter
+		m_fieldId: "ProductUuid"
+		m_filterValue: productItem.m_productUuid
+		m_filterValueType: "String"
+		m_filterOperations: ["Equal"]
+	}
+	
+	FieldFilter {
+		id: deviceTypeFilter
+		m_fieldId: "DeviceType"
+		m_filterValue: productItem.m_productUuid
+		m_filterValueType: "String"
+		m_filterOperations: ["Equal"]
+	}
+	
+	FieldFilter {
+		id: orderUuidFilter
+		m_fieldId: "OrderId"
+		m_filterValue: productItem.orderUuid
+		m_filterValueType: "String"
+		m_filterOperations: ["Equal"]
+	}
+	
+	FieldFilter {
+		id: emptyOrderFilter
+		m_fieldId: "OrderId"
+		m_filterValue: ""
+		m_filterValueType: "String"
+		m_filterOperations: ["Equal"]
+	}
+	
+	// function getDevicesModel(){
+	// 	let excludeDeviceIds = []
+	// 	for (let i = 0; i < orderProductsModel.count; i++){
+	// 		let categoryId = orderProductsModel.get(i).item.m_categoryId;
+	// 		if (categoryId === hardwareCategoryId){
+	// 			let deviceID = orderProductsModel.get(i).item.m_id;
+	// 			if (deviceID !== ""){
+	// 				excludeDeviceIds.push(deviceID)
+	// 			}
+	// 		}
+	// 	}
+		
+	// 	let resultModel = treeItemModelComp.createObject(productEditor);
+	// 	let selectedProductId = productItem.m_productUuid;
+	// 	let selectedDeviceId = productItem.m_id;
+		
+	// 	let index = excludeDeviceIds.indexOf(selectedDeviceId);
+	// 	if (index >= 0){
+	// 		excludeDeviceIds.splice(index, 1)
+	// 	}
+		
+	// 	for (let i = 0; i < productEditor.devicesModel.getItemsCount(); i++){
+	// 		let status = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_status, i);
+	// 		let orderId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, i);
+	// 		let deviceId = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_id, i);
+	// 		let deviceType = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_productUuid, i);
+	// 		let macAddress = productEditor.devicesModel.getData(DeviceItemTypeMetaInfo.s_macAddress, i);
+			
+	// 		if (!deviceId || deviceId === ""){
+	// 			continue;
+	// 		}
+			
+	// 		if (excludeDeviceIds.includes(deviceId)){
+	// 			continue;
+	// 		}
+			
+	// 		if (selectedProductId === deviceType && (orderId === "" || productEditor.orderUuid === orderId)){
+	// 			let index = resultModel.insertNewItem();
+	// 			resultModel.copyItemDataFromModel(index, productEditor.devicesModel, i);
+				
+	// 			let sMacAddress = "s" + macAddress.split(':').join('');
+	// 			resultModel.setData("SMacAddress1", sMacAddress, index);
+				
+	// 			let sMacAddress2 = "s:" + macAddress.split(':').join('');
+	// 			resultModel.setData("SMacAddress2", sMacAddress2, index);
+				
+	// 			let sMacAddress3 = "s:" + macAddress;
+	// 			resultModel.setData("SMacAddress3", sMacAddress3, index);
+				
+	// 			let sMacAddress4 = "s" + macAddress;
+	// 			resultModel.setData("SMacAddress4", sMacAddress4, index);
+	// 		}
+	// 	}
+		
+	// 	return resultModel;
+	// }
+	
+	function setHardware(){
+		segmentedElementView.softwareProductButton.checkable = false;
+		segmentedElementView.softwareProductButton.checked = false;
+		
+		segmentedElementView.hardwareProductButton.checkable = true;
+		segmentedElementView.hardwareProductButton.checked = true;
+		
+		productCB.model = CachedProductCollection.hardwareProductsModel;
+		
+		productCB.currentIndex = -1;
+		
+		contentLoader.sourceComponent = hardwareProductComponent;
+	}
+	
+	function setSoftware(){
+		segmentedElementView.softwareProductButton.checkable = true;
+		segmentedElementView.softwareProductButton.checked = true;
+		
+		segmentedElementView.hardwareProductButton.checkable = false;
+		segmentedElementView.hardwareProductButton.checked = false;
+		
+		productCB.model = CachedProductCollection.softwareProductsModel;
+		
+		productCB.currentIndex = -1;
+		
+		contentLoader.sourceComponent = softwareProductComponent;
+	}
+	
+	function updateProductModel(){
+		if (productCB.currentIndex >= 0){
+			if (!productEditor.blockUpdatingModel){
+				productEditor.clearProduct();
+			}
+			
+			productItem.m_productUuid = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, productCB.currentIndex);
+			productItem.m_categoryId = productCB.model.getData(OrderedProductTypeMetaInfo.s_categoryId, productCB.currentIndex);
+			productItem.m_productName = productCB.model.getData(OrderedProductTypeMetaInfo.s_productName, productCB.currentIndex);
+			
+			contentLoader.item.productLicensesModel = 0;
+			
+			let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
+			if (licensesModel){
+				contentLoader.item.productLicensesModel = licensesModel;
+			}
+			
+			if (contentLoader.item.productLicensesModel){
+				contentLoader.item.productLicensesModel.refresh()
+			}
+			
+			if (productItem.m_categoryId === productEditor.hardwareCategoryId){
+				deviceCollection.filter.removeFieldFilter(deviceTypeFilter);
+				deviceTypeFilter.m_filterValue = productItem.m_productUuid;
+				deviceCollection.filter.addFieldFilter(deviceTypeFilter)
+				
+				deviceCollection.filter.removeGroupFilter(excludesGroup)
+				
+				for (let i = 0; i < orderProductsModel.count; i++){
+					let categoryId = orderProductsModel.get(i).item.m_categoryId;
+					if (categoryId === hardwareCategoryId){
+						let deviceID = orderProductsModel.get(i).item.m_id;
+						if (deviceID !== "" && productItem.m_id != deviceID){
+							excludeDocumentIdFilter.m_filterValue = deviceID;
+							excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+						}
+					}
+				}
+				
+				deviceCollection.filter.addGroupFilter(excludesGroup)
+
+				deviceCollection.updateModel();
+			}
+			
+			if (productItem.m_categoryId === productEditor.softwareCategoryId){
+				softwareCollection.filter.removeFieldFilter(productIdFilter);
+				productIdFilter.m_filterValue = productItem.m_productUuid;
+				softwareCollection.filter.addFieldFilter(productIdFilter)
+				
+				softwareCollection.filter.removeGroupFilter(excludesGroup)
+				
+				for (let i = 0; i < orderProductsModel.count; i++){
+					let categoryId = orderProductsModel.get(i).item.m_categoryId;
+					if (categoryId === productEditor.softwareCategoryId){
+						let id = orderProductsModel.get(i).item.m_id;
+						if (id !== "" && productItem.m_id != id){
+							excludeDocumentIdFilter.m_filterValue = id;
+							excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+						}
+					}
+				}
+				
+				softwareCollection.filter.addGroupFilter(excludesGroup)
+				
+				softwareCollection.updateModel();
+			}
+		}
+	}
+	
+	Column {
+		id: contentColumn;
+		
+		anchors.top: parent.top;
+		anchors.topMargin: Style.sizeMainMargin;
+		anchors.left: parent.left;
+		anchors.leftMargin: Style.sizeMainMargin;
+		anchors.right: parent.right;
+		anchors.rightMargin: Style.sizeMainMargin;
+		
+		spacing: Style.sizeMainMargin;
+		
+		ElementView {
+			id: segmentedElementView;
+			
+			width: parent.width;
+			
+			name: qsTr("Product Category");
+			description: qsTr("Please select the product category you want to create");
+			
+			visible: productEditor.index === -1;
+			
+			property Button softwareProductButton;
+			property Button hardwareProductButton;
+			
+			property int selectedIndex: 0;
+			
+			bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
+			
+			Component {
+				id: selectedComp;
+				
+				BaseText {
+					font.family: Style.fontFamilyBold;
+					text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
+				}
+			}
+			
+			controlComp: Component {
+				SegmentedButton {
+					anchors.centerIn: parent;
+					height: 40;
+					selectedIndex: 0;
+					isExclusive: true;
+					
+					onSelectedIndexChanged: {
+						productEditor.clearProduct();
+						
+						if (selectedIndex == 0){
+							productEditor.setSoftware();
+						}
+						else if (selectedIndex == 1){
+							productEditor.setHardware();
+						}
+						
+						segmentedElementView.selectedIndex = selectedIndex;
+					}
+					
+					Button {
+						id: softwareProductButton;
+						
+						anchors.verticalCenter: parent.verticalCenter;
+						
+						checkable: true
+						checked: true
+						
+						iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
+						text: qsTr("Software");
+						
+						Component.onCompleted: {
+							segmentedElementView.softwareProductButton = softwareProductButton;
+						}
+					}
+					
+					Button {
+						id: hardwareProductButton;
+						
+						anchors.verticalCenter: parent.verticalCenter;
+						
+						checkable: true
+						checked: false;
+						
+						iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
+						
+						text: qsTr("Hardware");
+						
+						Component.onCompleted: {
+							segmentedElementView.hardwareProductButton = hardwareProductButton;
+						}
+					}
+				}
+			}
+		}
+		
+		ComboBoxElementView {
+			id: productCB;
+			
+			width: parent.width;
+			controlWidth: 500;
+			
+			name: qsTr("Product");
+			nameId: "ProductName";
+			
+			onCurrentIndexChanged: {
+				productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
+				
+				productEditor.updateProductModel();
+			}
+		}
+		
+		Component {
+			id: productErrorComp;
+			
+			Text {
+				id: selectProductText;
+				
+				text: qsTr("Please select a product");
+				color: Style.errorTextColor;
+				font.family: Style.fontFamily;
+				font.pixelSize: Style.fontSizeNormal;
+			}
+		}
+	}
+	
+	Loader {
+		id: contentLoader;
+		
+		anchors.top: contentColumn.bottom;
+		anchors.bottom: parent.bottom;
+		anchors.left: parent.left;
+		anchors.right: parent.right;
+		anchors.margins: Style.sizeMainMargin;
+		
+		width: parent.width;
+		
+		visible: productCB.currentIndex >= 0;
+	}
+	
+	function clearProduct(){
+		if (productItem){
+			// productItem.m_id = ''
+			productItem.m_productUuid = ''
+			productItem.m_licenseUuid = ''
+			productItem.m_categoryId = ''
+			productItem.m_licenseId = ''
+			productItem.m_productName = ''
+			productItem.m_licenseName = ''
+			productItem.m_serialNumber = ''
+			productItem.m_inUse = false
+			productItem.m_isNew = false
+			productItem.m_expiration = ''
+			productItem.m_macAddress = ''
+		}
+	}
+	
+	Component {
+		id: hardwareProductComponent;
+		HardwareProductEditor {
+			productIndex: productEditor.index;
+			model: productEditor.productItem;
+		}
+	}
+	
+	Component {
+		id: softwareProductComponent;
+		SoftwareProductEditor {
+			productIndex: productEditor.index;
+			model: productEditor.productItem;
+		}
+	}
+	
+	Component {
+		id: treeItemModelComp;
+		TreeItemModel {}
+	}
+	
+	function started(){
+		if (!productItem){
+			return;
+		}
+		
+		productEditor.blockUpdatingModel = true;
+		
+		if (productItem.m_categoryId === productEditor.softwareCategoryId){
+			productEditor.setSoftware();
+		}
+		else if (productItem.m_categoryId  === productEditor.hardwareCategoryId){
+			productEditor.setHardware();
+		}
+		else{
+			console.error("Unknown product type:", productItem.m_categoryId);
+			return;
+		}
+		
+		for (let i = 0; i < productCB.model.getItemsCount(); i++){
+			let id = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, i);
+			if (id === productItem.m_productUuid){
+				productCB.currentIndex = i;
+				break;
+			}
+		}
+		
+		if (productCB.currentIndex == -1){
+			console.error("Unable to edit product. Error: This product not found!", productItem.m_categoryId);
+			return;
+		}
+		
+		productEditor.blockUpdatingModel = false;
+	}
+	
+	Loading {
+		id: loading;
+		anchors.fill: parent;
+		visible: false;
+		color: Style.backgroundColor2;
+	}
 }//Container
 
 

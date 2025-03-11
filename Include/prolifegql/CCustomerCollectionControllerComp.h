@@ -39,7 +39,7 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::Accounts::CAccountItemGqlRequest& accountItemRequest,
-				sdl::prolife::Accounts::CAccountDataPayload::V1_0& representationPayload,
+				sdl::prolife::Accounts::CAccountData::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,

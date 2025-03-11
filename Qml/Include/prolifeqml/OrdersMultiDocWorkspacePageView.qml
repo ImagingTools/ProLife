@@ -28,10 +28,8 @@ MultiDocWorkspacePageView {
 				}
 			}
 			
-			commandsControllerComp: Component {CommandsPanelController {
-					commandId: "Order";
-					uuid: orderEditor.viewId;
-					commandsView: orderEditor.commandsView;
+			commandsControllerComp: Component {  GqlBasedCommandsController {
+					typeId: "Order";
 				}
 			}
 		}
@@ -73,12 +71,6 @@ MultiDocWorkspacePageView {
 			
 			documentModelComp: Component {
 				OrderData {}
-			}
-			
-			payloadModel: OrderDataPayload {
-				onFinished: {
-					requestDocumentDataController.documentModel = m_orderData
-				}
 			}
 		}
 	}

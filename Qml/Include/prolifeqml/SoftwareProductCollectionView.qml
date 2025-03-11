@@ -61,10 +61,8 @@ RemoteCollectionView {
 			}
 			
 			commandsControllerComp:
-				Component {CommandsPanelController {
-					commandId: "SoftwareProduct";
-					uuid: softwareEditor.viewId;
-					commandsView: softwareEditor.commandsView;
+				Component { GqlBasedCommandsController {
+					typeId: "SoftwareProduct";
 				}
 			}
 		}
@@ -84,12 +82,6 @@ RemoteCollectionView {
 			
 			documentModelComp: Component {
 				SoftwareProductData {}
-			}
-			
-			payloadModel: SoftwareProductDataPayload {
-				onFinished: {
-					requestDocumentDataController.documentModel = m_softwareProductData
-				}
 			}
 		}
 	}

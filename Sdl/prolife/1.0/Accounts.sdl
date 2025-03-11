@@ -52,13 +52,9 @@ input AccountDataInput {
 	Item: AccountData!
 }
 
-type AccountDataPayload {
-	AccountData: AccountData
-}
-
 type Query {
 	AccountsList (input:AccountsListInput): AccountsListPayload!
-	AccountItem (input: InputId): AccountDataPayload!
+	AccountItem (input: InputId): AccountData!
 }
 
 type Mutation {

@@ -314,7 +314,7 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
 	const sdl::prolife::Orders::COrderItemGqlRequest& orderItemRequest,
-	sdl::prolife::Orders::COrderDataPayload::V1_0& representationPayload,
+	sdl::prolife::Orders::COrderData::V1_0& representationPayload,
 	QString& errorMessage) const
 {
 	prolifedata::CIdentifiableOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(&const_cast<istd::IChangeable&>(data));
@@ -332,30 +332,28 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Orders::COrderData::V1_0 orderData;
-
 	QByteArray id;
 	if (arguments.input.Version_1_0->Id){
 		id = *arguments.input.Version_1_0->Id;
 	}
-	orderData.Id = (id);
+	representationPayload.Id = (id);
 
 	QByteArray orderId = orderInfoPtr->GetOrderId();
-	orderData.Name = (orderId);
-	orderData.OrderId = (orderId);
+	representationPayload.Name = (orderId);
+	representationPayload.OrderId = (orderId);
 
 	QByteArray purchaseOrderId = orderInfoPtr->GetPurchaseOrderId();
-	orderData.PurchaseId = (purchaseOrderId);
+	representationPayload.PurchaseId = (purchaseOrderId);
 
 	QByteArray customerId = orderInfoPtr->GetCustomerId();
-	orderData.CustomerId = (customerId);
+	representationPayload.CustomerId = (customerId);
 
 	QString description = orderInfoPtr->GetDescription();
-	orderData.Description = (description);
+	representationPayload.Description = (description);
 
 	prolifedata::IOrderInfo::OrderStatus status = orderInfoPtr->GetOrderStatus();
 	QByteArray orderStatus = prolifedata::GetIdFromOrderStatus(status);
-	orderData.OrderStatus = (orderStatus);
+	representationPayload.OrderStatus = (orderStatus);
 
 	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
 	if (productCollectionPtr == nullptr){
@@ -488,8 +486,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
-	orderData.OrderProducts = std::make_optional<QList<sdl::prolife::Orders::COrderedProduct::V1_0>>(products);
-	representationPayload.OrderData = std::make_optional<sdl::prolife::Orders::COrderData::V1_0>(orderData);
+	representationPayload.OrderProducts = std::make_optional<QList<sdl::prolife::Orders::COrderedProduct::V1_0>>(products);
 
 	return true;
 }

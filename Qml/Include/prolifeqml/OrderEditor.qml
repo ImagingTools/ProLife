@@ -222,7 +222,6 @@ ViewBase {
     }
 
     function updateGui(){
-        console.log("updateGui", orderData.toJson())
         instanceIdInput.text = orderData.m_orderId;
         purchaseIdInput.text = orderData.m_purchaseId;
         descriptionInput.text = orderData.m_description;
@@ -230,9 +229,12 @@ ViewBase {
         customerCB.currentIndex = -1;
         let customerId = orderData.m_customerId;
         let customerModel = customerCB.model;
+		
         if (customerModel){
             for (let i = 0; i < customerModel.getItemsCount(); i++){
                 let id = customerModel.getData("Id", i);
+				console.log("id", id)
+				
                 if (id === customerId){
                     customerCB.currentIndex = i;
                     break;

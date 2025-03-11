@@ -511,13 +511,6 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
-                                <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>DevicesCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="LeftAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -544,6 +537,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -846,13 +842,6 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
-                                <AttributeInfo Id="GqlCommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>DeviceCommands</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
                                 <AttributeInfo Id="LeftAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -870,6 +859,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Device"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>

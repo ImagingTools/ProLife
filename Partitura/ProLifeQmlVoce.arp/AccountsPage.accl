@@ -17,6 +17,7 @@
         <Element ComponentName="CustomerChangeGenerator" X="1000" Y="650" Note=""/>
         <Element ComponentName="CustomerCollectionController" X="600" Y="375" Note=""/>
         <Element ComponentName="Demultiplexer" X="550" Y="100" Note=""/>
+        <Element ComponentName="GroupFilterParamJoiner" X="350" Y="275" Note=""/>
         <Element ComponentName="OperationContextController" X="1000" Y="575" Note=""/>
         <Element ComponentName="Revision" X="1100" Y="100" Note=""/>
         <Element ComponentName="StandardDocumentCommandsController" X="225" Y="100" Note=""/>

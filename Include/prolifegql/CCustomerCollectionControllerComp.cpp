@@ -132,7 +132,7 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
 			const sdl::prolife::Accounts::CAccountItemGqlRequest& accountItemRequest,
-			sdl::prolife::Accounts::CAccountDataPayload::V1_0& representationPayload,
+			sdl::prolife::Accounts::CAccountData::V1_0& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&data);
@@ -150,30 +150,28 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Accounts::CAccountData::V1_0 accountData;
-
 	QByteArray id;
 	if (arguments.input.Version_1_0->Id){
 		id = *arguments.input.Version_1_0->Id;
 	}
 
-	accountData.Id = (id);
+	representationPayload.Id = (id);
 
 	QString name = customerInfoPtr->GetName();
-	accountData.Name = (name);
+	representationPayload.Name = (name);
 
 	QString description = customerInfoPtr->GetDescription();
-	accountData.Description = (description);
+	representationPayload.Description = (description);
 
 	QString email = customerInfoPtr->GetEmail();
-	accountData.Email = (email);
+	representationPayload.Email = (email);
 
 	QByteArray customerId = customerInfoPtr->GetCustomerId();
-	accountData.CustomerId = (customerId);
+	representationPayload.CustomerId = (customerId);
 
 	QByteArrayList groups = customerInfoPtr->GetGroups();
 	std::sort(groups.begin(), groups.end());
-	accountData.Groups = (groups.join(';'));
+	representationPayload.Groups = (groups.join(';'));
 
 	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
 	if (addressProviderPtr != nullptr){
@@ -182,25 +180,23 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
 			if (addressPtr != nullptr){
 				QString city = addressPtr->GetCity();
-				accountData.City = (city);
+				representationPayload.City = (city);
 
 				QString country = addressPtr->GetCountry();
-				accountData.Country = (country);
+				representationPayload.Country = (country);
 
 				QString street = addressPtr->GetStreet();
-				accountData.Street = (street);
+				representationPayload.Street = (street);
 
 				QString postalCodeStr;
 				int postalCode = addressPtr->GetPostalCode();
 				if (postalCode > 0){
 					postalCodeStr = QString::number(postalCode);
 				}
-				accountData.PostalCode = (postalCodeStr);
+				representationPayload.PostalCode = (postalCodeStr);
 			}
 		}
 	}
-
-	representationPayload.AccountData = accountData;
 
 	return true;
 }

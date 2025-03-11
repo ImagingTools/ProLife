@@ -66,13 +66,9 @@ input SoftwareProductDataInput {
 	Item: SoftwareProductData!
 }
 
-type SoftwareProductDataPayload {
-	SoftwareProductData: SoftwareProductData
-}
-
 type Query {
 	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
-	SoftwareProductItem (input: InputId): SoftwareProductDataPayload!
+	SoftwareProductItem (input: InputId): SoftwareProductData!
 }
 
 type Mutation {
@@ -96,6 +92,5 @@ collectionSchema {
 		}
 	}
 }
-
 
 

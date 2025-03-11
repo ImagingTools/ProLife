@@ -114,10 +114,6 @@ type CreateLicenseFilePayload {
 	Data: String!
 }
 
-type DeviceDataPayload {
-	DeviceData: DeviceData
-}
-
 type DecryptLicenseFilePayload {
 	FileName: String!
 	DecryptedData: ID!
@@ -125,7 +121,7 @@ type DecryptLicenseFilePayload {
 
 type Query {
 	DevicesList (input:DevicesListInput): DevicesListPayload!
-	DeviceItem (input: InputId): DeviceDataPayload!
+	DeviceItem (input: InputId): DeviceData!
 	GetDeviceBinding (input: GetDeviceBindingInput): DeviceBindingData!
 }
 

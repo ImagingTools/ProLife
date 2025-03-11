@@ -51,7 +51,7 @@ protected:
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
 				const sdl::prolife::Orders::COrderItemGqlRequest& orderItemRequest,
-				sdl::prolife::Orders::COrderDataPayload::V1_0& representationPayload,
+				sdl::prolife::Orders::COrderData::V1_0& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,

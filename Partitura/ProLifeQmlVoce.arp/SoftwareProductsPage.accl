@@ -11,6 +11,7 @@
         <Element ComponentName="CheckPermissionOr" X="125" Y="125" Note=""/>
         <Element ComponentName="CollectionCommands" X="975" Y="225" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
+        <Element ComponentName="GroupFilterParamJoiner" X="175" Y="300" Note=""/>
         <Element ComponentName="HeadersDataProvider" X="125" Y="450" Note=""/>
         <Element ComponentName="LicenseChangeGenerator" X="1025" Y="450" Note=""/>
         <Element ComponentName="ObjectCommands" X="975" Y="75" Note=""/>
