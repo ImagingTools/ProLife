@@ -36,7 +36,7 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		collectionFilter.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC");
+		table.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC");
 		registerDocumentInfo();
 	}
 	

@@ -1,0 +1,24 @@
+#pragma once
+
+
+// ACF includes
+#include <iser/ISerializable.h>
+
+
+namespace prolifedata
+{
+
+
+class ISoftwareTransfer: virtual public iser::ISerializable
+{
+public:
+	virtual QByteArray GetSoftwareId() const = 0;
+	virtual void SetSoftwareId(const QByteArray& softwareId) = 0;
+	virtual int GetTransferCount() const = 0;
+	virtual void SetTransferCount(int transferCount) = 0;
+};
+
+
+} // namespace prolifedata
+
+

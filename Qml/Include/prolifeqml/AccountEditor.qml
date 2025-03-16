@@ -12,9 +12,7 @@ ViewBase {
 
 	width: bodyColumn.width;
 	height: bodyColumn.height;
-
-	// anchors.fill: parent;
-
+	
 	property int radius: 3;
 
 	property int textInputHeight: 30;
@@ -363,8 +361,6 @@ ViewBase {
 
 			KeyNavigation.tab: customerIdInput;
 			KeyNavigation.backtab: streetInput;
-
-			// table.checkable: true;
 
 			onTableChanged: {
 				if (groupsElement.table){

@@ -30,9 +30,9 @@
                             <Values>
                                 <Value>ProLifeServerBase/HttpServerFramework</Value>
                                 <Value>ProLifeServerBase/WebSocketServerFramework</Value>
-                                <Value>ProLifeServerBase/DatabaseEngine</Value>
                                 <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
+                                <Value>ProLifeServerBase/DatabaseEngine</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

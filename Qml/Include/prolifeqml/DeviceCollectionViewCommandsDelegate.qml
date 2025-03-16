@@ -12,26 +12,15 @@ import imtbaseComplexCollectionFilterSdl 1.0
 
 DocumentCollectionViewDelegate {
 	id: container;
-
-	property bool filterByNewActive: false;
-	property string filterLicense: "";
-
-	documentTypeId: "Device";
-	viewTypeId: "DeviceEditor";
-
+	
+	documentTypeIds: ["Device"]
+	documentViewTypeIds: ["DeviceEditor"]
+	documentViewsComp: [deviceEditorComp]
+	documentDataControllersComp: [dataControllerComp];
+	documentValidatorsComp: [deviceValidatorComp];
+	
 	removeDialogTitle: qsTr("Removing the sensor");
 	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
-
-	onCollectionIdChanged: {
-		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-		if (documentManager){
-			container.documentManager = documentManager;
-
-			documentManager.registerDocumentView("Device", "DeviceEditor", deviceEditorComp);
-			documentManager.registerDocumentDataController("Device", dataControllerComp);
-			documentManager.registerDocumentValidator("Device", deviceValidatorComp);
-		}
-	}
 
 	Component {
 		id: saveDialogComp;
@@ -473,6 +462,23 @@ DocumentCollectionViewDelegate {
 			id: createLicenseFileIO;
 		}
 	}
+	
+	TransferLicensesInput {
+		id: transferLicensesInput;
+	}
+
+	GqlSdlRequestSender {
+		id: transferLicensesRequest;
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_transferLicenses;
+
+		sdlObjectComp: Component {
+			TransferLicensesPayload {
+				onFinished: {
+					ModalDialogManager.showInfoDialog(qsTr("The licenses were successfully transferred"));
+				}
+			}
+		}
+	}
 
 	Component {
 		id: deviceCollectionViewComp;
@@ -493,22 +499,6 @@ DocumentCollectionViewDelegate {
 					transferLicensesInput.m_fromDeviceId = dialog.fromDeviceId;
 					transferLicensesInput.m_toDeviceId = dialog.toDeviceId;
 					transferLicensesRequest.send(transferLicensesInput);
-				}
-			}
-			
-			TransferLicensesInput {
-				id: transferLicensesInput;
-			}
-
-			GqlSdlRequestSender {
-				id: transferLicensesRequest;
-				gqlCommandId: ProlifeSensorsSdlCommandIds.s_transferLicenses;
-
-				sdlObjectComp: Component {
-					TransferLicensesPayload {
-						onFinished: {
-						}
-					}
 				}
 			}
 
@@ -548,7 +538,6 @@ DocumentCollectionViewDelegate {
 							deviceCollectionView.collectionFilter.addFieldFilter(licenseFilter)
 							deviceCollectionView.collectionFilter.addFieldFilter(productFilter)
 							deviceCollectionView.collectionFilter.addFieldFilter(excludeFilter)
-							// deviceCollectionView.collectionFilter.filterChanged()
 						}
 					}
 
@@ -566,7 +555,6 @@ DocumentCollectionViewDelegate {
 
 						Component.onCompleted: {
 							filterMenu.decorator = filterComp;
-
 						}
 
 						Component {

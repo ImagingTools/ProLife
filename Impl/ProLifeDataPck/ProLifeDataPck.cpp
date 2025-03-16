@@ -64,6 +64,11 @@ I_EXPORT_COMPONENT(
 			"Hardware meta info creator",
 			"Hardware Meta Info Creator");
 
+I_EXPORT_COMPONENT(
+			SoftwareTransferInfo,
+			"Software transfer info",
+			"Software Transfer Info");
+
 
 } // namespace ProLifeDataPck
 

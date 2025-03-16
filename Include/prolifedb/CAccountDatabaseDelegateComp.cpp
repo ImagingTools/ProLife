@@ -26,7 +26,7 @@ QString CAccountDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::I
 		QByteArrayList groupIds = filterParamPtr->GetGroupIds();
 		
 		if (groupIds.isEmpty()){
-			filterQuery = QString("\"Document\"->'Groups' = '[]'");
+			filterQuery = QString("root.\"Document\"->'Groups' = '[]'");
 		}
 		else {
 			for (int i = 0; i < groupIds.size(); i++){
@@ -34,16 +34,23 @@ QString CAccountDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::I
 					filterQuery += " OR ";
 				}
 				
-				filterQuery += QString("\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupIds[i]));
+				filterQuery += QString("root.\"Document\"->'Groups' ? '%1'").arg(qPrintable(groupIds[i]));
 			}
 			
-			QString ownerSubquery = QString(R"((SELECT acc."RevisionInfo"->>'OwnerId' FROM "Accounts" as acc WHERE acc."DocumentId" = root."DocumentId" AND (acc."RevisionInfo"->>'RevisionNumber')::int = 1 LIMIT 1))");
-			
-			filterQuery += QString(R"( OR (%1 = '%2'))").arg(ownerSubquery, qPrintable(userId));
+			filterQuery = QString(R"((%0) OR users."Document"->>'Id' = '%1')").arg(filterQuery, qPrintable(userId));
 		}
 	}
 	
 	return filterQuery;
+}
+
+
+QByteArray CAccountDatabaseDelegateComp::CreateJoinTablesQuery() const
+{
+	return QByteArray(R"(
+			LEFT JOIN "Users" AS users
+				ON users."DocumentId"::text = root."RevisionInfo"->>'OwnerId'
+	)");
 }
 
 

@@ -35,6 +35,11 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 	}
 	
 	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+
+	if (!retVal.Version_1_0.has_value()){
+		Q_ASSERT(false);
+		return sdl::imtbase::ImtCollection::CVisualStatus();
+	}
 	
 	QByteArray objectId;
 	if (retVal.Version_1_0->ObjectId){
@@ -119,7 +124,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		
 		QString macAddress = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toString();
 		if (!macAddress.isEmpty()){
-			representationObject.Name = (deviceType + " (" + macAddress + ")");
+			representationObject.Name = (productName + " (" + macAddress + ")");
 		}
 	}
 

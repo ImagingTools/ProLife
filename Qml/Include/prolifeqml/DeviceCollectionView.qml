@@ -16,20 +16,6 @@ RemoteCollectionView {
 	collectionId: "Devices";
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
 	
-	commandsViewComp: Component {
-		id: commandsDecoratorComp;
-
-		CommandsPanel {
-			commandId: container.viewId;
-
-			onCommandActivated: {
-				if (container.commandsDelegate){
-					container.commandsDelegate.commandHandle(commandId);
-				}
-			}
-		}
-	}
-
 	commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
 			collectionView: container;
 		}
@@ -38,7 +24,7 @@ RemoteCollectionView {
 	visibleMetaInfo: true;
 
 	Component.onCompleted: {
-		collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
+		table.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 		filterMenu.decorator = deviceCollectionFilterComp;
 	}
 

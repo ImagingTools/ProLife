@@ -93,6 +93,10 @@ DecoratorBase {
 			radius: 3;
 			
 			onCurrentIndexChanged: {
+				if (!mainItem.complexFilter){
+					return
+				}
+
 				mainItem.complexFilter.removeFieldFilter(licenseFilter)
 				
 				if (licenseComboBox.currentIndex == 1){
@@ -154,6 +158,10 @@ DecoratorBase {
 				anchors.verticalCenter: parent.verticalCenter;
 				widthFromDecorator: true;
 				function nextCheckState() {
+					if (!mainItem.complexFilter){
+						return;
+					}
+
 					mainItem.complexFilter.removeFieldFilter(statusFilter)
 					
 					if (checkState == Qt.Checked){

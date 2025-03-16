@@ -10,6 +10,24 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
+        <Element Id="AdministrationRepositories" PackageId="ImtUserAdministrationVoce" ComponentId="AdministrationRepositories">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="AuthorizableServerFramework" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -62,7 +80,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ThreadsLimit" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="1"/>
+                        <Data IsEnabled="true" Value="10"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
@@ -171,6 +189,7 @@
                             <Values>
                                 <Value>Products</Value>
                                 <Value>Licenses</Value>
+                                <Value>Features</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -198,6 +217,27 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LisaRepositories" PackageId="LisaVoce" ComponentId="Repositories">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ObjectCollectionMigrationController" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -218,6 +258,7 @@
                                 <Value>Repositories/OrderDatabaseDelegate</Value>
                                 <Value>Repositories/AccountDatabaseDelegate</Value>
                                 <Value>Repositories/BindingProductsDatabaseDelegate</Value>
+                                <Value>Repositories/SoftwareTransferDatabaseDelegate</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -263,13 +304,13 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine/FeatureRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/CachedFeatureRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureContainer" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/FeatureContainer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/GroupRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedGroupRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="JwtSessionController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
@@ -278,7 +319,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/CachedLicenseRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -289,10 +330,10 @@
                     <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Repositories/DeviceSqlRepository</Value>
-                                <Value>Repositories/SoftwareSqlRepository</Value>
-                                <Value>Repositories/OrderSqlRepository</Value>
-                                <Value>Repositories/AccountSqlRepository</Value>
+                                <Value>Repositories/CachedDeviceRepository</Value>
+                                <Value>Repositories/CachedSoftwareRepository</Value>
+                                <Value>Repositories/CachedOrderRepository</Value>
+                                <Value>Repositories/CachedAccountRepository</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -300,16 +341,19 @@
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/CachedProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RoleRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserSessionRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserSessionsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareTransferSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
@@ -318,7 +362,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -393,6 +437,9 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Users</Value>
+                                <Value>Roles</Value>
+                                <Value>UserGroups</Value>
+                                <Value>UserSessions</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -422,9 +469,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -596,12 +640,6 @@
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DependentCollections" Type="Reference[]" ExportId="OrderDependentCollections">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DependentMetaInfoList" Type="Reference" ExportId="OrderDependentMetaInfoList">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -653,6 +691,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="SoftwareTransferSqlRepository" PackageId="ProLifeVoce" ComponentId="SoftwareTransferSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
@@ -667,10 +723,15 @@
                     <Component ExportedId="CachedSoftwareRepository" ComponentId="CachedSoftwareRepository"/>
                     <Component ExportedId="DeviceDatabaseDelegate" ComponentId="DeviceSqlRepository/DeviceDatabaseDelegate"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
+                    <Component ExportedId="FeatureSqlRepository" ComponentId="LisaRepositories/FeatureSqlRepository"/>
+                    <Component ExportedId="LicenseSqlRepository" ComponentId="LisaRepositories/LicenseSqlRepository"/>
                     <Component ExportedId="OrderDatabaseDelegate" ComponentId="OrderSqlRepository/OrderDatabaseDelegate"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
+                    <Component ExportedId="ProductSqlRepository" ComponentId="LisaRepositories/ProductRepository"/>
                     <Component ExportedId="SoftwareProductDatabaseDelegate" ComponentId="SoftwareSqlRepository/SoftwareProductDatabaseDelegate"/>
                     <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
+                    <Component ExportedId="SoftwareTransferDatabaseDelegate" ComponentId="SoftwareTransferSqlRepository/SqlDatabaseDocumentDelegate"/>
+                    <Component ExportedId="SoftwareTransferSqlRepository" ComponentId="SoftwareTransferSqlRepository"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>

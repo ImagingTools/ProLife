@@ -152,7 +152,7 @@ bool CDatabaseConverterComp::MigrateTable(const QString& tableName, const QByteA
 			'OwnerId', COALESCE("OwnerId", ''),
 			'OwnerName', COALESCE("OwnerName", ''),
 			'OperationDescription', COALESCE("OperationDescription", ''),
-			'RevisionNumber', "RevisionNumber",
+			'RevisionNumber', "RevisionNumber", 
 			'Checksum', "Checksum"
 		),
 		CASE 
@@ -203,7 +203,6 @@ bool CDatabaseConverterComp::UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObj
 	while (sqlQuery.next()){
 		QSqlRecord record = sqlQuery.record();
 		
-		QByteArray objectId = record.value(qPrintable("DocumentId")).toByteArray();
 		QByteArray updateMetaInfoQuery = databaseDelegate.CreateUpdateMetaInfoQuery(record);
 		updateMetaInfoQuery = updateMetaInfoQuery.replace('\b', ';');
 		if (!ExecQuery(updateMetaInfoQuery)){

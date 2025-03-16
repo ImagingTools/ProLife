@@ -62,7 +62,7 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		collectionFilter.setSortingInfo("Name", "ASC");
+		table.setSortingInfo("Name", "ASC");
 	}
 	
 	Component {

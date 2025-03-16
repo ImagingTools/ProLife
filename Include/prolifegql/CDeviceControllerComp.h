@@ -38,9 +38,11 @@ public:
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_deviceBindingCollectionCompPtr, "DeviceBindingCollection", "Device binding collection", true, "DeviceBindingCollection");
+		I_ASSIGN(m_softwareTransferCollectionCompPtr, "SoftwareTransferCollection", "Software transfer collection", true, "SoftwareTransferCollection");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 		I_ASSIGN(m_encryptionCompPtr, "Encryption", "Encrypt/Decrypt instances", true, "Encryption");
+		I_ASSIGN(m_maxTransferCountAttrPtr, "MaxTransferCount", "Max transfer count", true, 3);
 	I_END_COMPONENT
 
 protected:
@@ -69,6 +71,7 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_softwareTransferCollectionCompPtr);
 	I_REF(ifile::IFilePersistence, m_basedPersistenceCompPtr);
 	I_REF(ifile::IFilePersistence, m_encryptionBasedPersistenceCompPtr);
 	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
@@ -76,6 +79,7 @@ protected:
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 	I_REF(imtcrypt::IEncryption, m_encryptionCompPtr);
+	I_ATTR(int, m_maxTransferCountAttrPtr);
 
 private:
 	mutable QByteArray m_productInstanceId;

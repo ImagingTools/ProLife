@@ -17,6 +17,7 @@
 #include <prolifedata/COrderMetaInfoCreatorComp.h>
 #include <prolifedata/CCustomerMetaInfoCreatorComp.h>
 #include <prolifedata/CHardwareBindingMetaInfoCreatorComp.h>
+#include <prolifedata/CSoftwareTransferInfo.h>
 
 
 namespace ProLifeDataPck
@@ -53,7 +54,12 @@ typedef prolifedata::CSoftwareMetaInfoCreatorComp SoftwareMetaInfoCreator;
 typedef prolifedata::COrderMetaInfoCreatorComp OrderMetaInfoCreator;
 typedef prolifedata::CCustomerMetaInfoCreatorComp CustomerMetaInfoCreator;
 typedef prolifedata::CHardwareBindingMetaInfoCreatorComp HardwareBindingMetaInfoCreator;
-
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CSoftwareTransferInfo,
+						prolifedata::ISoftwareTransfer,
+						iser::ISerializable,
+						istd::IChangeable>> SoftwareTransferInfo;
 
 } // namespace ProLifeDataPck
 

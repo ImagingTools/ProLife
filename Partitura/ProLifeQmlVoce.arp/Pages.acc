@@ -224,6 +224,9 @@
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -380,6 +383,9 @@
                                     <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
