@@ -5,6 +5,7 @@
 #include <iprm/TParamsPtr.h>
 
 // ImtCore includes
+#include <imtbase/CComplexCollectionFilterHelper.h>
 #include <imtauth/IUserInfo.h>
 
 // ProLife includes
@@ -28,9 +29,6 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 		QByteArray userId = filterParamPtr->GetUserId();
 		QByteArrayList groupIds = filterParamPtr->GetGroupIds();
 		
-		QString accountGroupsQuery = QString(R"((SELECT "Document"->'Groups' FROM "Accounts" as acc WHERE acc."DocumentId"::text = (SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."State" = 'Active' AND orders."DocumentId"::text = root."Document"->>'OrderId') AND acc."State" = 'Active'))");
-		QString ownerSubquery = QString(R"((SELECT "RevisionInfo"->>'OwnerId' FROM "Devices" as dev WHERE dev."DocumentId"::text = root."DocumentId"::text AND (dev."RevisionInfo"->>'RevisionNumber')::int = 1 LIMIT 1))");
-		
 		if (!groupIds.isEmpty()){
 			QString array = "array[";
 			
@@ -44,15 +42,55 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 			
 			array += "]";
 			
-			QString groupsQuery = QString(R"((SELECT "Document"->'Groups' FROM "Users" WHERE "DocumentId"::text = %1))").arg(ownerSubquery);
-			filterQuery += QString(R"((%0 ?| %1) OR (root."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(accountGroupsQuery, array, QString(R"((to_jsonb(%1)))").arg(groupsQuery));
+			filterQuery += QString(R"((acc."Document"->'Groups' ?| %0) OR (root."Document"->>'OrderId' = '' AND users."Document"->'Groups' ?| %0))").arg(array);
 		}
 		else{
-			filterQuery += QString(R"(%1 = '%2')").arg(ownerSubquery, qPrintable(userId));
+			filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 		}
 	}
 	
 	return filterQuery;
+}
+
+
+bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
+	const imtbase::IComplexCollectionFilter& collectionFilter,
+	QString& textFilterQuery) const
+{
+	bool retVal = BaseClass::CreateTextFilterQuery(collectionFilter, textFilterQuery);
+	if (retVal){
+		QSet<QByteArray> filteringFieldIds =
+			imtbase::CComplexCollectionFilterHelper::GetFilteringFieldIds(collectionFilter.GetFieldsFilter());
+		
+		QString textFilter = imtbase::CComplexCollectionFilterHelper::GetTextFilter(collectionFilter.GetFieldsFilter()).replace(":", "");
+		if (!textFilter.isEmpty() && filteringFieldIds.contains("MacAddress")){
+			QString macAddressTextFilter = QString(R"(('s' || replace("MacAddress", ':', '')) ILIKE '%%1%')").arg(textFilter);
+			if (textFilterQuery.isEmpty()){
+				textFilterQuery = macAddressTextFilter;
+			}
+			else{
+				textFilterQuery = "(" + textFilterQuery + ") OR" + "(" + macAddressTextFilter + ")";
+			}
+		}
+	}
+	
+	return retVal;
+}
+
+
+QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
+{
+	return QByteArray(R"(
+			LEFT JOIN "Orders" AS orders
+				ON orders."DocumentId"::text = root."Document"->>'OrderId'
+				AND orders."State" = 'Active'
+			LEFT JOIN "Accounts" AS acc
+				ON acc."DocumentId"::text = orders."Document"->>'OrderCustomer'
+				AND acc."State" = 'Active'
+			LEFT JOIN "Users" AS users
+				ON users."Document"->>'Id'::text = root1."RevisionInfo"->>'OwnerId'
+				AND users."State" = 'Active'
+	)");
 }
 
 

@@ -28,9 +28,6 @@ QString CSoftwareProductDatabaseDelegateComp::CreateAdditionalFiltersQuery(const
 		QByteArray userId = filterParamPtr->GetUserId();
 		QByteArrayList groupIds = filterParamPtr->GetGroupIds();
 		
-		QString accountGroupsQuery = QString(R"((SELECT "Document"->'Groups' FROM "Accounts" as acc WHERE acc."DocumentId"::text = (SELECT "Document"->>'OrderCustomer' FROM "Orders" as orders WHERE orders."State" = 'Active' AND orders."DocumentId"::text = root."Document"->>'OrderId') AND acc."State" = 'Active'))");
-		QString ownerSubquery = QString(R"((SELECT "RevisionInfo"->>'OwnerId' FROM "SoftwareInstances" as dev WHERE dev."DocumentId"::text = root."DocumentId"::text AND (dev."RevisionInfo"->>'RevisionNumber')::int = 1 LIMIT 1))");
-		
 		if (!groupIds.isEmpty()){
 			QString array = "array[";
 			
@@ -44,15 +41,30 @@ QString CSoftwareProductDatabaseDelegateComp::CreateAdditionalFiltersQuery(const
 			
 			array += "]";
 			
-			QString groupsQuery = QString(R"((SELECT "Document"->'Groups' FROM "Users" WHERE "DocumentId"::text = %1))").arg(ownerSubquery);
-			filterQuery += QString(R"((%0 ?| %1) OR (root."Document"->>'OrderId' = '' AND (%2 ?| %1)))").arg(accountGroupsQuery, array, QString(R"((to_jsonb(string_to_array((%1), ';'))))").arg(groupsQuery));
+			filterQuery += QString(R"((acc."Document"->'Groups' ?| %0) OR (root."Document"->>'OrderId' = '' AND users."Document"->'Groups' ?| %0))").arg(array);
 		}
 		else{
-			filterQuery += QString(R"(%1 = '%2')").arg(ownerSubquery, qPrintable(userId));
+			filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 		}
 	}
 	
 	return filterQuery;
+}
+
+
+QByteArray CSoftwareProductDatabaseDelegateComp::CreateJoinTablesQuery() const
+{
+	return QByteArray(R"(
+			LEFT JOIN "Orders" AS orders
+				ON orders."DocumentId"::text = root."Document"->>'OrderId'
+				AND orders."State" = 'Active'
+			LEFT JOIN "Accounts" AS acc
+				ON acc."DocumentId"::text = orders."Document"->>'OrderCustomer'
+				AND acc."State" = 'Active'
+			LEFT JOIN "Users" AS users
+				ON users."Document"->>'Id'::text = root1."RevisionInfo"->>'OwnerId'
+				AND users."State" = 'Active'
+	)");
 }
 
 

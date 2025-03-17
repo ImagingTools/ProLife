@@ -20,12 +20,6 @@ bool CDatabaseConverterComp::DoMigration(int& resultRevision, const istd::CIntRa
 		Q_ASSERT(false);
 		return false;
 	}
-	
-	QString query = QString(R"(CREATE TYPE "DocumentState" AS ENUM ('Active', 'InActive', 'Disabled'))");
-	
-	if (!ExecQuery(query)){
-		return false;
-	}
 
 	QString deviceTableName = m_deviceDatabaseDelegateCompPtr->GetTableName();
 	QString softwaresTableName = m_softwareInstanceDatabaseDelegateCompPtr->GetTableName();

@@ -19,6 +19,7 @@ public:
 
 	// reimplemented (imtdb::CSqlDatabaseDocumentDelegateComp)
 	virtual QString CreateAdditionalFiltersQuery(const iprm::IParamsSet& filterParams) const override;
+	virtual QByteArray CreateJoinTablesQuery() const override;
 };
 
 

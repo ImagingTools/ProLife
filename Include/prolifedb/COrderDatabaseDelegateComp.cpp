@@ -38,14 +38,27 @@ QString COrderDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IPa
 			
 			array += "]";
 			
-			filterQuery += QString(R"(((SELECT \"Document\"->'Groups' FROM \"Accounts\" as acc WHERE acc.\"DocumentId\"::text = t1.\"Document\"->>'OrderCustomer' AND acc.\"State\" = 'Active') ?| %1))").arg(array);
+			filterQuery += QString(R"((acc."Document"->'Groups' ?| %1))").arg(array);
 		}
 		else{
-			filterQuery += QString(R"((SELECT ord."RevisionInfo"->>'OwnerId' FROM "Orders" as ord WHERE ord."DocumentId" = root."DocumentId" AND (ord."RevisionInfo"->>'RevisionNumber')::int = 1 LIMIT 1) = '%1')").arg(qPrintable(userId));
+			filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 		}
 	}
 	
 	return filterQuery;
+}
+
+
+QByteArray COrderDatabaseDelegateComp::CreateJoinTablesQuery() const
+{
+	return QByteArray(R"(
+			LEFT JOIN "Accounts" AS acc
+				ON acc."DocumentId"::text = root."Document"->>'OrderCustomer'
+				AND acc."State" = 'Active'
+			LEFT JOIN "Users" AS users
+				ON users."Document"->>'Id'::text = root1."RevisionInfo"->>'OwnerId'
+				AND users."State" = 'Active'
+	)");
 }
 
 

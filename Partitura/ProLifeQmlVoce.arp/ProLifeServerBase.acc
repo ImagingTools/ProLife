@@ -60,12 +60,8 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>DatabaseConverterComp</Value>
-                            </Values>
-                        </Data>
+                    <AttributeInfo Id="MigrationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Migrations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
@@ -90,45 +86,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketDefaultPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="8778"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="DatabaseConverterComp" PackageId="ProLifeDbPck" ComponentId="DatabaseConverterComp">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CustomerDatabaseDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/AccountDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/BindingProductsDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DeviceDatabaseDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/DeviceDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="From" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="14"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollectionMigrationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ObjectCollectionMigrationController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OrderDatabaseDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/OrderDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareInstanceDatabaseDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Repositories/SoftwareProductDatabaseDelegate"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="To" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="14"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -238,35 +195,47 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ObjectCollectionMigrationController" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
+        <Element Id="Migrations" PackageId="" ComponentId="Migrations">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CustomerDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="From" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="14"/>
+                    <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/BindingProductsDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OrderDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/OrderDatabaseDelegate"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareInstanceDatabaseDelegate" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Repositories/DeviceDatabaseDelegate</Value>
-                                <Value>Repositories/SoftwareProductDatabaseDelegate</Value>
-                                <Value>Repositories/OrderDatabaseDelegate</Value>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
                                 <Value>Repositories/AccountDatabaseDelegate</Value>
                                 <Value>Repositories/BindingProductsDatabaseDelegate</Value>
                                 <Value>Repositories/SoftwareTransferDatabaseDelegate</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="To" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="14"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/LoggingParams"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -505,6 +474,171 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="Migrations">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="CompositeMigrationController" PackageId="ImtDatabasePck" ComponentId="CompositeMigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>MigrationController</Value>
+                                            <Value>DatabaseConverterComp</Value>
+                                            <Value>MigrationController_2</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DatabaseConverterComp" PackageId="ProLifeDbPck" ComponentId="DatabaseConverterComp">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CustomerDatabaseDelegate" Type="Reference" ExportId="CustomerDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="DeviceBindingDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceDatabaseDelegate" Type="Reference" ExportId="DeviceDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollectionMigrationController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ObjectCollectionMigrationController"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="OrderDatabaseDelegate" Type="Reference" ExportId="OrderDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SoftwareInstanceDatabaseDelegate" Type="Reference" ExportId="SoftwareInstanceDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="MigrationController" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="0"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="MigrationFilePath"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="13"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="MigrationController_2" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="15"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="MigrationFilePath"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="15"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="MigrationFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Migrations"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="2"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="SystemLocation"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ObjectCollectionMigrationController" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="SqlDatabaseObjectDelegates">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="SystemLocation" PackageId="FilePck" ComponentId="SystemLocation">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="101"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtdb::IMigrationController" ComponentId="CompositeMigrationController"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="CompositeMigrationController"/>
+                </ExportedInterfaces>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
         <EmbeddedRegistry Id="Repositories">
             <Data Description="" Keywords="">
                 <ElementsList>
