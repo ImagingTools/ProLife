@@ -521,17 +521,6 @@ ViewBase {
                     }
                 }
 
-				// ButtonElementView {
-				// 	id: buttonElementView;
-				// 	name: qsTr("Transfer Licenses");
-				// 	text: qsTr("Transfer");
-				// 	// visible:
-
-				// 	onClicked: {
-
-				// 	}
-				// }
-
                 TextInputElementView {
                     id: projectInput;
 

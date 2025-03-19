@@ -68,15 +68,11 @@ RemoteCollectionView {
 	Component {
 		id: accountEditorComp
 		
-		DocumentView {
+		AccountEditor {
 			id: accountEditor;
 			commandsControllerComp: Component {GqlBasedCommandsController {
 					typeId: "Account";
 				}
-			}
-			
-			viewComp: Component {
-				AccountEditor {}
 			}
 		}
 	}
