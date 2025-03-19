@@ -71,7 +71,7 @@ bool CDatabaseConverterComp::DoMigration(int& resultRevision, const istd::CIntRa
 		return false;
 	}
 	
-	if (!MigrateTable(deviceBindingTableName, "HardwareBinding", "''", "''")){
+	if (!MigrateTable(deviceBindingTableName, "HardwareBinding", "''", "''", false)){
 		return false;
 	}
 	
@@ -127,7 +127,12 @@ bool CDatabaseConverterComp::DoMigration(int& resultRevision, const istd::CIntRa
 
 // private methods
 
-bool CDatabaseConverterComp::MigrateTable(const QString& tableName, const QByteArray& type, const QString& nameField, const QString& descriptionField) const
+bool CDatabaseConverterComp::MigrateTable(
+	const QString& tableName,
+	const QByteArray& type,
+	const QString& nameField,
+	const QString& descriptionField,
+	bool updateUuid) const
 {
 	QString query = QString(
 						R"(
@@ -140,7 +145,7 @@ bool CDatabaseConverterComp::MigrateTable(const QString& tableName, const QByteA
 		'%2',
 		%3,
 		%4,
-		"Document",
+		%5,
 		COALESCE("LastModified", now()),
 		jsonb_build_object(
 			'OwnerId', COALESCE("OwnerId", ''),
@@ -157,7 +162,7 @@ bool CDatabaseConverterComp::MigrateTable(const QString& tableName, const QByteA
 		"Document"
 	FROM public."%1_new";
 	)"
-	).arg(tableName, qPrintable(type), nameField, descriptionField);
+	).arg(tableName, qPrintable(type), nameField, descriptionField, updateUuid ? "jsonb_set(\"Document\", '{Uuid}', to_jsonb(\"DocumentId\"::text))" : "\"Document\"");
 
 	return ExecQuery(query);
 }
@@ -196,6 +201,11 @@ bool CDatabaseConverterComp::UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObj
 	
 	while (sqlQuery.next()){
 		QSqlRecord record = sqlQuery.record();
+		
+		QByteArray objectId = databaseDelegate.GetObjectIdFromRecord(record);
+		if (objectId == "87ba953f-d47a-4725-97f1-2e657788a702"){
+			qDebug() << "fdfdfs";
+		}
 		
 		QByteArray updateMetaInfoQuery = databaseDelegate.CreateUpdateMetaInfoQuery(record);
 		updateMetaInfoQuery = updateMetaInfoQuery.replace('\b', ';');

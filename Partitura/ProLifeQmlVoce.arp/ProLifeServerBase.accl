@@ -24,15 +24,13 @@
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Migrations">
+        <EmbededRegistry Id="Subscriptions">
             <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -51,13 +49,15 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Subscriptions">
+        <EmbededRegistry Id="Migrations">
             <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="550" Y="350" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="200" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="925" Y="225" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="575" Y="75" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="550" Y="225" Note=""/>
+                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

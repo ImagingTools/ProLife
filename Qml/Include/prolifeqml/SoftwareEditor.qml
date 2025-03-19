@@ -145,10 +145,13 @@ ViewBase {
 		ordersCB.currentIndex = -1;
 		
 		let orderUuid = softwareProductData.m_orderUuid;
+		console.log("updateGui", softwareProductData);
 		if (ordersCB.sourceModel){
 			for (let i = 0; i < ordersCB.sourceModel.getItemsCount(); i++){
 				let id = ordersCB.sourceModel.getData("Id", i);
 				if (id === orderUuid){
+					console.log("id ===", id);
+					
 					ordersCB.currentIndex = i;
 					break;
 				}

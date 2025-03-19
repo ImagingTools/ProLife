@@ -183,7 +183,7 @@ DocumentCollectionViewDelegate {
 
 		let isOpenOrderEnabled = isEnabled;
 		if (isOpenOrderEnabled){
-			let orderId = elementsModel.getData("OrderId", selection[0]);
+			let orderId = elementsModel.getData("DeliveryId", selection[0]);
 			isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
 		}
 

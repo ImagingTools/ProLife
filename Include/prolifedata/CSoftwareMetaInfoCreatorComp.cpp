@@ -119,6 +119,10 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	if (objectId == "87ba953f-d47a-4725-97f1-2e657788a702"){
+		qDebug() << "fdfdfs";
+	}
+	
 	if (m_hardwareBindingCollectionCompPtr.IsValid()){
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
 		fieldFilter.fieldId = "SoftwareIds";

@@ -329,7 +329,6 @@ Item {
 									
 									onHeadersChanged: {
 										softwareProductCollection.table.setColumnContentById("LicenseName", null);
-										// softwareProductCollection.table.tableDecorator = tableDecoratorModel2;
 									}
 									
 									FieldFilter {

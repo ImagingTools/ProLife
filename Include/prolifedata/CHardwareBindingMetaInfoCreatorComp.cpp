@@ -35,10 +35,10 @@ bool CHardwareBindingMetaInfoCreatorComp::CreateMetaInfo(
 	if (hardwareInfoPtr == nullptr){
 		return false;
 	}
-	
+
 	metaInfoPtr->SetMetaInfo(IHardwareProductBinding::MIT_HARDWARE_ID, hardwareInfoPtr->GetHardwareId());
 	metaInfoPtr->SetMetaInfo(IHardwareProductBinding::MIT_SOFTWARE_IDS, hardwareInfoPtr->GetSoftwareIds().join(';'));
-	
+
 	return true;
 }
 
@@ -49,7 +49,6 @@ QString CHardwareBindingMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*met
 {
 	return QString();
 }
-
 
 
 } // namespace imtauth

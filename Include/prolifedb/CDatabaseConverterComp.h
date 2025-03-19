@@ -29,7 +29,12 @@ protected:
 	virtual bool DoMigration(int& resultRevision, const istd::CIntRange& subRange = istd::CIntRange()) const override;
 	
 private:
-	bool MigrateTable(const QString& tableName, const QByteArray& type, const QString& nameField, const QString& descriptionField) const;
+	bool MigrateTable(
+		const QString& tableName,
+		const QByteArray& type,
+		const QString& nameField,
+		const QString& descriptionField,
+		bool updateUuid = true) const;
 	bool RenameTable(const QString& tableName, const QString& newTableName) const;
 	bool DropTable(const QString& tableName) const;
 	bool UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObjectDelegate& databaseDelegate) const;

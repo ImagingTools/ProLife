@@ -222,36 +222,10 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 	
 	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 	
-	if (m_softwareProductCollectionCompPtr.IsValid()){
-		// Update project for all software
-		
-		for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
-			imtbase::IObjectCollection::DataPtr softwareDataPtr;
-			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
-				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
-				if (productInstanceInfoPtr != nullptr){
-					productInstanceInfoPtr->SetProject(project.toUtf8());
-					
-					istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-					if (m_softwareOperationContextControllerCompPtr.IsValid()){
-						operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, productInstanceInfoPtr);
-					}
-					
-					if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-						errorMessage = QString("Unable to update software instance object.");
-						SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-						
-						return retVal;
-					}
-				}
-			}
-		}
-	}
-	
 	deviceBindingInfoPtr->SetHardwareId(deviceId);
-	deviceBindingInfoPtr->SetSoftwareIds(newHardwareBindingSoftwareIds);
 	
-	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
+	newHardwareBindingSoftwareIds.removeAll("");
+	deviceBindingInfoPtr->SetSoftwareIds(newHardwareBindingSoftwareIds);
 	
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
@@ -259,6 +233,8 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 		
 		return retVal;
 	}
+	
+	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 	
 	return retVal;
 }

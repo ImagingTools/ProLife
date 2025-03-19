@@ -279,7 +279,7 @@
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/FeatureContainer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedGroupRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/UserGroupRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="JwtSessionController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
@@ -313,10 +313,10 @@
                         <Data IsEnabled="true" Value="LisaRepositories/CachedProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/RoleRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserSessionsRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/UserSessionsRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
@@ -331,7 +331,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/UserRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
