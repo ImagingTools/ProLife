@@ -146,6 +146,8 @@ ViewBase {
 				
 				let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, createdLicenseCb.currentIndex);
 				productItem.m_expiration = expiration;
+				
+				productItem.m_inUse = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_inUse, createdLicenseCb.currentIndex);
 			}
 		}
 	}
