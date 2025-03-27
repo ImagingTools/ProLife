@@ -106,7 +106,12 @@ input DecryptLicenseFileInput {
 }
 
 type TransferLicensesPayload {
-	Status: String
+	Ok: Boolean
+	Limit: Boolean
+}
+
+type RequestTransferLicensesPayload {
+	Result: Boolean!
 }
 
 type CreateLicenseFilePayload {
@@ -130,6 +135,7 @@ type Mutation {
 	DeviceAdd (input: DeviceDataInput): AddedNotificationPayload!
 	UpdateDeviceBinding (input: DeviceBindingInput): UpdatedNotificationPayload!
 	TransferLicenses (input: TransferLicensesInput): TransferLicensesPayload!
+	RequestTransferLicenses (input: TransferLicensesInput): RequestTransferLicensesPayload!
 	CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
 	DecryptLicenseFile (input: DecryptLicenseFileInput): DecryptLicenseFilePayload!
 }

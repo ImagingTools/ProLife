@@ -2,23 +2,24 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="BackupFolder" X="1000" Y="375" Note=""/>
-        <Element ComponentName="BackupSettingsRepresentation" X="1000" Y="150" Note=""/>
+        <Element ComponentName="BackupFolder" X="875" Y="350" Note=""/>
+        <Element ComponentName="BackupSettingsRepresentation" X="825" Y="150" Note=""/>
         <Element ComponentName="CacheClearingIntervalRepresentation" X="175" Y="675" Note=""/>
-        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="600" Y="275" Note=""/>
-        <Element ComponentName="DatabaseSettingsRepresentation" X="600" Y="150" Note=""/>
+        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="525" Y="275" Note=""/>
+        <Element ComponentName="DatabaseSettingsRepresentation" X="500" Y="150" Note=""/>
         <Element ComponentName="LisaUrlRepresentation" X="175" Y="375" Note=""/>
         <Element ComponentName="PumaUrlRepresentation" X="175" Y="475" Note=""/>
-        <Element ComponentName="SchedulerParams" X="1000" Y="275" Note=""/>
+        <Element ComponentName="SchedulerParams" X="875" Y="275" Note=""/>
         <Element ComponentName="ServerPortRepresentation" X="175" Y="275" Note=""/>
         <Element ComponentName="ServerSettingsRepresentation" X="175" Y="150" Note=""/>
         <Element ComponentName="SettingsRepresentation" X="600" Y="50" Note=""/>
+        <Element ComponentName="SmtpParamsRepresentation" X="1000" Y="75" Note=""/>
         <Element ComponentName="WebSocketServerPortRepresentation" X="175" Y="575" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

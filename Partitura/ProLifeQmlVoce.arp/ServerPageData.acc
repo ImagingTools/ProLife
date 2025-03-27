@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5270" Description="ACF"/>
-            <Version Id="1" Number="2220" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -132,7 +132,7 @@
                     <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Database</Value>
+                                <Value>DatabaseAccessSettings</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -238,6 +238,7 @@
                                 <Value>Server</Value>
                                 <Value>Backup</Value>
                                 <Value>LoggingParams</Value>
+                                <Value>SmtpServerParams</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -248,6 +249,7 @@
                                 <Value>Server</Value>
                                 <Value>Backup</Value>
                                 <Value>Log</Value>
+                                <Value>SmtpServer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -334,6 +336,11 @@
                         <Data IsEnabled="true" Value="http"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SmtpServerParams" PackageId="ImtHttpServerVoce" ComponentId="SmtpServerParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="WebSocketServerPort" PackageId="ImtCorePck" ComponentId="UrlParam">

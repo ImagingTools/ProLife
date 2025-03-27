@@ -7,6 +7,8 @@
 // ImtCore includes
 #include <imtcrypt/IEncryptionKeysProvider.h>
 #include <imtcrypt/IEncryption.h>
+#include <imtmail/ISmtpClient.h>
+#include <imtmail/ISmtpMessageCreator.h>
 
 // ProLife includes
 #include <prolifedata/IHardwareProductBinding.h>
@@ -20,18 +22,36 @@ namespace prolifegql
 {
 
 
-class CDeviceControllerComp:
-			public sdl::prolife::Sensors::CGraphQlHandlerCompBase,
-			virtual public imtcrypt::IEncryptionKeysProvider
+class CDeviceControllerCompBase:
+			public sdl::prolife::Sensors::CGraphQlHandlerCompBase
 {
 public:
 	typedef sdl::prolife::Sensors::CGraphQlHandlerCompBase BaseClass;
-
-	I_BEGIN_COMPONENT(CDeviceControllerComp)
-		I_REGISTER_INTERFACE(imtcrypt::IEncryptionKeysProvider);
+	
+	I_BEGIN_BASE_COMPONENT(CDeviceControllerCompBase)
 		I_ASSIGN(m_vectorKeyCompPtr, "VectorKey", "Additional key for AES encryption", false, "VectorKey");
 		I_ASSIGN(m_basedPersistenceCompPtr, "LicensePersistence", "Persistence used for license export", false, "LicensePersistence");
 		I_ASSIGN(m_encryptionBasedPersistenceCompPtr, "EncryptionBasedPersistence", "Encryption persistence used for license export", false, "EncryptionBasedPersistence");
+		I_ASSIGN(m_encryptionCompPtr, "Encryption", "Encrypt/Decrypt instances", true, "Encryption");
+		I_ASSIGN(m_maxTransferCountAttrPtr, "MaxTransferCount", "Max transfer count", true, 3);
+	I_END_COMPONENT
+	
+protected:
+	I_REF(ifile::IFilePersistence, m_basedPersistenceCompPtr);
+	I_REF(ifile::IFilePersistence, m_encryptionBasedPersistenceCompPtr);
+	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
+	I_REF(imtcrypt::IEncryption, m_encryptionCompPtr);
+	I_ATTR(int, m_maxTransferCountAttrPtr);
+};
+
+
+class CDeviceControllerComp: public CDeviceControllerCompBase, virtual public imtcrypt::IEncryptionKeysProvider
+{
+public:
+	typedef CDeviceControllerCompBase BaseClass;
+
+	I_BEGIN_COMPONENT(CDeviceControllerComp)
+		I_REGISTER_INTERFACE(imtcrypt::IEncryptionKeysProvider);
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 		I_ASSIGN(m_featureCollectionCompPtr, "FeatureCollection", "Feature collection", true, "FeatureCollection");
@@ -41,8 +61,8 @@ public:
 		I_ASSIGN(m_softwareTransferCollectionCompPtr, "SoftwareTransferCollection", "Software transfer collection", true, "SoftwareTransferCollection");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
-		I_ASSIGN(m_encryptionCompPtr, "Encryption", "Encrypt/Decrypt instances", true, "Encryption");
-		I_ASSIGN(m_maxTransferCountAttrPtr, "MaxTransferCount", "Max transfer count", true, 3);
+		I_ASSIGN(m_smtpMessageCreatorCompPtr, "SmtpMessageCreator", "Smtp message creator", true, "SmtpMessageCreator");
+		I_ASSIGN(m_smtpClientCompPtr, "SmtpClient", "Smtp client", true, "SmtpClient");
 	I_END_COMPONENT
 
 protected:
@@ -51,9 +71,13 @@ protected:
 	virtual sdl::prolife::Sensors::CTransferLicensesPayload OnTransferLicenses(const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CCreateLicenseFilePayload OnCreateLicenseFile(const sdl::prolife::Sensors::CCreateLicenseFileGqlRequest& createLicenseFileRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual sdl::prolife::Sensors::CDecryptLicenseFilePayload OnDecryptLicenseFile(
-		const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
-		const ::imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const override;
+				const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Sensors::CRequestTransferLicensesPayload OnRequestTransferLicenses(
+				const sdl::prolife::Sensors::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 	// reimplemented (imtcrypt::IEncryptionKeysProvider)
 	virtual QByteArray GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const override;
@@ -72,14 +96,10 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareTransferCollectionCompPtr);
-	I_REF(ifile::IFilePersistence, m_basedPersistenceCompPtr);
-	I_REF(ifile::IFilePersistence, m_encryptionBasedPersistenceCompPtr);
-	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
-
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
-	I_REF(imtcrypt::IEncryption, m_encryptionCompPtr);
-	I_ATTR(int, m_maxTransferCountAttrPtr);
+	I_REF(imtmail::ISmtpClient, m_smtpClientCompPtr);
+	I_REF(imtmail::ISmtpMessageCreator, m_smtpMessageCreatorCompPtr);
 
 private:
 	mutable QByteArray m_productInstanceId;

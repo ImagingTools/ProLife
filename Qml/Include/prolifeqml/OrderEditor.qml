@@ -8,6 +8,7 @@ import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
 import prolifeOrdersSdl 1.0
+import imtbaseImtCollectionSdl 1.0
 
 ViewBase {
     id: orderEditorContainer;

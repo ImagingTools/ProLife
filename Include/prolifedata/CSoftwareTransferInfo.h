@@ -19,6 +19,8 @@ public:
 	virtual void SetSoftwareId(const QByteArray& softwareId) override;
 	virtual int GetTransferCount() const override;
 	virtual void SetTransferCount(int transferCount) override;
+	virtual bool IsTransferLimitExceeded() const override;
+	virtual void SetTransferLimitExceeded(bool exceeded) override;
 	
 	// reimplemented (iser::ISerializable)
 	virtual bool Serialize(iser::IArchive& archive) override;
@@ -32,6 +34,7 @@ public:
 private:
 	QByteArray m_softwareId;
 	int m_transferCount;
+	bool m_exceeded;
 };
 
 

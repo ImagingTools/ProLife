@@ -16,7 +16,8 @@ namespace prolifedata
 // public methods
 
 CSoftwareTransferInfo::CSoftwareTransferInfo()
-	:m_transferCount(0)
+	:m_transferCount(0),
+	m_exceeded(false)
 {
 }
 
@@ -55,6 +56,22 @@ void CSoftwareTransferInfo::SetTransferCount(int transferCount)
 }
 
 
+bool CSoftwareTransferInfo::IsTransferLimitExceeded() const
+{
+	return m_exceeded;
+}
+
+
+void CSoftwareTransferInfo::SetTransferLimitExceeded(bool exceeded)
+{
+	if (m_exceeded != exceeded){
+		istd::CChangeNotifier notifier(this);
+		
+		m_exceeded = exceeded;
+	}
+}
+
+
 // reimplemented (iser::ISerializable)
 
 bool CSoftwareTransferInfo::Serialize(iser::IArchive& archive)
@@ -72,6 +89,11 @@ bool CSoftwareTransferInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.BeginTag(transferCountTag);
 	retVal = retVal && archive.Process(m_transferCount);
 	retVal = retVal && archive.EndTag(transferCountTag);
+	
+	iser::CArchiveTag exceededTag("TransferLimitExceeded", "Transfer limit exceeded", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(exceededTag);
+	retVal = retVal && archive.Process(m_exceeded);
+	retVal = retVal && archive.EndTag(exceededTag);
 
 	return retVal;
 }

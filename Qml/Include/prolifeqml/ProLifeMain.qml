@@ -1,5 +1,4 @@
-//import QtQuick 2.0
-import QtQml
+import QtQuick 2.0
 import Acf 1.0
 import imtgui 1.0
 import imtlicgui 1.0
@@ -9,55 +8,57 @@ import imtguigql 1.0
 import prolifeqml 1.0
 
 ApplicationMain {
-    id: window;
-
-    useWebSocketSubscription: true;
+	id: window;
+	
+	useWebSocketSubscription: true;
 	// canRecoveryPassword: false;
-    authorizationServerConnected: pumaConnectionChecker.status === 1;
-
-    Connections {
-        target: AuthorizationController;
-
+	authorizationServerConnected: pumaConnectionChecker.status === 1;
+	
+	Connections {
+		target: AuthorizationController;
+		
 		function onLoggedIn(){
-            CachedProductCollection.updateModel();
-            CachedLicenseCollection.updateModel();
-            CachedAccountCollection.updateModel();
-            CachedOrderCollection.updateModel();
-            CachedDeviceCollection.updateModel();
-            CachedSoftwareCollection.updateModel();
-        }
-
+			CachedProductCollection.updateModel();
+			CachedLicenseCollection.updateModel();
+			CachedAccountCollection.updateModel();
+			CachedOrderCollection.updateModel();
+			CachedDeviceCollection.updateModel();
+			CachedSoftwareCollection.updateModel();
+		}
+		
 		function onLoggedOut(){
-            CachedProductCollection.clearModel();
+			CachedProductCollection.clearModel();
 			CachedLicenseCollection.clearModel();
-            CachedAccountCollection.clearModel();
-            CachedOrderCollection.clearModel();
-            CachedDeviceCollection.clearModel();
-            CachedSoftwareCollection.clearModel();
-        }
-    }
-
-    WebSocketConnectionChecker {
-        id: pumaConnectionChecker;
+			CachedAccountCollection.clearModel();
+			CachedOrderCollection.clearModel();
+			CachedDeviceCollection.clearModel();
+			CachedSoftwareCollection.clearModel();
+		}
+	}
+	
+	WebSocketConnectionChecker {
+		id: pumaConnectionChecker;
 		gqlCommandId: "PumaWsConnection";
 		subscriptionManager: window.subscriptionManager;
-    }
-
-    WebSocketConnectionChecker {
-        id: lisaConnectionChecker;
+		onStatusChanged: {
+			console.log("pumaConnectionChecker onStatusChanged", status)
+		}
+	}
+	
+	WebSocketConnectionChecker {
+		id: lisaConnectionChecker;
 		gqlCommandId: "LisaWsConnection";
 		subscriptionManager: window.subscriptionManager;
-        onStatusChanged: {
+		onStatusChanged: {
 			if (status === 1){
 				if (!CachedProductCollection.completed){
 					CachedProductCollection.updateModel();
 				}
-
+				
 				if (!CachedLicenseCollection.completed){
 					CachedLicenseCollection.updateModel();
 				}
-
-				console.log("Lisa connected");
+				
 				if (PopupManager.messageIsOpened(gqlCommandId)){
 					PopupManager.closeMessage(gqlCommandId);
 				}
@@ -66,8 +67,8 @@ ApplicationMain {
 				if (!PopupManager.messageIsOpened(gqlCommandId)){
 					PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false, gqlCommandId);
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 }
 

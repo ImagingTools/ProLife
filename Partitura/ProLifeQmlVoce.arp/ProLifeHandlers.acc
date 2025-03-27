@@ -177,6 +177,9 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SmtpMessageFromParam" Type="Reference" ExportId="SmtpMessageFromParam">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

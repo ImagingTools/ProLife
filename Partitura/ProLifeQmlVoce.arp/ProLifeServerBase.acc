@@ -318,6 +318,9 @@
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/UserSessionsRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SmtpMessageFromParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/SmtpUsernameParam"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareSqlRepository"/>
                     </AttributeInfo>

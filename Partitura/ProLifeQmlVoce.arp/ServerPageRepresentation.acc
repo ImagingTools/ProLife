@@ -2,28 +2,28 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="BackupFolder" PackageId="ImtFilePck" ComponentId="FileNameParamRepresentationController">
+        <Element Id="BackupFolder" PackageId="ImtRestPck" ComponentId="FileNameParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="BackupFolder"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Backup Folder"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/FilePickerParam.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -37,10 +37,10 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Backup"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Backup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
@@ -50,6 +50,9 @@
                                 <Value>BackupFolder</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -63,14 +66,14 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="CacheClearingInterval"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Cache clearing interval"/>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Cache Clearing Interval"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsIntegerInput.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -81,35 +84,17 @@
         <Element Id="DatabaseAccessSettingsRepresentation" PackageId="ImtRestPck" ComponentId="DatabaseAccessSettingsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseNameSource" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HostSource" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Database"/>
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseAccessSettings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Database"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PasswordSource" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/DatabaseParams.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PortSource" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsIntegerInput.qml"/>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Database Access Settings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UsernameSource" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Settings/SettingsTextInput.qml"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -120,10 +105,10 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Database"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Database"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
@@ -145,14 +130,14 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="LisaUrl"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Lisa URL"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/UrlParamEditor.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -166,14 +151,14 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="PumaUrl"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Puma URL"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/UrlParamEditor.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -181,20 +166,23 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SchedulerParams" PackageId="ImtAppPck" ComponentId="SchedulerParamsRepresentationController">
+        <Element Id="SchedulerParams" PackageId="ImtRestPck" ComponentId="SchedulerParamsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="DateFormat" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="dd-MM-yyyy HH:mm"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="SchedulerParams"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Scheduler"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Application/SchedulerParams.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -208,14 +196,11 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ServerPort"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Server Port"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/UrlParamEditor.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -229,10 +214,10 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Server"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Server"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
@@ -258,10 +243,10 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
@@ -270,8 +255,27 @@
                                 <Value>ServerSettingsRepresentation</Value>
                                 <Value>DatabaseSettingsRepresentation</Value>
                                 <Value>BackupSettingsRepresentation</Value>
+                                <Value>SmtpParamsRepresentation</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SmtpParamsRepresentation" PackageId="ImtHttpServerVoce" ComponentId="SmtpParamsRepresentation">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -285,14 +289,14 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectId" Type="Id" ExportId="">
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="WebSocketServerPort"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectName" Type="Text" ExportId="">
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Web Socket Server Port"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToQml" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtgui/Params/UrlParamEditor.qml"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -303,7 +307,7 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="SettingsRepresentation"/>
+        <Interface InterfaceId="imtrest::IJsonRepresentationController" ComponentId="SettingsRepresentation"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="SettingsRepresentation"/>
     </ExportedInterfaces>
     <ExportedComponents>

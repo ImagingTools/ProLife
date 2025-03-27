@@ -28,11 +28,11 @@
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>ProLifeServerBase/DatabaseEngine</Value>
                                 <Value>ProLifeServerBase/HttpServerFramework</Value>
                                 <Value>ProLifeServerBase/WebSocketServerFramework</Value>
-                                <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
-                                <Value>ProLifeServerBase/DatabaseEngine</Value>
+                                <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

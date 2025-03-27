@@ -17,6 +17,7 @@
 #include <imtlic/ILicenseDefinition.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/IFeatureInfo.h>
+#include <imtauth/CUserInfo.h>
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
@@ -122,7 +123,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 	if (inputArguments.input.Version_1_0->Project){
 		project = *inputArguments.input.Version_1_0->Project;
 	}
-
+	
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
@@ -253,6 +254,9 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
 	retVal.Version_1_0.emplace();
 	
+	retVal.Version_1_0->Ok = false;
+	retVal.Version_1_0->Limit = false;
+	
 	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		I_CRITICAL();
@@ -321,15 +325,30 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
-			const prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr =
-						dynamic_cast<const prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
+			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr = dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
+			if (softwareTransferInfoPtr != nullptr){
+				if (softwareTransferInfoPtr->IsTransferLimitExceeded()){
+					errorMessage = QString("Unable to transfer licenses. Transfer limit exceeded");
+					SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+					
+					return retVal;
+				}
+			}
+		}
+	}
+	
+	// Checking the number of license transfers
+	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr =
+				dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
 			if (softwareTransferInfoPtr != nullptr){
 				int softwareCount = softwareTransferInfoPtr->GetTransferCount();
 				int maxTransferCount = m_maxTransferCountAttrPtr.IsValid() ? *m_maxTransferCountAttrPtr : 3;
 				if (softwareCount >= maxTransferCount){
-					errorMessage = QString("Unable to transfer licenses from '%1' to '%2'. Error: The transfer limit for license '%3' has been exceeded")
-								.arg(qPrintable(fromDeviceId), qPrintable(toDeviceId), qPrintable(softwareId));
-					SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+					retVal.Version_1_0->Limit = true;
+					
 					return retVal;
 				}
 			}
@@ -399,6 +418,8 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 			}
 		}
 	}
+	
+	retVal.Version_1_0->Ok = true;
 	
 	return retVal;
 }
@@ -656,7 +677,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	
 	if (!file.open(QIODevice::ReadOnly)){
 		errorMessage = QString("Unable to create license file for hardware '%1'. Error: File '%1' could not be open")
-							.arg(qPrintable(deviceId), filePathTmp);
+		.arg(qPrintable(deviceId), filePathTmp);
 		SendCriticalMessage(0, errorMessage, "CDeviceControllerComp");
 		
 		return retVal;
@@ -782,6 +803,149 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 }
 
 
+sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::OnRequestTransferLicenses(
+	const sdl::prolife::Sensors::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
+	const ::imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
+{
+	sdl::prolife::Sensors::CRequestTransferLicensesPayload response;
+	response.Version_1_0.emplace();
+	response.Version_1_0->Result = false;
+	
+	if (!m_smtpMessageCreatorCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SmtpMessageCreator' was not set", "CDeviceControllerComp");
+		return response;
+	}
+	
+	if (!m_smtpClientCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SmtpClient' was not set", "CDeviceControllerComp");
+		return response;
+	}
+	
+	sdl::prolife::Sensors::RequestTransferLicensesRequestArguments arguments = requestTransferLicensesRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.has_value()){
+		Q_ASSERT(false);
+		errorMessage = QString("Unable to request transfer license. Error: Request invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	QByteArray fromDeviceId;
+	if (arguments.input.Version_1_0->FromDeviceId){
+		fromDeviceId = *arguments.input.Version_1_0->FromDeviceId;
+	}
+	
+	QByteArray toDeviceId;
+	if (arguments.input.Version_1_0->ToDeviceId){
+		toDeviceId = *arguments.input.Version_1_0->ToDeviceId;
+	}
+	
+	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
+	if (!fromDeviceBindingInfoPtr.IsValid()){
+		errorMessage = QString("Unable to request transfer license. Error: From device is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	istd::TDelPtr<prolifedata::IHardwareProductBinding> toDeviceBindingInfoPtr = GetOrCreateDeviceBinding(toDeviceId);
+	if (!toDeviceBindingInfoPtr.IsValid()){
+		errorMessage = QString("Unable to request transfer license. Error: To device is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	QByteArrayList fromDeviceSoftwareIds = fromDeviceBindingInfoPtr->GetSoftwareIds();
+	
+	bool ok = false;
+	
+	// Checking that there are expired licenses among them
+	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr = dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
+			if (softwareTransferInfoPtr != nullptr){
+				int softwareCount = softwareTransferInfoPtr->GetTransferCount();
+				int maxTransferCount = m_maxTransferCountAttrPtr.IsValid() ? *m_maxTransferCountAttrPtr : 3;
+				
+				if (softwareCount >= maxTransferCount){
+					ok = true;
+				}
+			}
+		}
+	}
+	
+	if (!ok){
+		errorMessage = QString("Unable to request transfer license. Error: There are no licenses for which the limit has been reached");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	QByteArrayList toDeviceSoftwareIds = toDeviceBindingInfoPtr->GetSoftwareIds();
+	if (!toDeviceSoftwareIds.isEmpty()){
+		errorMessage = QString("Unable to request transfer license. Error: To device already contains licenses");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr){
+		errorMessage = QString("Unable to request transfer license. Error: GraphQL context from request is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr){
+		errorMessage = QString("Unable to request transfer license. Error: User info from GraphQL context is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	QString userName = userInfoPtr->GetName();
+	QString userEmail = userInfoPtr->GetMail();
+	
+	istd::TDelPtr<imtmail::ISmtpMessage> messagePtr = m_smtpMessageCreatorCompPtr->CreateMessage();
+	if (!messagePtr.IsValid()){
+		errorMessage = QString("Unable to request transfer license. Error: User info from GraphQL context is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+	
+	messagePtr->SetSubject(QString("Transferring licenses for user '%1'").arg(userName));
+	messagePtr->SetBody(QString("User '%1' requests a license transfer because the limit has been exceeded").arg(userName));
+	
+	messagePtr->SetTo(userEmail);
+	
+	if (!m_smtpClientCompPtr->SendEmail(*messagePtr.GetPtr())){
+		errorMessage = QString("Unable to request transfer license. Error when trying to send a message");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+
+	// Set limit exceeded
+	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr = dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
+			if (softwareTransferInfoPtr != nullptr){
+				softwareTransferInfoPtr->SetTransferLimitExceeded(true);
+				
+				if (!m_softwareTransferCollectionCompPtr->SetObjectData(softwareId, *softwareTransferInfoPtr)){
+					errorMessage = QString("Unable to update object for software transfer info");
+					SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+					
+					return response;
+				}
+			}
+		}
+	}
+	
+	response.Version_1_0->Result = true;
+	
+	return response;
+}
+
+
 // reimplemented (imtcrypt::IEncryptionKeysProvider)
 
 QByteArray CDeviceControllerComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const
@@ -805,6 +969,10 @@ QByteArray CDeviceControllerComp::GetEncryptionKey(imtcrypt::IEncryptionKeysProv
 
 prolifedata::IHardwareProductBinding* CDeviceControllerComp::GetOrCreateDeviceBinding(const QByteArray& deviceId) const
 {
+	if (deviceId.isEmpty()){
+		return nullptr;
+	}
+	
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
 		istd::TDelPtr<prolifedata::IHardwareProductBinding> deviceBindingInfoPtr;
