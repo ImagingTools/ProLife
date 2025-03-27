@@ -48,6 +48,7 @@ Item {
 			SoftwareProductItemTypeMetaInfo.s_expiration
 		];
 		onCollectionModelChanged: {
+			console.log("softwareCollection onCollectionModelChanged", collectionModel.toJson())
 			contentLoader.item.softwaresModel = collectionModel;
 			contentLoader.item.doUpdateGui();
 		}
@@ -181,11 +182,13 @@ Item {
 			let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
 			if (licensesModel){
 				contentLoader.item.productLicensesModel = licensesModel;
+				console.log("productLicensesModel", contentLoader.item.productLicensesModel.toJson());
 			}
 			
 			if (contentLoader.item.productLicensesModel){
 				contentLoader.item.productLicensesModel.refresh()
 			}
+			
 			
 			if (productItem.m_categoryId === productEditor.hardwareCategoryId){
 				deviceCollection.filter.removeFieldFilter(deviceTypeFilter);

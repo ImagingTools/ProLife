@@ -231,15 +231,10 @@ ViewBase {
 						articleValue.text = licenseId;
 					}
 					
-					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)){
-						let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)
-						
-						softwareValue.text = serialNumber;
-					}
-					
 					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)){
 						let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)
 						
+						console.log("expiration", expiration)
 						if (expiration === ""){
 							expirationValue.text = qsTr("Unlimited");
 						}

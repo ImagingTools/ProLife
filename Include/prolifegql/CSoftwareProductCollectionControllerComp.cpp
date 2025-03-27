@@ -197,6 +197,18 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.Project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
 	}
 	
+	if (requestInfo.items.isExpirationRequested) {
+		imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
+		if (!licenseIds.isEmpty()){
+			QByteArray licenseId = licenseIds[0];
+			
+			const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
+			if (licenseInstancePtr != nullptr){
+				representationObject.Expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
+			}
+		}
+	}
+	
 	if (requestInfo.items.isStatusRequested){
 		QByteArray hardwareMacAddress = hardwareId.toUtf8();
 		bool isPaired = !hardwareMacAddress.isEmpty();

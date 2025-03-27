@@ -51,7 +51,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 
 			bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectUuid, serialNumber, *m_softwareInstanceCollectionCompPtr);
 			if (!ok){
-				errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because serial number '%2' already exists")).arg(productName).arg(qPrintable(serialNumber));
+				errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because serial number '%2' already exists")).arg(productName, qPrintable(serialNumber));
 				return false;
 			}
 
@@ -62,7 +62,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 					QByteArray currentOrderId = softwareInfoPtr->GetOrderId();
 					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
 						QByteArray softwareSerialNumber = softwareInfoPtr->GetSerialNumber();
-						errorMessage = QString("It is not possible to add a product that is linked to another order. Software product '%1' with ID '%2'").arg(productName).arg(softwareSerialNumber);
+						errorMessage = QString("It is not possible to add a product that is linked to another order. Software product '%1' with ID '%2'").arg(productName, qPrintable(softwareSerialNumber));
 						return false;
 					}
 				}
@@ -74,7 +74,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 				if (!macAddress.isEmpty()){
 					bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
 					if (!ok){
-						errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName).arg(qPrintable(macAddress));
+						errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because MAC address '%2' already exists")).arg(productName, qPrintable(macAddress));
 						return false;
 					}
 				}
@@ -86,7 +86,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 				if (hardwareInfoPtr != nullptr){
 					QByteArray currentOrderId = hardwareInfoPtr->GetOrderId();
 					if (!currentOrderId.isEmpty() && orderUuid != currentOrderId){
-						errorMessage = QString("It is not possible to save a product that is linked to another order. Hardware product '%1' with ID '%2'").arg(productName).arg(hardwareInfoPtr->GetMacAddress());
+						errorMessage = QString("It is not possible to save a product that is linked to another order. Hardware product '%1' with ID '%2'").arg(productName, qPrintable(hardwareInfoPtr->GetMacAddress()));
 						return false;
 					}
 				}
@@ -97,7 +97,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 				if (!serialNumber.isEmpty()){
 					bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
 					if (!serialNumberIsValid){
-						errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName).arg(serialNumber);
+						errorMessage = QString("It is not possible to save the product '%1' because Serial Number: '%2' already exists").arg(productName, qPrintable(serialNumber));
 						return false;
 					}
 				}
@@ -980,7 +980,7 @@ bool COrderCollectionControllerComp::CheckNewProducts(
 					operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, softwareInstancePtr.GetPtr());
 				}
 
-				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
+				QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("SoftwareProduct"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
 				if (result.isEmpty()){
 					return false;
 				}
@@ -1090,7 +1090,7 @@ bool COrderCollectionControllerComp::CreateNewSoftware(
 		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, softwareInstancePtr.GetPtr());
 	}
 
-	QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("Software"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
+	QByteArray result = m_softwareInstanceCollectionCompPtr->InsertNewObject(QByteArray("SoftwareProduct"), "", "", softwareInstancePtr.PopPtr(), orderProductUuid, nullptr, nullptr, operationContextPtr.GetPtr());
 	if (result.isEmpty()){
 		return false;
 	}

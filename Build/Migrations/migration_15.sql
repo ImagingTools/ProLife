@@ -11,8 +11,3 @@ CREATE INDEX "DevicesOrderIdIndex" ON "Devices" (("DataMetaInfo"->>'OrderId'));
 CREATE INDEX "DevicesStatusIndex" ON "Devices" (("DataMetaInfo"->>'Status'));
 
 CREATE INDEX "OrdersCustomerIdIndex" ON "Orders" (("DataMetaInfo"->>'CustomerId'));
-
-DROP TABLE IF EXISTS "Roles";
-DROP TABLE IF EXISTS "Users";
-DROP TABLE IF EXISTS "UserGroups";
-DROP TABLE IF EXISTS "UserSessions";

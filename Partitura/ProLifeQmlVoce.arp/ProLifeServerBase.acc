@@ -44,7 +44,7 @@
                         <Data IsEnabled="true" Value="7778"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultSettingsPath" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings.xml"/>
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerSettings.xml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -55,7 +55,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="LocationSettingsType" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="105"/>
+                        <Data IsEnabled="true" Value="104"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -283,9 +283,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="JwtSessionController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaRepositories/CachedLicenseRepository"/>

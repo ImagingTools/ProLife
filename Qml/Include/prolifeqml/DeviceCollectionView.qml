@@ -14,7 +14,7 @@ RemoteCollectionView {
 	anchors.fill: parent;
 
 	collectionId: "Devices";
-	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId]
+	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId, DeviceItemTypeMetaInfo.s_deviceType]
 	
 	commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
 			collectionView: container;

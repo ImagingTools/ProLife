@@ -104,8 +104,6 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		
 		return false;
 	}
-	
-	QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 
 	sdl::prolife::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
 
@@ -153,9 +151,13 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isDeviceTypeRequested){
-		representationObject.DeviceType = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString().toUtf8();
+		representationObject.DeviceType = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
-
+	
+	if (requestInfo.items.isProductNameRequested){
+		representationObject.ProductName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString().toUtf8();
+	}
+	
 	if (requestInfo.items.isProductUuidRequested){
 		representationObject.ProductUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
