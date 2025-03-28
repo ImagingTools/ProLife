@@ -43,13 +43,14 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
+				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_ID, customerId);
+				
 				QString customerName = customerInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_NAME, customerName);
 			}
 		}
 	}
 	
-	metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_ID, customerId);
 	metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_ORDER_STATUS, orderInfoPtr->GetOrderStatus());
 	metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_ORDER_ID, orderInfoPtr->GetOrderId());
 	metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_PURCHASE_ORDER_ID, orderInfoPtr->GetPurchaseOrderId());

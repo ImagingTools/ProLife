@@ -110,7 +110,7 @@ QString COrderChangeGeneratorComp::CreateCustomOperationDescription(
 			QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
 			languageId,
 			"prolifegql::COrderChangeGeneratorComp");
-
+		
 		change = change.arg(GetProductName(newValue));
 
 		retVal += change + "\n";
@@ -207,6 +207,11 @@ QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) c
 
 QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) const
 {
+	QUuid uuid = QUuid::fromString(productId);
+	if (uuid.isNull()){
+		return productId;
+	}
+	
 	QByteArray lisaProductId;
 	QByteArray productName;
 

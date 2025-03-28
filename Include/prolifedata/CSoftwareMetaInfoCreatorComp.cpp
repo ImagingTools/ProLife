@@ -59,6 +59,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 				QByteArray deliveryId = orderInfoPtr->GetOrderId();
 				QByteArray purchaseId = orderInfoPtr->GetPurchaseOrderId();
 				
+				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, orderId);
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID, deliveryId);
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID, purchaseId);
 				
@@ -66,8 +67,6 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	}
-	
-	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, orderId);
 
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
@@ -83,13 +82,14 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	}
 	
 	QByteArray productId = softwareInfoPtr->GetProductId();
-	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID, productId);
 	
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
+				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID, productId);
+				
 				QByteArray id = productInfoPtr->GetProductId();
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID, id);
 				
@@ -101,14 +101,14 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
-		QByteArray licenseId = licenseIds[0];
-		metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID, licenseId);
-		
+		QByteArray licenseId = licenseIds[0];		
 		if (m_licenseCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr licenseDataPtr;
 			if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
 				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 				if (licenseInfoPtr != nullptr){
+					metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID, licenseId);
+					
 					QByteArray id = licenseInfoPtr->GetLicenseId();
 					metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID, id);
 					
@@ -118,11 +118,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	}
-	
-	if (objectId == "87ba953f-d47a-4725-97f1-2e657788a702"){
-		qDebug() << "fdfdfs";
-	}
-	
+
 	if (m_hardwareBindingCollectionCompPtr.IsValid()){
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
 		fieldFilter.fieldId = "SoftwareIds";

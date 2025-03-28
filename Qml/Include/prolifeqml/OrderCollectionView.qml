@@ -75,10 +75,14 @@ RemoteCollectionView {
 			height: 40;
 			
 			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;			
+
 			
-			LocalizationEvent {
-				onLocalizationChanged: {
-				}
+			onWidthChanged: {
+				checkWidth();
+			}
+			
+			function checkWidth(){
+				content.visible = width - filtermenu.width > content.width + 2 * content.spacing
 			}
 
 			Row {
@@ -106,7 +110,7 @@ RemoteCollectionView {
 				baseElement: mainItem.baseElement;
 				complexFilter: mainItem.complexFilter;
 				
-				width: 325;
+				// width: 325;
 			}
 		}
 	}

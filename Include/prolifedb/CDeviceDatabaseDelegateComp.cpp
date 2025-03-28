@@ -42,7 +42,7 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 			
 			array += "]";
 			
-			filterQuery += QString(R"((acc."Document"->'Groups' ?| %0) OR (root."Document"->>'OrderId' = '' AND users."Document"->'Groups' ?| %0))").arg(array);
+			filterQuery += QString(R"((acc."Document"->'Groups' ?| %0) OR (root."DataMetaInfo"->>'OrderId' = '' AND users."Document"->'Groups' ?| %0))").arg(array);
 		}
 		else{
 			filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
@@ -82,7 +82,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 {
 	return QByteArray(R"(
 			LEFT JOIN "Orders" AS orders
-				ON orders."DocumentId"::text = root."Document"->>'OrderId'
+				ON orders."DocumentId"::text = root."DataMetaInfo"->>'OrderId'
 				AND orders."State" = 'Active'
 			LEFT JOIN "Accounts" AS acc
 				ON acc."DocumentId"::text = orders."Document"->>'OrderCustomer'
