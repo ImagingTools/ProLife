@@ -32,6 +32,10 @@ if(NOT DEFINED PROLIFEDIR)
 	set(PROLIFEDIR "$ENV{PROLIFEDIR}")
 endif()
 
+if(NOT DEFINED IMTCOREDIR_BUILD)
+	set(IMTCOREDIR_BUILD "$ENV{IMTCOREDIR}")
+endif()
+
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
 
 get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
@@ -46,11 +50,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCusto
 # initialize SDL
 if (NOT IMT_DevAll_BUILD)
 	get_filename_component(CACHE_BASE_DIR_PATH "${IMTCOREDIR}/AuxInclude/${TARGETNAME}" ABSOLUTE)
-		ImtCoreAddSdlSearchPath("${CACHE_BASE_DIR_PATH}")
-		ImtCoreAddSdlSearchPath("${AUX_INCLUDE_DIR}/..")
+	ImtCoreAddSdlSearchPath("${CACHE_BASE_DIR_PATH}")
+	ImtCoreAddSdlSearchPath("${AUX_INCLUDE_DIR}/..")
 		
-		message("PROLIFE CACHE_BASE_DIR_PATH ${CACHE_BASE_DIR_PATH}")
-		message("PROLIFE AUX_INCLUDE_DIR ${AUX_INCLUDE_DIR}/..")
+	message("PROLIFE CACHE_BASE_DIR_PATH ${CACHE_BASE_DIR_PATH}")
+	message("PROLIFE AUX_INCLUDE_DIR ${AUX_INCLUDE_DIR}/..")
 endif()
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
 
