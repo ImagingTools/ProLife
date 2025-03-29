@@ -207,7 +207,7 @@ QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) c
 
 QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) const
 {
-	QUuid uuid = QUuid::fromString(productId);
+	QUuid uuid = QUuid::fromRfc4122(productId);
 	if (uuid.isNull()){
 		return productId;
 	}
