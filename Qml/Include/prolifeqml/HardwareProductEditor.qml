@@ -167,7 +167,7 @@ ViewBase {
 			controlWidth: 500;
 			sourceModel: root.devicesModel;
 			name: qsTr("Hardware-ID");
-			nameId: "DeviceType";
+			nameId: "ProductName";
 			bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 			
 			// SMacAddress1 - sxxxxxxxxxxxx
@@ -175,14 +175,14 @@ ViewBase {
 			// SMacAddress3 - s:xx:xx:xx:xx:xx:xx
 			// SMacAddress4 - sxx:xx:xx:xx:xx:xx
 			
-			filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "DeviceType", "MacAddress"];
+			filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "ProductName", "MacAddress"];
 			
 			delegate: Component {
 				FilterableComboBoxDelegate {
 					width: comboBoxRef ? comboBoxRef.width : 0;
 					comboBoxRef: deviceCB.cbRef;
 					description: model.MacAddress === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model.MacAddress;
-					text: model.DeviceType;
+					text: model.ProductName;
 				}
 			}
 			
