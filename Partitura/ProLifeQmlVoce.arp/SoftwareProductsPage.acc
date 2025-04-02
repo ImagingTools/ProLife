@@ -192,7 +192,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PermissionsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
+        <Element Id="PermissionsJoiner" PackageId="ImtServerAppPck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">

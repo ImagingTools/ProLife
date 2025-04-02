@@ -10,7 +10,7 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="BackupFolder" PackageId="ImtRestPck" ComponentId="FileNameParamRepresentationController">
+        <Element Id="BackupFolder" PackageId="ImtServerAppPck" ComponentId="FileNameParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -31,7 +31,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="BackupSettingsRepresentation" PackageId="ImtRestPck" ComponentId="ParamSetRepresentationController">
+        <Element Id="BackupSettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -60,28 +60,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="CacheClearingIntervalRepresentation" PackageId="ImtRestPck" ComponentId="TextParamRepresentationController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="CacheClearingInterval"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Cache Clearing Interval"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="DatabaseAccessSettingsRepresentation" PackageId="ImtRestPck" ComponentId="DatabaseAccessSettingsRepresentationController">
+        <Element Id="DatabaseAccessSettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="DatabaseAccessSettingsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -99,7 +78,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DatabaseSettingsRepresentation" PackageId="ImtRestPck" ComponentId="ParamSetRepresentationController">
+        <Element Id="DatabaseSettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -124,7 +103,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaUrlRepresentation" PackageId="ImtRestPck" ComponentId="UrlParamRepresentationController">
+        <Element Id="LisaUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -145,7 +124,28 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PumaUrlRepresentation" PackageId="ImtRestPck" ComponentId="UrlParamRepresentationController">
+        <Element Id="LisaWsUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="LisaWebSocketUrl"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Lisa Web Socket URL"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PumaUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -166,7 +166,28 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SchedulerParams" PackageId="ImtRestPck" ComponentId="SchedulerParamsRepresentationController">
+        <Element Id="PumaWSUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ModelId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="PumaWebSocketUrl"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Puma Web Socket URL"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SchedulerParams" PackageId="ImtServerAppPck" ComponentId="SchedulerParamsRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DateFormat" Type="String" ExportId="">
@@ -190,17 +211,17 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ServerPortRepresentation" PackageId="ImtRestPck" ComponentId="UrlParamRepresentationController">
+        <Element Id="ServerPortRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ServerPort"/>
+                        <Data IsEnabled="true" Value="ServerUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Server Port"/>
+                        <Data IsEnabled="true" Value="Server URL"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
@@ -208,7 +229,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ServerSettingsRepresentation" PackageId="ImtRestPck" ComponentId="ParamSetRepresentationController">
+        <Element Id="ServerSettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -223,11 +244,12 @@
                     <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LisaUrlRepresentation</Value>
-                                <Value>PumaUrlRepresentation</Value>
                                 <Value>ServerPortRepresentation</Value>
-                                <Value>CacheClearingIntervalRepresentation</Value>
-                                <Value>WebSocketServerPortRepresentation</Value>
+                                <Value>WsUrlRepresentation</Value>
+                                <Value>PumaUrlRepresentation</Value>
+                                <Value>PumaWSUrlRepresentation</Value>
+                                <Value>LisaUrlRepresentation</Value>
+                                <Value>LisaWsUrlRepresentation</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -237,7 +259,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SettingsRepresentation" PackageId="ImtRestPck" ComponentId="ParamSetRepresentationController">
+        <Element Id="SettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -255,6 +277,7 @@
                                 <Value>ServerSettingsRepresentation</Value>
                                 <Value>DatabaseSettingsRepresentation</Value>
                                 <Value>BackupSettingsRepresentation</Value>
+                                <Value>SslConfigurationRepresentation</Value>
                                 <Value>SmtpParamsRepresentation</Value>
                             </Values>
                         </Data>
@@ -283,17 +306,32 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="WebSocketServerPortRepresentation" PackageId="ImtRestPck" ComponentId="UrlParamRepresentationController">
+        <Element Id="SslConfigurationRepresentation" PackageId="ImtHttpServerVoce" ComponentId="SslConfigurationRepresentation">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="WsUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="WebSocketServerPort"/>
+                        <Data IsEnabled="true" Value="WebSocketUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Web Socket Server Port"/>
+                        <Data IsEnabled="true" Value="Web Socket URL"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -307,7 +345,7 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtrest::IJsonRepresentationController" ComponentId="SettingsRepresentation"/>
+        <Interface InterfaceId="imtserverapp::IJsonRepresentationController" ComponentId="SettingsRepresentation"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="SettingsRepresentation"/>
     </ExportedInterfaces>
     <ExportedComponents>

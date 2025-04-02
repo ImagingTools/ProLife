@@ -8,19 +8,21 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="BackupFolder" X="875" Y="350" Note=""/>
-        <Element ComponentName="BackupSettingsRepresentation" X="825" Y="150" Note=""/>
-        <Element ComponentName="CacheClearingIntervalRepresentation" X="175" Y="675" Note=""/>
-        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="525" Y="275" Note=""/>
-        <Element ComponentName="DatabaseSettingsRepresentation" X="500" Y="150" Note=""/>
-        <Element ComponentName="LisaUrlRepresentation" X="175" Y="375" Note=""/>
-        <Element ComponentName="PumaUrlRepresentation" X="175" Y="475" Note=""/>
-        <Element ComponentName="SchedulerParams" X="875" Y="275" Note=""/>
-        <Element ComponentName="ServerPortRepresentation" X="175" Y="275" Note=""/>
-        <Element ComponentName="ServerSettingsRepresentation" X="175" Y="150" Note=""/>
-        <Element ComponentName="SettingsRepresentation" X="600" Y="50" Note=""/>
+        <Element ComponentName="BackupFolder" X="975" Y="550" Note=""/>
+        <Element ComponentName="BackupSettingsRepresentation" X="950" Y="350" Note=""/>
+        <Element ComponentName="DatabaseAccessSettingsRepresentation" X="600" Y="475" Note=""/>
+        <Element ComponentName="DatabaseSettingsRepresentation" X="600" Y="350" Note=""/>
+        <Element ComponentName="LisaUrlRepresentation" X="175" Y="500" Note=""/>
+        <Element ComponentName="LisaWsUrlRepresentation" X="175" Y="575" Note=""/>
+        <Element ComponentName="PumaUrlRepresentation" X="600" Y="750" Note=""/>
+        <Element ComponentName="PumaWSUrlRepresentation" X="575" Y="675" Note=""/>
+        <Element ComponentName="SchedulerParams" X="975" Y="475" Note=""/>
+        <Element ComponentName="ServerPortRepresentation" X="175" Y="750" Note=""/>
+        <Element ComponentName="ServerSettingsRepresentation" X="175" Y="350" Note=""/>
+        <Element ComponentName="SettingsRepresentation" X="600" Y="200" Note=""/>
         <Element ComponentName="SmtpParamsRepresentation" X="1000" Y="75" Note=""/>
-        <Element ComponentName="WebSocketServerPortRepresentation" X="175" Y="575" Note=""/>
+        <Element ComponentName="SslConfigurationRepresentation" X="600" Y="75" Note=""/>
+        <Element ComponentName="WsUrlRepresentation" X="175" Y="675" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

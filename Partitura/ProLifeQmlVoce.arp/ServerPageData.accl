@@ -13,6 +13,7 @@
         <Element ComponentName="Database" X="150" Y="350" Note=""/>
         <Element ComponentName="DatabaseAccessSettings" X="125" Y="525" Note=""/>
         <Element ComponentName="FileAutoPersistence" X="575" Y="50" Note=""/>
+        <Element ComponentName="FileBasedSslConfiguration" X="200" Y="150" Note=""/>
         <Element ComponentName="FileNameParam" X="1075" Y="350" Note=""/>
         <Element ComponentName="LisaUrlParam" X="175" Y="650" Note=""/>
         <Element ComponentName="LisaWebSocketParam" X="225" Y="750" Note=""/>

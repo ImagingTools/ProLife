@@ -10,7 +10,7 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountCommands" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountCommands" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -29,7 +29,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountItem" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountItem" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -48,7 +48,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountUpdate" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountUpdate" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -72,7 +72,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsAdd" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsAdd" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -91,7 +91,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsCommands" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsCommands" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -110,7 +110,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsInfo" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsInfo" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -129,7 +129,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsList" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsList" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -148,7 +148,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsRemove" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsRemove" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -167,7 +167,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="AccountsSetDescription" PackageId="ImtRestPck" ComponentId="SingleCommandPermissionsProvider">
+        <Element Id="AccountsSetDescription" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandId" Type="Id" ExportId="">
@@ -186,7 +186,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="PermissionsJoiner" PackageId="ImtRestPck" ComponentId="CommandPermissionsProviderJoiner">
+        <Element Id="PermissionsJoiner" PackageId="ImtServerAppPck" ComponentId="CommandPermissionsProviderJoiner">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">

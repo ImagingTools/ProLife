@@ -190,6 +190,15 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="FileBasedSslConfiguration" PackageId="ImtComVoce" ComponentId="FileBasedSslConfiguration">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="EnableSsl" Type="Boolean" ExportId="EnableSsl">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="FileNameParam" PackageId="FilePck" ComponentId="FileNameParam">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -239,6 +248,7 @@
                                 <Value>Backup</Value>
                                 <Value>LoggingParams</Value>
                                 <Value>SmtpServerParams</Value>
+                                <Value>FileBasedSslConfiguration</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -250,6 +260,7 @@
                                 <Value>Backup</Value>
                                 <Value>Log</Value>
                                 <Value>SmtpServer</Value>
+                                <Value>SslConfiguration</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -299,6 +310,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>LisaUrlParam</Value>
+                                <Value>LisaWebSocketParam</Value>
                                 <Value>PumaUrlParam</Value>
                                 <Value>PumaWebSocketParam</Value>
                                 <Value>ServerPort</Value>
@@ -310,10 +322,11 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>LisaUrl</Value>
+                                <Value>LisaWebSocketUrl</Value>
                                 <Value>PumaUrl</Value>
                                 <Value>PumaWebSocketUrl</Value>
-                                <Value>ServerPort</Value>
-                                <Value>WebSocketServerPort</Value>
+                                <Value>ServerUrl</Value>
+                                <Value>WebSocketUrl</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

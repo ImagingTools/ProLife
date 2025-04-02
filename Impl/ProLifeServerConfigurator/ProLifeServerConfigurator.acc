@@ -118,6 +118,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="ServerPageData/TracingConfiguration"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -128,7 +131,7 @@
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
                     <Interface InterfaceId="imod::IModel" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="imtrest::IJsonRepresentationController" ComponentId="ServerPageRepresentation"/>
+                    <Interface InterfaceId="imtserverapp::IJsonRepresentationController" ComponentId="ServerPageRepresentation"/>
                     <Interface InterfaceId="iprm::IParamsSet" ComponentId="ServerPageData"/>
                     <Interface InterfaceId="iser::ISerializable" ComponentId="ServerPageData"/>
                     <Interface InterfaceId="istd::IChangeable" ComponentId="ServerPageData"/>
