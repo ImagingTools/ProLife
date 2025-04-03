@@ -138,7 +138,7 @@ Item {
 						model: CachedProductCollection.softwareProductsModel;
 						changeable: usedLicensesElementView.collection && usedLicensesElementView.collection.table.elementsList.count === 0;
 						bottomComp: currentIndex >= 0 ? undefined : productErrorComp
-						
+						controlWidth: 300
 						onCurrentIndexChanged: {
 							if (productEditor.blockUpdatingModel){
 								return;
