@@ -19,7 +19,6 @@ ViewBase {
 	property OrderedProduct productItem: model ? model : null;
 	
 	function updateGui(){
-		console.log("updateGui", productItem);
 		let isNew = productItem.m_isNew;
 		if (isNew){
 			switchNewSensor.checked = true;
@@ -49,11 +48,7 @@ ViewBase {
 			if (deviceCB.sourceModel){
 				for (let i = 0; i < deviceCB.sourceModel.getItemsCount(); i++){
 					let id = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_id, i);
-					console.log("id", id);
-					
 					if (id === deviceId){
-						console.log("===", id);
-						
 						deviceCB.currentIndex = i;
 						break;
 					}
@@ -167,7 +162,7 @@ ViewBase {
 			controlWidth: 500;
 			sourceModel: root.devicesModel;
 			name: qsTr("Hardware-ID");
-			nameId: "ProductName";
+			nameId: DeviceItemTypeMetaInfo.s_productName;
 			bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
 			
 			// SMacAddress1 - sxxxxxxxxxxxx
@@ -175,14 +170,14 @@ ViewBase {
 			// SMacAddress3 - s:xx:xx:xx:xx:xx:xx
 			// SMacAddress4 - sxx:xx:xx:xx:xx:xx
 			
-			filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "ProductName", "MacAddress"];
+			filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "productName", "macAddress"];
 			
 			delegate: Component {
 				FilterableComboBoxDelegate {
 					width: comboBoxRef ? comboBoxRef.width : 0;
 					comboBoxRef: deviceCB.cbRef;
-					description: model.MacAddress === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model.MacAddress;
-					text: model.ProductName;
+					description: model[DeviceItemTypeMetaInfo.s_macAddress] === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model[DeviceItemTypeMetaInfo.s_macAddress];
+					text: model[DeviceItemTypeMetaInfo.s_productName];
 				}
 			}
 			
@@ -259,8 +254,8 @@ ViewBase {
 					FilterableComboBoxDelegate {
 						width: comboBoxRef ? comboBoxRef.width : 0;
 						comboBoxRef: typesCB.cbRef;
-						text: model.LicenseName;
-						description: model.LicenseId;
+						text: model[DeviceItemTypeMetaInfo.s_licenseName];
+						description: model[DeviceItemTypeMetaInfo.s_licenseId];
 					}
 				}
 			}

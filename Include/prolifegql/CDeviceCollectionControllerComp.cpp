@@ -42,8 +42,8 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 	}
 	
 	QByteArray objectId;
-	if (retVal.Version_1_0->ObjectId){
-		objectId = *retVal.Version_1_0->ObjectId;
+	if (retVal.Version_1_0->objectId){
+		objectId = *retVal.Version_1_0->objectId;
 	}
 	
 	imtbase::IObjectCollection::DataPtr dataPtr;
@@ -66,7 +66,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 					name += " (" + macAddress + ")";
 				}
 				
-				retVal.Version_1_0->Text = name;
+				retVal.Version_1_0->text = name;
 			}
 		}
 	}
@@ -108,108 +108,108 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	sdl::prolife::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = objectId;
+		representationObject.id = objectId;
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = objectCollectionIterator.GetObjectTypeId();
-		representationObject.TypeId = collectionObjectId;
+		representationObject.typeId = collectionObjectId;
 	}
 	
 	QString productName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
 	if (requestInfo.items.isNameRequested){
-		representationObject.Name = productName;
+		representationObject.name = productName;
 		
 		QString macAddress = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toString();
 		if (!macAddress.isEmpty()){
-			representationObject.Name = (productName + " (" + macAddress + ")");
+			representationObject.name = (productName + " (" + macAddress + ")");
 		}
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
+		representationObject.description = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.PurchaseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+		representationObject.purchaseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isCustomerNameRequested){
-		representationObject.CustomerName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
+		representationObject.customerName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isMacAddressRequested){
-		representationObject.MacAddress = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toString();
+		representationObject.macAddress = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toString();
 	}
 
 	if (requestInfo.items.isSerialNumberRequested){
-		representationObject.SerialNumber = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER).toString();
+		representationObject.serialNumber = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER).toString();
 	}
 
 	if (requestInfo.items.isProjectRequested){
-		representationObject.Project = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_PROJECT).toString();
+		representationObject.project = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_PROJECT).toString();
 	}
 
 	if (requestInfo.items.isDeviceTypeRequested){
-		representationObject.DeviceType = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
+		representationObject.deviceType = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
 	
 	if (requestInfo.items.isProductNameRequested){
-		representationObject.ProductName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString().toUtf8();
+		representationObject.productName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString().toUtf8();
 	}
 	
 	if (requestInfo.items.isProductUuidRequested){
-		representationObject.ProductUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
+		representationObject.productUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isLicenseUuidRequested){
-		representationObject.LicenseUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_TYPE).toString().toUtf8();
+		representationObject.licenseUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_TYPE).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isLicenseIdRequested){
-		representationObject.LicenseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString().toUtf8();
+		representationObject.licenseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isLicenseNameRequested){
-		representationObject.LicenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString().toUtf8();
+		representationObject.licenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isDeliveryIdRequested){
-		representationObject.DeliveryId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+		representationObject.deliveryId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isSoftwareLinksCountRequested){
-		representationObject.SoftwareLinksCount = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
+		representationObject.softwareLinksCount = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
 	}
 
 	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.OrderUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
+		representationObject.orderUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isStatusRequested){
 		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 		QString statusName = prolifedata::GetNameFromDeviceProductionStatus(status);
-		representationObject.Status = (statusName);
+		representationObject.status = (statusName);
 	}
 
 	if (requestInfo.items.isStatusIdRequested){
 		prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 		QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
-		representationObject.StatusId = (statusId);
+		representationObject.statusId = (statusId);
 	}
 
 	if (requestInfo.items.isAddedRequested){
 		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime().toUTC();
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = (added);
+		representationObject.added = (added);
 	}
 	
 	if (requestInfo.items.isTimeStampRequested){
 		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.TimeStamp = (lastModified);
+		representationObject.timeStamp = (lastModified);
 	}
 
 	return true;
@@ -247,8 +247,8 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		return nullptr;
 	}
 
-	if (deviceDataRepresentation.Id){
-		newObjectId = *deviceDataRepresentation.Id;
+	if (deviceDataRepresentation.id){
+		newObjectId = *deviceDataRepresentation.id;
 	}
 
 	if (newObjectId.isEmpty()){
@@ -263,7 +263,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		return nullptr;
 	}
 
-	QString orderId = *deviceDataRepresentation.OrderId;
+	QString orderId = *deviceDataRepresentation.orderId;
 	if (!orderId.isEmpty()){
 		if (!AddDeviceToOrder(newObjectId, orderId.toUtf8())){
 			errorMessage = QString("Unable to add device. Error: Add device to order failed");
@@ -297,36 +297,36 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	QByteArray id;
-	if (arguments.input.Version_1_0->Id){
-		id = *arguments.input.Version_1_0->Id;
+	if (arguments.input.Version_1_0->id){
+		id = *arguments.input.Version_1_0->id;
 	}
 
-	representationPayload.Id = (id);
+	representationPayload.id = (id);
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-	representationPayload.MacAddress = (macAddress);
+	representationPayload.macAddress = (macAddress);
 
 	QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
-	representationPayload.SerialNumber = (serialNumber);
+	representationPayload.serialNumber = (serialNumber);
 
 	QByteArray orderId = deviceInfoPtr->GetOrderId();
-	representationPayload.OrderId = (orderId);
+	representationPayload.orderId = (orderId);
 
 	QString description = deviceInfoPtr->GetDescription();
-	representationPayload.Description = (description);
+	representationPayload.description = (description);
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 	QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
-	representationPayload.ProductionStatus = (statusId);
+	representationPayload.productionStatus = (statusId);
 
 	QByteArray project = deviceInfoPtr->GetProject();
-	representationPayload.Project = (project);
+	representationPayload.project = (project);
 
 	QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
-	representationPayload.LicenseName = (configurationType);
+	representationPayload.licenseName = (configurationType);
 
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
-	representationPayload.DeviceType = (productUuid);
+	representationPayload.deviceType = (productUuid);
 
 	return true;
 }
@@ -350,17 +350,17 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 		return false;
 	}
 	
-	if (!inputArguments.input.Version_1_0->Item){
+	if (!inputArguments.input.Version_1_0->item){
 		I_CRITICAL();
 		
 		return false;
 	}
 	
-	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *inputArguments.input.Version_1_0->Item;
+	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *inputArguments.input.Version_1_0->item;
 	
 	QByteArray objectId;
-	if (inputArguments.input.Version_1_0->Id){
-		objectId = *inputArguments.input.Version_1_0->Id;
+	if (inputArguments.input.Version_1_0->id){
+		objectId = *inputArguments.input.Version_1_0->id;
 	}
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
@@ -509,7 +509,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	QByteArray objectId;
 	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
-		objectId = inputParamPtr->GetFieldArgumentValue("Id").toByteArray();
+		objectId = inputParamPtr->GetFieldArgumentValue("id").toByteArray();
 	}
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
@@ -531,8 +531,8 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 		name = elementNameTr;
 	}
 
-	dataModelPtr->SetData("Name", name, index);
-	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("Children", index);
+	dataModelPtr->SetData("name", name, index);
+	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("children", index);
 
 	bool ok = false;
 
@@ -561,7 +561,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
 
 									int childrenIndex = childrenModelPtr->InsertNewItem();
-									childrenModelPtr->SetData("Value", licenseName + " (" + licenseDefinitionId + ")", childrenIndex);
+									childrenModelPtr->SetData("value", licenseName + " (" + licenseDefinitionId + ")", childrenIndex);
 								}
 							}
 						}
@@ -575,7 +575,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 		int childrenIndex = childrenModelPtr->InsertNewItem();
 		QString elementNameTr = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("No Licenses"), languageId, "prolifegql::CDeviceCollectionControllerComp");
 
-		childrenModelPtr->SetData("Value", elementNameTr, childrenIndex);
+		childrenModelPtr->SetData("value", elementNameTr, childrenIndex);
 	}
 
 	return rootModelPtr.PopPtr();
@@ -612,8 +612,8 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	QString macAddress;
-	if (representation.MacAddress){
-		macAddress = *representation.MacAddress;
+	if (representation.macAddress){
+		macAddress = *representation.macAddress;
 	}
 
 	if (!macAddress.isEmpty()){
@@ -629,8 +629,8 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	deviceInfoPtr->SetMacAddress(macAddress.toUtf8());
 
 	QString serialNumber;
-	if (representation.SerialNumber){
-		serialNumber = *representation.SerialNumber;
+	if (representation.serialNumber){
+		serialNumber = *representation.serialNumber;
 	}
 
 	if (!serialNumber.isEmpty()){
@@ -646,30 +646,30 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	deviceInfoPtr->SetSerialNumber(serialNumber.toUtf8());
 
 	QString project;
-	if (representation.Project){
-		project = *representation.Project;
+	if (representation.project){
+		project = *representation.project;
 		deviceInfoPtr->SetProject(project.toUtf8());
 	}
 
 	QString orderId;
-	if (representation.OrderId){
-		orderId = *representation.OrderId;
+	if (representation.orderId){
+		orderId = *representation.orderId;
 		deviceInfoPtr->SetOrderId(orderId.toUtf8());
 	}
 
-	if (representation.Description){
-		deviceInfoPtr->SetDescription(*representation.Description);
+	if (representation.description){
+		deviceInfoPtr->SetDescription(*representation.description);
 	}
 
-	if (representation.ProductionStatus){
-		QString status = *representation.ProductionStatus;
+	if (representation.productionStatus){
+		QString status = *representation.productionStatus;
 		prolifedata::IDeviceInfo::DeviceProductionStatus productionStatus = prolifedata::GetProductionStatusFromId(status.toUtf8());
 		deviceInfoPtr->SetDeviceProductionStatus(productionStatus);
 	}
 
 	QString licenseName;
-	if (representation.LicenseName){
-		licenseName = *representation.LicenseName;
+	if (representation.licenseName){
+		licenseName = *representation.licenseName;
 	}
 
 	if (licenseName.isEmpty()){
@@ -682,8 +682,8 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	deviceInfoPtr->SetConfigurationType(licenseName.toUtf8());
 
 	QString deviceType;
-	if (representation.DeviceType){
-		deviceType = *representation.DeviceType;
+	if (representation.deviceType){
+		deviceType = *representation.deviceType;
 	}
 
 	if (deviceType.isEmpty()){

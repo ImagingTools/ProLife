@@ -490,7 +490,7 @@ ViewBase {
 							width: comboBoxRef ? comboBoxRef.width : 0;
 							comboBoxRef: orderCB.cbRef;
 							
-							description: qsTr("Customer") + ": " + model.CustomerName;
+							description: qsTr("Customer") + ": " + model[OrderItemTypeMetaInfo.s_customerName];
 						}
 					}
 					
@@ -507,7 +507,7 @@ ViewBase {
 					id: statusCB;
 					
 					name: qsTr("Production Status");
-					model: productionStatus.m_model;
+					model: productionStatus.m_statusModel;
 					nameId: "m_name";
 					
 					property bool blockingIndexChanged: false;
@@ -521,7 +521,7 @@ ViewBase {
 						if (statusCB.currentIndex >= 0){
 						}
 						else{
-							statusCB.model = productionStatus.m_model;
+							statusCB.model = productionStatus.m_statusModel;
 						}
 					}
 				}

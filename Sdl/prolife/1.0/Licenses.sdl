@@ -1,4 +1,3 @@
-
 schema {
 	query: Query
 	mutation: Mutation
@@ -17,31 +16,31 @@ input SoftwareProductsListInput {
 }
 
 type SoftwareProductItem {
-	TypeId: ID!
-	Id: ID!
-	Name: String!
-	Description: String
-	DeliveryId: String
-	PurchaseId: String
-	CustomerId: String
-	CustomerName: String
-	OrderUuid: String
-	MacAddress: String
-	ProductId: String
-	ProductName: String
-	ProductUuid: String
-	SerialNumber: String
-	Expiration: String
-	IsPaired: Bool
-	InUse: Bool
-	HardwareId: String
-	LicenseName: String
-	LicenseId: String
-	LicenseUuid: String
-	Project: String
-	Status: String
-	Added: String
-	TimeStamp: String
+	id: ID!
+	typeId: ID!
+	name: String!
+	description: String
+	deliveryId: String
+	purchaseId: String
+	customerId: String
+	customerName: String
+	orderUuid: String
+	macAddress: String
+	productId: String
+	productName: String
+	productUuid: String
+	serialNumber: String
+	expiration: String
+	isPaired: Bool
+	inUse: Bool
+	hardwareId: String
+	licenseName: String
+	licenseId: String
+	licenseUuid: String
+	project: String
+	status: String
+	added: String
+	timeStamp: String
 }
 
 type SoftwareProductsListPayload {
@@ -50,20 +49,20 @@ type SoftwareProductsListPayload {
 }
 
 type SoftwareProductData {
-	Id: ID
-	ProductId: ID
-	CategoryId: ID
-	SerialNumber: ID
-	Project: String
-	InUse: Bool
-	OrderUuid: ID
-	LicenseUuid: ID
-	Expiration: String
+	id: ID
+	productId: ID
+	categoryId: ID
+	serialNumber: ID
+	project: String
+	inUse: Bool
+	orderUuid: ID
+	licenseUuid: ID
+	expiration: String
 }
 
 input SoftwareProductDataInput {
-	Id: ID!
-	Item: SoftwareProductData!
+	id: ID!
+	item: SoftwareProductData!
 }
 
 type Query {

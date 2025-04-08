@@ -167,6 +167,42 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ReplaceableFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplacementFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Status</Value>
+                                <Value>ProductName</Value>
+                                <Value>LicenseId</Value>
+                                <Value>LicenseName</Value>
+                                <Value>MacAddress</Value>
+                                <Value>SerialNumber</Value>
+                                <Value>DeliveryId</Value>
+                                <Value>PurchaseId</Value>
+                                <Value>Project</Value>
+                                <Value>CustomerName</Value>
+                                <Value>Added</Value>
+                                <Value>TimeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -278,18 +314,18 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Status</Value>
-                                <Value>ProductName</Value>
-                                <Value>LicenseId</Value>
-                                <Value>LicenseName</Value>
-                                <Value>MacAddress</Value>
-                                <Value>SerialNumber</Value>
-                                <Value>DeliveryId</Value>
-                                <Value>PurchaseId</Value>
-                                <Value>Project</Value>
-                                <Value>CustomerName</Value>
-                                <Value>Added</Value>
-                                <Value>TimeStamp</Value>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -317,16 +353,16 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DeviceType</Value>
-                                <Value>MacAddress</Value>
-                                <Value>SerialNumber</Value>
-                                <Value>Status</Value>
-                                <Value>Project</Value>
-                                <Value>DeliveryId</Value>
-                                <Value>LicenseName</Value>
-                                <Value>LicenseId</Value>
-                                <Value>CustomerName</Value>
-                                <Value>PurchaseId</Value>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -1040,7 +1076,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtrest::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+                    <Interface InterfaceId="imtserverapp::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
                     <Interface InterfaceId="istd::IPolymorphic" ComponentId="PermissionsJoiner"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>

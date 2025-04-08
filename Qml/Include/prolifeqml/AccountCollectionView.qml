@@ -33,26 +33,26 @@ RemoteCollectionView {
 					if (canEdit){
 						let index = contextMenuModel.insertNewItem();
 						
-						contextMenuModel.setData("Id", "Edit", index);
-						contextMenuModel.setData("Name", qsTr("Edit"), index);
-						contextMenuModel.setData("Icon", "Icons/Edit", index);
+						contextMenuModel.setData("id", "Edit", index);
+						contextMenuModel.setData("name", qsTr("Edit"), index);
+						contextMenuModel.setData("icon", "Icons/Edit", index);
 					}
 					
 					if (canRemove){
 						let index = contextMenuModel.insertNewItem();
 						
-						contextMenuModel.setData("Id", "Remove", index);
-						contextMenuModel.setData("Name", qsTr("Remove"), index);
-						contextMenuModel.setData("Icon", "Icons/Delete", index);
+						contextMenuModel.setData("id", "Remove", index);
+						contextMenuModel.setData("name", qsTr("Remove"), index);
+						contextMenuModel.setData("icon", "Icons/Delete", index);
 					}
 					
 					let ok = PermissionsController.checkPermission("ChangeAccountDescription");
 					if (ok){
 						let index = contextMenuModel.insertNewItem();
 						
-						contextMenuModel.setData("Id", "SetDescription", index);
-						contextMenuModel.setData("Name", qsTr("Set Description"), index);
-						contextMenuModel.setData("Icon", "", index);
+						contextMenuModel.setData("id", "SetDescription", index);
+						contextMenuModel.setData("name", qsTr("Set Description"), index);
+						contextMenuModel.setData("icon", "", index);
 					}
 					
 					contextMenuModel.refresh();
@@ -62,7 +62,7 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		table.setSortingInfo("Name", "ASC");
+		table.setSortingInfo(AccountItemTypeMetaInfo.s_name, "ASC");
 	}
 	
 	Component {

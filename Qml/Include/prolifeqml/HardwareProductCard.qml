@@ -75,13 +75,13 @@ Rectangle {
 
         let index = headersTableModel.insertNewItem();
 
-        headersTableModel.setData("Id", "Key", index)
-        headersTableModel.setData("Name", qsTr("Key"), index)
+        headersTableModel.setData("id", "Key", index)
+        headersTableModel.setData("name", qsTr("Key"), index)
 
         index = headersTableModel.insertNewItem();
 
-        headersTableModel.setData("Id", "Value", index)
-        headersTableModel.setData("Name", qsTr("Value"), index)
+        headersTableModel.setData("id", "Value", index)
+        headersTableModel.setData("name", qsTr("Value"), index)
 
         table.headers = headersTableModel;
     }

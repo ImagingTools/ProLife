@@ -75,18 +75,18 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Status</Value>
-                                <Value>ProductName</Value>
-                                <Value>LicenseId</Value>
-                                <Value>LicenseName</Value>
-                                <Value>SerialNumber</Value>
-                                <Value>DeliveryId</Value>
-                                <Value>PurchaseId</Value>
-                                <Value>Project</Value>
-                                <Value>CustomerName</Value>
-                                <Value>MacAddress</Value>
-                                <Value>Added</Value>
-                                <Value>TimeStamp</Value>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>macAddress</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -114,15 +114,16 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProductName</Value>
-                                <Value>DeliveryId</Value>
-                                <Value>SerialNumber</Value>
-                                <Value>MacAddress</Value>
-                                <Value>CustomerName</Value>
-                                <Value>LicenseId</Value>
-                                <Value>Project</Value>
-                                <Value>LicenseName</Value>
-                                <Value>PurchaseId</Value>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>macAddress</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -300,6 +301,42 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplaceableFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>macAddress</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplacementFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Status</Value>
+                                <Value>ProductName</Value>
+                                <Value>LicenseId</Value>
+                                <Value>LicenseName</Value>
+                                <Value>SerialNumber</Value>
+                                <Value>DeliveryId</Value>
+                                <Value>PurchaseId</Value>
+                                <Value>Project</Value>
+                                <Value>CustomerName</Value>
+                                <Value>MacAddress</Value>
+                                <Value>Added</Value>
+                                <Value>TimeStamp</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="SoftwareInstanceInfo"/>

@@ -160,13 +160,13 @@ Rectangle {
 
         let index = headersLicensesTable.insertNewItem();
 
-        headersLicensesTable.setData("Id", "Key", index)
-        headersLicensesTable.setData("Name", qsTr("Key"), index)
+        headersLicensesTable.setData("id", "Key", index)
+        headersLicensesTable.setData("name", qsTr("Key"), index)
 
         index = headersLicensesTable.insertNewItem();
 
-        headersLicensesTable.setData("Id", "Value", index)
-        headersLicensesTable.setData("Name", qsTr("Value"), index)
+        headersLicensesTable.setData("id", "Value", index)
+        headersLicensesTable.setData("name", qsTr("Value"), index)
 
         licensesView.headers = headersLicensesTable;
     }

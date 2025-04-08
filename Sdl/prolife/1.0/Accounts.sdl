@@ -1,5 +1,3 @@
-
-
 schema {
 	query: Query
 	mutation: Mutation
@@ -18,14 +16,14 @@ input AccountsListInput {
 }
 
 type AccountItem {
-	TypeId: ID!
-	Id: ID!
-	CustomerId: ID
-	Name: String!
-	Description: String
-	Email: String
-	Added: String
-	TimeStamp: String
+	typeId: ID!
+	id: ID!
+	customerId: ID
+	name: String!
+	description: String
+	email: String
+	added: String
+	timeStamp: String
 }
 
 type AccountsListPayload {
@@ -34,22 +32,22 @@ type AccountsListPayload {
 }
 
 type AccountData {
-	Id: ID
-	Name: String
-	CustomerId: ID
-	Description: String
-	Email: String
-	CompanyName: String
-	Country: String
-	City: String
-	PostalCode: String
-	Street: String
-	Groups: String
+	id: ID
+	name: String
+	customerId: ID
+	description: String
+	email: String
+	companyName: String
+	country: String
+	city: String
+	postalCode: String
+	street: String
+	groups: String
 }
 
 input AccountDataInput {
-	Id: ID!
-	Item: AccountData!
+	id: ID!
+	item: AccountData!
 }
 
 type Query {

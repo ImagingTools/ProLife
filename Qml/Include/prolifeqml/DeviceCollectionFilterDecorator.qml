@@ -50,16 +50,16 @@ DecoratorBase {
 		modelCategogy.clear();
 		
 		let index = modelCategogy.insertNewItem();
-		modelCategogy.setData("Id", "None", index);
-		modelCategogy.setData("Name", qsTr("Show all sensors"), index);
+		modelCategogy.setData("id", "None", index);
+		modelCategogy.setData("name", qsTr("Show all sensors"), index);
 		
 		index = modelCategogy.insertNewItem();
-		modelCategogy.setData("Id", "WithoutLicense", index);
-		modelCategogy.setData("Name", qsTr("Sensors without a license"), index);
+		modelCategogy.setData("id", "WithoutLicense", index);
+		modelCategogy.setData("name", qsTr("Sensors without a license"), index);
 		
 		index = modelCategogy.insertNewItem();
-		modelCategogy.setData("Id", "WithLicense", index);
-		modelCategogy.setData("Name", qsTr("Sensors with license"), index);
+		modelCategogy.setData("id", "WithLicense", index);
+		modelCategogy.setData("name", qsTr("Sensors with license"), index);
 		
 		modelCategogy.refresh();
 		

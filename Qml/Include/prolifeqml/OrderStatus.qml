@@ -11,26 +11,26 @@ QtObject {
         let index = root.statusModel.insertNewItem();
 
         // 0
-        root.statusModel.setData("Id", "Created", index);
-        root.statusModel.setData("Name", qsTr("Created"), index);
+        root.statusModel.setData("id", "Created", index);
+        root.statusModel.setData("name", qsTr("Created"), index);
 
         index = root.statusModel.insertNewItem();
 
         // 1
-        root.statusModel.setData("Id", "InProgress", index);
-        root.statusModel.setData("Name", qsTr("In Progress"), index);
+        root.statusModel.setData("id", "InProgress", index);
+        root.statusModel.setData("name", qsTr("In Progress"), index);
 
         index = root.statusModel.insertNewItem();
 
         // 2
-        root.statusModel.setData("Id", "Canceled", index);
-        root.statusModel.setData("Name", qsTr("Canceled"), index);
+        root.statusModel.setData("id", "Canceled", index);
+        root.statusModel.setData("name", qsTr("Canceled"), index);
 
         index = root.statusModel.insertNewItem();
 
         // 3
-        root.statusModel.setData("Id", "Closed", index);
-        root.statusModel.setData("Name", qsTr("Closed"), index);
+        root.statusModel.setData("id", "Closed", index);
+        root.statusModel.setData("name", qsTr("Closed"), index);
     }
 
     function getIconPath(statusId){

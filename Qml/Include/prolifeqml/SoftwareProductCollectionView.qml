@@ -171,20 +171,20 @@ RemoteCollectionView {
 				modelCategogy.clear();
 				
 				let index = modelCategogy.insertNewItem();
-				modelCategogy.setData("Id", "All", index);
-				modelCategogy.setData("Name", qsTr("Show all licenses"), index);
+				modelCategogy.setData("id", "All", index);
+				modelCategogy.setData("name", qsTr("Show all licenses"), index);
 				
 				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("Id", "Paired", index);
-				modelCategogy.setData("Name", qsTr("Show only paired licenses"), index);
+				modelCategogy.setData("id", "Paired", index);
+				modelCategogy.setData("name", qsTr("Show only paired licenses"), index);
 				
 				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("Id", "NotPaired", index);
-				modelCategogy.setData("Name", qsTr("Show only not paired licenses"), index);
+				modelCategogy.setData("id", "NotPaired", index);
+				modelCategogy.setData("name", qsTr("Show only not paired licenses"), index);
 				
 				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("Id", "InUse", index);
-				modelCategogy.setData("Name", qsTr("Show the licenses for which the file was created"), index);
+				modelCategogy.setData("id", "InUse", index);
+				modelCategogy.setData("name", qsTr("Show the licenses for which the file was created"), index);
 				
 				modelCategogy.refresh();
 				

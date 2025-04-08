@@ -48,7 +48,6 @@ Item {
 			SoftwareProductItemTypeMetaInfo.s_expiration
 		];
 		onCollectionModelChanged: {
-			console.log("softwareCollection onCollectionModelChanged", collectionModel.toJson())
 			contentLoader.item.softwaresModel = collectionModel;
 			contentLoader.item.doUpdateGui();
 		}
@@ -179,10 +178,9 @@ Item {
 			
 			contentLoader.item.productLicensesModel = 0;
 			
-			let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
+			let licensesModel = productCB.model.getData("licenses", productCB.currentIndex);
 			if (licensesModel){
 				contentLoader.item.productLicensesModel = licensesModel;
-				console.log("productLicensesModel", contentLoader.item.productLicensesModel.toJson());
 			}
 			
 			if (contentLoader.item.productLicensesModel){
@@ -339,7 +337,7 @@ Item {
 			controlWidth: 500;
 			
 			name: qsTr("Product");
-			nameId: "ProductName";
+			nameId: OrderedProductTypeMetaInfo.s_productName;
 			
 			onCurrentIndexChanged: {
 				productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;

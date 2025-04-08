@@ -31,6 +31,12 @@ DocumentCollectionViewDelegate {
 		}
 	}
 	
+	// DeviceDocumentDataController.qml
+	Component {
+		DocumentDataController {
+		}
+	}
+	
 	Component {
 		id: dataControllerComp;
 		
@@ -179,11 +185,11 @@ DocumentCollectionViewDelegate {
 		}
 		
 		let isEnabled = selection.length === 1;
-		let macAddress = elementsModel.getData("MacAddress", selection[0]);
+		let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, selection[0]);
 		
 		let isOpenOrderEnabled = isEnabled;
 		if (isOpenOrderEnabled){
-			let orderId = elementsModel.getData("DeliveryId", selection[0]);
+			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_deliveryId, selection[0]);
 			isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
 		}
 		
@@ -194,7 +200,7 @@ DocumentCollectionViewDelegate {
 		
 		let isTransferLicensesEnabled = isEnabled;
 		if (isTransferLicensesEnabled){
-			let status = elementsModel.getData("StatusId", selection[0])
+			let status = elementsModel.getData(DeviceItemTypeMetaInfo.s_statusId, selection[0])
 			
 			isTransferLicensesEnabled = status === "Defected";
 		}
@@ -218,17 +224,17 @@ DocumentCollectionViewDelegate {
 			if (canEdit){
 				let index = container.contextMenuModel.insertNewItem();
 				
-				container.contextMenuModel.setData("Id", "Edit", index);
-				container.contextMenuModel.setData("Name", qsTr("Edit"), index);
-				container.contextMenuModel.setData("Icon", "Icons/Edit", index);
+				container.contextMenuModel.setData("id", "Edit", index);
+				container.contextMenuModel.setData("name", qsTr("Edit"), index);
+				container.contextMenuModel.setData("icon", "Icons/Edit", index);
 			}
 			
 			if (canRemove){
 				let index = container.contextMenuModel.insertNewItem();
 				
-				container.contextMenuModel.setData("Id", "Remove", index);
-				container.contextMenuModel.setData("Name", qsTr("Remove"), index);
-				container.contextMenuModel.setData("Icon", "Icons/Delete", index);
+				container.contextMenuModel.setData("id", "Remove", index);
+				container.contextMenuModel.setData("name", qsTr("Remove"), index);
+				container.contextMenuModel.setData("icon", "Icons/Delete", index);
 			}
 			
 			container.contextMenuModel.refresh();
@@ -240,8 +246,8 @@ DocumentCollectionViewDelegate {
 		let elementsModel = container.collectionView.table.elements;
 		
 		if (commandId === "Bind"){
-			let hardwareId = elementsModel.getData("Id", indexes[0]);
-			let macAddress = elementsModel.getData("MacAddress", indexes[0]);
+			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
+			let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, indexes[0]);
 			
 			let title = qsTr("Add license to sensor '%1'");
 			title = title.replace("%1", macAddress);
@@ -249,31 +255,31 @@ DocumentCollectionViewDelegate {
 			ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
 		}
 		else if (commandId === "OpenOrder"){
-			let orderId = elementsModel.getData("OrderUuid", indexes[0]);
+			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, indexes[0]);
 			if (orderId !== ""){
 				MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
 			}
 		}
 		else if (commandId === "CreateLicenseFile"){
-			let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
+			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
 				return;
 			}
 			
-			let macAddress = elementsModel.getData("MacAddress", indexes[0])
+			let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, indexes[0])
 			if (macAddress === ""){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The MAC-Address is not set")})
 				return;
 			}
 			
-			let serialNumber = elementsModel.getData("SerialNumber", indexes[0])
+			let serialNumber = elementsModel.getData(DeviceItemTypeMetaInfo.s_serialNumber, indexes[0])
 			if (serialNumber === ""){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The Serial Number is not set")})
 				return;
 			}
 			
-			let status = elementsModel.getData("Status", indexes[0])
+			let status = elementsModel.getData(DeviceItemTypeMetaInfo.s_status, indexes[0])
 			if (status !== "Finished"){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The production status must be 'Finished'")})
 				return;
@@ -282,10 +288,7 @@ DocumentCollectionViewDelegate {
 			let data = macAddress.split(':');
 			let fileName = data.join('_') + "_" + licenseFileController.defaultName;
 			
-			// licenseFileController.fileName = fileName;
-			
-			let hardwareId = elementsModel.getData("Id", indexes[0]);
-			// licenseFileController.createLicenseFile(hardwareId);
+			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
 			
 			if (AuthorizationController.loggedUserIsSuperuser()){
 				ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
@@ -296,16 +299,15 @@ DocumentCollectionViewDelegate {
 			}
 		}
 		else if (commandId === "TransferLicenses"){
-			let count = elementsModel.getData("SoftwareLinksCount", indexes[0])
+			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(transferErrorDialogComp, {})
 				return;
 			}
 			
-			let hardwareId = elementsModel.getData("Id", indexes[0]);
-			let productId = elementsModel.getData("ProductUuid", indexes[0]);
+			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
+			let productId = elementsModel.getData(DeviceItemTypeMetaInfo.s_productUuid, indexes[0]);
 			
-			console.log("TransferLicenses", hardwareId, productId);
 			ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId});
 		}
 		else if (commandId === "DecryptFile"){
@@ -586,8 +588,8 @@ DocumentCollectionViewDelegate {
 						commandsDelegateComp: null;
 						
 						onSelectionChanged: {
-							dialog.buttons.setButtonState(Enums.ok, selection.length > 0);
-							dialog.toDeviceId = table.elements.getData("Id", selection[0]);
+							dialog.setButtonEnabled(Enums.ok, selection.length > 0)
+							dialog.toDeviceId = table.elements.getData(DeviceItemTypeMetaInfo.s_id, selection[0]);
 						}
 						
 						Component.onCompleted: {
@@ -606,8 +608,8 @@ DocumentCollectionViewDelegate {
 			}
 			
 			Component.onCompleted: {
-				buttonsModel.append({"Id": Enums.ok, "Name": qsTr("Transfer"), "Enabled": false});
-				buttonsModel.append({"Id": Enums.cancel, "Name": qsTr("Close"), "Enabled": true});
+				addButton(Enums.ok, qsTr("Transfer"), false)
+				addButton(Enums.cancel, qsTr("Close"), true)
 			}
 		}
 	}

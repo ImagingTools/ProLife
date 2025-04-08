@@ -49,8 +49,8 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 	sdl::prolife::Sensors::CDeviceBindingData::V1_0& response = retVal.Version_1_0.emplace();
 	
 	QByteArray deviceId;
-	if (inputArguments.input.Version_1_0->Id){
-		deviceId = *inputArguments.input.Version_1_0->Id;
+	if (inputArguments.input.Version_1_0->id){
+		deviceId = *inputArguments.input.Version_1_0->id;
 	}
 	
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
@@ -77,17 +77,17 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
 					QByteArray project = productInstanceInfoPtr->GetProject();
-					response.Project = project;
+					response.project = project;
 					
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
-					response.ProductUuid = productId;
+					response.productUuid = productId;
 				}
 			}
 		}
 	}
 	
-	response.Id = deviceId;
-	response.SoftwareIds = softwareIds.join(';');
+	response.id = deviceId;
+	response.softwareIds = softwareIds.join(';');
 	
 	return retVal;
 }
@@ -110,18 +110,18 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0& response = retVal.Version_1_0.emplace();
 	
 	QByteArray deviceId;
-	if (inputArguments.input.Version_1_0->DeviceId){
-		deviceId = *inputArguments.input.Version_1_0->DeviceId;
+	if (inputArguments.input.Version_1_0->deviceId){
+		deviceId = *inputArguments.input.Version_1_0->deviceId;
 	}
 	
 	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData;
-	if (inputArguments.input.Version_1_0->Item){
-		deviceBindingData = *inputArguments.input.Version_1_0->Item;
+	if (inputArguments.input.Version_1_0->item){
+		deviceBindingData = *inputArguments.input.Version_1_0->item;
 	}
 	
 	QString project;
-	if (inputArguments.input.Version_1_0->Project){
-		project = *inputArguments.input.Version_1_0->Project;
+	if (inputArguments.input.Version_1_0->project){
+		project = *inputArguments.input.Version_1_0->project;
 	}
 	
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
@@ -148,9 +148,9 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 		return retVal;
 	}
 	
-	response.Id = deviceId;
+	response.id = deviceId;
 	
-	QByteArrayList newHardwareBindingSoftwareIds = deviceBindingData.SoftwareIds->split(';');
+	QByteArrayList newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->split(';');
 	QByteArrayList hardwareBindingSoftwareIds = deviceBindingInfoPtr->GetSoftwareIds();
 	
 	QByteArrayList addedLicenses;
@@ -254,8 +254,8 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
 	retVal.Version_1_0.emplace();
 	
-	retVal.Version_1_0->Ok = false;
-	retVal.Version_1_0->Limit = false;
+	retVal.Version_1_0->ok = false;
+	retVal.Version_1_0->limit = false;
 	
 	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
@@ -265,13 +265,13 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	}
 	
 	QByteArray fromDeviceId;
-	if (inputArguments.input.Version_1_0->FromDeviceId){
-		fromDeviceId = *inputArguments.input.Version_1_0->FromDeviceId;
+	if (inputArguments.input.Version_1_0->fromDeviceId){
+		fromDeviceId = *inputArguments.input.Version_1_0->fromDeviceId;
 	}
 	
 	QByteArray toDeviceId;
-	if (inputArguments.input.Version_1_0->ToDeviceId){
-		toDeviceId = *inputArguments.input.Version_1_0->ToDeviceId;
+	if (inputArguments.input.Version_1_0->toDeviceId){
+		toDeviceId = *inputArguments.input.Version_1_0->toDeviceId;
 	}
 	
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
@@ -347,7 +347,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 				int softwareCount = softwareTransferInfoPtr->GetTransferCount();
 				int maxTransferCount = m_maxTransferCountAttrPtr.IsValid() ? *m_maxTransferCountAttrPtr : 3;
 				if (softwareCount >= maxTransferCount){
-					retVal.Version_1_0->Limit = true;
+					retVal.Version_1_0->limit = true;
 					
 					return retVal;
 				}
@@ -419,7 +419,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		}
 	}
 	
-	retVal.Version_1_0->Ok = true;
+	retVal.Version_1_0->ok = true;
 	
 	return retVal;
 }
@@ -441,13 +441,13 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	retVal.Version_1_0.emplace();
 	
 	QByteArray deviceId;
-	if (arguments.input.Version_1_0->DeviceId){
-		deviceId = *arguments.input.Version_1_0->DeviceId;
+	if (arguments.input.Version_1_0->deviceId){
+		deviceId = *arguments.input.Version_1_0->deviceId;
 	}
 	
 	bool encrypt = true;
-	if (arguments.input.Version_1_0->Encrypt){
-		encrypt = *arguments.input.Version_1_0->Encrypt;
+	if (arguments.input.Version_1_0->encrypt){
+		encrypt = *arguments.input.Version_1_0->encrypt;
 	}
 	
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
@@ -689,8 +689,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	
 	QString name = macAddress.split(':').join('_') + "_" + "License.lic";
 	
-	retVal.Version_1_0->Data = returnedData;
-	retVal.Version_1_0->Name = name;
+	retVal.Version_1_0->data = returnedData;
+	retVal.Version_1_0->name = name;
 	
 	file.close();
 	
@@ -776,13 +776,13 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 	}
 	
 	QByteArray encryptedData;
-	if (arguments.input.Version_1_0->FileData){
-		encryptedData = *arguments.input.Version_1_0->FileData;
+	if (arguments.input.Version_1_0->fileData){
+		encryptedData = *arguments.input.Version_1_0->fileData;
 	}
 	
 	QByteArray encryptionKey;
-	if (arguments.input.Version_1_0->Key){
-		encryptionKey = *arguments.input.Version_1_0->Key;
+	if (arguments.input.Version_1_0->key){
+		encryptionKey = *arguments.input.Version_1_0->key;
 	}
 	
 	m_productInstanceId = encryptionKey;
@@ -796,8 +796,8 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 	}
 	
 	QString name = encryptionKey.split(':').join('_') + "_" + "Decrypted.lic";
-	response.DecryptedData = decryptedData.toBase64();
-	response.FileName = name;
+	response.decryptedData = decryptedData.toBase64();
+	response.fileName = name;
 	
 	return retVal;
 }
@@ -810,7 +810,7 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 {
 	sdl::prolife::Sensors::CRequestTransferLicensesPayload response;
 	response.Version_1_0.emplace();
-	response.Version_1_0->Result = false;
+	response.Version_1_0->result = false;
 	
 	if (!m_smtpMessageCreatorCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SmtpMessageCreator' was not set", "CDeviceControllerComp");
@@ -831,13 +831,13 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 	}
 	
 	QByteArray fromDeviceId;
-	if (arguments.input.Version_1_0->FromDeviceId){
-		fromDeviceId = *arguments.input.Version_1_0->FromDeviceId;
+	if (arguments.input.Version_1_0->fromDeviceId){
+		fromDeviceId = *arguments.input.Version_1_0->fromDeviceId;
 	}
 	
 	QByteArray toDeviceId;
-	if (arguments.input.Version_1_0->ToDeviceId){
-		toDeviceId = *arguments.input.Version_1_0->ToDeviceId;
+	if (arguments.input.Version_1_0->toDeviceId){
+		toDeviceId = *arguments.input.Version_1_0->toDeviceId;
 	}
 	
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
@@ -940,7 +940,7 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 		}
 	}
 	
-	response.Version_1_0->Result = true;
+	response.Version_1_0->result = true;
 	
 	return response;
 }

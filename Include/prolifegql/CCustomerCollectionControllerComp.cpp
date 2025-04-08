@@ -48,28 +48,28 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = (objectId);
+		representationObject.id = (objectId);
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = (collectionObjectId);
+		representationObject.typeId = (collectionObjectId);
 	}
 
 	if (requestInfo.items.isCustomerIdRequested){
-		representationObject.CustomerId = (customerInfoPtr->GetCustomerId());
+		representationObject.customerId = (customerInfoPtr->GetCustomerId());
 	}
 
 	if (requestInfo.items.isNameRequested){
-		representationObject.Name = (customerInfoPtr->GetName());
+		representationObject.name = (customerInfoPtr->GetName());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = (customerInfoPtr->GetDescription());
+		representationObject.description = (customerInfoPtr->GetDescription());
 	}
 
 	if (requestInfo.items.isEmailRequested){
-		representationObject.Email = (customerInfoPtr->GetEmail());
+		representationObject.email = (customerInfoPtr->GetEmail());
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -77,7 +77,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		addedTime.setTimeSpec(Qt::UTC);
 
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = (added);
+		representationObject.added = (added);
 	}
 
 	if (requestInfo.items.isTimeStampRequested){
@@ -85,7 +85,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		lastModifiedTime.setTimeSpec(Qt::UTC);
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.TimeStamp = (lastModified);
+		representationObject.timeStamp = (lastModified);
 	}
 
 	return true;
@@ -151,27 +151,27 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	QByteArray id;
-	if (arguments.input.Version_1_0->Id){
-		id = *arguments.input.Version_1_0->Id;
+	if (arguments.input.Version_1_0->id){
+		id = *arguments.input.Version_1_0->id;
 	}
 
-	representationPayload.Id = (id);
+	representationPayload.id = (id);
 
 	QString name = customerInfoPtr->GetName();
-	representationPayload.Name = (name);
+	representationPayload.name = (name);
 
 	QString description = customerInfoPtr->GetDescription();
-	representationPayload.Description = (description);
+	representationPayload.description = (description);
 
 	QString email = customerInfoPtr->GetEmail();
-	representationPayload.Email = (email);
+	representationPayload.email = (email);
 
 	QByteArray customerId = customerInfoPtr->GetCustomerId();
-	representationPayload.CustomerId = (customerId);
+	representationPayload.customerId = (customerId);
 
 	QByteArrayList groups = customerInfoPtr->GetGroups();
 	std::sort(groups.begin(), groups.end());
-	representationPayload.Groups = (groups.join(';'));
+	representationPayload.groups = (groups.join(';'));
 
 	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
 	if (addressProviderPtr != nullptr){
@@ -180,20 +180,20 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
 			if (addressPtr != nullptr){
 				QString city = addressPtr->GetCity();
-				representationPayload.City = (city);
+				representationPayload.city = (city);
 
 				QString country = addressPtr->GetCountry();
-				representationPayload.Country = (country);
+				representationPayload.country = (country);
 
 				QString street = addressPtr->GetStreet();
-				representationPayload.Street = (street);
+				representationPayload.street = (street);
 
 				QString postalCodeStr;
 				int postalCode = addressPtr->GetPostalCode();
 				if (postalCode > 0){
 					postalCodeStr = QString::number(postalCode);
 				}
-				representationPayload.PostalCode = (postalCodeStr);
+				representationPayload.postalCode = (postalCodeStr);
 			}
 		}
 	}
@@ -227,9 +227,15 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 		return false;
 	}
+	
+	if (!requestArguments.input.Version_1_0->item.has_value()){
+		I_CRITICAL();
+		
+		return false;
+	}
 
-	const sdl::prolife::Accounts::CAccountData::V1_0& accountData = *accountUpdateRequest.GetRequestedArguments().input.Version_1_0->Item;
-	QByteArray objectId = *accountData.Id;
+	const sdl::prolife::Accounts::CAccountData::V1_0& accountData = *requestArguments.input.Version_1_0->item;
+	QByteArray objectId = *accountData.id;
 
 	prolifedata::CCustomerInfo *customerInfoPtr =
 		dynamic_cast<prolifedata::CCustomerInfo *>(&object);
@@ -268,8 +274,8 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 
-	if (accountDataRepresentation.Id){
-		objectId = *accountDataRepresentation.Id;
+	if (accountDataRepresentation.id){
+		objectId = *accountDataRepresentation.id;
 	}
 	if (objectId.isEmpty()){
 		objectId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
@@ -277,8 +283,8 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 	customerInfoPtr->SetObjectUuid(objectId);
 
 	QString accountName;
-	if (accountDataRepresentation.Name){
-		accountName = *accountDataRepresentation.Name;
+	if (accountDataRepresentation.name){
+		accountName = *accountDataRepresentation.name;
 	}
 
 	if (accountName.isEmpty()){
@@ -288,18 +294,18 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 
 	customerInfoPtr->SetName(accountName);
 
-	if (accountDataRepresentation.Description){
-		QString description = *accountDataRepresentation.Description;
+	if (accountDataRepresentation.description){
+		QString description = *accountDataRepresentation.description;
 		customerInfoPtr->SetDescription(description);
 	}
 
-	if (accountDataRepresentation.Email){
-		QString accountEmail = *accountDataRepresentation.Email;
+	if (accountDataRepresentation.email){
+		QString accountEmail = *accountDataRepresentation.email;
 		customerInfoPtr->SetEmail(accountEmail);
 	}
 
-	if (accountDataRepresentation.Groups){
-		QString accountGroups = *accountDataRepresentation.Groups;
+	if (accountDataRepresentation.groups){
+		QString accountGroups = *accountDataRepresentation.groups;
 		if (!accountGroups.isEmpty()){
 			QByteArrayList groupIds = accountGroups.toUtf8().split(';');
 			for (const QByteArray& groupId : groupIds){
@@ -308,30 +314,30 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 		}
 	}
 
-	if (accountDataRepresentation.CustomerId){
-		QByteArray accountCustomerId = *accountDataRepresentation.CustomerId;
+	if (accountDataRepresentation.customerId){
+		QByteArray accountCustomerId = *accountDataRepresentation.customerId;
 		customerInfoPtr->SetCustomerId(accountCustomerId);
 	}
 
 	imtauth::CAddress address;
 
-	if (accountDataRepresentation.City){
-		QString accountCity = *accountDataRepresentation.City;
+	if (accountDataRepresentation.city){
+		QString accountCity = *accountDataRepresentation.city;
 		address.SetCity(accountCity);
 	}
 
-	if (accountDataRepresentation.Street){
-		QString accountStreet = *accountDataRepresentation.Street;
+	if (accountDataRepresentation.street){
+		QString accountStreet = *accountDataRepresentation.street;
 		address.SetStreet(accountStreet);
 	}
 
-	if (accountDataRepresentation.PostalCode){
-		QString accountPostalCode = *accountDataRepresentation.PostalCode;
+	if (accountDataRepresentation.postalCode){
+		QString accountPostalCode = *accountDataRepresentation.postalCode;
 		address.SetPostalCode(accountPostalCode.toInt());
 	}
 
-	if (accountDataRepresentation.Country){
-		QString accountCountry = *accountDataRepresentation.Country;
+	if (accountDataRepresentation.country){
+		QString accountCountry = *accountDataRepresentation.country;
 		address.SetCountry(accountCountry);
 	}
 

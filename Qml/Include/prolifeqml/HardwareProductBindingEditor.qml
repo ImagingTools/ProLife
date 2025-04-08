@@ -55,7 +55,7 @@ Item {
 			productsCB.currentIndex = -1;
 			if (productsCB.model){
 				for (let i = 0; i < productsCB.model.getItemsCount(); i++){
-					let id = productsCB.model.getData("Id", i);
+					let id = productsCB.model.getData("id", i);
 					if (id === productEditor.productId){
 						productsCB.currentIndex = i;
 						break;
@@ -79,7 +79,7 @@ Item {
 		let bindingElements = usedLicensesElementView.collection.table.elements;
 		if (bindingElements){
 			for (let i = 0; i < bindingElements.getItemsCount(); i++){
-				let id = bindingElements.getData("LicenseId", i)
+				let id = bindingElements.getData("licenseId", i)
 				if (id === licenseId){
 					return false;
 				}
@@ -134,7 +134,7 @@ Item {
 						id: productComboBoxElementView;
 						width: parent.width;
 						name: qsTr("Product");
-						nameId: "ProductName";
+						nameId: "productName";
 						model: CachedProductCollection.softwareProductsModel;
 						changeable: usedLicensesElementView.collection && usedLicensesElementView.collection.table.elementsList.count === 0;
 						bottomComp: currentIndex >= 0 ? undefined : productErrorComp
@@ -145,7 +145,7 @@ Item {
 							}
 							
 							if (currentIndex > -1){
-								productEditor.productId = model.getData("Id", currentIndex);
+								productEditor.productId = model.getData("id", currentIndex);
 							}
 							
 							if (availableLicensesElementView.collection){
@@ -204,32 +204,32 @@ Item {
 									collectionHeadersModel2.clear();
 									
 									let index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "LicenseName", index);
-									collectionHeadersModel2.setData("Name", qsTr("Name"), index);
+									collectionHeadersModel2.setData("id", "licenseName", index);
+									collectionHeadersModel2.setData("name", qsTr("name"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "LicenseId", index);
-									collectionHeadersModel2.setData("Name", qsTr("Article"), index);
+									collectionHeadersModel2.setData("id", "licenseId", index);
+									collectionHeadersModel2.setData("name", qsTr("Article"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "DeliveryId", index);
-									collectionHeadersModel2.setData("Name", qsTr("Delivery-ID"), index);
+									collectionHeadersModel2.setData("id", "deliveryId", index);
+									collectionHeadersModel2.setData("name", qsTr("Delivery-ID"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "PurchaseId", index);
-									collectionHeadersModel2.setData("Name", qsTr("Purchase Order-ID"), index);
+									collectionHeadersModel2.setData("id", "purchaseId", index);
+									collectionHeadersModel2.setData("name", qsTr("Purchase Order-ID"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "SerialNumber", index);
-									collectionHeadersModel2.setData("Name", qsTr("Software-ID"), index);
+									collectionHeadersModel2.setData("id", "serialNumber", index);
+									collectionHeadersModel2.setData("name", qsTr("Software-ID"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
-									collectionHeadersModel2.setData("Id", "CustomerName", index);
-									collectionHeadersModel2.setData("Name", qsTr("Customer"), index);
+									collectionHeadersModel2.setData("id", "customerName", index);
+									collectionHeadersModel2.setData("name", qsTr("Customer"), index);
 									
 									let filteringInfoIds = []
 									for (let i = 0; i < collectionHeadersModel2.getItemsCount(); i++){
-										let infoId = collectionHeadersModel2.getData("Id", i);
+										let infoId = collectionHeadersModel2.getData("id", i);
 										filteringInfoIds.push(infoId)
 									}
 									
@@ -254,11 +254,11 @@ Item {
 											id: softwareDataController;
 											
 											Component.onCompleted: {
-												additionalFieldIds.push("OrderUuid");
-												additionalFieldIds.push("HardwareId");
-												additionalFieldIds.push("InUse");
-												additionalFieldIds.push("ProductUuid");
-												additionalFieldIds.push("CustomerId");
+												additionalFieldIds.push("orderUuid");
+												additionalFieldIds.push("hardwareId");
+												additionalFieldIds.push("inUse");
+												additionalFieldIds.push("productUuid");
+												additionalFieldIds.push("customerId");
 											}
 											
 											function updateModel(){}
@@ -278,13 +278,13 @@ Item {
 											for (let i = 0; i < selection.length; i++){
 												let index = selection[i];
 												
-												let inUse = softwareProductCollection.table.elements.getData("InUse", index);
+												let inUse = softwareProductCollection.table.elements.getData("inUse", index);
 												if (inUse && !unbindButton.userCanUnbind){
 													ok = false;
 													break;
 												}
 												
-												let licenseId = softwareProductCollection.table.elements.getData("LicenseId", index);
+												let licenseId = softwareProductCollection.table.elements.getData("licenseId", index);
 												if (!productEditor.checkLicenseId(licenseId)){
 													let message = productEditor.licenseErrorMessage.replace("%1", licenseId)
 													// productEditor.setError(message)
@@ -297,7 +297,7 @@ Item {
 												for (let j = i + 1; j < selection.length; j++){
 													let index2 = selection[j];
 													
-													let licenseId2 = softwareProductCollection.table.elements.getData("LicenseId", index2);
+													let licenseId2 = softwareProductCollection.table.elements.getData("licenseId", index2);
 													if (licenseId === licenseId2){
 														let message =  productEditor.duplicateErrorMessage.replace("%1", licenseId);
 														// productEditor.setError(message)
@@ -328,7 +328,7 @@ Item {
 									}
 									
 									onHeadersChanged: {
-										softwareProductCollection.table.setColumnContentById("LicenseName", null);
+										softwareProductCollection.table.setColumnContentById("licenseName", null);
 									}
 									
 									FieldFilter {
@@ -382,8 +382,8 @@ Item {
 											softwareProductCollection.collectionFilter.addFieldFilter(emptyHardwareFilter);
 											
 											for(var i = 0; i < usedLicensesElementView.collection.table.elements.getItemsCount(); i++){
-												let id = usedLicensesElementView.collection.table.elements.getData("Id", i);
-												let licenseUuid = usedLicensesElementView.collection.table.elements.getData("LicenseUuid", i);
+												let id = usedLicensesElementView.collection.table.elements.getData("id", i);
+												let licenseUuid = usedLicensesElementView.collection.table.elements.getData("licenseUuid", i);
 												
 												let filter = excludeFilter.copyMe();
 												filter.m_filterValue = id;
@@ -485,32 +485,32 @@ Item {
 									collectionHeadersModel.clear();
 									
 									let index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "InUse", index);
-									collectionHeadersModel.setData("Name", "", index);
+									collectionHeadersModel.setData("id", "inUse", index);
+									collectionHeadersModel.setData("name", "", index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "LicenseName", index);
-									collectionHeadersModel.setData("Name", qsTr("Name"), index);
+									collectionHeadersModel.setData("id", "licenseName", index);
+									collectionHeadersModel.setData("name", qsTr("name"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "LicenseId", index);
-									collectionHeadersModel.setData("Name", qsTr("Article"), index);
+									collectionHeadersModel.setData("id", "licenseId", index);
+									collectionHeadersModel.setData("name", qsTr("Article"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "DeliveryId", index);
-									collectionHeadersModel.setData("Name", qsTr("Delivery-ID"), index);
+									collectionHeadersModel.setData("id", "deliveryId", index);
+									collectionHeadersModel.setData("name", qsTr("Delivery-ID"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "PurchaseId", index);
-									collectionHeadersModel.setData("Name", qsTr("Purchase Order-ID"), index);
+									collectionHeadersModel.setData("id", "purchaseId", index);
+									collectionHeadersModel.setData("name", qsTr("Purchase Order-ID"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "SerialNumber", index);
-									collectionHeadersModel.setData("Name", qsTr("Software-ID"), index);
+									collectionHeadersModel.setData("id", "serialNumber", index);
+									collectionHeadersModel.setData("name", qsTr("Software-ID"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
-									collectionHeadersModel.setData("Id", "CustomerName", index);
-									collectionHeadersModel.setData("Name", qsTr("Customer"), index);
+									collectionHeadersModel.setData("id", "customerName", index);
+									collectionHeadersModel.setData("name", qsTr("Customer"), index);
 									
 									bindingProductsCollection.tableViewParamsStoredServer = false;
 									bindingProductsCollection.dataController.headersModel = collectionHeadersModel;
@@ -528,18 +528,18 @@ Item {
 									commandsViewComp: undefined;
 									tableViewParamsStoredServer: false;
 									table.isMultiSelect: false;
-									// additionalFieldIds: ["OrderUuid","HardwareUuid", "InUse", "ProductUuid", "CustomerUuid"]
+									// additionalFieldIds: ["OrderUuid","HardwareUuid", "inUse", "ProductUuid", "CustomerUuid"]
 									
 									dataControllerComp:
 										Component {CollectionRepresentation {
 											id: bindingDataController;
 											
 											Component.onCompleted: {
-												additionalFieldIds.push("OrderUuid");
-												additionalFieldIds.push("HardwareId");
-												additionalFieldIds.push("InUse");
-												additionalFieldIds.push("ProductUuid");
-												additionalFieldIds.push("CustomerId");
+												additionalFieldIds.push("orderUuid");
+												additionalFieldIds.push("hardwareId");
+												additionalFieldIds.push("inUse");
+												additionalFieldIds.push("productUuid");
+												additionalFieldIds.push("customerId");
 											}
 											
 											function updateModel(){}
@@ -580,7 +580,7 @@ Item {
 											let index = selection[0];
 											
 											let elementsModel = bindingProductsCollection.table.elements;
-											let inUse = elementsModel.getData("InUse", index);
+											let inUse = elementsModel.getData("inUse", index);
 											
 											if (unbindButton.userCanUnbind){
 												unbindButton.enabled = true;
@@ -598,7 +598,7 @@ Item {
 									}
 									
 									onHeadersChanged: {
-										bindingProductsCollection.table.setColumnContentById("InUse", lockIconCellComp);
+										bindingProductsCollection.table.setColumnContentById("inUse", lockIconCellComp);
 									}
 								}
 							}
@@ -649,7 +649,7 @@ Item {
 							}
 							
 							for (let index of indexes){
-								let id = availableLicensesElementView.collection.table.elements.getData("Id", index);
+								let id = availableLicensesElementView.collection.table.elements.getData("id", index);
 								if (!selectedProductIds.includes(id)){
 									selectedProductIds.push(id)
 									let newIndex = usedLicensesElementView.collection.table.elements.insertNewItem()
@@ -701,15 +701,15 @@ Item {
 							let elementsModel = usedLicensesElementView.collection.table.elements;
 							
 							if (!unbindButton.userCanUnbind){
-								if (elementsModel.containsKey("InUse", index)){
-									let inUse = elementsModel.getData("InUse", index);
+								if (elementsModel.containsKey("inUse", index)){
+									let inUse = elementsModel.getData("inUse", index);
 									if (inUse){
 										return;
 									}
 								}
 							}
 							
-							let id = elementsModel.getData("Id", index);
+							let id = elementsModel.getData("id", index);
 							if (selectedProductIds.indexOf(id) > -1){
 								elementsModel.removeItem(index)
 								selectedProductIds.splice(selectedProductIds.indexOf(id), 1);

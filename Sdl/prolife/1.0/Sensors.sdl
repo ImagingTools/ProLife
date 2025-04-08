@@ -17,38 +17,38 @@ input DevicesListInput {
 }
 
 type ProductionStatus {
-	Id: ID!
-	Name: String!
-	Icon: String
+	id: ID!
+	name: String!
+	icon: String
 }
 
 type ProductionStatusModel {
-	Model: [ProductionStatus]
+	statusModel: [ProductionStatus]
 }
 
 type DeviceItem {
-	TypeId: ID!
-	Id: ID!
-	Name: String!
-	Description: String
-	DeliveryId: ID
-	PurchaseId: ID
-	LicenseId: ID
-	ProductUuid: ID
-	LicenseUuid: ID
-	OrderUuid: ID
-	Status: String
-	StatusId: String
-	DeviceType: String
-	ProductName: String
-	LicenseName: String
-	MacAddress: String
-	SerialNumber: String
-	Project: String
-	SoftwareLinksCount: Integer
-	CustomerName: String
-	Added: String
-	TimeStamp: String
+	typeId: ID!
+	id: ID!
+	name: String!
+	description: String
+	deliveryId: ID
+	purchaseId: ID
+	licenseId: ID
+	productUuid: ID
+	licenseUuid: ID
+	orderUuid: ID
+	status: String
+	statusId: String
+	deviceType: String
+	productName: String
+	licenseName: String
+	macAddress: String
+	serialNumber: String
+	project: String
+	softwareLinksCount: Integer
+	customerName: String
+	added: String
+	timeStamp: String
 }
 
 type DevicesListPayload {
@@ -57,72 +57,72 @@ type DevicesListPayload {
 }
 
 type DeviceData {
-	Id: ID
-	Name: String
-	Description: String
-	MacAddress: String
-	SerialNumber: String
-	DeviceType: String
-	OrderId: String
-	LicenseName: String
-	Project: String
-	ProductionStatus: String
+	id: ID
+	name: String
+	description: String
+	macAddress: String
+	serialNumber: String
+	deviceType: String
+	orderId: String
+	licenseName: String
+	project: String
+	productionStatus: String
 }
 
 type DeviceBindingData {
-	Id: ID!
-	ProductUuid: ID
-	SoftwareIds: ID
-	Project: String
+	id: ID!
+	productUuid: ID
+	softwareIds: ID
+	project: String
 }
 
 input DeviceDataInput {
-	Id: ID!
-	Item: DeviceData!
+	id: ID!
+	item: DeviceData!
 }
 
 input DeviceBindingInput {
-	DeviceId: ID!
-	Item: DeviceBindingData!
-	Project: String
+	deviceId: ID!
+	item: DeviceBindingData!
+	project: String
 }
 
 input GetDeviceBindingInput {
-	Id: ID!
+	id: ID!
 }
 
 input TransferLicensesInput {
-	FromDeviceId: ID!
-	ToDeviceId: ID!
+	fromDeviceId: ID!
+	toDeviceId: ID!
 }
 
 input CreateLicenseFileInput {
-	DeviceId: ID!
-	Encrypt: Bool
+	deviceId: ID!
+	encrypt: Bool
 }
 
 input DecryptLicenseFileInput {
-	Key: ID!
-	FileData: ID!
+	key: ID!
+	fileData: ID!
 }
 
 type TransferLicensesPayload {
-	Ok: Boolean
-	Limit: Boolean
+	ok: Boolean
+	limit: Boolean
 }
 
 type RequestTransferLicensesPayload {
-	Result: Boolean!
+	result: Boolean!
 }
 
 type CreateLicenseFilePayload {
-	Name: String!
-	Data: String!
+	name: String!
+	data: String!
 }
 
 type DecryptLicenseFilePayload {
-	FileName: String!
-	DecryptedData: ID!
+	fileName: String!
+	decryptedData: ID!
 }
 
 type Query {

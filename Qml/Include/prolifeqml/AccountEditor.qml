@@ -54,7 +54,7 @@ ViewBase {
 		groupsElement.table.uncheckAll();
 		if (groupsElement.table.elements){
 			for (let i = 0; i < groupsElement.table.elements.getItemsCount(); i++){
-				let id = groupsElement.table.elements.getData("Id", i);
+				let id = groupsElement.table.elements.getData("id", i);
 				if (groupIds.includes(id)){
 					groupsElement.table.checkItem(i);
 				}
@@ -76,7 +76,7 @@ ViewBase {
 		let selectedGroupIds = []
 		let indexes = groupsElement.table.getCheckedItems();
 		for (let index of indexes){
-			let id = groupsElement.table.elements.getData("Id", index);
+			let id = groupsElement.table.elements.getData("id", index);
 			selectedGroupIds.push(id)
 		}
 		
@@ -390,8 +390,8 @@ ViewBase {
 				
 				headersModel.insertNewItem();
 				
-				headersModel.setData("Id", "Name");
-				headersModel.setData("Name", qsTr("Group Name"));
+				headersModel.setData("id", "name");
+				headersModel.setData("name", qsTr("Group Name"));
 				
 				groupsElement.table.headers = headersModel;
 			}

@@ -91,9 +91,9 @@ ElementView {
 	
 	function setIsEnabledCommand(commandsModel, commandId, isEnabled){
 		for (let i = 0; i < commandsModel.getItemsCount(); i++){
-			let id = commandsModel.getData("Id", i);
+			let id = commandsModel.getData("id", i);
 			if (id === commandId){
-				commandsModel.setData("IsEnabled", isEnabled, i);
+				commandsModel.setData("isEnabled", isEnabled, i);
 				break;
 			}
 		}
@@ -101,7 +101,7 @@ ElementView {
 	
 	function setCommandValue(commandsModel, commandId, commandKey, commandValue){
 		for (let i = 0; i < commandsModel.getItemsCount(); i++){
-			let id = commandsModel.getData("Id", i);
+			let id = commandsModel.getData("id", i);
 			if (id === commandId){
 				commandsModel.setData(commandKey, commandValue, i);
 				break;
@@ -133,19 +133,19 @@ ElementView {
 		Component.onCompleted: {
 			let index = softwareCommandsModel.insertNewItem();
 			
-			softwareCommandsModel.setData("Id", "Edit", index);
-			softwareCommandsModel.setData("Name", "Edit", index);
-			softwareCommandsModel.setData("Icon", "Icons/Edit", index);
-			softwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
-			softwareCommandsModel.setData("Visible", true, index);
+			softwareCommandsModel.setData("id", "Edit", index);
+			softwareCommandsModel.setData("name", "Edit", index);
+			softwareCommandsModel.setData("icon", "Icons/Edit", index);
+			softwareCommandsModel.setData("isEnabled", !root.readOnly, index);
+			softwareCommandsModel.setData("visible", true, index);
 			
 			index = softwareCommandsModel.insertNewItem();
 			
-			softwareCommandsModel.setData("Id", "Remove", index);
-			softwareCommandsModel.setData("Name", "Remove", index);
-			softwareCommandsModel.setData("Icon", "Icons/Delete", index);
-			softwareCommandsModel.setData("IsEnabled", !root.readOnly, index);
-			softwareCommandsModel.setData("Visible", true, index);
+			softwareCommandsModel.setData("id", "Remove", index);
+			softwareCommandsModel.setData("name", "Remove", index);
+			softwareCommandsModel.setData("icon", "Icons/Delete", index);
+			softwareCommandsModel.setData("isEnabled", !root.readOnly, index);
+			softwareCommandsModel.setData("visible", true, index);
 			
 			root.activeCommandsModel = softwareCommandsModel;
 			softwareCommandsModel.completed = true;

@@ -14,7 +14,7 @@ ComboBoxGqlSimple {
 	gqlCommandId: "AccountsList"
 	subscriptionCommandId: "OnAccountsCollectionChanged"
 	
-	fields: ["Id", "Name"];
+	fields: ["id", "name"];
 	
 	property CollectionFilter complexFilter;
 		
@@ -25,7 +25,7 @@ ComboBoxGqlSimple {
 
 		complexFilter.removeFieldFilter(accountFilter)
 		if (currentIndex > 0){
-			let value = model.getData("Id", currentIndex);
+			let value = model.getData("id", currentIndex);
 			accountFilter.m_filterValue = value;
 			complexFilter.addFieldFilter(accountFilter)
 		}
@@ -37,8 +37,8 @@ ComboBoxGqlSimple {
 		currentIndex = -1;
 		model.insertNewItem(0)
 		
-		model.setData("Id", "All");
-		model.setData("Name", qsTr("All customers"))
+		model.setData("id", "All");
+		model.setData("name", qsTr("All customers"))
 		
 		currentIndex = 0;
 	}

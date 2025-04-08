@@ -37,10 +37,10 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>CustomerId</Value>
-                                <Value>Name</Value>
-                                <Value>Email</Value>
-                                <Value>Description</Value>
+                                <Value>customerId</Value>
+                                <Value>name</Value>
+                                <Value>email</Value>
+                                <Value>description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -60,10 +60,10 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>CustomerId</Value>
-                                <Value>Name</Value>
-                                <Value>Email</Value>
-                                <Value>Description</Value>
+                                <Value>customerId</Value>
+                                <Value>name</Value>
+                                <Value>email</Value>
+                                <Value>description</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -246,6 +246,26 @@
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplaceableFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>customerId</Value>
+                                <Value>name</Value>
+                                <Value>email</Value>
+                                <Value>description</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplacementFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>CustomerId</Value>
+                                <Value>Name</Value>
+                                <Value>Email</Value>
+                                <Value>Description</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>

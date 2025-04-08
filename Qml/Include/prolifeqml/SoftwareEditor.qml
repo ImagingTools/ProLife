@@ -145,13 +145,10 @@ ViewBase {
 		ordersCB.currentIndex = -1;
 		
 		let orderUuid = softwareProductData.m_orderUuid;
-		console.log("updateGui", softwareProductData);
 		if (ordersCB.sourceModel){
 			for (let i = 0; i < ordersCB.sourceModel.getItemsCount(); i++){
-				let id = ordersCB.sourceModel.getData("Id", i);
+				let id = ordersCB.sourceModel.getData("id", i);
 				if (id === orderUuid){
-					console.log("id ===", id);
-					
 					ordersCB.currentIndex = i;
 					break;
 				}
@@ -163,7 +160,7 @@ ViewBase {
 		
 		if (productCB.model){
 			for (let i = 0; i < productCB.model.getItemsCount(); i++){
-				let id = productCB.model.getData("Id", i);
+				let id = productCB.model.getData("id", i);
 				if (id === productId){
 					productCB.currentIndex = i;
 					break;
@@ -186,7 +183,7 @@ ViewBase {
 		if (canChangeOrder){
 			if (ordersCB.sourceModel){
 				if (ordersCB.currentIndex >= 0){
-					let orderUuid = ordersCB.sourceModel.getData("Id", ordersCB.currentIndex);
+					let orderUuid = ordersCB.sourceModel.getData("id", ordersCB.currentIndex);
 					softwareProductData.m_orderUuid = orderUuid;
 				}
 				else{
@@ -196,7 +193,7 @@ ViewBase {
 		}
 		
 		if (productCB.currentIndex >= 0 && productCB.model){
-			let selectedId = productCB.model.getData("Id", productCB.currentIndex);
+			let selectedId = productCB.model.getData("id", productCB.currentIndex);
 			softwareProductData.m_productId = selectedId;
 		}
 		else{
@@ -209,10 +206,10 @@ ViewBase {
 	
 	function getProductLicensesModel(){
 		for (let i = 0; i < root.licensesModel.getItemsCount(); i++){
-			let productId = root.licensesModel.getData("Id", i);
+			let productId = root.licensesModel.getData("id", i);
 			if (productId === root.productId){
-				if (root.licensesModel.containsKey("Licenses", i)){
-					return root.licensesModel.getData("Licenses", i);
+				if (root.licensesModel.containsKey("licenses", i)){
+					return root.licensesModel.getData("licenses", i);
 				}
 			}
 		}
@@ -313,10 +310,10 @@ ViewBase {
 				FilterableComboBoxElementView {
 					id: ordersCB;
 					
-					nameId: "OrderId";
+					nameId: "orderId";
 					name: qsTr("Order");
 					
-					filteringFields: ["OrderId", "CustomerName"];
+					filteringFields: ["orderId", "customerName"];
 					
 					sourceModel: CachedOrderCollection.collectionModel;
 					
@@ -328,7 +325,7 @@ ViewBase {
 					delegate: Component {
 						FilterableComboBoxDelegate {
 							width: ordersCB.cbRef ? ordersCB.cbRef.width : 0;
-							description: qsTr("Customer") + ": " + model.CustomerName;
+							description: qsTr("Customer") + ": " + model.customerName;
 							comboBoxRef: ordersCB.cbRef;
 						}
 					}
@@ -363,7 +360,7 @@ ViewBase {
 					let licenseUuid = root.softwareProductData.m_licenseUuid;
 					if (licenseCB.model){
 						for (let i = 0; i < licenseCB.model.getItemsCount(); i++){
-							let licenseId = licenseCB.model.getData("Id", i);
+							let licenseId = licenseCB.model.getData("id", i);
 							if (licenseId === licenseUuid){
 								licenseCB.currentIndex = i;
 								
@@ -401,7 +398,7 @@ ViewBase {
 					}
 					
 					if (licenseCB.currentIndex >= 0 && licenseCB.model){
-						let selectedId = licenseCB.model.getData("Id", licenseCB.currentIndex);
+						let selectedId = licenseCB.model.getData("id", licenseCB.currentIndex);
 						root.softwareProductData.m_licenseUuid = selectedId;
 					}
 					else{
@@ -413,7 +410,7 @@ ViewBase {
 					id: productCB;
 					
 					name: qsTr("Product");
-					nameId: "ProductName";
+					nameId: "productName";
 					
 					model: CachedProductCollection.softwareProductsModel;
 					
@@ -431,9 +428,9 @@ ViewBase {
 					
 					onCurrentIndexChanged: {
 						if (productCB.currentIndex >= 0){
-							let licensesModel = productCB.model.getData("Licenses", productCB.currentIndex);
+							let licensesModel = productCB.model.getData("licenses", productCB.currentIndex);
 							if (!licensesModel){
-								licensesModel = productCB.model.addTreeModel("Licenses", productCB.currentIndex);
+								licensesModel = productCB.model.addTreeModel("licenses", productCB.currentIndex);
 							}
 							
 							root.productLicensesModel = licensesModel;
@@ -451,7 +448,7 @@ ViewBase {
 				ComboBoxElementView {
 					id: licenseCB;
 					
-					nameId: "LicenseName";
+					nameId: "licenseName";
 					name: qsTr("Licenses");
 					
 					model: root.productLicensesModel;

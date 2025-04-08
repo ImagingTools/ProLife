@@ -61,7 +61,7 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 	if (retVal){
 		QSet<QByteArray> filteringFieldIds =
 			imtbase::CComplexCollectionFilterHelper::GetFilteringFieldIds(collectionFilter.GetFieldsFilter());
-		
+
 		QString textFilter = imtbase::CComplexCollectionFilterHelper::GetTextFilter(collectionFilter.GetFieldsFilter()).replace(":", "");
 		if (!textFilter.isEmpty() && filteringFieldIds.contains("MacAddress")){
 			QString macAddressTextFilter = QString(R"(('s' || replace("MacAddress", ':', '')) ILIKE '%%1%')").arg(textFilter);

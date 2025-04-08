@@ -41,7 +41,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerC
 	sdl::imtbase::ImtCollection::CVisualStatus::V1_0& response = *retVal.Version_1_0;
 	
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(*response.ObjectId, dataPtr)){
+	if (m_objectCollectionCompPtr->GetObjectData(*response.objectId, dataPtr)){
 		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 		if (softwareInfoPtr != nullptr){
 			QByteArray productId = softwareInfoPtr->GetProductId();
@@ -63,7 +63,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerC
 				name += " (" + serialNumber + ")";
 			}
 			
-			response.Text = name;
+			response.text = name;
 		}
 	}
 	
@@ -107,94 +107,94 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	QString hardwareId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toString();
 	
 	if (requestInfo.items.isIdRequested){
-		representationObject.Id = (objectId);
+		representationObject.id = (objectId);
 	}
 	
 	if (requestInfo.items.isTypeIdRequested){
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.TypeId = (collectionObjectId);
+		representationObject.typeId = (collectionObjectId);
 	}
 	
 	if (requestInfo.items.isNameRequested){
 		QString productName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
-		representationObject.Name = (productName);
+		representationObject.name = (productName);
 		
 		QString serialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 		if (!serialNumber.isEmpty()){
-			representationObject.Name = (productName + " (" + serialNumber + ")");
+			representationObject.name = (productName + " (" + serialNumber + ")");
 		}
 	}
 	
 	if (requestInfo.items.isDescriptionRequested){
-		representationObject.Description = (metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
+		representationObject.description = (metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
 	}
 	
 	if (requestInfo.items.isDeliveryIdRequested){
-		representationObject.DeliveryId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
+		representationObject.deliveryId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
 	}
 	
 	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.PurchaseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
+		representationObject.purchaseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
 	}
 	
 	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.OrderUuid = softwareInfoPtr->GetOrderId();
+		representationObject.orderUuid = softwareInfoPtr->GetOrderId();
 	}
 	
 	if (requestInfo.items.isMacAddressRequested){
-		representationObject.MacAddress = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
+		representationObject.macAddress = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
 	}
 	
 	if (requestInfo.items.isProductIdRequested){
-		representationObject.ProductId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toString();
+		representationObject.productId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toString();
 	}
 	
 	if (requestInfo.items.isProductNameRequested) {
-		representationObject.ProductName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
+		representationObject.productName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	}
 	
 	if (requestInfo.items.isProductUuidRequested) {
-		representationObject.ProductUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toString();
+		representationObject.productUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toString();
 	}
 	
 	if (requestInfo.items.isSerialNumberRequested) {
-		representationObject.SerialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
+		representationObject.serialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 	}
 	
 	if (requestInfo.items.isIsPairedRequested) {
-		representationObject.IsPaired = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
+		representationObject.isPaired = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
 	}
 	
 	if (requestInfo.items.isInUseRequested) {
-		representationObject.InUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
+		representationObject.inUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	}
 	
 	if (requestInfo.items.isHardwareIdRequested) {
-		representationObject.HardwareId = hardwareId;
+		representationObject.hardwareId = hardwareId;
 	}
 	
 	if (requestInfo.items.isLicenseNameRequested) {
-		representationObject.LicenseName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
+		representationObject.licenseName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
 	}
 	
 	if (requestInfo.items.isLicenseIdRequested) {
-		representationObject.LicenseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
+		representationObject.licenseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
 	}
 	
 	if (requestInfo.items.isLicenseUuidRequested) {
-		representationObject.LicenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
+		representationObject.licenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
 	}
 	
 	if (requestInfo.items.isCustomerIdRequested) {
-		representationObject.CustomerId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
+		representationObject.customerId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
 	}
 	
 	if (requestInfo.items.isCustomerNameRequested) {
-		representationObject.CustomerName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
+		representationObject.customerName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 	}
 	
 	if (requestInfo.items.isProjectRequested) {
-		representationObject.Project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
+		representationObject.project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
 	}
 	
 	if (requestInfo.items.isExpirationRequested) {
@@ -204,7 +204,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			
 			const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 			if (licenseInstancePtr != nullptr){
-				representationObject.Expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
+				representationObject.expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 			}
 		}
 	}
@@ -213,16 +213,16 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		QByteArray hardwareMacAddress = hardwareId.toUtf8();
 		bool isPaired = !hardwareMacAddress.isEmpty();
 		if (isPaired){
-			representationObject.Status = ("IsPaired");
+			representationObject.status = ("IsPaired");
 		}
 		else{
-			representationObject.Status = ("NotPaired");
+			representationObject.status = ("NotPaired");
 		}
 		
 		if (isPaired){
 			bool isUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 			if (isUse){
-				representationObject.Status = ("InUse");
+				representationObject.status = ("InUse");
 			}
 		}
 	}
@@ -231,14 +231,14 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime().toUTC();
 		
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.Added = (added);
+		representationObject.added = (added);
 	}
 	
 	if (requestInfo.items.isTimeStampRequested){
 		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
 		
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
-		representationObject.TimeStamp = (lastModified);
+		representationObject.timeStamp = (lastModified);
 	}
 	
 	return true;
@@ -273,8 +273,8 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 		return nullptr;
 	}
 	
-	if (softwareProductDataRepresentation.Id){
-		newObjectId = *softwareProductDataRepresentation.Id;
+	if (softwareProductDataRepresentation.id){
+		newObjectId = *softwareProductDataRepresentation.id;
 	}
 	
 	if (newObjectId.isEmpty()){
@@ -289,8 +289,8 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 		return nullptr;
 	}
 	
-	if (softwareProductDataRepresentation.OrderUuid){
-		QString orderId = *softwareProductDataRepresentation.OrderUuid;
+	if (softwareProductDataRepresentation.orderUuid){
+		QString orderId = *softwareProductDataRepresentation.orderUuid;
 		if (!orderId.isEmpty()){
 			if (!AddSoftwareToOrder(newObjectId, orderId.toUtf8())){
 				errorMessage = QString("Unable to add software. Error: Add software to order failed");
@@ -325,29 +325,29 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 	
 	QByteArray id;
-	if (arguments.input.Version_1_0->Id){
-		id = *arguments.input.Version_1_0->Id;
+	if (arguments.input.Version_1_0->id){
+		id = *arguments.input.Version_1_0->id;
 	}
 	
-	representationPayload.Id = (id);
+	representationPayload.id = (id);
 	
 	QByteArray productId = softwareInfoPtr->GetProductId();
-	representationPayload.ProductId = (productId);
+	representationPayload.productId = (productId);
 	
 	QByteArray factoryId = softwareInfoPtr->GetFactoryId();
-	representationPayload.CategoryId = (factoryId);
+	representationPayload.categoryId = (factoryId);
 	
 	QByteArray serialNumber = softwareInfoPtr->GetSerialNumber();
-	representationPayload.SerialNumber = (serialNumber);
+	representationPayload.serialNumber = (serialNumber);
 	
 	QByteArray project = softwareInfoPtr->GetProject();
-	representationPayload.Project = (project);
+	representationPayload.project = (project);
 	
 	bool inUse = softwareInfoPtr->IsInUse();
-	representationPayload.InUse = (inUse);
+	representationPayload.inUse = (inUse);
 	
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
-	representationPayload.OrderUuid = (orderId);
+	representationPayload.orderUuid = (orderId);
 	
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
@@ -355,8 +355,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		
 		const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 		if (licenseInstancePtr != nullptr){
-			representationPayload.LicenseUuid = (licenseInstancePtr->GetLicenseId());
-			representationPayload.Expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
+			representationPayload.licenseUuid = (licenseInstancePtr->GetLicenseId());
+			representationPayload.expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 		}
 	}
 	
@@ -482,8 +482,8 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	}
 	
 	QByteArray serialNumber;
-	if (representation.SerialNumber){
-		serialNumber = *representation.SerialNumber;
+	if (representation.serialNumber){
+		serialNumber = *representation.serialNumber;
 	}
 	
 	if (serialNumber.isEmpty()){
@@ -506,8 +506,8 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	softwareInfoPtr->SetSerialNumber(serialNumber);
 	
 	QByteArray productId;
-	if (representation.ProductId){
-		productId = *representation.ProductId;
+	if (representation.productId){
+		productId = *representation.productId;
 	}
 	
 	if (productId.isEmpty()){
@@ -537,14 +537,14 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 	
-	if (representation.Project){
-		QString project = *representation.Project;
+	if (representation.project){
+		QString project = *representation.project;
 		softwareInfoPtr->SetProject(project.toUtf8());
 	}
 	
 	QByteArray orderUuid;
-	if (representation.OrderUuid){
-		orderUuid = *representation.OrderUuid;
+	if (representation.orderUuid){
+		orderUuid = *representation.orderUuid;
 		softwareInfoPtr->SetOrderId(orderUuid);
 	}
 	
@@ -571,8 +571,8 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	softwareInfoPtr->SetupProductInstance(productId, "", customerUuid);
 	
 	QByteArray licenseUuid;
-	if (representation.LicenseUuid){
-		licenseUuid = *representation.LicenseUuid;
+	if (representation.licenseUuid){
+		licenseUuid = *representation.licenseUuid;
 	}
 	
 	if (licenseUuid.isEmpty()){
@@ -582,7 +582,7 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 	
-	QString expiration = *representation.Expiration;
+	QString expiration = *representation.expiration;
 	
 	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
 	
@@ -755,16 +755,16 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		return false;
 	}
 	
-	if (!requestArguments.input.Version_1_0->Item){
+	if (!requestArguments.input.Version_1_0->item){
 		I_CRITICAL();
 		return false;
 	}
 	
-	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareData = *requestArguments.input.Version_1_0->Item;
+	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareData = *requestArguments.input.Version_1_0->item;
 	
 	QByteArray objectId;
-	if (requestArguments.input.Version_1_0->Id){
-		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->Id;
+	if (requestArguments.input.Version_1_0->id){
+		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->id;
 	}
 	
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&object);

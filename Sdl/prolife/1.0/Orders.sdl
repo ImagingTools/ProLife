@@ -16,17 +16,17 @@ input OrdersListInput {
 }
 
 type OrderItem {
-	TypeId: ID!
-	Id: ID!
-	Name: String
-	CustomerId: ID
-	Status: String
-	OrderId: ID
-	PurchaseId: ID
-	CustomerName: String
-	Description: String
-	Added: String
-	TimeStamp: String
+	typeId: ID!
+	id: ID!
+	name: String
+	customerId: ID
+	status: String
+	orderId: ID
+	purchaseId: ID
+	customerName: String
+	description: String
+	added: String
+	timeStamp: String
 }
 
 type OrdersListPayload {
@@ -35,34 +35,34 @@ type OrdersListPayload {
 }
 
 type OrderedProduct {
-	Id: ID!
-	ProductUuid: ID
-	LicenseUuid: ID
-	CategoryId: ID
-	LicenseId: ID
-	ProductName: String
-	LicenseName: String
-	SerialNumber: ID
-	InUse: Bool
-	IsNew: Bool
-	Expiration: String
-	MacAddress: ID
+	id: ID!
+	productUuid: ID
+	licenseUuid: ID
+	categoryId: ID
+	licenseId: ID
+	productName: String
+	licenseName: String
+	serialNumber: ID
+	inUse: Bool
+	isNew: Bool
+	expiration: String
+	macAddress: ID
 }
 
 type OrderData {
-	Id: ID
-	Name: String
-	Description: String
-	OrderId: ID
-	PurchaseId: ID
-	CustomerId: ID
-	OrderStatus: ID
-	OrderProducts: [OrderedProduct]
+	id: ID
+	name: String
+	description: String
+	orderId: ID
+	purchaseId: ID
+	customerId: ID
+	orderStatus: ID
+	orderProducts: [OrderedProduct]
 }
 
 input OrderDataInput {
-	Id: ID!
-	Item: OrderData!
+	id: ID!
+	item: OrderData!
 }
 
 type Query {

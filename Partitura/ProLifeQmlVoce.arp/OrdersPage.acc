@@ -188,6 +188,32 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ReplaceableFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>orderId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>description</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ReplacementFilterFields" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Status</Value>
+                                <Value>OrderId</Value>
+                                <Value>PurchaseId</Value>
+                                <Value>Description</Value>
+                                <Value>CustomerName</Value>
+                                <Value>Added</Value>
+                                <Value>TimeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -224,13 +250,13 @@
                     <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Status</Value>
-                                <Value>OrderId</Value>
-                                <Value>PurchaseId</Value>
-                                <Value>Description</Value>
-                                <Value>CustomerName</Value>
-                                <Value>Added</Value>
-                                <Value>TimeStamp</Value>
+                                <Value>status</Value>
+                                <Value>orderId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>description</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -253,12 +279,11 @@
                     <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>OrderId</Value>
-                                <Value>PurchaseId</Value>
-                                <Value>Description</Value>
-                                <Value>Status</Value>
-                                <Value>CustomerName</Value>
-                                <Value>MacAddress</Value>
+                                <Value>status</Value>
+                                <Value>orderId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>description</Value>
+                                <Value>customerName</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

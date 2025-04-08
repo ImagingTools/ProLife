@@ -194,8 +194,6 @@ ViewBase {
 			
 			name: qsTr("License")
 			
-			nameId: "Name"
-			
 			filteringFields: [
 				SoftwareProductItemTypeMetaInfo.s_serialNumber,
 				SoftwareProductItemTypeMetaInfo.s_productName,
@@ -210,12 +208,16 @@ ViewBase {
 					width: comboBoxRef ? comboBoxRef.width : 0;
 					comboBoxRef: createdLicenseCb.cbRef;
 					
-					text: model.SerialNumber === "" ? model.ProductName + " (" + qsTr("No software-ID") + ")" : model.ProductName + " (" + model.SerialNumber+ ")";
+					text: model[SoftwareProductItemTypeMetaInfo.s_serialNumber] === "" ? model[SoftwareProductItemTypeMetaInfo.s_productName] +
+																						 " (" + qsTr("No software-ID") + ")" : model[SoftwareProductItemTypeMetaInfo.s_productName] +
+																						 " (" + model[SoftwareProductItemTypeMetaInfo.s_serialNumber]+ ")";
 					
 					property string article: qsTr("Article");
 					property string notSpecified: qsTr("not specified");
 					
-					description: model.LicenseId !== "" ? article + ": " + model.LicenseName + " (" + model.LicenseId + ")": article + ": " + notSpecified;
+					description: model[SoftwareProductItemTypeMetaInfo.s_licenseId] !== "" ? article +
+																							 ": " + model[SoftwareProductItemTypeMetaInfo.s_licenseName] +
+																							 " (" + model[SoftwareProductItemTypeMetaInfo.s_licenseId] + ")": article + ": " + notSpecified;
 				}
 			}
 			
@@ -311,8 +313,8 @@ ViewBase {
 						width: licenseCB.width;
 						comboBoxRef: licenseCB.cbRef;
 						
-						text: model.LicenseName;
-						description: model.LicenseId;
+						text: model[SoftwareProductItemTypeMetaInfo.s_licenseName];
+						description: model[SoftwareProductItemTypeMetaInfo.s_licenseId];
 					}
 				}
 				
