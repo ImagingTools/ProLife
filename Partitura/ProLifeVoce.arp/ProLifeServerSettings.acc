@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5332" Description="ACF"/>
+            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description></Description>
+    <Keywords></Keywords>
+    <ElementsList>
+        <Element Id="BackupParams" PackageId="" ComponentId="BackupParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="ConnectionCollection" PackageId="ImtServicePck" ComponentId="ConnectionCollection">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionDescriptions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Server tcp port to be listened</Value>
+                                <Value>Server websocket port to be listened</Value>
+                                <Value>Server tcp port to be connected to Puma</Value>
+                                <Value>Server websocket port to be connected to Puma</Value>
+                                <Value>Server websocket port to be connected to Lisa</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionNames" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife main HTTP</Value>
+                                <Value>ProLife main WebSocket</Value>
+                                <Value>Puma main HTTP</Value>
+                                <Value>Puma main WebSocket</Value>
+                                <Value>Lisa main HTTP</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionServiceTypeNames" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife</Value>
+                                <Value>ProLife</Value>
+                                <Value>Puma</Value>
+                                <Value>Puma</Value>
+                                <Value>Lisa</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionTypes" Type="Integer[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>0</Value>
+                                <Value>0</Value>
+                                <Value>1</Value>
+                                <Value>1</Value>
+                                <Value>1</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionUrlListCompPtr" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ServerParams/ServerPort</Value>
+                                <Value>ServerParams/WebSocketServerPort</Value>
+                                <Value>ServerParams/PumaUrl</Value>
+                                <Value>ServerParams/PumaWebSocketPort</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ConnectionUsageIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLifeUrlTcp</Value>
+                                <Value>ProLifeUrlWs</Value>
+                                <Value>PumaUrlTcp</Value>
+                                <Value>PumaUrlWs</Value>
+                                <Value>LisaUrlTcp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServiceTypeName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="LoggingParams/TracingConfiguration"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DatabaseParams" PackageId="" ComponentId="DatabaseParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="Email" PackageId="BasePck" ComponentId="TextParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="FileAutoPersistence" PackageId="ImtCoreVoce" ComponentId="FileAutoPersistence">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerSettings.xml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="104"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Object" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Preferences"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="FileBasedSslConfiguration" PackageId="ImtComVoce" ComponentId="FileBasedSslConfiguration">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="EnableSsl" Type="Boolean" ExportId="EnableSsl">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="LoggingParams" PackageId="ImtCoreVoce" ComponentId="LoggingParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="Preferences" PackageId="BasePck" ComponentId="ComposedParamsSet">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>DatabaseParams</Value>
+                                <Value>ServerParams</Value>
+                                <Value>BackupParams</Value>
+                                <Value>LoggingParams</Value>
+                                <Value>FileBasedSslConfiguration</Value>
+                                <Value>SmtpServerParams</Value>
+                                <Value>Support</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Database</Value>
+                                <Value>Server</Value>
+                                <Value>Backup</Value>
+                                <Value>Log</Value>
+                                <Value>SslConfiguration</Value>
+                                <Value>SmtpServer</Value>
+                                <Value>Support</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Default"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ServerParams" PackageId="" ComponentId="ServerParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="SmtpServerParams" PackageId="ImtHttpServerVoce" ComponentId="SmtpServerParams">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="Support" PackageId="BasePck" ComponentId="ComposedParamsSet">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Email</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Email</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="BackupParams">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="Backup" PackageId="BasePck" ComponentId="ComposedParamsSet">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>SchedulerParams</Value>
+                                            <Value>FileNameParam</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>SchedulerParams</Value>
+                                            <Value>BackupFolder</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Default"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="FileNameParam" PackageId="FilePck" ComponentId="FileNameParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="PathType" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="2"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="SchedulerParams" PackageId="ImtAppPck" ComponentId="SchedulerParams">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Interval" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="86400"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="StartTime" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="01-01-2020 04:00"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imod::IModel" ComponentId="Backup"/>
+                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="Backup"/>
+                    <Interface InterfaceId="iser::ISerializable" ComponentId="Backup"/>
+                    <Interface InterfaceId="istd::IChangeable" ComponentId="Backup"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="Backup"/>
+                    <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Backup"/>
+                </ExportedInterfaces>
+                <ExportedComponents/>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="DatabaseParams">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="Database" PackageId="BasePck" ComponentId="ComposedParamsSet">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ProLifeDatabaseAccessSettings</Value>
+                                            <Value>PumaDatabaseAccessSettings</Value>
+                                            <Value>LisaDatabaseAccessSettings</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ProLifeDatabaseSettings</Value>
+                                            <Value>PumaDatabaseSettings</Value>
+                                            <Value>LisaDatabaseSettings</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Default"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="LisaDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="lisa"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="root"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="5432"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="postgres"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ProLifeDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="prolife"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="root"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PumaDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="puma"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="root"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="5432"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="postgres"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imod::IModel" ComponentId="Database"/>
+                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="Database"/>
+                    <Interface InterfaceId="iser::ISerializable" ComponentId="Database"/>
+                    <Interface InterfaceId="istd::IChangeable" ComponentId="Database"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="Database"/>
+                    <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Database"/>
+                </ExportedInterfaces>
+                <ExportedComponents>
+                    <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="LisaDatabaseAccessSettings"/>
+                    <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="ProLifeDatabaseAccessSettings"/>
+                    <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="PumaDatabaseAccessSettings"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
+        <EmbeddedRegistry Id="ServerParams">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="LisaUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="7776"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="http"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="LisaWebSocketUrl" PackageId="ImtCorePck" ComponentId="UrlParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="8776"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="ws"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Server" PackageId="BasePck" ComponentId="ComposedParamsSet">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ServerConnectionParams/PumaUrl</Value>
+                                            <Value>ServerConnectionParams/PumaWebSocketPort</Value>
+                                            <Value>ServerConnectionParams/ServerPort</Value>
+                                            <Value>ServerConnectionParams/WebSocketServerPort</Value>
+                                            <Value>LisaUrl</Value>
+                                            <Value>LisaWebSocketUrl</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ServerUrl</Value>
+                                            <Value>WsUrl</Value>
+                                            <Value>PumaUrl</Value>
+                                            <Value>PumaWsUrl</Value>
+                                            <Value>LisaUrl</Value>
+                                            <Value>LisaWsUrl</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Default"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerConnectionParams" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerConnectionParams">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="7778"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="WebSocketDefaultPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="8778"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imod::IModel" ComponentId="Server"/>
+                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="Server"/>
+                    <Interface InterfaceId="iser::ISerializable" ComponentId="Server"/>
+                    <Interface InterfaceId="istd::IChangeable" ComponentId="Server"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="Server"/>
+                    <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Server"/>
+                </ExportedInterfaces>
+                <ExportedComponents>
+                    <Component ExportedId="LisaUrl" ComponentId="LisaUrl"/>
+                    <Component ExportedId="LisaWebSocketUrl" ComponentId="LisaWebSocketUrl"/>
+                    <Component ExportedId="PumaUrl" ComponentId="ServerConnectionParams/PumaUrl"/>
+                    <Component ExportedId="PumaWebSocketPort" ComponentId="ServerConnectionParams/PumaWebSocketPort"/>
+                    <Component ExportedId="ServerPort" ComponentId="ServerConnectionParams/ServerPort"/>
+                    <Component ExportedId="WebSocketServerPort" ComponentId="ServerConnectionParams/WebSocketServerPort"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
+    </EmbeddedRegistriesList>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imod::IModel" ComponentId="Preferences"/>
+        <Interface InterfaceId="imtservice::IConnectionCollection" ComponentId="ConnectionCollection"/>
+        <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
+        <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="FileAutoPersistence/AutoPersistence"/>
+    </ExportedInterfaces>
+    <ExportedComponents>
+        <Component ExportedId="BackupParams" ComponentId="BackupParams"/>
+        <Component ExportedId="EnableSsl" ComponentId="FileBasedSslConfiguration/EnableSsl"/>
+        <Component ExportedId="FileBasedSslConfiguration" ComponentId="FileBasedSslConfiguration"/>
+        <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="DatabaseParams/LisaDatabaseAccessSettings"/>
+        <Component ExportedId="LisaUrl" ComponentId="ServerParams/LisaUrl"/>
+        <Component ExportedId="LisaWebSocketUrl" ComponentId="ServerParams/LisaWebSocketUrl"/>
+        <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="DatabaseParams/ProLifeDatabaseAccessSettings"/>
+        <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="DatabaseParams/PumaDatabaseAccessSettings"/>
+        <Component ExportedId="PumaUrl" ComponentId="ServerParams/PumaUrl"/>
+        <Component ExportedId="PumaWebSocketPort" ComponentId="ServerParams/PumaWebSocketPort"/>
+        <Component ExportedId="ServerPort" ComponentId="ServerParams/ServerPort"/>
+        <Component ExportedId="SmtpPasswordParam" ComponentId="SmtpServerParams/SmtpPasswordParam"/>
+        <Component ExportedId="SmtpPortParam" ComponentId="SmtpServerParams/SmtpPortParam"/>
+        <Component ExportedId="SmtpServerAddressParam" ComponentId="SmtpServerParams/SmtpServerAddressParam"/>
+        <Component ExportedId="SmtpServerParams" ComponentId="SmtpServerParams"/>
+        <Component ExportedId="SmtpUsernameParam" ComponentId="SmtpServerParams/SmtpUsernameParam"/>
+        <Component ExportedId="SupportEmail" ComponentId="Email"/>
+        <Component ExportedId="TracingConfiguration" ComponentId="LoggingParams/TracingConfiguration"/>
+        <Component ExportedId="WebSocketServerPort" ComponentId="ServerParams/WebSocketServerPort"/>
+    </ExportedComponents>
+</Acf>

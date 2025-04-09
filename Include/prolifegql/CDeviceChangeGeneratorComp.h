@@ -40,6 +40,7 @@ private:
 	QString GetSoftwareName(const QByteArray& softwareId) const;
 	QString GetProductName(const QByteArray& productId) const;
 	QString GetOrderName(const QByteArray& orderId) const;
+	QString GetDeviceName(const QByteArray& deviceId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);

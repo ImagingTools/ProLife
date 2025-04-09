@@ -442,7 +442,7 @@ DocumentCollectionViewDelegate {
 		id: requestMessageDialog
 		MessageDialog {
 			title: qsTr("Sending a request");
-			message: qsTr("Request license transferring ?")
+			message: qsTr("Send a request to the administrator's email address requesting the transfer of licenses ?")
 
 			onFinished: {
 				if (buttonId == Enums.yes){
@@ -509,7 +509,7 @@ DocumentCollectionViewDelegate {
 			RequestTransferLicensesPayload {
 				onFinished: {
 					if (m_result){
-						ModalDialogManager.showInfoDialog(qsTr("The request has been sent successfully, wait for a response"));
+						ModalDialogManager.showInfoDialog(qsTr("The license transfer request was successfully sent to the administrator's email address"));
 					}
 					else{
 						ModalDialogManager.showErrorDialog(qsTr("Error when sending the request, please try again later"));

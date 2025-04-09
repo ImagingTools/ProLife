@@ -15,8 +15,8 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="Settings">
             <PositionMap>
-                <Element ComponentName="ServerPageData" X="350" Y="250" Note=""/>
-                <Element ComponentName="ServerPageRepresentation" X="775" Y="250" Note=""/>
+                <Element ComponentName="ProLifeServerSettings" X="350" Y="150" Note=""/>
+                <Element ComponentName="ProLifeServerSettingsRepresentation" X="800" Y="150" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

@@ -3,6 +3,7 @@
 
 // ACF includes
 #include <iprm/IIdParam.h>
+#include <iprm/ITextParam.h>
 
 // ImtCore includes
 #include <imtcrypt/IEncryptionKeysProvider.h>
@@ -59,6 +60,7 @@ public:
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
 		I_ASSIGN(m_deviceBindingCollectionCompPtr, "DeviceBindingCollection", "Device binding collection", true, "DeviceBindingCollection");
 		I_ASSIGN(m_softwareTransferCollectionCompPtr, "SoftwareTransferCollection", "Software transfer collection", true, "SoftwareTransferCollection");
+		I_ASSIGN(m_supportEmailParamCompPtr, "SupportEmailParam", "Support email param", true, "SupportEmailParam");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 		I_ASSIGN(m_smtpMessageCreatorCompPtr, "SmtpMessageCreator", "Smtp message creator", true, "SmtpMessageCreator");
@@ -96,6 +98,7 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_featureCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareTransferCollectionCompPtr);
+	I_REF(iprm::ITextParam, m_supportEmailParamCompPtr);
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 	I_REF(imtmail::ISmtpClient, m_smtpClientCompPtr);

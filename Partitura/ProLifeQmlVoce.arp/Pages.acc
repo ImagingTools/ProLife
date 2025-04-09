@@ -221,13 +221,22 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SmtpMessageFromParam" Type="Reference" ExportId="SmtpMessageFromParam">
+                    <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="SmtpClient">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SmtpUserParam" Type="Reference" ExportId="SmtpUserParam">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="SupportEmailParam">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -318,6 +327,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -346,14 +358,8 @@
                     <Element Id="DevicesPage" PackageId="ProLifeQmlVoce" ComponentId="DevicesPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="DevicesPage/OperationContextController"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
@@ -379,7 +385,10 @@
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="SmtpMessageFromParam" Type="Reference" ExportId="SmtpMessageFromParam">
+                                <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="SmtpClient">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SmtpUserParam" Type="Reference" ExportId="SmtpUserParam">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareRepository">
@@ -392,6 +401,12 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="SupportEmailParam">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -442,6 +457,9 @@
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -476,6 +494,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">

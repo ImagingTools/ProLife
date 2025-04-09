@@ -24,18 +24,10 @@
         <Element ComponentName="HardwareBindingChangeGenerator" X="950" Y="600" Note=""/>
         <Element ComponentName="OperationContextController" X="575" Y="600" Note=""/>
         <Element ComponentName="Permissions" X="525" Y="375" Note=""/>
-        <Element ComponentName="SmtpClient" X="725" Y="700" Note=""/>
         <Element ComponentName="SmtpMessageCreator" X="950" Y="700" Note=""/>
         <Element ComponentName="XmlFileSerializer" X="650" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Permissions">
-            <PositionMap>
-                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
-                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
                 <Element ComponentName="Bind" X="600" Y="250" Note=""/>
@@ -54,6 +46,13 @@
                 <Element ComponentName="Bind" X="1000" Y="250" Note=""/>
                 <Element ComponentName="CommandsController" X="625" Y="75" Note=""/>
                 <Element ComponentName="StandardDocumentCommands" X="225" Y="250" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Permissions">
+            <PositionMap>
+                <Element ComponentName="DevicePermissions" X="598" Y="325" Note=""/>
+                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

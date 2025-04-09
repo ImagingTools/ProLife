@@ -56,6 +56,20 @@ bool CDeviceChangeGeneratorComp::GenerateDocumentChanges(
 			}
 		}
 	}
+	else if (operationTypeId == "TransferFromDevice"){
+		iprm::TParamsPtr<iprm::ITextParam> fromDeviceParamPtr(paramsPtr, "FromDeviceId");
+		if (fromDeviceParamPtr.IsValid()){
+			QString fromDeviceId = fromDeviceParamPtr->GetText();
+			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", "Device-ID", fromDeviceId.toUtf8(), fromDeviceId.toUtf8());
+		}
+	}
+	else if (operationTypeId == "TransferToDevice"){
+		iprm::TParamsPtr<iprm::ITextParam> toDeviceParamPtr(paramsPtr, "ToDeviceId");
+		if (toDeviceParamPtr.IsValid()){
+			QString toDeviceId = toDeviceParamPtr->GetText();
+			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", "Device-ID", toDeviceId.toUtf8(), toDeviceId.toUtf8());
+		}
+	}
 	else{
 		return BaseClass::GenerateDocumentChanges(operationTypeId, documentId, documentPtr, documentChangeCollection, errorMessage, paramsPtr);
 	}
@@ -152,8 +166,32 @@ QString CDeviceChangeGeneratorComp::CreateCustomOperationDescription(
 	QByteArray newValue = operationDescription.GetNewValue();
 	QString keyName = operationDescription.GetKeyName();
 	keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
-
-	if (typeId == "CreateLicenseFile"){
+	
+	if (typeId == "TransferFromDevice"){
+		QString deviceName = GetDeviceName(oldValue);
+		
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Licenses were transferred from the sensor '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::CDeviceChangeGeneratorComp");
+		change = change.arg(deviceName);
+		
+		retVal += change + "\n";
+	}
+	else if (typeId == "TransferToDevice"){
+		QString deviceName = GetDeviceName(oldValue);
+		
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Licenses have been transferred to the sensor '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::CDeviceChangeGeneratorComp");
+		change = change.arg(deviceName);
+		
+		retVal += change + "\n";
+	}
+	else if (typeId == "CreateLicenseFile"){
 		QString change = iqt::GetTranslation(
 			m_translationManagerCompPtr.GetPtr(),
 			QString(QT_TR_NOOP("Created the license file")).toUtf8(),
@@ -281,6 +319,22 @@ QString CDeviceChangeGeneratorComp::GetOrderName(const QByteArray& orderId) cons
 	}
 
 	return orderId;
+}
+
+
+QString CDeviceChangeGeneratorComp::GetDeviceName(const QByteArray& deviceId) const
+{
+	if (m_objectCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+			const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo* >(dataPtr.GetPtr());
+			if (deviceInfoPtr != nullptr){
+				return deviceInfoPtr->GetMacAddress();
+			}
+		}
+	}
+	
+	return deviceId;
 }
 
 

@@ -274,16 +274,19 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		toDeviceId = *inputArguments.input.Version_1_0->toDeviceId;
 	}
 	
+	// Get FROM device binding data
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
 	if (!fromDeviceBindingInfoPtr.IsValid()){
 		return retVal;
 	}
 	
+	// Get TO device binding data
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> toDeviceBindingInfoPtr = GetOrCreateDeviceBinding(toDeviceId);
 	if (!toDeviceBindingInfoPtr.IsValid()){
 		return retVal;
 	}
 	
+	// Get FROM device data
 	prolifedata::IDeviceInfo* fromDeviceInfoPtr = nullptr;
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
 	if (m_deviceCollectionCompPtr->GetObjectData(fromDeviceId, deviceDataPtr)){
@@ -296,6 +299,19 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		return retVal;
 	}
 	
+	// Get TO device data
+	prolifedata::IDeviceInfo* toDeviceInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr toDeviceDataPtr;
+	if (m_deviceCollectionCompPtr->GetObjectData(toDeviceId, toDeviceDataPtr)){
+		toDeviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(toDeviceDataPtr.GetPtr());
+	}
+	
+	if (toDeviceInfoPtr == nullptr){
+		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%2' not exists").arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
+		return retVal;
+	}
+	
+	// Check FROM device status is Defected
 	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = fromDeviceInfoPtr->GetDeviceProductionStatus();
 	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_DEFECTED){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Production status for device '%1' should be 'Defected'")
@@ -304,6 +320,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		return retVal;
 	}
 	
+	// Check same devices
 	if (fromDeviceId == toDeviceId){
 		errorMessage = QString("It is not possible to transfer licenses to the same device");
 		
@@ -315,6 +332,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	QByteArrayList fromDeviceSoftwareIds = fromDeviceBindingInfoPtr->GetSoftwareIds();
 	QByteArrayList toDeviceSoftwareIds = toDeviceBindingInfoPtr->GetSoftwareIds();
 	
+	// Check TO device empty licenses
 	if (!toDeviceSoftwareIds.isEmpty()){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%2' already contains licenses").arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
 		
@@ -355,15 +373,10 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		}
 	}
 	
-	CreateDeviceOperationContext(fromDeviceId, "", QByteArrayList(), fromDeviceSoftwareIds);
-	CreateDeviceOperationContext(toDeviceId, projectId, fromDeviceSoftwareIds, QByteArrayList());
-	
-	CreateSoftwareOperationContext(toDeviceId, projectId, fromDeviceSoftwareIds, QByteArrayList());
-	CreateSoftwareOperationContext(fromDeviceId, projectId, QByteArrayList(), fromDeviceSoftwareIds);
-	
 	toDeviceBindingInfoPtr->SetSoftwareIds(fromDeviceSoftwareIds);
 	fromDeviceBindingInfoPtr->SetSoftwareIds(QByteArrayList());
 	
+	// Update licenses for TO device
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -371,15 +384,60 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		return retVal;
 	}
 	
+	// Update licenses for FROM device
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		
 		return retVal;
 	}
 	
+	// Set operation context for TO device data
+	istd::TDelPtr<imtbase::IOperationContext> toDeviceOperationContextPtr =  nullptr;
+	if (m_deviceOperationContextControllerCompPtr.IsValid()){
+		iprm::CTextParam fromDeviceParam;
+		fromDeviceParam.SetText(fromDeviceId);
+		
+		iprm::CParamsSet paramsSet;
+		paramsSet.SetEditableParameter("FromDeviceId", &fromDeviceParam);
+		
+		toDeviceOperationContextPtr.SetPtr(m_deviceOperationContextControllerCompPtr->CreateOperationContext("TransferFromDevice", toDeviceId, toDeviceInfoPtr, &paramsSet));
+		
+		if (!m_deviceCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, toDeviceOperationContextPtr.GetPtr())){
+			SendWarningMessage(0, "Unable to set operation context for device instance", "CDeviceControllerComp");
+		}
+	}
+
+	iprm::CTextParam toDeviceParam;
+	toDeviceParam.SetText(toDeviceId);
+	
+	iprm::CParamsSet toParamsSet;
+	toParamsSet.SetEditableParameter("ToDeviceId", &toDeviceParam);
+
+	// Set operation context for FROM device data
+	istd::TDelPtr<imtbase::IOperationContext> fromDeviceOperationContextPtr =  nullptr;
+	if (m_deviceOperationContextControllerCompPtr.IsValid()){
+		fromDeviceOperationContextPtr.SetPtr(m_deviceOperationContextControllerCompPtr->CreateOperationContext("TransferToDevice", fromDeviceId, fromDeviceBindingInfoPtr.GetPtr(), &toParamsSet));
+		
+		if (!m_deviceCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, fromDeviceOperationContextPtr.GetPtr())){
+			SendWarningMessage(0, "Unable to set operation context for device instance", "CDeviceControllerComp");
+		}
+	}
+
 	// Incrementing the number of license transfers
 	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
+		imtbase::IObjectCollection::DataPtr softwareDataPtr;
+		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+			const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				istd::TDelPtr<imtbase::IOperationContext> softwareOperationContextPtr =  nullptr;
+				softwareOperationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext("TransferToDevice", softwareId, productInstanceInfoPtr, &toParamsSet));
+
+				if (!m_softwareProductCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, softwareOperationContextPtr.GetPtr())){
+					SendWarningMessage(0, "Unable to set operation context for software instances", "CDeviceControllerComp");
+				}
+			}
+		}
+
 		istd::TOptDelPtr<prolifedata::CSoftwareTransferInfo> softwareTransferInfoPtr;
 		softwareTransferInfoPtr.SetPtr(new prolifedata::CSoftwareTransferInfo, true);
 		
@@ -418,7 +476,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 			}
 		}
 	}
-	
+
 	retVal.Version_1_0->ok = true;
 	
 	return retVal;
@@ -719,7 +777,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	{
 		istd::TDelPtr<imtbase::IOperationContext> operationContextPtr =  nullptr;
 		if (m_deviceOperationContextControllerCompPtr.IsValid()){
-			operationContextPtr.SetPtr(m_softwareOperationContextControllerCompPtr->CreateOperationContext(
+			operationContextPtr.SetPtr(m_deviceOperationContextControllerCompPtr->CreateOperationContext(
 				"CreateLicenseFile",
 				deviceId,
 				deviceDataPtr.GetPtr()));
@@ -822,6 +880,11 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 		return response;
 	}
 	
+	if (!m_supportEmailParamCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'supportEmailParam' was not set", "CDeviceControllerComp");
+		return response;
+	}
+	
 	sdl::prolife::Sensors::RequestTransferLicensesRequestArguments arguments = requestTransferLicensesRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.has_value()){
 		Q_ASSERT(false);
@@ -902,7 +965,6 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 	}
 	
 	QString userName = userInfoPtr->GetName();
-	QString userEmail = userInfoPtr->GetMail();
 	
 	istd::TDelPtr<imtmail::ISmtpMessage> messagePtr = m_smtpMessageCreatorCompPtr->CreateMessage();
 	if (!messagePtr.IsValid()){
@@ -914,7 +976,8 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 	messagePtr->SetSubject(QString("Transferring licenses for user '%1'").arg(userName));
 	messagePtr->SetBody(QString("User '%1' requests a license transfer because the limit has been exceeded").arg(userName));
 	
-	messagePtr->SetTo(userEmail);
+	QString supportEmail = m_supportEmailParamCompPtr->GetText();
+	messagePtr->SetTo(supportEmail);
 	
 	if (!m_smtpClientCompPtr->SendEmail(*messagePtr.GetPtr())){
 		errorMessage = QString("Unable to request transfer license. Error when trying to send a message");
@@ -1122,6 +1185,7 @@ QByteArrayList CDeviceControllerComp::GetAllLicenseDependencies(const QByteArray
 	
 	return retVal;
 }
+
 
 } // namespace prolifegql
 

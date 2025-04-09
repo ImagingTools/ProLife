@@ -20,7 +20,7 @@
                         <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
                     </AttributeInfo>
                     <AttributeInfo Id="BaseUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Settings/ServerPort"/>
+                        <Data IsEnabled="true" Value="Settings/ServerUrl"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -85,20 +85,11 @@
         <EmbeddedRegistry Id="Settings">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="ServerPageData" PackageId="ProLifeQmlVoce" ComponentId="ServerPageData">
+                    <Element Id="ProLifeServerSettings" PackageId="ProLifeVoce" ComponentId="ProLifeServerSettings">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                                     <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultDatabaseName" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="prolife"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerSettings.xml"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="104"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
@@ -112,14 +103,14 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ServerPageRepresentation" PackageId="ProLifeQmlVoce" ComponentId="ServerPageRepresentation">
+                    <Element Id="ProLifeServerSettingsRepresentation" PackageId="ProLifeVoce" ComponentId="ProLifeServerSettingsRepresentation">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ServerPageData/TracingConfiguration"/>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
@@ -130,15 +121,13 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imod::IModel" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="imtserverapp::IJsonRepresentationController" ComponentId="ServerPageRepresentation"/>
-                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="iser::ISerializable" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="istd::IChangeable" ComponentId="ServerPageData"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="ServerPageData/AutoPersistence"/>
+                    <Interface InterfaceId="imtserverapp::IJsonRepresentationController" ComponentId="ProLifeServerSettingsRepresentation"/>
+                    <Interface InterfaceId="iprm::IParamsSet" ComponentId="ProLifeServerSettings"/>
+                    <Interface InterfaceId="iser::ISerializable" ComponentId="ProLifeServerSettings"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="ProLifeServerSettingsRepresentation"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="ServerPort" ComponentId="ServerPageData/ServerPort"/>
+                    <Component ExportedId="ServerUrl" ComponentId="ProLifeServerSettings/ServerPort"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>

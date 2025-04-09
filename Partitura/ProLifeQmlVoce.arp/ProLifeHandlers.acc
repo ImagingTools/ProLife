@@ -174,13 +174,19 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SmtpMessageFromParam" Type="Reference" ExportId="SmtpMessageFromParam">
+                    <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="SmtpClient">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SmtpUserParam" Type="Reference" ExportId="SmtpUserParam">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="SupportEmailParam">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
@@ -342,7 +348,5 @@
         <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="ApplicationHandlers"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationHandlers"/>
     </ExportedInterfaces>
-    <ExportedComponents>
-        <Component ExportedId="FeatureContainer" ComponentId="ApplicationHandlers/FeatureContainer"/>
-    </ExportedComponents>
+    <ExportedComponents/>
 </Acf>

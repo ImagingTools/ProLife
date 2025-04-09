@@ -43,6 +43,13 @@ bool CLicenseChangeGeneratorComp::GenerateDocumentChanges(
 			InsertOperationDescription(documentChangeCollection, "UnbindFromSensor", "Hardware", "Hardware", hardwareId.toUtf8(), hardwareId.toUtf8());
 		}
 	}
+	else if (operationTypeId == "TransferToDevice"){
+		iprm::TParamsPtr<iprm::ITextParam> toDeviceParamPtr(paramsPtr, "ToDeviceId");
+		if (toDeviceParamPtr.IsValid()){
+			QString toDeviceId = toDeviceParamPtr->GetText();
+			InsertOperationDescription(documentChangeCollection, operationTypeId, "HardwareId", "Hardware-ID", toDeviceId.toUtf8(), toDeviceId.toUtf8());
+		}
+	}
 	else{
 		return BaseClass::GenerateDocumentChanges(operationTypeId, documentId, documentPtr, documentChangeCollection, errorMessage, paramsPtr);
 	}
@@ -135,8 +142,19 @@ QString CLicenseChangeGeneratorComp::CreateCustomOperationDescription(const imtb
 	QByteArray typeId = operationDescription.GetOperationTypeId();
 	QByteArray newValue = operationDescription.GetNewValue();
 	QByteArray oldValue = operationDescription.GetOldValue();
-
-	if (typeId == "BindToSensor"){
+	
+	if (typeId == "TransferToDevice"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("The license has been transferred to the hardware '%1'")).toUtf8(),
+			languageId,
+			"prolifegql::CLicenseChangeGeneratorComp");
+		
+		change = change.arg(GetHardwareName(newValue));
+		
+		retVal += change;
+	}
+	else if (typeId == "BindToSensor"){
 		QString change = iqt::GetTranslation(
 			m_translationManagerCompPtr.GetPtr(),
 			QString(QT_TR_NOOP("License binded to hardware '%1'")).toUtf8(),
@@ -162,14 +180,6 @@ QString CLicenseChangeGeneratorComp::CreateCustomOperationDescription(const imtb
 		QString change = iqt::GetTranslation(
 			m_translationManagerCompPtr.GetPtr(),
 			QString(QT_TR_NOOP("Created the license file")).toUtf8(),
-			languageId,
-			"prolifegql::CLicenseChangeGeneratorComp");
-		retVal += change;
-	}
-	else if (typeId == "UpdateLicense"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Li")).toUtf8(),
 			languageId,
 			"prolifegql::CLicenseChangeGeneratorComp");
 		retVal += change;
