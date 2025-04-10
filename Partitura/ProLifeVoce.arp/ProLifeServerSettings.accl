@@ -42,7 +42,8 @@
         <EmbededRegistry Id="BackupParams">
             <PositionMap>
                 <Element ComponentName="Backup" X="550" Y="75" Note=""/>
-                <Element ComponentName="FileNameParam" X="825" Y="350" Note=""/>
+                <Element ComponentName="CompanyDataLocation" X="825" Y="500" Note=""/>
+                <Element ComponentName="RelativeFileNameParam" X="825" Y="350" Note=""/>
                 <Element ComponentName="SchedulerParams" X="325" Y="350" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>

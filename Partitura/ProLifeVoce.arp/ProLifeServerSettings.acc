@@ -12,7 +12,11 @@
     <ElementsList>
         <Element Id="BackupParams" PackageId="" ComponentId="BackupParams">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="ConnectionCollection" PackageId="ImtServicePck" ComponentId="ConnectionCollection">
@@ -226,7 +230,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>SchedulerParams</Value>
-                                            <Value>FileNameParam</Value>
+                                            <Value>RelativeFileNameParam</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -244,11 +248,29 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="FileNameParam" PackageId="FilePck" ComponentId="FileNameParam">
+                    <Element Id="CompanyDataLocation" PackageId="FilePck" ComponentId="SystemLocation">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LocationType" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="104"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="RelativeFileNameParam" PackageId="FilePck" ComponentId="RelativeFileNameParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Backups"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="PathType" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="2"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="CompanyDataLocation"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
