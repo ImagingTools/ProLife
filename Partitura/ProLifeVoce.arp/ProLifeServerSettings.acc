@@ -32,6 +32,7 @@
                                 <Value>Server websocket port to be listened</Value>
                                 <Value>Server tcp port to be connected to Puma</Value>
                                 <Value>Server websocket port to be connected to Puma</Value>
+                                <Value>Server tcp port to be connected to Lisa</Value>
                                 <Value>Server websocket port to be connected to Lisa</Value>
                             </Values>
                         </Data>
@@ -44,6 +45,7 @@
                                 <Value>Puma main HTTP</Value>
                                 <Value>Puma main WebSocket</Value>
                                 <Value>Lisa main HTTP</Value>
+                                <Value>Lisa main WebSocket</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -55,6 +57,7 @@
                                 <Value>Puma</Value>
                                 <Value>Puma</Value>
                                 <Value>Lisa</Value>
+                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -63,6 +66,7 @@
                             <Values>
                                 <Value>0</Value>
                                 <Value>0</Value>
+                                <Value>1</Value>
                                 <Value>1</Value>
                                 <Value>1</Value>
                                 <Value>1</Value>
@@ -76,6 +80,8 @@
                                 <Value>ServerParams/WebSocketServerPort</Value>
                                 <Value>ServerParams/PumaUrl</Value>
                                 <Value>ServerParams/PumaWebSocketPort</Value>
+                                <Value>ServerParams/LisaUrl</Value>
+                                <Value>ServerParams/LisaWebSocketUrl</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -87,8 +93,12 @@
                                 <Value>PumaUrlTcp</Value>
                                 <Value>PumaUrlWs</Value>
                                 <Value>LisaUrlTcp</Value>
+                                <Value>LisaUrlWs</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
