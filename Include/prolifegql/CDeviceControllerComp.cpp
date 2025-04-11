@@ -221,8 +221,6 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 		}
 	}
 	
-	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
-	
 	deviceBindingInfoPtr->SetHardwareId(deviceId);
 	
 	newHardwareBindingSoftwareIds.removeAll("");
@@ -235,6 +233,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 		return retVal;
 	}
 	
+	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 	
 	return retVal;

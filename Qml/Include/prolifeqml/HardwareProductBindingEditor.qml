@@ -205,7 +205,7 @@ Item {
 									
 									let index = collectionHeadersModel2.insertNewItem();
 									collectionHeadersModel2.setData("id", "licenseName", index);
-									collectionHeadersModel2.setData("name", qsTr("name"), index);
+									collectionHeadersModel2.setData("name", qsTr("Name"), index);
 									
 									index = collectionHeadersModel2.insertNewItem();
 									collectionHeadersModel2.setData("id", "licenseId", index);
@@ -490,7 +490,7 @@ Item {
 									
 									index = collectionHeadersModel.insertNewItem();
 									collectionHeadersModel.setData("id", "licenseName", index);
-									collectionHeadersModel.setData("name", qsTr("name"), index);
+									collectionHeadersModel.setData("name", qsTr("Name"), index);
 									
 									index = collectionHeadersModel.insertNewItem();
 									collectionHeadersModel.setData("id", "licenseId", index);

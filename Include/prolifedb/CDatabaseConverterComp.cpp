@@ -95,6 +95,14 @@ bool CDatabaseConverterComp::DoMigration(int& resultRevision, const istd::CIntRa
 		return false;
 	}
 	
+	if (!UpdateOrderLinkInfo(*m_deviceDatabaseDelegateCompPtr.GetPtr())){
+		return false;
+	}
+	
+	if (!UpdateOrderLinkInfo(*m_softwareInstanceDatabaseDelegateCompPtr.GetPtr())){
+		return false;
+	}
+	
 	if (!UpdateMetaInfoForTable(*m_deviceBindingDatabaseDelegateCompPtr.GetPtr())){
 		return false;
 	}
@@ -201,12 +209,6 @@ bool CDatabaseConverterComp::UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObj
 	
 	while (sqlQuery.next()){
 		QSqlRecord record = sqlQuery.record();
-		
-		QByteArray objectId = databaseDelegate.GetObjectIdFromRecord(record);
-		if (objectId == "87ba953f-d47a-4725-97f1-2e657788a702"){
-			qDebug() << "fdfdfs";
-		}
-		
 		QByteArray updateMetaInfoQuery = databaseDelegate.CreateUpdateMetaInfoQuery(record);
 		updateMetaInfoQuery = updateMetaInfoQuery.replace('\b', ';');
 		if (!ExecQuery(updateMetaInfoQuery)){
@@ -218,11 +220,36 @@ bool CDatabaseConverterComp::UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObj
 }
 
 
+bool CDatabaseConverterComp::UpdateOrderLinkInfo(const imtdb::ISqlDatabaseObjectDelegate& databaseDelegate) const
+{
+	QString tableName = databaseDelegate.GetTableName();
+	
+	QString query = QString(R"(
+			UPDATE "%1"
+			SET "Document" = jsonb_set(
+				"Document",
+				'{OrderId}',
+				'""',
+				true
+			)
+			WHERE ("Document"->>'OrderId') != ''
+			AND NOT EXISTS (
+				SELECT 1
+				FROM "Orders"
+				WHERE ("Orders"."DocumentId")::text = "%1"."Document"->>'OrderId'
+			);
+	)").arg(tableName);
+	
+	return ExecQuery(query);
+}
+
+
 bool CDatabaseConverterComp::ExecQuery(const QString& query) const
 {
 	QSqlError sqlError;
 	m_databaseEngineCompPtr->ExecSqlQuery(query.toUtf8(), &sqlError);
 	if (sqlError.type() != QSqlError::NoError){
+		qDebug() << sqlError.text();
 		return false;
 	}
 	

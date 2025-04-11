@@ -17,6 +17,15 @@
         <Element ComponentName="SupportSettingsRepresentation" X="325" Y="650" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="DatabaseSettingsRepresentation">
+            <PositionMap>
+                <Element ComponentName="DatabaseSettingsRepresentation" X="575" Y="100" Note=""/>
+                <Element ComponentName="LisaSettingsRepresentation" X="600" Y="250" Note=""/>
+                <Element ComponentName="ProLifeSettingsRepresentation" X="225" Y="250" Note=""/>
+                <Element ComponentName="PumaSettingsRepresentation" X="975" Y="250" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="ServerSettingsRepresentation">
             <PositionMap>
                 <Element ComponentName="LisaUrlRepresentation" X="200" Y="300" Note=""/>
@@ -25,7 +34,7 @@
                 <Element ComponentName="PumaWSUrlRepresentation" X="1000" Y="300" Note=""/>
                 <Element ComponentName="ServerPortRepresentation" X="600" Y="400" Note=""/>
                 <Element ComponentName="ServerSettingsRepresentation" X="600" Y="125" Note=""/>
-                <Element ComponentName="WsUrlRepresentation" X="600" Y="302" Note=""/>
+                <Element ComponentName="WsUrlRepresentation" X="600" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -41,15 +50,6 @@
                 <Element ComponentName="BackupFolder" X="925" Y="275" Note=""/>
                 <Element ComponentName="BackupSettingsRepresentation" X="550" Y="75" Note=""/>
                 <Element ComponentName="SchedulerParams" X="225" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DatabaseSettingsRepresentation">
-            <PositionMap>
-                <Element ComponentName="DatabaseSettingsRepresentation" X="575" Y="100" Note=""/>
-                <Element ComponentName="LisaSettingsRepresentation" X="600" Y="250" Note=""/>
-                <Element ComponentName="ProLifeSettingsRepresentation" X="225" Y="250" Note=""/>
-                <Element ComponentName="PumaSettingsRepresentation" X="975" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

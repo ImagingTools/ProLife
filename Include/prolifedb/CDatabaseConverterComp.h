@@ -38,6 +38,7 @@ private:
 	bool RenameTable(const QString& tableName, const QString& newTableName) const;
 	bool DropTable(const QString& tableName) const;
 	bool UpdateMetaInfoForTable(const imtdb::ISqlDatabaseObjectDelegate& databaseDelegate) const;
+	bool UpdateOrderLinkInfo(const imtdb::ISqlDatabaseObjectDelegate& databaseDelegate) const;
 	bool ExecQuery(const QString& query) const;
 	
 private:

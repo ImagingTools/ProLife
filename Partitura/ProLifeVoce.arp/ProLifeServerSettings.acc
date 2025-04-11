@@ -450,10 +450,10 @@
                                 <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ServerConnectionParams/PumaUrl</Value>
-                                            <Value>ServerConnectionParams/PumaWebSocketPort</Value>
                                             <Value>ServerConnectionParams/ServerPort</Value>
                                             <Value>ServerConnectionParams/WebSocketServerPort</Value>
+                                            <Value>ServerConnectionParams/PumaUrl</Value>
+                                            <Value>ServerConnectionParams/PumaWebSocketPort</Value>
                                             <Value>LisaUrl</Value>
                                             <Value>LisaWebSocketUrl</Value>
                                         </Values>
