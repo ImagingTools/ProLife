@@ -53,6 +53,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, deviceInfoPtr->GetSerialNumber());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_STATUS, deviceInfoPtr->GetDeviceProductionStatus());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_PROJECT, deviceInfoPtr->GetProject());
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
 	
 	QByteArray customerId;
 	if (m_orderCollectionCompPtr.IsValid()){
@@ -60,7 +61,6 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
 			const IOrderInfo* orderInfoPtr = dynamic_cast<const IOrderInfo*>(orderDataPtr.GetPtr());
 			if (orderInfoPtr != nullptr){
-				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
 				
 				QByteArray deliveryId = orderInfoPtr->GetOrderId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DELIVERY_ID, deliveryId);
@@ -73,12 +73,13 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_ID, customerId);
+	
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
-				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_ID, customerId);
 				
 				QString customerName = customerInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_NAME, customerName);
@@ -86,12 +87,13 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_TYPE, productId);
+	
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
-				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_TYPE, productId);
 				
 				QByteArray id = productInfoPtr->GetProductId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PRODUCT_ID, id);
@@ -102,12 +104,13 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		}
 	}
 	
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, licenseId);
+	
 	if (m_licenseCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr licenseDataPtr;
 		if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
 			const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 			if (licenseInfoPtr != nullptr){
-				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, licenseId);
 				
 				QByteArray id = licenseInfoPtr->GetLicenseId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_ID, id);

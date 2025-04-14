@@ -38,12 +38,13 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 	}
 	
 	QByteArray customerId = orderInfoPtr->GetCustomerId();
+	metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_ID, customerId);
+	
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
-				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_ID, customerId);
 				
 				QString customerName = customerInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_NAME, customerName);
