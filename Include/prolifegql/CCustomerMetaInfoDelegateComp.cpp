@@ -1,6 +1,9 @@
 #include <prolifegql/CCustomerMetaInfoDelegateComp.h>
 
 
+// Qt includes
+#include <QJsonObject>
+
 // ProLife includes
 #include <prolifedata/ICustomerInfo.h>
 
@@ -9,55 +12,49 @@ namespace prolifegql
 {
 
 
-// protected methods
-
-bool CCustomerMetaInfoDelegateComp::FillRepresentation(
-	sdl::prolife::Accounts::CAccountData::V1_0& metaInfoRepresentation,
-	const idoc::IDocumentMetaInfo& metaInfo) const
+bool CCustomerMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
 {
 	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_CUSTOMER_ID).toByteArray();
-	metaInfoRepresentation.customerId = customerId;
+	representation["CustomerId"] = QString(customerId);
 	
 	QString name = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_NAME).toString();
-	metaInfoRepresentation.name = name;
+	representation["Name"] = name;
 	
 	QString description = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_DESCRIPTION).toString();
-	metaInfoRepresentation.description = description;
+	representation["Description"] = description;
 	
 	QString email = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_EMAIL).toString();
-	metaInfoRepresentation.email = email;
+	representation["Email"] = email;
 	
 	QByteArray groupIds = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_GROUPS).toByteArray();
-	metaInfoRepresentation.groups = groupIds;
-
+	representation["Groups"] = QString(groupIds);
+	
 	return true;
 }
 
 
-bool CCustomerMetaInfoDelegateComp::FillMetaInfo(
-	idoc::IDocumentMetaInfo& metaInfo,
-	const sdl::prolife::Accounts::CAccountData::V1_0& metaInfoRepresentation) const
+bool CCustomerMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
 {
-	if (metaInfoRepresentation.customerId){
-		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CUSTOMER_ID, *metaInfoRepresentation.customerId);
+	if (representation.contains("CustomerId")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CUSTOMER_ID, representation.value("CustomerId"));
 	}
 	
-	if (metaInfoRepresentation.name){
-		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_NAME, *metaInfoRepresentation.name);
+	if (representation.contains("Name")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_NAME, representation.value("Name"));
 	}
 	
-	if (metaInfoRepresentation.description){
-		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_DESCRIPTION, *metaInfoRepresentation.description);
+	if (representation.contains("Description")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CONTACT_DESCRIPTION, representation.value("Description"));
 	}
 	
-	if (metaInfoRepresentation.email){
-		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_EMAIL, *metaInfoRepresentation.email);
+	if (representation.contains("Email")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_EMAIL, representation.value("Email"));
 	}
 	
-	if (metaInfoRepresentation.groups){
-		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_GROUPS, *metaInfoRepresentation.groups);
+	if (representation.contains("Groups")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_GROUPS, representation.value("Groups"));
 	}
-	
+
 	return true;
 }
 

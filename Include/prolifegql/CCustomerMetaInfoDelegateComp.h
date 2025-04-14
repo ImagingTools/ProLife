@@ -1,32 +1,25 @@
 #pragma once
 
 
-// ACF includes
-#include <ilog/TLoggerCompWrap.h>
-
 // ImtCore includes
-#include <imtdbgql/TSdlBasedMetaInfoDelegate.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts.h>
+#include <imtdb/CJsonBasedMetaInfoDelegateComp.h>
 
 
 namespace prolifegql
 {
 
 
-class CCustomerMetaInfoDelegateComp:
-			public ilog::CLoggerComponentBase,
-			public imtdbgql::TSdlBasedMetaInfoDelegate<sdl::prolife::Accounts::CAccountData::V1_0>
+class CCustomerMetaInfoDelegateComp: public imtdb::CJsonBasedMetaInfoDelegateComp
 {
 public:
-	typedef ilog::CLoggerComponentBase BaseClass;
+	typedef imtdb::CJsonBasedMetaInfoDelegateComp BaseClass;
 
 	I_BEGIN_COMPONENT(CCustomerMetaInfoDelegateComp);
-		I_REGISTER_INTERFACE(imtdb::IJsonBasedMetaInfoDelegate);
 	I_END_COMPONENT;
 
 protected:
-	virtual bool FillRepresentation(sdl::prolife::Accounts::CAccountData::V1_0& metaInfoRepresentation, const idoc::IDocumentMetaInfo& metaInfo) const override;
-	virtual bool FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const sdl::prolife::Accounts::CAccountData::V1_0& metaInfoRepresentation) const override;
+	virtual bool FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const override;
+	virtual bool FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const override;
 };
 
 
