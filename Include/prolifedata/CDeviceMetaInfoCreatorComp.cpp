@@ -61,7 +61,6 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
 			const IOrderInfo* orderInfoPtr = dynamic_cast<const IOrderInfo*>(orderDataPtr.GetPtr());
 			if (orderInfoPtr != nullptr){
-				
 				QByteArray deliveryId = orderInfoPtr->GetOrderId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DELIVERY_ID, deliveryId);
 
