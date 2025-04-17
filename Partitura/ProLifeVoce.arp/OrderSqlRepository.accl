@@ -16,6 +16,7 @@
         <Element ComponentName="OrderMetaInfoCreator" X="189" Y="344" Note=""/>
         <Element ComponentName="OrderMetaInfoDelegate" X="200" Y="425" Note=""/>
         <Element ComponentName="Orders" X="650" Y="425" Note=""/>
+        <Element ComponentName="PostgresXPathExtractor" X="975" Y="400" Note=""/>
         <Element ComponentName="Types" X="625" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

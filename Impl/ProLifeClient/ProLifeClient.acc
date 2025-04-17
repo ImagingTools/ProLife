@@ -25,6 +25,15 @@
                     <AttributeInfo Id="CompanyName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ImagingTools"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ComponentsToPreInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ImtCoreQmlInitializer/StaticQmlBaseTypeRegistrator</Value>
+                                <Value>ImtCoreQmlInitializer/StaticQmlModuleRegistrator</Value>
+                                <Value>ImtCoreQmlInitializer/StaticQmlTypeRegistrator</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -67,6 +76,11 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="ImtCoreQmlInitializer" PackageId="ImtCoreVoce" ComponentId="ImtCoreQmlInitializer">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="LocalSettings" PackageId="ImtQmlVoce" ComponentId="LocalSettings">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -78,9 +92,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DefaultServerPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="7778"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LanguageConstraints" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Application/ApplicationLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/TextFileLog"/>

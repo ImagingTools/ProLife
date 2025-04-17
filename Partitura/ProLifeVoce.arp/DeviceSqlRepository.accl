@@ -18,6 +18,7 @@
         <Element ComponentName="LicenseNameMetaInfoController" X="1000" Y="575" Note=""/>
         <Element ComponentName="ObjectCollection" X="250" Y="450" Note=""/>
         <Element ComponentName="OrderIdMetaInfoController" X="225" Y="575" Note=""/>
+        <Element ComponentName="PostgresXPathExtractor" X="406" Y="359" Note=""/>
         <Element ComponentName="ProductNameMetaInfoController" X="625" Y="675" Note=""/>
         <Element ComponentName="Types" X="600" Y="50" Note=""/>
     </PositionMap>

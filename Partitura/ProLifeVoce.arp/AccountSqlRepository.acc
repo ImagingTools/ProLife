@@ -45,14 +45,17 @@
                     <AttributeInfo Id="ObjectTypes" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Types"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SqlJsonXPathExtractor" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PostgresXPathExtractor"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Accounts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UseDocumentBase64Encoding" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
+                    <AttributeInfo Id="UseDataMetaInfo" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -133,6 +136,11 @@
                         </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PostgresXPathExtractor" PackageId="ImtDatabasePck" ComponentId="PostgresXPathExtractor">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="Repository" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">

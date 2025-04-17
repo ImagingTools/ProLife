@@ -12,17 +12,47 @@
     <ElementsList>
         <Element Id="BackupSettingsRepresentation" PackageId="" ComponentId="BackupSettingsRepresentation">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="DatabaseSettingsRepresentation" PackageId="" ComponentId="DatabaseSettingsRepresentation">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="ServerSettingsRepresentation" PackageId="" ComponentId="ServerSettingsRepresentation">
             <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap/>
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
             </Data>
         </Element>
         <Element Id="SettingsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">

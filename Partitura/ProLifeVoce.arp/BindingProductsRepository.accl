@@ -13,6 +13,7 @@
         <Element ComponentName="HardwareBindingMetaInfoCreator" X="200" Y="125" Note=""/>
         <Element ComponentName="HardwareBindingMetaInfoDelegate" X="225" Y="475" Note=""/>
         <Element ComponentName="HardwareProductBindingInfo" X="1000" Y="300" Note=""/>
+        <Element ComponentName="PostgresXPathExtractor" X="971" Y="494" Note=""/>
         <Element ComponentName="SqlDatabaseJsonDelegate" X="625" Y="300" Note=""/>
         <Element ComponentName="Types" X="625" Y="75" Note=""/>
     </PositionMap>

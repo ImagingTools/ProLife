@@ -14,6 +14,7 @@
         <Element ComponentName="CustomerMetaInfoDelegate" X="165" Y="393" Note=""/>
         <Element ComponentName="JsonSerializer" X="425" Y="350" Note=""/>
         <Element ComponentName="ObjectCollection" X="200" Y="100" Note=""/>
+        <Element ComponentName="PostgresXPathExtractor" X="900" Y="500" Note=""/>
         <Element ComponentName="Repository" X="500" Y="575" Note=""/>
         <Element ComponentName="Types" X="1000" Y="350" Note=""/>
     </PositionMap>
