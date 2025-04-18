@@ -30,6 +30,15 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="ComponentsToPreInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ImtCoreQmlInitializer/StaticQmlBaseTypeRegistrator</Value>
+                                <Value>ImtCoreQmlInitializer/StaticQmlModuleRegistrator</Value>
+                                <Value>ImtCoreQmlInitializer/StaticQmlTypeRegistrator</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="LogDefaultPath" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeClientLog.txt"/>
                     </AttributeInfo>
@@ -52,6 +61,11 @@
                         <Data IsEnabled="true" Value="VersionInfo"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ImtCoreQmlInitializer" PackageId="ImtCoreVoce" ComponentId="ImtCoreQmlInitializer">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="Settings" PackageId="" ComponentId="Settings">
