@@ -33,6 +33,10 @@ sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerC
 	}
 	
 	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	if (!errorMessage.isEmpty()){
+		return sdl::imtbase::ImtCollection::CVisualStatus();
+	}
+	
 	if (!retVal.Version_1_0){
 		I_CRITICAL();
 		

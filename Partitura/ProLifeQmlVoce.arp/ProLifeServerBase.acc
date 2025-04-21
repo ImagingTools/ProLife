@@ -278,10 +278,10 @@
                     <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Repositories/CachedDeviceRepository</Value>
-                                <Value>Repositories/CachedSoftwareRepository</Value>
-                                <Value>Repositories/CachedOrderRepository</Value>
-                                <Value>Repositories/CachedAccountRepository</Value>
+                                <Value>Repositories/DeviceSqlRepository</Value>
+                                <Value>Repositories/SoftwareSqlRepository</Value>
+                                <Value>Repositories/OrderSqlRepository</Value>
+                                <Value>Repositories/AccountSqlRepository</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

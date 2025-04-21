@@ -24,18 +24,15 @@
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
+        <EmbededRegistry Id="Migrations">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
-                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
-                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -49,15 +46,18 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Migrations">
+        <EmbededRegistry Id="Repositories">
             <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
+                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
+                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
+                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
+                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
+                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
+                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
