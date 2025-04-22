@@ -24,7 +24,6 @@ copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/
 copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeSensorsSdl, $$buildwebdir/src/prolifeSensorsSdl)
 copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeLicensesSdl, $$buildwebdir/src/prolifeLicensesSdl)
 copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeOrdersSdl, $$buildwebdir/src/prolifeOrdersSdl)
-copyToWebDir($$prolifedir/$$AUXINCLUDEDIR/GeneratedFiles/prolifesdl/SDL/1.0/QML/prolifeSensorBindingSdl, $$buildwebdir/src/prolifeSensorBindingSdl)
 
 compyleWeb($$buildwebdir, "prolife")
 

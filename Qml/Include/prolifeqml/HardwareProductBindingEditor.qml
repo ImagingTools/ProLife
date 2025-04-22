@@ -7,7 +7,6 @@ import imtauthgui 1.0
 import imtcolgui 1.0
 import imtguigql 1.0
 import imtlicgui 1.0
-import prolifeSensorBindingSdl 1.0
 import prolifeSensorsSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
