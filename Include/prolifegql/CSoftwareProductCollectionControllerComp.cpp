@@ -395,7 +395,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 	}
 	
 	if (productInstanceInfoPtr == nullptr){
-		errorMessage = QString("Unable to remove software '%1'. Error: Software does not exists");
+		errorMessage = QString("Unable to remove software '%1'. Error: Software does not exists").arg(qPrintable(objectId));
 		return nullptr;
 	}
 	

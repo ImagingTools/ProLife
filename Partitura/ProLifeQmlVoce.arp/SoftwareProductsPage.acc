@@ -314,6 +314,7 @@
                                 <Value>purchaseId</Value>
                                 <Value>project</Value>
                                 <Value>customerName</Value>
+                                <Value>customerId</Value>
                                 <Value>macAddress</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
@@ -332,6 +333,7 @@
                                 <Value>PurchaseId</Value>
                                 <Value>Project</Value>
                                 <Value>CustomerName</Value>
+                                <Value>CustomerId</Value>
                                 <Value>MacAddress</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
