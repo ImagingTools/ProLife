@@ -35476,13 +35476,20 @@
 															"    }\r",
 															"}\r",
 															"\r",
-															"pm.test('Query is successful', function () {\r",
-															"    pm.response.to.be.ok;\r",
+															"const response = pm.response.json();\r",
+															"\r",
+															"response.data.GetRevisionInfoList.revisions.forEach(item => {\r",
+															"    delete item.timestamp;\r",
+															"});\r",
+															"\r",
+															"// Также удалим из схемы (если нужно модифицировать именно её структуру аналогично)\r",
+															"responseSchema.data.GetRevisionInfoList.revisions.forEach(item => {\r",
+															"    delete item.timestamp;\r",
 															"});\r",
 															"\r",
 															"// Сравнение всего ответа с ожидаемой схемой\r",
 															"pm.test(\"Response matches expected schema\", () => {\r",
-															"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+															"    pm.expect(response).to.eql(responseSchema);\r",
 															"});"
 														],
 														"type": "text/javascript",
@@ -75562,6 +75569,85 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1ab102ea-452e-4980-b196-f3c501cd1111\", encrypt: true}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CreateLicenseFile (Not encrypt)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"CreateLicenseFile\": {\r",
+													"            \"name\": \"77_17_77_66_77_77_License.lic\",\r",
+													"            \"data\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxBY2Y+DQogICAgPEFjZkhlYWRlcj4NCiAgICAgICAgPFZlcnNpb25JbmZvcz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIwIiBOdW1iZXI9IjUzMzIiIERlc2NyaXB0aW9uPSJBQ0YiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIxIiBOdW1iZXI9IjIyMzAiIERlc2NyaXB0aW9uPSJBQ0YtU29sdXRpb25zIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTAiIE51bWJlcj0iOTE2IiBEZXNjcmlwdGlvbj0iSUFDRiIvPg0KICAgICAgICAgICAgPFZlcnNpb24gSWQ9IjEwMjMiIE51bWJlcj0iMzk1MjY0IiBEZXNjcmlwdGlvbj0iUXQgRnJhbWV3b3JrIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTk3NyIgTnVtYmVyPSIxMzYyOCIgRGVzY3JpcHRpb249IkltdENvcmUiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIyMDIyIiBOdW1iZXI9IjEzNjEzIiBEZXNjcmlwdGlvbj0iUHJvTGlmZSIvPg0KICAgICAgICA8L1ZlcnNpb25JbmZvcz4NCiAgICA8L0FjZkhlYWRlcj4NCiAgICA8UHJvZHVjdElkPlJUVlNvZnR3YXJlPC9Qcm9kdWN0SWQ+DQogICAgPFNlcmlhbE51bWJlcj48L1NlcmlhbE51bWJlcj4NCiAgICA8SW5Vc2U+ZmFsc2U8L0luVXNlPg0KICAgIDxQcm9qZWN0PjwvUHJvamVjdD4NCiAgICA8SW5zdGFuY2VJZD43NzoxNzo3Nzo2Njo3Nzo3NzwvSW5zdGFuY2VJZD4NCiAgICA8Q3VzdG9tZXJJZD48L0N1c3RvbWVySWQ+DQogICAgPExpY2Vuc2VzPg0KICAgICAgICA8TGljZW5zZUluc3RhbmNlPg0KICAgICAgICAgICAgPExpY2Vuc2VEYXRhIExpY2Vuc2VJZD0iMTIuMTAxNzgiIExpY2Vuc2VOYW1lPSJSVFYgQWRkT24gLSBEb3QiIExpY2Vuc2VEZXNjcmlwdGlvbj0iIiBQcm9kdWN0SWQ9IiI+DQogICAgICAgICAgICAgICAgPEZlYXR1cmVzPg0KICAgICAgICAgICAgICAgICAgICA8RmVhdHVyZSBJRD0iTXVsdGlEb3RJbnNwZWN0aW9uIiBOYW1lPSJNdWx0aSBEb3QgSW5zcGVjdGlvbiIvPg0KICAgICAgICAgICAgICAgIDwvRmVhdHVyZXM+DQogICAgICAgICAgICAgICAgPERlcGVuZGVuY2llcy8+DQogICAgICAgICAgICAgICAgPEV4cGlyYXRpb25UaW1lPjwvRXhwaXJhdGlvblRpbWU+DQogICAgICAgICAgICA8L0xpY2Vuc2VEYXRhPg0KICAgICAgICA8L0xpY2Vuc2VJbnN0YW5jZT4NCiAgICAgICAgPExpY2Vuc2VJbnN0YW5jZT4NCiAgICAgICAgICAgIDxMaWNlbnNlRGF0YSBMaWNlbnNlSWQ9IjEyLjEwMTg1IiBMaWNlbnNlTmFtZT0iUlRWIEFkZE9uIC0gUmVmZXJlbmNlIiBMaWNlbnNlRGVzY3JpcHRpb249IiIgUHJvZHVjdElkPSIiPg0KICAgICAgICAgICAgICAgIDxGZWF0dXJlcz4NCiAgICAgICAgICAgICAgICAgICAgPEZlYXR1cmUgSUQ9IlJlZmVyZW5jZSIgTmFtZT0iUmVmZXJlbmNlIi8+DQogICAgICAgICAgICAgICAgPC9GZWF0dXJlcz4NCiAgICAgICAgICAgICAgICA8RGVwZW5kZW5jaWVzLz4NCiAgICAgICAgICAgICAgICA8RXhwaXJhdGlvblRpbWU+MjAyNi0wMS0yM1QwMDowMDowMC4wMDA8L0V4cGlyYXRpb25UaW1lPg0KICAgICAgICAgICAgPC9MaWNlbnNlRGF0YT4NCiAgICAgICAgPC9MaWNlbnNlSW5zdGFuY2U+DQogICAgPC9MaWNlbnNlcz4NCjwvQWNmPg0K\"\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// console.log(\"response:\", pm.response.json().data.CreateLicenseFile.data);\r",
+													"console.log(\"Decoded value:\", atob(pm.response.json().data.CreateLicenseFile.data));\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1ab102ea-452e-4980-b196-f3c501cd1111\", encrypt: false}) {}}",
 												"variables": ""
 											}
 										},
