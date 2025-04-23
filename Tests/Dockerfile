@@ -1,16 +1,21 @@
 FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
-WORKDIR C:\\app
+SHELL ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
+RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+RUN choco install -y nodejs
+RUN npm install -g newman
+RUN choco install -y postgresql17 --params '"/Password=root"'
 
-COPY D:\Temp\Qt6\ProLife\Tests\TestRunner.bat C:\app\TestRunner.bat
-COPY D:\Temp\Qt6\Lisa\Bin\Release_Qt6_VC17_x64 C:\app\Lisa
-COPY D:\Temp\Qt6\ProLife\Bin\Release_Qt6_VC17_x64 C:\app\ProLife
-COPY D:\Temp\Qt6\Puma\Bin\Release_Qt6_VC17_x64 C:\app\Puma
-COPY D:\Temp\Qt6\ProLife\Tests\postman_collection.json C:\app\postman_collection.json
-COPY D:\Temp\Qt6\ProLife\Tests\lisatest.backup C:\app\backups\lisatest.backup
-COPY D:\Temp\Qt6\ProLife\Tests\pumatest.backup C:\app\backups\pumatest.backup
-COPY D:\Temp\Qt6\ProLife\Tests\prolifetest.backup C:\app\backups\prolifetest.backup
+# Добавим bin в PATH
+ENV PATH="C:\\Program Files\\PostgreSQL\\17\\bin;${PATH}"
+ENV PATH="C:\\Users\\ContainerAdministrator\\AppData\\Roaming\\npm;${PATH}"
+ENV PATH="C:\\Program Files\\nodejs;${PATH}"
 
+COPY backups/ C:/backups/
+COPY installers/ C:/installers/
 
-# Запуск setup.bat
-CMD ["cmd.exe", "/c", "C:\app\TestRunner.bat"]
+WORKDIR C:/
+COPY postman_collection.json .
+COPY start.bat .
+
+CMD ["cmd", "/c", "C:\\start.bat"]
