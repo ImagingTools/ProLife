@@ -50,8 +50,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCusto
 # initialize SDL
 if (NOT IMT_DevAll_BUILD)
 	get_filename_component(CACHE_BASE_DIR_PATH "${IMTCOREDIR}/AuxInclude/${TARGETNAME}" ABSOLUTE)
-	ImtCoreAddSdlSearchPath("${CACHE_BASE_DIR_PATH}")
-	ImtCoreAddSdlSearchPath("${AUX_INCLUDE_DIR}/..")
+	ImtCoreAddSdlHeaderIncludePath("${CACHE_BASE_DIR_PATH}")
+	ImtCoreAddSdlHeaderIncludePath("${AUX_INCLUDE_DIR}/..")
 		
 	message("PROLIFE CACHE_BASE_DIR_PATH ${CACHE_BASE_DIR_PATH}")
 	message("PROLIFE AUX_INCLUDE_DIR ${AUX_INCLUDE_DIR}/..")
