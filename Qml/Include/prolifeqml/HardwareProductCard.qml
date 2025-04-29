@@ -22,14 +22,15 @@ Rectangle {
     signal edited();
 
     Component.onCompleted: {
-        Events.subscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
-
         hardwareCard.updateElements();
     }
 
-    Component.onDestruction: {
-        Events.unSubscribeEvent("OnLocalizationChanged", hardwareCard.onLocalizationChanged);
-    }
+	
+	LocalizationEvent {
+		onLocalizationChanged: {
+			hardwareCard.onLocalizationChanged(langId)
+		}
+	}
 
     function onLocalizationChanged(language){
         hardwareCard.updateHeaders();

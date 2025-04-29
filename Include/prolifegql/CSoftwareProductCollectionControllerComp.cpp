@@ -588,7 +588,7 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	
 	QString expiration = *representation.expiration;
 	
-	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
+	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy").toUTC());
 	
 	return true;
 }
