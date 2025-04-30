@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5352" Description="ACF"/>
+            <Version Id="1" Number="2237" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -141,11 +141,26 @@
         <Element Id="LisaGQLEngine" PackageId="LisaGraphQlVoce" ComponentId="LisaGQLEngine">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="LisaHttpUrl" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/LisaUrl"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaWebSocketUrl" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/LisaWebSocketUrl"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerFramework"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SslConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/FileBasedSslConfiguration"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
