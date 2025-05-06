@@ -437,8 +437,16 @@ ViewBase {
 					placeHolderText: qsTr("Enter serial number");
 					
 					onEditingFinished: {
+						if (!deviceEditorContainer.deviceData){
+							return
+						}
+
+						let serialNumber = deviceEditorContainer.deviceData.m_serialNumber
 						deviceEditorContainer.doUpdateModel();
-						deviceEditorContainer.checkFinishedStatus();
+
+						if (serialNumber !== text){
+							deviceEditorContainer.checkFinishedStatus();
+						}
 					}
 					
 					KeyNavigation.tab: macAddressInput;
@@ -449,8 +457,16 @@ ViewBase {
 					id: macAddressInput;
 					
 					onEditingFinished: {
+						if (!deviceEditorContainer.deviceData){
+							return
+						}
+						
+						let macAddress = deviceEditorContainer.deviceData.m_macAddress
 						deviceEditorContainer.doUpdateModel();
-						deviceEditorContainer.checkFinishedStatus();
+						
+						if (macAddress !== text){
+							deviceEditorContainer.checkFinishedStatus();
+						}
 					}
 					
 					KeyNavigation.tab: orderCB;
