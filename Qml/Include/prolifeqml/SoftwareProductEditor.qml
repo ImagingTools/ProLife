@@ -11,7 +11,7 @@ import prolifeLicensesSdl 1.0
 ViewBase {
 	id: root;
 	
-	height: content.height;
+	// height: content.height;
 	
 	property var productLicensesModel: TreeItemModel{}
 	
@@ -34,7 +34,7 @@ ViewBase {
 	
 	function updateGui(){
 		if (productItem.m_isNew){
-			switchNewLicense.checked = true;
+			switchNewLicense.setChecked(true)
 			
 			licenseCB.currentIndex = -1;
 			if (licenseCB.sourceModel){
@@ -71,7 +71,7 @@ ViewBase {
 			}
 		}
 		else{
-			switchNewLicense.checked = false;
+			switchNewLicense.setChecked(false)
 			
 			createdLicenseCb.currentIndex = -1;
 			
@@ -153,12 +153,8 @@ ViewBase {
 		}
 	}
 	
-	Column {
-		id: content;
-		
-		width: parent.width;
-		
-		spacing: Style.sizeMainMargin;
+	GroupElementView {
+		width: parent.width
 		
 		SwitchElementView {
 			id: switchNewLicense;
@@ -253,10 +249,8 @@ ViewBase {
 			}
 		}
 		
-		Column {
-			id: softwareContent;
+		GroupElementView {
 			width: parent.width;
-			spacing: parent.spacing;
 			visible: !root.isNewSoftware && createdLicenseCb.currentIndex >= 0;
 			
 			TextElementView {
@@ -284,13 +278,8 @@ ViewBase {
 			}
 		}
 		
-		Column {
-			id: newSoftwareContent;
-			
+		GroupElementView {
 			width: parent.width;
-			
-			spacing: parent.spacing;
-			
 			visible: root.isNewSoftware;
 			
 			FilterableComboBoxElementView {
@@ -330,21 +319,21 @@ ViewBase {
 					
 					root.doUpdateModel();
 				}
-			}
-			
-			Component {
-				id: licenseTypeErrorComp;
 				
-				Text {
-					id: selectSensorText;
+				Component {
+					id: licenseTypeErrorComp;
 					
-					text: qsTr("Please select a license");
-					color: Style.errorTextColor;
-					font.family: Style.fontFamily;
-					font.pixelSize: Style.fontSizeNormal;
+					Text {
+						id: selectSensorText;
+						
+						text: qsTr("Please select a license");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeNormal;
+					}
 				}
 			}
-			
+
 			TextInputElementView {
 				id: serialNumberInput;
 				
@@ -475,8 +464,6 @@ ViewBase {
 			}
 		}
 	}
-	
-	
 }//Container
 
 

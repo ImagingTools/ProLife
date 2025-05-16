@@ -10,7 +10,7 @@ import prolifeSensorsSdl 1.0
 ViewBase {
 	id: root;
 	
-	height: content.height;
+	// height: content.height;
 	
 	property var productLicensesModel: TreeItemModel{}
 	property TreeItemModel devicesModel: TreeItemModel{}
@@ -22,7 +22,7 @@ ViewBase {
 	function updateGui(){
 		let isNew = productItem.m_isNew;
 		if (isNew){
-			switchNewSensor.checked = true;
+			switchNewSensor.setChecked(true)
 			
 			macAddressInput.text = productItem.m_macAddress;
 			serialNumberInput.text = productItem.m_serialNumber;
@@ -41,7 +41,7 @@ ViewBase {
 			}
 		}
 		else{
-			switchNewSensor.checked = false;
+			switchNewSensor.setChecked(false)
 			
 			deviceCB.currentIndex = -1;
 			let deviceId = productItem.m_id;
@@ -131,11 +131,9 @@ ViewBase {
 			}
 		}
 	}
-	
-	Column {
-		id: content;
-		width: parent.width;
-		spacing: Style.sizeMainMargin;
+
+	GroupElementView {
+		width: parent.width
 		
 		SwitchElementView {
 			id: switchNewSensor;
@@ -211,23 +209,22 @@ ViewBase {
 				
 				root.doUpdateModel();
 			}
-		}
-		
-		Component {
-			id: sensorErrorComp;
 			
-			Text {
-				id: selectSensorText;
-				text: qsTr("Please select a sensor");
-				color: Style.errorTextColor;
-				font.family: Style.fontFamily;
-				font.pixelSize: Style.fontSizeNormal;
+			Component {
+				id: sensorErrorComp;
+				
+				Text {
+					id: selectSensorText;
+					text: qsTr("Please select a sensor");
+					color: Style.errorTextColor;
+					font.family: Style.fontFamily;
+					font.pixelSize: Style.fontSizeNormal;
+				}
 			}
 		}
-		
-		Column {
+
+		GroupElementView {
 			width: parent.width;
-			spacing: parent.spacing;
 			visible: root.isNewDevice;
 			
 			FilterableComboBoxElementView {
@@ -259,17 +256,17 @@ ViewBase {
 						description: model[DeviceItemTypeMetaInfo.s_licenseId];
 					}
 				}
-			}
-			
-			Component {
-				id: typeSensorErrorComp;
 				
-				Text {
-					id: selectTypeText;
-					text: qsTr("Please select a type sensor");
-					color: Style.errorTextColor;
-					font.family: Style.fontFamily;
-					font.pixelSize: Style.fontSizeNormal;
+				Component {
+					id: typeSensorErrorComp;
+					
+					Text {
+						id: selectTypeText;
+						text: qsTr("Please select a type sensor");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeNormal;
+					}
 				}
 			}
 			
@@ -307,9 +304,9 @@ ViewBase {
 			}
 		}
 		
-		Column {
+		
+		GroupElementView {
 			width: parent.width;
-			spacing: parent.spacing;
 			visible: !root.isNewDevice;
 			
 			TextElementView {

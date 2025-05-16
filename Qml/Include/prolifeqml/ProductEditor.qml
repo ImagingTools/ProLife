@@ -237,7 +237,7 @@ Item {
 		}
 	}
 	
-	Column {
+	GroupElementView {
 		id: contentColumn;
 		
 		anchors.top: parent.top;
@@ -246,8 +246,6 @@ Item {
 		anchors.leftMargin: Style.sizeMainMargin;
 		anchors.right: parent.right;
 		anchors.rightMargin: Style.sizeMainMargin;
-		
-		spacing: Style.sizeMainMargin;
 		
 		ElementView {
 			id: segmentedElementView;
@@ -345,21 +343,21 @@ Item {
 				
 				productEditor.updateProductModel();
 			}
-		}
-		
-		Component {
-			id: productErrorComp;
 			
-			Text {
-				id: selectProductText;
+			Component {
+				id: productErrorComp;
 				
-				text: qsTr("Please select a product");
-				color: Style.errorTextColor;
-				font.family: Style.fontFamily;
-				font.pixelSize: Style.fontSizeNormal;
+				Text {
+					id: selectProductText;
+					
+					text: qsTr("Please select a product");
+					color: Style.errorTextColor;
+					font.family: Style.fontFamily;
+					font.pixelSize: Style.fontSizeNormal;
+				}
 			}
 		}
-	}
+	} // GroupElementView
 	
 	Loader {
 		id: contentLoader;

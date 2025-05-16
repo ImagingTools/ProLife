@@ -536,7 +536,8 @@ ViewBase {
 					onDatePickerChanged: {
 						if (datePicker){
 							let currentDate = new Date();
-							datePicker.selectedDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+							let date = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+							datePicker.setDateAsString(Functions.dateToStr(date,"dd.MM.yyyy"))
 						}
 					}
 					
