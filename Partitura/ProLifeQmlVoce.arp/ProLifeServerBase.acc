@@ -76,7 +76,7 @@
                         <Data IsEnabled="true" Value="ProLifeServerSettings/FileBasedSslConfiguration"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ThreadsLimit" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="10"/>
+                        <Data IsEnabled="true" Value="100"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
@@ -89,6 +89,22 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WebSocketServerPort" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/WebSocketServerPort"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="GroupsModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/GroupRemoteRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveModels" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AdministrationRepositories/UserGroupRepository</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -276,7 +292,7 @@
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/FeatureContainer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/GroupRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedGroupCollection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="JwtSessionController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
@@ -307,7 +323,7 @@
                         <Data IsEnabled="true" Value="LisaRepositories/CachedProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RoleRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleCollection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/UserSessionsRepository"/>
@@ -334,7 +350,7 @@
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
+                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserCollection"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -445,6 +461,22 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="RolesModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RoleRemoteRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveModels" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AdministrationRepositories/RoleRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SmtpClient" PackageId="ImtMailPck" ComponentId="SmtpClient">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -495,6 +527,22 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="UsersModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SlaveModels" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AdministrationRepositories/UserRepository</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

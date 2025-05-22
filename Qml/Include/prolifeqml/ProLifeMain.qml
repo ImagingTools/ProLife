@@ -14,6 +14,7 @@ ApplicationMain {
 	useWebSocketSubscription: true;
 	// canRecoveryPassword: false;
 	authorizationServerConnected: pumaConnectionChecker.status === 1;
+	authConnectionState: pumaConnectionChecker.status
 	
 	Connections {
 		target: AuthorizationController;
@@ -64,7 +65,7 @@ ApplicationMain {
 					PopupManager.closeMessage(gqlCommandId);
 				}
 			}
-			else if (status === 2){
+			else{
 				if (!PopupManager.messageIsOpened(gqlCommandId)){
 					PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false, gqlCommandId);
 				}
