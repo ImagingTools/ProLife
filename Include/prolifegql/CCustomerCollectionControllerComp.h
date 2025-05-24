@@ -32,7 +32,7 @@ protected:
 				QString& errorMessage) const override;
 
 	// Account methods
-	virtual istd::IChangeable* CreateObjectFromRepresentation(
+	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
 				const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;

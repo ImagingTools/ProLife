@@ -44,7 +44,7 @@ protected:
 				const sdl::prolife::Orders::COrdersListGqlRequest& ordersListRequest,
 				sdl::prolife::Orders::COrderItem::V1_0& representationObject,
 				QString& errorMessage) const override;
-	virtual istd::IChangeable* CreateObjectFromRepresentation(
+	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
 				const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;

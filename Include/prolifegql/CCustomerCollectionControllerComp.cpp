@@ -92,7 +92,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
+istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
 			QByteArray& newObjectId,
 			QString& errorMessage) const
@@ -104,7 +104,7 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 		return nullptr;
 	}
 
-	istd::TDelPtr<imtauth::ICompanyInfo> companyInstancePtr = m_accountInfoFactCompPtr.CreateInstance();
+	istd::TUniqueInterfacePtr<imtauth::ICompanyInfo> companyInstancePtr = m_accountInfoFactCompPtr.CreateInstance();
 	if (!companyInstancePtr.IsValid()){
 		errorMessage = QString("Unable to create company instance. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
@@ -125,7 +125,10 @@ istd::IChangeable* CCustomerCollectionControllerComp::CreateObjectFromRepresenta
 		return nullptr;
 	}
 
-	return companyInstancePtr.PopPtr();
+	istd::IChangeableUniquePtr retVal;
+	retVal.MoveCastedPtr<imtauth::ICompanyInfo>(companyInstancePtr);
+
+	return retVal;
 }
 
 
@@ -239,7 +242,7 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	prolifedata::CCustomerInfo *customerInfoPtr =
 		dynamic_cast<prolifedata::CCustomerInfo *>(&object);
-	if (customerInfoPtr == nullptr) {
+	if (customerInfoPtr == nullptr){
 		errorMessage = QString(
 			"Unable to cast company info to customer info. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");

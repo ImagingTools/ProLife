@@ -158,7 +158,7 @@ DecoratorBase {
 			CheckBox {
 				anchors.verticalCenter: parent.verticalCenter;
 				widthFromDecorator: true;
-				function nextCheckState() {
+				function nextCheckState(){
 					if (!mainItem.complexFilter){
 						return;
 					}

@@ -172,7 +172,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	// Serialize order with the new format:
 	iser::CArchiveTag statusTag("Status", "Order status", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(statusTag);
-	if (prolifeVersion >= 5902) {
+	if (prolifeVersion >= 5902){
 		retVal = retVal && I_SERIALIZE_ENUM(OrderStatus, archive, m_status);
 	}
 	// Serialize order with the old format:
@@ -187,7 +187,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_orderId);
 	retVal = retVal && archive.EndTag(orderIdTag);
 
-	if (imtCoreVersion > 6630) {
+	if (imtCoreVersion > 6630){
 		iser::CArchiveTag purchaseOrderIdTag("PurchaseId", "User-defined purchase order-ID", iser::CArchiveTag::TT_LEAF);
 		retVal = retVal && archive.BeginTag(purchaseOrderIdTag);
 		retVal = retVal && archive.Process(m_purchaseId);

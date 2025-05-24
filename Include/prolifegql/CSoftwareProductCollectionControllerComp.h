@@ -40,7 +40,7 @@ protected:
 				const sdl::prolife::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
 				sdl::prolife::Licenses::CSoftwareProductItem::V1_0& representationObject,
 				QString& errorMessage) const override;
-	virtual istd::IChangeable* CreateObjectFromRepresentation(
+	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
 				const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;

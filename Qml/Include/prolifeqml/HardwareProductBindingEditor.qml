@@ -361,7 +361,7 @@ Item {
 										m_filterOperations: ["Equal"]
 									}
 
-									function updateData() {
+									function updateData(){
 										if (!dataController){
 											return;
 										}

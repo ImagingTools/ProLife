@@ -244,7 +244,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentation(
+istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepresentation(
 	const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
 	QByteArray& newObjectId,
 	QString& errorMessage) const
@@ -254,8 +254,8 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		return nullptr;
 	}
 
-	istd::TDelPtr<prolifedata::CIdentifiableOrderInfo> orderInfoPtr;
-	orderInfoPtr.SetCastedOrRemove(m_orderInfoFactCompPtr.CreateInstance());
+	istd::TUniqueInterfacePtr<prolifedata::IOrderInfo> orderInfoPtr;
+	orderInfoPtr = m_orderInfoFactCompPtr.CreateInstance();
 	if (!orderInfoPtr.IsValid()){
 		errorMessage = QString("Unable to cast order instance to identifable object. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
@@ -307,7 +307,10 @@ istd::IChangeable* COrderCollectionControllerComp::CreateObjectFromRepresentatio
 		}
 	}
 
-	return orderInfoPtr.PopPtr();
+	istd::IChangeableUniquePtr retVal;
+	retVal.MoveCastedPtr<prolifedata::IOrderInfo>(orderInfoPtr);
+
+	return retVal;
 }
 
 
@@ -518,7 +521,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	prolifedata::CIdentifiableOrderInfo *orderInfoPtr =
 		dynamic_cast<prolifedata::CIdentifiableOrderInfo *>(
 		&const_cast<istd::IChangeable &>(object));
-	if (orderInfoPtr == nullptr) {
+	if (orderInfoPtr == nullptr){
 		errorMessage = QString("Object is invalid");
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
 

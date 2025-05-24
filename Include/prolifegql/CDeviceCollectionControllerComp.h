@@ -42,7 +42,7 @@ protected:
 				const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
 				sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
 				QString& errorMessage) const override;
-	virtual istd::IChangeable* CreateObjectFromRepresentation(
+	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
 				const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;

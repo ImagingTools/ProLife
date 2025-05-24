@@ -153,55 +153,55 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.productId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toString();
 	}
 	
-	if (requestInfo.items.isProductNameRequested) {
+	if (requestInfo.items.isProductNameRequested){
 		representationObject.productName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	}
 	
-	if (requestInfo.items.isProductUuidRequested) {
+	if (requestInfo.items.isProductUuidRequested){
 		representationObject.productUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toString();
 	}
 	
-	if (requestInfo.items.isSerialNumberRequested) {
+	if (requestInfo.items.isSerialNumberRequested){
 		representationObject.serialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 	}
 	
-	if (requestInfo.items.isIsPairedRequested) {
+	if (requestInfo.items.isIsPairedRequested){
 		representationObject.isPaired = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
 	}
 	
-	if (requestInfo.items.isInUseRequested) {
+	if (requestInfo.items.isInUseRequested){
 		representationObject.inUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	}
 	
-	if (requestInfo.items.isHardwareIdRequested) {
+	if (requestInfo.items.isHardwareIdRequested){
 		representationObject.hardwareId = hardwareId;
 	}
 	
-	if (requestInfo.items.isLicenseNameRequested) {
+	if (requestInfo.items.isLicenseNameRequested){
 		representationObject.licenseName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
 	}
 	
-	if (requestInfo.items.isLicenseIdRequested) {
+	if (requestInfo.items.isLicenseIdRequested){
 		representationObject.licenseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
 	}
 	
-	if (requestInfo.items.isLicenseUuidRequested) {
+	if (requestInfo.items.isLicenseUuidRequested){
 		representationObject.licenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
 	}
 	
-	if (requestInfo.items.isCustomerIdRequested) {
+	if (requestInfo.items.isCustomerIdRequested){
 		representationObject.customerId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
 	}
 	
-	if (requestInfo.items.isCustomerNameRequested) {
+	if (requestInfo.items.isCustomerNameRequested){
 		representationObject.customerName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 	}
 	
-	if (requestInfo.items.isProjectRequested) {
+	if (requestInfo.items.isProjectRequested){
 		representationObject.project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
 	}
 	
-	if (requestInfo.items.isExpirationRequested) {
+	if (requestInfo.items.isExpirationRequested){
 		imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 		if (!licenseIds.isEmpty()){
 			QByteArray licenseId = licenseIds[0];
@@ -249,7 +249,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
+istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
 	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
 	QByteArray& newObjectId,
 	QString& errorMessage) const
@@ -261,7 +261,7 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 		return nullptr;
 	}
 	
-	istd::TDelPtr<imtlic::IProductInstanceInfo> softwareInstancePtr = m_softwareInfoFactCompPtr.CreateInstance();
+	istd::TUniqueInterfacePtr<imtlic::IProductInstanceInfo> softwareInstancePtr = m_softwareInfoFactCompPtr.CreateInstance();
 	if (!softwareInstancePtr.IsValid()){
 		errorMessage = QString("Unable to create software instance. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
@@ -302,8 +302,11 @@ istd::IChangeable* CSoftwareProductCollectionControllerComp::CreateObjectFromRep
 			}
 		}
 	}
-	
-	return softwareInstancePtr.PopPtr();
+
+	istd::IChangeableUniquePtr retVal;
+	retVal.MoveCastedPtr<imtlic::IProductInstanceInfo>(softwareInstancePtr);
+
+	return retVal;
 }
 
 

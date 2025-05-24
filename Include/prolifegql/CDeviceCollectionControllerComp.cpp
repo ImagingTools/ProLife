@@ -219,7 +219,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
-istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
+istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
 	const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
 	QByteArray& newObjectId,
 	QString& errorMessage) const
@@ -234,7 +234,7 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		return nullptr;
 	}
 
-	istd::TDelPtr<prolifedata::IDeviceInfo> deviceInstancePtr = m_deviceInfoFactCompPtr.CreateInstance();
+	istd::TUniqueInterfacePtr<prolifedata::IDeviceInfo> deviceInstancePtr = m_deviceInfoFactCompPtr.CreateInstance();
 	if (!deviceInstancePtr.IsValid()){
 		errorMessage = QString("Unable to create device instance. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
@@ -274,7 +274,10 @@ istd::IChangeable* CDeviceCollectionControllerComp::CreateObjectFromRepresentati
 		}
 	}
 
-	return deviceInstancePtr.PopPtr();
+	istd::IChangeableUniquePtr retVal;
+	retVal.MoveCastedPtr<prolifedata::IDeviceInfo>(deviceInstancePtr);
+
+	return retVal;
 }
 
 
