@@ -439,7 +439,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		return nullptr;
 	}
 
-	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
@@ -513,7 +513,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	}
 
 	QByteArray objectId;
-	const imtgql::CGqlObject* inputParamPtr = gqlRequest.GetParamObject("input");
+	const imtgql::CGqlParamObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetFieldArgumentValue("id").toByteArray();
 	}
@@ -590,7 +590,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 
 void CDeviceCollectionControllerComp::SetAdditionalFilters(
 			const imtgql::CGqlRequest& gqlRequest,
-			const imtgql::CGqlObject& /*viewParamsGql*/,
+			const imtgql::CGqlParamObject& /*viewParamsGql*/,
 			iprm::CParamsSet* filterParams) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){

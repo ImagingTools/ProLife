@@ -207,7 +207,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 void CCustomerCollectionControllerComp::SetAdditionalFilters(
 	const imtgql::CGqlRequest& gqlRequest,
-	const imtgql::CGqlObject& /*viewParamsGql*/,
+	const imtgql::CGqlParamObject& /*viewParamsGql*/,
 	iprm::CParamsSet* filterParams) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){

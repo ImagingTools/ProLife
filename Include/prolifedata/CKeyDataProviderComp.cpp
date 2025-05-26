@@ -505,7 +505,7 @@ imtbase::CTreeItemModel* CKeyDataProviderComp::GetRemoteCollectionData(const QBy
 
 	imtgql::CGqlRequest request(imtgql::CGqlRequest::RT_QUERY, collectionCommandId);
 
-	imtgql::CGqlObject itemsObject;
+	imtgql::CGqlFieldObject itemsObject;
 
 	for (const QByteArray& fieldId : fields){
 		itemsObject.InsertField(fieldId);

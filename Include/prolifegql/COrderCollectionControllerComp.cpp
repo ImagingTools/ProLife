@@ -619,7 +619,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
 		const imtgql::CGqlRequest& gqlRequest,
 		QString& errorMessage) const
 {
-	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
 
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
@@ -676,7 +676,7 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
 
 void COrderCollectionControllerComp::SetAdditionalFilters(
 	const imtgql::CGqlRequest& gqlRequest,
-	const imtgql::CGqlObject& /*viewParamsGql*/,
+	const imtgql::CGqlParamObject& /*viewParamsGql*/,
 	iprm::CParamsSet* filterParams) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){

@@ -380,7 +380,7 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		return nullptr;
 	}
 	
-	const imtgql::CGqlObject& inputParams = gqlRequest.GetParams();
+	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
 	
 	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
 	if (objectId.isEmpty()){
@@ -734,7 +734,7 @@ bool CSoftwareProductCollectionControllerComp::AddSoftwareToOrder(const QByteArr
 
 void CSoftwareProductCollectionControllerComp::SetAdditionalFilters(
 	const imtgql::CGqlRequest& gqlRequest,
-	const imtgql::CGqlObject& /*viewParamsGql*/,
+	const imtgql::CGqlParamObject& /*viewParamsGql*/,
 	iprm::CParamsSet* filterParams) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){
