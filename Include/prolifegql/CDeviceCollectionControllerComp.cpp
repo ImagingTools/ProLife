@@ -515,7 +515,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	QByteArray objectId;
 	const imtgql::CGqlParamObject* inputParamPtr = gqlRequest.GetParamObject("input");
 	if (inputParamPtr != nullptr){
-		objectId = inputParamPtr->GetFieldArgumentValue("id").toByteArray();
+		objectId = inputParamPtr->GetParamArgumentValue("id").toByteArray();
 	}
 
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
