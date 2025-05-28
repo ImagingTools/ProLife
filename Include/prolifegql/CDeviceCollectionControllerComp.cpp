@@ -438,55 +438,54 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
 		return nullptr;
 	}
-
-	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
-
-	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
-	if (objectId.isEmpty()){
-		errorMessage = QString("No object-ID could not be extracted from the request");
-		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-
+	
+	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
+	if (!errorMessage.isEmpty()){
 		return nullptr;
 	}
-
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
-		if (bindingInfoPtr != nullptr){
-			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
-			for (const QByteArray& softwareId : softwareIds){
-				imtbase::IObjectCollection::DataPtr softwareDataPtr;
-				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
-					const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
-					if (productInstanceInfoPtr != nullptr){
-						bool isUse = productInstanceInfoPtr->IsInUse();
-						if (isUse){
-							errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
-							SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-							errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
-
-							return nullptr;
+	
+	for (const QByteArray& objectId : objectIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+			if (bindingInfoPtr != nullptr){
+				QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+				for (const QByteArray& softwareId : softwareIds){
+					imtbase::IObjectCollection::DataPtr softwareDataPtr;
+					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+						const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+						if (productInstanceInfoPtr != nullptr){
+							bool isUse = productInstanceInfoPtr->IsInUse();
+							if (isUse){
+								errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
+								SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+								errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
+								
+								return nullptr;
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-
-	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr deviceDataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
-		deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
-	}
-
-	if (deviceInfoPtr != nullptr){
-		QByteArray orderId = deviceInfoPtr->GetOrderId();
-		if (!orderId.isEmpty()){
-			if (!RemoveDeviceFromOrder(objectId, orderId)){
-				SendWarningMessage(0,
-								   QString("Remove device '%1' from order '%2' failed")
-									   .arg(qPrintable(objectId), qPrintable(orderId)),
-								   "CDeviceCollectionControllerComp");
+	
+	for (const QByteArray& objectId : objectIds){
+		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr deviceDataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
+			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
+		}
+		
+		if (deviceInfoPtr != nullptr){
+			QByteArray orderId = deviceInfoPtr->GetOrderId();
+			if (!orderId.isEmpty()){
+				if (!RemoveDeviceFromOrder(objectId, orderId)){
+					SendWarningMessage(0,
+									   QString("Remove device '%1' from order '%2' failed")
+										   .arg(qPrintable(objectId), qPrintable(orderId)),
+									   "CDeviceCollectionControllerComp");
+				}
 			}
 		}
 	}
@@ -743,8 +742,10 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
-
-	if (!productCollectionPtr->RemoveElement(deviceId)){
+	
+	QByteArrayList removedIds;
+	removedIds << deviceId;
+	if (!productCollectionPtr->RemoveElements(removedIds)){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Removing element from product collection failed")
 							 .arg(qPrintable(deviceId), qPrintable(orderId)),

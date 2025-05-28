@@ -380,84 +380,91 @@ imtbase::CTreeItemModel* CSoftwareProductCollectionControllerComp::DeleteObject(
 		return nullptr;
 	}
 	
-	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
-	
-	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
-	if (objectId.isEmpty()){
-		errorMessage = QString("No object-ID could not be extracted from the request");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-		
+	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
+	if (!errorMessage.isEmpty()){
 		return nullptr;
 	}
 	
-	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInstanceInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		productInstanceInfoPtr =
-			dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-	}
-	
-	if (productInstanceInfoPtr == nullptr){
-		errorMessage = QString("Unable to remove software '%1'. Error: Software does not exists").arg(qPrintable(objectId));
-		return nullptr;
-	}
-	
-	bool isUse = productInstanceInfoPtr->IsInUse();
-	if (isUse){
-		errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+	for (const QByteArray& objectId : objectIds){
+		const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInstanceInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			productInstanceInfoPtr =
+				dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+		}
 		
-		errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
+		if (productInstanceInfoPtr == nullptr){
+			errorMessage = QString("Unable to remove software '%1'. Error: Software does not exists").arg(qPrintable(objectId));
+			return nullptr;
+		}
 		
-		return nullptr;
+		bool isUse = productInstanceInfoPtr->IsInUse();
+		if (isUse){
+			errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
+			SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+			
+			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
+			
+			return nullptr;
+		}
 	}
-	
+
 	if (m_bindingCollectionCompPtr.IsValid()){
-		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-		fieldFilter.fieldId = "SoftwareIds";
-		fieldFilter.filterValue = objectId;
-		fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FO_CONTAINS;
-		
-		imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
-		groupFilter.fieldFilters << fieldFilter;
-		
-		imtbase::CComplexCollectionFilter complexFilter;
-		complexFilter.SetFieldsFilter(groupFilter);
-		
-		iprm::CParamsSet filterParam;
-		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
-		
-		imtbase::IObjectCollection::Ids elementIds = m_bindingCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-		for (const imtbase::IObjectCollection::Id& elementId: elementIds){
-			imtbase::IObjectCollection::DataPtr bindingDataPtr;
-			if (m_bindingCollectionCompPtr->GetObjectData(elementId, bindingDataPtr)){
-				prolifedata::CHardwareProductBinding* deviceBindingInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(bindingDataPtr.GetPtr());
-				if (deviceBindingInfoPtr != nullptr){
-					QByteArrayList softwareIds = deviceBindingInfoPtr->GetSoftwareIds();
-					if (softwareIds.contains(objectId)){
-						deviceBindingInfoPtr->Unbind(objectId);
-						
-						if (!m_bindingCollectionCompPtr->SetObjectData(elementId, *deviceBindingInfoPtr)){
-							SendWarningMessage(0, QString("Unable to update hardware binding object after software removing"));
+		for (const QByteArray& objectId : objectIds){
+			imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+			fieldFilter.fieldId = "SoftwareIds";
+			fieldFilter.filterValue = objectId;
+			fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FO_CONTAINS;
+			
+			imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+			groupFilter.fieldFilters << fieldFilter;
+			
+			imtbase::CComplexCollectionFilter complexFilter;
+			complexFilter.SetFieldsFilter(groupFilter);
+			
+			iprm::CParamsSet filterParam;
+			filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+			
+			imtbase::IObjectCollection::Ids elementIds = m_bindingCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+			for (const imtbase::IObjectCollection::Id& elementId: elementIds){
+				imtbase::IObjectCollection::DataPtr bindingDataPtr;
+				if (m_bindingCollectionCompPtr->GetObjectData(elementId, bindingDataPtr)){
+					prolifedata::CHardwareProductBinding* deviceBindingInfoPtr = dynamic_cast<prolifedata::CHardwareProductBinding*>(bindingDataPtr.GetPtr());
+					if (deviceBindingInfoPtr != nullptr){
+						QByteArrayList softwareIds = deviceBindingInfoPtr->GetSoftwareIds();
+						if (softwareIds.contains(objectId)){
+							deviceBindingInfoPtr->Unbind(objectId);
+							
+							if (!m_bindingCollectionCompPtr->SetObjectData(elementId, *deviceBindingInfoPtr)){
+								SendWarningMessage(0, QString("Unable to update hardware binding object after software removing"));
+							}
+							
+							break;
 						}
-						
-						break;
 					}
 				}
 			}
 		}
 	}
 	
-	QByteArray orderId = productInstanceInfoPtr->GetOrderId();
-	if (!orderId.isEmpty()){
-		if (!RemoveSoftwareFromOrder(objectId, orderId)){
-			SendWarningMessage(0,
-								QString("Remove software '%1' from order '%2' failed")
-									.arg(qPrintable(objectId), qPrintable(orderId)),
-								"CDeviceCollectionControllerComp");
+	for (const QByteArray& objectId : objectIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInstanceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				QByteArray orderId = productInstanceInfoPtr->GetOrderId();
+				if (!orderId.isEmpty()){
+					if (!RemoveSoftwareFromOrder(objectId, orderId)){
+						SendWarningMessage(0,
+										   QString("Remove software '%1' from order '%2' failed")
+											   .arg(qPrintable(objectId), qPrintable(orderId)),
+										   "CDeviceCollectionControllerComp");
+					}
+				}
+			}
 		}
 	}
-	
+
 	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
@@ -636,7 +643,9 @@ bool CSoftwareProductCollectionControllerComp::RemoveSoftwareFromOrder(const QBy
 		return false;
 	}
 	
-	if (!productCollectionPtr->RemoveElement(softwareId)){
+	QByteArrayList removedIds;
+	removedIds << softwareId;
+	if (!productCollectionPtr->RemoveElements(removedIds)){
 		SendErrorMessage(0,
 						 QString("Unable to remove software '%1' from order '%2'. Error: Removing element from product collection failed")
 							 .arg(qPrintable(softwareId), qPrintable(orderId)),

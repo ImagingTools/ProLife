@@ -620,52 +620,40 @@ imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
 		QString& errorMessage) const
 {
 	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
-
-	QByteArray objectId = GetObjectIdFromInputParams(inputParams);
-	if (objectId.isEmpty()){
-		errorMessage = QString("Unable to delete an order with empty ID");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
+	
+	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
+	if (!errorMessage.isEmpty()){
 		return nullptr;
 	}
-
-	prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-	}
-
-	if (oldOrderInfoPtr == nullptr){
-		errorMessage = QString("Unable to delete an order with ID '%1'. Order does not exists");
-		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-
-		return nullptr;
-	}
-
-	imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
-	if (productCollectionPtr == nullptr){
-		Q_ASSERT(false);
-		return nullptr;
-	}
-
-	imtbase::ICollectionInfo::Ids elementIds = productCollectionPtr->GetElementIds();
-
-	for (const imtbase::ICollectionInfo::Id& id : elementIds){
-		imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
-		if (typeId == QByteArray("HardwareInfo")){
-			if (!UpdateOrderForHardware(id, "")){
-				SendWarningMessage(0,
-								   QString("Unable to remove order '%1' from device '%2'")
-										  .arg(qPrintable(objectId), qPrintable(objectId)),
-								   "COrderCollectionControllerComp");
-			}
-		}
-		else if (typeId == QByteArray("SoftwareInfo")){
-			if (!UpdateOrderForSoftware(id, "")){
-				SendWarningMessage(0,
-								   QString("Unable to remove order '%1' from software '%2'")
-									.arg(qPrintable(objectId), qPrintable(objectId)),
-								   "COrderCollectionControllerComp");
+	
+	for (const QByteArray& objectId : objectIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+			if (oldOrderInfoPtr != nullptr){
+				imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
+				if (productCollectionPtr != nullptr){
+					imtbase::ICollectionInfo::Ids elementIds = productCollectionPtr->GetElementIds();
+					for (const imtbase::ICollectionInfo::Id& id : elementIds){
+						imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
+						if (typeId == QByteArray("HardwareInfo")){
+							if (!UpdateOrderForHardware(id, "")){
+								SendWarningMessage(0,
+												   QString("Unable to remove order '%1' from device '%2'")
+													   .arg(qPrintable(objectId), qPrintable(objectId)),
+												   "COrderCollectionControllerComp");
+							}
+						}
+						else if (typeId == QByteArray("SoftwareInfo")){
+							if (!UpdateOrderForSoftware(id, "")){
+								SendWarningMessage(0,
+												   QString("Unable to remove order '%1' from software '%2'")
+													   .arg(qPrintable(objectId), qPrintable(objectId)),
+												   "COrderCollectionControllerComp");
+							}
+						}
+					}
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 
 // ACF includes
 #include <iqt/iqt.h>
+#include <istd/TDelPtr.h>
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
@@ -121,7 +122,6 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 	}
 
 	if (!FillObjectFromRepresentation(accountDataRepresentation, *customerInfoPtr, newObjectId, errorMessage)){
-		errorMessage = QString("Unable to create customer from representation. Error: '%1'");
 		return nullptr;
 	}
 
@@ -253,7 +253,6 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	customerInfoPtr->ResetData();
 
 	if (!FillObjectFromRepresentation(accountData, object, objectId, errorMessage)){
-		errorMessage = QString("Unable to create customer from representation. Error: '%1'");
 		return false;
 	}
 
@@ -291,8 +290,30 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	if (accountName.isEmpty()){
-		errorMessage = QString("Account name cannnot be empty");
+		errorMessage = QString("Account name cannot be empty");
 		return false;
+	}
+	
+	istd::TDelPtr<const iprm::IParamsSet> filterParamPtr = CreateComplexFilter("Name", accountName.toUtf8());
+	if (filterParamPtr.IsValid()){
+		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, filterParamPtr.GetPtr());
+		if (!collectionIds.isEmpty()){
+			QByteArray collectionId = collectionIds[0];
+			if (objectId != collectionId){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+					const prolifedata::CCustomerInfo* foundCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
+					if (foundCustomerInfoPtr != nullptr){
+						QString foundCustomerName = foundCustomerInfoPtr->GetName();
+						if (foundCustomerName.toLower() == accountName.toLower()){
+							errorMessage = QString("Account name already exists");
+							SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+							return false;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	customerInfoPtr->SetName(accountName);
@@ -319,6 +340,30 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 
 	if (accountDataRepresentation.customerId){
 		QByteArray accountCustomerId = *accountDataRepresentation.customerId;
+		if (!accountCustomerId.isEmpty()){
+			istd::TDelPtr<const iprm::IParamsSet> customerIdFilterParamPtr = CreateComplexFilter("CustomerId", accountCustomerId);
+			if (customerIdFilterParamPtr.IsValid()){
+				imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, customerIdFilterParamPtr.GetPtr());
+				if (!collectionIds.isEmpty()){
+					QByteArray collectionId = collectionIds[0];
+					if (objectId != collectionId){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+							const prolifedata::CCustomerInfo* foundCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
+							if (foundCustomerInfoPtr != nullptr){
+								QByteArray foundCustomerId = foundCustomerInfoPtr->GetCustomerId();
+								if (foundCustomerId.toLower() == accountCustomerId.toLower()){
+									errorMessage = QString("Customer-ID already exists");
+									SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		customerInfoPtr->SetCustomerId(accountCustomerId);
 	}
 
@@ -347,6 +392,25 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 	customerInfoPtr->AddAddress(address);
 
 	return true;
+}
+
+
+const iprm::IParamsSet* CCustomerCollectionControllerComp::CreateComplexFilter(const QByteArray& fieldId, const QByteArray& fieldValue) const
+{
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = fieldId;
+	fieldFilter.filterValue = fieldValue;
+	
+	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+
+	imtbase::CComplexCollectionFilter* complexFilterPtr = new imtbase::CComplexCollectionFilter();
+	complexFilterPtr->SetFieldsFilter(groupFilter);
+	
+	iprm::CParamsSet* filterParamPtr = new iprm::CParamsSet();
+	filterParamPtr->SetEditableParameter("ComplexFilter", complexFilterPtr, true);
+	
+	return filterParamPtr;
 }
 
 

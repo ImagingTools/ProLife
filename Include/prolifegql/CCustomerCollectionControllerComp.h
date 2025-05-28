@@ -54,6 +54,7 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
+	const iprm::IParamsSet* CreateComplexFilter(const QByteArray& fieldId, const QByteArray& fieldValue) const;
 
 private:
 	I_FACT(imtauth::ICompanyInfo, m_accountInfoFactCompPtr);
