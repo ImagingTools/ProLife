@@ -425,6 +425,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -23440,7 +23444,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"2ae4e2f1-9de8-4d2a-9ccb-0ed32c67a1a6\", typeId: \"Device\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"2ae4e2f1-9de8-4d2a-9ccb-0ed32c67a1a6\", typeId: \"Device\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -24060,6 +24064,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -24234,6 +24242,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -24381,6 +24393,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -27565,7 +27581,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"87ba953f-d47a-4725-97f1-2e657788a702\", typeId: \"SoftwareProduct\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"87ba953f-d47a-4725-97f1-2e657788a702\", typeId: \"SoftwareProduct\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -29782,7 +29798,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"05ff8582-c88f-4e6b-9ae0-88d08f224eba\", typeId: \"Order\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"05ff8582-c88f-4e6b-9ae0-88d08f224eba\", typeId: \"Order\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -31128,7 +31144,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -33678,7 +33694,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -35301,7 +35317,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -36385,7 +36401,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -36472,7 +36488,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Authorization {Authorization(input: {login: \"ACTOOLS_User\", password: \"1\", productId: \"ProLife\"})}",
+												"query": "query Authorization {Authorization(input: {login: \"ACTOOLS_User\", password: \"1\", productId: \"ProLife\"}) {}}",
 												"variables": ""
 											}
 										},
@@ -36541,6 +36557,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -36695,7 +36715,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Search {Search(input: {text: \"test\"})}",
+												"query": "query Search {Search(input: {text: \"test\"}) {searchResults}}",
 												"variables": ""
 											}
 										},
@@ -36994,6 +37014,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -41223,10 +41247,6 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"pm.test('Response time is below 200ms', function () {\r",
-													"    pm.response.to.have.responseTime.below(500);\r",
-													"});\r",
-													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -41263,7 +41283,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"1731a35d-c51b-48f0-9e6a-f537d784646c\", typeId: \"Device\"})}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"1731a35d-c51b-48f0-9e6a-f537d784646c\", typeId: \"Device\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -41432,7 +41452,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"2e0e0483-5487-48d3-9404-9995ce9408d2\", typeId: \"Device\"})}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"2e0e0483-5487-48d3-9404-9995ce9408d2\", typeId: \"Device\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -41965,6 +41985,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -42307,7 +42331,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"87ba953f-d47a-4725-97f1-2e657788a702\", typeId: \"SoftwareProduct\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"87ba953f-d47a-4725-97f1-2e657788a702\", typeId: \"SoftwareProduct\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -42810,7 +42834,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"05ff8582-c88f-4e6b-9ae0-88d08f224eba\", typeId: \"Order\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"05ff8582-c88f-4e6b-9ae0-88d08f224eba\", typeId: \"Order\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -43337,7 +43361,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -44709,7 +44733,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -44947,7 +44971,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -45485,7 +45509,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -45536,6 +45560,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -45555,7 +45583,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetUserMode {GetUserMode(input: {})}",
+												"query": "query GetUserMode {GetUserMode(input: {}) {userMode}}",
 												"variables": ""
 											}
 										},
@@ -45630,7 +45658,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Authorization {Authorization(input: {login: \"ELD-Admin\", password: \"1\", productId: \"ProLife\"})}",
+												"query": "query Authorization {Authorization(input: {login: \"ELD-Admin\", password: \"1\", productId: \"ProLife\"}) {}}",
 												"variables": ""
 											}
 										},
@@ -45727,6 +45755,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -46465,6 +46497,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -53012,7 +53048,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"bb17d227-9587-429e-b72f-33a8cd893dbd\", typeId: \"Device\"})}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"bb17d227-9587-429e-b72f-33a8cd893dbd\", typeId: \"Device\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -53358,6 +53394,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -69110,7 +69150,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"0404f6ab-ef02-424e-8d29-ef4f28cbd7a3\", typeId: \"SoftwareProduct\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"0404f6ab-ef02-424e-8d29-ef4f28cbd7a3\", typeId: \"SoftwareProduct\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -71143,7 +71183,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"565d0f89-34ed-4c8b-a1e1-93133616cc11\", typeId: \"Order\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"565d0f89-34ed-4c8b-a1e1-93133616cc11\", typeId: \"Order\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -71660,7 +71700,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {}}",
+												"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"7a550af6-3998-4b26-8602-83289c45eb60\", typeId: \"Account\"}) {objectId icon text description}}",
 												"variables": ""
 											}
 										},
@@ -73031,7 +73071,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"074c2bdb-906a-4888-a147-ae72b98f4e9b\", typeId: \"Role\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -73269,7 +73309,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"599400c0-f468-42db-9f35-53bd36c26a6c\", typeId: \"User\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -73807,7 +73847,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {}}",
+														"query": "query GetObjectVisualStatus {GetObjectVisualStatus(input: {objectId: \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\", typeId: \"Group\"}) {objectId icon text description}}",
 														"variables": ""
 													}
 												},
@@ -73898,7 +73938,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Authorization {Authorization(input: {login: \"su\", password: \"1\", productId: \"ProLife\"})}",
+												"query": "query Authorization {Authorization(input: {login: \"su\", password: \"1\", productId: \"ProLife\"}) {}}",
 												"variables": ""
 											}
 										},
@@ -74092,6 +74132,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -74395,6 +74439,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -75521,7 +75569,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1ab102ea-452e-4980-b196-f3c501cd1111\", encrypt: true}) {}}",
+												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1ab102ea-452e-4980-b196-f3c501cd1111\", encrypt: true}) {name data}}",
 												"variables": ""
 											}
 										},
@@ -75835,7 +75883,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"ad8735dd-350f-4b13-9a90-341d8962558e\", encrypt: true}) {}}",
+												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"ad8735dd-350f-4b13-9a90-341d8962558e\", encrypt: true}) {name data}}",
 												"variables": ""
 											}
 										},
@@ -76010,6 +76058,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
+													"});\r",
+													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
@@ -76151,7 +76203,9 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"DevicesRemove\": {\r",
-													"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd1222\"\r",
+													"            \"elementIds\": [\r",
+													"                \"1ab102ea-452e-4980-b196-f3c501cd1222\"\r",
+													"            ]\r",
 													"        }\r",
 													"    }\r",
 													"};\r",
@@ -76196,7 +76250,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation DevicesRemove {DevicesRemove(input: {id: \"1ab102ea-452e-4980-b196-f3c501cd1222\"}) {removedNotification {id}}}",
+												"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"1ab102ea-452e-4980-b196-f3c501cd1222\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -76272,7 +76326,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation DevicesRemove {DevicesRemove(input: {id: \"f82b547d-fba8-4b55-937c-b2af4113c950\"}) {removedNotification {id}}}",
+												"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"f82b547d-fba8-4b55-937c-b2af4113c950\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -76302,11 +76356,11 @@
 													"const responseSchema = {\r",
 													"    \"errors\": {\r",
 													"        \"DevicesRemove\": {\r",
-													"            \"message\": \"No object-ID could not be extracted from the request\",\r",
+													"            \"message\": \"Unable to delete object. Object with ID '' does not exists\",\r",
 													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
-													"};\r",
+													"}\r",
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
@@ -76348,7 +76402,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation DevicesRemove {DevicesRemove(input: {id: \"\"}) {removedNotification {id}}}",
+												"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -76424,7 +76478,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation DevicesRemove {DevicesRemove(input: {id: \"b78dbc34-b530-4adc-acb2-77537f793e98\"}) {removedNotification {id}}}",
+												"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"b78dbc34-b530-4adc-acb2-77537f793e98\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -76988,7 +77042,9 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"SoftwareProductsRemove\": {\r",
-													"            \"id\": \"44eb5406-d910-478f-9291-c38a26f1c333\"\r",
+													"            \"elementIds\": [\r",
+													"                \"44eb5406-d910-478f-9291-c38a26f1c333\"\r",
+													"            ]\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -77033,7 +77089,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {id: \"44eb5406-d910-478f-9291-c38a26f1c333\"}) {removedNotification {id}}}",
+												"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {elementIds: [\"44eb5406-d910-478f-9291-c38a26f1c333\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -77109,7 +77165,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {id: \"44eb5406-d910-478f-9291-c38a26f1c333\"}) {removedNotification {id}}}",
+												"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {elementIds: [\"44eb5406-d910-478f-9291-c38a26f1c333\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -78725,7 +78781,9 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"AccountsRemove\": {\r",
-													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            \"elementIds\": [\r",
+													"                \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            ]\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -78770,7 +78828,311 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation AccountsRemove {AccountsRemove(input: {id: \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"}) {removedNotification {id}}}",
+												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {removedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountAdd 1(For Remove)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountAdd\": {\r",
+													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"        }\r",
+													"    }\r",
+													"};\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983c\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff0983c\",name:\"Test1\",customerId:\"Test1\",description:\"Test1\",email:\"Test1@mail.ru\",companyName:\"\",country:\"Test1\",city:\"Test1\",postalCode:\"666666\",street:\"Test\",groups:\"\"}}) {addedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountAdd 2(For Remove)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountAdd\": {\r",
+													"            \"id\": \"42cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"        }\r",
+													"    }\r",
+													"};\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"42cd86aa-765b-44a9-b03f-0d108ff0983c\", item: {id:\"42cd86aa-765b-44a9-b03f-0d108ff0983c\",name:\"Test2\",customerId:\"Test2\",description:\"Test2\",email:\"Test2@mail.ru\",companyName:\"\",country:\"Test2\",city:\"Test2\",postalCode:\"666666\",street:\"Test2\",groups:\"\"}}) {addedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountAdd 3(For Remove)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountAdd\": {\r",
+													"            \"id\": \"52cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"        }\r",
+													"    }\r",
+													"};\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"52cd86aa-765b-44a9-b03f-0d108ff0983c\", item: {id:\"52cd86aa-765b-44a9-b03f-0d108ff0983c\",name:\"Test3\",customerId:\"Test3\",description:\"Test3\",email:\"Test3@mail.ru\",companyName:\"\",country:\"Test3\",city:\"Test3\",postalCode:\"666666\",street:\"Test3\",groups:\"\"}}) {addedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountsRemove (Multi removing)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountsRemove\": {\r",
+													"            \"elementIds\": [\r",
+													"                \"32cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"                \"42cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"                \"52cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\", \"42cd86aa-765b-44a9-b03f-0d108ff0983c\", \"52cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -79350,7 +79712,9 @@
 															"const responseSchema = {\r",
 															"    \"data\": {\r",
 															"        \"RolesRemove\": {\r",
-															"            \"id\": \"88341c6c-74fe-4375-b280-fcbe61cda9df\"\r",
+															"            \"elementIds\": [\r",
+															"                \"88341c6c-74fe-4375-b280-fcbe61cda9df\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -79395,7 +79759,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation RolesRemove {RolesRemove(input: {id: \"88341c6c-74fe-4375-b280-fcbe61cda9df\"}) {removedNotification {id}}}",
+														"query": "mutation RolesRemove {RolesRemove(input: {elementIds: [\"88341c6c-74fe-4375-b280-fcbe61cda9df\"]}) {removedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -80195,7 +80559,9 @@
 															"const responseSchema = {\r",
 															"    \"data\": {\r",
 															"        \"UsersRemove\": {\r",
-															"            \"id\": \"4dbd73aa-b103-484e-ac69-caad51e02a5e\"\r",
+															"            \"elementIds\": [\r",
+															"                \"4dbd73aa-b103-484e-ac69-caad51e02a5e\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -80240,7 +80606,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UsersRemove {UsersRemove(input: {id: \"4dbd73aa-b103-484e-ac69-caad51e02a5e\"}) {removedNotification {id}}}",
+														"query": "mutation UsersRemove {UsersRemove(input: {elementIds: [\"4dbd73aa-b103-484e-ac69-caad51e02a5e\"]}) {removedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -80331,7 +80697,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Authorization {Authorization(input: {login: \"ACTOOLS_User\", password: \"1\", productId: \"ProLife\"})}",
+												"query": "query Authorization {Authorization(input: {login: \"ACTOOLS_User\", password: \"1\", productId: \"ProLife\"}) {}}",
 												"variables": ""
 											}
 										},
@@ -80410,7 +80776,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query SetProfile {SetProfile(input: {id: \"599400c0-f468-42db-9f35-53bd36c26a6c\", name: \"AC TOOLS License User 2\", email: \"tools.de@atlascopco.com\"})}",
+												"query": "query SetProfile {SetProfile(input: {id: \"599400c0-f468-42db-9f35-53bd36c26a6c\", name: \"AC TOOLS License User 2\", email: \"tools.de@atlascopco.com\"}) {status}}",
 												"variables": ""
 											}
 										},
@@ -80489,7 +80855,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query SetProfile {SetProfile(input: {id: \"599400c0-f468-42db-9f35-53bd36c26a6c\", name: \"AC TOOLS License User\", email: \"tools.de@atlascopco.com\"})}",
+												"query": "query SetProfile {SetProfile(input: {id: \"599400c0-f468-42db-9f35-53bd36c26a6c\", name: \"AC TOOLS License User\", email: \"tools.de@atlascopco.com\"}) {status}}",
 												"variables": ""
 											}
 										},
@@ -80558,6 +80924,10 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.response.to.have.responseTime.below(200);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -80717,7 +81087,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Search {Search(input: {text: \"test\"})}",
+												"query": "query Search {Search(input: {text: \"test\"}) {id name items}}",
 												"variables": ""
 											}
 										},
@@ -80819,7 +81189,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1731a35d-c51b-48f0-9e6a-f537d784646c\", encrypt: false})}",
+												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"1731a35d-c51b-48f0-9e6a-f537d784646c\", encrypt: false}) {name data}}",
 												"variables": ""
 											}
 										},
@@ -80916,7 +81286,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"bb17d227-9587-429e-b72f-33a8cd893dbd\", encrypt: false})}",
+												"query": "mutation CreateLicenseFile {CreateLicenseFile(input: {deviceId: \"bb17d227-9587-429e-b72f-33a8cd893dbd\", encrypt: false}) {name data}}",
 												"variables": ""
 											}
 										},
@@ -80971,6 +81341,10 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
+													"pm.test('Response time is below 200ms', function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+													"});\r",
+													"\r",
 													"const jsonData = pm.response.json().data;\r",
 													"\r",
 													"// Comparing the entire response with the expected schema\r",
@@ -80999,7 +81373,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query Authorization {Authorization(input: {login: \"ELD-Admin\", password: \"1\", productId: \"ProLife\"})}",
+												"query": "query Authorization {Authorization(input: {login: \"ELD-Admin\", password: \"1\", productId: \"ProLife\"}) {}}",
 												"variables": ""
 											}
 										},
@@ -81195,7 +81569,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Authorization {Authorization(input: {login: \"TestAdmin\", password: \"1\", productId: \"ProLife\"})}",
+										"query": "query Authorization {Authorization(input: {login: \"TestAdmin\", password: \"1\", productId: \"ProLife\"}) {}}",
 										"variables": ""
 									}
 								},
@@ -81356,7 +81730,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Authorization {Authorization(input: {login: \"su\", password: \"1\", productId: \"ProLife\"})}",
+										"query": "query Authorization {Authorization(input: {login: \"su\", password: \"1\", productId: \"ProLife\"}) {}}",
 										"variables": ""
 									}
 								},
@@ -81503,7 +81877,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Authorization {Authorization(input: {login: \"TestAdmin\", password: \"1\", productId: \"ProLife\"})}",
+										"query": "query Authorization {Authorization(input: {login: \"TestAdmin\", password: \"1\", productId: \"ProLife\"}) {}}",
 										"variables": ""
 									}
 								},
