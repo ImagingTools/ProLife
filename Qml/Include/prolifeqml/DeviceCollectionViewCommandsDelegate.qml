@@ -590,7 +590,9 @@ DocumentCollectionViewDelegate {
 						
 						onSelectionChanged: {
 							dialog.setButtonEnabled(Enums.ok, selection.length > 0)
-							dialog.toDeviceId = table.elements.getData(DeviceItemTypeMetaInfo.s_id, selection[0]);
+							
+							let index = table.getIndexByItemId(selection[0]);
+							dialog.toDeviceId = table.elements.getData(DeviceItemTypeMetaInfo.s_id, index);
 						}
 						
 						Component.onCompleted: {

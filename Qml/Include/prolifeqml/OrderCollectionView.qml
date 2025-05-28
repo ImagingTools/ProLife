@@ -76,9 +76,8 @@ RemoteCollectionView {
 			width: baseElement ? baseElement.width: 0;
 			height: 40;
 			
-			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;			
+			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;
 
-			
 			onWidthChanged: {
 				checkWidth();
 			}

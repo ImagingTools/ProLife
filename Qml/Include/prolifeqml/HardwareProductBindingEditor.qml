@@ -577,7 +577,8 @@ Item {
 												availableLicensesElementView.collection.table.resetSelection();
 											}
 											
-											let index = selection[0];
+											let elementId = selection[0]
+											let index = bindingProductsCollection.table.getIndexByItemId(elementId);
 											
 											let elementsModel = bindingProductsCollection.table.elements;
 											let inUse = elementsModel.getData("inUse", index);
@@ -692,7 +693,7 @@ Item {
 							}
 							
 							let selectedProductIds = productEditor.bindingModel.m_softwareIds.split(';')
-							let indexes = usedLicensesElementView.collection.table.tableSelection.selectedIndexes;
+							let indexes = usedLicensesElementView.collection.table.getSelectedIndexes()
 							if (indexes.length === 0){
 								return
 							}
