@@ -101,7 +101,7 @@ ViewBase {
 		anchors.top: flickable.top;
 		anchors.bottom: flickable.bottom;
 		
-		secondSize: Style.sizeMainMargin;
+		secondSize: Style.marginM;
 		targetItem: flickable;
 		
 		visible: accountEditorContainer.visible;
@@ -116,7 +116,7 @@ ViewBase {
 		anchors.right: flickable.right;
 		anchors.bottom: flickable.bottom;
 		
-		secondSize: Style.sizeMainMargin;
+		secondSize: Style.marginM;
 		
 		vertical: false;
 		targetItem: flickable;
@@ -137,19 +137,19 @@ ViewBase {
 		id: flickable;
 		
 		anchors.top: parent.top;
-		anchors.topMargin: Style.sizeLargeMargin;
+		anchors.topMargin: Style.marginXL;
 		
 		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: Style.sizeLargeMargin;
+		anchors.bottomMargin: Style.marginXL;
 		
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.sizeLargeMargin;
+		anchors.leftMargin: Style.marginXL;
 		
 		anchors.right: scrollbar.left;
-		anchors.rightMargin: Style.sizeLargeMargin;
+		anchors.rightMargin: Style.marginXL;
 		
 		contentWidth: bodyColumn.width;
-		contentHeight: Math.max(bodyColumn.height + 2 * Style.sizeLargeMargin + 100, historyPanel.contentHeight + 2 * Style.sizeLargeMargin);
+		contentHeight: Math.max(bodyColumn.height + 2 * Style.marginXL + 100, historyPanel.contentHeight + 2 * Style.marginXL);
 		
 		boundsBehavior: Flickable.StopAtBounds;
 		clip: true;
@@ -159,7 +159,7 @@ ViewBase {
 			
 			width: 700;
 			
-			spacing: Style.sizeLargeMargin;
+			spacing: Style.marginXL;
 			
 			GroupHeaderView {
 				width: parent.width;
@@ -402,7 +402,7 @@ ViewBase {
 				
 				color: Style.textColor;
 				font.family: Style.fontFamilyBold;
-				font.pixelSize: Style.fontSizeXXLarge;
+				font.pixelSize: Style.fontSizeXXL;
 
 				text: qsTr("Group Information");
 			}

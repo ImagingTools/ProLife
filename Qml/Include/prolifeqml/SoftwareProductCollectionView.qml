@@ -206,7 +206,7 @@ RemoteCollectionView {
 				anchors.left: parent.left;
 				anchors.verticalCenter: parent.verticalCenter;
 				
-				spacing: Style.sizeMainMargin;
+				spacing: Style.marginM;
 				
 				FieldFilter {
 					id: pairedFilter

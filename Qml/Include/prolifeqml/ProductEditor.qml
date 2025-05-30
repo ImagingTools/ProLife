@@ -241,11 +241,11 @@ Item {
 		id: contentColumn;
 		
 		anchors.top: parent.top;
-		anchors.topMargin: Style.sizeMainMargin;
+		anchors.topMargin: Style.marginM;
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.sizeMainMargin;
+		anchors.leftMargin: Style.marginM;
 		anchors.right: parent.right;
-		anchors.rightMargin: Style.sizeMainMargin;
+		anchors.rightMargin: Style.marginM;
 		
 		ElementView {
 			id: segmentedElementView;
@@ -353,7 +353,7 @@ Item {
 					text: qsTr("Please select a product");
 					color: Style.errorTextColor;
 					font.family: Style.fontFamily;
-					font.pixelSize: Style.fontSizeNormal;
+					font.pixelSize: Style.fontSizeM;
 				}
 			}
 		}
@@ -366,7 +366,7 @@ Item {
 		anchors.bottom: parent.bottom;
 		anchors.left: parent.left;
 		anchors.right: parent.right;
-		anchors.margins: Style.sizeMainMargin;
+		anchors.margins: Style.marginM;
 		
 		width: parent.width;
 		

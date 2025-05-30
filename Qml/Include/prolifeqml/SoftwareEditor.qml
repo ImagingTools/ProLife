@@ -257,19 +257,19 @@ ViewBase {
 		id: flickable;
 		
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.sizeLargeMargin;
+		anchors.leftMargin: Style.marginXL;
 		
 		anchors.top: parent.top;
-		anchors.topMargin: Style.sizeLargeMargin;
+		anchors.topMargin: Style.marginXL;
 		
 		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: Style.sizeLargeMargin;
+		anchors.bottomMargin: Style.marginXL;
 		
 		anchors.right: scrollbar.left;
-		anchors.rightMargin: Style.sizeLargeMargin;
+		anchors.rightMargin: Style.marginXL;
 		
 		contentWidth: bodyColumn.width;
-		contentHeight: Math.max(bodyColumn.height + 2 * Style.sizeLargeMargin + 100, historyPanel.contentHeight + 2 * Style.sizeLargeMargin);
+		contentHeight: Math.max(bodyColumn.height + 2 * Style.marginXL + 100, historyPanel.contentHeight + 2 * Style.marginXL);
 		
 		boundsBehavior: Flickable.StopAtBounds;
 		clip: true;
@@ -279,7 +279,7 @@ ViewBase {
 			
 			width: 700;
 			
-			spacing: Style.sizeLargeMargin;
+			spacing: Style.marginXL;
 			
 			GroupHeaderView {
 				width: parent.width;

@@ -223,19 +223,19 @@ ViewBase {
 		id: flickable;
 		
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.sizeLargeMargin;
+		anchors.leftMargin: Style.marginXL;
 		
 		anchors.top: parent.top;
-		anchors.topMargin: Style.sizeLargeMargin;
+		anchors.topMargin: Style.marginXL;
 		
 		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: Style.sizeLargeMargin;
+		anchors.bottomMargin: Style.marginXL;
 		
 		anchors.right: scrollbar.left;
-		anchors.rightMargin: Style.sizeLargeMargin;
+		anchors.rightMargin: Style.marginXL;
 		
 		contentWidth: content.width;
-		contentHeight: Math.max(content.height + 2 * Style.sizeLargeMargin + 100, historyPanel.contentHeight + 2 * Style.sizeLargeMargin);
+		contentHeight: Math.max(content.height + 2 * Style.marginXL + 100, historyPanel.contentHeight + 2 * Style.marginXL);
 		
 		boundsBehavior: Flickable.StopAtBounds;
 		
@@ -246,7 +246,7 @@ ViewBase {
 			
 			width: 700;
 			
-			spacing: Style.sizeLargeMargin;
+			spacing: Style.marginXL;
 			
 			GroupHeaderView {
 				title: qsTr("Order Information");
@@ -269,7 +269,7 @@ ViewBase {
 						
 						color: Style.errorTextColor;
 						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeNormal;
+						font.pixelSize: Style.fontSizeM;
 					}
 				}
 				
@@ -470,7 +470,7 @@ ViewBase {
 					
 					height: parent.height;
 					
-					spacing: Style.sizeMainMargin;
+					spacing: Style.marginM;
 					
 					ToolButton {
 						id: expandButton;
@@ -518,7 +518,7 @@ ViewBase {
 					text: qsTr("Products") + " (" + productsView.count + ")";
 					color: Style.textColor;
 					font.family: Style.fontFamilyBold;
-					font.pixelSize: Style.fontSizeXXLarge;
+					font.pixelSize: Style.fontSizeXXL;
 				}
 			}
 			
@@ -529,7 +529,7 @@ ViewBase {
 				height: contentHeight;
 				
 				boundsBehavior: Flickable.StopAtBounds;
-				spacing: Style.sizeLargeMargin;
+				spacing: Style.marginXL;
 				
 				cacheBuffer: 1000;
 				

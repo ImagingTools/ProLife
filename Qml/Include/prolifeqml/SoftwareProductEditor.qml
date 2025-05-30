@@ -329,7 +329,7 @@ ViewBase {
 						text: qsTr("Please select a license");
 						color: Style.errorTextColor;
 						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeNormal;
+						font.pixelSize: Style.fontSizeM;
 					}
 				}
 			}
@@ -391,12 +391,12 @@ ViewBase {
 							
 							anchors.verticalCenter: parent.verticalCenter;
 							anchors.left: checkBox.right;
-							anchors.leftMargin: Style.sizeMainMargin;
+							anchors.leftMargin: Style.marginM;
 							
 							visible: checkBox.checkState === Qt.Unchecked;
 							
 							font.family: Style.fontFamily;
-							font.pixelSize: Style.fontSizeNormal;
+							font.pixelSize: Style.fontSizeM;
 							color: Style.textColor;
 							
 							text: qsTr("Unlimited");
@@ -407,7 +407,7 @@ ViewBase {
 							
 							anchors.verticalCenter: parent.verticalCenter;
 							anchors.left: checkBox.right;
-							anchors.leftMargin: Style.sizeMainMargin;
+							anchors.leftMargin: Style.marginM;
 							
 							visible: checkBox.checkState === Qt.Checked;
 							
@@ -430,7 +430,7 @@ ViewBase {
 							textFieldHeight: height;
 							
 							textFieldBorderColor: Style.borderColor;
-							mainMargin: Style.sizeMainMargin;
+							mainMargin: Style.marginM;
 							
 							Component.onCompleted: {
 								expirationElementView.datePicker = datePicker_;

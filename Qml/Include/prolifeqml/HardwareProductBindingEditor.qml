@@ -94,22 +94,22 @@ Item {
 		anchors.right: parent.right;
 		anchors.top: flickable.top;
 		anchors.bottom: flickable.bottom;
-		secondSize: Style.sizeMainMargin;
+		secondSize: Style.marginM;
 		targetItem: flickable;
 	}
 	
 	Flickable {
 		id: flickable;
 		anchors.top: parent.top;
-		anchors.topMargin: Style.sizeLargeMargin;
+		anchors.topMargin: Style.marginXL;
 		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: Style.sizeLargeMargin;
+		anchors.bottomMargin: Style.marginXL;
 		anchors.left: parent.left;
-		anchors.leftMargin: Style.sizeLargeMargin;
+		anchors.leftMargin: Style.marginXL;
 		anchors.right: scrollbar.left;
-		anchors.rightMargin: Style.sizeLargeMargin;
+		anchors.rightMargin: Style.marginXL;
 		contentWidth: width;
-		contentHeight: content.height + 2 * Style.sizeLargeMargin;
+		contentHeight: content.height + 2 * Style.marginXL;
 		boundsBehavior: Flickable.StopAtBounds;
 		clip: true;
 		
@@ -123,12 +123,12 @@ Item {
 				Column {
 					id: availableLicensesColumn;
 					anchors.top: parent.top
-					anchors.topMargin: Style.sizeMainMargin;
+					anchors.topMargin: Style.marginM;
 					anchors.right: parent.horizontalCenter;
 					anchors.rightMargin: buttonsColumn.width;
 					anchors.left: parent.left;
-					anchors.leftMargin: Style.sizeMainMargin;
-					spacing: Style.sizeMainMargin;
+					anchors.leftMargin: Style.marginM;
+					spacing: Style.marginM;
 					
 					ComboBoxElementView {
 						id: productComboBoxElementView;
@@ -417,7 +417,7 @@ Item {
 					
 					anchors.bottom: availableLicensesColumn.bottom;
 					anchors.right: parent.right;
-					anchors.rightMargin: Style.sizeMainMargin;
+					anchors.rightMargin: Style.marginM;
 					anchors.left: parent.horizontalCenter;
 					anchors.leftMargin: buttonsColumn.width;
 					
@@ -448,7 +448,7 @@ Item {
 											
 											anchors.verticalCenter: parent.verticalCenter;
 											anchors.left: parent.left;
-											anchors.leftMargin: Style.sizeSmallMargin;
+											anchors.leftMargin: Style.marginXS;
 											
 											width: 18;
 											height: width;
@@ -610,8 +610,8 @@ Item {
 				Column {
 					id: buttonsColumn;
 					anchors.centerIn: parent;
-					spacing: Style.sizeLargeMargin;
-					width: Style.sizeLargeMargin;
+					spacing: Style.marginXL;
+					width: Style.marginXL;
 					
 					ToolButton {
 						id: bindButton;
