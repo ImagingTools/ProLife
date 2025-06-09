@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5352" Description="ACF"/>
-            <Version Id="1" Number="2237" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5385" Description="ACF"/>
+            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -37,18 +37,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Migrations">
-            <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -61,6 +49,18 @@
                 <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Migrations">
+            <PositionMap>
+                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController_2" X="900" Y="250" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="ObjectCollectionMigrationController" X="225" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

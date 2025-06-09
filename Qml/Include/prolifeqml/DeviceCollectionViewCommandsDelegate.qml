@@ -571,6 +571,13 @@ DocumentCollectionViewDelegate {
 						m_filterOperations: ["Not","Equal"]
 					}
 					
+					FieldFilter {
+						id: allFilter
+						m_fieldId: "All"
+						m_filterValueType: "String"
+						m_filterOperations: ["Not","Equal"]
+					}
+					
 					Connections {
 						target: dialog;
 						

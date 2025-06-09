@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5385" Description="ACF"/>
+            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -132,6 +132,7 @@
                                 <Value>CollectionCommands/New</Value>
                                 <Value>CollectionCommands/Edit</Value>
                                 <Value>CollectionCommands/Remove</Value>
+                                <Value>CollectionCommands/Restore</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -142,6 +143,8 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Revision</Value>
+                                <Value>CollectionCommands/RemoveAll</Value>
+                                <Value>CollectionCommands/RestoreAll</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -184,6 +187,9 @@
                     <AttributeInfo Id="AccountFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="AccountInfo"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Accounts"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -211,9 +217,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AccountsHeadersDataProvider"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="AccountsList"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
