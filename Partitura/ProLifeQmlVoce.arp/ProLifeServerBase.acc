@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5352" Description="ACF"/>
-            <Version Id="1" Number="2237" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5385" Description="ACF"/>
+            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -190,9 +190,6 @@
         <Element Id="LisaRepositories" PackageId="LisaVoce" ComponentId="Repositories">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
@@ -286,7 +283,7 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/CachedFeatureRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/FeatureSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureContainer" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/FeatureContainer"/>
@@ -298,7 +295,7 @@
                         <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/CachedLicenseRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/LicenseSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -320,7 +317,7 @@
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaRepositories/CachedProductRepository"/>
+                        <Data IsEnabled="true" Value="LisaRepositories/ProductRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleCollection"/>

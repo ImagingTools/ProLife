@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5385" Description="ACF"/>
+            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -90,11 +90,11 @@
         <Element Id="DeviceCollectionController" PackageId="ProLifeGqlPck" ComponentId="DeviceCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -117,9 +117,6 @@
                     <AttributeInfo Id="DeviceFactory" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="DeviceInfo"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceChangeGenerator"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="GroupFilterParamJoiner" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="GroupFilterParamJoiner"/>
                     </AttributeInfo>
@@ -128,9 +125,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ListObjectCommand" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="DevicesList"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -163,9 +157,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ReplaceableFilterFields" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
