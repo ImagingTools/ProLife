@@ -30180,6 +30180,18 @@
 													"                            \"priority\": 0,\r",
 													"                            \"alignment\": 1,\r",
 													"                            \"subElements\": []\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"elementId\": \"Restore\",\r",
+													"                            \"elementName\": \"Restore\",\r",
+													"                            \"elementDescription\": \"\",\r",
+													"                            \"elementItemPath\": \"Icons/Restore\",\r",
+													"                            \"elementStatus\": \"\",\r",
+													"                            \"enabled\": false,\r",
+													"                            \"visible\": true,\r",
+													"                            \"priority\": 0,\r",
+													"                            \"alignment\": 1,\r",
+													"                            \"subElements\": []\r",
 													"                        }\r",
 													"                    ]\r",
 													"                },\r",
@@ -30217,6 +30229,30 @@
 													"                            \"priority\": 0,\r",
 													"                            \"alignment\": 1,\r",
 													"                            \"subElements\": []\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"elementId\": \"RemoveAll\",\r",
+													"                            \"elementName\": \"Remove All\",\r",
+													"                            \"elementDescription\": \"\",\r",
+													"                            \"elementItemPath\": \"Icons/Delete\",\r",
+													"                            \"elementStatus\": \"\",\r",
+													"                            \"enabled\": true,\r",
+													"                            \"visible\": true,\r",
+													"                            \"priority\": -1,\r",
+													"                            \"alignment\": 1,\r",
+													"                            \"subElements\": []\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"elementId\": \"RestoreAll\",\r",
+													"                            \"elementName\": \"Restore All\",\r",
+													"                            \"elementDescription\": \"\",\r",
+													"                            \"elementItemPath\": \"Icons/Restore\",\r",
+													"                            \"elementStatus\": \"\",\r",
+													"                            \"enabled\": false,\r",
+													"                            \"visible\": true,\r",
+													"                            \"priority\": -1,\r",
+													"                            \"alignment\": 1,\r",
+													"                            \"subElements\": []\r",
 													"                        }\r",
 													"                    ]\r",
 													"                }\r",
@@ -30227,10 +30263,6 @@
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
-													"});\r",
-													"\r",
-													"pm.test('Response time is below 500ms', function () {\r",
-													"    pm.response.to.have.responseTime.below(500);\r",
 													"});\r",
 													"\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
@@ -77123,7 +77155,7 @@
 													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
-													"};\r",
+													"}\r",
 													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
@@ -78547,7 +78579,7 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"AccountAdd\": {\r",
-													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983d\"\r",
 													"        }\r",
 													"    }\r",
 													"};\r",
@@ -78560,6 +78592,16 @@
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
 													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -78592,7 +78634,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983c\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff0983c\",name:\"Test\",customerId:\"Test\",description:\"Test\",email:\"Test@mail.ru\",companyName:\"\",country:\"Test\",city:\"Test\",postalCode:\"666666\",street:\"Test\",groups:\"\"}}) {addedNotification {id}}}",
+												"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983d\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff0983d\",name:\"Test\",customerId:\"Test\",description:\"Test\",email:\"Test@mail.ru\",companyName:\"\",country:\"Test\",city:\"Test\",postalCode:\"666666\",street:\"Test\",groups:\"\"}}) {addedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -78622,7 +78664,7 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"AccountItem\": {\r",
-													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983d\",\r",
 													"            \"name\": \"Test\",\r",
 													"            \"customerId\": \"Test\",\r",
 													"            \"description\": \"Test\",\r",
@@ -78676,7 +78718,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query AccountItem {AccountItem(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"}) {item {id}}}",
+												"query": "query AccountItem {AccountItem(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983d\"}) {item {id}}}",
 												"variables": ""
 											}
 										},
@@ -78706,7 +78748,7 @@
 													"const responseSchema = {\r",
 													"    \"data\": {\r",
 													"        \"AccountUpdate\": {\r",
-													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983d\"\r",
 													"        }\r",
 													"    }\r",
 													"};\r",
@@ -78751,7 +78793,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation AccountUpdate {AccountUpdate(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983c\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff0983c\",name:\"Test\",customerId:\"Test\",description:\"Test\",email:\"Test@mail.ru\",companyName:\"\",country:\"Test\",city:\"Test\",postalCode:\"666666\",street:\"Test\",groups:\"a47c93d1-0d3d-4282-8864-75a967a6ebed;c6312e96-7be5-447c-8bf3-a328ac7222b7\"}}) {updatedNotification {id}}}",
+												"query": "mutation AccountUpdate {AccountUpdate(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff0983d\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff0983d\",name:\"Test\",customerId:\"Test\",description:\"Test\",email:\"Test@mail.ru\",companyName:\"\",country:\"Test\",city:\"Test\",postalCode:\"666666\",street:\"Test\",groups:\"a47c93d1-0d3d-4282-8864-75a967a6ebed;c6312e96-7be5-447c-8bf3-a328ac7222b7\"}}) {updatedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -78771,7 +78813,7 @@
 									"response": []
 								},
 								{
-									"name": "AccountsRemove",
+									"name": "AccountsRemove (Single removing)",
 									"event": [
 										{
 											"listen": "test",
@@ -78782,7 +78824,7 @@
 													"    \"data\": {\r",
 													"        \"AccountsRemove\": {\r",
 													"            \"elementIds\": [\r",
-													"                \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"                \"32cd86aa-765b-44a9-b03f-0d108ff0983d\"\r",
 													"            ]\r",
 													"        }\r",
 													"    }\r",
@@ -78828,7 +78870,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {removedNotification {id}}}",
+												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983d\"]}) {removedNotification {id}}}",
 												"variables": ""
 											}
 										},
@@ -79133,6 +79175,490 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\", \"42cd86aa-765b-44a9-b03f-0d108ff0983c\", \"52cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {removedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountsList (DISABLED)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountsList\": {\r",
+													"            \"notification\": {\r",
+													"                \"pagesCount\": 1,\r",
+													"                \"totalCount\": 4\r",
+													"            },\r",
+													"            \"items\": [\r",
+													"                {\r",
+													"                    \"typeId\": \"\",\r",
+													"                    \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983d\",\r",
+													"                    \"customerId\": \"Test\",\r",
+													"                    \"name\": \"Test\",\r",
+													"                    \"description\": \"Test\",\r",
+													"                    \"email\": \"Test@mail.ru\",\r",
+													"                    \"added\": \"10.06.2025 09:24:03\",\r",
+													"                    \"timeStamp\": \"10.06.2025 09:24:09\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"typeId\": \"\",\r",
+													"                    \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"                    \"customerId\": \"Test1\",\r",
+													"                    \"name\": \"Test1\",\r",
+													"                    \"description\": \"Test1\",\r",
+													"                    \"email\": \"Test1@mail.ru\",\r",
+													"                    \"added\": \"10.06.2025 09:24:15\",\r",
+													"                    \"timeStamp\": \"10.06.2025 09:24:15\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"typeId\": \"\",\r",
+													"                    \"id\": \"42cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"                    \"customerId\": \"Test2\",\r",
+													"                    \"name\": \"Test2\",\r",
+													"                    \"description\": \"Test2\",\r",
+													"                    \"email\": \"Test2@mail.ru\",\r",
+													"                    \"added\": \"10.06.2025 09:24:18\",\r",
+													"                    \"timeStamp\": \"10.06.2025 09:24:18\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"typeId\": \"\",\r",
+													"                    \"id\": \"52cd86aa-765b-44a9-b03f-0d108ff0983c\",\r",
+													"                    \"customerId\": \"Test3\",\r",
+													"                    \"name\": \"Test3\",\r",
+													"                    \"description\": \"Test3\",\r",
+													"                    \"email\": \"Test3@mail.ru\",\r",
+													"                    \"added\": \"10.06.2025 09:24:20\",\r",
+													"                    \"timeStamp\": \"10.06.2025 09:24:20\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"responseSchema.data.AccountsList.items.forEach(item => {\r",
+													"    delete item.timeStamp;\r",
+													"    delete item.added;\r",
+													"});\r",
+													"\r",
+													"const response = pm.response.json();\r",
+													"response.data.AccountsList.items.forEach(item => {\r",
+													"    delete item.timeStamp;\r",
+													"    delete item.added;\r",
+													"});\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(response).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query AccountsList {AccountsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"email\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}, documentFilterModel: {documentId:\"\",documentStates:[\"DISABLED\"]}}}) {items {id name customerId email description}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RestoreObjects (Test1)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\"data\":{\"RestoreObjects\":{\"success\":true}}}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation RestoreObjects {RestoreObjects(input: {collectionId: \"Accounts\", objectIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {succes}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RestoreObjects (Test2, Test3)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\"data\":{\"RestoreObjects\":{\"success\":true}}}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation RestoreObjects {RestoreObjects(input: {collectionId: \"Accounts\", objectIds: [\"52cd86aa-765b-44a9-b03f-0d108ff0983c\",\"42cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {success}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RestoreObjectSet (All objects)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\"data\":{\"RestoreObjectSet\":{\"success\":true}}}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation RestoreObjectSet {RestoreObjectSet(input: {collectionId: \"Accounts\", filterModel: null}) {success}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AccountsRemove (Test1)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"AccountsRemove\": {\r",
+													"            \"elementIds\": [\r",
+													"                \"32cd86aa-765b-44a9-b03f-0d108ff0983c\"\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff0983c\"]}) {removedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RestoreObjectSet (All objects with Filter)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\"data\":{\"RestoreObjectSet\":{\"success\":true}}}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation RestoreObjectSet {RestoreObjectSet(input: {collectionId: \"Accounts\", filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[{fieldFilters:[{fieldId:\"customerId\",filterValue:\"Test1\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"name\",filterValue:\"Test1\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"email\",filterValue:\"Test1\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"description\",filterValue:\"Test1\",filterValueType:\"String\",filterOperations:[\"Contains\"]}],groupFilters:[],logicalOperation:\"Or\"}],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}) {}}",
 												"variables": ""
 											}
 										},
@@ -82036,6 +82562,3006 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "query PagesData {PagesData {items {pageId name icon source startItem}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Updating meta info Tests",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Authorization",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Fixed TypeError by adding null check for jsonData.Authorization\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"Authorization\": {\r",
+											"            \"permissions\": \"\",\r",
+											"            \"systemId\": \"\",\r",
+											"            \"token\": \"\",\r",
+											"            \"userId\": \"7730a2a9-3c5d-4df6-a453-f9ce329c701e\",\r",
+											"            \"username\": \"su\"\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"access_token\", \"\");\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json().data;\r",
+											"\r",
+											"// Comparing the entire response with the expected schema\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"        pm.expect(jsonData.Authorization.permissions).to.eql(responseSchema.data.Authorization.permissions);\r",
+											"        pm.expect(jsonData.Authorization.systemId).to.eql(responseSchema.data.Authorization.systemId);\r",
+											"        pm.expect(jsonData.Authorization.userId).to.not.be.empty;\r",
+											"        pm.expect(jsonData.Authorization.username).to.eql(responseSchema.data.Authorization.username);\r",
+											"        pm.expect(jsonData.Authorization.token).to.not.be.empty;\r",
+											"        pm.environment.set(\"access_token\", jsonData.Authorization.token);\r",
+											"        pm.environment.set(\"user_id\", jsonData.Authorization.userId);\r",
+											"        console.log(pm.environment.get(\"access_token\"));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Authorization {Authorization(input: {login: \"su\", password: \"1\", productId: \"ProLife\"}) {}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Hardware",
+					"item": [
+						{
+							"name": "AccountAdd (Account_100)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountAdd\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff07777\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",name:\"Account_100\",customerId:\"Account_100\",description:\"Account_100\",email:\"Account_100@mail.ru\",companyName:\"\",country:\"Account_100\",city:\"Account_100\",postalCode:\"666666\",street:\"Account_100\",groups:\"\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderAdd (77765555)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrderAdd\": {\r",
+											"            \"id\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrderAdd {OrderAdd(input: {typeId: \"Order\", id: \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\", item: {id:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",name:\"\",description:\"Test\",orderId:\"77765555\",purchaseId:\"77765555\",customerId:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",orderStatus:\"Created\",orderProducts:[]}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeviceAdd (11:77:55:77:77:00)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"DeviceAdd\": {\r",
+											"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DeviceAdd {DeviceAdd(input: {typeId: \"Device\", id: \"1ab102ea-452e-4980-b196-f3c501cd7777\", item: {id:\"1ab102ea-452e-4980-b196-f3c501cd7777\",name:\"\",description:\"Test\",macAddress:\"11:77:55:77:77:00\",serialNumber:\"55009943\",deviceType:\"b079d7bf-1a69-4aa9-bfbd-e720c9fcf508\",orderId:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",licenseName:\"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",project:\"\",productionStatus:\"Finished\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DevicesList (Check) 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.DevicesList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"1ab102ea-452e-4980-b196-f3c501cd7777\") {\r",
+											"        pm.test(\"orderUuid should not be empty\", function () {\r",
+											"            pm.expect(item.orderUuid).to.not.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"purchaseId should equal '77765555'\", function () {\r",
+											"            pm.expect(item.purchaseId).to.eql(\"77765555\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"deliveryId should equal '77765555'\", function () {\r",
+											"            pm.expect(item.deliveryId).to.eql(\"77765555\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"customerName should equal 'Account_100'\", function () {\r",
+											"            pm.expect(item.customerName).to.eql(\"Account_100\");\r",
+											"        });\r",
+											"\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query DevicesList {DevicesList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status deviceType licenseId licenseName macAddress derialNumber deliveryId purchaseId project customerName orderUuid statusId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountUpdate (Account_100 -> Account_200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountUpdate\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountUpdate {AccountUpdate(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff07777\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",name:\"Account_200\",customerId:\"Account_100\",description:\"Account_100\",email:\"Account_100@mail.ru\",companyName:\"\",country:\"Account_100\",city:\"Account_100\",postalCode:\"666666\",street:\"Account_100\",groups:\"\"}}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderUpdate (77765555 -> 77766666)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrderUpdate\": {\r",
+											"            \"id\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrderUpdate {OrderUpdate(input: {id: \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\", item: {id:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",name:\"77765555\",description:\"Test\",orderId:\"77766666\",purchaseId:\"77766666\",customerId:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",orderStatus:\"Created\",orderProducts:[{id:\"1ab102ea-452e-4980-b196-f3c501cd7777\",productUuid:\"b079d7bf-1a69-4aa9-bfbd-e720c9fcf508\",licenseUuid:\"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",categoryId:\"Hardware\",licenseId:\"60.11300\",productName:\"RTV Hardware\",licenseName:\"RTV Camera V3, QUISS, 600mm, Mid\",serialNumber:\"55009943\",inUse:false,isNew:false,expiration:\"\",macAddress:\"11:77:55:77:77:00\"}]}, typeId: \"Order\", name: \"77766666\", description: \"Test\"}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DevicesList (Check) 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.DevicesList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"1ab102ea-452e-4980-b196-f3c501cd7777\") {\r",
+											"        pm.test(\"orderUuid should not be empty\", function () {\r",
+											"            pm.expect(item.orderUuid).to.not.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"purchaseId should equal '77766666'\", function () {\r",
+											"            pm.expect(item.purchaseId).to.eql(\"77766666\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"deliveryId should equal '77766666'\", function () {\r",
+											"            pm.expect(item.deliveryId).to.eql(\"77766666\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"customerName should equal 'Account_200'\", function () {\r",
+											"            pm.expect(item.customerName).to.eql(\"Account_200\");\r",
+											"        });\r",
+											"\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query DevicesList {DevicesList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status deviceType licenseId licenseName macAddress derialNumber deliveryId purchaseId project customerName orderUuid statusId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountsRemove (Account_200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountsRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff07777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersRemove (77766666)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrdersRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrdersRemove {OrdersRemove(input: {elementIds: [\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DevicesList (Check) 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.DevicesList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"1ab102ea-452e-4980-b196-f3c501cd7777\") {\r",
+											"        pm.test(\"orderUuid should be empty\", function () {\r",
+											"            pm.expect(item.orderUuid).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"purchaseId should be empty\", function () {\r",
+											"            pm.expect(item.purchaseId).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"deliveryId should be empty\", function () {\r",
+											"            pm.expect(item.deliveryId).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"customerName should be empty\", function () {\r",
+											"            pm.expect(item.customerName).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query DevicesList {DevicesList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status deviceType licenseId licenseName macAddress derialNumber deliveryId purchaseId project customerName orderUuid statusId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DevicesRemove (11:77:55:99:99:00)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"DevicesRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"1ab102ea-452e-4980-b196-f3c501cd7777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Software",
+					"item": [
+						{
+							"name": "AccountAdd (Account_100)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountAdd\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff07777\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",name:\"Account_100\",customerId:\"Account_100\",description:\"Account_100\",email:\"Account_100@mail.ru\",companyName:\"\",country:\"Account_100\",city:\"Account_100\",postalCode:\"666666\",street:\"Account_100\",groups:\"\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderAdd (77765555)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrderAdd\": {\r",
+											"            \"id\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrderAdd {OrderAdd(input: {typeId: \"Order\", id: \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\", item: {id:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",name:\"\",description:\"Test\",orderId:\"77765555\",purchaseId:\"77765555\",customerId:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",orderStatus:\"Created\",orderProducts:[]}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductAdd (Test_12345)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"SoftwareProductAdd\": {\r",
+											"            \"id\": \"77775406-d910-478f-9291-c38a26f1c00a\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SoftwareProductAdd {SoftwareProductAdd(input: {typeId: \"SoftwareProduct\", id: \"77775406-d910-478f-9291-c38a26f1c00a\", item: {id:\"77775406-d910-478f-9291-c38a26f1c00a\",productId:\"d9afd338-7fe1-4989-9908-f35859937b9d\",categoryId:\"\",serialNumber:\"Test_12345\",project:\"Test\",inUse:false,orderUuid:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",licenseUuid:\"c34f2966-7179-4ea8-a5de-336024cb0312\",expiration:\"\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeviceAdd (11:77:55:77:77:00)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"DeviceAdd\": {\r",
+											"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DeviceAdd {DeviceAdd(input: {typeId: \"Device\", id: \"1ab102ea-452e-4980-b196-f3c501cd7777\", item: {id:\"1ab102ea-452e-4980-b196-f3c501cd7777\",name:\"\",description:\"Test\",macAddress:\"11:77:55:77:77:00\",serialNumber:\"55009943\",deviceType:\"b079d7bf-1a69-4aa9-bfbd-e720c9fcf508\",orderId:\"\",licenseName:\"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",project:\"\",productionStatus:\"Finished\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.expect(item.macAddress).to.be.empty;\r",
+											"        pm.expect(item.hardwareId).to.be.empty;\r",
+											"        pm.expect(item.purchaseId).to.eql(\"77765555\");\r",
+											"        pm.expect(item.deliveryId).to.eql(\"77765555\");\r",
+											"        pm.expect(item.customerName).to.eql(\"Account_100\");\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountUpdate (Account_100 -> Account_200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountUpdate\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountUpdate {AccountUpdate(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff07777\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",name:\"Account_200\",customerId:\"Account_100\",description:\"Account_100\",email:\"Account_100@mail.ru\",companyName:\"\",country:\"Account_100\",city:\"Account_100\",postalCode:\"666666\",street:\"Account_100\",groups:\"\"}}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderUpdate (77765555 -> 77766666)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrderUpdate\": {\r",
+											"            \"id\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrderUpdate {OrderUpdate(input: {id: \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\", item: {id:\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\",name:\"77765555\",description:\"Test\",orderId:\"77766666\",purchaseId:\"77766666\",customerId:\"32cd86aa-765b-44a9-b03f-0d108ff07777\",orderStatus:\"Created\",orderProducts:[{id:\"77775406-d910-478f-9291-c38a26f1c00a\",productUuid:\"d9afd338-7fe1-4989-9908-f35859937b9d\",licenseUuid:\"12.10185\",categoryId:\"Software\",licenseId:\"\",productName:\"RTV Software\",licenseName:\"RTV AddOn - Reference\",serialNumber:\"Test_12345\",inUse:false,isNew:false,expiration:\"\",macAddress:\"\"}]}, typeId: \"Order\", name: \"77766666\", description: \"Test\"}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.test(\"macAddress should be empty\", function () {\r",
+											"            pm.expect(item.macAddress).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"hardwareId should be empty\", function () {\r",
+											"            pm.expect(item.hardwareId).to.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"orderUuid should not be empty\", function () {\r",
+											"            pm.expect(item.orderUuid).to.not.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"purchaseId should equal '77766666'\", function () {\r",
+											"            pm.expect(item.purchaseId).to.eql(\"77766666\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"deliveryId should equal '77766666'\", function () {\r",
+											"            pm.expect(item.deliveryId).to.eql(\"77766666\");\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"customerId should not be empty\", function () {\r",
+											"            pm.expect(item.customerId).to.not.be.empty;\r",
+											"        });\r",
+											"\r",
+											"        pm.test(\"customerName should equal 'Account_200'\", function () {\r",
+											"            pm.expect(item.customerName).to.eql(\"Account_200\");\r",
+											"        });\r",
+											"\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountsRemove (Account_200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountsRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"32cd86aa-765b-44a9-b03f-0d108ff07777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff07777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersRemove (77766666)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrdersRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrdersRemove {OrdersRemove(input: {elementIds: [\"f8ef2f85-ce5d-4b12-ab7d-6004dac77777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.expect(item.macAddress).to.be.empty;\r",
+											"        pm.expect(item.hardwareId).to.be.empty;\r",
+											"        pm.expect(item.purchaseId).to.be.empty;\r",
+											"        pm.expect(item.deliveryId).to.be.empty;\r",
+											"        pm.expect(item.orderUuid).to.be.empty;\r",
+											"        pm.expect(item.customerName).to.be.empty;\r",
+											"        pm.expect(item.customerId).to.be.empty;\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateDeviceBinding (Bind 11:77:55:77:77:00 to license Test_12345)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"UpdateDeviceBinding\": {\r",
+											"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateDeviceBinding {UpdateDeviceBinding(input: {deviceId: \"1ab102ea-452e-4980-b196-f3c501cd7777\", item: {id:\"1ab102ea-452e-4980-b196-f3c501cd7777\",productUuid:\"d9afd338-7fe1-4989-9908-f35859937b9d\",softwareIds:\"77775406-d910-478f-9291-c38a26f1c00a\",project:\"Test\"}, project: \"Test\"}) {id}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.expect(item.macAddress).to.eql(\"11:77:55:77:77:00\");\r",
+											"        pm.expect(item.hardwareId).to.eql(\"1ab102ea-452e-4980-b196-f3c501cd7777\");\r",
+											"        pm.expect(item.purchaseId).to.be.empty;\r",
+											"        pm.expect(item.deliveryId).to.be.empty;\r",
+											"        pm.expect(item.orderUuid).to.be.empty;\r",
+											"        pm.expect(item.customerName).to.be.empty;\r",
+											"        pm.expect(item.customerId).to.be.empty;\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeviceUpdate (11:77:55:77:77:00 -> 11:77:55:99:99:00)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"DeviceUpdate\": {\r",
+											"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DeviceUpdate {DeviceUpdate(input: {typeId: \"Device\", id: \"1ab102ea-452e-4980-b196-f3c501cd7777\", item: {id:\"1ab102ea-452e-4980-b196-f3c501cd7777\",name:\"\",description:\"Test\",macAddress:\"11:77:55:99:99:00\",serialNumber:\"55009943\",deviceType:\"b079d7bf-1a69-4aa9-bfbd-e720c9fcf508\",orderId:\"\",licenseName:\"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",project:\"\",productionStatus:\"Finished\"}}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 4 Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.expect(item.macAddress).to.eql(\"11:77:55:99:99:00\");\r",
+											"        pm.expect(item.hardwareId).to.eql(\"1ab102ea-452e-4980-b196-f3c501cd7777\");\r",
+											"        pm.expect(item.purchaseId).to.be.empty;\r",
+											"        pm.expect(item.deliveryId).to.be.empty;\r",
+											"        pm.expect(item.orderUuid).to.be.empty;\r",
+											"        pm.expect(item.customerName).to.be.empty;\r",
+											"        pm.expect(item.customerId).to.be.empty;\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DevicesRemove (11:77:55:99:99:00)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"DevicesRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"1ab102ea-452e-4980-b196-f3c501cd7777\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DevicesRemove {DevicesRemove(input: {elementIds: [\"1ab102ea-452e-4980-b196-f3c501cd7777\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsList (Check) 5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.SoftwareProductsList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"77775406-d910-478f-9291-c38a26f1c00a\") {\r",
+											"        pm.expect(item.macAddress).to.be.empty;\r",
+											"        pm.expect(item.hardwareId).to.be.empty;\r",
+											"        pm.expect(item.purchaseId).to.be.empty;\r",
+											"        pm.expect(item.deliveryId).to.be.empty;\r",
+											"        pm.expect(item.orderUuid).to.be.empty;\r",
+											"        pm.expect(item.customerName).to.be.empty;\r",
+											"        pm.expect(item.customerId).to.be.empty;\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftwareProductsRemove (Test_12345)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"SoftwareProductsRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"77775406-d910-478f-9291-c38a26f1c00a\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {elementIds: [\"77775406-d910-478f-9291-c38a26f1c00a\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "AccountAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountAdd\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff05555\"\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountAdd {AccountAdd(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff05555\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff05555\",name:\"AccountTest\",customerId:\"AccountTest\",description:\"AccountTest\",email:\"AccountTest@mail.ru\",companyName:\"\",country:\"AccountTest\",city:\"AccountTest\",postalCode:\"666666\",street:\"AccountTest\",groups:\"\"}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrderAdd\": {\r",
+											"            \"id\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrderAdd {OrderAdd(input: {typeId: \"Order\", id: \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\", item: {id:\"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\",name:\"\",description:\"Test\",orderId:\"77765555\",purchaseId:\"77765555\",customerId:\"32cd86aa-765b-44a9-b03f-0d108ff05555\",orderStatus:\"Created\",orderProducts:[]}}) {addedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersList (Check account meta info)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.OrdersList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\") {\r",
+											"        pm.expect(item.customerName).to.not.be.empty;\r",
+											"        pm.expect(item.customerName).to.eql(\"AccountTest\");\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query OrdersList {OrdersList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status orderId purchaseId description customerName added timeStamp}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountUpdate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountUpdate\": {\r",
+											"            \"id\": \"32cd86aa-765b-44a9-b03f-0d108ff05555\"\r",
+											"        }\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountUpdate {AccountUpdate(input: {typeId: \"Account\", id: \"32cd86aa-765b-44a9-b03f-0d108ff05555\", item: {id:\"32cd86aa-765b-44a9-b03f-0d108ff05555\",name:\"AccountTest2\",customerId:\"AccountTest\",description:\"AccountTest\",email:\"AccountTest@mail.ru\",companyName:\"\",country:\"AccountTest\",city:\"AccountTest\",postalCode:\"666666\",street:\"AccountTest\",groups:\"a47c93d1-0d3d-4282-8864-75a967a6ebed;c6312e96-7be5-447c-8bf3-a328ac7222b7\"}}) {updatedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersList (Check account meta info) 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.OrdersList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\") {\r",
+											"        pm.expect(item.customerName).to.not.be.empty;\r",
+											"        pm.expect(item.customerName).to.eql(\"AccountTest2\");\r",
+											"        break;\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query OrdersList {OrdersList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status orderId purchaseId description customerName added timeStamp}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AccountsRemove",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"AccountsRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"32cd86aa-765b-44a9-b03f-0d108ff05555\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AccountsRemove {AccountsRemove(input: {elementIds: [\"32cd86aa-765b-44a9-b03f-0d108ff05555\"]}) {removedNotification {id}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersList (Check account meta info) 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"const items = response.data.OrdersList.items;\r",
+											"\r",
+											"for (let i = 0; i < items.length; i++) {\r",
+											"    const item = items[i];\r",
+											"    if (item.id === \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\") {\r",
+											"        pm.expect(item.customerName).to.be.empty;\r",
+											"        break;\r",
+											"    }\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query OrdersList {OrdersList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name status orderId purchaseId description customerName added timeStamp}}}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7778/ProLife/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7778",
+									"path": [
+										"ProLife",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrdersRemove",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Ожидаемая схема ответа\r",
+											"const responseSchema = {\r",
+											"    \"data\": {\r",
+											"        \"OrdersRemove\": {\r",
+											"            \"elementIds\": [\r",
+											"                \"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\"\r",
+											"            ]\r",
+											"        }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test('Query is successful', function () {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"// Сравнение всего ответа с ожидаемой схемой\r",
+											"pm.test(\"Response matches expected schema\", () => {\r",
+											"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{access_token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "x-authentication-token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation OrdersRemove {OrdersRemove(input: {elementIds: [\"f8ef2f85-ce5d-4b12-ab7d-6004dac75555\"]}) {removedNotification {id}}}",
 										"variables": ""
 									}
 								},
