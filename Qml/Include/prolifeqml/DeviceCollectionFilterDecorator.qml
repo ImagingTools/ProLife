@@ -16,8 +16,8 @@ DecoratorBase {
 	property alias licenseCb: licenseComboBox;
 	property alias accountCb: accountComboBox;
 	
-	property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;	
-	
+	property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;
+
 	Component.onCompleted: {
 		updateText();
 		checkWidth();

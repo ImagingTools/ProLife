@@ -17,6 +17,7 @@ RemoteCollectionView {
 	collectionId: "Orders";
 	
 	filterMenu.decorator: orderCollectionFilterComp;
+	documentCollectionFilter: null
 	
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
 			collectionView: container;

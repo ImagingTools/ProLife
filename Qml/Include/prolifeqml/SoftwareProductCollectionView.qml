@@ -16,7 +16,7 @@ RemoteCollectionView {
 	collectionId: "SoftwareProducts";
 	
 	filterMenu.decorator: licenseCollectionFilterComp;
-	
+	documentCollectionFilter: null
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_orderUuid,
 		SoftwareProductItemTypeMetaInfo.s_macAddress,

@@ -16,7 +16,8 @@ RemoteCollectionView {
 
 	collectionId: "Devices";
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_orderUuid, DeviceItemTypeMetaInfo.s_statusId, DeviceItemTypeMetaInfo.s_deviceType]
-	
+	documentCollectionFilter: null
+
 	commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {
 			collectionView: container;
 		}
@@ -26,8 +27,10 @@ RemoteCollectionView {
 
 	Component.onCompleted: {
 		table.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
-		filterMenu.decorator = deviceCollectionFilterComp;
+		// filterMenu.decorator = deviceCollectionFilterComp;
 	}
+	
+	filterMenu.decorator: deviceCollectionFilterComp;
 
 	Component {
 		id: deviceCollectionFilterComp;
