@@ -596,10 +596,6 @@ DocumentCollectionViewDelegate {
 							dialog.setButtonEnabled(Enums.ok, selectedIds.length > 0)
 						}
 						
-						Component.onCompleted: {
-							filterMenu.decorator = filterComp;
-						}
-						
 						Component {
 							id: filterComp;
 							DeviceCollectionFilterDecorator {

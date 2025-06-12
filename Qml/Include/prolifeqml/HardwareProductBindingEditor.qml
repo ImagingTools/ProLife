@@ -569,7 +569,7 @@ Item {
 									}
 									
 									onSelectionChanged: {
-										if (selection.length === 0){
+										if (selectedIndexes.length === 0){
 											unbindButton.enabled = false
 										}
 										else{
@@ -577,9 +577,8 @@ Item {
 												availableLicensesElementView.collection.table.resetSelection();
 											}
 											
-											let elementId = selection[0]
-											let index = bindingProductsCollection.table.getIndexByItemId(elementId);
-											
+											let index = selectedIndexes[0]
+	
 											let elementsModel = bindingProductsCollection.table.elements;
 											let inUse = elementsModel.getData("inUse", index);
 											
