@@ -27,7 +27,6 @@ RemoteCollectionView {
 
 	Component.onCompleted: {
 		table.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
-		// filterMenu.decorator = deviceCollectionFilterComp;
 	}
 	
 	filterMenu.decorator: deviceCollectionFilterComp;

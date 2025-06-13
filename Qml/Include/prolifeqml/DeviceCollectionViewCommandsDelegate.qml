@@ -587,6 +587,7 @@ DocumentCollectionViewDelegate {
 						visibleMetaInfo: false;
 						table.isMultiSelect: false;
 						commandsDelegateComp: null;
+						filterMenu.decorator: filterComp;
 						
 						onSelectionChanged: {
 							if (selectedIds.length > 0){
