@@ -81936,7 +81936,7 @@
 											"const responseSchema = {\r",
 											"    \"errors\": {\r",
 											"        \"RegisterUser\": {\r",
-											"            \"message\": \"Unable to register user. Error: 'Username already exists'\",\r",
+											"            \"message\": \"Unable to register user. Error: Username already exists\",\r",
 											"            \"type\": \"Warning\"\r",
 											"        }\r",
 											"    }\r",
