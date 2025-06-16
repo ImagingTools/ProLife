@@ -151,6 +151,10 @@ QString CCustomerChangeGeneratorComp::CreateCustomOperationDescription(const imt
 
 QString CCustomerChangeGeneratorComp::GetGroupName(const QByteArray& groupId) const
 {
+	if (!IsUuid(groupId)){
+		return groupId;
+	}
+
 	if (m_groupCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_groupCollectionCompPtr->GetObjectData(groupId, dataPtr)){

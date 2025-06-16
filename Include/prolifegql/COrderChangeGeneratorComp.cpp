@@ -21,10 +21,10 @@ namespace prolifegql
 // protected methods
 
 bool COrderChangeGeneratorComp::CompareDocuments(
-				const istd::IChangeable& oldDocument,
-				const istd::IChangeable& newDocument,
-				imtbase::CObjectCollection& documentChangeCollection,
-				QString& errorMessage)
+			const istd::IChangeable& oldDocument,
+			const istd::IChangeable& newDocument,
+			imtbase::CObjectCollection& documentChangeCollection,
+			QString& errorMessage)
 {
 	prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(const_cast<istd::IChangeable*>(&oldDocument));
 	if (oldOrderInfoPtr == nullptr){
@@ -93,8 +93,8 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 
 
 QString COrderChangeGeneratorComp::CreateCustomOperationDescription(
-	const imtbase::COperationDescription& operationDescription,
-	const QByteArray& languageId) const
+			const imtbase::COperationDescription& operationDescription,
+			const QByteArray& languageId) const
 {
 	QString retVal;
 
@@ -193,6 +193,10 @@ void COrderChangeGeneratorComp::GenerateDifferences(
 
 QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) const
 {
+	if (!IsUuid(accountId)){
+		return accountId;
+	}
+
 	imtbase::IObjectCollection::DataPtr newDataPtr;
 	if (m_accountCollectionCompPtr->GetObjectData(accountId, newDataPtr)){
 		const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(newDataPtr.GetPtr());
@@ -207,6 +211,10 @@ QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) c
 
 QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) const
 {
+	if (!IsUuid(productId)){
+		return productId;
+	}
+
 	QByteArray lisaProductId;
 	QByteArray productName;
 
@@ -245,7 +253,6 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 	if (!lisaProductName.isEmpty() && !productName.isEmpty()){
 		return lisaProductName + " (" + productName + ")";
 	}
-
 
 	return productId;
 }

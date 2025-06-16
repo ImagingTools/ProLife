@@ -209,6 +209,10 @@ QString CLicenseChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& ke
 
 QString CLicenseChangeGeneratorComp::GetProductName(const QByteArray& productId) const
 {
+	if (!IsUuid(productId)){
+		return productId;
+	}
+
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
@@ -225,6 +229,10 @@ QString CLicenseChangeGeneratorComp::GetProductName(const QByteArray& productId)
 
 QString CLicenseChangeGeneratorComp::GetOrderName(const QByteArray& orderId) const
 {
+	if (!IsUuid(orderId)){
+		return orderId;
+	}
+
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_orderCollectionCompPtr->GetObjectData(orderId, dataPtr)){
@@ -241,6 +249,10 @@ QString CLicenseChangeGeneratorComp::GetOrderName(const QByteArray& orderId) con
 
 QString CLicenseChangeGeneratorComp::GetLicenseName(const QByteArray& licenseId) const
 {
+	if (!IsUuid(licenseId)){
+		return licenseId;
+	}
+
 	if (m_licenseCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_licenseCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
@@ -257,6 +269,10 @@ QString CLicenseChangeGeneratorComp::GetLicenseName(const QByteArray& licenseId)
 
 QString CLicenseChangeGeneratorComp::GetHardwareName(const QByteArray& hardwareId) const
 {
+	if (!IsUuid(hardwareId)){
+		return hardwareId;
+	}
+
 	if (m_deviceCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_deviceCollectionCompPtr->GetObjectData(hardwareId, dataPtr)){

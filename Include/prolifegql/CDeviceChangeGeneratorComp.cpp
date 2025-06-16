@@ -154,14 +154,13 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(const istd::IChangeable& oldDo
 
 
 QString CDeviceChangeGeneratorComp::CreateCustomOperationDescription(
-	const imtbase::COperationDescription& operationDescription,
-	const QByteArray& languageId) const
+			const imtbase::COperationDescription& operationDescription,
+			const QByteArray& languageId) const
 {
 	QString retVal;
 
 	QByteArray typeId = operationDescription.GetOperationTypeId();
 
-	QByteArray key = operationDescription.GetKey();
 	QByteArray oldValue = operationDescription.GetOldValue();
 	QByteArray newValue = operationDescription.GetNewValue();
 	QString keyName = operationDescription.GetKeyName();
@@ -246,6 +245,10 @@ QString CDeviceChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key
 
 QString CDeviceChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid) const
 {
+	if (!IsUuid(productUuid)){
+		return productUuid;
+	}
+
 	if (m_licenseCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
@@ -262,6 +265,10 @@ QString CDeviceChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid
 
 QString CDeviceChangeGeneratorComp::GetSoftwareName(const QByteArray& softwareId) const
 {
+	if (!IsUuid(softwareId)){
+		return softwareId;
+	}
+
 	if (m_softwareInstanceCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
@@ -292,6 +299,10 @@ QString CDeviceChangeGeneratorComp::GetSoftwareName(const QByteArray& softwareId
 
 QString CDeviceChangeGeneratorComp::GetProductName(const QByteArray& productId) const
 {
+	if (!IsUuid(productId)){
+		return productId;
+	}
+
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_productCollectionCompPtr->GetObjectData(productId, dataPtr)){
@@ -308,6 +319,10 @@ QString CDeviceChangeGeneratorComp::GetProductName(const QByteArray& productId) 
 
 QString CDeviceChangeGeneratorComp::GetOrderName(const QByteArray& orderId) const
 {
+	if (!IsUuid(orderId)){
+		return orderId;
+	}
+
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_orderCollectionCompPtr->GetObjectData(orderId, dataPtr)){
@@ -324,6 +339,10 @@ QString CDeviceChangeGeneratorComp::GetOrderName(const QByteArray& orderId) cons
 
 QString CDeviceChangeGeneratorComp::GetDeviceName(const QByteArray& deviceId) const
 {
+	if (!IsUuid(deviceId)){
+		return deviceId;
+	}
+
 	if (m_objectCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_objectCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
@@ -333,7 +352,7 @@ QString CDeviceChangeGeneratorComp::GetDeviceName(const QByteArray& deviceId) co
 			}
 		}
 	}
-	
+
 	return deviceId;
 }
 
