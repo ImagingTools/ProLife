@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5352" Description="ACF"/>
-            <Version Id="1" Number="2237" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5394" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -29,10 +29,12 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProLifeServerBase/HttpServerFramework</Value>
-                                <Value>ProLifeServerBase/WebSocketServerFramework</Value>
                                 <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/DatabaseEngine</Value>
+                                <Value>ProLifeServerBase/UsersModelUpdateBridge</Value>
+                                <Value>ProLifeServerBase/RolesModelUpdateBridge</Value>
+                                <Value>ProLifeServerBase/GroupsModelUpdateBridge</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -106,6 +108,7 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="ibase::IApplication" ComponentId="SingletonDocApplication"/>
+        <Interface InterfaceId="imtlic::IProductInfo" ComponentId="ProLifeServerBase"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="SingletonDocApplication"/>
     </ExportedInterfaces>
     <ExportedComponents/>

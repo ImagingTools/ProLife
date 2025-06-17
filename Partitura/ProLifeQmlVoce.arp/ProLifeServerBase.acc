@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5385" Description="ACF"/>
-            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5394" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -51,9 +51,6 @@
                     <AttributeInfo Id="MigrationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Migrations"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PathToPermissionsFile" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value=":/Features/ProLifeFeatures"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ProductId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
@@ -94,7 +91,7 @@
             </Data>
         </Element>
         <Element Id="GroupsModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
-            <Data IsEnabled="true" Flags="1">
+            <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/GroupRemoteRepository"/>
@@ -459,7 +456,7 @@
             </Data>
         </Element>
         <Element Id="RolesModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
-            <Data IsEnabled="true" Flags="1">
+            <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/RoleRemoteRepository"/>
@@ -529,7 +526,7 @@
             </Data>
         </Element>
         <Element Id="UsersModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
-            <Data IsEnabled="true" Flags="1">
+            <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DefaultModel" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/UserRemoteRepository"/>
@@ -1073,13 +1070,18 @@
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
-    <ExportedInterfaces/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imtlic::IProductInfo" ComponentId="AuthorizableServerFramework"/>
+    </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>
+        <Component ExportedId="GroupsModelUpdateBridge" ComponentId="GroupsModelUpdateBridge"/>
         <Component ExportedId="HttpServerFramework" ComponentId="AuthorizableServerFramework/HttpServerFramework"/>
         <Component ExportedId="LisaDatabaseConnector" ComponentId="LisaDatabaseConnector"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="PumaDatabaseConnector" ComponentId="PumaDatabaseConnector"/>
+        <Component ExportedId="RolesModelUpdateBridge" ComponentId="RolesModelUpdateBridge"/>
+        <Component ExportedId="UsersModelUpdateBridge" ComponentId="UsersModelUpdateBridge"/>
         <Component ExportedId="WebSocketServerFramework" ComponentId="AuthorizableServerFramework/WebSocketServerFramework"/>
     </ExportedComponents>
 </Acf>

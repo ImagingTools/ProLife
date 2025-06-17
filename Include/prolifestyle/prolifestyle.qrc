@@ -12,9 +12,5 @@
         <file alias="prolife_dark.theme">prolife_dark.theme</file>
         <file alias="prolife_light.theme">prolife_light.theme</file>
     </qresource>
-    <qresource prefix="/Decorators"/>
-    <qresource prefix="/Features">
-        <file alias="ProLifeFeatures">Resources/Features/ProLifeFeatures.xml</file>
-    </qresource>
     <qresource prefix="/ProLife"/>
 </RCC>
