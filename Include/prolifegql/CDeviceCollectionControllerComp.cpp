@@ -25,50 +25,50 @@ namespace prolifegql
 // protected methods
 
 sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVisualStatus(
-	const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
-	const ::imtgql::CGqlRequest& gqlRequest,
-	QString& errorMessage) const
+			const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
 		return sdl::imtbase::ImtCollection::CVisualStatus();
 	}
-	
+
 	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 	if (!errorMessage.isEmpty()){
 		return sdl::imtbase::ImtCollection::CVisualStatus();
 	}
-	
+
 	if (!retVal.Version_1_0.has_value()){
 		Q_ASSERT(false);
 		return sdl::imtbase::ImtCollection::CVisualStatus();
 	}
-	
+
 	QByteArray objectId;
 	if (retVal.Version_1_0->objectId){
 		objectId = *retVal.Version_1_0->objectId;
 	}
-	
+
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-			
+
 			idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
 			if (metaInfoPtr.IsValid()){
 				QString productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
-				
+
 				QString name = productName;
 				if (name.isEmpty()){
 					name = deviceType;
 				}
-				
+
 				if (!macAddress.isEmpty()){
 					name += " (" + macAddress + ")";
 				}
-				
+
 				retVal.Version_1_0->text = name;
 			}
 		}
@@ -77,13 +77,14 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 	return retVal;
 }
 
+
 // reimplemented (sdl::prolife::Sensors::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
-	const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
-	sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
-	QString& errorMessage) const
+			const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
+			const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
+			sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
+			QString& errorMessage) const
 {
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -104,12 +105,12 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	if (!metaInfo.IsValid()){
 		errorMessage = QString("Unable to create representation from object '%1'. Error: Meta info is invalid").arg(qPrintable(objectId));
 		SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-		
+
 		return false;
 	}
 
 	sdl::prolife::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
-
+	
 	if (requestInfo.items.isIdRequested){
 		representationObject.id = objectId;
 	}
@@ -118,11 +119,11 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		QByteArray collectionObjectId = objectCollectionIterator.GetObjectTypeId();
 		representationObject.typeId = collectionObjectId;
 	}
-	
+
 	QString productName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
 	if (requestInfo.items.isNameRequested){
 		representationObject.name = productName;
-		
+
 		QString macAddress = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toString();
 		if (!macAddress.isEmpty()){
 			representationObject.name = (productName + " (" + macAddress + ")");
@@ -156,11 +157,11 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	if (requestInfo.items.isDeviceTypeRequested){
 		representationObject.deviceType = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
-	
+
 	if (requestInfo.items.isProductNameRequested){
 		representationObject.productName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString().toUtf8();
 	}
-	
+
 	if (requestInfo.items.isProductUuidRequested){
 		representationObject.productUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_TYPE).toString().toUtf8();
 	}
@@ -207,7 +208,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 		representationObject.added = (added);
 	}
-	
+
 	if (requestInfo.items.isTimeStampRequested){
 		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
 
@@ -220,9 +221,9 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
-	const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
-	QByteArray& newObjectId,
-	QString& errorMessage) const
+			const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
+			QByteArray& newObjectId,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
@@ -282,10 +283,10 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
-	const istd::IChangeable& data,
-	const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-	sdl::prolife::Sensors::CDeviceData::V1_0& representationPayload,
-	QString& errorMessage) const
+			const istd::IChangeable& data,
+			const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
+			sdl::prolife::Sensors::CDeviceData::V1_0& representationPayload,
+			QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&data);
 	if (deviceInfoPtr == nullptr){
@@ -301,7 +302,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 		return false;
 	}
-
+	
 	QByteArray id;
 	if (arguments.input.Version_1_0->id){
 		id = *arguments.input.Version_1_0->id;
@@ -334,15 +335,28 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	representationPayload.deviceType = (productUuid);
 
+	QList<sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0> softwareBindingInfoList;
+
+	QByteArrayList softwareIds = GetBindedSoftware(id);
+	for (const QByteArray& softwareId : softwareIds){
+		sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0 softwareBindingInfo;
+		softwareBindingInfo.softwareId = softwareId;
+		softwareBindingInfo.softwareName = GetSoftwareName(softwareId);
+
+		softwareBindingInfoList << softwareBindingInfo;
+	}
+
+	representationPayload.softwareBindingInfos = softwareBindingInfoList;
+
 	return true;
 }
 
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-	const imtgql::CGqlRequest& /*rawGqlRequest*/,
-	const sdl::prolife::Sensors::CDeviceUpdateGqlRequest& deviceUpdateRequest,
-	istd::IChangeable& object,
-	QString& errorMessage) const
+			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const sdl::prolife::Sensors::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+			istd::IChangeable& object,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
@@ -355,15 +369,15 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 		return false;
 	}
-	
+
 	if (!inputArguments.input.Version_1_0->item){
 		I_CRITICAL();
-		
+
 		return false;
 	}
-	
+
 	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *inputArguments.input.Version_1_0->item;
-	
+
 	QByteArray objectId;
 	if (inputArguments.input.Version_1_0->id){
 		objectId = *inputArguments.input.Version_1_0->id;
@@ -373,9 +387,9 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	Q_ASSERT(deviceInfoPtr != nullptr);
 
 	deviceInfoPtr->ResetData();
-	
+
 	deviceInfoPtr->SetObjectUuid(objectId);
-	
+
 	if (!FillObjectFromRepresentation(deviceData, *deviceInfoPtr, objectId, errorMessage)){
 		errorMessage = QString("Unable to update device. Error: '%1'").arg(errorMessage);
 		return false;
@@ -421,8 +435,8 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 
 imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
-	const imtgql::CGqlRequest& gqlRequest,
-	QString& errorMessage) const
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
@@ -438,12 +452,12 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
 		return nullptr;
 	}
-	
+
 	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
 	if (!errorMessage.isEmpty()){
 		return nullptr;
 	}
-	
+
 	for (const QByteArray& objectId : objectIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
@@ -460,7 +474,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 								errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
 								SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
 								errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
-								
+
 								return nullptr;
 							}
 						}
@@ -469,21 +483,21 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
 			}
 		}
 	}
-	
+
 	for (const QByteArray& objectId : objectIds){
 		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
 		imtbase::IObjectCollection::DataPtr deviceDataPtr;
 		if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
 			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
 		}
-		
+
 		if (deviceInfoPtr != nullptr){
 			QByteArray orderId = deviceInfoPtr->GetOrderId();
 			if (!orderId.isEmpty()){
 				if (!RemoveDeviceFromOrder(objectId, orderId)){
 					SendWarningMessage(0,
 									   QString("Remove device '%1' from order '%2' failed")
-										   .arg(qPrintable(objectId), qPrintable(orderId)),
+									   .arg(qPrintable(objectId), qPrintable(orderId)),
 									   "CDeviceCollectionControllerComp");
 				}
 			}
@@ -516,7 +530,7 @@ imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtg
 	if (inputParamPtr != nullptr){
 		objectId = inputParamPtr->GetParamArgumentValue("id").toByteArray();
 	}
-
+	
 	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
 	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
 
@@ -603,10 +617,10 @@ void CDeviceCollectionControllerComp::SetAdditionalFilters(
 // private methods
 
 bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
-	const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
-	istd::IChangeable& object,
-	QByteArray& objectId,
-	QString& errorMessage) const
+			const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
+			istd::IChangeable& object,
+			QByteArray& objectId,
+			QString& errorMessage) const
 {
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
 	if (deviceInfoPtr == nullptr){
@@ -720,7 +734,7 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 	if (oldOrderInfoPtr == nullptr){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Order does not exists")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -729,7 +743,7 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 	if (productCollectionPtr == nullptr){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Product collection from order is invalid")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -738,17 +752,17 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 	if (!elementIds.contains(deviceId)){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: The device does not exist in this order")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
-	
+
 	QByteArrayList removedIds;
 	removedIds << deviceId;
 	if (!productCollectionPtr->RemoveElements(removedIds)){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Removing element from product collection failed")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -761,7 +775,7 @@ bool CDeviceCollectionControllerComp::RemoveDeviceFromOrder(const QByteArray& de
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Updating an order in a collection failed")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -786,7 +800,7 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 	if (orderInfoPtr == nullptr){
 		SendErrorMessage(0,
 						 QString("Unable to add device '%1' to order '%2'. Error: Order does not exists")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -795,7 +809,7 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 	if (orderInfoPtr == nullptr){
 		SendErrorMessage(0,
 						 QString("Unable to add device '%1' to order '%2'. Error: Product collection from order is invalid")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -804,7 +818,7 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 	if (elementIds.contains(deviceId)){
 		SendErrorMessage(0,
 						 QString("Unable to add device '%1' to order '%2'. Error: The device already exists in this order")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -819,7 +833,7 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 	if (objectId.isEmpty()){
 		SendErrorMessage(0,
 						 QString("Unable to add device '%1' to order '%2'. Error: Adding an order in a collection failed")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -832,12 +846,64 @@ bool CDeviceCollectionControllerComp::AddDeviceToOrder(const QByteArray& deviceI
 	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 		SendErrorMessage(0,
 						 QString("Unable to remove device '%1' from order '%2'. Error: Updating an order in a collection failed")
-							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 .arg(qPrintable(deviceId), qPrintable(orderId)),
 						 "CDeviceCollectionControllerComp");
 		return false;
 	}
 
 	return true;
+}
+
+
+QByteArrayList CDeviceCollectionControllerComp::GetBindedSoftware(const QByteArray& deviceId) const
+{
+	if (!m_bindingCollectionCompPtr.IsValid()){
+		return QByteArrayList();
+	}
+
+	const prolifedata::IHardwareProductBinding* bindingInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_bindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
+		bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+	}
+
+	if (bindingInfoPtr == nullptr){
+		return QByteArrayList();
+	}
+
+	return bindingInfoPtr->GetSoftwareIds();
+}
+
+
+QString CDeviceCollectionControllerComp::GetSoftwareName(const QByteArray& softwareId) const
+{
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		return QString();
+	}
+
+	imtbase::IObjectCollection::DataPtr productDataPtr;
+	if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
+		imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
+		if (productInstanceInfoPtr != nullptr){
+			imtbase::ICollectionInfo::Ids elementsIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
+			if (!elementsIds.isEmpty()){
+				QByteArray licenseId = elementsIds[0];
+
+				imtbase::IObjectCollection::DataPtr licenseDataPtr;
+				if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+					imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+					if (licenseDefinitionPtr != nullptr){
+						QString licenseName = licenseDefinitionPtr->GetLicenseName();
+						QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
+
+						return licenseName + " (" + licenseDefinitionId + ")";
+					}
+				}
+			}
+		}
+	}
+
+	return QString();
 }
 
 

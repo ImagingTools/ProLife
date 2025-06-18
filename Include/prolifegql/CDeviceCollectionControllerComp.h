@@ -69,6 +69,8 @@ private:
 				QString& errorMessage) const;
 	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
+	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
+	QString GetSoftwareName(const QByteArray& softwareId) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

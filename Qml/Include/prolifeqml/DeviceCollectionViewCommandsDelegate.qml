@@ -23,6 +23,10 @@ DocumentCollectionViewDelegate {
 	removeDialogTitle: qsTr("Removing the sensor");
 	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
 	
+	readonly property string createLicenseFileCommand: "CreateLicenseFile"
+	readonly property string bindCommand: "Bind"
+	readonly property string transferLicensesCommand: "TransferLicenses"
+	
 	Component {
 		id: saveDialogComp;
 		
@@ -122,57 +126,73 @@ DocumentCollectionViewDelegate {
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
 					view: deviceEditor;
 					onCommandActivated: {
-						if (commandId == "Bind"){
-							let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-							if (documentManager){
-								let documentData = documentManager.getDocumentDataByView(deviceEditor);
-								if (!documentData){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-									
-									return;
-								}
-								
-								let documentIndex = documentData.documentIndex;
-								if (documentIndex < 0){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-									
-									return;
-								}
-								
-								let isDirty = documentData.isDirty;
-								let isNew = documentData.isNew;
-								if (isNew || isDirty){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please save the document first"), "title": qsTr("Save document")});
-									
-									return;
-								}
-								
-								let documentModel = documentData.documentDataController.documentModel;
-								if (!documentModel){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-									
-									return;
-								}
-								
-								let macAddress = documentModel.m_macAddress;
-								if (!macAddressValidator.isValid(macAddress)){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Please enter a valid MAC-Address")});
-									
-									return;
-								}
-								
-								let title = qsTr("Add license to sensor '%1'");
-								title = title.replace("%1", macAddress);
-								
-								let documentId = documentData.documentId;
-								if (documentId === ""){
-									ModalDialogManager.openDialog(saveDialogComp, {"message": qsTr("Unknown error")});
-									
-									return;
-								}
-								
-								ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": documentId, "title": title});
+						if (commandId !== container.createLicenseFileCommand &&
+							commandId !== container.transferLicensesCommand &&
+							commandId !== container.bindCommand){
+							return
+						}
+						
+						let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
+						if (!documentManager){
+							ModalDialogManager.showErrorDialog(qsTr("Unable to handle command. Document manager is invalid"))
+							return;
+						}
+
+						let documentModel = deviceEditor.deviceData
+						if (!documentModel){
+							ModalDialogManager.showInfoDialog(qsTr("Unable to handle command. Document model is invalid"));
+							return;
+						}
+
+						let documentId =  deviceEditor.deviceData.m_id
+						let isDirty = documentManager.documentIsDirty(documentId);
+						let isNew = documentManager.documentIsNew(documentId);
+
+						if (documentId === "" || isNew || isDirty){
+							ModalDialogManager.showInfoDialog(qsTr("Please save the document first"));
+							return;
+						}
+
+						if (commandId == container.createLicenseFileCommand){
+							if (!documentModel.m_productionStatus){
+								return;
 							}
+
+							if (documentModel.m_productionStatus !== "Finished"){
+								ModalDialogManager.showInfoDialog(qsTr("The production status should be 'Finished'"))
+								return;
+							}
+							
+							container.onCreateLicenseFile(documentId)
+						}
+						else if (commandId == container.transferLicensesCommand){
+							if (!documentModel.m_softwareBindingInfos ||
+								!documentModel.m_productionStatus){
+								return;
+							}
+
+							let count = documentModel.m_softwareBindingInfos.count
+							if (count <= 0){
+								ModalDialogManager.openDialog(transferErrorDialogComp, {})
+								return;
+							}
+							
+							if (documentModel.m_productionStatus !== "Defected"){
+								ModalDialogManager.showInfoDialog(qsTr("The production status should be 'Defect'"))
+								return;
+							}
+							
+							let deviceType = documentModel.m_deviceType;
+							container.onTransferLicenses(documentId, deviceType)
+						}
+						else if (commandId == container.bindCommand){
+							let macAddress = documentModel.m_macAddress;
+							if (!macAddressValidator.isValid(macAddress)){
+								ModalDialogManager.showInfoDialog(qsTr("Please enter a valid MAC-Address"))
+								return;
+							}
+
+							container.onBind(documentId, macAddress)
 						}
 					}
 				}
@@ -208,9 +228,9 @@ DocumentCollectionViewDelegate {
 		
 		if(commandsController){
 			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
-			commandsController.setCommandIsEnabled("Bind", isBindEnabled);
-			commandsController.setCommandIsEnabled("CreateLicenseFile", isEnabled);
-			commandsController.setCommandIsEnabled("TransferLicenses", isTransferLicensesEnabled);
+			commandsController.setCommandIsEnabled(container.bindCommand, isBindEnabled);
+			commandsController.setCommandIsEnabled(container.createLicenseFileCommand, isEnabled);
+			commandsController.setCommandIsEnabled(container.transferLicensesCommand, isTransferLicensesEnabled);
 		}
 	}
 	
@@ -242,18 +262,36 @@ DocumentCollectionViewDelegate {
 		}
 	}
 	
+	function onBind(hardwareId, macAddress){
+		let title = qsTr("Add license to sensor '%1'");
+		title = title.replace("%1", macAddress);
+		
+		ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
+	}
+	
+	function onCreateLicenseFile(hardwareId){
+		if (AuthorizationController.loggedUserIsSuperuser()){
+			ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
+		}
+		else{
+			createLicenseFileInput.m_deviceId = hardwareId;
+			createLicenseFileRequest.send(createLicenseFileInput)
+		}
+	}
+	
+	function onTransferLicenses(hardwareId, productId){
+		ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId})
+	}
+	
 	onCommandActivated: {
 		let indexes = container.collectionView.table.getSelectedIndexes();
 		let elementsModel = container.collectionView.table.elements;
 		
-		if (commandId === "Bind"){
+		if (commandId === container.bindCommand){
 			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
 			let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, indexes[0]);
-			
-			let title = qsTr("Add license to sensor '%1'");
-			title = title.replace("%1", macAddress);
-			
-			ModalDialogManager.openDialog(productPairEditorDialog, {"hardwareId": hardwareId, "title": title});
+
+			onBind(hardwareId, macAddress)
 		}
 		else if (commandId === "OpenOrder"){
 			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, indexes[0]);
@@ -261,7 +299,7 @@ DocumentCollectionViewDelegate {
 				MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
 			}
 		}
-		else if (commandId === "CreateLicenseFile"){
+		else if (commandId === container.createLicenseFileCommand){
 			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
@@ -285,21 +323,12 @@ DocumentCollectionViewDelegate {
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("The production status must be 'Finished'")})
 				return;
 			}
-			
-			let data = macAddress.split(':');
-			let fileName = data.join('_') + "_" + licenseFileController.defaultName;
-			
+
 			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
-			
-			if (AuthorizationController.loggedUserIsSuperuser()){
-				ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
-			}
-			else{
-				createLicenseFileInput.m_deviceId = hardwareId;
-				createLicenseFileRequest.send(createLicenseFileInput)
-			}
+
+			onCreateLicenseFile(hardwareId)
 		}
-		else if (commandId === "TransferLicenses"){
+		else if (commandId === container.transferLicensesCommand){
 			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(transferErrorDialogComp, {})
@@ -309,7 +338,7 @@ DocumentCollectionViewDelegate {
 			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
 			let productId = elementsModel.getData(DeviceItemTypeMetaInfo.s_productUuid, indexes[0]);
 			
-			ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId});
+			onTransferLicenses(hardwareId, productId)
 		}
 		else if (commandId === "DecryptFile"){
 			licenseFileDialog.open();

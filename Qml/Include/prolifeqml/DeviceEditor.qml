@@ -31,7 +31,7 @@ ViewBase {
 	property int comboBoxHeight: 27;
 	
 	property DeviceData deviceData: model ? model : null;
-	
+
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
 			CachedProductCollection.updateModel();
@@ -43,7 +43,19 @@ ViewBase {
 	}
 	
 	onDeviceDataChanged: {
+		if (!deviceData){
+			return;
+		}
+
 		checkPermissions();
+		
+		let licenseGroupVisible = false
+		if (deviceData.m_softwareBindingInfos){
+			licenseInformationTable.table.elements = deviceData.m_softwareBindingInfos
+			licenseGroupVisible = deviceData.m_softwareBindingInfos.count > 0
+		}
+
+		licenseInformationGroup.visible = licenseGroupVisible
 	}
 	
 	function checkPermissions(){
@@ -556,6 +568,44 @@ ViewBase {
 					
 					onEditingFinished: {
 						deviceEditorContainer.doUpdateModel();
+					}
+				}
+			}
+		
+			GroupHeaderView {
+				width: parent.width;
+				
+				groupView: licenseInformationGroup;
+				title: qsTr("License Information");
+				visible: licenseInformationGroup.visible
+			}
+			
+			GroupElementView {
+				id: licenseInformationGroup
+				width: parent.width
+				
+				TableElementView {
+					id: licenseInformationTable
+					// name: qsTr("Licenses")
+					// readOnly: deviceEditorContainer.readOnly
+					
+					TreeItemModel {
+						id: headersModel
+						
+						Component.onCompleted: {
+							licenseInformationTable.updateHeaders()
+						}
+					}
+
+					function updateHeaders(){
+						headersModel.clear();
+						
+						headersModel.insertNewItem();
+						
+						headersModel.setData("id", "softwareName");
+						headersModel.setData("name", qsTr("Software Name"));
+
+						licenseInformationTable.table.headers = headersModel;
 					}
 				}
 			}
