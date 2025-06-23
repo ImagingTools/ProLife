@@ -19,6 +19,10 @@ ViewBase {
 	property int productIndex: -1;
 	property OrderedProduct productItem: model ? model : null;
 	
+	Component.onCompleted: {
+		console.log("HardwareProductEditor.qml onCompleted")
+	}
+	
 	function updateGui(){
 		let isNew = productItem.m_isNew;
 		if (isNew){

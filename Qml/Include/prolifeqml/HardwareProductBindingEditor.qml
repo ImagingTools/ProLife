@@ -247,7 +247,6 @@ Item {
 									table.checkable: true;
 									table.selectable: false;
 									tableViewParamsStoredServer: false;
-									commandsViewComp: undefined;
 									dataControllerComp:
 										Component {
 										CollectionRepresentation {
@@ -525,10 +524,8 @@ Item {
 									hasFilter: false;
 									filterMenuVisible: false;
 									hasPagination: false;
-									commandsViewComp: undefined;
 									tableViewParamsStoredServer: false;
 									table.isMultiSelect: false;
-									// additionalFieldIds: ["OrderUuid","HardwareUuid", "inUse", "ProductUuid", "CustomerUuid"]
 									
 									dataControllerComp:
 										Component {CollectionRepresentation {

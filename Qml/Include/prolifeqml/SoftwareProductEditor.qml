@@ -32,6 +32,10 @@ ViewBase {
 		licenseCB.changeable = !readOnly
 	}
 	
+	Component.onCompleted: {
+		console.log("SoftwareProductEditor.qml onCompleted")
+	}
+	
 	function updateGui(){
 		if (productItem.m_isNew){
 			switchNewLicense.setChecked(true)

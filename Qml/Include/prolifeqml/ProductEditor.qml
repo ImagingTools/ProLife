@@ -140,6 +140,7 @@ Item {
 	}
 	
 	function setHardware(){
+		console.log("setHardware")
 		segmentedElementView.softwareProductButton.checkable = false;
 		segmentedElementView.softwareProductButton.checked = false;
 		
@@ -149,7 +150,8 @@ Item {
 		productCB.model = CachedProductCollection.hardwareProductsModel;
 		
 		productCB.currentIndex = -1;
-		
+
+		contentLoader.sourceComponent = undefined
 		contentLoader.sourceComponent = hardwareProductComponent;
 	}
 	
@@ -164,6 +166,7 @@ Item {
 		
 		productCB.currentIndex = -1;
 		
+		contentLoader.sourceComponent = undefined
 		contentLoader.sourceComponent = softwareProductComponent;
 	}
 	
@@ -371,11 +374,14 @@ Item {
 		width: parent.width;
 		
 		visible: productCB.currentIndex >= 0;
+		
+		onLoaded: {
+			console.log("contentLoader onLoaded", item)
+		}
 	}
 	
 	function clearProduct(){
 		if (productItem){
-			// productItem.m_id = ''
 			productItem.m_productUuid = ''
 			productItem.m_licenseUuid = ''
 			productItem.m_categoryId = ''
