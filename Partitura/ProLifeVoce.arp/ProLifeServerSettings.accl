@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5395" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -30,21 +30,20 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="ServerParams">
-            <PositionMap>
-                <Element ComponentName="LisaUrl" X="400" Y="250" Note=""/>
-                <Element ComponentName="LisaWebSocketUrl" X="200" Y="250" Note=""/>
-                <Element ComponentName="Server" X="575" Y="125" Note=""/>
-                <Element ComponentName="ServerConnectionParams" X="850" Y="250" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="BackupParams">
             <PositionMap>
                 <Element ComponentName="Backup" X="550" Y="75" Note=""/>
                 <Element ComponentName="CompanyDataLocation" X="825" Y="500" Note=""/>
                 <Element ComponentName="RelativeFileNameParam" X="825" Y="350" Note=""/>
                 <Element ComponentName="SchedulerParams" X="325" Y="350" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ServerParams">
+            <PositionMap>
+                <Element ComponentName="LisaConnectionInterface" X="300" Y="250" Note=""/>
+                <Element ComponentName="Server" X="575" Y="125" Note=""/>
+                <Element ComponentName="ServerConnectionParams" X="850" Y="250" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

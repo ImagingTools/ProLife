@@ -54,11 +54,8 @@
                     <AttributeInfo Id="ProductId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PumaUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/PumaUrl"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PumaWebSocketUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/PumaWebSocketPort"/>
+                    <AttributeInfo Id="PumaServerConnectionInterface" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/PumaConnectionInterface"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RequestHandler" Type="Factory" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeHandlers"/>
@@ -66,8 +63,8 @@
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServerPort" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/ServerPort"/>
+                    <AttributeInfo Id="ServerInterface" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/ServerConnectionInterface"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SslConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/FileBasedSslConfiguration"/>
@@ -83,9 +80,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketServerPort" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/WebSocketServerPort"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -154,11 +148,8 @@
         <Element Id="LisaGQLEngine" PackageId="LisaGraphQlVoce" ComponentId="LisaGQLEngine">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="LisaHttpUrl" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/LisaUrl"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaWebSocketUrl" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/LisaWebSocketUrl"/>
+                    <AttributeInfo Id="LisaServerConnectionInterface" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/LisaConnectionInterface"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -319,6 +310,9 @@
                     <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleCollection"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ServerConnectionInterface" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/ServerConnectionInterface"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/UserSessionsRepository"/>
                     </AttributeInfo>
@@ -348,9 +342,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketPortModel" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/WebSocketServerPort"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
