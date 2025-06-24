@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5395" Description="ACF"/>
+            <Version Id="0" Number="5398" Description="ACF"/>
             <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
@@ -25,27 +25,12 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ConnectionDescriptions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Server tcp port to be listened</Value>
-                                <Value>Server websocket port to be listened</Value>
-                                <Value>Server tcp port to be connected to Puma</Value>
-                                <Value>Server websocket port to be connected to Puma</Value>
-                                <Value>Server tcp port to be connected to Lisa</Value>
-                                <Value>Server websocket port to be connected to Lisa</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="ConnectionNames" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProLife main HTTP</Value>
-                                <Value>ProLife main WebSocket</Value>
-                                <Value>Puma main HTTP</Value>
-                                <Value>Puma main WebSocket</Value>
-                                <Value>Lisa main HTTP</Value>
-                                <Value>Lisa main WebSocket</Value>
+                                <Value>ProLife server connection interface</Value>
+                                <Value>Puma server connection interface</Value>
+                                <Value>Lisa server connection interface</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -53,10 +38,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProLife</Value>
-                                <Value>ProLife</Value>
                                 <Value>Puma</Value>
-                                <Value>Puma</Value>
-                                <Value>Lisa</Value>
                                 <Value>Lisa</Value>
                             </Values>
                         </Data>
@@ -67,21 +49,15 @@
                                 <Value>0</Value>
                                 <Value>0</Value>
                                 <Value>1</Value>
-                                <Value>1</Value>
-                                <Value>1</Value>
-                                <Value>1</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="ConnectionUsageIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ProLifeUrlTcp</Value>
-                                <Value>ProLifeUrlWs</Value>
-                                <Value>PumaUrlTcp</Value>
-                                <Value>PumaUrlWs</Value>
-                                <Value>LisaUrlTcp</Value>
-                                <Value>LisaUrlWs</Value>
+                                <Value>ProLife</Value>
+                                <Value>Puma</Value>
+                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -96,6 +72,7 @@
                             <Values>
                                 <Value>ServerParams/ServerConnectionInterface</Value>
                                 <Value>ServerParams/PumaConnectionInterface</Value>
+                                <Value>ServerParams/LisaConnectionInterface</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -138,6 +115,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StoreOnChange" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
@@ -413,14 +393,23 @@
                     <Element Id="LisaConnectionInterface" PackageId="ImtComPck" ComponentId="ServerConnectionInterfaceParam">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="DefaultPumaHost">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="7776"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="8776"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="PumaConnectionInterface" PackageId="ImtComPck" ComponentId="ServerConnectionInterfaceParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="7788"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="8788"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -431,23 +420,38 @@
                                 <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ServerConnectionParams/ServerConnectionInterface</Value>
+                                            <Value>ServerConnectionInterface</Value>
                                             <Value>LisaConnectionInterface</Value>
-                                            <Value>ServerConnectionParams/PumaConnectionInterface</Value>
+                                            <Value>PumaConnectionInterface</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ServerPort</Value>
-                                            <Value>LisaPort</Value>
-                                            <Value>PumaPort</Value>
+                                            <Value>ServerConnection</Value>
+                                            <Value>LisaConnection</Value>
+                                            <Value>PumaConnection</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Default"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="ServerConnectionInterface" PackageId="ImtComPck" ComponentId="ServerConnectionInterfaceParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="7778"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="8778"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -482,10 +486,10 @@
                 </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="LisaConnectionInterface" ComponentId="LisaConnectionInterface"/>
-                    <Component ExportedId="PumaConnectionInterface" ComponentId="ServerConnectionParams/PumaConnectionInterface"/>
+                    <Component ExportedId="PumaConnectionInterface" ComponentId="PumaConnectionInterface"/>
                     <Component ExportedId="PumaUrl" ComponentId="ServerConnectionParams/PumaUrl"/>
                     <Component ExportedId="PumaWebSocketPort" ComponentId="ServerConnectionParams/PumaWebSocketPort"/>
-                    <Component ExportedId="ServerConnectionInterface" ComponentId="ServerConnectionParams/ServerConnectionInterface"/>
+                    <Component ExportedId="ServerConnectionInterface" ComponentId="ServerConnectionInterface"/>
                     <Component ExportedId="ServerPort" ComponentId="ServerConnectionParams/ServerPort"/>
                     <Component ExportedId="WebSocketServerPort" ComponentId="ServerConnectionParams/WebSocketServerPort"/>
                 </ExportedComponents>
@@ -497,23 +501,21 @@
         <Interface InterfaceId="imtservice::IConnectionCollection" ComponentId="ConnectionCollection"/>
         <Interface InterfaceId="iprm::IParamsSet" ComponentId="Preferences"/>
         <Interface InterfaceId="iser::ISerializable" ComponentId="Preferences"/>
-        <Interface InterfaceId="istd::IPolymorphic" ComponentId="FileAutoPersistence/AutoPersistence"/>
+        <Interface InterfaceId="istd::IChangeable" ComponentId="Preferences"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="Preferences"/>
+        <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Preferences"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="AutoPersistence" ComponentId="FileAutoPersistence/AutoPersistence"/>
         <Component ExportedId="BackupParams" ComponentId="BackupParams"/>
         <Component ExportedId="EnableSsl" ComponentId="FileBasedSslConfiguration/EnableSsl"/>
         <Component ExportedId="FileBasedSslConfiguration" ComponentId="FileBasedSslConfiguration"/>
         <Component ExportedId="LisaConnectionInterface" ComponentId="ServerParams/LisaConnectionInterface"/>
         <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="DatabaseParams/LisaDatabaseAccessSettings"/>
-        <Component ExportedId="LisaUrl" ComponentId="ServerParams/LisaUrl"/>
-        <Component ExportedId="LisaWebSocketUrl" ComponentId="ServerParams/LisaWebSocketUrl"/>
         <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="DatabaseParams/ProLifeDatabaseAccessSettings"/>
         <Component ExportedId="PumaConnectionInterface" ComponentId="ServerParams/PumaConnectionInterface"/>
         <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="DatabaseParams/PumaDatabaseAccessSettings"/>
-        <Component ExportedId="PumaUrl" ComponentId="ServerParams/PumaUrl"/>
-        <Component ExportedId="PumaWebSocketPort" ComponentId="ServerParams/PumaWebSocketPort"/>
         <Component ExportedId="ServerConnectionInterface" ComponentId="ServerParams/ServerConnectionInterface"/>
-        <Component ExportedId="ServerPort" ComponentId="ServerParams/ServerPort"/>
         <Component ExportedId="SmtpPasswordParam" ComponentId="SmtpServerParams/SmtpPasswordParam"/>
         <Component ExportedId="SmtpPortParam" ComponentId="SmtpServerParams/SmtpPortParam"/>
         <Component ExportedId="SmtpServerAddressParam" ComponentId="SmtpServerParams/SmtpServerAddressParam"/>
@@ -521,6 +523,5 @@
         <Component ExportedId="SmtpUsernameParam" ComponentId="SmtpServerParams/SmtpUsernameParam"/>
         <Component ExportedId="SupportEmail" ComponentId="Email"/>
         <Component ExportedId="TracingConfiguration" ComponentId="LoggingParams/TracingConfiguration"/>
-        <Component ExportedId="WebSocketServerPort" ComponentId="ServerParams/WebSocketServerPort"/>
     </ExportedComponents>
 </Acf>

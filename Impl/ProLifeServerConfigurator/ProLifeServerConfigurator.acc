@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5395" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -19,13 +19,10 @@
                     <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerConfigurator"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="BaseUrlParam" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Settings/ServerUrl"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Settings</Value>
+                                <Value>Settings/AutoPersistence</Value>
                                 <Value>Application/ObserverQml</Value>
                             </Values>
                         </Data>
@@ -50,6 +47,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductName" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ServerConnectionParam" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Settings/ServerConnectionInterface"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Settings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Settings"/>
@@ -138,10 +138,11 @@
                     <Interface InterfaceId="imtserverapp::IJsonRepresentationController" ComponentId="ProLifeServerSettingsRepresentation"/>
                     <Interface InterfaceId="iprm::IParamsSet" ComponentId="ProLifeServerSettings"/>
                     <Interface InterfaceId="iser::ISerializable" ComponentId="ProLifeServerSettings"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="ProLifeServerSettingsRepresentation"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="ProLifeServerSettings"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="ServerUrl" ComponentId="ProLifeServerSettings/ServerPort"/>
+                    <Component ExportedId="AutoPersistence" ComponentId="ProLifeServerSettings/AutoPersistence"/>
+                    <Component ExportedId="ServerConnectionInterface" ComponentId="ProLifeServerSettings/ServerConnectionInterface"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>

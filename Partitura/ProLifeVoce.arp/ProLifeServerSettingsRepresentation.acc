@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5395" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -329,17 +329,17 @@
         <EmbeddedRegistry Id="ServerSettingsRepresentation">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="LisaUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
+                    <Element Id="LisaConnectionParamRepresentation" PackageId="ImtServerAppPck" ComponentId="ServerConnectionParamRepresentationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaUrl"/>
+                                    <Data IsEnabled="true" Value="LisaConnection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Lisa URL"/>
+                                    <Data IsEnabled="true" Value="Lisa Connection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
@@ -350,17 +350,17 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="LisaWsUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
+                    <Element Id="PumaConnectionParamRepresentation" PackageId="ImtServerAppPck" ComponentId="ServerConnectionParamRepresentationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="LisaWsUrl"/>
+                                    <Data IsEnabled="true" Value="PumaConnection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Lisa Web Socket URL"/>
+                                    <Data IsEnabled="true" Value="Puma Connection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
@@ -371,59 +371,17 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="PumaUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
+                    <Element Id="ServerConnectionParamRepresentation" PackageId="ImtServerAppPck" ComponentId="ServerConnectionParamRepresentationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="PumaUrl"/>
+                                    <Data IsEnabled="true" Value="ServerConnection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Puma URL"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="PumaWSUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="PumaWsUrl"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Puma Web Socket URL"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ServerPortRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="ServerUrl"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="ProLife URL"/>
+                                    <Data IsEnabled="true" Value="Server Connection"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
@@ -449,35 +407,11 @@
                                 <AttributeInfo Id="ParamRepresentationControllers" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ServerPortRepresentation</Value>
-                                            <Value>WsUrlRepresentation</Value>
-                                            <Value>PumaUrlRepresentation</Value>
-                                            <Value>PumaWSUrlRepresentation</Value>
-                                            <Value>LisaUrlRepresentation</Value>
-                                            <Value>LisaWsUrlRepresentation</Value>
+                                            <Value>ServerConnectionParamRepresentation</Value>
+                                            <Value>LisaConnectionParamRepresentation</Value>
+                                            <Value>PumaConnectionParamRepresentation</Value>
                                         </Values>
                                     </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="WsUrlRepresentation" PackageId="ImtServerAppPck" ComponentId="UrlParamRepresentationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ModelId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="WsUrl"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="ProLife Web Socket URL"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
