@@ -25,6 +25,15 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ConnectionDescriptions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLife server connection interface</Value>
+                                <Value>Puma server connection interface</Value>
+                                <Value>Lisa server connection interface</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="ConnectionNames" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -34,7 +43,7 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="ConnectionServiceTypeNames" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="ConnectionServiceTypeIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ProLife</Value>
@@ -49,15 +58,6 @@
                                 <Value>0</Value>
                                 <Value>0</Value>
                                 <Value>1</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ConnectionUsageIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ProLife</Value>
-                                <Value>Puma</Value>
-                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -76,7 +76,7 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="ServiceTypeName" Type="Id" ExportId="">
+                    <AttributeInfo Id="ServiceTypeId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
