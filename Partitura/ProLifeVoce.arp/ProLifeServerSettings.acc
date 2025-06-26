@@ -56,7 +56,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>0</Value>
-                                <Value>0</Value>
+                                <Value>1</Value>
                                 <Value>1</Value>
                             </Values>
                         </Data>
