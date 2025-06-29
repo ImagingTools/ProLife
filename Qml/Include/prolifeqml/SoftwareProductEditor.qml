@@ -238,8 +238,6 @@ ViewBase {
 					
 					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)){
 						let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)
-						
-						console.log("expiration", expiration)
 						if (expiration === ""){
 							expirationValue.text = qsTr("Unlimited");
 						}

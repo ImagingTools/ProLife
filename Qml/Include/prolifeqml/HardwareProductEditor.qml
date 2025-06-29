@@ -229,7 +229,8 @@ ViewBase {
 
 		GroupElementView {
 			width: parent.width;
-			visible: root.isNewDevice;
+			visible: false
+			visible: switchNewSensor.checked;
 			
 			FilterableComboBoxElementView {
 				id: typesCB;
@@ -307,11 +308,10 @@ ViewBase {
 				name: qsTr("Article Number");
 			}
 		}
-		
-		
+
 		GroupElementView {
 			width: parent.width;
-			visible: !root.isNewDevice;
+			visible: !switchNewSensor.checked && deviceCB.currentIndex >= 0;
 			
 			TextElementView {
 				id: deviceTypeText;
