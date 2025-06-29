@@ -6,6 +6,10 @@ RUN choco install -y nodejs
 RUN npm install -g newman
 RUN choco install -y postgresql17 --params '"/Password=root"'
 
+WORKDIR C:/gui
+RUN npm install
+RUN npx playwright install chrome
+
 # Добавим bin в PATH
 ENV PATH="C:\\Program Files\\PostgreSQL\\17\\bin;${PATH}"
 ENV PATH="C:\\Users\\ContainerAdministrator\\AppData\\Roaming\\npm;${PATH}"
@@ -13,6 +17,7 @@ ENV PATH="C:\\Program Files\\nodejs;${PATH}"
 
 COPY backups/ C:/backups/
 COPY installers/ C:/installers/
+COPY gui/ C:/gui/
 
 WORKDIR C:/
 COPY postman_collection.json .
