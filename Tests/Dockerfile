@@ -7,6 +7,7 @@ RUN npm install -g newman
 RUN choco install -y postgresql17 --params '"/Password=root"'
 
 WORKDIR C:/gui
+COPY gui/ C:/gui/
 RUN npm install
 RUN npx playwright install chrome
 
@@ -17,7 +18,6 @@ ENV PATH="C:\\Program Files\\nodejs;${PATH}"
 
 COPY backups/ C:/backups/
 COPY installers/ C:/installers/
-COPY gui/ C:/gui/
 
 WORKDIR C:/
 COPY postman_collection.json .
