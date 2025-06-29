@@ -1,0 +1,125 @@
+const {expect } = require('@playwright/test');
+const delay = (time = 5000) => new Promise(resolve => setTimeout(resolve, time));
+const fs = require('fs');
+const path = require('path');
+
+var frameCount = 0;
+
+const reloadPage = async (page, url = 'http://localhost:7778') => {
+  await page.goto(url);
+  await waitForPageStability(page);
+};
+
+const clickAt = async (page, x, y, maskParams) => {
+  await addMask(page, maskParams);
+  await page.mouse.click(x, y);
+  await waitForPageStability(page);
+  await removeMask(page);
+};
+
+const wheelScroll = async (page, deltaY) => {
+  await page.mouse.wheel(0, deltaY);
+};
+
+const checkScreenshot = async (page, filename, maskParams) => {
+  await addMask(page, maskParams);
+  await waitForPageStability(page);
+  await expect(page).toHaveScreenshot(filename, { fullPage: true });
+  await removeMask(page);
+};
+
+async function login(page, username, password) {
+  await reloadPage(page);
+
+  await clickAt(page, 700, 386); // Click 'Login' input field
+  await page.keyboard.type(username);
+
+  await clickAt(page, 685, 455); // Click 'Password' input field
+  await page.keyboard.type(password);
+
+  await delay(500);
+
+  await clickAt(page, 700, 600); // Click 'Login' button
+}
+
+async function waitForPageStability(page, options = {}) {
+  const {
+    maxTotalTime = 5000,
+    visualCheckInterval = 500,
+    visualStableFrames = 2,
+    debugScreenshots = false,
+    screenshotDir = path.join(process.cwd(), 'screenshots_debug'),
+  } = options;
+
+  // Подготовка директории для скриншотов
+  if (debugScreenshots) {
+    fs.mkdirSync(screenshotDir, { recursive: true });
+  }
+
+  const startTime = Date.now();
+
+  // Параллельно ждем networkidle и domcontentloaded
+  await Promise.all([
+    page.waitForLoadState('networkidle'),
+    page.waitForLoadState('domcontentloaded')
+  ]);
+
+  let stableFrames = 0;
+  let previousScreenshot = await page.screenshot({ animations: 'disabled' });
+
+  while (Date.now() - startTime < maxTotalTime){
+    await page.waitForTimeout(visualCheckInterval);
+
+    const currentScreenshot = await page.screenshot({ animations: 'disabled' });
+
+    if (debugScreenshots){
+      const filename_ = 'frame_' + frameCount + '.png';
+      fs.writeFileSync(path.join(screenshotDir, filename_), currentScreenshot);
+      frameCount++;
+    }
+
+    if (previousScreenshot.equals(currentScreenshot)){
+      stableFrames++;
+      if (stableFrames >= visualStableFrames){
+        return;
+      }
+    } 
+    else{
+      stableFrames = 0;
+      previousScreenshot = currentScreenshot;
+    }
+  }
+
+  // throw new Error('Timeout: visual stability not reached after ${maxTotalTime}ms');
+}
+
+const addMask = async (page, maskParams) => {
+  if (!maskParams) return;
+
+  await page.evaluate(({ x, y, width, height }) => {
+    const mask = document.createElement('div');
+    Object.assign(mask.style, {
+      position: 'fixed',
+      top: (typeof y === 'number' ? y + 'px' : y) || '0px',
+      left: (typeof x === 'number' ? x + 'px' : x) || '0px',
+      width: (typeof width === 'number' ? width + 'px' : width) || '100px',
+      height: (typeof height === 'number' ? height + 'px' : height) || '100px',
+      backgroundColor: '#000000',
+      zIndex: '9999',
+      pointerEvents: 'none',
+    });
+    mask.setAttribute('data-mask', 'true');
+    document.body.appendChild(mask);
+  }, maskParams);
+
+  await page.waitForFunction(() => !!document.querySelector('div[data-mask="true"]'));
+};
+
+const removeMask = async (page) => {
+  await page.evaluate(() => {
+    const mask = document.querySelector('div[data-mask="true"]');
+    if (mask) mask.remove();
+  });
+};
+
+module.exports = { delay, reloadPage, clickAt, checkScreenshot, login, wheelScroll, waitForPageStability};
