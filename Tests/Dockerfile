@@ -22,5 +22,6 @@ COPY installers/ C:/installers/
 WORKDIR C:/
 COPY postman_collection.json .
 COPY start.bat .
+COPY reset_db.bat .
 
 CMD ["cmd", "/c", "C:\\start.bat"]
