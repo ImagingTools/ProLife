@@ -2,7 +2,7 @@
 set -e
 
 echo "=== Waiting for PostgreSQL to start ==="
-
+pg_ctlcluster 14 main start
 until pg_isready -h localhost -p 5432 -U postgres; do
   echo "PostgreSQL is not ready yet. Waiting..."
   sleep 2
