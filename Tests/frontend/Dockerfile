@@ -25,4 +25,4 @@ USER root
 
 RUN chmod +x start.sh
 
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["/app/start.sh"]
