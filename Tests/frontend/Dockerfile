@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get remove -y postgresql-client postgresql-client-common
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" \
     > /etc/apt/sources.list.d/pgdg.list && \
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
