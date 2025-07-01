@@ -18,20 +18,12 @@ RUN npm install -g playwright && \
     playwright install --with-deps
 
 # --- 2. Копирование проекта ---
-COPY backups/ /app/backups/
-COPY tests/ /app/tests/
-COPY global-setup.js /app/global-setup.js
-COPY package.json /app/package.json
-COPY package-lock.json /app/package-lock.json
-COPY playwright.config.js /app/playwright.config.js
-COPY reset_db.sh /app/reset_db.sh
-COPY start.sh /app/start.sh
-COPY LisaServer /app/LisaServer
-COPY PumaServer /app/PumaServer
-COPY ProLifeServer /app/ProLifeServer
+WORKDIR /app
+COPY . .
 
 USER root
 
 RUN chmod +x /app/start.sh
+RUN chmod +x /app/reset_db.sh
 
 ENTRYPOINT ["/app/start.sh"]
