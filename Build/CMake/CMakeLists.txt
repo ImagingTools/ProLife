@@ -37,6 +37,8 @@ if(NOT DEFINED IMTCOREDIR_BUILD)
 endif()
 
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
+include(${IMTCOREDIR}/Config/CMake/PartituraUpgrade.cmake)
+imt_core_upgrade_partitura("${CMAKE_CURRENT_LIST_DIR}/../..")
 
 get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
 get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
