@@ -11,19 +11,20 @@ psql -U postgres -c "ALTER USER postgres PASSWORD 'root';"
 
 ./reset_db.sh
 
-nohup /app/PumaServer &>/dev/null &
+# Запускаем приложения через команду start
+/app/PumaServer start &
 echo "Waiting for PumaServer on http://localhost:7788..."
 until curl -s http://localhost:7788 > /dev/null; do
     sleep 1
 done
 
-nohup /app/LisaServer &>/dev/null &
+/app/LisaServer start &
 echo "Waiting for LisaServer on http://localhost:7776..."
 until curl -s http://localhost:7776 > /dev/null; do
     sleep 1
 done
 
-nohup /app/ProLifeServer &>/dev/null &
+/app/ProLifeServer start &
 echo "Waiting for ProLifeServer on http://localhost:7778..."
 until curl -s http://localhost:7778 > /dev/null; do
     sleep 1
