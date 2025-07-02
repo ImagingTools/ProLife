@@ -20,12 +20,6 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
-# --- 3. Установка libssl1.1 вручную (для libcrypto.so.1.1) ---
-RUN apt-get update && apt-get install -y wget && \
-    wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.1/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
-    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
-    rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb
-
 # --- 4. Копирование проекта и установка зависимостей ---
 WORKDIR /app
 COPY package.json package-lock.json* ./
