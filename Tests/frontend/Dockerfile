@@ -8,7 +8,9 @@ RUN apt-get update && \
         wget curl gnupg lsb-release git \
         ca-certificates software-properties-common \
         python3 python3-pip \
-        xvfb && \
+        xvfb \
+        ttf-mscorefonts-installer fontconfig && \
+    fc-cache -fv && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
