@@ -5,6 +5,7 @@ module.exports = defineConfig({
   timeout: 100000, // 100 секунд для каждого тестов (макс)
   testDir: './tests',
   globalSetup: require.resolve('./global-setup.js'),
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-win32{ext}',
   use: {
     headless: true,
     viewport: { width: 1400, height: 800 },
@@ -20,14 +21,12 @@ module.exports = defineConfig({
       testMatch: /tests\/auth\/.*\.test\.js/,
       use: {
         storageState: 'storageState.json',
-	snapshotSuffix: 'win32',
       },
     },
     {
       name: 'guest',
       testIgnore: /tests\/auth\/.*\.test\.js/,
       use: {
-	snapshotSuffix: 'win32',
       },
     }
   ],
