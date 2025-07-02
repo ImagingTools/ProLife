@@ -5,7 +5,7 @@ module.exports = defineConfig({
   timeout: 100000, // 100 секунд для каждого тестов (макс)
   testDir: './tests',
   globalSetup: require.resolve('./global-setup.js'),
-  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-win32{ext}',
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}-win32{ext}',
   use: {
     headless: true,
     viewport: { width: 1400, height: 800 },
