@@ -21,9 +21,13 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
-    apt-get install -y ttf-mscorefonts-installer && \
-    fc-cache -f
+    apt-get install -y --no-install-recommends fontconfig wget cabextract && \
+    mkdir -p /usr/share/fonts/truetype/msttcorefonts && \
+    wget -q -O /tmp/verdan32.exe https://downloads.sourceforge.net/corefonts/verdan32.exe && \
+    cabextract -L -F '*.ttf' /tmp/verdan32.exe -d /usr/share/fonts/truetype/msttcorefonts/ && \
+    fc-cache -f -v && \
+    apt-get remove -y wget cabextract && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 # --- 4. Копирование проекта и установка зависимостей ---
 WORKDIR /app
