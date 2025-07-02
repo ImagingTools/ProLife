@@ -12,8 +12,22 @@ psql -U postgres -c "ALTER USER postgres PASSWORD 'root';"
 ./reset_db.sh
 
 nohup /app/PumaServer &>/dev/null &
+echo "Waiting for PumaServer on http://localhost:7788..."
+until curl -s http://localhost:7788 > /dev/null; do
+    sleep 1
+done
+
 nohup /app/LisaServer &>/dev/null &
+echo "Waiting for LisaServer on http://localhost:7776..."
+until curl -s http://localhost:7776 > /dev/null; do
+    sleep 1
+done
+
 nohup /app/ProLifeServer &>/dev/null &
+echo "Waiting for ProLifeServer on http://localhost:7778..."
+until curl -s http://localhost:7778 > /dev/null; do
+    sleep 1
+done
 
 npx playwright test
 
