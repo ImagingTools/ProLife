@@ -20,15 +20,6 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig wget cabextract && \
-    mkdir -p /usr/share/fonts/truetype/msttcorefonts && \
-    wget -q -O /tmp/verdan32.exe https://downloads.sourceforge.net/corefonts/verdan32.exe && \
-    cabextract -L -F '*.ttf' /tmp/verdan32.exe -d /usr/share/fonts/truetype/msttcorefonts/ && \
-    fc-cache -f -v && \
-    apt-get remove -y wget cabextract && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
-
 # --- 4. Копирование проекта и установка зависимостей ---
 WORKDIR /app
 COPY package.json package-lock.json* ./
