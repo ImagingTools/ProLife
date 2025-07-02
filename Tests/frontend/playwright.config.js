@@ -5,12 +5,12 @@ module.exports = defineConfig({
   timeout: 100000, // 100 секунд для каждого тестов (макс)
   testDir: './tests',
   globalSetup: require.resolve('./global-setup.js'),
-  snapshotSuffix: 'win32',
   use: {
     headless: true,
     viewport: { width: 1400, height: 800 },
     screenshot: 'only-on-failure',
     baseURL: 'http://localhost:7778',
+    snapshotSuffix: 'win32',
   },
   expect: {
     toHaveScreenshot: { threshold: 0.2 },
