@@ -10,7 +10,6 @@ module.exports = defineConfig({
     viewport: { width: 1400, height: 800 },
     screenshot: 'only-on-failure',
     baseURL: 'http://localhost:7778',
-    snapshotSuffix: 'win32',
   },
   expect: {
     toHaveScreenshot: { threshold: 0.2 },
@@ -21,12 +20,15 @@ module.exports = defineConfig({
       testMatch: /tests\/auth\/.*\.test\.js/,
       use: {
         storageState: 'storageState.json',
+	snapshotSuffix: 'win32',
       },
     },
     {
       name: 'guest',
       testIgnore: /tests\/auth\/.*\.test\.js/,
-      use: {},
+      use: {
+	snapshotSuffix: 'win32',
+      },
     }
   ],
 });
