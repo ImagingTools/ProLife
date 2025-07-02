@@ -20,6 +20,11 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    fonts-verdana \
+    ttf-mscorefonts-installer \
+    fontconfig
+
 # --- 4. Копирование проекта и установка зависимостей ---
 WORKDIR /app
 COPY package.json package-lock.json* ./
