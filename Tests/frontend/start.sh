@@ -11,6 +11,8 @@ psql -U postgres -c "ALTER USER postgres PASSWORD 'root';"
 
 ./reset_db.sh
 
+export LD_LIBRARY_PATH=/app/qtlibs:$LD_LIBRARY_PATH
+
 # Запускаем приложения через команду start
 /app/PumaServer start &
 echo "Waiting for PumaServer on http://localhost:7788..."
