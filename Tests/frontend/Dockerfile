@@ -20,10 +20,10 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
-    fonts-verdana \
-    ttf-mscorefonts-installer \
-    fontconfig
+RUN apt-get update && \
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get install -y ttf-mscorefonts-installer && \
+    fc-cache -f
 
 # --- 4. Копирование проекта и установка зависимостей ---
 WORKDIR /app
