@@ -13,17 +13,18 @@ RUN apt-get update && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# --- 2. Установка PostgreSQL 15 и клиента ---
+# --- 2. Установка PostgreSQL 16 и клиента ---
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     apt-get update && \
-    apt-get install -y postgresql-15 postgresql-client-15 && \
+    apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
 # --- 3. Установка Playwright ---
 RUN npm install -g playwright && \
     playwright install --with-deps
 
+# Проверка версии pg_restore
 RUN pg_restore --version
 
 # --- 4. Копирование проекта ---
