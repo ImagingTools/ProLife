@@ -20,19 +20,13 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     apt-get install -y postgresql-16 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
-# --- 3. Установка Playwright ---
-RUN npm install -g playwright && \
-    playwright install --with-deps
-
-# Проверка версии pg_restore
-RUN pg_restore --version
-
-# --- 4. Копирование проекта ---
+# --- 3. Копирование проекта и установка зависимостей ---
 WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install && npx playwright install --with-deps
 COPY . .
 
-USER root
-
+# --- 4. Скрипты ---
 RUN chmod +x /app/start.sh
 RUN chmod +x /app/reset_db.sh
 
