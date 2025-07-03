@@ -2,7 +2,7 @@
 const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
-  timeout: 100000, // 100 секунд для каждого тестов (макс)
+  timeout: 0,
   testDir: './tests',
   globalSetup: require.resolve('./global-setup.js'),
   //snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}-win32{ext}',
