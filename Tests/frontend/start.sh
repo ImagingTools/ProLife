@@ -35,7 +35,7 @@ until curl -s http://localhost:7778 > /dev/null; do
 done
 
 if [ "$UPDATE_SCREENSHOTS" = "1" ]; then
-    npx playwright test --updateScreenshots
+    npx playwright test --update-snapshots
 else
     npx playwright test
 fi
