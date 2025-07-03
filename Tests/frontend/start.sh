@@ -34,6 +34,6 @@ until curl -s http://localhost:7778 > /dev/null; do
     sleep 1
 done
 
-npx playwright test --project=guest
+npx playwright test
 
 pg_ctlcluster 16 main stop
