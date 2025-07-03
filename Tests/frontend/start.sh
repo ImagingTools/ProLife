@@ -34,6 +34,10 @@ until curl -s http://localhost:7778 > /dev/null; do
     sleep 1
 done
 
-npx playwright test
+if [ "$UPDATE_SCREENSHOTS" = "1" ]; then
+    npx playwright test --updateScreenshots
+else
+    npx playwright test
+fi
 
 pg_ctlcluster 16 main stop
