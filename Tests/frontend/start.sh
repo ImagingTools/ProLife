@@ -40,4 +40,11 @@ else
     npx playwright test
 fi
 
+ret=$?
+
 pg_ctlcluster 16 main stop
+
+if [ $ret -ne 0 ]; then
+    echo "Tests failed with exit code $ret"
+    exit $ret
+fi
