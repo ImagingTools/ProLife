@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, delay} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot } = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);

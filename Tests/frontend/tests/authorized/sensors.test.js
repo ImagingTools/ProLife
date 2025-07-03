@@ -1,4 +1,4 @@
-const { test, chromium } = require('@playwright/test');
+const { test } = require('@playwright/test');
 const { reloadPage, clickAt, checkScreenshot, login, wheelScroll, delay} = require('../utils');
 
 test.beforeEach(async ({ page }) => {

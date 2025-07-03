@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, login} = require('./utils');
+const { reloadPage, clickAt, checkScreenshot, login} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -39,6 +39,5 @@ test('Should open register window', async ({ page }) => {
 
 test('Superuser authorization', async ({ page }) => {
   await login(page, "su", "1");
-
   await checkScreenshot(page, 'succesful_login.png');
 });
