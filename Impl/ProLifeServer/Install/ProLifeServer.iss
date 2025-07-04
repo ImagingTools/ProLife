@@ -27,7 +27,6 @@ CloseApplications=true
 
 [Components]
 Name: "server"; Description: "ProLife server"; Types: full compact custom; Flags: fixed
-//Name: "postgresql"; Description: "PostgreSQL 14"; Types: full
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -36,33 +35,22 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-//Name: envPath; Description: "Add to PATH variable PostgreSQL"; Components: postgresql
-    
+  
 [Files]
 Source: "{#BasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BasePath}\*"; Excludes: "*.exe,*.manifest,*.arp";  DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-//Source: "postgresql.exe"; DestDir: "{app}"; Flags: deleteafterinstall; Components: postgresql
 Source: "{#BasePath}\ProLifeServerConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
-//Source: "nginx\*"; DestDir: "{app}\nginx"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-//Filename: "{app}\postgresql.exe"; Flags: runascurrentuser; Parameters:  --mode unattended --unattendedmodeui minimal --superpassword root; Components: postgresql
-// Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
-//Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser postinstall
-//Filename: "{app}\nginx\startNginx.bat"; Flags: runascurrentuser postinstall
+Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent;
 
 [UninstallRun]
 //Filename: "{app}\nginx\stopNginx.bat"; Flags: runascurrentuser
-
-//[Registry]
-//Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
-  //  ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{pf64}\PostgreSQL\14\bin"; \
-    //Tasks:  envPath; Check: NeedsAddPath('{pf64}\PostgreSQL\14\bin');
 
 [Code]
 function NeedsAddPath(Param: string): boolean;
