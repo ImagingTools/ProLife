@@ -61,6 +61,10 @@ ProductionStatusModel {
 	}
 
 	function fillModel(){
+		if (!hasStatusModel()){
+			createStatusModel()
+		}
+
 		m_statusModel.clear();
 		m_statusModel.addElement(createStatus("None", qsTr("None"), "../../../../" + Style.getIconPath("Icons/StateUnknown", Icon.State.On, Icon.Mode.Active)));
 		m_statusModel.addElement(createStatus("Accepted", qsTr("Accepted"), "../../../../" + Style.getIconPath("Icons/Timeline", Icon.State.On, Icon.Mode.Active)));

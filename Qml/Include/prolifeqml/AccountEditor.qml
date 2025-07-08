@@ -64,6 +64,7 @@ ViewBase {
 	}
 	
 	function updateModel(){
+		console.log("updateModel()")
 		accountData.m_name = accountNameInput.text;
 		accountData.m_description = accountDescriptionInput.text;
 		accountData.m_email = emailInput.text;
