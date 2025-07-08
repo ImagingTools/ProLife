@@ -381,8 +381,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					softwareProduct.categoryId = (softwareProductPtr->GetFactoryId());
 					softwareProduct.productUuid = (softwareProductPtr->GetProductId());
 					softwareProduct.serialNumber = (softwareProductPtr->GetSerialNumber());
-					softwareProduct.inUse = std::make_optional<bool>(softwareProductPtr->IsInUse());
-					softwareProduct.isNew = std::make_optional<bool>(false);
+					softwareProduct.inUse = std::move(softwareProductPtr->IsInUse());
+					softwareProduct.isNew = std::move(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
@@ -432,7 +432,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					hardwareProduct.productUuid = (productUuid);
 					hardwareProduct.categoryId = (QByteArray("Hardware"));
 					hardwareProduct.licenseUuid = (licenseDefinitionUuid);
-					hardwareProduct.isNew = std::make_optional<bool>(false);
+					hardwareProduct.isNew = std::move(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
@@ -464,7 +464,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					if (m_bindingCollectionCompPtr->GetObjectData(productId, bindingDataPtr)){
 						const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(bindingDataPtr.GetPtr());
 						if (bindingInfoPtr != nullptr){
-							hardwareProduct.inUse = std::make_optional<bool>(false);
+							hardwareProduct.inUse = std::move(false);
 
 							QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
 							for (const QByteArray& softwareId : softwareIds){
@@ -474,7 +474,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 									if (productInstanceInfoPtr != nullptr){
 										bool isUse = productInstanceInfoPtr->IsInUse();
 										if (isUse){
-											hardwareProduct.inUse = std::make_optional<bool>(true);
+											hardwareProduct.inUse = std::move(true);
 											break;
 										}
 									}
@@ -489,7 +489,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
-	representationPayload.orderProducts = std::make_optional<QList<sdl::prolife::Orders::COrderedProduct::V1_0>>(products);
+	representationPayload.orderProducts = std::move(products);
 
 	return true;
 }
