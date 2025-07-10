@@ -530,6 +530,7 @@ ViewBase {
 					
 					name: qsTr("Expiration");
 					visible: !unlimitedSwitch.checked;
+					readOnly: root.readOnly;
 					
 					KeyNavigation.tab: projectInput;
 					KeyNavigation.backtab: unlimitedSwitch;
