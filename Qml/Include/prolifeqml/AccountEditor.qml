@@ -50,8 +50,12 @@ ViewBase {
 		postalCodeInput.text = accountData.m_postalCode;
 		cityInput.text = accountData.m_city;
 		streetInput.text = accountData.m_street;
-		
-		let groupIds = accountData.m_groups.split(';');
+
+		let groupIds = []
+		if (accountData.m_groups){
+			groupIds = accountData.m_groups.split(';');
+		}
+
 		groupsElement.table.uncheckAll();
 		if (groupsElement.table.elements){
 			for (let i = 0; i < groupsElement.table.elements.getItemsCount(); i++){
@@ -64,7 +68,6 @@ ViewBase {
 	}
 	
 	function updateModel(){
-		console.log("updateModel()")
 		accountData.m_name = accountNameInput.text;
 		accountData.m_description = accountDescriptionInput.text;
 		accountData.m_email = emailInput.text;

@@ -15,7 +15,7 @@ Item {
 	
 	property TreeItemModel licensesModel: TreeItemModel{}
 	property TreeItemModel productsModel: TreeItemModel{}
-	property ListModel orderProductsModel: ListModel {}
+	property BaseModel orderProductsModel: BaseModel {}
 	
 	property TreeItemModel devicesModel: TreeItemModel {}
 	property TreeItemModel softwaresModel: TreeItemModel {}
@@ -99,6 +99,10 @@ Item {
 		m_logicalOperation: deviceCollection.filter.logicalOperation.OR;
 		
 		Component.onCompleted: {
+			if (!hasFieldFilters()){
+				createFieldFilters()
+			}
+
 			m_fieldFilters.addElement(orderUuidFilter);
 			m_fieldFilters.addElement(emptyOrderFilter);
 			
@@ -171,6 +175,8 @@ Item {
 	}
 	
 	function updateProductModel(){
+
+
 		if (productCB.currentIndex >= 0){
 			if (!productEditor.blockUpdatingModel){
 				productEditor.clearProduct();
@@ -199,17 +205,19 @@ Item {
 				
 				deviceCollection.filter.removeGroupFilter(excludesGroup)
 				
-				for (let i = 0; i < orderProductsModel.count; i++){
-					let categoryId = orderProductsModel.get(i).item.m_categoryId;
-					if (categoryId === hardwareCategoryId){
-						let deviceID = orderProductsModel.get(i).item.m_id;
-						if (deviceID !== "" && productItem.m_id != deviceID){
-							excludeDocumentIdFilter.m_filterValue = deviceID;
-							excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+				if (orderProductsModel){
+					for (let i = 0; i < orderProductsModel.count; i++){
+						let categoryId = orderProductsModel.get(i).item.m_categoryId;
+						if (categoryId === hardwareCategoryId){
+							let deviceID = orderProductsModel.get(i).item.m_id;
+							if (deviceID !== "" && productItem.m_id != deviceID){
+								excludeDocumentIdFilter.m_filterValue = deviceID;
+								excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+							}
 						}
 					}
 				}
-				
+
 				deviceCollection.filter.addGroupFilter(excludesGroup)
 
 				deviceCollection.updateModel();
@@ -222,17 +230,18 @@ Item {
 				
 				softwareCollection.filter.removeGroupFilter(excludesGroup)
 				
-				for (let i = 0; i < orderProductsModel.count; i++){
-					let categoryId = orderProductsModel.get(i).item.m_categoryId;
-					if (categoryId === productEditor.softwareCategoryId){
-						let id = orderProductsModel.get(i).item.m_id;
-						if (id !== "" && productItem.m_id != id){
-							excludeDocumentIdFilter.m_filterValue = id;
-							excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+				if (orderProductsModel){
+					for (let i = 0; i < orderProductsModel.count; i++){
+						let categoryId = orderProductsModel.get(i).item.m_categoryId;
+						if (categoryId === productEditor.softwareCategoryId){
+							let id = orderProductsModel.get(i).item.m_id;
+							if (id !== "" && productItem.m_id != id){
+								excludeDocumentIdFilter.m_filterValue = id;
+								excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
+							}
 						}
 					}
 				}
-				
 				softwareCollection.filter.addGroupFilter(excludesGroup)
 				
 				softwareCollection.updateModel();

@@ -24,7 +24,7 @@ Rectangle {
 	
 	signal clicked();
 	signal edited();
-	
+
 	Component.onCompleted: {
 		softwareCard.updateElements();
 	}
@@ -81,7 +81,7 @@ Rectangle {
 		anchors.right: rightPanel.left;
 		
 		visible: licensesView.elementsCount !== 0
-		
+
 		Table {
 			id: licensesView;
 			

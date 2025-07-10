@@ -171,6 +171,10 @@ ViewBase {
 		else{
 			orderData.m_orderStatus = "";
 		}
+
+		if (!orderData.hasOrderProducts()){
+			orderData.createOrderProducts()
+		}
 	}
 	
 	OrderStatus {
