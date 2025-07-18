@@ -237,7 +237,7 @@ Item {
 						let categoryId = orderProductsModel.get(i).item.m_categoryId;
 						if (categoryId === productEditor.softwareCategoryId){
 							let id = orderProductsModel.get(i).item.m_id;
-							if (id !== "" && productItem.m_id != id){
+							if (id !== "" && productItem.m_id !== id){
 								excludeDocumentIdFilter.m_filterValue = id;
 								excludesGroup.m_fieldFilters.addElement(excludeDocumentIdFilter.copyMe());
 							}

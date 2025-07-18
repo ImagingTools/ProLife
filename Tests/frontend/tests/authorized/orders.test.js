@@ -108,3 +108,106 @@ test('New order test', async ({ page }) => {
   await checkScreenshot(page, 'orders_new_editor_24.png')
 });
 
+test('Edit order test (add new hardware product)', async ({ page }) => {
+  await clickAt(page, 1190, 170); // 'Text filter clicked
+  await page.keyboard.type('10942314');
+  await checkScreenshot(page, 'orders_edit_h_1.png')
+
+  await clickAt(page, 700, 300); // First element click
+  await clickAt(page, 265, 115); // Edit command click
+  await checkScreenshot(page, 'orders_edit_h_2.png')
+
+  await clickAt(page, 790, 180); // Hide order information group
+  await checkScreenshot(page, 'orders_edit_h_3.png')
+
+  await clickAt(page, 767, 250); // Compact view button click
+  await checkScreenshot(page, 'orders_edit_h_4.png')
+
+  await clickAt(page, 767, 250); // Detailed view button click
+  await checkScreenshot(page, 'orders_edit_h_5.png')
+
+  await clickAt(page, 750, 325); // First product edit click
+  await checkScreenshot(page, 'orders_edit_h_6.png')
+
+  await clickAt(page, 1050, 770); // Cancel editor click
+  await checkScreenshot(page, 'orders_edit_h_7.png')
+
+  await clickAt(page, 750, 550); // Second product edit click
+  await checkScreenshot(page, 'orders_edit_h_8.png')
+
+  await clickAt(page, 1050, 770); // Cancel editor click
+
+  await clickAt(page, 800, 250); // New Product click
+  await clickAt(page, 1015, 85); // Hardware category click
+  await clickAt(page, 700, 250); // Product CB click
+  await clickAt(page, 700, 290); // First item click from CB
+  await clickAt(page, 1045, 335); // New Sensor switch click
+  await clickAt(page, 700, 415); // Types CB click
+  await clickAt(page, 700, 450); // First item click from CB
+  await clickAt(page, 700, 490); // MAC Address text input click
+  await page.keyboard.type('8c:1f:64:50:19:1b'); // Mac Address already exists in order
+  await checkScreenshot(page, 'orders_edit_h_9.png')
+
+  await clickAt(page, 700, 490); // MAC Address text input click
+  await page.keyboard.press('Control+A');
+  await page.keyboard.press('Delete');
+  await page.keyboard.type('8c:1f:64:50:19:20'); // Valid Mac Address
+  await checkScreenshot(page, 'orders_edit_h_10.png')
+
+  await clickAt(page, 700, 570); // Serial Number text input click
+  await page.keyboard.type('S8C1F6450191B'); // Serial Number already exists in order
+  await checkScreenshot(page, 'orders_edit_h_11.png')
+
+  await clickAt(page, 700, 490); // Serial Number text input click
+  await page.keyboard.press('Control+A');
+  await page.keyboard.press('Delete');
+  await page.keyboard.type('77777');
+  await checkScreenshot(page, 'orders_edit_h_12.png')
+
+  await clickAt(page, 980, 770); // Ok button click
+  await checkScreenshot(page, 'orders_edit_h_13.png')
+
+  await clickAt(page, 750, 320); // Click edit for new hardware product
+  await checkScreenshot(page, 'orders_edit_h_14.png')
+});
+
+test('Edit order test (add new software product)', async ({ page }) => {
+  await clickAt(page, 1190, 170); // 'Text filter clicked
+  await page.keyboard.type('33333');
+  await clickAt(page, 700, 300); // First element click
+  await clickAt(page, 265, 115); // Edit command click
+
+  await clickAt(page, 790, 180); // Hide order information group
+
+  await clickAt(page, 750, 325); // First product edit click
+  await checkScreenshot(page, 'orders_edit_s_1.png')
+
+  await clickAt(page, 1050, 770); // Cancel editor click
+
+  await clickAt(page, 750, 550); // Second product edit click
+  await checkScreenshot(page, 'orders_edit_s_2.png')
+
+  await clickAt(page, 1050, 770); // Cancel editor click
+
+  await clickAt(page, 800, 250); // New Product click
+  await clickAt(page, 700, 250); // Product CB click
+  await clickAt(page, 700, 290); // First item click from CB
+  await clickAt(page, 1045, 335); // New License switch click
+  await clickAt(page, 700, 415); // Licenses CB click
+  await clickAt(page, 700, 450); // First item click from CB
+  await clickAt(page, 700, 490); // Software-ID text input click
+  await page.keyboard.type('9989897'); // Software-ID already exists in order
+  await checkScreenshot(page, 'orders_edit_s_3.png')
+
+  await clickAt(page, 700, 490); // Software-ID text input click
+  await page.keyboard.press('Control+A');
+  await page.keyboard.press('Delete');
+  await page.keyboard.type('9989810'); // Valid Software-ID
+  await checkScreenshot(page, 'orders_edit_s_4.png')
+
+  await clickAt(page, 980, 770); // Ok button click
+  await checkScreenshot(page, 'orders_edit_s_5.png')
+
+  await clickAt(page, 750, 320); // Click edit for new software product
+  await checkScreenshot(page, 'orders_edit_s_6.png')
+});
