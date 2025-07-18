@@ -158,7 +158,7 @@ test('Edit order test (add new hardware product)', async ({ page }) => {
   await page.keyboard.type('S8C1F6450191B'); // Serial Number already exists in order
   await checkScreenshot(page, 'orders_edit_h_11.png')
 
-  await clickAt(page, 700, 490); // Serial Number text input click
+  await clickAt(page, 700, 570); // Serial Number text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('77777');
@@ -174,6 +174,7 @@ test('Edit order test (add new hardware product)', async ({ page }) => {
 test('Edit order test (add new software product)', async ({ page }) => {
   await clickAt(page, 1190, 170); // 'Text filter clicked
   await page.keyboard.type('33333');
+  await checkScreenshot(page, 'orders_edit_s_0.png')
   await clickAt(page, 700, 255); // First element click
   await clickAt(page, 265, 115); // Edit command click
 
