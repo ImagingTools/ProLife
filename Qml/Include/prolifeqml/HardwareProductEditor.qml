@@ -10,19 +10,14 @@ import prolifeSensorsSdl 1.0
 ViewBase {
 	id: root;
 	
-	// height: content.height;
-	
 	property var productLicensesModel: TreeItemModel{}
 	property TreeItemModel devicesModel: TreeItemModel{}
 	property alias deviceIndex: deviceCB.currentIndex;
 	property bool isNewDevice: switchNewSensor.checked;
 	property int productIndex: -1;
 	property OrderedProduct productItem: model ? model : null;
-	
-	Component.onCompleted: {
-		console.log("HardwareProductEditor.qml onCompleted")
-	}
-	
+	property BaseModel orderProductsModel: BaseModel {}
+
 	function updateGui(){
 		let isNew = productItem.m_isNew;
 		if (isNew){
@@ -229,7 +224,6 @@ ViewBase {
 
 		GroupElementView {
 			width: parent.width;
-			visible: false
 			visible: switchNewSensor.checked;
 			
 			FilterableComboBoxElementView {
@@ -283,7 +277,34 @@ ViewBase {
 				visible: parent.visible && typesCB.currentIndex >= 0;
 				
 				onEditingFinished: {
+					if (acceptableInput){
+						macAddressInput.bottomComp = undefined
+						if (root.orderProductsModel){
+							for (let i = 0; i < root.orderProductsModel.count; i++){
+								let productItem = root.orderProductsModel.get(i).item
+								if (productItem.m_id !== root.productItem.m_id &&
+									productItem.m_categoryId === "Hardware" &&
+									productItem.m_macAddress === text){
+									macAddressInput.bottomComp = macAddressErrorComp
+									break
+								}
+							}
+						}
+					}
+
 					root.doUpdateModel();
+				}
+				
+				Component {
+					id: macAddressErrorComp;
+					
+					Text {
+						id: selectSensorText;
+						text: qsTr("MAC Address already exists");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeM;
+					}
 				}
 			}
 			
@@ -297,7 +318,32 @@ ViewBase {
 				visible: parent.visible && typesCB.currentIndex >= 0;
 				
 				onEditingFinished: {
+					serialNumberInput.bottomComp = undefined
+					if (root.orderProductsModel){
+						for (let i = 0; i < root.orderProductsModel.count; i++){
+							let productItem = root.orderProductsModel.get(i).item
+							if (productItem.m_id !== root.productItem.m_id &&
+								productItem.m_categoryId === "Hardware" &&
+								productItem.m_serialNumber === text){
+								serialNumberInput.bottomComp = serialNumberErrorComp
+								break
+							}
+						}
+					}
+
 					root.doUpdateModel();
+				}
+				
+				Component {
+					id: serialNumberErrorComp;
+					
+					Text {
+						id: selectSensorText;
+						text: qsTr("Serial Number already exists");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeM;
+					}
 				}
 			}
 			

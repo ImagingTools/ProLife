@@ -54,7 +54,7 @@ Item {
 		}
 		
 		onStateChanged: {
-			loading.visible = state == "Loading";
+			loading.visible = state === "Loading";
 		}
 	}
 	
@@ -78,7 +78,7 @@ Item {
 		}
 		
 		onStateChanged: {
-			loading.visible = state == "Loading";
+			loading.visible = state === "Loading";
 		}
 	}
 	
@@ -92,6 +92,11 @@ Item {
 	GroupFilter {
 		id: excludesGroup;
 		m_logicalOperation: deviceCollection.filter.logicalOperation.AND;
+		Component.onCompleted: {
+			if (!hasFieldFilters()){
+				createFieldFilters()
+			}
+		}
 	}
 	
 	GroupFilter {
@@ -144,7 +149,6 @@ Item {
 	}
 	
 	function setHardware(){
-		console.log("setHardware")
 		segmentedElementView.softwareProductButton.checkable = false;
 		segmentedElementView.softwareProductButton.checked = false;
 		
@@ -175,8 +179,6 @@ Item {
 	}
 	
 	function updateProductModel(){
-
-
 		if (productCB.currentIndex >= 0){
 			if (!productEditor.blockUpdatingModel){
 				productEditor.clearProduct();
@@ -383,10 +385,6 @@ Item {
 		width: parent.width;
 		
 		visible: productCB.currentIndex >= 0;
-		
-		onLoaded: {
-			console.log("contentLoader onLoaded", item)
-		}
 	}
 	
 	function clearProduct(){
@@ -410,14 +408,16 @@ Item {
 		HardwareProductEditor {
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
+			orderProductsModel: productEditor.orderProductsModel;
 		}
 	}
-	
+
 	Component {
 		id: softwareProductComponent;
 		SoftwareProductEditor {
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
+			orderProductsModel: productEditor.orderProductsModel;
 		}
 	}
 	

@@ -14,6 +14,7 @@ ViewBase {
 	// height: content.height;
 	
 	property var productLicensesModel: TreeItemModel{}
+	property BaseModel orderProductsModel: BaseModel {}
 	
 	property TreeItemModel softwaresModel: TreeItemModel{}
 	
@@ -31,11 +32,7 @@ ViewBase {
 		expirationElementView.datePicker.readOnly = readOnly;
 		licenseCB.changeable = !readOnly
 	}
-	
-	Component.onCompleted: {
-		console.log("SoftwareProductEditor.qml onCompleted")
-	}
-	
+
 	function updateGui(){
 		if (productItem.m_isNew){
 			switchNewLicense.setChecked(true)
@@ -350,7 +347,32 @@ ViewBase {
 				visible: licenseCB.currentIndex >= 0;
 				
 				onEditingFinished: {
+					serialNumberInput.bottomComp = undefined
+					if (root.orderProductsModel){
+						for (let i = 0; i < root.orderProductsModel.count; i++){
+							let productItem = root.orderProductsModel.get(i).item
+							if (productItem.m_id !== root.productItem.m_id &&
+								productItem.m_categoryId === "Software" &&
+								productItem.m_serialNumber === text){
+								serialNumberInput.bottomComp = serialNumberErrorComp
+								break
+							}
+						}
+					}
+
 					root.doUpdateModel();
+				}
+				
+				Component {
+					id: serialNumberErrorComp;
+					
+					Text {
+						id: selectSensorText;
+						text: qsTr("Serial Number already exists");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeM;
+					}
 				}
 			}
 			
