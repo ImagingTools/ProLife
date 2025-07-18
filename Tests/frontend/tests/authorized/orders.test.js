@@ -113,7 +113,7 @@ test('Edit order test (add new hardware product)', async ({ page }) => {
   await page.keyboard.type('10942314');
   await checkScreenshot(page, 'orders_edit_h_1.png')
 
-  await clickAt(page, 700, 300); // First element click
+  await clickAt(page, 700, 255); // First element click
   await clickAt(page, 265, 115); // Edit command click
   await checkScreenshot(page, 'orders_edit_h_2.png')
 
@@ -174,7 +174,7 @@ test('Edit order test (add new hardware product)', async ({ page }) => {
 test('Edit order test (add new software product)', async ({ page }) => {
   await clickAt(page, 1190, 170); // 'Text filter clicked
   await page.keyboard.type('33333');
-  await clickAt(page, 700, 300); // First element click
+  await clickAt(page, 700, 255); // First element click
   await clickAt(page, 265, 115); // Edit command click
 
   await clickAt(page, 790, 180); // Hide order information group
