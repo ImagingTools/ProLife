@@ -346,6 +346,14 @@ Item {
 									}
 									
 									FieldFilter {
+										id: emptyLicenseIdFilter
+										m_fieldId: "LicenseId"
+										m_filterValueType: "String"
+										m_filterValue: ""
+										m_filterOperations: ["Not", "Equal"]
+									}
+									
+									FieldFilter {
 										id: excludeFilter
 										m_fieldId: "DocumentId"
 										m_filterValueType: "String"
@@ -376,7 +384,12 @@ Item {
 												return;
 											}
 											
-											softwareProductCollection.collectionFilter.clearAllFilters();
+											softwareProductCollection.collectionFilter.removeFilterByFieldId(productFilter.m_fieldId);
+											softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyHardwareFilter.m_fieldId);
+											softwareProductCollection.collectionFilter.removeFilterByFieldId(excludeFilter.m_fieldId);
+											softwareProductCollection.collectionFilter.removeFilterByFieldId(licenseFilter.m_fieldId);
+											softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyLicenseIdFilter.m_fieldId);
+											// softwareProductCollection.collectionFilter.clearAllFilters();
 											softwareProductCollection.collectionFilter.addFieldFilter(productFilter);
 											softwareProductCollection.collectionFilter.addFieldFilter(emptyHardwareFilter);
 											
@@ -394,6 +407,9 @@ Item {
 												softwareProductCollection.collectionFilter.addFieldFilter(licFilter);
 	
 											}
+											
+											// Exclude licenses with empty Article
+											softwareProductCollection.collectionFilter.addFieldFilter(emptyLicenseIdFilter);
 											
 											softwareProductCollection.collectionFilter.filterChanged()
 										}
