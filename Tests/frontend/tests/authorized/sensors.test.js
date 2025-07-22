@@ -282,6 +282,7 @@ test('Sensor editor test', async ({ page }) => {
 test('Bind command test', async ({ page }) => {
   await clickAt(page, 1000, 170); // Filter text input click
   await page.keyboard.type("8c:1f:64:50:19:0b");
+  await checkScreenshot(page, 'bind_sensors_0.png')
   await selectFirstSensor(page)
 
   await clickAt(page, 535, 115); // 'Bind' command click
