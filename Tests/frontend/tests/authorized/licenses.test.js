@@ -11,25 +11,25 @@ test('Start software page', async ({ page }) => {
 });
 
 test('Filters test', async ({ page }) => {
-  await clickAt(page, 215, 170); // License filter CB click
+  await clickAt(page, 200, 165); // License filter CB click
   await checkScreenshot(page, 'software_filters_1.png')
 
-  await clickAt(page, 205, 240); // Select only paired from cb
+  await clickAt(page, 300, 200); // Select only paired from cb
   await checkScreenshot(page, 'software_filters_2.png')
 
-  await clickAt(page, 215, 170); // License filter CB click
-  await clickAt(page, 205, 270); // Select only not paired from cb
+  await clickAt(page, 200, 165); // License filter CB click
+  await clickAt(page, 300, 230); // Select only not paired from cb
   await checkScreenshot(page, 'software_filters_3.png')
 
-  await clickAt(page, 215, 170); // License filter CB click
-  await clickAt(page, 205, 300); // Select file created from cb
+  await clickAt(page, 200, 165); // License filter CB click
+  await clickAt(page, 300, 260); // Select file created from cb
   await checkScreenshot(page, 'software_filters_4.png')
 
-  await clickAt(page, 540, 175); // Account filter CB click
+  await clickAt(page, 520, 165); // Account filter CB click
   await checkScreenshot(page, 'software_filters_5.png')
-  await clickAt(page, 540, 175); // Account filter CB click
+  await clickAt(page, 520, 200); // Account filter CB click
 
-  await clickAt(page, 1010, 175); // Date filter click
+  await clickAt(page, 130, 165); // Date filter click
   await checkScreenshot(page, 'software_filters_6.png')
 });
 

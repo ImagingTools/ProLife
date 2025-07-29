@@ -11,7 +11,7 @@ test('Start orders page', async ({ page }) => {
 });
 
 test('Orders filters test', async ({ page }) => {
-  await clickAt(page, 210, 175); // Account filter CB click
+  await clickAt(page, 230, 165); // Customers filter click
   await checkScreenshot(page, 'orders_account_filter.png')
 });
 

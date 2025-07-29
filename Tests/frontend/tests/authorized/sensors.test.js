@@ -36,40 +36,39 @@ test('CreateLicenseFile command test', async ({ page }) => {
 });
 
 test('Sensors filters test', async ({ page }) => {
-  await page.setViewportSize({ width: 1500, height: 800 });
-
   await clickAt(page, 1075, 170); // 'Text Filter' click
   await page.keyboard.type("ias");
   await checkScreenshot(page, 'sensors_text_filter.png')
 
-  await clickAt(page, 915, 170); // 'Date Filter' click
+  await clickAt(page, 130, 170); // 'Date Filter' click
   await checkScreenshot(page, 'sensors_date_filter_dialog.png')
 
-  await clickAt(page, 873, 392); // Last year click
+  await clickAt(page, 215, 392); // Last year click
   await checkScreenshot(page, 'sensors_date_filter.png')
 
-  await clickAt(page, 800, 170); // Only new sensors checkbox click
+  await clickAt(page, 525, 165); // Sensor Status Filter click
+  await clickAt(page, 600, 200); // None status selected
   await checkScreenshot(page, 'sensors_new_sensors_filter.png')
 
-  await clickAt(page, 190, 170); // Show all sensors combobox click
+  await clickAt(page, 280, 165); // License filter click
   await checkScreenshot(page, 'sensors_licenses_filter.png')
 
-  await clickAt(page, 190, 235); // Sensor without licenses click
+  await clickAt(page, 360, 200); // Sensor without licenses click
   await checkScreenshot(page, 'sensors_without_licenses_filter.png')
 
-  await clickAt(page, 190, 170); // Show all sensors combobox click
-  await clickAt(page, 190, 265); // Sensor with licenses click
+  await clickAt(page, 280, 165); // License filter click
+  await clickAt(page, 370, 230); // Sensor with licenses click
   await checkScreenshot(page, 'sensors_with_licenses_filter.png')
 
-  await clickAt(page, 1242, 170); // Clear text filter
-  await clickAt(page, 800, 170); // Only new sensors clear filter
-  await clickAt(page, 923, 170); // Date clear filter
+  await clickAt(page, 1140, 165); // Clear text filter
+  await clickAt(page, 660, 165); // Clear Status filter
+  await clickAt(page, 215, 170); // Date clear filter
   await checkScreenshot(page, 'sensors_clear_filters.png')
 
-  await clickAt(page, 480, 170); // Account filter combobox click
+  await clickAt(page, 450, 170); // Customers filter click
   await checkScreenshot(page, 'sensors_account_filter_dialog.png')
 
-  await clickAt(page, 480, 510); // Quiss account select
+  await clickAt(page, 525, 535); // Quiss account select
   await checkScreenshot(page, 'sensors_quiss_account_filter.png')
 });
 
