@@ -15,7 +15,6 @@ RemoteCollectionView {
 	
 	collectionId: "SoftwareProducts";
 	
-	filterMenu.decorator: licenseCollectionFilterComp;
 	documentCollectionFilter: null
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_orderUuid,
@@ -38,6 +37,8 @@ RemoteCollectionView {
 	
 	Component.onCompleted: {
 		table.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC");
+		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
+		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 		registerDocumentInfo();
 	}
 	
@@ -135,147 +136,62 @@ RemoteCollectionView {
 	}
 	
 	Component {
-		id: licenseCollectionFilterComp;
-		
-		DecoratorBase {
-			id: mainItem;
-			
-			width: baseElement ? baseElement.width: 0;
-			height: 40;
-			
-			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;
-			
+		id: licenseDelegateFilterComp
+		FieldFilterDelegate {
+			id: licenseDelegateFilter
+			name: qsTr("License Status")
+
 			Component.onCompleted: {
-				checkWidth();
+				createAndAddOption("Paired", qsTr("Show only paired licenses"), "", true)
+				createAndAddOption("NotPaired", qsTr("Show only not paired licenses"), "", true)
+				createAndAddOption("InUse", qsTr("Show the licenses for which the file was created"), "", true)
+				
+				setFieldFilterForOption("Paired", pairedFilter)
+				setFieldFilterForOption("NotPaired", unpairedFilter)
+				setFieldFilterForOption("InUse", inUseFilter)
 			}
 			
-			LocalizationEvent {
-				onLocalizationChanged: {
-					mainItem.updateModel();
-				}
+			FieldFilter {
+				id: pairedFilter
+				m_fieldId: "IsPaired"
+				m_filterValue: "true"
+				m_filterValueType: "Bool"
+				m_filterOperations: ["Equal"]
 			}
 			
-			onWidthChanged: {
-				checkWidth();
+			FieldFilter {
+				id: unpairedFilter
+				m_fieldId: "IsPaired"
+				m_filterValue: "false"
+				m_filterValueType: "Bool"
+				m_filterOperations: ["Equal"]
 			}
 			
-			function checkWidth(){
-				if (width - filtermenu.width <= content.width + 2 * content.spacing){
-					content.visible = false;
-				}
-				else{
-					content.visible = true;
-				}
+			FieldFilter {
+				id: inUseFilter
+				m_fieldId: "InUse"
+				m_filterValue: "true"
+				m_filterValueType: "Bool"
+				m_filterOperations: ["Equal"]
 			}
+		}
+	}
+
+	Component {
+		id: customersDelegateFilterComp
+		FieldFilterDelegate {
+			id: customersDelegateFilter
+			name: qsTr("Customers")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: "CustomerId"
 			
-			function updateModel(){
-				modelCategogy.clear();
+			OptionsListAdapter {
+				id: optionsListAdapter
+				collectionModel: CachedAccountCollection.collectionModel
 				
-				let index = modelCategogy.insertNewItem();
-				modelCategogy.setData("id", "All", index);
-				modelCategogy.setData("name", qsTr("Show all licenses"), index);
-				
-				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("id", "Paired", index);
-				modelCategogy.setData("name", qsTr("Show only paired licenses"), index);
-				
-				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("id", "NotPaired", index);
-				modelCategogy.setData("name", qsTr("Show only not paired licenses"), index);
-				
-				index = modelCategogy.insertNewItem();
-				modelCategogy.setData("id", "InUse", index);
-				modelCategogy.setData("name", qsTr("Show the licenses for which the file was created"), index);
-				
-				modelCategogy.refresh();
-				
-				licenseComboBox.model = modelCategogy;
-			}
-			
-			TreeItemModel {
-				id: modelCategogy;
-				
-				Component.onCompleted: {
-					mainItem.updateModel();
+				onCollectionModelChanged: {
+					customersDelegateFilter.setOptionsList(m_options)
 				}
-			}
-			
-			Row {
-				id: content;
-				
-				anchors.left: parent.left;
-				anchors.verticalCenter: parent.verticalCenter;
-				
-				spacing: Style.marginM;
-				
-				FieldFilter {
-					id: pairedFilter
-					m_fieldId: "IsPaired"
-					m_filterValue: "true"
-					m_filterValueType: "Bool"
-					m_filterOperations: ["Equal"]
-				}
-				
-				FieldFilter {
-					id: unpairedFilter
-					m_fieldId: "IsPaired"
-					m_filterValue: "false"
-					m_filterValueType: "Bool"
-					m_filterOperations: ["Equal"]
-				}
-				
-				FieldFilter {
-					id: inUseFilter
-					m_fieldId: "InUse"
-					m_filterValue: "true"
-					m_filterValueType: "Bool"
-					m_filterOperations: ["Equal"]
-				}
-				
-				ComboBox {
-					id: licenseComboBox;
-					
-					width: 300;
-					height: filtermenu.height;
-					
-					currentIndex: 0;
-					
-					radius: 3;
-					
-					onCurrentIndexChanged: {
-						mainItem.complexFilter.removeFieldFilter(pairedFilter)
-						mainItem.complexFilter.removeFieldFilter(unpairedFilter)
-						mainItem.complexFilter.removeFieldFilter(inUseFilter)
-						
-						if (licenseComboBox.currentIndex == 1){
-							mainItem.complexFilter.addFieldFilter(pairedFilter)
-						}
-						else if (licenseComboBox.currentIndex == 2){
-							mainItem.complexFilter.addFieldFilter(unpairedFilter)
-						}
-						else if (licenseComboBox.currentIndex == 3){
-							mainItem.complexFilter.addFieldFilter(inUseFilter)
-						}
-						
-						mainItem.complexFilter.filterChanged()
-					}
-				}
-				
-				AccountFilterComboBox {
-					id: accountComboBox;
-					width: 300;
-					height: filtermenu.height;
-					complexFilter: mainItem.complexFilter;
-				}
-			}
-			
-			FilterPanelDecorator {
-				id: filtermenu
-				anchors.verticalCenter: parent.verticalCenter;
-				anchors.right: parent.right;
-				baseElement: mainItem.baseElement;
-				width: contentWidth;
-				complexFilter: mainItem.complexFilter;
 			}
 		}
 	}

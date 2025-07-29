@@ -16,7 +16,6 @@ RemoteCollectionView {
 	
 	collectionId: "Orders";
 	
-	filterMenu.decorator: orderCollectionFilterComp;
 	documentCollectionFilter: null
 	
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
@@ -66,51 +65,24 @@ RemoteCollectionView {
 	
 	Component.onCompleted: {
 		table.setSortingInfo(OrderItemTypeMetaInfo.s_timeStamp, "DESC");
+		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 	}
-	
+
 	Component {
-		id: orderCollectionFilterComp;
-		
-		DecoratorBase {
-			id: mainItem;
+		id: customersDelegateFilterComp
+		FieldFilterDelegate {
+			id: customersDelegateFilter
+			name: qsTr("Customers")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: "CustomerId"
 			
-			width: baseElement ? baseElement.width: 0;
-			height: 40;
-			
-			property CollectionFilter complexFilter: baseElement ? baseElement.complexFilter : null;
-
-			onWidthChanged: {
-				checkWidth();
-			}
-			
-			function checkWidth(){
-				content.visible = width - filtermenu.width > content.width + 2 * content.spacing
-			}
-
-			Row {
-				id: content;
+			OptionsListAdapter {
+				id: optionsListAdapter
+				collectionModel: CachedAccountCollection.collectionModel
 				
-				anchors.left: parent.left;
-				anchors.verticalCenter: parent.verticalCenter;
-				
-				spacing: Style.marginM;
-				
-				AccountFilterComboBox {
-					id: accountComboBox;
-					width: 300;
-					height: filtermenu.height;
-					complexFilter: mainItem.complexFilter;
+				onCollectionModelChanged: {
+					customersDelegateFilter.setOptionsList(m_options)
 				}
-			}
-			
-			FilterPanelDecorator {
-				id: filtermenu
-				
-				anchors.verticalCenter: parent.verticalCenter;
-				anchors.right: parent.right;
-				
-				baseElement: mainItem.baseElement;
-				complexFilter: mainItem.complexFilter;
 			}
 		}
 	}
