@@ -46,19 +46,10 @@ get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
 set(AUX_INCLUDE_DIR "${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/GeneratedFiles")
 
 include_directories("${AUX_INCLUDE_DIR}/../")
+include_directories("${AUX_INCLUDE_DIR}/")
 
 # Sdl
 include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")
-# initialize SDL
-if (NOT IMT_DevAll_BUILD)
-	get_filename_component(CACHE_BASE_DIR_PATH "${IMTCOREDIR}/AuxInclude/${TARGETNAME}" ABSOLUTE)
-	ImtCoreAddSdlHeaderIncludePath("${CACHE_BASE_DIR_PATH}")
-	ImtCoreAddSdlModulesPath("${CACHE_BASE_DIR_PATH}")
-	ImtCoreAddSdlHeaderIncludePath("${AUX_INCLUDE_DIR}/..")
-		
-	message("PROLIFE CACHE_BASE_DIR_PATH ${CACHE_BASE_DIR_PATH}")
-	message("PROLIFE AUX_INCLUDE_DIR ${AUX_INCLUDE_DIR}/..")
-endif()
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
 
 # Include
