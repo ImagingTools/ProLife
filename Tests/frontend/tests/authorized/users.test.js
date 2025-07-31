@@ -12,33 +12,33 @@ test('Start users page', async ({ page }) => {
 });
 
 test('Users sort tests', async ({ page }) => {
-  await clickAt(page, 1084, 128); // Last Connection column click
+  await clickAt(page, 1084, 180); // Last Connection column click
   await checkScreenshot(page, 'user_last_connection_asc.png')
 
-  await clickAt(page, 1084, 128); // Last Connection column click
+  await clickAt(page, 1084, 180); // Last Connection column click
   await checkScreenshot(page, 'user_last_connection_desc.png')
 
-  await clickAt(page, 462, 128); // Email column click
+  await clickAt(page, 462, 180); // Email column click
   await checkScreenshot(page, 'user_email_asc.png')
 
-  await clickAt(page, 462, 128); // Email column click
+  await clickAt(page, 462, 180); // Email column click
   await checkScreenshot(page, 'user_email_desc.png')
 
-  await clickAt(page, 320, 128); // Name column click
+  await clickAt(page, 320, 180); // Name column click
   await checkScreenshot(page, 'user_name_asc.png')
 
-  await clickAt(page, 320, 128); // Name column click
+  await clickAt(page, 320, 180); // Name column click
   await checkScreenshot(page, 'user_name_desc.png')
 });
 
 test('Users revision command test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
   await clickAt(page, 1130, 85); // Revision command click
   await checkScreenshot(page, 'users_revision_dialog.png')
 });
 
 test('Users new command test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
   await clickAt(page, 330, 85); // New command click
   await checkScreenshot(page, 'users_new_editor.png')
 
@@ -83,7 +83,7 @@ test('Users new command test', async ({ page }) => {
 });
 
 test('Users remove command GUI test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
 
   await clickAt(page, 525, 85); // Remove command click
   await checkScreenshot(page, 'users_remove_dialog.png')
@@ -93,7 +93,7 @@ test('Users remove command GUI test', async ({ page }) => {
 });
 
 test('Users edit command GUI test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
 
   await clickAt(page, 425, 85); // Edit command click
   await checkScreenshot(page, 'user_editor_1.png')

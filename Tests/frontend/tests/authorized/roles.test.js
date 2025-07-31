@@ -12,22 +12,22 @@ test('Start roles page', async ({ page }) => {
 });
 
 test('Roles sort tests', async ({ page }) => {
-  await clickAt(page, 390, 130); // Role Name column click
+  await clickAt(page, 390, 180); // Role Name column click
   await checkScreenshot(page, 'role_name_asc.png')
 
-  await clickAt(page, 390, 130); // Role Name column click
+  await clickAt(page, 390, 180); // Role Name column click
   await checkScreenshot(page, 'role_name_desc.png')
 
-  await clickAt(page, 700, 130); // Role ID column click
+  await clickAt(page, 700, 180); // Role ID column click
   await checkScreenshot(page, 'role_id_asc.png')
 
-  await clickAt(page, 700, 130); // Role ID column click
+  await clickAt(page, 700, 180); // Role ID column click
   await checkScreenshot(page, 'role_id_desc.png')
 
-  await clickAt(page, 1000, 130); // Role Description column click
+  await clickAt(page, 1000, 180); // Role Description column click
   await checkScreenshot(page, 'role_description_asc.png')
 
-  await clickAt(page, 1000, 130); // Role Description column click
+  await clickAt(page, 1000, 180); // Role Description column click
   await checkScreenshot(page, 'role_description_desc.png')
 
   await clickAt(page, 787, 786); // Pagination 50 click
@@ -35,24 +35,21 @@ test('Roles sort tests', async ({ page }) => {
 });
 
 test('Roles filter tests', async ({ page }) => {
-  await clickAt(page, 1173, 130); // Filter button click (Enable filter)
-  await checkScreenshot(page, 'roles_filters.png')
-
   await clickAt(page, 1000, 135); // Text filter click
   await page.keyboard.type('admin');
   await checkScreenshot(page, 'roles_text_filter.png')
 
-  await clickAt(page, 617, 135); // Document state filter click
+  await clickAt(page, 420, 135); // Document state filter click
   await checkScreenshot(page, 'roles_filters_document_state.png')
 
   await clickAt(page, 45, 25); // Remove focus
 
-  await clickAt(page, 800, 135); // Date filter click
+  await clickAt(page, 300, 135); // Date filter click
   await checkScreenshot(page, 'roles_filters_date.png')
 });
 
 test('Roles remove command GUI test', async ({ page }) => {
-  await clickAt(page, 672, 212); // Select first element
+  await clickAt(page, 672, 215); // Select first element
   await clickAt(page, 525, 85); // Remove command click
   await checkScreenshot(page, 'roles_remove_dialog.png')
 
@@ -102,7 +99,7 @@ test('Roles New command GUI test', async ({ page }) => {
 });
 
 test('Roles Edit command GUI test', async ({ page }) => {
-  await clickAt(page, 672, 212); // Select first element
+  await clickAt(page, 672, 215); // Select first element
   await clickAt(page, 425, 85); // Edit command click
   await checkScreenshot(page, 'roles_editor_1.png')
 

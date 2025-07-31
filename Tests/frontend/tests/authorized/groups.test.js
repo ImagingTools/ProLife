@@ -12,27 +12,27 @@ test('Start groups page', async ({ page }) => {
 });
 
 test('Groups sort tests', async ({ page }) => {
-  await clickAt(page, 914, 128); // Description column click
+  await clickAt(page, 914, 180); // Description column click
   await checkScreenshot(page, 'groups_description_asc.png')
 
-  await clickAt(page, 914, 128); // Description column click
+  await clickAt(page, 914, 180); // Description column click
   await checkScreenshot(page, 'groups_description_desc.png')
 
-  await clickAt(page, 440, 128); // Name column click
+  await clickAt(page, 440, 180); // Name column click
   await checkScreenshot(page, 'groups_name_asc.png')
 
-  await clickAt(page, 440, 128); // Name column click
+  await clickAt(page, 440, 180); // Name column click
   await checkScreenshot(page, 'groups_name_desc.png')
 });
 
 test('Groups revision command test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
   await clickAt(page, 1130, 85); // Revision command click
   await checkScreenshot(page, 'groups_revision_dialog.png')
 });
 
 test('Groups new command test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
   await clickAt(page, 330, 85); // New command click
   await checkScreenshot(page, 'groups_new_editor.png')
 
@@ -87,7 +87,7 @@ test('Groups new command test', async ({ page }) => {
 });
 
 test('Groups remove command GUI test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
 
   await clickAt(page, 525, 85); // Remove command click
   await checkScreenshot(page, 'groups_remove_dialog.png')
@@ -97,7 +97,7 @@ test('Groups remove command GUI test', async ({ page }) => {
 });
 
 test('Groups edit command GUI test', async ({ page }) => {
-  await clickAt(page, 490, 165); // Select first element
+  await clickAt(page, 490, 215); // Select first element
 
   await clickAt(page, 425, 85); // Edit command click
   await checkScreenshot(page, 'group_editor_1.png')
@@ -115,18 +115,15 @@ test('Groups edit command GUI test', async ({ page }) => {
 });
 
 test('Groups filter tests', async ({ page }) => {
-  await clickAt(page, 1173, 130); // Filter button click (Enable filter)
-  await checkScreenshot(page, 'groups_filters.png')
-
   await clickAt(page, 1000, 135); // Text filter click
   await page.keyboard.type('ias');
   await checkScreenshot(page, 'groups_text_filter.png')
 
-  await clickAt(page, 617, 135); // Document state filter click
+  await clickAt(page, 420, 135); // Document state filter click
   await checkScreenshot(page, 'groups_filters_document_state.png')
 
   await clickAt(page, 45, 25); // Remove focus
 
-  await clickAt(page, 800, 135); // Date filter click
+  await clickAt(page, 300, 135); // Date filter click
   await checkScreenshot(page, 'groups_filters_date.png')
 });
