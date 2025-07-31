@@ -8,6 +8,7 @@ import imtdocgui 1.0
 import imtcontrols 1.0
 import prolifeSensorsSdl 1.0
 import imtguigql 1.0
+import imtlicgui 1.0
 import Qt.labs.platform 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
@@ -575,23 +576,7 @@ DocumentCollectionViewDelegate {
 				Item {
 					width: dialog.width;
 					height: dialog.height - 100;
-					
-					FieldFilter {
-						id: licenseFilter
-						m_fieldId: "SoftwareCount"
-						m_filterValue: '0';
-						m_filterValueType: "Integer"
-						m_filterOperations: ["Equal"]
-					}
-					
-					FieldFilter {
-						id: productFilter
-						m_fieldId: "DeviceType"
-						m_filterValue: dialog.productUuid;
-						m_filterValueType: "String"
-						m_filterOperations: ["Equal"]
-					}
-					
+
 					FieldFilter {
 						id: excludeFilter
 						m_fieldId: "DocumentId"
@@ -604,19 +589,74 @@ DocumentCollectionViewDelegate {
 						target: dialog;
 						
 						function onStarted(){
-							deviceCollectionView.collectionFilter.addFieldFilter(licenseFilter)
-							deviceCollectionView.collectionFilter.addFieldFilter(productFilter)
 							deviceCollectionView.collectionFilter.addFieldFilter(excludeFilter)
+						}
+					}
+					
+					Component {
+						id: licensesDelegateFilterComp
+						
+						LicenseFilterDelegate {
+							readOnly: true
+							Component.onCompleted: {
+								setSelectedIndex(0)
+							}
+						}
+					}
+					
+					Component {
+						id: customersDelegateFilterComp
+						
+						CustomerFilterDelegate {
+						}
+					}
+					
+					Component {
+						id: productsDelegateFilterComp
+						FieldFilterDelegate {
+							id: productsDelegateFilter
+							name: qsTr("Products")
+							defaultFieldFilter.m_fieldId: "DeviceType"
+							readOnly: true
+							
+							property string productUuid: dialog.productUuid
+							onProductUuidChanged: {
+								if (productsDelegateFilter.productUuid !== ""){
+									optionsListAdapter.updateSelectedProduct()
+								}
+							}
+							
+							OptionsListAdapter {
+								id: optionsListAdapter
+								collectionModel: CachedProductCollection.hardwareProductsModel
+								onCollectionModelChanged: {
+									productsDelegateFilter.setOptionsList(m_options)
+									
+									if (productsDelegateFilter.productUuid !== ""){
+										updateSelectedProduct()
+									}
+								}
+								
+								function updateSelectedProduct(){
+									for (let i = 0; i < m_options.count; i++){
+										let optionId = productsDelegateFilter.getOptionId(i)
+										if (productsDelegateFilter.productUuid === optionId){
+											productsDelegateFilter.setSelectedIndex(i)
+											break
+										}
+									}
+								}
+							}
 						}
 					}
 					
 					DeviceCollectionView {
 						id: deviceCollectionView;
-						commandsControllerComp: null;
-						visibleMetaInfo: false;
-						table.isMultiSelect: false;
-						commandsDelegateComp: null;
-						filterMenu.decorator: filterComp;
+						commandsControllerComp: null
+						visibleMetaInfo: false
+						table.isMultiSelect: false
+						commandsDelegateComp: null
+						canResetFilters: false
 						
 						onSelectionChanged: {
 							if (selectedIds.length > 0){
@@ -626,12 +666,11 @@ DocumentCollectionViewDelegate {
 							dialog.setButtonEnabled(Enums.ok, selectedIds.length > 0)
 						}
 						
-						Component {
-							id: filterComp;
-							DeviceCollectionFilterDecorator {
-								licenseCb.currentIndex: 1;
-								licenseCb.changeable: false;
-							}
+						function registerFilters(){
+							registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
+							registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
+							registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+							
 						}
 					}
 				}

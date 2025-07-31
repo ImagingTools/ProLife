@@ -287,41 +287,45 @@ test('Bind command test', async ({ page }) => {
   await clickAt(page, 535, 115); // 'Bind' command click
   await checkScreenshot(page, 'bind_sensors_1.png')
 
-  await clickAt(page, 480, 165); // Product combobox click
+  await clickAt(page, 1000, 190); // Product combobox click
   await checkScreenshot(page, 'bind_sensors_2.png')
 
-  await clickAt(page, 480, 200); // Select first element
+  await clickAt(page, 1000, 225); // Select first element
   await checkScreenshot(page, 'bind_sensors_3.png')
 
-  await clickAt(page, 125, 335); // Select first license
+  await clickAt(page, 1075, 270); // Bind new licenses click
   await checkScreenshot(page, 'bind_sensors_4.png')
 
-  await clickAt(page, 125, 370); // Select second license
+  await clickAt(page, 235, 267); // Select first license
   await checkScreenshot(page, 'bind_sensors_5.png')
 
-  await clickAt(page, 125, 410); // Deselect second license
+  await clickAt(page, 235, 300); // Select second license
   await checkScreenshot(page, 'bind_sensors_6.png')
 
-  await clickAt(page, 695, 430); // Bind first lic
+  await clickAt(page, 235, 335); // Select third license
   await checkScreenshot(page, 'bind_sensors_7.png')
 
-  await clickAt(page, 960, 335); // Select binded license
-  await clickAt(page, 695, 480); // Unbind license
+  await clickAt(page, 235, 335); // Deselect third license
   await checkScreenshot(page, 'bind_sensors_8.png')
 
-  await clickAt(page, 125, 335); // Select first license
-  await clickAt(page, 695, 430);// Bind
+  await clickAt(page, 1070, 675); // Bind button click
   await checkScreenshot(page, 'bind_sensors_9.png')
 
-  await clickAt(page, 1225, 730); // Apply button click
+  await clickAt(page, 700, 365); // Select first license
   await checkScreenshot(page, 'bind_sensors_10.png')
+
+  await clickAt(page, 945, 270); // Unbind button click
+  await checkScreenshot(page, 'bind_sensors_11.png')
+
+  await clickAt(page, 1080, 680); // Apply button click
+  await checkScreenshot(page, 'bind_sensors_12.png')
 
   await clickAt(page, 695, 400); // Project text input click
   await page.keyboard.type('Test');
-  await checkScreenshot(page, 'bind_sensors_11.png')
+  await checkScreenshot(page, 'bind_sensors_13.png')
 
   await clickAt(page, 730, 480); // Ok button click
-  await checkScreenshot(page, 'bind_sensors_12.png')
+  await checkScreenshot(page, 'bind_sensors_14.png')
 });
 
 test('Transfer licenses command test', async ({ page }) => {

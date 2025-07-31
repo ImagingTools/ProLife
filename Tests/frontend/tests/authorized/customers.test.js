@@ -20,15 +20,15 @@ test('Customers filters GUI test', async ({ page }) => {
   await page.keyboard.type('ias');
   await checkScreenshot(page, 'customers_text_filter.png')
 
-  await clickAt(page, 800, 170); // Document state filter click
+  await clickAt(page, 250, 165); // Document state filter click
   await checkScreenshot(page, 'customers_document_state_filter.png')
 
-  await clickAt(page, 800, 230); // Select disabled documents
+  await clickAt(page, 290, 230); // Select disabled documents
   await checkScreenshot(page, 'customers_document_disabled_filter.png')
 
   await removeFocus(page);
 
-  await clickAt(page, 1000, 170); // Date filter click
+  await clickAt(page, 130, 165); // Date filter click
   await checkScreenshot(page, 'customers_date_filter.png')
 
   await clickAt(page, 1383, 207); // Hide filter button click

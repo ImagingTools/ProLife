@@ -27,7 +27,10 @@ RemoteCollectionView {
 
 	Component.onCompleted: {
 		table.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
-		
+		registerFilters()
+	}
+	
+	function registerFilters(){
 		registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 		registerFieldFilterDelegate("SensorStatus", statusDelegateFilterComp)
@@ -58,52 +61,15 @@ RemoteCollectionView {
 
 	Component {
 		id: licensesDelegateFilterComp
-		FieldFilterDelegate {
-			id: licensesDelegateFilter
-			name: qsTr("License")
-			
-			Component.onCompleted: {
-				createAndAddOption("WithoutLicense", qsTr("Sensors without a license"), "", true)
-				createAndAddOption("WithLicense", qsTr("Sensors with license"), "", true)
-				
-				setFieldFilterForOption("WithoutLicense", withoutLicenseFilter)
-				setFieldFilterForOption("WithLicense", withLicenseFilter)
-			}
-			
-			FieldFilter {
-				id: withoutLicenseFilter
-				m_fieldId: "SoftwareCount"
-				m_filterValue: "0"
-				m_filterValueType: "Integer"
-				m_filterOperations: ["Equal"]
-			}
-			
-			FieldFilter {
-				id: withLicenseFilter
-				m_fieldId: "SoftwareCount"
-				m_filterValue: "0"
-				m_filterValueType: "Integer"
-				m_filterOperations: ["Greater"]
-			}
+		
+		LicenseFilterDelegate {
 		}
 	}
 	
 	Component {
 		id: customersDelegateFilterComp
-		FieldFilterDelegate {
-			id: customersDelegateFilter
-			name: qsTr("Customers")
-			visibleItemCount: 15
-			defaultFieldFilter.m_fieldId: "CustomerId"
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				collectionModel: CachedAccountCollection.collectionModel
-				
-				onCollectionModelChanged: {
-					customersDelegateFilter.setOptionsList(m_options)
-				}
-			}
+		
+		CustomerFilterDelegate {
 		}
 	}
 

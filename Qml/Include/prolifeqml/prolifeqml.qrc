@@ -38,5 +38,7 @@
 	<file alias="ProLife/AccountCollectionViewCommandsDelegate.qml">AccountCollectionViewCommandsDelegate.qml</file>
 	<file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
 	<file alias="ProLife/AccountFilterComboBox.qml">AccountFilterComboBox.qml</file>
+	<file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
+	<file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
     </qresource>
 </RCC>

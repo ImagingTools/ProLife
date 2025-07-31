@@ -36,10 +36,14 @@ RemoteCollectionView {
 	}
 	
 	Component.onCompleted: {
-		table.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC");
+		table.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")
+		registerDocumentInfo()
+		registerFilters()
+	}
+	
+	function registerFilters(){
 		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
-		registerDocumentInfo();
 	}
 	
 	function registerDocumentInfo(){

@@ -12,3 +12,5 @@ DeviceCollectionFilterDecorator 1.0 DeviceCollectionFilterDecorator.qml
 AccountEditor 1.0 AccountEditor.qml
 AccountCollectionView 1.0 AccountCollectionView.qml
 AccountFilterComboBox 1.0 AccountFilterComboBox.qml
+LicenseFilterDelegate 1.0 LicenseFilterDelegate.qml
+CustomerFilterDelegate 1.0 CustomerFilterDelegate.qml
