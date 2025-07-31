@@ -290,7 +290,7 @@ test('Bind command test', async ({ page }) => {
   await clickAt(page, 1000, 190); // Product combobox click
   await checkScreenshot(page, 'bind_sensors_2.png')
 
-  await clickAt(page, 1000, 225); // Select first element
+  await clickAt(page, 1000, 255); // Select RTV Software
   await checkScreenshot(page, 'bind_sensors_3.png')
 
   await clickAt(page, 1075, 270); // Bind new licenses click
