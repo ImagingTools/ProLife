@@ -85003,6 +85003,529 @@
 					"name": "Orders",
 					"item": [
 						{
+							"name": "Changing Customer",
+							"item": [
+								{
+									"name": "Add order with new software",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"OrderAdd\": {\r",
+													"            \"id\": \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\"\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation OrderAdd {OrderAdd(input: {id: \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\", item: {__typename:\"OrderData\",id:\"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\",name:\"\",description:\"\",orderId:\"98833222\",purchaseId:\"98833222\",customerId:\"7a550af6-3998-4b26-8602-83289c45eb60\",orderStatus:\"Created\",orderProducts:[{id:\"813b0c82-7208-44e3-b03f-111111111111\",productUuid:\"d9afd338-7fe1-4989-9908-f35859937b9d\",licenseUuid:\"c34f2966-7179-4ea8-a5de-336024cb0312\",categoryId:\"Software\",licenseId:\"12.10185\",productName:\"RTV Software\",licenseName:\"RTV AddOn - Reference\",serialNumber:\"12345654321\",inUse:false,isNew:true,expiration:\"\",macAddress:\"\"}]}, typeId: \"Order\", name: \"98833222\", description: \"\"}) {addedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Check software from List",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"SoftwareProductsList\": {\r",
+													"            \"notification\": {\r",
+													"                \"pagesCount\": 1,\r",
+													"                \"totalCount\": 1\r",
+													"            },\r",
+													"            \"items\": [\r",
+													"                {\r",
+													"                    \"id\": \"813b0c82-7208-44e3-b03f-111111111111\",\r",
+													"                    \"typeId\": \"SoftwareProduct\",\r",
+													"                    \"name\": \"RTV Software (12345654321)\",\r",
+													"                    \"description\": \"\",\r",
+													"                    \"deliveryId\": \"98833222\",\r",
+													"                    \"purchaseId\": \"98833222\",\r",
+													"                    \"customerId\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
+													"                    \"customerName\": \"AC Tools\",\r",
+													"                    \"orderUuid\": \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\",\r",
+													"                    \"macAddress\": \"\",\r",
+													"                    \"productId\": \"RTVSoftware\",\r",
+													"                    \"productName\": \"RTV Software\",\r",
+													"                    \"productUuid\": \"d9afd338-7fe1-4989-9908-f35859937b9d\",\r",
+													"                    \"serialNumber\": \"12345654321\",\r",
+													"                    \"expiration\": \"\",\r",
+													"                    \"isPaired\": false,\r",
+													"                    \"inUse\": false,\r",
+													"                    \"hardwareId\": \"\",\r",
+													"                    \"licenseName\": \"RTV AddOn - Reference\",\r",
+													"                    \"licenseId\": \"12.10185\",\r",
+													"                    \"licenseUuid\": \"c34f2966-7179-4ea8-a5de-336024cb0312\",\r",
+													"                    \"project\": \"\",\r",
+													"                    \"status\": \"NotPaired\",\r",
+													"                    \"added\": \"07.08.2025 13:37:59\",\r",
+													"                    \"timeStamp\": \"07.08.2025 13:37:59\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {__typename:\"ComplexCollectionFilter\",sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],textFilter:{__typename:\"TextFilter\",text:\"12345654321\",fieldIds:[\"status\", \"productName\", \"licenseId\", \"licenseName\", \"serialNumber\", \"deliveryId\", \"purchaseId\", \"project\", \"customerName\", \"macAddress\"]},distinctFields:[]}, documentFilterModel: null}}) {items {id name typeId status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update customer for order",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"OrderUpdate\": {\r",
+													"            \"id\": \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\"\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation OrderUpdate {OrderUpdate(input: {id: \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\", item: {__typename:\"OrderData\",id:\"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\",name:\"98833222\",description:\"\",orderId:\"98833222\",purchaseId:\"98833222\",customerId:\"90369409-0326-4a82-9686-850ce3f83389\",orderStatus:\"Created\",orderProducts:[{id:\"813b0c82-7208-44e3-b03f-111111111111\",productUuid:\"d9afd338-7fe1-4989-9908-f35859937b9d\",licenseUuid:\"12.10185\",categoryId:\"Software\",licenseId:\"\",productName:\"RTV Software\",licenseName:\"RTV AddOn - Reference\",serialNumber:\"12345654321\",inUse:false,isNew:false,expiration:\"\",macAddress:\"\"}]}, typeId: \"Order\", name: \"98833222\", description: \"\"}) {updatedNotification {id}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Check software from List (with new customer)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"SoftwareProductsList\": {\r",
+													"            \"notification\": {\r",
+													"                \"pagesCount\": 1,\r",
+													"                \"totalCount\": 1\r",
+													"            },\r",
+													"            \"items\": [\r",
+													"                {\r",
+													"                    \"id\": \"813b0c82-7208-44e3-b03f-111111111111\",\r",
+													"                    \"typeId\": \"SoftwareProduct\",\r",
+													"                    \"name\": \"RTV Software (12345654321)\",\r",
+													"                    \"description\": \"\",\r",
+													"                    \"deliveryId\": \"98833222\",\r",
+													"                    \"purchaseId\": \"98833222\",\r",
+													"                    \"customerId\": \"90369409-0326-4a82-9686-850ce3f83389\",\r",
+													"                    \"customerName\": \"IAS\",\r",
+													"                    \"orderUuid\": \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\",\r",
+													"                    \"macAddress\": \"\",\r",
+													"                    \"productId\": \"RTVSoftware\",\r",
+													"                    \"productName\": \"RTV Software\",\r",
+													"                    \"productUuid\": \"d9afd338-7fe1-4989-9908-f35859937b9d\",\r",
+													"                    \"serialNumber\": \"12345654321\",\r",
+													"                    \"expiration\": \"\",\r",
+													"                    \"isPaired\": false,\r",
+													"                    \"inUse\": false,\r",
+													"                    \"hardwareId\": \"\",\r",
+													"                    \"licenseName\": \"RTV AddOn - Reference\",\r",
+													"                    \"licenseId\": \"12.10185\",\r",
+													"                    \"licenseUuid\": \"c34f2966-7179-4ea8-a5de-336024cb0312\",\r",
+													"                    \"project\": \"\",\r",
+													"                    \"status\": \"NotPaired\",\r",
+													"                    \"added\": \"07.08.2025 13:37:59\",\r",
+													"                    \"timeStamp\": \"07.08.2025 13:37:59\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query SoftwareProductsList {SoftwareProductsList(input: {viewParams: {count: 25, offset: 0, filterModel: {__typename:\"ComplexCollectionFilter\",sortingInfo:[{fieldId:\"timeStamp\",sortingOrder:\"DESC\"}],textFilter:{__typename:\"TextFilter\",text:\"12345654321\",fieldIds:[\"status\", \"productName\", \"licenseId\", \"licenseName\", \"serialNumber\", \"deliveryId\", \"purchaseId\", \"project\", \"customerName\", \"macAddress\"]},distinctFields:[]}, documentFilterModel: null}}) {items {id name typeId status productName licenseId licenseName serialNumber deliveryId purchaseId project customerName macAddress added timeStamp orderUuid inUse productUuid customerId}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove Order",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"OrdersRemove\": {\r",
+													"            \"elementIds\": [\r",
+													"                \"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\"\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation OrdersRemove {OrdersRemove(input: {__typename: \"RemoveElementsInput\", collectionId: \"\", elementIds: [\"76610b55-e6c9-47bf-b644-e3b8d50c6a0e\"]}) {removedNotification {elementIds}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove Software",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Ожидаемая схема ответа\r",
+													"const responseSchema = {\r",
+													"    \"data\": {\r",
+													"        \"SoftwareProductsRemove\": {\r",
+													"            \"elementIds\": [\r",
+													"                \"813b0c82-7208-44e3-b03f-111111111111\"\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"// Сравнение всего ответа с ожидаемой схемой\r",
+													"pm.test(\"Response matches expected schema\", () => {\r",
+													"    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation SoftwareProductsRemove {SoftwareProductsRemove(input: {__typename: \"RemoveElementsInput\", collectionId: \"\", elementIds: [\"813b0c82-7208-44e3-b03f-111111111111\"]}) {removedNotification {elementIds}}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "AccountAdd",
 							"event": [
 								{
