@@ -10,6 +10,7 @@ import imtbaseImtCollectionSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 import imtlicgui 1.0
 import imtcolgui 1.0
+import imtauthgui 1.0
 
 Dialog {
 	id: productEditorDialog
@@ -166,7 +167,7 @@ Dialog {
 										if (!usedLicensesTableElementView.table){
 											return
 										}
-										
+
 										let selection = usedLicensesTableElementView.table.getSelectedIndexes()
 										if (selection.length !== 1){
 											return
@@ -180,39 +181,65 @@ Dialog {
 										if (index > -1) {
 											softwareIds.splice(index, 1);
 										}
-										
+
 										flickableContent.bindingModel.m_softwareIds = softwareIds.join(';')
-										
+
 										usedLicensesTableElementView.table.elements.removeItem(selection[0])
 										usedLicensesTableElementView.table.resetSelection()
 									}
-									
+
+									property int productIndex: productComboBoxElementView.currentIndex
+									onProductIndexChanged: {
+										bindButton.setEnabled(productIndex >= 0)
+									}
+
+									function setEnabled(enabled){
+										let canUnbind = PermissionsController.checkPermission("UnbindSensor")
+
+										let selection = usedLicensesTableElementView.table.getSelectedIndexes();
+										if (selection.length === 0){
+											unbindButton.enabled = false
+											return
+										}
+
+										let inUse = usedLicensesTableElementView.table.elements.getData("inUse", selection[0])
+										if (inUse && !canUnbind){
+											unbindButton.enabled = false
+											return
+										}
+
+										unbindButton.enabled = enabled
+									}
+
 									Connections {
 										target: usedLicensesTableElementView.table
 										function onSelectionChanged(selection){
 											if (selection.length !== 1){
-												unbindButton.enabled = false
+												unbindButton.setEnabled(false)
 												return
 											}
-											
-											let inUse = target.elements.getData("inUse", selection[0])
-											if (inUse){
-												unbindButton.enabled = false
-											}
-											else{
-												unbindButton.enabled = selection.length > 0
-											}
+											unbindButton.setEnabled(selection.length > 0)
 										}
 									}
 								}
 
 								Button {
+									id: bindButton
 									text: qsTr("Bind New Licenses")
 									icon.source: enabled ?	"qrc:/" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal) :
 															"qrc:/" + Style.getIconPath("Icons/Link", Icon.State.Off, Icon.Mode.Disabled) 
-									enabled: productComboBoxElementView.currentIndex >= 0
+									enabled: false
 									onClicked: {
 										ModalDialogManager.openDialog(availableLicenceCollectionComp, {});
+									}
+
+									function setEnabled(enabled){
+										let canBind = PermissionsController.checkPermission("BindSensor")
+										if (!canBind){
+											bindButton.enabled = false
+											return
+										}
+										bindButton.enabled = enabled
 									}
 								}
 							}
@@ -220,7 +247,6 @@ Dialog {
 						
 						onTableChanged: {
 							if (table){
-								// table.height = flickableContent.tableHeight
 								table.isMultiSelect = false
 							}
 						}
@@ -268,12 +294,12 @@ Dialog {
 										licenseNameText.text = licenseName
 
 										let inUse = usedLicensesTableElementView.table.elements.getData("inUse", rowIndex)
-										unbindButton.visible = inUse
+										unbindButton2.visible = inUse
 									}
 								}
 
 								ToolButton {
-									id: unbindButton
+									id: unbindButton2
 									anchors.verticalCenter: cellDelegate.verticalCenter
 									anchors.left: cellDelegate.left
 									anchors.leftMargin: Style.marginM
@@ -285,7 +311,7 @@ Dialog {
 								BaseText {
 									id: licenseNameText
 									anchors.verticalCenter: cellDelegate.verticalCenter
-									anchors.left: unbindButton.right
+									anchors.left: unbindButton2.right
 									anchors.leftMargin: Style.marginM
 								}
 							}
