@@ -377,7 +377,6 @@ Dialog {
 				if (buttonId == Enums.ok){
 					let bindingModel = productEditorDialog.contentItem.bindingModel;
 					bindingModel.m_id = productEditorDialog.hardwareId;
-					
 					deviceBindingInput.m_deviceId = productEditorDialog.hardwareId
 					deviceBindingInput.m_project = inputValue
 					deviceBindingInput.m_item = bindingModel

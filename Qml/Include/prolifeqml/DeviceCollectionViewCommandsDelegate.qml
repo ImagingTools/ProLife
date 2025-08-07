@@ -229,9 +229,9 @@ DocumentCollectionViewDelegate {
 		
 		if(commandsController){
 			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
-			commandsController.setCommandIsEnabled(container.bindCommand, isBindEnabled);
-			commandsController.setCommandIsEnabled(container.createLicenseFileCommand, isEnabled);
-			commandsController.setCommandIsEnabled(container.transferLicensesCommand, isTransferLicensesEnabled);
+			commandsController.setCommandIsEnabled(bindCommand, isBindEnabled);
+			commandsController.setCommandIsEnabled(createLicenseFileCommand, isEnabled);
+			commandsController.setCommandIsEnabled(transferLicensesCommand, isTransferLicensesEnabled);
 		}
 	}
 	
@@ -275,6 +275,7 @@ DocumentCollectionViewDelegate {
 			ModalDialogManager.openDialog(encryptPopupMenuDialog, {"hardwareId":hardwareId});
 		}
 		else{
+			collectionView.commandsController.setCommandIsEnabled(createLicenseFileCommand, false)
 			createLicenseFileInput.m_deviceId = hardwareId;
 			createLicenseFileRequest.send(createLicenseFileInput)
 		}
@@ -285,10 +286,14 @@ DocumentCollectionViewDelegate {
 	}
 	
 	onCommandActivated: {
-		let indexes = container.collectionView.table.getSelectedIndexes();
-		let elementsModel = container.collectionView.table.elements;
+		if (!collectionView){
+			return
+		}
+
+		let indexes = collectionView.table.getSelectedIndexes();
+		let elementsModel = collectionView.table.elements;
 		
-		if (commandId === container.bindCommand){
+		if (commandId === bindCommand){
 			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
 			let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, indexes[0]);
 
@@ -300,7 +305,7 @@ DocumentCollectionViewDelegate {
 				MainDocumentManager.openDocument("Orders", orderId, "Order", "OrderEditor")
 			}
 		}
-		else if (commandId === container.createLicenseFileCommand){
+		else if (commandId === createLicenseFileCommand){
 			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
@@ -329,7 +334,7 @@ DocumentCollectionViewDelegate {
 
 			onCreateLicenseFile(hardwareId)
 		}
-		else if (commandId === container.transferLicensesCommand){
+		else if (commandId === transferLicensesCommand){
 			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
 			if (count <= 0){
 				ModalDialogManager.openDialog(transferErrorDialogComp, {})
@@ -354,7 +359,7 @@ DocumentCollectionViewDelegate {
 		
 		onAccepted: {
 			let filePath;
-			if (Qt.platform.os == "web"){
+			if (Qt.platform.os === "web"){
 				filePath = licenseFileDialog.file.toString()
 			}
 			else{
@@ -363,7 +368,7 @@ DocumentCollectionViewDelegate {
 			
 			filePath = filePath.replace('file:///', '')
 			
-			if (Qt.platform.os == "web"){
+			if (Qt.platform.os === "web"){
 				let reader = new FileReader()
 				
 				reader.readAsDataURL(filePath)
@@ -419,7 +424,7 @@ DocumentCollectionViewDelegate {
 		sdlObjectComp: Component {
 			DecryptLicenseFilePayload {
 				onFinished: {
-					if (Qt.platform.os == "web"){
+					if (Qt.platform.os === "web"){
 						decryptFileIO.source = m_fileName;
 					}
 					
@@ -495,12 +500,21 @@ DocumentCollectionViewDelegate {
 		sdlObjectComp: Component {
 			CreateLicenseFilePayload {
 				onFinished: {
-					if (Qt.platform.os == "web"){
+					if (!container.collectionView){
+						return
+					}
+					
+					if (Qt.platform.os === "web"){
 						createLicenseFileIO.source = m_name;
 					}
 					
 					let encodedStr = Qt.atob(m_data);
 					createLicenseFileIO.write(encodedStr);
+					
+					if (container.collectionView.commandsController){
+						let selectedIds = container.collectionView.getSelectedIds()
+						container.collectionView.commandsController.setCommandIsEnabled(selectedIds.length === 1, true)
+					}
 				}
 			}
 		}

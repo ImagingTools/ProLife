@@ -2,15 +2,15 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5411" Description="ACF"/>
+            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+        <Element Id="AccountMetaInfoController1" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
@@ -149,11 +149,16 @@
                             <Values>
                                 <Value>OrderId</Value>
                                 <Value>PurchaseId</Value>
+                                <Value>CustomerId</Value>
+                                <Value>CustomerName</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="Orders"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="IsDocumentSource" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -166,6 +171,8 @@
                             <Values>
                                 <Value>DeliveryId</Value>
                                 <Value>PurchaseId</Value>
+                                <Value>CustomerId</Value>
+                                <Value>CustomerName</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
