@@ -3,14 +3,7 @@ TARGET = prolifesdl
 include($(ACFDIR)/Config/QMake/StaticConfig.pri)
 include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
 
-
-# SDL
-SDL_SCHEMES_LIST = $$PWD/../1.0/Sensors.sdl \
-					$$PWD/../1.0/Licenses.sdl \
-					$$PWD/../1.0/Orders.sdl \
-					$$PWD/../1.0/Accounts.sdl
+SDL_SCHEMES_LIST = $$files($$_PRO_FILE_PWD_/../1.0/*.sdl, false)
 
 include($(IMTCOREDIR)/Config/QMake/SdlConfiguration.pri)
-
-
 
