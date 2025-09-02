@@ -223,7 +223,6 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 		const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 		if (productInfoPtr != nullptr){
 			lisaProductId = productInfoPtr->GetProductId();
-
 			productName = productInfoPtr->GetSerialNumber();
 		}
 	}
@@ -232,10 +231,13 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 			const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
 			if (deviceInfoPtr != nullptr){
 				lisaProductId = deviceInfoPtr->GetDeviceType();
-
 				productName = deviceInfoPtr->GetMacAddress();
 			}
 		}
+	}
+
+	if (!productDataPtr.IsValid()){
+		return productId;
 	}
 
 	QString lisaProductName;
@@ -250,11 +252,16 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 		}
 	}
 
-	if (!lisaProductName.isEmpty() && !productName.isEmpty()){
-		return lisaProductName + " (" + productName + ")";
+	if (lisaProductName.isEmpty()){
+		return productId;
 	}
 
-	return productId;
+	QString retVal = lisaProductName;
+	if (!productName.isEmpty()){
+		retVal =  retVal + " (" + productName + ")";
+	}
+
+	return retVal;
 }
 
 
