@@ -27,6 +27,7 @@ Item {
 	
 	property OrderedProduct productItem;
 	property int index: -1;
+	property int instanceCount: 1
 	
 	property string softwareCategoryId: "Software";
 	property string hardwareCategoryId: "Hardware";
@@ -107,7 +108,7 @@ Item {
 			if (!hasFieldFilters()){
 				createFieldFilters()
 			}
-
+			
 			m_fieldFilters.addElement(orderUuidFilter);
 			m_fieldFilters.addElement(emptyOrderFilter);
 			
@@ -158,7 +159,7 @@ Item {
 		productCB.model = CachedProductCollection.hardwareProductsModel;
 		
 		productCB.currentIndex = -1;
-
+		
 		contentLoader.sourceComponent = undefined
 		contentLoader.sourceComponent = hardwareProductComponent;
 	}
@@ -219,9 +220,9 @@ Item {
 						}
 					}
 				}
-
+				
 				deviceCollection.filter.addGroupFilter(excludesGroup)
-
+				
 				deviceCollection.updateModel();
 			}
 			
@@ -251,141 +252,175 @@ Item {
 		}
 	}
 	
-	GroupElementView {
-		id: contentColumn;
-		
-		anchors.top: parent.top;
-		anchors.topMargin: Style.marginM;
-		anchors.left: parent.left;
-		anchors.leftMargin: Style.marginM;
-		anchors.right: parent.right;
-		anchors.rightMargin: Style.marginM;
-		
-		ElementView {
-			id: segmentedElementView;
-			
-			width: parent.width;
-			
-			name: qsTr("Product Category");
-			description: qsTr("Please select the product category you want to create");
-			
-			visible: productEditor.index === -1;
-			
-			property Button softwareProductButton;
-			property Button hardwareProductButton;
-			
-			property int selectedIndex: 0;
-			
-			bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
-			
-			Component {
-				id: selectedComp;
-				
-				BaseText {
-					font.family: Style.fontFamilyBold;
-					text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
-				}
-			}
-			
-			controlComp: Component {
-				SegmentedButton {
-					anchors.centerIn: parent;
-					height: 40;
-					selectedIndex: 0;
-					isExclusive: true;
-					
-					onSelectedIndexChanged: {
-						productEditor.clearProduct();
-						
-						if (selectedIndex == 0){
-							productEditor.setSoftware();
-						}
-						else if (selectedIndex == 1){
-							productEditor.setHardware();
-						}
-						
-						segmentedElementView.selectedIndex = selectedIndex;
-					}
-					
-					Button {
-						id: softwareProductButton;
-						
-						anchors.verticalCenter: parent.verticalCenter;
-						
-						checkable: true
-						checked: true
-						
-						iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
-						text: qsTr("Software");
-						
-						Component.onCompleted: {
-							segmentedElementView.softwareProductButton = softwareProductButton;
-						}
-					}
-					
-					Button {
-						id: hardwareProductButton;
-						
-						anchors.verticalCenter: parent.verticalCenter;
-						
-						checkable: true
-						checked: false;
-						
-						iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
-						
-						text: qsTr("Hardware");
-						
-						Component.onCompleted: {
-							segmentedElementView.hardwareProductButton = hardwareProductButton;
-						}
-					}
-				}
-			}
-		}
-		
-		ComboBoxElementView {
-			id: productCB;
-			
-			width: parent.width;
-			controlWidth: 500;
-			
-			name: qsTr("Product");
-			nameId: OrderedProductTypeMetaInfo.s_productName;
-			
-			onCurrentIndexChanged: {
-				productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
-				
-				productEditor.updateProductModel();
-			}
-			
-			Component {
-				id: productErrorComp;
-				
-				Text {
-					id: selectProductText;
-					
-					text: qsTr("Please select a product");
-					color: Style.errorTextColor;
-					font.family: Style.fontFamily;
-					font.pixelSize: Style.fontSizeM;
-				}
-			}
-		}
-	} // GroupElementView
-	
-	Loader {
-		id: contentLoader;
-		
-		anchors.top: contentColumn.bottom;
-		anchors.bottom: parent.bottom;
-		anchors.left: parent.left;
-		anchors.right: parent.right;
-		anchors.margins: Style.marginM;
-		
-		width: parent.width;
-		
-		visible: productCB.currentIndex >= 0;
+	CustomScrollbar {
+		id: scrollbar
+		z: parent.z + 1
+		anchors.right: parent.right
+		anchors.top: flickable.top
+		anchors.bottom: flickable.bottom
+		secondSize: Style.marginM
+		targetItem: flickable
+		visible: productEditor.visible
 	}
+	
+	Flickable {
+		id: flickable
+
+		anchors.top: parent.top
+		anchors.topMargin: Style.marginM
+		anchors.left: parent.left
+		anchors.leftMargin: Style.marginM
+		anchors.right: scrollbar.left
+		anchors.rightMargin: Style.marginM
+		anchors.bottom: parent.bottom
+		anchors.bottomMargin: Style.marginM
+
+		contentWidth: width
+		contentHeight: contentColumn.height
+
+		boundsBehavior: Flickable.StopAtBounds
+		clip: true
+		
+		Column {
+			id: contentColumn
+			width: flickable.width
+			spacing: Style.marginM
+			onHeightChanged: {
+				console.log("contentColumn onHeightChanged", height)
+			}
+
+			GroupElementView {
+				width: contentColumn.width
+				onHeightChanged: {
+					console.log("contentColumn onHeightChanged", height)
+				}
+				ElementView {
+					id: segmentedElementView;
+					width: parent.width;
+					name: qsTr("Product Category");
+					description: qsTr("Please select the product category you want to create");
+					visible: productEditor.index === -1;
+					
+					property Button softwareProductButton;
+					property Button hardwareProductButton;
+					
+					property int selectedIndex: 0;
+					
+					bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
+					
+					Component {
+						id: selectedComp;
+						
+						BaseText {
+							font.family: Style.fontFamilyBold;
+							text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
+						}
+					}
+					
+					controlComp: Component {
+						SegmentedButton {
+							anchors.centerIn: parent;
+							height: 40;
+							selectedIndex: 0;
+							isExclusive: true;
+							
+							onSelectedIndexChanged: {
+								productEditor.clearProduct();
+								
+								if (selectedIndex == 0){
+									productEditor.setSoftware();
+								}
+								else if (selectedIndex == 1){
+									productEditor.setHardware();
+								}
+								
+								segmentedElementView.selectedIndex = selectedIndex;
+							}
+							
+							Button {
+								id: softwareProductButton;
+								
+								anchors.verticalCenter: parent.verticalCenter;
+								
+								checkable: true
+								checked: true
+								
+								iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
+								text: qsTr("Software");
+								
+								Component.onCompleted: {
+									segmentedElementView.softwareProductButton = softwareProductButton;
+								}
+							}
+							
+							Button {
+								id: hardwareProductButton;
+								
+								anchors.verticalCenter: parent.verticalCenter;
+								
+								checkable: true
+								checked: false;
+								
+								iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
+								
+								text: qsTr("Hardware");
+								
+								Component.onCompleted: {
+									segmentedElementView.hardwareProductButton = hardwareProductButton;
+								}
+							}
+						}
+					}
+				}
+				
+				ComboBoxElementView {
+					id: productCB;
+					
+					width: parent.width;
+					controlWidth: 500;
+					
+					name: qsTr("Product");
+					nameId: OrderedProductTypeMetaInfo.s_productName;
+					
+					onCurrentIndexChanged: {
+						productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
+						
+						productEditor.updateProductModel();
+					}
+					
+					Component {
+						id: productErrorComp;
+						
+						Text {
+							id: selectProductText;
+							
+							text: qsTr("Please select a product");
+							color: Style.errorTextColor;
+							font.family: Style.fontFamily;
+							font.pixelSize: Style.fontSizeM;
+						}
+					}
+				}
+			} // GroupElementView
+
+			Loader {
+				id: contentLoader
+				width: contentColumn.width
+				visible: productCB.currentIndex >= 0
+				onLoaded: {
+					contentLoader.height = item.height
+					console.log("item.height", item.height)
+				}
+				
+				Connections {
+					target: contentLoader.item
+					function onHeightChanged(){
+						contentLoader.height = target.height
+					}
+				}
+			}
+		}
+	} // Flickable
 	
 	function clearProduct(){
 		if (productItem){
@@ -409,15 +444,21 @@ Item {
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
 			orderProductsModel: productEditor.orderProductsModel;
+			onInstanceCountChanged: {
+				productEditor.instanceCount = instanceCount
+			}
 		}
 	}
-
+	
 	Component {
 		id: softwareProductComponent;
 		SoftwareProductEditor {
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
 			orderProductsModel: productEditor.orderProductsModel;
+			onInstanceCountChanged: {
+				productEditor.instanceCount = instanceCount
+			}
 		}
 	}
 	

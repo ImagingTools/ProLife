@@ -20,8 +20,7 @@ Dialog {
 	Component.onCompleted: {
 		addButton(Enums.ok, qsTr("OK"), false)
 		addButton(Enums.cancel, qsTr("Cancel"), true)
-		
-		productEditorDialog.title = qsTr("Product editor");
+		title = qsTr("Product Editor");
 	}
 	
 	contentComp: Component {

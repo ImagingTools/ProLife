@@ -11,7 +11,7 @@ import prolifeLicensesSdl 1.0
 ViewBase {
 	id: root;
 	
-	// height: content.height;
+	height: mainElementView.contentHeight
 	
 	property var productLicensesModel: TreeItemModel{}
 	property BaseModel orderProductsModel: BaseModel {}
@@ -26,7 +26,8 @@ ViewBase {
 	property int productIndex: -1;
 	
 	property OrderedProduct productItem: model ? model : null;
-	
+	property alias instanceCount: spinBoxElementView.value
+
 	function setReadOnly(readOnly){
 		serialNumberInput.readOnly = readOnly;
 		expirationElementView.datePicker.readOnly = readOnly;
@@ -95,6 +96,7 @@ ViewBase {
 	}
 	
 	function updateModel(){
+		console.log("SoftwareProductEditor.qml updateModel")
 		productItem.m_isNew = isNewSoftware;
 		
 		if (isNewSoftware){
@@ -155,6 +157,7 @@ ViewBase {
 	}
 	
 	GroupElementView {
+		id: mainElementView
 		width: parent.width
 		
 		SwitchElementView {
@@ -280,6 +283,26 @@ ViewBase {
 		GroupElementView {
 			width: parent.width;
 			visible: root.isNewSoftware;
+
+			SpinBoxElementView {
+				id: spinBoxElementView
+				name: qsTr("Number")
+				description: qsTr("Max: ") + to
+				from: 1
+				to: 10
+				startValue: from
+				visible: root.productIndex == -1
+				onValueChanged: {
+					if (value > 1){
+						serialNumberInput.text = ""
+						if (expirationElementView.checkBox){
+							expirationElementView.checkBox.checkState = Qt.Unchecked
+						}
+						
+						root.doUpdateModel();
+					}
+				}
+			}
 			
 			FilterableComboBoxElementView {
 				id: licenseCB;
@@ -344,7 +367,7 @@ ViewBase {
 				
 				readOnly: root.readOnly;
 				
-				visible: licenseCB.currentIndex >= 0;
+				visible: licenseCB.currentIndex >= 0 && spinBoxElementView.value === 1
 				
 				onEditingFinished: {
 					serialNumberInput.bottomComp = undefined
@@ -359,7 +382,7 @@ ViewBase {
 							}
 						}
 					}
-
+					console.log("serialNumberInput onEditingFinished", text)
 					root.doUpdateModel();
 				}
 				
@@ -383,7 +406,7 @@ ViewBase {
 				
 				name: qsTr("Expiration");
 				
-				visible: licenseCB.currentIndex >= 0;
+				visible: licenseCB.currentIndex >= 0 && spinBoxElementView.value === 1
 				
 				property CheckBox checkBox;
 				property DatePicker datePicker;

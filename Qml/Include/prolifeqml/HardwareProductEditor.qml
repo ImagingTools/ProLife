@@ -9,6 +9,7 @@ import prolifeSensorsSdl 1.0
 
 ViewBase {
 	id: root;
+	height: mainElementView.contentHeight
 	
 	property var productLicensesModel: TreeItemModel{}
 	property TreeItemModel devicesModel: TreeItemModel{}
@@ -17,6 +18,7 @@ ViewBase {
 	property int productIndex: -1;
 	property OrderedProduct productItem: model ? model : null;
 	property BaseModel orderProductsModel: BaseModel {}
+	property int instanceCount: 1//spinBoxElementView.value
 
 	function updateGui(){
 		let isNew = productItem.m_isNew;
@@ -132,6 +134,7 @@ ViewBase {
 	}
 
 	GroupElementView {
+		id: mainElementView
 		width: parent.width
 		
 		SwitchElementView {
@@ -150,6 +153,39 @@ ViewBase {
 				let canAddSensor = PermissionsController.checkPermission("AddSensor");
 				if (!canAddSensor){
 					switchNewSensor.visible = false;
+				}
+			}
+			
+			bottomComp: root.productIndex === -1 && checked ? spinBoxComp : undefined
+			
+			Component {
+				id: spinBoxComp
+				Item {
+					height: spinBox.height
+					Row {
+						spacing: Style.marginM
+						BaseText {
+							anchors.verticalCenter: parent.verticalCenter
+							text: qsTr("Number: ")
+						}
+
+						SpinBox {
+							id: spinBox
+							anchors.verticalCenter: parent.verticalCenter
+							from: 1
+							to: 10
+							stepSize: 1
+							startValue: from
+							onValueChanged: {
+								if (value > 1){
+									macAddressInput.text = ""
+									serialNumberInput.text = ""
+								}
+
+								root.instanceCount = value
+							}
+						}
+					}
 				}
 			}
 		}
@@ -269,12 +305,22 @@ ViewBase {
 				}
 			}
 			
+			// SpinBoxElementView { 
+			// 	id: spinBoxElementView
+			// 	name: qsTr("Instance Count")
+			// 	description: qsTr("Max: ") + to
+			// 	from: 1
+			// 	to: 10
+			// 	startValue: 1
+			// 	visible: root.productIndex == -1
+			// }
+			
 			MacAddressElementView {
 				id: macAddressInput;
 				width: parent.width;
 				controlWidth: 500;
 				readOnly: root.readOnly;
-				visible: parent.visible && typesCB.currentIndex >= 0;
+				visible: parent.visible && typesCB.currentIndex >= 0 && root.instanceCount === 1
 				
 				onEditingFinished: {
 					if (acceptableInput){
@@ -315,7 +361,7 @@ ViewBase {
 				name: qsTr("Serial Number");
 				placeHolderText: qsTr("Enter the serial number");
 				readOnly: root.readOnly;
-				visible: parent.visible && typesCB.currentIndex >= 0;
+				visible: parent.visible && typesCB.currentIndex >= 0 && root.instanceCount === 1
 				
 				onEditingFinished: {
 					serialNumberInput.bottomComp = undefined

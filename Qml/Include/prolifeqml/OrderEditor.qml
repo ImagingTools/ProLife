@@ -437,17 +437,21 @@ ViewBase {
 					
 					onFinished: {
 						if (buttonId == Enums.ok){
-							
-							let productModel = productsDialog.bodyItem.productItem.copyMe();
 							let actualOrderProducts = orderEditorContainer.orderData.m_orderProducts;
-							
+
 							let index = productsView.activeProductIndex;
 							if (index < 0){
-								if (actualOrderProducts){
-									actualOrderProducts.insert(0, {"item": productModel})
+								let instanceCount = productsDialog.bodyItem.instanceCount
+								for (let i = 0; i < instanceCount; ++i){
+									let productModel = productsDialog.bodyItem.productItem.copyMe();
+									productModel.m_id = UuidGenerator.generateUUID();
+									if (actualOrderProducts){
+										actualOrderProducts.insert(0, {"item": productModel})
+									}
 								}
 							}
 							else{
+								let productModel = productsDialog.bodyItem.productItem.copyMe();
 								if (actualOrderProducts){
 									actualOrderProducts.set(index, {"item": productModel})
 								}
@@ -574,7 +578,6 @@ ViewBase {
 					let orderProducts = orderEditorContainer.orderData.m_orderProducts
 					if (orderProducts){
 						orderProducts.remove(productsView.activeProductIndex);
-						
 						orderEditorContainer.model.modelChanged([]);
 					}
 				}
