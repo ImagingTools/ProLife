@@ -195,6 +195,15 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	sensorManagementFeatureInfo->InsertSubFeature(transferLicensesFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> resetTransferCounterFeatureInfo;
+	resetTransferCounterFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	resetTransferCounterFeatureInfo->SetFeatureId("ResetTransferCounter");
+	resetTransferCounterFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Reset Transfer Counter"));
+	resetTransferCounterFeatureInfo->SetOptional(false);
+	resetTransferCounterFeatureInfo->SetIsPermission(true);
+
+	sensorManagementFeatureInfo->InsertSubFeature(resetTransferCounterFeatureInfo.PopPtr());
+
 	productInfo.AddFeature("06d570ef-170c-48fc-bf81-fab890b8d9da", *sensorManagementFeatureInfo.GetPtr());
 
 	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> orderManagementFeatureInfo;

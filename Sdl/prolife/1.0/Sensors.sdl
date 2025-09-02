@@ -111,9 +111,19 @@ input DecryptLicenseFileInput {
 	fileData: ID!
 }
 
+input ResetTransferCounterInput {
+	hardwareId: ID!
+}
+
+type ResetTransferCounterPayload {
+	result: Boolean!
+	message: String
+}
+
 type TransferLicensesPayload {
 	ok: Boolean
 	limit: Boolean
+	supportEmail: String
 }
 
 type RequestTransferLicensesPayload {
@@ -144,6 +154,7 @@ type Mutation {
 	RequestTransferLicenses (input: TransferLicensesInput): RequestTransferLicensesPayload!
 	CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
 	DecryptLicenseFile (input: DecryptLicenseFileInput): DecryptLicenseFilePayload!
+	ResetTransferCounter (input: ResetTransferCounterInput): ResetTransferCounterPayload!
 }
 
 collectionSchema {

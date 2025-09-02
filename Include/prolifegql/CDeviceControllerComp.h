@@ -80,6 +80,10 @@ protected:
 				const sdl::prolife::Sensors::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
+	virtual sdl::prolife::Sensors::CResetTransferCounterPayload OnResetTransferCounter(
+				const sdl::prolife::Sensors::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 	// reimplemented (imtcrypt::IEncryptionKeysProvider)
 	virtual QByteArray GetEncryptionKey(imtcrypt::IEncryptionKeysProvider::KeyType type) const override;

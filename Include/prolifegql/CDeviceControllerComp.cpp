@@ -241,21 +241,26 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 
 
 sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
-	const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& errorMessage) const
+			const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
 {
 	if (!m_softwareTransferCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareTransferCollection' was not set", "CDeviceControllerComp");
 		return sdl::prolife::Sensors::CTransferLicensesPayload();
 	}
-	
+
+	if (!m_supportEmailParamCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SupportEmailParam' was not set", "CDeviceControllerComp");
+		return sdl::prolife::Sensors::CTransferLicensesPayload();
+	}
+
 	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
 	retVal.Version_1_0.emplace();
-	
 	retVal.Version_1_0->ok = false;
 	retVal.Version_1_0->limit = false;
-	
+	retVal.Version_1_0->supportEmail = m_supportEmailParamCompPtr->GetText();
+
 	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		I_CRITICAL();
@@ -267,49 +272,49 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	if (inputArguments.input.Version_1_0->fromDeviceId){
 		fromDeviceId = *inputArguments.input.Version_1_0->fromDeviceId;
 	}
-	
+
 	QByteArray toDeviceId;
 	if (inputArguments.input.Version_1_0->toDeviceId){
 		toDeviceId = *inputArguments.input.Version_1_0->toDeviceId;
 	}
-	
+
 	// Get FROM device binding data
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
 	if (!fromDeviceBindingInfoPtr.IsValid()){
 		return retVal;
 	}
-	
+
 	// Get TO device binding data
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> toDeviceBindingInfoPtr = GetOrCreateDeviceBinding(toDeviceId);
 	if (!toDeviceBindingInfoPtr.IsValid()){
 		return retVal;
 	}
-	
+
 	// Get FROM device data
 	prolifedata::IDeviceInfo* fromDeviceInfoPtr = nullptr;
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
 	if (m_deviceCollectionCompPtr->GetObjectData(fromDeviceId, deviceDataPtr)){
 		fromDeviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
 	}
-	
+
 	if (fromDeviceInfoPtr == nullptr){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%1' not exists").arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
 		
 		return retVal;
 	}
-	
+
 	// Get TO device data
 	prolifedata::IDeviceInfo* toDeviceInfoPtr = nullptr;
 	imtbase::IObjectCollection::DataPtr toDeviceDataPtr;
 	if (m_deviceCollectionCompPtr->GetObjectData(toDeviceId, toDeviceDataPtr)){
 		toDeviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(toDeviceDataPtr.GetPtr());
 	}
-	
+
 	if (toDeviceInfoPtr == nullptr){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%2' not exists").arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
 		return retVal;
 	}
-	
+
 	// Check FROM device status is Defected
 	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = fromDeviceInfoPtr->GetDeviceProductionStatus();
 	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_DEFECTED){
@@ -318,42 +323,25 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		
 		return retVal;
 	}
-	
+
 	// Check same devices
 	if (fromDeviceId == toDeviceId){
 		errorMessage = QString("It is not possible to transfer licenses to the same device");
 		
 		return retVal;
 	}
-	
+
 	QByteArray projectId = fromDeviceInfoPtr->GetProject();
 	
 	QByteArrayList fromDeviceSoftwareIds = fromDeviceBindingInfoPtr->GetSoftwareIds();
 	QByteArrayList toDeviceSoftwareIds = toDeviceBindingInfoPtr->GetSoftwareIds();
-	
+
 	// Check TO device empty licenses
 	if (!toDeviceSoftwareIds.isEmpty()){
 		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Device '%2' already contains licenses").arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
-		
 		return retVal;
 	}
-	
-	// Checking the number of license transfers
-	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
-			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr = dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
-			if (softwareTransferInfoPtr != nullptr){
-				if (softwareTransferInfoPtr->IsTransferLimitExceeded()){
-					errorMessage = QString("Unable to transfer licenses. Transfer limit exceeded");
-					SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-					
-					return retVal;
-				}
-			}
-		}
-	}
-	
+
 	// Checking the number of license transfers
 	for (const QByteArray& softwareId : fromDeviceSoftwareIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
@@ -365,16 +353,15 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 				int maxTransferCount = m_maxTransferCountAttrPtr.IsValid() ? *m_maxTransferCountAttrPtr : 3;
 				if (softwareCount >= maxTransferCount){
 					retVal.Version_1_0->limit = true;
-					
 					return retVal;
 				}
 			}
 		}
 	}
-	
+
 	toDeviceBindingInfoPtr->SetSoftwareIds(fromDeviceSoftwareIds);
 	fromDeviceBindingInfoPtr->SetSoftwareIds(QByteArrayList());
-	
+
 	// Update licenses for TO device
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
@@ -382,14 +369,14 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		
 		return retVal;
 	}
-	
+
 	// Update licenses for FROM device
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 		return retVal;
 	}
-	
+
 	// Set operation context for TO device data
 	istd::TDelPtr<imtbase::IOperationContext> toDeviceOperationContextPtr =  nullptr;
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
@@ -880,7 +867,7 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 	}
 
 	if (!m_supportEmailParamCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'supportEmailParam' was not set", "CDeviceControllerComp");
+		Q_ASSERT_X(false, "Attribute 'SupportEmailParam' was not set", "CDeviceControllerComp");
 		return response;
 	}
 
@@ -998,6 +985,77 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 
 					return response;
 				}
+			}
+		}
+	}
+
+	response.Version_1_0->result = true;
+
+	return response;
+}
+
+
+sdl::prolife::Sensors::CResetTransferCounterPayload CDeviceControllerComp::OnResetTransferCounter(
+			const sdl::prolife::Sensors::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	sdl::prolife::Sensors::CResetTransferCounterPayload response;
+	response.Version_1_0.emplace();
+	response.Version_1_0->result = false;
+
+	if (!m_softwareTransferCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SoftwareTransferCollection' was not set", "CDeviceControllerComp");
+		return response;
+	}
+
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr){
+		errorMessage = QString("Unable to reset transfer counter. Error: GraphQL context from request is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr){
+		errorMessage = QString("Unable to reset transfer counter. Error: User info from GraphQL context is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+
+	sdl::prolife::Sensors::ResetTransferCounterRequestArguments arguments = resetTransferCounterRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.has_value()){
+		Q_ASSERT(false);
+		errorMessage = QString("Unable to reset transfer counter. Error: Request invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+
+	QByteArray hardwareId;
+	if (arguments.input.Version_1_0->hardwareId){
+		hardwareId = *arguments.input.Version_1_0->hardwareId;
+	}
+
+	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(hardwareId);
+	if (!fromDeviceBindingInfoPtr.IsValid()){
+		errorMessage = QString("Unable to reset transfer counter. Error: Hardware is invalid");
+		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
+		return response;
+	}
+
+	QByteArrayList softwareIds = fromDeviceBindingInfoPtr->GetSoftwareIds();
+	if (softwareIds.isEmpty()){
+		errorMessage = QString("Unable to reset transfer counter. Error: There are no licenses for this sensor");
+		return response;
+	}
+
+	for (const QByteArray& softwareId : softwareIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareTransferCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			prolifedata::CSoftwareTransferInfo* softwareTransferInfoPtr = dynamic_cast<prolifedata::CSoftwareTransferInfo*>(dataPtr.GetPtr());
+			if (softwareTransferInfoPtr != nullptr){
+				softwareTransferInfoPtr->SetTransferCount(0);
+				m_softwareTransferCollectionCompPtr->SetObjectData(softwareId, *softwareTransferInfoPtr);
 			}
 		}
 	}

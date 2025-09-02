@@ -231,6 +231,7 @@ DocumentCollectionViewDelegate {
 			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
 			commandsController.setCommandIsEnabled(bindCommand, isBindEnabled);
 			commandsController.setCommandIsEnabled(createLicenseFileCommand, isEnabled);
+			commandsController.setCommandIsEnabled(ProlifeSensorsSdlCommandIds.s_resetTransferCounter, isEnabled);
 			commandsController.setCommandIsEnabled(transferLicensesCommand, isTransferLicensesEnabled);
 		}
 	}
@@ -283,6 +284,11 @@ DocumentCollectionViewDelegate {
 	
 	function onTransferLicenses(hardwareId, productId){
 		ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId})
+	}
+
+	function onResetTransferCounter(hardwareId){
+		resetTransferCounterInput.m_hardwareId = hardwareId
+		resetTransferCounterRequest.send(resetTransferCounterInput)
 	}
 	
 	onCommandActivated: {
@@ -348,6 +354,10 @@ DocumentCollectionViewDelegate {
 		}
 		else if (commandId === "DecryptFile"){
 			licenseFileDialog.open();
+		}
+		else if (commandId === ProlifeSensorsSdlCommandIds.s_resetTransferCounter){
+			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
+			onResetTransferCounter(hardwareId)
 		}
 	}
 	
@@ -478,8 +488,6 @@ DocumentCollectionViewDelegate {
 		id: requestMessageDialog
 		MessageDialog {
 			title: qsTr("Sending a request");
-			message: qsTr("Send a request to the administrator's email address requesting the transfer of licenses ?")
-
 			onFinished: {
 				if (buttonId == Enums.yes){
 					transferLicensesRequest2.send(transferLicensesInput)
@@ -487,7 +495,28 @@ DocumentCollectionViewDelegate {
 			}
 		}
 	}
-	
+
+	ResetTransferCounterInput {
+		id: resetTransferCounterInput
+	}
+
+	GqlSdlRequestSender {
+		id: resetTransferCounterRequest
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_resetTransferCounter
+		sdlObjectComp: Component {
+			ResetTransferCounterPayload {
+				onFinished: {
+					if (m_result){
+						ModalDialogManager.showInfoDialog(qsTr("The transfer counter has been successfully reset"));
+					}
+					else{
+						ModalDialogManager.showErrorDialog(m_message);
+					}
+				}
+			}
+		}
+	}
+
 	CreateLicenseFileInput {
 		id: createLicenseFileInput;
 	}
@@ -538,8 +567,21 @@ DocumentCollectionViewDelegate {
 					if (m_ok){
 						ModalDialogManager.showInfoDialog(qsTr("The licenses were successfully transferred"));
 					}
+					
 					if (m_limit && !m_ok){
-						ModalDialogManager.openDialog(requestMessageDialog, {})
+						let message = qsTr("The license transfer limit has been exceeded.")
+						if (m_supportEmail !== ""){
+							message += " " + qsTr("Send a transfer request to the administrator's address: '%1' ?")
+							message = message.replace("%1", m_supportEmail)
+							ModalDialogManager.openDialog(
+										requestMessageDialog,
+										{message: message})
+						}
+						else{
+							message += " " + qsTr("It is not possible to request a transfer because the support email is not specified.")
+							message = message.replace("%1", m_supportEmail)
+							ModalDialogManager.showInfoDialog(message)
+						}
 					}
 				}
 			}
