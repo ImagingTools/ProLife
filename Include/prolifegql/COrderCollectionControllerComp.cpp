@@ -1022,6 +1022,10 @@ bool COrderCollectionControllerComp::CreateNewHardware(
 	deviceInstancePtr->SetSerialNumber(serialNumber);
 	deviceInstancePtr->SetMacAddress(macAddress);
 
+	if (!macAddress.isEmpty() && !serialNumber.isEmpty()){
+		deviceInstancePtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DPS_FINISHED);
+	}
+
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
 		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Create", orderProductUuid, deviceInstancePtr.GetPtr());
