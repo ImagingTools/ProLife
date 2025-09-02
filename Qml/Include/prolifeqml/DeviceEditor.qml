@@ -411,20 +411,36 @@ ViewBase {
 				
 				ComboBoxElementView {
 					id: configurationCB;
-					
 					name: qsTr("Hardware Configuration");
-					nameId: LicenseItemTypeMetaInfo.s_licenseName;
-					
-					KeyNavigation.tab: descriptionInput;
+					nameId: LicenseItemTypeMetaInfo.s_licenseName
+					KeyNavigation.tab: articleText;
 					KeyNavigation.backtab: productCB;
 					isSelectionRequired: true;
 					errorText: qsTr("Please select a configuration");
+					delegate:Component { FilterableComboBoxDelegate {
+						width: configurationCB.width
+						text: model[DeviceItemTypeMetaInfo.s_licenseName]
+						comboBoxRef: configurationCB.cbRef
+						description: model[DeviceItemTypeMetaInfo.s_licenseId]
+					}
+					}
 					
 					onCurrentIndexChanged: {
-						if (configurationCB.currentIndex >= 0){
+						if (currentIndex >= 0){
+							if (model){
+								articleText.text = model.getData(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)
+							}
 							deviceEditorContainer.doUpdateModel();
 						}
 					}
+				}
+				
+				TextInputElementView {
+					id: articleText
+					name: qsTr("Article")
+					readOnly: true
+					KeyNavigation.tab: descriptionInput
+					KeyNavigation.backtab: configurationCB
 				}
 				
 				TextInputElementView {
@@ -438,7 +454,7 @@ ViewBase {
 					}
 					
 					KeyNavigation.tab: serialNumberInput;
-					KeyNavigation.backtab: configurationCB;
+					KeyNavigation.backtab: articleText;
 				}
 				
 				TextInputElementView {

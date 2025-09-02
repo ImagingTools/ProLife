@@ -450,12 +450,12 @@ ViewBase {
 				ComboBoxElementView {
 					id: licenseCB;
 					
-					nameId: "licenseName";
+					nameId: SoftwareProductItemTypeMetaInfo.s_licenseName;
 					name: qsTr("Licenses");
 					
 					model: root.productLicensesModel;
 					
-					KeyNavigation.tab: serialNumberInput;
+					KeyNavigation.tab: articleText;
 					KeyNavigation.backtab: productCB;
 					
 					isSelectionRequired: true;
@@ -463,9 +463,29 @@ ViewBase {
 					
 					onCurrentIndexChanged: {
 						if (currentIndex >= 0){
+							if (model){
+								articleText.text = model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
+							}
+
 							root.doUpdateModel();
 						}
 					}
+					delegate: Component {
+						FilterableComboBoxDelegate {
+							width: licenseCB.width
+							comboBoxRef: licenseCB.cbRef
+							text: model[SoftwareProductItemTypeMetaInfo.s_licenseName]
+							description: model[SoftwareProductItemTypeMetaInfo.s_licenseId]
+						}
+					}
+				}
+				
+				TextInputElementView {
+					id: articleText
+					name: qsTr("Article")
+					readOnly: true
+					KeyNavigation.tab: serialNumberInput
+					KeyNavigation.backtab: licenseCB
 				}
 				
 				TextInputElementView {
@@ -475,7 +495,7 @@ ViewBase {
 					name: qsTr("Software-ID");
 					
 					KeyNavigation.tab: unlimitedSwitch;
-					KeyNavigation.backtab: licenseCB;
+					KeyNavigation.backtab: articleText;
 					
 					textInputValidator: serialNumberRegexp;
 					showErrorWhenInvalid: true;
