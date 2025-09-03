@@ -183,6 +183,7 @@ ViewBase {
 								}
 
 								root.instanceCount = value
+								root.doUpdateModel()
 							}
 						}
 					}

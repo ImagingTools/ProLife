@@ -299,7 +299,7 @@ ViewBase {
 							expirationElementView.checkBox.checkState = Qt.Unchecked
 						}
 						
-						root.doUpdateModel();
+						root.doUpdateModel()
 					}
 				}
 			}
