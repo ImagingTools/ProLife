@@ -142,23 +142,23 @@ test('Edit order test (add new hardware product)', async ({ page }) => {
   await clickAt(page, 700, 250); // Product CB click
   await clickAt(page, 700, 290); // First item click from CB
   await clickAt(page, 1045, 335); // New Sensor switch click
-  await clickAt(page, 700, 415); // Types CB click
-  await clickAt(page, 700, 450); // First item click from CB
-  await clickAt(page, 700, 490); // MAC Address text input click
+  await clickAt(page, 700, 470); // Types CB click
+  await clickAt(page, 700, 505); // First item click from CB
+  await clickAt(page, 700, 545); // MAC Address text input click
   await page.keyboard.type('8c:1f:64:50:19:1b'); // Mac Address already exists in order
   await checkScreenshot(page, 'orders_edit_h_9.png')
 
-  await clickAt(page, 700, 490); // MAC Address text input click
+  await clickAt(page, 700, 545); // MAC Address text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('8c:1f:64:50:19:20'); // Valid Mac Address
   await checkScreenshot(page, 'orders_edit_h_10.png')
 
-  await clickAt(page, 700, 570); // Serial Number text input click
+  await clickAt(page, 700, 625); // Serial Number text input click
   await page.keyboard.type('S8C1F6450191B'); // Serial Number already exists in order
   await checkScreenshot(page, 'orders_edit_h_11.png')
 
-  await clickAt(page, 700, 570); // Serial Number text input click
+  await clickAt(page, 700, 625); // Serial Number text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('77777');
@@ -194,13 +194,13 @@ test('Edit order test (add new software product)', async ({ page }) => {
   await clickAt(page, 700, 250); // Product CB click
   await clickAt(page, 700, 290); // First item click from CB
   await clickAt(page, 1045, 335); // New License switch click
-  await clickAt(page, 700, 415); // Licenses CB click
-  await clickAt(page, 700, 450); // First item click from CB
-  await clickAt(page, 700, 490); // Software-ID text input click
+  await clickAt(page, 700, 530); // Licenses CB click
+  await clickAt(page, 700, 565); // First item click from CB
+  await clickAt(page, 700, 610); // Software-ID text input click
   await page.keyboard.type('9989897'); // Software-ID already exists in order
   await checkScreenshot(page, 'orders_edit_s_3.png')
 
-  await clickAt(page, 700, 490); // Software-ID text input click
+  await clickAt(page, 700, 610); // Software-ID text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('9989810'); // Valid Software-ID

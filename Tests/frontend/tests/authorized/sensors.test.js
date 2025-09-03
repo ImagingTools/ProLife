@@ -162,23 +162,22 @@ test('Sensors new command test', async ({ page }) => {
   await clickAt(page, 575, 430); // Select 3 element from combobox
   await checkScreenshot(page, 'sensors_new_editor_configuration_3_select.png')
 
-  await clickAt(page, 575, 575); // Mac Address text input click
+  await clickAt(page, 575, 650); // Mac Address text input click
   await page.keyboard.type('12345');
   await checkScreenshot(page, 'sensors_new_editor_mac_address_error1.png')
 
-  await clickAt(page, 575, 575); // Mac Address text input click
+  await clickAt(page, 575, 650); // Mac Address text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('xx:xx:xx:xx:xx:xx');
   await checkScreenshot(page, 'sensors_new_editor_mac_address_error2.png')
 
-  await clickAt(page, 575, 575); // Mac Address text input click
+  await clickAt(page, 575, 650); // Mac Address text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('11:11:11:11:11:11');
-  // await checkScreenshot(page, 'sensors_new_editor_mac_address_valid.png')
 
-  await clickAt(page, 575, 495); // Serial Number text input click
+  await clickAt(page, 575, 575); // Serial Number text input click
   await page.keyboard.type('11:11:11:11:11:11');
   await checkScreenshot(page, 'sensors_new_editor_serial_number_enter.png')
 
