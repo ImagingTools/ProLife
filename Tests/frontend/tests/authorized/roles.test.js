@@ -99,6 +99,9 @@ test('Roles New command GUI test', async ({ page }) => {
 });
 
 test('Roles Edit command GUI test', async ({ page }) => {
+  await clickAt(page, 1000, 135); // Text filter click
+  await page.keyboard.type('sensor production manager');
+
   await clickAt(page, 672, 215); // Select first element
   await clickAt(page, 425, 85); // Edit command click
   await checkScreenshot(page, 'roles_editor_1.png')

@@ -324,7 +324,7 @@ test('Bind command test', async ({ page }) => {
   await checkScreenshot(page, 'bind_sensors_13.png')
 
   await clickAt(page, 730, 480); // Ok button click
-  await checkScreenshot(page, 'bind_sensors_14.png')
+  await checkScreenshot(page, 'bind_sensors_14.png', { x: 925, y: 230, width: 235, height: 30 })
 });
 
 test('Transfer licenses command test', async ({ page }) => {

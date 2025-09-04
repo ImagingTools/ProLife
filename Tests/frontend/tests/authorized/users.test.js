@@ -13,7 +13,7 @@ test('Start users page', async ({ page }) => {
 
 test('Users sort tests', async ({ page }) => {
   await clickAt(page, 1084, 180); // Last Connection column click
-  await checkScreenshot(page, 'user_last_connection_asc.png')
+  await checkScreenshot(page, 'user_last_connection_asc.png', { x: 1115, y: 195, width: 150, height: 30 })
 
   await clickAt(page, 1084, 180); // Last Connection column click
   await checkScreenshot(page, 'user_last_connection_desc.png')
