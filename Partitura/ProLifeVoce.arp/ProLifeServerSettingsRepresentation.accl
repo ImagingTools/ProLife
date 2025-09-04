@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5395" Description="ACF"/>
-            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -17,13 +17,6 @@
         <Element ComponentName="SupportSettingsRepresentation" X="325" Y="650" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="SupportSettingsRepresentation">
-            <PositionMap>
-                <Element ComponentName="SettingsRepresentation" X="600" Y="225" Note=""/>
-                <Element ComponentName="SupportEmaiRepresentationController" X="600" Y="400" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="ServerSettingsRepresentation">
             <PositionMap>
                 <Element ComponentName="LisaConnectionParamRepresentation" X="250" Y="225" Note=""/>
@@ -38,6 +31,13 @@
                 <Element ComponentName="BackupFolder" X="925" Y="275" Note=""/>
                 <Element ComponentName="BackupSettingsRepresentation" X="550" Y="75" Note=""/>
                 <Element ComponentName="SchedulerParams" X="225" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="SupportSettingsRepresentation">
+            <PositionMap>
+                <Element ComponentName="SettingsRepresentation" X="600" Y="225" Note=""/>
+                <Element ComponentName="SupportEmaiRepresentationController" X="600" Y="400" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
