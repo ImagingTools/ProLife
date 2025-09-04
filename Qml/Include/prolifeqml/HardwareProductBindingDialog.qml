@@ -271,7 +271,11 @@ Dialog {
 											let index = checkedIndexes[i]
 	
 											let id = availableLicensesModel.getData("id", index)
-											flickableContent.bindingModel.m_softwareIds += ";" + id
+											if (i > 0){
+												flickableContent.bindingModel.m_softwareIds += ";"
+											}
+
+											flickableContent.bindingModel.m_softwareIds += id
 
 											let index2 = usedLicensesTableElementView.table.elements.insertNewItem()
 											usedLicensesTableElementView.table.elements.copyItemDataFromModel(index2, availableLicensesModel, index)

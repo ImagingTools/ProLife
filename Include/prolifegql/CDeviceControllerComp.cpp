@@ -94,80 +94,80 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 
 
 sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
-	const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& errorMessage) const
+			const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
 {
 	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload retVal;
-	
+
 	sdl::prolife::Sensors::UpdateDeviceBindingRequestArguments inputArguments = updateDeviceBindingRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		I_CRITICAL();
-		
+
 		return retVal;
 	}
-	
+
 	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0& response = retVal.Version_1_0.emplace();
-	
+
 	QByteArray deviceId;
 	if (inputArguments.input.Version_1_0->deviceId){
 		deviceId = *inputArguments.input.Version_1_0->deviceId;
 	}
-	
+
 	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData;
 	if (inputArguments.input.Version_1_0->item){
 		deviceBindingData = *inputArguments.input.Version_1_0->item;
 	}
-	
+
 	QString project;
 	if (inputArguments.input.Version_1_0->project){
 		project = *inputArguments.input.Version_1_0->project;
 	}
-	
+
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
 		deviceBindingInfoPtr.SetCastedOrRemove(dataPtr.GetPtr(), false);
 	}
-	
+
 	if (!deviceBindingInfoPtr.IsValid()){
 		prolifedata::CHardwareProductBinding* deviceBindingPtr = new prolifedata::CHardwareProductBinding();
 		deviceBindingPtr->SetHardwareId(deviceId);
-		
+
 		deviceBindingInfoPtr.SetPtr(deviceBindingPtr, true);
-		
+
 		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
 		if (result.isEmpty()){
 			SendWarningMessage(0, QString("Unable to insert hardware binding object to collection"), "CDeviceControllerComp");
 		}
 	}
-	
+
 	if (!deviceBindingInfoPtr.IsValid()){
 		errorMessage = QString("Unable to update device binding. Error: Device is invalid");
-		
+
 		return retVal;
 	}
-	
+
 	response.id = deviceId;
-	
+
 	QByteArrayList newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->split(';');
 	QByteArrayList hardwareBindingSoftwareIds = deviceBindingInfoPtr->GetSoftwareIds();
-	
+
 	QByteArrayList addedLicenses;
 	QByteArrayList removedLicenses;
-	
+
 	for (const QByteArray& id : newHardwareBindingSoftwareIds){
 		if (!hardwareBindingSoftwareIds.contains(id)){
 			addedLicenses << id;
 		}
 	}
-	
+
 	for (const QByteArray& id : hardwareBindingSoftwareIds){
 		if (!newHardwareBindingSoftwareIds.contains(id)){
 			removedLicenses << id;
 		}
 	}
-	
+
 	// Check product-ID
 	QByteArray prevProductId;
 	for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
@@ -183,14 +183,14 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 				else{
 					if (prevProductId != productId){
 						errorMessage = QString("Unable to update device binding. Error: Licenses must be of the same product");
-						
+
 						return retVal;
 					}
 				}
 			}
 		}
 	}
-	
+
 	// Check licenses
 	for (int i = 0; i < newHardwareBindingSoftwareIds.size(); i++){
 		imtbase::IObjectCollection::DataPtr softwareDataPtr;
@@ -199,7 +199,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 				= dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 			if (productInstanceInfoPtr != nullptr){
 				imtbase::ICollectionInfo::Ids licenseIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
-				
+
 				for (int j = i + 1; j < newHardwareBindingSoftwareIds.size(); j++){
 					imtbase::IObjectCollection::DataPtr softwareDataPtr2;
 					if (m_softwareProductCollectionCompPtr->GetObjectData(newHardwareBindingSoftwareIds[j], softwareDataPtr2)){
@@ -220,22 +220,22 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 			}
 		}
 	}
-	
+
 	deviceBindingInfoPtr->SetHardwareId(deviceId);
-	
+
 	newHardwareBindingSoftwareIds.removeAll("");
 	deviceBindingInfoPtr->SetSoftwareIds(newHardwareBindingSoftwareIds);
-	
+
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		
+
 		return retVal;
 	}
-	
+
 	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
 	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
-	
+
 	return retVal;
 }
 
