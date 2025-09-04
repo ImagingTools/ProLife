@@ -340,7 +340,7 @@ test('Transfer licenses command test', async ({ page }) => {
   await checkScreenshot(page, 'sensors_transfer_licenses_2.png')
 
   await clickAt(page, 1305, 730); // Close button click
-  await checkScreenshot(page, 'sensors_transfer_licenses_3.png')
+  await checkScreenshot(page, 'sensors_transfer_licenses_3.png', { x: 1055, y: 235, width: 205, height: 20 })
 
   await clickAt(page, 525, 70); // Close document from tab
   await checkScreenshot(page, 'sensors_transfer_licenses_4.png')

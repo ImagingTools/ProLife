@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, wheelScroll} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, wheelScroll, delay} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -101,14 +101,15 @@ test('Roles New command GUI test', async ({ page }) => {
 test('Roles Edit command GUI test', async ({ page }) => {
   await clickAt(page, 1000, 135); // Text filter click
   await page.keyboard.type('sensor production manager');
-
+  await delay(100);
   await clickAt(page, 665, 215); // Select first element
+  await delay(100);
   await clickAt(page, 425, 85); // Edit command click
-  await checkScreenshot(page, 'roles_editor_1.png')
+  await checkScreenshot(page, 'roles_editor_1.png');
 
   await page.mouse.move(700, 400);
-  await wheelScroll(page, 1000)
-  await checkScreenshot(page, 'roles_editor_2.png')
+  await wheelScroll(page, 1000);
+  await checkScreenshot(page, 'roles_editor_2.png');
 });
 
 
