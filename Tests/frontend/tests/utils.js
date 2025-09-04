@@ -24,7 +24,7 @@ const wheelScroll = async (page, deltaY) => {
 const checkScreenshot = async (page, filename, maskParams) => {
   await addMask(page, maskParams);
   await waitForPageStability(page);
-  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0.015});
+  await expect(page).toHaveScreenshot(filename, { fullPage: true });
   await removeMask(page);
 };
 
