@@ -71,13 +71,13 @@ test('New order test', async ({ page }) => {
   await clickAt(page, 1045, 340); // New license check box click
   await checkScreenshot(page, 'orders_new_editor_12.png')
 
-  await clickAt(page, 700, 415); // License type combobox click
+  await clickAt(page, 700, 535); // License type combobox click
   await checkScreenshot(page, 'orders_new_editor_13.png')
 
-  await clickAt(page, 700, 445); // Select first elem
+  await clickAt(page, 700, 565); // Select first elem
   await checkScreenshot(page, 'orders_new_editor_14.png')
 
-  await clickAt(page, 775, 570); // Expiration check box click
+  await clickAt(page, 765, 690); // Expiration check box click
   await checkScreenshot(page, 'orders_new_editor_15.png')
 
   await clickAt(page, 1020, 85); // Hardware category click
@@ -98,10 +98,10 @@ test('New order test', async ({ page }) => {
   await clickAt(page, 1047, 340); // New sensor checkbox click
   await checkScreenshot(page, 'orders_new_editor_21.png')
 
-  await clickAt(page, 700, 415); // Type combobox click
+  await clickAt(page, 700, 465); // Type combobox click
   await checkScreenshot(page, 'orders_new_editor_22.png')
 
-  await clickAt(page, 700, 450); // Select first elem
+  await clickAt(page, 700, 500); // Select first elem
   await checkScreenshot(page, 'orders_new_editor_23.png')
 
   await clickAt(page, 915, 85); // Software category click
