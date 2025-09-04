@@ -45,7 +45,7 @@ test('Roles filter tests', async ({ page }) => {
   await clickAt(page, 45, 25); // Remove focus
 
   await clickAt(page, 300, 135); // Date filter click
-  await checkScreenshot(page, 'roles_filters_date.png')
+  await checkScreenshot(page, 'roles_filters_date.png', { x: 275, y: 415, width: 240, height: 100 })
 });
 
 test('Roles remove command GUI test', async ({ page }) => {
@@ -102,7 +102,7 @@ test('Roles Edit command GUI test', async ({ page }) => {
   await clickAt(page, 1000, 135); // Text filter click
   await page.keyboard.type('sensor production manager');
 
-  await clickAt(page, 672, 215); // Select first element
+  await clickAt(page, 680, 215); // Select first element
   await clickAt(page, 425, 85); // Edit command click
   await checkScreenshot(page, 'roles_editor_1.png')
 

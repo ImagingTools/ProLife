@@ -32,7 +32,7 @@ test('Settings test', async ({ page }) => {
 
   await clickAt(page, 310, 205); // Page about click
 
-  await checkScreenshot(page, 'settings_about_page.png')
+  await checkScreenshot(page, 'settings_about_page.png', { x: 810, y: 180, width: 290, height: 30 })
 });
 
 test('User popup logout test', async ({ page }) => {

@@ -12,23 +12,24 @@ test('Start users page', async ({ page }) => {
 });
 
 test('Users sort tests', async ({ page }) => {
+  let mask = { x: 1015, y: 200, width: 150, height: 565 }
   await clickAt(page, 1084, 180); // Last Connection column click
-  await checkScreenshot(page, 'user_last_connection_asc.png', { x: 1115, y: 195, width: 150, height: 30 })
+  await checkScreenshot(page, 'user_last_connection_asc.png', mask)
 
   await clickAt(page, 1084, 180); // Last Connection column click
-  await checkScreenshot(page, 'user_last_connection_desc.png')
+  await checkScreenshot(page, 'user_last_connection_desc.png', mask)
 
   await clickAt(page, 462, 180); // Email column click
-  await checkScreenshot(page, 'user_email_asc.png')
+  await checkScreenshot(page, 'user_email_asc.png', mask)
 
   await clickAt(page, 462, 180); // Email column click
-  await checkScreenshot(page, 'user_email_desc.png')
+  await checkScreenshot(page, 'user_email_desc.png', mask)
 
   await clickAt(page, 320, 180); // Name column click
-  await checkScreenshot(page, 'user_name_asc.png')
+  await checkScreenshot(page, 'user_name_asc.png', mask)
 
   await clickAt(page, 320, 180); // Name column click
-  await checkScreenshot(page, 'user_name_desc.png')
+  await checkScreenshot(page, 'user_name_desc.png', mask)
 });
 
 test('Users revision command test', async ({ page }) => {

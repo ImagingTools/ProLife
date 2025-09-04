@@ -29,7 +29,7 @@ test('Customers filters GUI test', async ({ page }) => {
   await removeFocus(page);
 
   await clickAt(page, 130, 165); // Date filter click
-  await checkScreenshot(page, 'customers_date_filter.png')
+  await checkScreenshot(page, 'customers_date_filter.png', { x: 110, y: 444, width: 235, height: 105 })
 
   await clickAt(page, 1383, 207); // Hide filter button click
   await checkScreenshot(page, 'customers_hidden_filter.png')
