@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5395" Description="ACF"/>
-            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -81,6 +81,7 @@
                                 <Value>Pages/SoftwareProductsPage</Value>
                                 <Value>Pages/OrdersPage</Value>
                                 <Value>Pages/AccountsPage</Value>
+                                <Value>Pages/UserActionPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -196,6 +197,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -351,5 +355,7 @@
         <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="ApplicationHandlers"/>
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="ApplicationHandlers"/>
     </ExportedInterfaces>
-    <ExportedComponents/>
+    <ExportedComponents>
+        <Component ExportedId="UserActionSqlRepository" ComponentId="Pages/UserActionSqlRepository"/>
+    </ExportedComponents>
 </Acf>

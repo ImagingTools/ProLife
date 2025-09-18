@@ -602,8 +602,6 @@ ViewBase {
 				
 				TableElementView {
 					id: licenseInformationTable
-					// name: qsTr("Licenses")
-					// readOnly: deviceEditorContainer.readOnly
 					
 					TreeItemModel {
 						id: headersModel

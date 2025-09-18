@@ -2,18 +2,21 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5352" Description="ACF"/>
-            <Version Id="1" Number="2237" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountsPage" PackageId="ImtCoreVoce" ComponentId="MultiDocPage">
+        <Element Id="AccountsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="FixedItemQmlPath" Type="Text" ExportId="">
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Accounts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -24,9 +27,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Customers"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Accounts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -52,13 +52,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesPage" PackageId="ImtCoreVoce" ComponentId="MultiDocPage">
+        <Element Id="DevicesPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="32"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="FixedItemQmlPath" Type="Text" ExportId="">
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Devices"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/DeviceCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -69,9 +72,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Hardware"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -137,9 +137,15 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="OrdersPage" PackageId="ImtCoreVoce" ComponentId="Page">
+        <Element Id="OrdersPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Orders"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/OrderCollectionView.qml"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Deployment"/>
                     </AttributeInfo>
@@ -147,9 +153,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Orders"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Orders"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
@@ -166,12 +169,6 @@
                                 <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="../../ProLife/OrdersMultiDocWorkspacePageView.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="StartQmlItem" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/OrderCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -268,10 +265,13 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SoftwareProductsPage" PackageId="ImtCoreVoce" ComponentId="MultiDocPage">
+        <Element Id="SoftwareProductsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="FixedItemQmlPath" Type="Text" ExportId="">
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareProducts"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/SoftwareProductCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
@@ -282,9 +282,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Software"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareProducts"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -300,6 +297,33 @@
                                 <Value>RemoveLicense</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="UserAction" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="UserActions"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="qrc:/qml/imtauthgui/UserActionCollectionView.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Icons/Account"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="User Actions"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -548,5 +572,6 @@
         <Component ExportedId="SoftwareProductsController" ComponentId="PageData/SoftwareProductsPage"/>
         <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Repositories/SoftwareSqlRepository"/>
+        <Component ExportedId="UserActionPage" ComponentId="UserAction"/>
     </ExportedComponents>
 </Acf>

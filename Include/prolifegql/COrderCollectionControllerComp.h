@@ -38,6 +38,11 @@ protected:
 				QByteArrayList& removedProducts,
 				QByteArrayList& updatedProducts) const;
 
+	virtual bool OnBeforeRemoveElements(
+				const QByteArrayList& elementIds,
+				const imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 	// reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
@@ -58,7 +63,6 @@ protected:
 				const sdl::prolife::Orders::COrderUpdateGqlRequest& orderUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:

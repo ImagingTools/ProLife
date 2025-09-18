@@ -13,11 +13,12 @@
         <Element ComponentName="DevicesInfo" X="550" Y="375" Note=""/>
         <Element ComponentName="DevicesList" X="550" Y="275" Note=""/>
         <Element ComponentName="DevicesRemove" X="200" Y="375" Note=""/>
-        <Element ComponentName="DevicesSetDescription" X="200" Y="475" Note=""/>
+        <Element ComponentName="DevicesRemove_1" X="200" Y="450" Note=""/>
+        <Element ComponentName="DevicesSetDescription" X="175" Y="525" Note=""/>
         <Element ComponentName="HardwareProductBindingAdd" X="925" Y="475" Note=""/>
         <Element ComponentName="HardwareProductBindingUpdate" X="925" Y="375" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
-        <Element ComponentName="ResetTransferCounter" X="575" Y="475" Note=""/>
+        <Element ComponentName="ResetTransferCounter" X="550" Y="475" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

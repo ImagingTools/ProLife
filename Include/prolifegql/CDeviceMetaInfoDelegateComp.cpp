@@ -54,7 +54,7 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 	
 	QByteArray productId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_ID).toByteArray();
 	representation["ProductId"] = QString(productId);
-	
+
 	QByteArray licenseId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toByteArray();
 	representation["LicenseId"] = QString(licenseId);
 	
@@ -113,7 +113,7 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 	if (representation.contains("CustomerName")){
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME, representation.value("CustomerName"));
 	}
-	
+
 	if (representation.contains("ProductName")){
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME, representation.value("ProductName"));
 	}

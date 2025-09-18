@@ -3,7 +3,7 @@ TARGET = ProLifeGqlPck
 include($(ACFDIR)/Config/QMake/ComponentConfig.pri)
 include($(IMTCOREDIR)/Config/QMake/ImtCore.pri)
 
-LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtguigql -limtbase -limtgql -limtgui -limtwidgets -limtlic -limtdb -limtauth -limtcol -limtbasesdl -limtservergql -limtrest
+LIBS += -L$(IMTCOREDIR)/Lib/$$COMPILER_DIR -limtguigql -limtbase -limtgql -limtgui -limtwidgets -limtlic -limtdb -limtauth -limtcol -limtbasesdl -limtservergql -limtserverapp -limtrest
 LIBS += -L$(PROLIFEDIR)/Lib/$$COMPILER_DIR -lprolifegql -lprolifedata -lprolifesdl
 
 include($(ACFDIR)/Config/QMake/AcfQt.pri)

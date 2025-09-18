@@ -11,19 +11,18 @@ import prolifeOrdersSdl 1.0
 
 RemoteCollectionView {
 	id: container;
-	
 	visibleMetaInfo: false;
-	
 	collectionId: "Orders";
-	
 	documentCollectionFilter: null
-	
+
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
 			collectionView: container;
-			
-			documentTypeId: "Order";
-			viewTypeId: "OrderEditor";
-			
+			documentTypeIds: ["Order"]
+			documentViewsComp: [orderEditorComp]
+			documentViewTypeIds: ["OrderEditor"]
+			documentValidatorsComp: [orderValidatorComp]
+			documentDataControllersComp: [dataControllerComp]
+
 			function setupContextMenu(){
 				let commandsController = collectionView.commandsController;
 				if (commandsController){
@@ -83,6 +82,64 @@ RemoteCollectionView {
 				onCollectionModelChanged: {
 					customersDelegateFilter.setOptionsList(m_options)
 				}
+			}
+		}
+	}
+
+	Component {
+		id: orderEditorComp;
+		
+		OrderEditor {
+			id: orderEditor;
+			
+			commandsDelegateComp: Component {ViewCommandsDelegateBase {
+					view: orderEditor;
+				}
+			}
+			
+			commandsControllerComp: Component { GqlBasedCommandsController {
+					typeId: "Order";
+				}
+			}
+		}
+	}
+	
+	Component {
+		id: orderValidatorComp;
+		
+		OrderValidator {}
+	}
+	
+	Component {
+		id: dataControllerComp;
+		
+		GqlRequestDocumentDataController {
+			id: requestDocumentDataController
+			
+			property OrderData orderData: documentModel;
+			
+			gqlGetCommandId: ProlifeOrdersSdlCommandIds.s_orderItem;
+			gqlUpdateCommandId: ProlifeOrdersSdlCommandIds.s_orderUpdate;
+			gqlAddCommandId: ProlifeOrdersSdlCommandIds.s_orderAdd;
+			
+			typeId: "Order";
+			documentName: orderData ? orderData.m_orderId: "";
+			documentDescription: orderData ? orderData.m_description: "";
+			
+			onSaved: {
+				let orderProductsModel = documentModel.m_orderProducts;
+				for (let i = 0; i < orderProductsModel.count; i++){
+					let productItem = orderProductsModel.get(i).item;
+					if (productItem.m_isNew){
+						productItem.m_isNew = false;
+						
+						orderProductsModel.set(i, {item: productItem})
+					}
+				}
+			}
+			
+			documentModelComp: Component {
+				OrderData {}
 			}
 		}
 	}

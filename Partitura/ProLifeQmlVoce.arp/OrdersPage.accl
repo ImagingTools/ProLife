@@ -2,13 +2,14 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5385" Description="ACF"/>
-            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CheckPermissionOr" X="125" Y="575" Note=""/>
+        <Element ComponentName="CollectionHeadersProvider" X="850" Y="300" Note=""/>
         <Element ComponentName="Demultiplexer" X="575" Y="125" Note=""/>
         <Element ComponentName="GroupFilterParamJoiner" X="175" Y="300" Note=""/>
         <Element ComponentName="OperationContextController" X="750" Y="500" Note=""/>
@@ -16,7 +17,6 @@
         <Element ComponentName="OrderCollectionCommands" X="900" Y="125" Note=""/>
         <Element ComponentName="OrderCollectionController" X="550" Y="300" Note=""/>
         <Element ComponentName="OrderCommands" X="250" Y="125" Note=""/>
-        <Element ComponentName="OrderHeadersDataProvider" X="425" Y="500" Note=""/>
         <Element ComponentName="OrderInfo" X="1050" Y="500" Note=""/>
         <Element ComponentName="OrderPermissions" X="275" Y="700" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="400" Y="600" Note=""/>

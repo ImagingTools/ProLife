@@ -7,6 +7,7 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
 import imtdocgui 1.0
+import imtlicgui 1.0
 import prolifeSensorsSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
@@ -31,9 +32,12 @@ RemoteCollectionView {
 	}
 	
 	function registerFilters(){
-		registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
+		registerFieldFilterDelegate("SoftwareCount", licenseDelegateFilterComp)
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 		registerFieldFilterDelegate("SensorStatus", statusDelegateFilterComp)
+		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
+		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)
+		setFilterDependency(DeviceItemTypeMetaInfo.s_licenseUuid, DeviceItemTypeMetaInfo.s_productUuid)
 	}
 
 	Component {
@@ -60,7 +64,7 @@ RemoteCollectionView {
 	}
 
 	Component {
-		id: licensesDelegateFilterComp
+		id: licenseDelegateFilterComp
 		
 		LicenseFilterDelegate {
 		}
@@ -70,6 +74,50 @@ RemoteCollectionView {
 		id: customersDelegateFilterComp
 		
 		CustomerFilterDelegate {
+		}
+	}
+
+	Component {
+		id: productsDelegateFilterComp
+		
+		FieldFilterDelegate {
+			id: productsDelegateFilter
+			name: qsTr("Products")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_productUuid
+			
+			OptionsListAdapter {
+				id: optionsListAdapter
+				collectionModel: CachedProductCollection.hardwareProductsModel
+				
+				onCollectionModelChanged: {
+					productsDelegateFilter.setOptionsList(m_options)
+				}
+			}
+		}
+	}
+
+	Component {
+		id: licensesDelegateFilterComp
+		
+		FieldFilterDelegate {
+			id: productsDelegateFilter
+			name: qsTr("Licenses")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_licenseUuid
+			
+			onFilterDependencyChanged: {
+				if (filterId === DeviceItemTypeMetaInfo.s_productUuid){
+					optionsListAdapter.collectionModel = CachedProductCollection.getLicensesModel(filterValue)
+				}
+			}
+			
+			OptionsListAdapter {
+				id: optionsListAdapter
+				onCollectionModelChanged: {
+					productsDelegateFilter.setOptionsList(m_options)
+				}
+			}
 		}
 	}
 

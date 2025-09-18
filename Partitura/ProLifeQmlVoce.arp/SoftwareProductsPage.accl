@@ -2,17 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5385" Description="ACF"/>
-            <Version Id="1" Number="2247" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CheckPermissionOr" X="125" Y="125" Note=""/>
         <Element ComponentName="CollectionCommands" X="975" Y="225" Note=""/>
+        <Element ComponentName="CollectionHeadersProvider" X="425" Y="425" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
         <Element ComponentName="GroupFilterParamJoiner" X="175" Y="300" Note=""/>
-        <Element ComponentName="HeadersDataProvider" X="125" Y="450" Note=""/>
         <Element ComponentName="LicenseChangeGenerator" X="1025" Y="450" Note=""/>
         <Element ComponentName="ObjectCommands" X="975" Y="75" Note=""/>
         <Element ComponentName="OperationContextController" X="725" Y="450" Note=""/>
@@ -23,18 +23,18 @@
         <Element ComponentName="SoftwareProductCollectionController" X="575" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="ObjectCommands">
-            <PositionMap>
-                <Element ComponentName="StandardDocumentCommandsController" X="575" Y="125" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
                 <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
                 <Element ComponentName="OpenOrder" X="950" Y="275" Note=""/>
                 <Element ComponentName="Revision" X="950" Y="425" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ObjectCommands">
+            <PositionMap>
+                <Element ComponentName="StandardDocumentCommandsController" X="575" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

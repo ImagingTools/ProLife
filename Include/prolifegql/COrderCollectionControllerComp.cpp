@@ -159,6 +159,47 @@ void COrderCollectionControllerComp::GenerateDifferences(
 }
 
 
+bool COrderCollectionControllerComp::OnBeforeRemoveElements(
+			const QByteArrayList& elementIds,
+			const imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& /*errorMessage*/) const
+{
+	for (const QByteArray& objectId : elementIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
+			if (oldOrderInfoPtr != nullptr){
+				imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
+				if (productCollectionPtr != nullptr){
+					imtbase::ICollectionInfo::Ids elementIds = productCollectionPtr->GetElementIds();
+					for (const imtbase::ICollectionInfo::Id& id : elementIds){
+						imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
+						if (typeId == QByteArray("HardwareInfo")){
+							if (!UpdateOrderForHardware(id, "")){
+								SendWarningMessage(0,
+												   QString("Unable to remove order '%1' from device '%2'")
+													   .arg(qPrintable(objectId), qPrintable(objectId)),
+												   "COrderCollectionControllerComp");
+							}
+						}
+						else if (typeId == QByteArray("SoftwareInfo")){
+							if (!UpdateOrderForSoftware(id, "")){
+								SendWarningMessage(0,
+												   QString("Unable to remove order '%1' from software '%2'")
+													   .arg(qPrintable(objectId), qPrintable(objectId)),
+												   "COrderCollectionControllerComp");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+
 // reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
@@ -612,53 +653,6 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	return true;
-}
-
-
-imtbase::CTreeItemModel* COrderCollectionControllerComp::DeleteObject(
-		const imtgql::CGqlRequest& gqlRequest,
-		QString& errorMessage) const
-{
-	const imtgql::CGqlParamObject& inputParams = gqlRequest.GetParams();
-	
-	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
-	if (!errorMessage.isEmpty()){
-		return nullptr;
-	}
-	
-	for (const QByteArray& objectId : objectIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-			if (oldOrderInfoPtr != nullptr){
-				imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
-				if (productCollectionPtr != nullptr){
-					imtbase::ICollectionInfo::Ids elementIds = productCollectionPtr->GetElementIds();
-					for (const imtbase::ICollectionInfo::Id& id : elementIds){
-						imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
-						if (typeId == QByteArray("HardwareInfo")){
-							if (!UpdateOrderForHardware(id, "")){
-								SendWarningMessage(0,
-												   QString("Unable to remove order '%1' from device '%2'")
-													   .arg(qPrintable(objectId), qPrintable(objectId)),
-												   "COrderCollectionControllerComp");
-							}
-						}
-						else if (typeId == QByteArray("SoftwareInfo")){
-							if (!UpdateOrderForSoftware(id, "")){
-								SendWarningMessage(0,
-												   QString("Unable to remove order '%1' from software '%2'")
-													   .arg(qPrintable(objectId), qPrintable(objectId)),
-												   "COrderCollectionControllerComp");
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return BaseClass::DeleteObject(gqlRequest, errorMessage);
 }
 
 

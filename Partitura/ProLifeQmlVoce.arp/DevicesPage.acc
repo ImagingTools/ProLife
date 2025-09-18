@@ -35,6 +35,82 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CollectionHeadersProvider" PackageId="ImtColPck" ComponentId="CollectionHeadersProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="FilterableHeaderIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeaderIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HeaderNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Status</Value>
+                                <Value>Product</Value>
+                                <Value>Article</Value>
+                                <Value>Name</Value>
+                                <Value>Hardware-ID</Value>
+                                <Value>Serial Number</Value>
+                                <Value>Delivery-ID</Value>
+                                <Value>Purchase Order-ID</Value>
+                                <Value>Project</Value>
+                                <Value>Customer</Value>
+                                <Value>Added</Value>
+                                <Value>Last Modified</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SortableHeaderIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>status</Value>
+                                <Value>productName</Value>
+                                <Value>licenseId</Value>
+                                <Value>licenseName</Value>
+                                <Value>macAddress</Value>
+                                <Value>serialNumber</Value>
+                                <Value>deliveryId</Value>
+                                <Value>purchaseId</Value>
+                                <Value>project</Value>
+                                <Value>customerName</Value>
+                                <Value>added</Value>
+                                <Value>timeStamp</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="Demultiplexer" PackageId="ImtServerGqlPck" ComponentId="GraphQLDemultiplexer">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -121,7 +197,7 @@
                         <Data IsEnabled="true" Value="GroupFilterParamJoiner"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HeadersProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DeviceHeadersDataProvider"/>
+                        <Data IsEnabled="true" Value="CollectionHeadersProvider"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
                         <Data IsEnabled="false"/>
@@ -173,6 +249,8 @@
                                 <Value>customerName</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
+                                <Value>productUuid</Value>
+                                <Value>licenseUuid</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -191,6 +269,8 @@
                                 <Value>CustomerName</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
+                                <Value>DeviceType</Value>
+                                <Value>ConfigurationType</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -291,77 +371,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AesInitVector"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="DeviceHeadersDataProvider" PackageId="ImtServerGqlPck" ComponentId="HeadersDataProvider">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>DevicesInfo</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HeadersIds" Type="String[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>status</Value>
-                                <Value>productName</Value>
-                                <Value>licenseId</Value>
-                                <Value>licenseName</Value>
-                                <Value>macAddress</Value>
-                                <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
-                                <Value>project</Value>
-                                <Value>customerName</Value>
-                                <Value>added</Value>
-                                <Value>timeStamp</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="HeadersNames" Type="Text[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Status</Value>
-                                <Value>Product</Value>
-                                <Value>Article</Value>
-                                <Value>Name</Value>
-                                <Value>Hardware-ID</Value>
-                                <Value>Serial Number</Value>
-                                <Value>Delivery-ID</Value>
-                                <Value>Purchase Order-ID</Value>
-                                <Value>Project</Value>
-                                <Value>Customer</Value>
-                                <Value>Added</Value>
-                                <Value>Last Modified</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SearchByFilterIds" Type="String[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>status</Value>
-                                <Value>productName</Value>
-                                <Value>licenseId</Value>
-                                <Value>licenseName</Value>
-                                <Value>macAddress</Value>
-                                <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
-                                <Value>project</Value>
-                                <Value>customerName</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

@@ -31,14 +31,13 @@
         <file alias="ProLife/LicenseValidator.qml">LicenseValidator.qml</file>
         <file alias="ProLife/OrderValidator.qml">OrderValidator.qml</file>
         <file alias="ProLife/DeviceCollectionFilterDecorator.qml">DeviceCollectionFilterDecorator.qml</file>
-        <file alias="ProLife/OrdersMultiDocWorkspacePageView.qml">OrdersMultiDocWorkspacePageView.qml</file>
         <file alias="ProLife/OrderProductDelegate.qml">OrderProductDelegate.qml</file>
-	<file alias="ProLife/AccountEditorCommandsDelegate.qml">AccountEditorCommandsDelegate.qml</file>
-	<file alias="ProLife/AccountEditor.qml">AccountEditor.qml</file>
-	<file alias="ProLife/AccountCollectionViewCommandsDelegate.qml">AccountCollectionViewCommandsDelegate.qml</file>
-	<file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
-	<file alias="ProLife/AccountFilterComboBox.qml">AccountFilterComboBox.qml</file>
-	<file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
-	<file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
+        <file alias="ProLife/AccountEditorCommandsDelegate.qml">AccountEditorCommandsDelegate.qml</file>
+        <file alias="ProLife/AccountEditor.qml">AccountEditor.qml</file>
+        <file alias="ProLife/AccountCollectionViewCommandsDelegate.qml">AccountCollectionViewCommandsDelegate.qml</file>
+        <file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
+        <file alias="ProLife/AccountFilterComboBox.qml">AccountFilterComboBox.qml</file>
+        <file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
+        <file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
     </qresource>
 </RCC>

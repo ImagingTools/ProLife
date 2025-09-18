@@ -78,6 +78,134 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 }
 
 
+sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControllerComp::OnGetElementMetaInfo(
+			const sdl::imtbase::ImtCollection::CGetElementMetaInfoGqlRequest& getElementMetaInfoRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload response;
+	response.Version_1_0.Emplace();
+
+	sdl::imtbase::ImtCollection::GetElementMetaInfoRequestArguments arguments = getElementMetaInfoRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		Q_ASSERT(false);
+		return response;
+	}
+
+	QByteArray objectId;
+	if (arguments.input.Version_1_0->elementId){
+		objectId = *arguments.input.Version_1_0->elementId;
+	}
+
+	sdl::imtbase::ImtCollection::CElementMetaInfo::V1_0 elementMetaInfo;
+	sdl::imtbase::ImtBaseTypes::CParameter::V1_0 parameter;
+	parameter.id = QByteArrayLiteral("Licenses");
+	parameter.typeId = "";
+	parameter.name = QStringLiteral("Licenses");
+
+	QString parameterData;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+		if (bindingInfoPtr != nullptr){
+			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+			for (const QByteArray& softwareId : softwareIds){
+				imtbase::IObjectCollection::DataPtr productDataPtr;
+				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
+					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
+					if (productInstanceInfoPtr != nullptr){
+						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
+						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
+
+						for (const QByteArray& licenseId : elementsIds){
+							imtbase::IObjectCollection::DataPtr licenseDataPtr;
+							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+								if (licenseDefinitionPtr != nullptr){
+									
+									QString licenseName = licenseDefinitionPtr->GetLicenseName();
+									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
+
+									parameterData += licenseName + " (" + licenseDefinitionId + ")\n";
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (parameterData.isEmpty()){
+		parameterData = QStringLiteral("No Licenses");
+	}
+	
+	parameter.data = parameterData;
+	
+	QList<sdl::imtbase::ImtBaseTypes::CParameter::V1_0> infoParams;
+	infoParams << parameter;
+
+	elementMetaInfo.infoParams = infoParams;
+	response.Version_1_0->elementMetaInfo = elementMetaInfo;
+
+	return response;
+}
+
+
+bool CDeviceCollectionControllerComp::OnBeforeRemoveElements(
+			const QByteArrayList& elementIds,
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	for (const QByteArray& objectId : elementIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+			const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
+			if (bindingInfoPtr != nullptr){
+				QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+				for (const QByteArray& softwareId : softwareIds){
+					imtbase::IObjectCollection::DataPtr softwareDataPtr;
+					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
+						const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
+						if (productInstanceInfoPtr != nullptr){
+							bool isUse = productInstanceInfoPtr->IsInUse();
+							if (isUse){
+								errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
+								SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
+								errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	for (const QByteArray& objectId : elementIds){
+		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
+		imtbase::IObjectCollection::DataPtr deviceDataPtr;
+		if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
+			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
+		}
+
+		if (deviceInfoPtr != nullptr){
+			QByteArray orderId = deviceInfoPtr->GetOrderId();
+			if (!orderId.isEmpty()){
+				if (!RemoveDeviceFromOrder(objectId, orderId)){
+					SendWarningMessage(	0,
+										QString("Remove device '%1' from order '%2' failed")
+										.arg(qPrintable(objectId), qPrintable(orderId)),
+										"CDeviceCollectionControllerComp");
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+
 // reimplemented (sdl::prolife::Sensors::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
@@ -302,7 +430,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 		return false;
 	}
-	
+
 	QByteArray id;
 	if (arguments.input.Version_1_0->id){
 		id = *arguments.input.Version_1_0->id;
@@ -431,173 +559,6 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	return true;
-}
-
-
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::DeleteObject(
-			const imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const
-{
-	if (!m_objectCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_bindingCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'BindingCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_softwareProductCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	QByteArrayList objectIds = ExtractObjectIdsForRemoval(gqlRequest, errorMessage);
-	if (!errorMessage.isEmpty()){
-		return nullptr;
-	}
-
-	for (const QByteArray& objectId : objectIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
-			if (bindingInfoPtr != nullptr){
-				QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
-				for (const QByteArray& softwareId : softwareIds){
-					imtbase::IObjectCollection::DataPtr softwareDataPtr;
-					if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
-						const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
-						if (productInstanceInfoPtr != nullptr){
-							bool isUse = productInstanceInfoPtr->IsInUse();
-							if (isUse){
-								errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
-								SendErrorMessage(0, errorMessage, "CDeviceCollectionControllerComp");
-								errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CDeviceCollectionControllerComp");
-
-								return nullptr;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	for (const QByteArray& objectId : objectIds){
-		prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = nullptr;
-		imtbase::IObjectCollection::DataPtr deviceDataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(objectId, deviceDataPtr)){
-			deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(deviceDataPtr.GetPtr());
-		}
-
-		if (deviceInfoPtr != nullptr){
-			QByteArray orderId = deviceInfoPtr->GetOrderId();
-			if (!orderId.isEmpty()){
-				if (!RemoveDeviceFromOrder(objectId, orderId)){
-					SendWarningMessage(0,
-									   QString("Remove device '%1' from order '%2' failed")
-									   .arg(qPrintable(objectId), qPrintable(orderId)),
-									   "CDeviceCollectionControllerComp");
-				}
-			}
-		}
-	}
-
-	return BaseClass::DeleteObject(gqlRequest, errorMessage);
-}
-
-
-imtbase::CTreeItemModel* CDeviceCollectionControllerComp::GetMetaInfo(const imtgql::CGqlRequest& gqlRequest, QString& /*errorMessage*/) const
-{
-	if (!m_licenseCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'LicenseCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_bindingCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'BindingCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	if (!m_softwareProductCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'SoftwareProductCollection' was not set", "CDeviceCollectionControllerComp");
-		return nullptr;
-	}
-
-	QByteArray objectId;
-	const imtgql::CGqlParamObject* inputParamPtr = gqlRequest.GetParamObject("input");
-	if (inputParamPtr != nullptr){
-		objectId = inputParamPtr->GetParamArgumentValue("id").toByteArray();
-	}
-	
-	istd::TDelPtr<imtbase::CTreeItemModel> rootModelPtr(new imtbase::CTreeItemModel);
-	imtbase::CTreeItemModel* dataModelPtr = rootModelPtr->AddTreeModel("data");
-
-	int index = dataModelPtr->InsertNewItem();
-
-	QString name = QT_TR_NOOP("Licenses");
-
-	QByteArray languageId;
-	if (m_translationManagerCompPtr.IsValid()){
-		const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-		if (gqlContextPtr != nullptr){
-			languageId = gqlContextPtr->GetLanguageId();
-		}
-
-		QString elementNameTr = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), name.toUtf8(), languageId, "prolifegql::CDeviceCollectionControllerComp");
-
-		name = elementNameTr;
-	}
-
-	dataModelPtr->SetData("name", name, index);
-	imtbase::CTreeItemModel* childrenModelPtr = dataModelPtr->AddTreeModel("children", index);
-
-	bool ok = false;
-
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
-		if (bindingInfoPtr != nullptr){
-			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
-
-			ok = !softwareIds.isEmpty();
-
-			for (const QByteArray& softwareId : softwareIds){
-				imtbase::IObjectCollection::DataPtr productDataPtr;
-				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
-					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
-					if (productInstanceInfoPtr != nullptr){
-						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
-						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
-
-						for (const QByteArray& licenseId : elementsIds){
-							imtbase::IObjectCollection::DataPtr licenseDataPtr;
-							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
-								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-								if (licenseDefinitionPtr != nullptr){
-									QString licenseName = licenseDefinitionPtr->GetLicenseName();
-									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
-
-									int childrenIndex = childrenModelPtr->InsertNewItem();
-									childrenModelPtr->SetData("value", licenseName + " (" + licenseDefinitionId + ")", childrenIndex);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if (!ok){
-		int childrenIndex = childrenModelPtr->InsertNewItem();
-		QString elementNameTr = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("No Licenses"), languageId, "prolifegql::CDeviceCollectionControllerComp");
-
-		childrenModelPtr->SetData("value", elementNameTr, childrenIndex);
-	}
-
-	return rootModelPtr.PopPtr();
 }
 
 

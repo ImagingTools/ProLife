@@ -34,6 +34,11 @@ protected:
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
+	virtual bool OnBeforeRemoveElements(
+				const QByteArrayList& elementIds,
+				const imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 	// reimplemented (sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
@@ -54,7 +59,6 @@ protected:
 				const sdl::prolife::Licenses::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual imtbase::CTreeItemModel* DeleteObject(const imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
@@ -65,7 +69,7 @@ private:
 				QString& errorMessage) const;
 	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
-	
+
 private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

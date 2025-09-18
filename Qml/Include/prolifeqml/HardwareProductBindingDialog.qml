@@ -58,11 +58,7 @@ Dialog {
 	
 	onFinished: {
 		if (buttonId == Enums.ok){
-			if (!bindingModel){
-				return
-			}
-
-			ModalDialogManager.openDialog(messageDialog, {"inputValue":bindingModel.m_project});
+			ModalDialogManager.openDialog(messageDialog, {});
 		}
 	}
 
@@ -275,7 +271,7 @@ Dialog {
 											let index = checkedIndexes[i]
 	
 											let id = availableLicensesModel.getData("id", index)
-											if (flickableContent.bindingModel.m_softwareIds !== ""){
+											if (i > 0){
 												flickableContent.bindingModel.m_softwareIds += ";"
 											}
 

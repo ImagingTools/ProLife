@@ -11,12 +11,12 @@
         <Element ComponentName="AesInitVector" X="1100" Y="475" Note=""/>
         <Element ComponentName="CheckPermissionOr" X="125" Y="75" Note=""/>
         <Element ComponentName="CollectionCommands" X="1000" Y="175" Note=""/>
+        <Element ComponentName="CollectionHeadersProvider" X="375" Y="475" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
         <Element ComponentName="DeviceChangeGenerator" X="425" Y="700" Note=""/>
         <Element ComponentName="DeviceCollectionController" X="350" Y="200" Note=""/>
         <Element ComponentName="DeviceCommands" X="1000" Y="75" Note=""/>
         <Element ComponentName="DeviceController" X="950" Y="400" Note=""/>
-        <Element ComponentName="DeviceHeadersDataProvider" X="125" Y="525" Note=""/>
         <Element ComponentName="DeviceInfo" X="200" Y="600" Note=""/>
         <Element ComponentName="Encryption" X="1075" Y="275" Note=""/>
         <Element ComponentName="EncryptionBasePersistence" X="875" Y="275" Note=""/>
@@ -28,17 +28,10 @@
         <Element ComponentName="XmlFileSerializer" X="650" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="CollectionCommands">
+        <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="Bind" X="600" Y="250" Note=""/>
-                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
-                <Element ComponentName="DecryptFile" X="600" Y="600" Note=""/>
-                <Element ComponentName="OpenOrder" X="1025" Y="250" Note=""/>
-                <Element ComponentName="ResetTransferCounter" X="1025" Y="725" Note=""/>
-                <Element ComponentName="Revision" X="1025" Y="425" Note=""/>
-                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-                <Element ComponentName="TransferLicenses" X="1025" Y="600" Note=""/>
+                <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
+                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -52,10 +45,17 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
+        <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
-                <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
-                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
+                <Element ComponentName="Bind" X="600" Y="250" Note=""/>
+                <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="425" Note=""/>
+                <Element ComponentName="DecryptFile" X="600" Y="600" Note=""/>
+                <Element ComponentName="OpenOrder" X="1025" Y="250" Note=""/>
+                <Element ComponentName="ResetTransferCounter" X="1025" Y="725" Note=""/>
+                <Element ComponentName="Revision" X="1025" Y="425" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
+                <Element ComponentName="TransferLicenses" X="1025" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

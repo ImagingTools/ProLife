@@ -6,6 +6,7 @@ import imtauthgui 1.0
 import imtcontrols 1.0
 import imtcolgui 1.0
 import imtguigql 1.0
+import imtlicgui 1.0
 import imtdocgui 1.0
 import prolifeLicensesSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
@@ -21,7 +22,7 @@ RemoteCollectionView {
 		SoftwareProductItemTypeMetaInfo.s_macAddress,
 		SoftwareProductItemTypeMetaInfo.s_inUse,
 		SoftwareProductItemTypeMetaInfo.s_productUuid,
-		SoftwareProductItemTypeMetaInfo.s_customerId,
+		SoftwareProductItemTypeMetaInfo.s_customerId
 	]
 	
 	commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
@@ -42,8 +43,11 @@ RemoteCollectionView {
 	}
 	
 	function registerFilters(){
-		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
+		registerFieldFilterDelegate("LicenseStatus", licenseStatusDelegateFilterComp)
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
+		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)
+		setFilterDependency(SoftwareProductItemTypeMetaInfo.s_licenseUuid, SoftwareProductItemTypeMetaInfo.s_productUuid)
 	}
 	
 	function registerDocumentInfo(){
@@ -140,7 +144,51 @@ RemoteCollectionView {
 	}
 	
 	Component {
-		id: licenseDelegateFilterComp
+		id: productsDelegateFilterComp
+		
+		FieldFilterDelegate {
+			id: productsDelegateFilter
+			name: qsTr("Products")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_productUuid
+			
+			OptionsListAdapter {
+				id: optionsListAdapter
+				collectionModel: CachedProductCollection.softwareProductsModel
+				
+				onCollectionModelChanged: {
+					productsDelegateFilter.setOptionsList(m_options)
+				}
+			}
+		}
+	}
+
+	Component {
+		id: licensesDelegateFilterComp
+		
+		FieldFilterDelegate {
+			id: productsDelegateFilter
+			name: qsTr("Licenses")
+			visibleItemCount: 15
+			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_licenseUuid
+			
+			onFilterDependencyChanged: {
+				if (filterId === SoftwareProductItemTypeMetaInfo.s_productUuid){
+					optionsListAdapter.collectionModel = CachedProductCollection.getLicensesModel(filterValue)
+				}
+			}
+			
+			OptionsListAdapter {
+				id: optionsListAdapter
+				onCollectionModelChanged: {
+					productsDelegateFilter.setOptionsList(m_options)
+				}
+			}
+		}
+	}
+	
+	Component {
+		id: licenseStatusDelegateFilterComp
 		FieldFilterDelegate {
 			id: licenseDelegateFilter
 			name: qsTr("License Status")

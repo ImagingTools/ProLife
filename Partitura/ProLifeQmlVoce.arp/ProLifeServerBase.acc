@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5395" Description="ACF"/>
-            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -235,6 +235,13 @@
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserActionDatabaseDelegate" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>AuthorizableServerFramework/UserActionSqlRepository</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -265,7 +272,7 @@
                     <AttributeInfo Id="ExternRequestHandlers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AuthorizableServerFramework/PumaGQLClientEngine</Value>
+                                <Value>AuthorizableServerFramework</Value>
                                 <Value>LisaGQLEngine</Value>
                             </Values>
                         </Data>
@@ -440,6 +447,9 @@
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserActionSqlRepository"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -543,9 +553,10 @@
                                 <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>MigrationController</Value>
+                                            <Value>MigrationController0_13</Value>
                                             <Value>DatabaseConverterComp</Value>
-                                            <Value>MigrationController_2</Value>
+                                            <Value>MigrationController15</Value>
+                                            <Value>MigrationController16</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -574,7 +585,7 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ObjectCollectionMigrationController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="ObjectCollectionMigrationController"/>
+                                    <Data IsEnabled="true" Value="MigrationController14"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderDatabaseDelegate" Type="Reference" ExportId="OrderDatabaseDelegate">
                                     <Data IsEnabled="false"/>
@@ -591,7 +602,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="MigrationController" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                    <Element Id="MigrationController0_13" PackageId="ImtDatabasePck" ComponentId="MigrationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -615,7 +626,31 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="MigrationController_2" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                    <Element Id="MigrationController14" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="SqlDatabaseObjectDelegates">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="14"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="MigrationController15" PackageId="ImtDatabasePck" ComponentId="MigrationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -639,6 +674,30 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="MigrationController16" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="16"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="UserActionDatabaseDelegate">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="16"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="MigrationFilePath" PackageId="FilePck" ComponentId="RelativeFileNameParam">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -650,30 +709,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="ReferencePath" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="SystemLocation"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ObjectCollectionMigrationController" PackageId="ImtDatabasePck" ComponentId="ObjectCollectionMigrationController">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="From" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="14"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SqlDatabaseObjectDelegates" Type="Reference[]" ExportId="SqlDatabaseObjectDelegates">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="To" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="14"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -712,6 +747,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -816,6 +854,9 @@
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -838,6 +879,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -877,6 +921,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -960,12 +1007,8 @@
                     <Element Id="DeviceCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>OnDevicesCollectionChanged</Value>
-                                        </Values>
-                                    </Data>
+                                <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
