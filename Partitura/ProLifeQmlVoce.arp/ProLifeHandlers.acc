@@ -81,7 +81,6 @@
                                 <Value>Pages/SoftwareProductsPage</Value>
                                 <Value>Pages/OrdersPage</Value>
                                 <Value>Pages/AccountsPage</Value>
-                                <Value>Pages/UserActionPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -197,9 +196,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
