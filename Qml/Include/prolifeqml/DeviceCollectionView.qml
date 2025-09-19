@@ -91,7 +91,6 @@ RemoteCollectionView {
 				collectionModel: CachedProductCollection.hardwareProductsModel
 				
 				onCollectionModelChanged: {
-					console.log("onCollectionModelChanged",collectionModel.toJson())
 					productsDelegateFilter.setOptionsList(m_options)
 				}
 			}
@@ -99,7 +98,7 @@ RemoteCollectionView {
 			Connections {
 				target: CachedProductCollection
 				function onHardwareProductsModelReady(){
-					console.log("onHardwareProductsModelReady")
+					optionsListAdapter.collectionModel = null
 					optionsListAdapter.collectionModel = CachedProductCollection.hardwareProductsModel
 				}
 			}
