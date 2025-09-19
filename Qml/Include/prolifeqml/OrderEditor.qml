@@ -441,13 +441,20 @@ ViewBase {
 
 							let index = productsView.activeProductIndex;
 							if (index < 0){
+								let addProductFunc = function(product){
+									if (actualOrderProducts){
+										actualOrderProducts.insert(0, {"item": product.copyMe()})
+									}
+								}
+
+								let productItem =  productsDialog.bodyItem.productItem;
 								let instanceCount = productsDialog.bodyItem.instanceCount
 								for (let i = 0; i < instanceCount; ++i){
-									let productModel = productsDialog.bodyItem.productItem.copyMe();
-									productModel.m_id = UuidGenerator.generateUUID();
-									if (actualOrderProducts){
-										actualOrderProducts.insert(0, {"item": productModel})
+									if (productItem.m_isNew){
+										productItem.m_id = UuidGenerator.generateUUID();
 									}
+									
+									addProductFunc(productItem)
 								}
 							}
 							else{

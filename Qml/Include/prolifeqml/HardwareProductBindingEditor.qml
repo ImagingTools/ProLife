@@ -145,6 +145,7 @@ Dialog {
 						table.selectable: false;
 						tableViewParamsStoredServer: false;
 						canResetFilters: false
+						commandsDelegateComp: null
 
 						dataControllerComp:
 							Component {
@@ -163,8 +164,6 @@ Dialog {
 							}
 						}
 
-						function registerDocumentInfo(){}
-						
 						function registerFilters(){
 							registerFieldFilterDelegate("Products", productsDelegateFilterComp)
 						}

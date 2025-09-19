@@ -13,9 +13,7 @@ import imtbaseComplexCollectionFilterSdl 1.0
 
 RemoteCollectionView {
 	id: container;
-	
-	collectionId: "SoftwareProducts";
-	
+
 	documentCollectionFilter: null
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_orderUuid,
@@ -27,6 +25,10 @@ RemoteCollectionView {
 	
 	commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
 			collectionView: container;
+			documentTypeIds: ["SoftwareProduct"]
+			documentViewsComp: [softwareEditorComp]
+			documentDataControllersComp: [documentDataControllerComp]
+			documentValidatorsComp: [licenseValidatorComp]
 		}
 	}
 	
@@ -38,7 +40,6 @@ RemoteCollectionView {
 	
 	Component.onCompleted: {
 		table.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")
-		registerDocumentInfo()
 		registerFilters()
 	}
 	
@@ -49,16 +50,7 @@ RemoteCollectionView {
 		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)
 		setFilterDependency(SoftwareProductItemTypeMetaInfo.s_licenseUuid, SoftwareProductItemTypeMetaInfo.s_productUuid)
 	}
-	
-	function registerDocumentInfo(){
-		let documentManager = MainDocumentManager.getDocumentManager(container.collectionId);
-		if (documentManager){
-			documentManager.registerDocumentView("SoftwareProduct", "SoftwareProductEditor", softwareEditorComp);
-			documentManager.registerDocumentDataController("SoftwareProduct", documentDataControllerComp);
-			documentManager.registerDocumentValidator("SoftwareProduct", licenseValidatorComp);
-		}
-	}
-	
+
 	Component {
 		id: softwareEditorComp;
 		

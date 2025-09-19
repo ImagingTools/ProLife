@@ -308,7 +308,7 @@ DocumentCollectionViewDelegate {
 		else if (commandId === "OpenOrder"){
 			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, indexes[0]);
 			if (orderId !== ""){
-				MainDocumentManager.openDocument(orderId, "Order")
+				MainDocumentManager.openDocument("Orders", orderId, "Order")
 			}
 		}
 		else if (commandId === createLicenseFileCommand){

@@ -38,10 +38,27 @@ bool COrderCollectionControllerComp::CheckProducts(
 	}
 
 	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
-		QByteArray objectUuid = *product.id;
-		QByteArray productUuid = *product.productUuid;
-		QByteArray categoryId = *product.categoryId;
+		QByteArray objectUuid;
+		if (product.id){
+			objectUuid = *product.id;
+		}
+
+		QByteArray productUuid;
+		if (product.productUuid){
+			productUuid = *product.productUuid;
+		}
+
+		QByteArray categoryId;
+		if (product.categoryId){
+			categoryId = *product.categoryId;
+		}
+
 		QString productName = GetProductName(productUuid);
+
+		bool isNew = false;
+		if (product.isNew){
+			isNew = *product.isNew;
+		}
 
 		if (categoryId == "Software"){
 			QByteArray serialNumber;
@@ -49,10 +66,12 @@ bool COrderCollectionControllerComp::CheckProducts(
 				serialNumber = *product.serialNumber;
 			}
 
-			bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectUuid, serialNumber, *m_softwareInstanceCollectionCompPtr);
-			if (!ok){
-				errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because serial number '%2' already exists")).arg(productName, qPrintable(serialNumber));
-				return false;
+			if (isNew){
+				bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectUuid, serialNumber, *m_softwareInstanceCollectionCompPtr);
+				if (!ok){
+					errorMessage = QString(QT_TR_NOOP("It is not possible to save the product '%1' because serial number '%2' already exists")).arg(productName, qPrintable(serialNumber));
+					return false;
+				}
 			}
 
 			imtbase::IObjectCollection::DataPtr dataPtr;
@@ -69,7 +88,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 			}
 		}
 		else if (categoryId == "Hardware"){
-			if (product.macAddress){
+			if (product.macAddress && isNew){
 				QByteArray macAddress = *product.macAddress;
 				if (!macAddress.isEmpty()){
 					bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
@@ -92,7 +111,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 				}
 			}
 
-			if (product.serialNumber){
+			if (product.serialNumber && isNew){
 				QByteArray serialNumber = *product.serialNumber;
 				if (!serialNumber.isEmpty()){
 					bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
@@ -1090,4 +1109,5 @@ bool COrderCollectionControllerComp::CreateNewSoftware(
 
 } // namespace prolifegql
 
-
+			
+			

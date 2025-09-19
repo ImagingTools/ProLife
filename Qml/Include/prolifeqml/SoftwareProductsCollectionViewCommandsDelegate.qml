@@ -9,10 +9,7 @@ import prolifeLicensesSdl 1.0
 
 DocumentCollectionViewDelegate {
 	id: container;
-	
-	documentTypeId: "SoftwareProduct";
-	viewTypeId: "SoftwareProductEditor";
-	
+
 	removeDialogTitle: qsTr("Removing the software instance");
 	removeMessage: qsTr("Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.");
 
@@ -75,7 +72,7 @@ DocumentCollectionViewDelegate {
 			let elementsModel = container.collectionView.table.elements;
 			let orderUuid = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, indexes[0]);
 			if (orderUuid !== ""){
-				MainDocumentManager.openDocument(orderUuid, "Order")
+				MainDocumentManager.openDocument("Orders", orderUuid, "Order")
 			}
 		}
 	}
