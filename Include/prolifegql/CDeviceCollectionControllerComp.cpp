@@ -142,7 +142,7 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 	
 	parameter.data = parameterData;
 	
-	QList<sdl::imtbase::ImtBaseTypes::CParameter::V1_0> infoParams;
+	imtsdl::TElementList<sdl::imtbase::ImtBaseTypes::CParameter::V1_0> infoParams;
 	infoParams << parameter;
 
 	elementMetaInfo.infoParams = infoParams;
@@ -463,7 +463,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	representationPayload.deviceType = (productUuid);
 
-	QList<sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0> softwareBindingInfoList;
+	imtsdl::TElementList<sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(id);
 	for (const QByteArray& softwareId : softwareIds){

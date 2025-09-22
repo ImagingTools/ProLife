@@ -29,7 +29,7 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	bool CheckProducts(const QByteArray& orderUuid, const QList<sdl::prolife::Orders::COrderedProduct::V1_0>& productsModel, QString& errorMessage) const;
+	bool CheckProducts(const QByteArray& orderUuid, const imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0>& productsModel, QString& errorMessage) const;
 	QString GetProductName(const QByteArray& productUuid) const;
 	void GenerateDifferences(
 				prolifedata::IOrderInfo& currentOrder,

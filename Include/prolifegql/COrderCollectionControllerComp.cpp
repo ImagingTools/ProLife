@@ -24,7 +24,7 @@ namespace prolifegql
 
 bool COrderCollectionControllerComp::CheckProducts(
 	const QByteArray& orderUuid,
-	const QList<sdl::prolife::Orders::COrderedProduct::V1_0>& products,
+	const imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0>& products,
 	QString& errorMessage) const
 {
 	if (!m_softwareInstanceCollectionCompPtr.IsValid()){
@@ -37,33 +37,33 @@ bool COrderCollectionControllerComp::CheckProducts(
 		return false;
 	}
 
-	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+	for (const istd::TSharedNullable<sdl::prolife::Orders::COrderedProduct::V1_0>& product : products){
 		QByteArray objectUuid;
-		if (product.id){
-			objectUuid = *product.id;
+		if (product->id){
+			objectUuid = *product->id;
 		}
 
 		QByteArray productUuid;
-		if (product.productUuid){
-			productUuid = *product.productUuid;
+		if (product->productUuid){
+			productUuid = *product->productUuid;
 		}
 
 		QByteArray categoryId;
-		if (product.categoryId){
-			categoryId = *product.categoryId;
+		if (product->categoryId){
+			categoryId = *product->categoryId;
 		}
 
 		QString productName = GetProductName(productUuid);
 
 		bool isNew = false;
-		if (product.isNew){
-			isNew = *product.isNew;
+		if (product->isNew){
+			isNew = *product->isNew;
 		}
 
 		if (categoryId == "Software"){
 			QByteArray serialNumber;
-			if (product.serialNumber){
-				serialNumber = *product.serialNumber;
+			if (product->serialNumber){
+				serialNumber = *product->serialNumber;
 			}
 
 			if (isNew){
@@ -88,8 +88,8 @@ bool COrderCollectionControllerComp::CheckProducts(
 			}
 		}
 		else if (categoryId == "Hardware"){
-			if (product.macAddress && isNew){
-				QByteArray macAddress = *product.macAddress;
+			if (product->macAddress && isNew){
+				QByteArray macAddress = *product->macAddress;
 				if (!macAddress.isEmpty()){
 					bool ok = prolifedata::CheckDeviceMacAddressExists(objectUuid, macAddress, *m_deviceCollectionCompPtr);
 					if (!ok){
@@ -111,8 +111,8 @@ bool COrderCollectionControllerComp::CheckProducts(
 				}
 			}
 
-			if (product.serialNumber && isNew){
-				QByteArray serialNumber = *product.serialNumber;
+			if (product->serialNumber && isNew){
+				QByteArray serialNumber = *product->serialNumber;
 				if (!serialNumber.isEmpty()){
 					bool serialNumberIsValid = prolifedata::CheckDeviceSerialNumberExists(objectUuid, serialNumber, *m_deviceCollectionCompPtr);
 					if (!serialNumberIsValid){
@@ -328,30 +328,30 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 		return nullptr;
 	}
 
-	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
+	imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
 	if (orderDataRepresentation.orderProducts){
 		products = *orderDataRepresentation.orderProducts;
 	}
 
-	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+	for (const istd::TSharedNullable<sdl::prolife::Orders::COrderedProduct::V1_0>& product : products){
 		QByteArray categoryId;
-		if (product.categoryId){
-			categoryId = *product.categoryId;
+		if (product->categoryId){
+			categoryId = *product->categoryId;
 		}
 
 		QByteArray productId;
-		if (product.id){
-			productId = *product.id;
+		if (product->id){
+			productId = *product->id;
 		}
 
 		bool isNew = false;
-		if (product.isNew){
-			isNew = *product.isNew;
+		if (product->isNew){
+			isNew = *product->isNew;
 		}
 
 		if (categoryId == QByteArray("Hardware")){
 			if (isNew){
-				CreateNewHardware(product, newObjectId);
+				CreateNewHardware(*product, newObjectId);
 			}
 			else{
 				UpdateOrderForHardware(productId, newObjectId);
@@ -359,7 +359,7 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 		}
 		else if (categoryId == QByteArray("Software")){
 			if (isNew){
-				CreateNewSoftware(product, newObjectId);
+				CreateNewSoftware(*product, newObjectId);
 			}
 			else{
 				UpdateOrderForSoftware(productId, newObjectId);
@@ -423,7 +423,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
+	imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
 
 	imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
 	for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
@@ -549,7 +549,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		}
 	}
 
-	representationPayload.orderProducts = std::move(products);
+	representationPayload.orderProducts = products;
 
 	return true;
 }
@@ -636,25 +636,25 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	if (orderData.orderProducts){
-		for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : *orderData.orderProducts){
+		for (const istd::TSharedNullable<sdl::prolife::Orders::COrderedProduct::V1_0>& product : *orderData.orderProducts){
 			bool isNew = false;
-			if (product.isNew){
-				isNew = *product.isNew;
+			if (product->isNew){
+				isNew = *product->isNew;
 			}
 
 			QByteArray productId;
-			if (product.id){
-				productId = *product.id;
+			if (product->id){
+				productId = *product->id;
 			}
 
 			QByteArray categoryId;
-			if (product.categoryId){
-				categoryId = *product.categoryId;
+			if (product->categoryId){
+				categoryId = *product->categoryId;
 			}
 
 			if (categoryId == QByteArray("Hardware")){
 				if (isNew){
-					CreateNewHardware(product, objectId);
+					CreateNewHardware(*product, objectId);
 				}
 				else if (addedProducts.contains(productId)){
 					UpdateOrderForHardware(productId, objectId);
@@ -662,7 +662,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 			}
 			else if (categoryId == QByteArray("Software")){
 				if (isNew){
-					CreateNewSoftware(product, objectId);
+					CreateNewSoftware(*product, objectId);
 				}
 				else if (addedProducts.contains(productId)){
 					UpdateOrderForSoftware(productId, objectId);
@@ -812,7 +812,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 
-	QList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
+	imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
 	if (orderDataRepresentation.orderProducts){
 		products = *orderDataRepresentation.orderProducts;
 	}
@@ -822,18 +822,18 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 
-	for (const sdl::prolife::Orders::COrderedProduct::V1_0& product : products){
+	for (const istd::TSharedNullable<sdl::prolife::Orders::COrderedProduct::V1_0>& product : products){
 		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
 
 		QByteArray orderProductUuid;
-		if (product.id){
-			orderProductUuid = *product.id;
+		if (product->id){
+			orderProductUuid = *product->id;
 		}
 
 		QByteArray categoryId;
-		if (product.categoryId){
-			categoryId = *product.categoryId;
+		if (product->categoryId){
+			categoryId = *product->categoryId;
 		}
 
 		objectLinkPtr->SetObjectUuid(orderProductUuid);
