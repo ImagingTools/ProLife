@@ -48,12 +48,15 @@ DocumentCollectionViewDelegate {
 		
 		GqlRequestDocumentDataController {
 			id: requestDocumentDataController
-			
+
+			property DeviceData deviceData: documentModel;
+
 			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
 			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
 			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
 			
 			typeId: "Device";
+			documentName: deviceData ? deviceData.m_macAddress : ""
 			
 			documentModelComp: Component {
 				DeviceData {}
@@ -208,13 +211,7 @@ DocumentCollectionViewDelegate {
 		
 		let isEnabled = selection.length === 1;
 		let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, selection[0]);
-		
-		let isOpenOrderEnabled = isEnabled;
-		if (isOpenOrderEnabled){
-			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_deliveryId, selection[0]);
-			isOpenOrderEnabled = isOpenOrderEnabled && orderId !== "";
-		}
-		
+
 		let isBindEnabled = isEnabled;
 		if (isBindEnabled){
 			isBindEnabled = isBindEnabled && macAddress !== "";
@@ -228,7 +225,6 @@ DocumentCollectionViewDelegate {
 		}
 		
 		if(commandsController){
-			commandsController.setCommandIsEnabled("OpenOrder", isOpenOrderEnabled);
 			commandsController.setCommandIsEnabled(bindCommand, isBindEnabled);
 			commandsController.setCommandIsEnabled(createLicenseFileCommand, isEnabled);
 			commandsController.setCommandIsEnabled(ProlifeSensorsSdlCommandIds.s_resetTransferCounter, isEnabled);
@@ -304,12 +300,6 @@ DocumentCollectionViewDelegate {
 			let macAddress = elementsModel.getData(DeviceItemTypeMetaInfo.s_macAddress, indexes[0]);
 
 			onBind(hardwareId, macAddress)
-		}
-		else if (commandId === "OpenOrder"){
-			let orderId = elementsModel.getData(DeviceItemTypeMetaInfo.s_orderUuid, indexes[0]);
-			if (orderId !== ""){
-				MainDocumentManager.openDocument("Orders", orderId, "Order")
-			}
 		}
 		else if (commandId === createLicenseFileCommand){
 			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])

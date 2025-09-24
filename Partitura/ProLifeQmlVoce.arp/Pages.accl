@@ -15,7 +15,6 @@
         <Element ComponentName="PageData" X="925" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="925" Y="200" Note=""/>
         <Element ComponentName="SoftwareProductsPage" X="200" Y="300" Note=""/>
-        <Element ComponentName="UserAction" X="200" Y="625" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PageData">

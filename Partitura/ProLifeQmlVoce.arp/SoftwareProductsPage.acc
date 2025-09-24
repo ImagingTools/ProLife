@@ -44,11 +44,11 @@
                                 <Value>licenseId</Value>
                                 <Value>licenseName</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
-                                <Value>macAddress</Value>
+                                <Value>customerLink</Value>
+                                <Value>hardwareLink</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -60,11 +60,11 @@
                                 <Value>licenseId</Value>
                                 <Value>licenseName</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
-                                <Value>macAddress</Value>
+                                <Value>customerLink</Value>
+                                <Value>hardwareLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -96,11 +96,11 @@
                                 <Value>licenseId</Value>
                                 <Value>licenseName</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
-                                <Value>macAddress</Value>
+                                <Value>customerLink</Value>
+                                <Value>hardwareLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -319,12 +319,11 @@
                                 <Value>licenseId</Value>
                                 <Value>licenseName</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
-                                <Value>customerId</Value>
-                                <Value>macAddress</Value>
+                                <Value>customerLink</Value>
+                                <Value>hardwareLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                                 <Value>productUuid</Value>
@@ -344,7 +343,6 @@
                                 <Value>PurchaseId</Value>
                                 <Value>Project</Value>
                                 <Value>CustomerName</Value>
-                                <Value>CustomerId</Value>
                                 <Value>MacAddress</Value>
                                 <Value>Added</Value>
                                 <Value>TimeStamp</Value>
@@ -357,6 +355,9 @@
                         <Data IsEnabled="true" Value="SoftwareInstanceInfo"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -373,9 +374,6 @@
                     <Element Id="CommandsController" PackageId="ImtGraphQlVoce" ComponentId="CommandsController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="LeftAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -388,13 +386,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="RightAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>OpenOrder</Value>
                                             <Value>Revision</Value>
                                         </Values>
                                     </Data>
@@ -407,46 +401,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="SoftwareProducts"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OpenOrder" PackageId="ImtCoreVoce" ComponentId="Command">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OpenOrder"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Deployment"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Open Order"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -536,9 +490,7 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
-                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="CommandsController"/>
                     <Interface InterfaceId="istd::IChangeable" ComponentId="CommandsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>

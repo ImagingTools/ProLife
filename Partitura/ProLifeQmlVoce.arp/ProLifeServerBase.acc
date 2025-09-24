@@ -31,6 +31,9 @@
         <Element Id="AuthorizableServerFramework" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
                     </AttributeInfo>
@@ -344,6 +347,9 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserActionManager"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="UserCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AdministrationRepositories/CachedUserCollection"/>
                     </AttributeInfo>
@@ -446,9 +452,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/UserActionSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>

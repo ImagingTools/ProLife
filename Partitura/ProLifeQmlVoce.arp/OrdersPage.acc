@@ -25,7 +25,7 @@
                                 <Value>orderId</Value>
                                 <Value>purchaseId</Value>
                                 <Value>description</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -36,7 +36,7 @@
                                 <Value>orderId</Value>
                                 <Value>purchaseId</Value>
                                 <Value>description</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -62,7 +62,7 @@
                                 <Value>orderId</Value>
                                 <Value>purchaseId</Value>
                                 <Value>description</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -251,7 +251,7 @@
                                 <Value>orderId</Value>
                                 <Value>purchaseId</Value>
                                 <Value>description</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -277,6 +277,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">

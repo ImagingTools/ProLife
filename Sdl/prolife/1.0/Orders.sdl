@@ -18,11 +18,10 @@ type OrderItem {
 	typeId: ID!
 	id: ID!
 	name: String
-	customerId: ID
+	customerLink: ObjectLink
 	status: String
 	orderId: ID
 	purchaseId: ID
-	customerName: String
 	description: String
 	added: String
 	timeStamp: String

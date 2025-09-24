@@ -47,10 +47,10 @@
                                 <Value>licenseName</Value>
                                 <Value>macAddress</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -63,10 +63,10 @@
                                 <Value>licenseName</Value>
                                 <Value>macAddress</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -99,10 +99,10 @@
                                 <Value>licenseName</Value>
                                 <Value>macAddress</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                             </Values>
@@ -243,10 +243,10 @@
                                 <Value>licenseName</Value>
                                 <Value>macAddress</Value>
                                 <Value>serialNumber</Value>
-                                <Value>deliveryId</Value>
-                                <Value>purchaseId</Value>
+                                <Value>deliveryIdLink</Value>
+                                <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
-                                <Value>customerName</Value>
+                                <Value>customerLink</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
                                 <Value>productUuid</Value>
@@ -278,6 +278,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -370,6 +373,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">
@@ -589,7 +595,6 @@
                                 <AttributeInfo Id="RightAlignmentCommands" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>OpenOrder</Value>
                                             <Value>Revision</Value>
                                             <Value>TransferLicenses</Value>
                                             <Value>ResetTransferCounter</Value>
@@ -675,46 +680,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Priority" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="0"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="OpenOrder" PackageId="ImtCoreVoce" ComponentId="Command">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="OpenOrder"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Deployment"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Open Order"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>

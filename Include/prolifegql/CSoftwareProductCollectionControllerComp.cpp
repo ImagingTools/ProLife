@@ -219,87 +219,128 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	if (requestInfo.items.isDescriptionRequested){
 		representationObject.description = (metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString());
 	}
-	
-	if (requestInfo.items.isDeliveryIdRequested){
-		representationObject.deliveryId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
+
+	QString scheme = "applink";
+	if (requestInfo.items.isDeliveryIdLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Order");
+		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Orders/Order");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.deliveryIdLink = objectLink;
 	}
 	
-	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.purchaseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString();
+	if (requestInfo.items.isPurchaseIdLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Order");
+		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Orders/Order");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.purchaseIdLink = objectLink;
 	}
-	
-	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.orderUuid = softwareInfoPtr->GetOrderId();
+
+	if (requestInfo.items.isHardwareLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Device");
+		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Devices/Device");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.hardwareLink = objectLink;
 	}
-	
-	if (requestInfo.items.isMacAddressRequested){
-		representationObject.macAddress = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
-	}
-	
+
 	if (requestInfo.items.isProductIdRequested){
 		representationObject.productId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID).toString();
 	}
-	
+
 	if (requestInfo.items.isProductNameRequested){
 		representationObject.productName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	}
-	
+
 	if (requestInfo.items.isProductUuidRequested){
 		representationObject.productUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID).toString();
 	}
-	
+
 	if (requestInfo.items.isSerialNumberRequested){
 		representationObject.serialNumber = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER).toString();
 	}
-	
+
 	if (requestInfo.items.isIsPairedRequested){
 		representationObject.isPaired = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED).toBool();
 	}
-	
+
 	if (requestInfo.items.isInUseRequested){
 		representationObject.inUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 	}
-	
-	if (requestInfo.items.isHardwareIdRequested){
-		representationObject.hardwareId = hardwareId;
-	}
-	
+
 	if (requestInfo.items.isLicenseNameRequested){
 		representationObject.licenseName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
 	}
-	
+
 	if (requestInfo.items.isLicenseIdRequested){
 		representationObject.licenseId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
 	}
-	
+
 	if (requestInfo.items.isLicenseUuidRequested){
 		representationObject.licenseUuid = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_UUID).toString();
 	}
-	
-	if (requestInfo.items.isCustomerIdRequested){
-		representationObject.customerId = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString();
+
+	if (requestInfo.items.isCustomerLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Account");
+		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Accounts/Account");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.customerLink = objectLink;
 	}
-	
-	if (requestInfo.items.isCustomerNameRequested){
-		representationObject.customerName = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
-	}
-	
+
 	if (requestInfo.items.isProjectRequested){
 		representationObject.project = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toString();
 	}
-	
+
 	if (requestInfo.items.isExpirationRequested){
 		imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 		if (!licenseIds.isEmpty()){
 			QByteArray licenseId = licenseIds[0];
-			
+
 			const imtlic::ILicenseInstance* licenseInstancePtr = softwareInfoPtr->GetLicenseInstance(licenseId);
 			if (licenseInstancePtr != nullptr){
 				representationObject.expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 			}
 		}
 	}
-	
+
 	if (requestInfo.items.isStatusRequested){
 		QByteArray hardwareMacAddress = hardwareId.toUtf8();
 		bool isPaired = !hardwareMacAddress.isEmpty();
@@ -309,7 +350,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		else{
 			representationObject.status = ("NotPaired");
 		}
-		
+
 		if (isPaired){
 			bool isUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 			if (isUse){
@@ -317,21 +358,21 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			}
 		}
 	}
-	
+
 	if (requestInfo.items.isAddedRequested){
 		QDateTime addedTime = objectCollectionIterator.GetElementInfo("Added").toDateTime().toUTC();
-		
+
 		QString added = addedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 		representationObject.added = (added);
 	}
-	
+
 	if (requestInfo.items.isTimeStampRequested){
 		QDateTime lastModifiedTime = objectCollectionIterator.GetElementInfo("Timestamp").toDateTime().toUTC();
-		
+
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 		representationObject.timeStamp = (lastModified);
 	}
-	
+
 	return true;
 }
 

@@ -314,13 +314,6 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="DocumentPersistenceList" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>JsonSerializer</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="JsonBasedMetaInfoDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SoftwareMetaInfoDelegate"/>
                     </AttributeInfo>

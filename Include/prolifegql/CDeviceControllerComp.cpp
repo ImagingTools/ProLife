@@ -671,11 +671,13 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	}
 
 	bool isAdmin = false;
+	QByteArray userId;
 	QString username;
 	const imtgql::IGqlContext* gqlContextPtr = createLicenseFileRequest.GetRequestContext();
 	if (gqlContextPtr != nullptr){
-		imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+		imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
 		if (userInfoPtr != nullptr){
+			userId = userInfoPtr->GetObjectUuid();
 			isAdmin = userInfoPtr->IsAdmin();
 			username = userInfoPtr->GetName();
 		}
@@ -761,16 +763,12 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	}
 
 	{
-		istd::TDelPtr<imtbase::IOperationContext> operationContextPtr =  nullptr;
-		if (m_deviceOperationContextControllerCompPtr.IsValid()){
-			operationContextPtr.SetPtr(m_deviceOperationContextControllerCompPtr->CreateOperationContext(
-				"CreateLicenseFile",
-				deviceId,
-				deviceDataPtr.GetPtr()));
-		}
+		if (m_userActionManagerCompPtr.IsValid()){
+			imtauth::IUserRecentAction::UserInfo userInfo(userId, username);
+			imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo( QByteArrayLiteral("CreateLicenseFile"), QStringLiteral("Create License File"), QStringLiteral("License file was created"));
+			imtauth::IUserRecentAction::TargetInfo targetInfo(deviceId, QByteArrayLiteral("Device"), QStringLiteral("Device"), QByteArrayLiteral("Devices"), macAddress);
 
-		if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *deviceDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-			SendWarningMessage(0, "Error when trying update hardware product", "CDeviceControllerComp");
+			m_userActionManagerCompPtr->CreateUserAction(userInfo, actionTypeInfo, targetInfo);
 		}
 	}
 

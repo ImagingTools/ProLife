@@ -16,9 +16,6 @@
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
 
 
-#undef GetObject
-
-
 namespace prolifegql
 {
 
@@ -35,11 +32,13 @@ public:
 		I_ASSIGN(m_encryptionBasedPersistenceCompPtr, "EncryptionBasedPersistence", "Encryption persistence used for license export", false, "EncryptionBasedPersistence");
 		I_ASSIGN(m_encryptionCompPtr, "Encryption", "Encrypt/Decrypt instances", true, "Encryption");
 		I_ASSIGN(m_maxTransferCountAttrPtr, "MaxTransferCount", "Max transfer count", true, 3);
+		I_ASSIGN(m_userActionManagerCompPtr, "UserActionManager", "User action manager", false, "UserActionManager");
 	I_END_COMPONENT
 	
 protected:
 	I_REF(ifile::IFilePersistence, m_basedPersistenceCompPtr);
 	I_REF(ifile::IFilePersistence, m_encryptionBasedPersistenceCompPtr);
+	I_REF(imtauth::IUserActionManager, m_userActionManagerCompPtr);
 	I_REF(iprm::IIdParam, m_vectorKeyCompPtr);
 	I_REF(imtcrypt::IEncryption, m_encryptionCompPtr);
 	I_ATTR(int, m_maxTransferCountAttrPtr);

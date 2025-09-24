@@ -35,12 +35,12 @@ type DeviceItem {
 	id: ID!
 	name: String!
 	description: String
-	deliveryId: ID
-	purchaseId: ID
+	deliveryIdLink: ObjectLink
+	purchaseIdLink: ObjectLink
 	licenseId: ID
 	productUuid: ID
 	licenseUuid: ID
-	orderUuid: ID
+	customerLink: ObjectLink
 	status: String
 	statusId: String
 	deviceType: String
@@ -50,7 +50,6 @@ type DeviceItem {
 	serialNumber: String
 	project: String
 	softwareLinksCount: Integer
-	customerName: String
 	added: String
 	timeStamp: String
 }

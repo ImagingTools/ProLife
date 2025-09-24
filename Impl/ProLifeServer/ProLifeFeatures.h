@@ -859,6 +859,46 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	productInfo.AddFeature("ce4a7f72-5303-4044-b25c-3a02020eebd3", *administrationFeatureInfo.GetPtr());
 
+	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> workspaceManagementFeatureInfo;
+	workspaceManagementFeatureInfo.SetPtr(new imtlic::CIdentifiableFeatureInfo);
+	workspaceManagementFeatureInfo->SetObjectUuid("df22ac46-7253-4b13-a1b8-d4391943adde");
+	workspaceManagementFeatureInfo->SetFeatureId("WorkspaceManagement");
+	workspaceManagementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Workspace Management"));
+	workspaceManagementFeatureInfo->SetOptional(false);
+	workspaceManagementFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewWorkspaceFeatureInfo;
+	viewWorkspaceFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewWorkspaceFeatureInfo->SetFeatureId("ViewWorkspace");
+	viewWorkspaceFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Workspace"));
+	viewWorkspaceFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View workspace page"));
+	viewWorkspaceFeatureInfo->SetOptional(false);
+	viewWorkspaceFeatureInfo->SetIsPermission(true);
+
+	workspaceManagementFeatureInfo->InsertSubFeature(viewWorkspaceFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewUserActionsFeatureInfo;
+	viewUserActionsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewUserActionsFeatureInfo->SetFeatureId("ViewUserActions");
+	viewUserActionsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View User Actions"));
+	viewUserActionsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View only your activity"));
+	viewUserActionsFeatureInfo->SetOptional(false);
+	viewUserActionsFeatureInfo->SetIsPermission(true);
+
+	workspaceManagementFeatureInfo->InsertSubFeature(viewUserActionsFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewAllUserActionsFeatureInfo;
+	viewAllUserActionsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewAllUserActionsFeatureInfo->SetFeatureId("ViewAllUserActions");
+	viewAllUserActionsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View All User Actions"));
+	viewAllUserActionsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View the activity of all users"));
+	viewAllUserActionsFeatureInfo->SetOptional(false);
+	viewAllUserActionsFeatureInfo->SetIsPermission(true);
+
+	workspaceManagementFeatureInfo->InsertSubFeature(viewAllUserActionsFeatureInfo.PopPtr());
+
+	productInfo.AddFeature("df22ac46-7253-4b13-a1b8-d4391943adde", *workspaceManagementFeatureInfo.GetPtr());
+
 }
 
 

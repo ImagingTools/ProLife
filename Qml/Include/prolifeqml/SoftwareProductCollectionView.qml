@@ -75,12 +75,15 @@ RemoteCollectionView {
 		
 		GqlRequestDocumentDataController {
 			id: requestDocumentDataController
+
+			property SoftwareProductData softwareProductData: documentModel;
 			
 			gqlGetCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductItem;
 			gqlUpdateCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductUpdate;
 			gqlAddCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductAdd;
 			
 			typeId: "SoftwareProduct";
+			documentName: softwareProductData ? softwareProductData.m_serialNumber : ""
 			
 			documentModelComp: Component {
 				SoftwareProductData {}

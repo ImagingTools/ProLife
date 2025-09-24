@@ -262,12 +262,39 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.description = metaInfo->GetMetaInfo(imtbase::ICollectionInfo::EIT_DESCRIPTION).toString();
 	}
 
-	if (requestInfo.items.isPurchaseIdRequested){
-		representationObject.purchaseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+	QString scheme = "applink";
+	if (requestInfo.items.isPurchaseIdLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Order");
+		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Orders/Order");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.purchaseIdLink = objectLink;
 	}
 
-	if (requestInfo.items.isCustomerNameRequested){
-		representationObject.customerName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
+	if (requestInfo.items.isCustomerLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Account");
+		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Accounts/Account");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.customerLink = objectLink;
 	}
 
 	if (requestInfo.items.isMacAddressRequested){
@@ -306,16 +333,25 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.licenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString().toUtf8();
 	}
 
-	if (requestInfo.items.isDeliveryIdRequested){
-		representationObject.deliveryId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+	if (requestInfo.items.isDeliveryIdLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Order");
+		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = scheme;
+		urlParam.path = QStringLiteral("Orders/Order");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		}
+		objectLink.url = urlParam;
+
+		representationObject.deliveryIdLink = objectLink;
 	}
 
 	if (requestInfo.items.isSoftwareLinksCountRequested){
 		representationObject.softwareLinksCount = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
-	}
-
-	if (requestInfo.items.isOrderUuidRequested){
-		representationObject.orderUuid = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isStatusRequested){

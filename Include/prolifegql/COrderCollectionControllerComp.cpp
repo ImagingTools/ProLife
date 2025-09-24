@@ -276,10 +276,21 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.orderId = (orderInfoPtr->GetOrderId());
 	}
 
-	if (requestInfo.items.isCustomerNameRequested){
-		if (metaInfo.IsValid()){
-			representationObject.customerName = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+	if (requestInfo.items.isCustomerLinkRequested){
+		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+		objectLink.typeId = QByteArrayLiteral("Account");
+		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+
+		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		urlParam.scheme = "applink";
+		urlParam.path = QStringLiteral("Accounts/Account");
+		if (!(*objectLink.id).isEmpty()){
+			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
 		}
+		objectLink.url = urlParam;
+
+		representationObject.customerLink = objectLink;
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){

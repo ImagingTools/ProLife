@@ -239,6 +239,9 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -307,33 +310,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="UserAction" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="UserActions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtauthgui/UserActionCollectionView.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Account"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="User Actions"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
         <EmbeddedRegistry Id="PageData">
@@ -355,6 +331,12 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -436,6 +418,9 @@
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -487,6 +472,12 @@
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -524,6 +515,12 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -572,6 +569,5 @@
         <Component ExportedId="SoftwareProductsController" ComponentId="PageData/SoftwareProductsPage"/>
         <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
         <Component ExportedId="SoftwareSqlRepository" ComponentId="Repositories/SoftwareSqlRepository"/>
-        <Component ExportedId="UserActionPage" ComponentId="UserAction"/>
     </ExportedComponents>
 </Acf>
