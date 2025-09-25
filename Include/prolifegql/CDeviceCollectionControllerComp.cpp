@@ -426,7 +426,7 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 	deviceInfoPtr->SetObjectUuid(newObjectId);
 
 	if (!FillObjectFromRepresentation(deviceDataRepresentation, *deviceInfoPtr, newObjectId, errorMessage)){
-		errorMessage = QString("Unable to create device from representaion. Error: '%1'").arg(errorMessage);
+		errorMessage = QString("Unable to create sensor. Error: '%1'").arg(errorMessage);
 
 		return nullptr;
 	}
@@ -434,7 +434,7 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 	QString orderId = *deviceDataRepresentation.orderId;
 	if (!orderId.isEmpty()){
 		if (!AddDeviceToOrder(newObjectId, orderId.toUtf8())){
-			errorMessage = QString("Unable to add device. Error: Add device to order failed");
+			errorMessage = QString("Unable to add sensor. Error: Add device to order failed");
 			return nullptr;
 		}
 	}
@@ -555,7 +555,7 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	deviceInfoPtr->SetObjectUuid(objectId);
 
 	if (!FillObjectFromRepresentation(deviceData, *deviceInfoPtr, objectId, errorMessage)){
-		errorMessage = QString("Unable to update device. Error: '%1'").arg(errorMessage);
+		errorMessage = QString("Unable to update sensor. Error: '%1'").arg(errorMessage);
 		return false;
 	}
 
@@ -635,7 +635,7 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	if (!macAddress.isEmpty()){
 		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress.toUtf8(), *m_objectCollectionCompPtr);
 		if (!ok){
-			errorMessage = QString("MAC-Address already exists");
+			errorMessage = QString("MAC-Address '%1' already exists").arg(macAddress);
 			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 			return false;
@@ -652,7 +652,7 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	if (!serialNumber.isEmpty()){
 		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber.toUtf8(), *m_objectCollectionCompPtr);
 		if (!ok){
-			errorMessage = QT_TR_NOOP("Serial Number already exists");
+			errorMessage = QT_TR_NOOP(QString("Serial Number '%1' already exists").arg(serialNumber));
 			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 			return false;

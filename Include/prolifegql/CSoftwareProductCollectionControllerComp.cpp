@@ -416,7 +416,7 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 	softwareInfoPtr->SetObjectUuid(newObjectId);
 	
 	if (!FillObjectFromRepresentation(softwareProductDataRepresentation, *softwareInfoPtr, newObjectId, errorMessage)){
-		errorMessage = QString("Unable to create software from representation. Error: '%1'").arg(errorMessage);
+		errorMessage = QString("Unable to create software. Error: '%1'").arg(errorMessage);
 		
 		return nullptr;
 	}
@@ -540,9 +540,9 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	if (!serialNumber.isEmpty()){
 		bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectId, serialNumber, *m_objectCollectionCompPtr);
 		if (!ok){
-			errorMessage = QString("Serial Number already exists");
+			errorMessage = QString("Serial Number '%1' already exists").arg(serialNumber);
 			SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-			
+
 			return false;
 		}
 	}
@@ -827,7 +827,7 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	softwareInfoPtr->SetObjectUuid(objectId);
 	
 	if (!FillObjectFromRepresentation(softwareData, object, objectId, errorMessage)){
-		errorMessage = QString("Unable to update software from representation. Error: '%1'").arg(errorMessage);
+		errorMessage = QString("Unable to update software. Error: '%1'").arg(errorMessage);
 		return false;
 	}
 	

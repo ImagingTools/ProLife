@@ -5,7 +5,7 @@ import imtbaseComplexCollectionFilterSdl 1.0
 
 FieldFilterDelegate {
 	id: licensesDelegateFilter
-	name: qsTr("License")
+	name: qsTr("License Status")
 	
 	Component.onCompleted: {
 		createAndAddOption("WithoutLicense", qsTr("Sensors without a license"), "", true)

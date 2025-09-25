@@ -122,6 +122,7 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 	}
 
 	if (!FillObjectFromRepresentation(accountDataRepresentation, *customerInfoPtr, newObjectId, errorMessage)){
+		errorMessage = QString("Unable to create customer. Error: '%1'").arg(errorMessage);
 		return nullptr;
 	}
 
@@ -253,6 +254,7 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	customerInfoPtr->ResetData();
 
 	if (!FillObjectFromRepresentation(accountData, object, objectId, errorMessage)){
+		errorMessage = QString("Unable to update customer. Error: '%1'").arg(errorMessage);
 		return false;
 	}
 
@@ -306,7 +308,7 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 					if (foundCustomerInfoPtr != nullptr){
 						QString foundCustomerName = foundCustomerInfoPtr->GetName();
 						if (foundCustomerName.toLower() == accountName.toLower()){
-							errorMessage = QString("Account name already exists");
+							errorMessage = QString("Account name '%1' already exists").arg(accountName);
 							SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 							return false;
 						}
@@ -353,7 +355,7 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 							if (foundCustomerInfoPtr != nullptr){
 								QByteArray foundCustomerId = foundCustomerInfoPtr->GetCustomerId();
 								if (foundCustomerId.toLower() == accountCustomerId.toLower()){
-									errorMessage = QString("Customer-ID already exists");
+									errorMessage = QString("Customer-ID '%1' already exists").arg(QString::fromUtf8(foundCustomerId));
 									SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 									return false;
 								}

@@ -32,7 +32,7 @@ RemoteCollectionView {
 	}
 	
 	function registerFilters(){
-		registerFieldFilterDelegate("SoftwareCount", licenseDelegateFilterComp)
+		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 		registerFieldFilterDelegate("SensorStatus", statusDelegateFilterComp)
 		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)

@@ -335,7 +335,7 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 	}
 
 	if (!FillObjectFromRepresentation(orderDataRepresentation, *orderInfoPtr, newObjectId, errorMessage)){
-		errorMessage = QString("Unable to create order from representatiom. Error: '%1'").arg(errorMessage);
+		errorMessage = QString("Unable to create order. Error: '%1'").arg(errorMessage);
 		return nullptr;
 	}
 
@@ -604,12 +604,8 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	orderInfoPtr->SetObjectUuid(objectId);
 
 	if (!FillObjectFromRepresentation(orderData, object, objectId, errorMessage)){
-		if (errorMessage.isEmpty()){
-			errorMessage = QString("Unable to create order from representatiom");
-		}
-
+		errorMessage = QString("Unable to update order. Error: '%1'").arg(errorMessage);
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
-
 		return false;
 	}
 
@@ -777,7 +773,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 				if (objectPrderInfoPtr != nullptr){
 					QByteArray currentOrderId = objectPrderInfoPtr->GetOrderId().toLower();
 					if (currentOrderId == orderId.toLower()){
-						errorMessage = QString("Delivery-ID already exists");
+						errorMessage = QString("Delivery-ID '%1' already exists").arg(orderId);
 						SendErrorMessage(0, errorMessage, "COrderControllerComp");
 
 						return false;
@@ -796,7 +792,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	if (customerId.isEmpty()){
-		errorMessage = QString("Customer can not be empty!");
+		errorMessage = QString("Customer cannot be empty");
 		SendErrorMessage(0, errorMessage, "COrderControllerComp");
 
 		return false;

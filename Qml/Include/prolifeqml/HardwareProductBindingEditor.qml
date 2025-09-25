@@ -101,40 +101,19 @@ Dialog {
 					Component.onCompleted: {
 						availableLicensesElementView.collection = softwareProductCollection;
 					}
-					
-					TreeItemModel {
-						id: collectionHeadersModel;
-						
+
+					TableHeaders {
 						Component.onCompleted: {
-							rectWrap.updateHeaders();
-						}
-					}
-					
-					function updateHeaders(){
-						collectionHeadersModel.clear();
-						
-						let index = collectionHeadersModel.insertNewItem();
-						collectionHeadersModel.setData("id", "licenseName", index);
-						collectionHeadersModel.setData("name", qsTr("Name"), index);
-						
-						index = collectionHeadersModel.insertNewItem();
-						collectionHeadersModel.setData("id", "licenseId", index);
-						collectionHeadersModel.setData("name", qsTr("Article"), index);
+							addHeader("licenseName", qsTr("Name"))
+							addHeader("licenseId", qsTr("Article"))
+							addHeader("serialNumber", qsTr("Software-ID"))
+							
+							let filteringInfoIds = ["licenseName", "licenseId", "serialNumber"]
 
-						index = collectionHeadersModel.insertNewItem();
-						collectionHeadersModel.setData("id", "serialNumber", index);
-						collectionHeadersModel.setData("name", qsTr("Software-ID"), index);
-
-						let filteringInfoIds = []
-						for (let i = 0; i < collectionHeadersModel.getItemsCount(); i++){
-							let infoId = collectionHeadersModel.getData("id", i);
-							filteringInfoIds.push(infoId)
+							softwareProductCollection.collectionFilter.setFilteringInfoIds(filteringInfoIds);
+							softwareProductCollection.tableViewParamsStoredServer = false;
+							softwareProductCollection.dataController.headersReceived(this)
 						}
-						
-						softwareProductCollection.collectionFilter.setFilteringInfoIds(filteringInfoIds);
-						
-						softwareProductCollection.tableViewParamsStoredServer = false;
-						softwareProductCollection.dataController.headersModel = collectionHeadersModel;
 					}
 					
 					SoftwareProductCollectionView {
