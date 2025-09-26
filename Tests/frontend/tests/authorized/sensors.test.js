@@ -349,7 +349,7 @@ test('Transfer licenses command test', async ({ page }) => {
 });
 
 async function selectFirstSensor(page) {
-  await clickAt(page, 600, 255); // Select first element from table
+  await clickAt(page, 600, 245); // Select first element from table
 }
 
 async function removeFocus(page) {
