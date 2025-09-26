@@ -46,28 +46,25 @@ test('Users new command test', async ({ page }) => {
   await clickAt(page, 470, 250); // Username text input click
   await page.keyboard.type('Test');
 
-  await clickAt(page, 470, 350); // Name text input click
+  await clickAt(page, 470, 335); // Name text input click
   await page.keyboard.type('Test');
 
-  await clickAt(page, 470, 350); // Name text input click
-  await page.keyboard.type('Test');
-
-  await clickAt(page, 470, 450); // Email text input click
+  await clickAt(page, 470, 415); // Email text input click
   await page.keyboard.type('Test');
   await checkScreenshot(page, 'users_incorrect_email.png')
 
-  await clickAt(page, 470, 450); // Email text input click
+  await clickAt(page, 470, 415); // Email text input click
   await page.keyboard.type('@mail.ru');
   await checkScreenshot(page, 'users_correct_email.png')
 
-  await clickAt(page, 470, 580); // Password text input click
+  await clickAt(page, 470, 520); // Password text input click
   await page.keyboard.type('1');
 
-  await clickAt(page, 470, 650); // Confirm password text input click
+  await clickAt(page, 470, 600); // Confirm password text input click
   await page.keyboard.type('2');
   await checkScreenshot(page, 'users_invalid_password.png')
 
-  await clickAt(page, 470, 650); // Confirm password text input click
+  await clickAt(page, 470, 600); // Confirm password text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('1');

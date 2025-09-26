@@ -263,17 +263,17 @@ test('Sensor editor test', async ({ page }) => {
 
   await clickAt(page, 880, 115); // Transfer licenses command click
   await checkScreenshot(page, 'sensors_editor_tl.png')
-  await clickAt(page, 865, 445); // OK click
+  await clickAt(page, 890, 445); // OK click
+  
+  await clickAt(page, 787, 180); // Show device information
+  await checkScreenshot(page, 'sensor_show_device_info.png')
 
-  await clickAt(page, 575, 575); // Mac Address text input click
+  await clickAt(page, 575, 650); // Mac Address text input click
   await page.keyboard.type('22:88:44:11:14:34');
   await checkScreenshot(page, 'sensors_new_editor_mac_address_valid.png')
 
   await clickAt(page, 140, 120); // 'Save' command click
   await checkScreenshot(page, 'sensor_after_save.png')
-
-  await clickAt(page, 787, 180); // Show device information
-  await checkScreenshot(page, 'sensor_show_device_info.png')
 
   await clickAt(page, 530, 70); // Close document (tab)
   await checkScreenshot(page, 'sensors_after_closing.png')
@@ -285,7 +285,7 @@ test('Bind command test', async ({ page }) => {
   await checkScreenshot(page, 'bind_sensors_0.png')
   await selectFirstSensor(page)
 
-  await clickAt(page, 550, 115); // 'Bind' command click
+  await clickAt(page, 455, 115); // 'Bind' command click
   await checkScreenshot(page, 'bind_sensors_1.png')
 
   await clickAt(page, 1000, 190); // Product combobox click
@@ -332,6 +332,7 @@ test('Bind command test', async ({ page }) => {
 test('Transfer licenses command test', async ({ page }) => {
   await clickAt(page, 1000, 170); // Filter text input click
   await page.keyboard.type("8c:1f:64:50:19:0b");
+  await checkScreenshot(page, 'sensors_transfer_licenses_0.png')
   await selectFirstSensor(page)
 
   await clickAt(page, 290, 115); // 'Edit' command click
