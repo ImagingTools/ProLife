@@ -8,7 +8,7 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="AccountsPage" X="200" Y="500" Note=""/>
+        <Element ComponentName="CustomersPage" X="200" Y="500" Note=""/>
         <Element ComponentName="DevicesPage" X="200" Y="200" Note=""/>
         <Element ComponentName="DocumentRevisionController" X="550" Y="350" Note=""/>
         <Element ComponentName="OrdersPage" X="200" Y="400" Note=""/>

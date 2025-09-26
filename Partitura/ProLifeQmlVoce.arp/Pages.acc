@@ -10,7 +10,7 @@
     <Description></Description>
     <Keywords></Keywords>
     <ElementsList>
-        <Element Id="AccountsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="CustomersPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
@@ -20,7 +20,7 @@
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Account"/>
+                        <Data IsEnabled="true" Value="Icons/Customer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -555,7 +555,7 @@
     <ExportedComponents>
         <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="AccountsController" ComponentId="PageData/AccountsPage"/>
-        <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
+        <Component ExportedId="AccountsPage" ComponentId="CustomersPage"/>
         <Component ExportedId="BindingProductsRepository" ComponentId="Repositories/BindingProductsRepository"/>
         <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
         <Component ExportedId="DeviceSqlCollection" ComponentId="Repositories/DeviceSqlCollection"/>
