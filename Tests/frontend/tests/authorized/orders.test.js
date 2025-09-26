@@ -3,7 +3,7 @@ const { reloadPage, clickAt, checkScreenshot } = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
-  await clickAt(page, 40, 240); // Orders page click
+  await clickAt(page, 40, 340); // Orders page click
 });
 
 test('Start orders page', async ({ page }) => {
