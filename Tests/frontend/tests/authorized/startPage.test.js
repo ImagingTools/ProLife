@@ -20,7 +20,7 @@ test('User popup visibility test', async ({ page }) => {
 
   await checkScreenshot(page, 'user_profile.png')
 
-  await clickAt(page, 970, 524); // Change password click
+  await clickAt(page, 970, 545); // Change password click
 
   await checkScreenshot(page, 'change_password_dialog.png')
 });

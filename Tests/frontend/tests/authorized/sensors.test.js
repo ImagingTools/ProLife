@@ -285,7 +285,7 @@ test('Bind command test', async ({ page }) => {
   await checkScreenshot(page, 'bind_sensors_0.png')
   await selectFirstSensor(page)
 
-  await clickAt(page, 535, 115); // 'Bind' command click
+  await clickAt(page, 550, 115); // 'Bind' command click
   await checkScreenshot(page, 'bind_sensors_1.png')
 
   await clickAt(page, 1000, 190); // Product combobox click
