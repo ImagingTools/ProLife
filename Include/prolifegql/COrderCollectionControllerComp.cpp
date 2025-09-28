@@ -276,6 +276,10 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.orderId = (orderInfoPtr->GetOrderId());
 	}
 
+	if (requestInfo.items.isCustomerNameRequested){
+		representationObject.customerName = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+	}
+
 	if (requestInfo.items.isCustomerLinkRequested){
 		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toString().toUtf8();

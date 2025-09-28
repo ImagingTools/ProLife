@@ -18,6 +18,7 @@ type OrderItem {
 	typeId: ID!
 	id: ID!
 	name: String
+	customerName: String
 	customerLink: ObjectLink
 	status: String
 	orderId: ID

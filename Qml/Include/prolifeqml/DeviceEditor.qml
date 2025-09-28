@@ -535,7 +535,7 @@ ViewBase {
 							width: comboBoxRef ? comboBoxRef.width : 0;
 							comboBoxRef: orderCB.cbRef;
 							
-							description: qsTr("Customer") + ": " + model[OrderItemTypeMetaInfo.s_customerName];
+							description: qsTr("Customer") + ": " + model[OrderItemTypeMetaInfo.s_customerName]
 						}
 					}
 					
