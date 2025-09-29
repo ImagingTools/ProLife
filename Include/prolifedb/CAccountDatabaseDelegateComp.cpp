@@ -52,7 +52,11 @@ QByteArray CAccountDatabaseDelegateComp::CreateJoinTablesQuery() const
 {
 	return QByteArray(R"(
 			LEFT JOIN "Users" AS users
-				ON users."DocumentId"::text = root."RevisionInfo"->>'OwnerId'
+				ON (
+					(users."Document"->>'Id' = root1."RevisionInfo"->>'OwnerId'
+					OR users."DocumentId"::text = root1."RevisionInfo"->>'OwnerId')
+					AND users."State" = 'Active'
+				)
 	)");
 }
 

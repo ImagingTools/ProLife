@@ -89,8 +89,11 @@ QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 				ON acc."DocumentId"::text = orders."Document"->>'OrderCustomer'
 				AND acc."State" = 'Active'
 			LEFT JOIN "Users" AS users
-				ON users."Document"->>'Id'::text = root1."RevisionInfo"->>'OwnerId'
-				AND users."State" = 'Active'
+				ON (
+					(users."Document"->>'Id' = root1."RevisionInfo"->>'OwnerId'
+					OR users."DocumentId"::text = root1."RevisionInfo"->>'OwnerId')
+					AND users."State" = 'Active'
+				)
 	)");
 }
 
