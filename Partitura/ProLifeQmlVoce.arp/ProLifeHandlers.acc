@@ -54,26 +54,6 @@
                     <AttributeInfo Id="LogPath" Type="Reference" ExportId="LogPath">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="OptionIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Devices</Value>
-                                <Value>SoftwareProducts</Value>
-                                <Value>Orders</Value>
-                                <Value>Accounts</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="OptionNames" Type="Text[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>Hardware</Value>
-                                <Value>Software</Value>
-                                <Value>Orders</Value>
-                                <Value>Customers</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="Pages" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
