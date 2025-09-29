@@ -42,7 +42,6 @@ ViewBase {
 	}
 	
 	onSoftwareProductDataChanged: {
-		console.log("onSoftwareProductDataChanged", softwareProductData)
 		checkPermissions();
 		checkInUse();
 	}

@@ -57,7 +57,7 @@ ViewBase {
 
 		licenseInformationGroup.visible = licenseGroupVisible
 	}
-	
+
 	function checkPermissions(){
 		if (!deviceData){
 			return;

@@ -41,9 +41,6 @@ ApplicationMain {
 		id: pumaConnectionChecker;
 		gqlCommandId: "PumaWsConnection";
 		subscriptionManager: window.subscriptionManager;
-		onStatusChanged: {
-			console.log("pumaConnectionChecker onStatusChanged", status)
-		}
 	}
 	
 	WebSocketConnectionChecker {

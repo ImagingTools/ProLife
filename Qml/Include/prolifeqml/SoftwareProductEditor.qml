@@ -96,7 +96,6 @@ ViewBase {
 	}
 	
 	function updateModel(){
-		console.log("SoftwareProductEditor.qml updateModel")
 		productItem.m_isNew = isNewSoftware;
 		
 		if (isNewSoftware){
@@ -382,7 +381,6 @@ ViewBase {
 							}
 						}
 					}
-					console.log("serialNumberInput onEditingFinished", text)
 					root.doUpdateModel();
 				}
 				

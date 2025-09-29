@@ -125,8 +125,6 @@ ViewBase {
 		if (customerModel){
 			for (let i = 0; i < customerModel.getItemsCount(); i++){
 				let id = customerModel.getData("id", i);
-				console.log("id", id)
-				
 				if (id === customerId){
 					customerCB.currentIndex = i;
 					break;

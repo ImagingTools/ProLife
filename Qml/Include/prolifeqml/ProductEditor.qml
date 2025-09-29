@@ -285,15 +285,10 @@ Item {
 			id: contentColumn
 			width: flickable.width
 			spacing: Style.marginM
-			onHeightChanged: {
-				console.log("contentColumn onHeightChanged", height)
-			}
 
 			GroupElementView {
 				width: contentColumn.width
-				onHeightChanged: {
-					console.log("contentColumn onHeightChanged", height)
-				}
+
 				ElementView {
 					id: segmentedElementView;
 					width: parent.width;
@@ -409,7 +404,6 @@ Item {
 				visible: productCB.currentIndex >= 0
 				onLoaded: {
 					contentLoader.height = item.height
-					console.log("item.height", item.height)
 				}
 				
 				Connections {
