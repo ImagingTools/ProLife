@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "40e72995-ffe8-463f-aa08-7f4407ff596b",
+		"_postman_id": "7d30d9d5-907f-47da-8fd8-a06449cabe08",
 		"name": "ProLife Tests Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34842692"
@@ -50034,8 +50034,11 @@
 													"    delete item.added;\r",
 													"});\r",
 													"\r",
+													"let index = 1\r",
 													"const response = pm.response.json();\r",
 													"response.data.SoftwareProductsList.items.forEach(item => {\r",
+													"    console.log(index, item.id, item.name, item.added, item.timeStamp)\r",
+													"    index = index + 1\r",
 													"    delete item.timeStamp;\r",
 													"    delete item.added;\r",
 													"});\r",
