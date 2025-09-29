@@ -23,17 +23,17 @@
         <Element ComponentName="SoftwareProductCollectionController" X="575" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="ObjectCommands">
+            <PositionMap>
+                <Element ComponentName="StandardDocumentCommandsController" X="575" Y="125" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="CollectionCommands">
             <PositionMap>
                 <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
                 <Element ComponentName="Revision" X="950" Y="425" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="ObjectCommands">
-            <PositionMap>
-                <Element ComponentName="StandardDocumentCommandsController" X="575" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
