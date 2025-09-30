@@ -86,10 +86,10 @@ test('Customers revision dialog GUI test', async ({ page }) => {
 
 test('Customers sort collection GUI test', async ({ page }) => {
   await clickAt(page, 540, 210); // Account Name column click
-  await checkScreenshot(page, 'account_name_asc.png')
+  await checkScreenshot(page, 'account_name_desc.png')
 
   await clickAt(page, 540, 210); // Account Name column click
-  await checkScreenshot(page, 'account_name_desc.png')
+  await checkScreenshot(page, 'account_name_asc.png')
 
   await clickAt(page, 875, 210); // Email column click
   await checkScreenshot(page, 'email_asc.png')
