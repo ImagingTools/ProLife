@@ -281,7 +281,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Account");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();

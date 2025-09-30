@@ -5,9 +5,6 @@
 #include <icomp/TModelCompWrap.h>
 #include <icomp/TMakeComponentWrap.h>
 
-// ImtCore includes
-#include <imtservergql/TObjectCollectionControllerSearchCompWrap.h>
-
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
 #include <prolifegql/COrderCollectionControllerComp.h>
@@ -36,18 +33,14 @@ namespace ProLifeGqlPck
 {
 
 
-typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
-			prolifegql::COrderCollectionControllerComp> OrderCollectionController;
-typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
-			prolifegql::CDeviceCollectionControllerComp> DeviceCollectionController;
-typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
-			prolifegql::CSoftwareProductCollectionControllerComp> SoftwareProductCollectionController;
+typedef prolifegql::COrderCollectionControllerComp OrderCollectionController;
+typedef prolifegql::CDeviceCollectionControllerComp DeviceCollectionController;
+typedef prolifegql::CSoftwareProductCollectionControllerComp SoftwareProductCollectionController;
 typedef prolifegql::CDeviceChangeGeneratorComp DeviceChangeGenerator;
 typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
-typedef imtservergql::TObjectCollectionControllerSearchCompWrap<
-			prolifegql::CCustomerCollectionControllerComp> CustomerCollectionController;
+typedef prolifegql::CCustomerCollectionControllerComp CustomerCollectionController;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<
 						prolifedata::CCustomerInfo,

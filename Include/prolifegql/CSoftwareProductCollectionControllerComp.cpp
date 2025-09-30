@@ -222,7 +222,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 	QString scheme = "applink";
 	if (requestInfo.items.isDeliveryIdLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString().toUtf8();
@@ -239,7 +239,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 	
 	if (requestInfo.items.isPurchaseIdLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString().toUtf8();
@@ -256,7 +256,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isHardwareLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Device");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
@@ -309,7 +309,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Account");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();

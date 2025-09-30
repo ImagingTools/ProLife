@@ -238,7 +238,6 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	sdl::prolife::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
-	
 	if (requestInfo.items.isIdRequested){
 		representationObject.id = objectId;
 	}
@@ -264,7 +263,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 	QString scheme = "applink";
 	if (requestInfo.items.isPurchaseIdLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
@@ -281,7 +280,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Account");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
@@ -334,7 +333,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isDeliveryIdLinkRequested){
-		sdl::imtbase::ImtCollection::CObjectLink::V1_0 objectLink;
+		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
