@@ -80,25 +80,31 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 			const imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	for (const QByteArray& objectId : elementIds){
-		const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInstanceInfoPtr = nullptr;
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			productInstanceInfoPtr =
-				dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-		}
-		
-		if (productInstanceInfoPtr == nullptr){
-			errorMessage = QString("Unable to remove software '%1'. Error: Software does not exists").arg(qPrintable(objectId));
-			return false;
-		}
-		
-		bool isUse = productInstanceInfoPtr->IsInUse();
-		if (isUse){
-			errorMessage = QT_TR_NOOP("It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.");
-			SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
-			errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
-			return false;
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr == nullptr) {
+		errorMessage = QString("Unable to remove software elements. Error: request context is missing");
+		return false;
+	}
+
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	if (userInfoPtr == nullptr) {
+		errorMessage = QString("Unable to remove software elements. Error: user information is missing in request context");
+		return false;
+	}
+
+	bool isAdmin = userInfoPtr->IsAdmin();
+	if (!isAdmin){
+		for (const QByteArray& objectId : elementIds){
+			idoc::MetaInfoPtr metaInfo = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
+			if (metaInfo.IsValid()){
+				bool inUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
+				if (inUse){
+					errorMessage = QT_TR_NOOP("It is not possible to delete this software because a license file has been created for it. Contact your system administrator.");
+					SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+					errorMessage = imtgql::GetTranslation(m_translationManagerCompPtr.GetPtr(), gqlRequest, errorMessage.toUtf8(), "prolifegql::CSoftwareProductCollectionControllerComp");
+					return false;
+				}
+			}
 		}
 	}
 
