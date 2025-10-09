@@ -37,12 +37,6 @@ DocumentCollectionViewDelegate {
 		}
 	}
 	
-	// DeviceDocumentDataController.qml
-	Component {
-		DocumentDataController {
-		}
-	}
-	
 	Component {
 		id: dataControllerComp;
 		
