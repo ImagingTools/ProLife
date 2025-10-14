@@ -30,7 +30,6 @@
         <file alias="ProLife/DeviceValidator.qml">DeviceValidator.qml</file>
         <file alias="ProLife/LicenseValidator.qml">LicenseValidator.qml</file>
         <file alias="ProLife/OrderValidator.qml">OrderValidator.qml</file>
-        <file alias="ProLife/DeviceCollectionFilterDecorator.qml">DeviceCollectionFilterDecorator.qml</file>
         <file alias="ProLife/OrderProductDelegate.qml">OrderProductDelegate.qml</file>
         <file alias="ProLife/AccountEditorCommandsDelegate.qml">AccountEditorCommandsDelegate.qml</file>
         <file alias="ProLife/AccountEditor.qml">AccountEditor.qml</file>
