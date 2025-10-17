@@ -67,7 +67,17 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 		
 		m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
 	}
-	
+
+	if (m_deviceCollectionCompPtr.IsValid()){
+		imtbase::IObjectCollection::DataPtr deviceDataPtr;
+		if (m_deviceCollectionCompPtr->GetObjectData(deviceId, deviceDataPtr)){
+			const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(deviceDataPtr.GetPtr());
+			if (deviceInfoPtr != nullptr){
+				response.project = deviceInfoPtr->GetProject();
+			}
+		}
+	}
+
 	QByteArrayList softwareIds = hardwareProductBindingPtr->GetSoftwareIds();
 	if (!softwareIds.isEmpty()){
 		if (m_softwareProductCollectionCompPtr.IsValid()){
@@ -76,9 +86,6 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 			if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, softwareDataPtr)){
 				imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(softwareDataPtr.GetPtr());
 				if (productInstanceInfoPtr != nullptr){
-					QByteArray project = productInstanceInfoPtr->GetProject();
-					response.project = project;
-					
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
 					response.productUuid = productId;
 				}
@@ -315,10 +322,10 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		return retVal;
 	}
 
-	// Check FROM device status is Defected
-	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = fromDeviceInfoPtr->GetDeviceProductionStatus();
-	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_DEFECTED){
-		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Production status for device '%1' should be 'Defected'")
+	// Check TO device status is Finished
+	prolifedata::IDeviceInfo::DeviceProductionStatus deviceProductionStatus = toDeviceInfoPtr->GetDeviceProductionStatus();
+	if (deviceProductionStatus != prolifedata::IDeviceInfo::DPS_FINISHED){
+		errorMessage = QString("Unable to transfer license from '%1' to '%2'. Error: Production status for device '%1' should be 'Finished'")
 		.arg(qPrintable(fromDeviceId), qPrintable(toDeviceId));
 		
 		return retVal;
@@ -404,6 +411,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
 		fromDeviceOperationContextPtr.SetPtr(m_deviceOperationContextControllerCompPtr->CreateOperationContext("TransferToDevice", fromDeviceId, fromDeviceBindingInfoPtr.GetPtr(), &toParamsSet));
 
+		fromDeviceInfoPtr->SetDeviceProductionStatus(prolifedata::IDeviceInfo::DPS_DEFECTED);
 		if (!m_deviceCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, fromDeviceOperationContextPtr.GetPtr())){
 			SendWarningMessage(0, "Unable to set operation context for device instance", "CDeviceControllerComp");
 		}

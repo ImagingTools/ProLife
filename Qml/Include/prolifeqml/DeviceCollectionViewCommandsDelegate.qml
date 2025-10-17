@@ -175,11 +175,6 @@ DocumentCollectionViewDelegate {
 								return;
 							}
 							
-							if (documentModel.m_productionStatus !== "Defected"){
-								ModalDialogManager.showInfoDialog(qsTr("The production status should be 'Defect'"))
-								return;
-							}
-							
 							let deviceType = documentModel.m_deviceType;
 							container.onTransferLicenses(documentId, deviceType)
 						}
@@ -211,18 +206,18 @@ DocumentCollectionViewDelegate {
 			isBindEnabled = isBindEnabled && macAddress !== "";
 		}
 		
-		let isTransferLicensesEnabled = isEnabled;
-		if (isTransferLicensesEnabled){
-			let status = elementsModel.getData(DeviceItemTypeMetaInfo.s_statusId, selection[0])
+		// let isTransferLicensesEnabled = isEnabled;
+		// if (isTransferLicensesEnabled){
+		// 	let status = elementsModel.getData(DeviceItemTypeMetaInfo.s_statusId, selection[0])
 			
-			isTransferLicensesEnabled = status === "Defected";
-		}
+		// 	isTransferLicensesEnabled = status === "Defected";
+		// }
 		
 		if(commandsController){
 			commandsController.setCommandIsEnabled(bindCommand, isBindEnabled);
 			commandsController.setCommandIsEnabled(createLicenseFileCommand, isEnabled);
 			commandsController.setCommandIsEnabled(ProlifeSensorsSdlCommandIds.s_resetTransferCounter, isEnabled);
-			commandsController.setCommandIsEnabled(transferLicensesCommand, isTransferLicensesEnabled);
+			commandsController.setCommandIsEnabled(transferLicensesCommand, isEnabled);
 		}
 	}
 	
@@ -624,12 +619,28 @@ DocumentCollectionViewDelegate {
 						m_filterValueType: "String"
 						m_filterOperations: ["Not","Equal"]
 					}
-					
+
+					FieldFilter {
+						id: productionStatusFilter
+						m_fieldId: "Status"
+						m_filterValue: "6"
+						m_filterValueType: "Integer"
+						m_filterOperations: ["Not","Equal"]
+					}
+
+					FieldFilter {
+						id: productionStatusFilter2
+						m_fieldId: "Status"
+						m_filterValue: "5"
+						m_filterValueType: "Integer"
+						m_filterOperations: ["Equal"]
+					}
+
 					Connections {
 						target: dialog;
 						
 						function onStarted(){
-							deviceCollectionView.collectionFilter.addFieldFilter(excludeFilter)
+
 						}
 					}
 					
@@ -697,6 +708,22 @@ DocumentCollectionViewDelegate {
 						table.isMultiSelect: false
 						commandsDelegateComp: null
 						canResetFilters: false
+						
+						Component.onCompleted: {
+							collectionFilter.addFieldFilter(excludeFilter)
+							collectionFilter.addFieldFilter(productionStatusFilter)
+							collectionFilter.addFieldFilter(productionStatusFilter2)
+						}
+
+						// dataControllerComp: Component {
+						// 	CollectionRepresentation {
+						// 		collectionId: deviceCollectionView.collectionId;
+						// 		additionalFieldIds: deviceCollectionView.additionalFieldIds;
+						// 		function updateModel(){
+									
+						// 		}
+						// 	}
+						// }
 						
 						onSelectionChanged: {
 							if (selectedIds.length > 0){
