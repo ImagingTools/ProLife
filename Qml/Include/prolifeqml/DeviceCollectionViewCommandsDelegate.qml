@@ -120,6 +120,13 @@ DocumentCollectionViewDelegate {
 				Component { GqlBasedCommandsController {
 					typeId: "Device";
 				}}
+
+			onDeviceDataChanged: {
+				if (deviceData !== null && container.documentManager){
+					isNew = container.documentManager.documentIsNew(deviceData.m_id)
+					checkPermissions()
+				}
+			}
 			
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
 					view: deviceEditor;
@@ -521,7 +528,7 @@ DocumentCollectionViewDelegate {
 					
 					if (container.collectionView.commandsController){
 						let selectedIds = container.collectionView.getSelectedIds()
-						container.collectionView.commandsController.setCommandIsEnabled(selectedIds.length === 1, true)
+						container.collectionView.commandsController.setCommandIsEnabled(container.createLicenseFileCommand, selectedIds.length === 1)
 					}
 				}
 			}
@@ -623,27 +630,11 @@ DocumentCollectionViewDelegate {
 					FieldFilter {
 						id: productionStatusFilter
 						m_fieldId: "Status"
-						m_filterValue: "6"
-						m_filterValueType: "Integer"
-						m_filterOperations: ["Not","Equal"]
-					}
-
-					FieldFilter {
-						id: productionStatusFilter2
-						m_fieldId: "Status"
-						m_filterValue: "5"
+						m_filterValue: "5" // Finished
 						m_filterValueType: "Integer"
 						m_filterOperations: ["Equal"]
 					}
 
-					Connections {
-						target: dialog;
-						
-						function onStarted(){
-
-						}
-					}
-					
 					Component {
 						id: licensesDelegateFilterComp
 						
@@ -712,18 +703,7 @@ DocumentCollectionViewDelegate {
 						Component.onCompleted: {
 							collectionFilter.addFieldFilter(excludeFilter)
 							collectionFilter.addFieldFilter(productionStatusFilter)
-							collectionFilter.addFieldFilter(productionStatusFilter2)
 						}
-
-						// dataControllerComp: Component {
-						// 	CollectionRepresentation {
-						// 		collectionId: deviceCollectionView.collectionId;
-						// 		additionalFieldIds: deviceCollectionView.additionalFieldIds;
-						// 		function updateModel(){
-									
-						// 		}
-						// 	}
-						// }
 						
 						onSelectionChanged: {
 							if (selectedIds.length > 0){

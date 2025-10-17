@@ -21,7 +21,8 @@ ViewBase {
 	property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
 	
 	property OrderData orderData: model ? model : null;
-	
+	property bool isNew: false
+
 	Component.onCompleted: {
 		if (!CachedAccountCollection.completed){
 			CachedAccountCollection.updateModel();
@@ -71,10 +72,9 @@ ViewBase {
 			return;
 		}
 		
-		let orderId = orderData.m_id;
 		let canAddOrder = PermissionsController.checkPermission("AddOrder");
 		
-		if (orderId === "" && canAddOrder){
+		if (isNew && canAddOrder){
 			instanceIdInput.readOnly = false;
 			purchaseIdInput.readOnly = false;
 			descriptionInput.readOnly = false;

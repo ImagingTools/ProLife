@@ -157,7 +157,13 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 
 	response.id = deviceId;
 
-	QByteArrayList newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->split(';');
+	QByteArrayList newHardwareBindingSoftwareIds;
+	if (deviceBindingData.softwareIds){
+		if (!deviceBindingData.softwareIds->isEmpty()){
+			newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->split(';');
+		}
+	}
+
 	QByteArrayList hardwareBindingSoftwareIds = deviceBindingInfoPtr->GetSoftwareIds();
 
 	QByteArrayList addedLicenses;

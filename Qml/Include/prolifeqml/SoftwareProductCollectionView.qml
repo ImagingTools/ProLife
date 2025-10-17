@@ -61,6 +61,13 @@ RemoteCollectionView {
 					view: softwareEditor;
 				}
 			}
+
+			onSoftwareProductDataChanged: {
+				if (softwareProductData !== null && container.commandsDelegate.documentManager){
+					isNew = container.commandsDelegate.documentManager.documentIsNew(softwareProductData.m_id)
+					checkPermissions()
+				}
+			}
 			
 			commandsControllerComp:
 				Component { GqlBasedCommandsController {

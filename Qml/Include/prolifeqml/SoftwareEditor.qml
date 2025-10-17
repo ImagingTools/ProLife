@@ -21,7 +21,7 @@ ViewBase {
 	property string alertMessage: "";
 	
 	property SoftwareProductData softwareProductData: model ? model : null;
-	
+	property bool isNew: false
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
 			CachedProductCollection.updateModel();
@@ -57,11 +57,9 @@ ViewBase {
 		if (!softwareProductData){
 			return;
 		}
-		
-		let softwareId = softwareProductData.m_id;
-		
+
 		let canAddLicense = PermissionsController.checkPermission("AddLicense");
-		if (softwareId === "" && canAddLicense){
+		if (isNew && canAddLicense){
 			projectInput.readOnly = false;
 			
 			ordersCB.changeable = true;

@@ -97,6 +97,13 @@ RemoteCollectionView {
 				}
 			}
 			
+			onOrderDataChanged: {
+				if (orderData !== null && container.commandsDelegate.documentManager){
+					isNew = container.commandsDelegate.documentManager.documentIsNew(orderData.m_id)
+					checkPermissions()
+				}
+			}
+			
 			commandsControllerComp: Component { GqlBasedCommandsController {
 					typeId: "Order";
 				}

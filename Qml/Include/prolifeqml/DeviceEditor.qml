@@ -31,6 +31,7 @@ ViewBase {
 	property int comboBoxHeight: 27;
 	
 	property DeviceData deviceData: model ? model : null;
+	property bool isNew: false
 
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
@@ -62,11 +63,9 @@ ViewBase {
 		if (!deviceData){
 			return;
 		}
-		
-		let deviceId = deviceData.m_id;
-		
+
 		let canAddSensor = PermissionsController.checkPermission("AddSensor");
-		if (deviceId === "" && canAddSensor){
+		if (isNew && canAddSensor){
 			descriptionInput.readOnly = false;
 			serialNumberInput.readOnly = false;
 			macAddressInput.readOnly = false;
