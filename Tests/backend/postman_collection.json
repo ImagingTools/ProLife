@@ -124508,7 +124508,8 @@
 													"    \"data\": {\r",
 													"        \"GetDeviceBinding\": {\r",
 													"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd0c4a\",\r",
-													"            \"softwareIds\": \"\"\r",
+													"            \"softwareIds\": \"\",\r",
+													"            \"project\": \"\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -124523,7 +124524,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -124586,7 +124588,7 @@
 													"            \"id\": \"1ab102ea-452e-4980-b196-f3c501cd1111\",\r",
 													"            \"productUuid\": \"d9afd338-7fe1-4989-9908-f35859937b9d\",\r",
 													"            \"softwareIds\": \"628cbc99-bda5-4505-ba62-7ddae0a499f8;3d9403f2-823c-42ca-b69b-196441bbd155\",\r",
-													"            \"project\": \"Test\"\r",
+													"            \"project\": \"\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -124601,7 +124603,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
