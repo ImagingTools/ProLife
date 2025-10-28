@@ -71,6 +71,7 @@ type DeviceData {
 	project: String
 	productionStatus: String
 	softwareBindingInfos: [SoftwareBindingInfo]
+	internalUse: Bool
 }
 
 type DeviceBindingData {

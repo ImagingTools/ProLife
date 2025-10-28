@@ -34,6 +34,8 @@ public:
 	virtual void SetDeviceProductionStatus(DeviceProductionStatus status) override;
 	virtual QByteArray GetProject() const override;
 	virtual void SetProject(const QByteArray& project) override;
+	virtual bool IsInternalUse() const override;
+	virtual void SetInternalUse(bool internalUse) override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -55,6 +57,7 @@ private:
 	QString m_description;
 	QByteArray m_project;
 	DeviceProductionStatus m_status;
+	bool m_internalUse;
 };
 
 

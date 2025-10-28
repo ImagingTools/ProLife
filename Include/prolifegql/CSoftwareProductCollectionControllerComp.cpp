@@ -500,7 +500,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			representationPayload.expiration = (licenseInstancePtr->GetExpiration().toString("dd.MM.yyyy"));
 		}
 	}
-	
+
+	representationPayload.internalUse = softwareInfoPtr->IsInternalUse();
+
 	return true;
 }
 
@@ -635,7 +637,11 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	QString expiration = *representation.expiration;
 	
 	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
-	
+
+	if (representation.internalUse){
+		softwareInfoPtr->SetInternalUse(*representation.internalUse);
+	}
+
 	return true;
 }
 

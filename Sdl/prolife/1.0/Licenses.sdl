@@ -54,6 +54,7 @@ type SoftwareProductData {
 	orderUuid: ID
 	licenseUuid: ID
 	expiration: String
+	internalUse: Bool
 }
 
 input SoftwareProductDataInput {

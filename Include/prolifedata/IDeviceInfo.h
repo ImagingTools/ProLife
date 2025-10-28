@@ -117,6 +117,16 @@ public:
 		Set the project of this device instance.
 	*/
 	virtual void SetProject(const QByteArray& project) = 0;
+
+	/**
+		Checks whether this product instance is marked for internal use only.
+	*/
+	virtual bool IsInternalUse() const = 0;
+
+	/**
+		Sets whether this product instance is for internal use only.
+	*/
+	virtual void SetInternalUse(bool internalUse) = 0;
 };
 
 

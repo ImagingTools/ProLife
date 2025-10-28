@@ -17,9 +17,9 @@ namespace prolifedata
 // public methods
 
 CDeviceInfo::CDeviceInfo() :
-	m_status(DPS_NONE)
+	m_status(DPS_NONE),
+	m_internalUse(false)
 {
-
 }
 
 
@@ -136,6 +136,22 @@ void CDeviceInfo::SetProject(const QByteArray& project)
 }
 
 
+bool CDeviceInfo::IsInternalUse() const
+{
+	return m_internalUse;
+}
+
+
+void CDeviceInfo::SetInternalUse(bool internalUse)
+{
+	if (m_internalUse != internalUse){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_internalUse = internalUse;
+	}
+}
+
+
 // reimplemented (iser::IObject)
 
 QByteArray CDeviceInfo::GetFactoryId() const
@@ -185,17 +201,22 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_description);
 	retVal = retVal && archive.EndTag(descriptionTag);
 
-//	if (imtCoreVersion >= 9644){
-		iser::CArchiveTag projectTag("Project", "Project", iser::CArchiveTag::TT_LEAF);
-		retVal = retVal && archive.BeginTag(projectTag);
-		retVal = retVal && archive.Process(m_project);
-		retVal = retVal && archive.EndTag(projectTag);
-//	}
+	iser::CArchiveTag projectTag("Project", "Project", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(projectTag);
+	retVal = retVal && archive.Process(m_project);
+	retVal = retVal && archive.EndTag(projectTag);
 
 	iser::CArchiveTag statusTag("Status", "Device status", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(statusTag);
 	retVal = retVal && I_SERIALIZE_ENUM(DeviceProductionStatus, archive, m_status);
 	retVal = retVal && archive.EndTag(statusTag);
+
+	if (imtCoreVersion >= 15177){
+		iser::CArchiveTag internalUseTag("InternalUse", "Internal Use", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(internalUseTag);
+		retVal = retVal && archive.Process(m_internalUse);
+		retVal = retVal && archive.EndTag(internalUseTag);
+	}
 
 	return retVal;
 }
@@ -224,6 +245,7 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		m_description = sourcePtr->m_description;
 		m_project = sourcePtr->m_project;
 		m_status = sourcePtr->m_status;
+		m_internalUse = sourcePtr->m_internalUse;
 
 		return true;
 	}
@@ -253,6 +275,7 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 	m_configurationType.clear();
 	m_description.clear();
 	m_project.clear();
+	m_internalUse = false;
 	m_status = DPS_NONE;
 
 	return true;

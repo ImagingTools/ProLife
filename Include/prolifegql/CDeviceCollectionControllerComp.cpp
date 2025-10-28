@@ -510,6 +510,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	representationPayload.softwareBindingInfos = softwareBindingInfoList;
+	representationPayload.internalUse = deviceInfoPtr->IsInternalUse();
 
 	return true;
 }
@@ -709,6 +710,10 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	deviceInfoPtr->SetDeviceType(deviceType.toUtf8());
+
+	if (representation.internalUse){
+		deviceInfoPtr->SetInternalUse(*representation.internalUse);
+	}
 
 	return true;
 }
