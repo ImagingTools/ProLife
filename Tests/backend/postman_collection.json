@@ -54673,42 +54673,12 @@
 													"        \"GroupsList\": {\r",
 													"            \"items\": [\r",
 													"                {\r",
-													"                    \"added\": \"25.10.2023 15:38:35\",\r",
-													"                    \"description\": \"Product Company QUISS\",\r",
-													"                    \"id\": \"c6312e96-7be5-447c-8bf3-a328ac7222b7\",\r",
+													"                    \"added\": \"15.06.2023 16:57:24\",\r",
+													"                    \"description\": \"Atlas Copco\",\r",
+													"                    \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
 													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"R&D\",\r",
-													"                    \"parentGroups\": \"\",\r",
-													"                    \"roles\": \"4fc1ca50-4557-48e9-b5cb-6025d11da2f3\",\r",
-													"                    \"typeId\": \"Group\"\r",
-													"                },\r",
-													"                {\r",
-													"                    \"added\": \"28.05.2024 16:30:16\",\r",
-													"                    \"description\": \"Central AC Warehouse\",\r",
-													"                    \"id\": \"a47c93d1-0d3d-4282-8864-75a967a6ebed\",\r",
-													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"PTD\",\r",
-													"                    \"parentGroups\": \"\",\r",
-													"                    \"roles\": \"\",\r",
-													"                    \"typeId\": \"Group\"\r",
-													"                },\r",
-													"                {\r",
-													"                    \"added\": \"28.05.2024 16:00:01\",\r",
-													"                    \"description\": \"RTV.3d Production\",\r",
-													"                    \"id\": \"af42f3d0-340d-491e-ae3c-10d2ed8394b9\",\r",
-													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"Sensor Production ISRA Darmstadt\",\r",
-													"                    \"parentGroups\": \"\",\r",
-													"                    \"roles\": \"\",\r",
-													"                    \"typeId\": \"Group\"\r",
-													"                },\r",
-													"                {\r",
-													"                    \"added\": \"15.06.2023 17:49:04\",\r",
-													"                    \"description\": \"Part Of Atlas Copco Group\",\r",
-													"                    \"id\": \"5e538823-a8cb-42d8-b02e-ce379dcd9d3b\",\r",
-													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"PERCEPTRON\",\r",
-													"                    \"parentGroups\": \"\",\r",
+													"                    \"name\": \"AC TOOLS\",\r",
+													"                    \"parentGroups\": \"8b30c362-1b81-4106-a020-885f060fd719\",\r",
 													"                    \"roles\": \"\",\r",
 													"                    \"typeId\": \"Group\"\r",
 													"                },\r",
@@ -54733,21 +54703,31 @@
 													"                    \"typeId\": \"Group\"\r",
 													"                },\r",
 													"                {\r",
-													"                    \"added\": \"15.06.2023 17:38:54\",\r",
-													"                    \"description\": \"Part Of IAS\",\r",
-													"                    \"id\": \"b7e385fb-2b4c-4a6e-9060-24216fbbbe0b\",\r",
-													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"SCHEUGENPFLUG\",\r",
-													"                    \"parentGroups\": \"\",\r",
-													"                    \"roles\": \"\",\r",
-													"                    \"typeId\": \"Group\"\r",
-													"                },\r",
-													"                {\r",
 													"                    \"added\": \"15.06.2023 16:56:42\",\r",
 													"                    \"description\": \"Part Of Atlas Copco Group\",\r",
 													"                    \"id\": \"e573baab-2f20-440b-b9df-9d0bc2c3edad\",\r",
 													"                    \"lastModified\": \"\",\r",
 													"                    \"name\": \"ISRA\",\r",
+													"                    \"parentGroups\": \"\",\r",
+													"                    \"roles\": \"\",\r",
+													"                    \"typeId\": \"Group\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"added\": \"15.06.2023 17:49:04\",\r",
+													"                    \"description\": \"Part Of Atlas Copco Group\",\r",
+													"                    \"id\": \"5e538823-a8cb-42d8-b02e-ce379dcd9d3b\",\r",
+													"                    \"lastModified\": \"\",\r",
+													"                    \"name\": \"PERCEPTRON\",\r",
+													"                    \"parentGroups\": \"\",\r",
+													"                    \"roles\": \"\",\r",
+													"                    \"typeId\": \"Group\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"added\": \"28.05.2024 16:30:16\",\r",
+													"                    \"description\": \"Central AC Warehouse\",\r",
+													"                    \"id\": \"a47c93d1-0d3d-4282-8864-75a967a6ebed\",\r",
+													"                    \"lastModified\": \"\",\r",
+													"                    \"name\": \"PTD\",\r",
 													"                    \"parentGroups\": \"\",\r",
 													"                    \"roles\": \"\",\r",
 													"                    \"typeId\": \"Group\"\r",
@@ -54763,12 +54743,32 @@
 													"                    \"typeId\": \"Group\"\r",
 													"                },\r",
 													"                {\r",
-													"                    \"added\": \"15.06.2023 16:57:24\",\r",
-													"                    \"description\": \"Atlas Copco\",\r",
-													"                    \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
+													"                    \"added\": \"25.10.2023 15:38:35\",\r",
+													"                    \"description\": \"Product Company QUISS\",\r",
+													"                    \"id\": \"c6312e96-7be5-447c-8bf3-a328ac7222b7\",\r",
 													"                    \"lastModified\": \"\",\r",
-													"                    \"name\": \"AC TOOLS\",\r",
-													"                    \"parentGroups\": \"8b30c362-1b81-4106-a020-885f060fd719\",\r",
+													"                    \"name\": \"R&D\",\r",
+													"                    \"parentGroups\": \"\",\r",
+													"                    \"roles\": \"4fc1ca50-4557-48e9-b5cb-6025d11da2f3\",\r",
+													"                    \"typeId\": \"Group\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"added\": \"15.06.2023 17:38:54\",\r",
+													"                    \"description\": \"Part Of IAS\",\r",
+													"                    \"id\": \"b7e385fb-2b4c-4a6e-9060-24216fbbbe0b\",\r",
+													"                    \"lastModified\": \"\",\r",
+													"                    \"name\": \"SCHEUGENPFLUG\",\r",
+													"                    \"parentGroups\": \"\",\r",
+													"                    \"roles\": \"\",\r",
+													"                    \"typeId\": \"Group\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"added\": \"28.05.2024 16:00:01\",\r",
+													"                    \"description\": \"RTV.3d Production\",\r",
+													"                    \"id\": \"af42f3d0-340d-491e-ae3c-10d2ed8394b9\",\r",
+													"                    \"lastModified\": \"\",\r",
+													"                    \"name\": \"Sensor Production ISRA Darmstadt\",\r",
+													"                    \"parentGroups\": \"\",\r",
 													"                    \"roles\": \"\",\r",
 													"                    \"typeId\": \"Group\"\r",
 													"                }\r",
@@ -54804,7 +54804,8 @@
 													""
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -54834,7 +54835,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GroupsList {GroupsList(input: {viewParams: {offset: 0, count: -1, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name description parentGroups roles}}}",
+												"query": "query GroupsList {GroupsList(input: {viewParams: {offset: 0, count: -1, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name description parentGroups roles}}}",
 												"variables": ""
 											}
 										},
@@ -57091,7 +57092,7 @@
 															"            \"isDefault\": false,\r",
 															"            \"isGuest\": false,\r",
 															"            \"name\": \"Sensor Production User\",\r",
-															"            \"parentRoles\": \"\",\r",
+															"            \"parentRoles\": [],\r",
 															"            \"permissions\": \"AddSensor;ViewSensors\",\r",
 															"            \"productId\": \"ProLife\",\r",
 															"            \"roleId\": \"SensorProductionUser\"\r",
@@ -57109,7 +57110,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -58859,13 +58861,20 @@
 															"    \"data\": {\r",
 															"        \"UserItem\": {\r",
 															"            \"email\": \"tools.de@atlascopco.com\",\r",
-															"            \"groups\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
+															"            \"groups\": [\r",
+															"                \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\"\r",
+															"            ],\r",
 															"            \"id\": \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
 															"            \"name\": \"AC TOOLS License User\",\r",
 															"            \"password\": \"53a634ac9f17fbde7dba41c3f43fb4e1\",\r",
-															"            \"permissions\": \"CreateLicenseFile;ViewSensors\",\r",
+															"            \"permissions\": [\r",
+															"                \"CreateLicenseFile\",\r",
+															"                \"ViewSensors\"\r",
+															"            ],\r",
 															"            \"productId\": \"ProLife\",\r",
-															"            \"roles\": \"24bb5756-5f69-4052-b723-1aa0b9a57969\",\r",
+															"            \"roles\": [\r",
+															"                \"24bb5756-5f69-4052-b723-1aa0b9a57969\"\r",
+															"            ],\r",
 															"            \"systemInfos\": [\r",
 															"                {\r",
 															"                    \"enabled\": true,\r",
@@ -58888,7 +58897,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -59759,9 +59769,22 @@
 															"            \"description\": \"Atlas Copco\",\r",
 															"            \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
 															"            \"name\": \"AC TOOLS\",\r",
-															"            \"parentGroups\": \"8b30c362-1b81-4106-a020-885f060fd719\",\r",
-															"            \"roles\": \"\",\r",
-															"            \"users\": \"28463162-ffd2-4648-b399-f57f5ab82a68;599400c0-f468-42db-9f35-53bd36c26a6c;691d7bd7-b351-432f-80f2-dcbf08e428f8;70d1aac5-f3ee-487e-85d9-078b8116d981;8b06eee4-bf2f-44c6-b929-d542f01532b7;9c110c0c-a92e-4a3f-a206-ee3ae3017564;b128578a-fba3-4a58-a592-ae73e363cb80;dad913dc-6141-44a6-8ba0-5cf2184e512b;e18c0fb9-39e5-4c60-aefd-5595bf30d3e5;f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            \"parentGroups\": [\r",
+															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
+															"            ],\r",
+															"            \"roles\": [],\r",
+															"            \"users\": [\r",
+															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
+															"                \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"                \"691d7bd7-b351-432f-80f2-dcbf08e428f8\",\r",
+															"                \"70d1aac5-f3ee-487e-85d9-078b8116d981\",\r",
+															"                \"8b06eee4-bf2f-44c6-b929-d542f01532b7\",\r",
+															"                \"9c110c0c-a92e-4a3f-a206-ee3ae3017564\",\r",
+															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
+															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
+															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -59776,7 +59799,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129047,7 +129071,7 @@
 															"            \"isDefault\": false,\r",
 															"            \"isGuest\": false,\r",
 															"            \"name\": \"New Role\",\r",
-															"            \"parentRoles\": \"\",\r",
+															"            \"parentRoles\": [],\r",
 															"            \"permissions\": \"\",\r",
 															"            \"productId\": \"ProLife\",\r",
 															"            \"roleId\": \"NewRole\"\r",
@@ -129065,7 +129089,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129130,7 +129155,7 @@
 															"            \"isDefault\": false,\r",
 															"            \"isGuest\": false,\r",
 															"            \"name\": \"New Role\",\r",
-															"            \"parentRoles\": \"\",\r",
+															"            \"parentRoles\": [],\r",
 															"            \"permissions\": \"\",\r",
 															"            \"productId\": \"ProLife\",\r",
 															"            \"roleId\": \"NewRole\"\r",
@@ -129148,7 +129173,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129972,9 +129998,22 @@
 															"            \"description\": \"Atlas Copco\",\r",
 															"            \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
 															"            \"name\": \"AC TOOLS\",\r",
-															"            \"parentGroups\": \"8b30c362-1b81-4106-a020-885f060fd719\",\r",
-															"            \"roles\": \"\",\r",
-															"            \"users\": \"28463162-ffd2-4648-b399-f57f5ab82a68;4dbd73aa-b103-484e-ac69-caad51e02a5e;599400c0-f468-42db-9f35-53bd36c26a6c;691d7bd7-b351-432f-80f2-dcbf08e428f8;70d1aac5-f3ee-487e-85d9-078b8116d981;8b06eee4-bf2f-44c6-b929-d542f01532b7;9c110c0c-a92e-4a3f-a206-ee3ae3017564;b128578a-fba3-4a58-a592-ae73e363cb80;dad913dc-6141-44a6-8ba0-5cf2184e512b;e18c0fb9-39e5-4c60-aefd-5595bf30d3e5;f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            \"parentGroups\": [\r",
+															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
+															"            ],\r",
+															"            \"roles\": [],\r",
+															"            \"users\": [\r",
+															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
+															"                \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"                \"691d7bd7-b351-432f-80f2-dcbf08e428f8\",\r",
+															"                \"70d1aac5-f3ee-487e-85d9-078b8116d981\",\r",
+															"                \"8b06eee4-bf2f-44c6-b929-d542f01532b7\",\r",
+															"                \"9c110c0c-a92e-4a3f-a206-ee3ae3017564\",\r",
+															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
+															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
+															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -129989,7 +130028,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -130127,9 +130167,22 @@
 															"            \"description\": \"Atlas Copco\",\r",
 															"            \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
 															"            \"name\": \"AC TOOLS\",\r",
-															"            \"parentGroups\": \"8b30c362-1b81-4106-a020-885f060fd719\",\r",
-															"            \"roles\": \"\",\r",
-															"            \"users\": \"28463162-ffd2-4648-b399-f57f5ab82a68;599400c0-f468-42db-9f35-53bd36c26a6c;691d7bd7-b351-432f-80f2-dcbf08e428f8;70d1aac5-f3ee-487e-85d9-078b8116d981;8b06eee4-bf2f-44c6-b929-d542f01532b7;9c110c0c-a92e-4a3f-a206-ee3ae3017564;b128578a-fba3-4a58-a592-ae73e363cb80;dad913dc-6141-44a6-8ba0-5cf2184e512b;e18c0fb9-39e5-4c60-aefd-5595bf30d3e5;f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            \"parentGroups\": [\r",
+															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
+															"            ],\r",
+															"            \"roles\": [],\r",
+															"            \"users\": [\r",
+															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
+															"                \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"                \"691d7bd7-b351-432f-80f2-dcbf08e428f8\",\r",
+															"                \"70d1aac5-f3ee-487e-85d9-078b8116d981\",\r",
+															"                \"8b06eee4-bf2f-44c6-b929-d542f01532b7\",\r",
+															"                \"9c110c0c-a92e-4a3f-a206-ee3ae3017564\",\r",
+															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
+															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
+															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -130144,7 +130197,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -131428,7 +131482,8 @@
 											"});"
 										],
 										"type": "text/javascript",
-										"packages": {}
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
@@ -131458,7 +131513,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UserUpdate {UserUpdate(input: {typeId: \"User\", productId: \"ProLife\", id: \"9fb8f2a6-3b5f-41ca-a978-108c99f0fce4\", item: {id:\"9fb8f2a6-3b5f-41ca-a978-108c99f0fce4\",productId:\"ProLife\",name:\"Test\",username:\"TestAdmin\",password:\"304e293e3b8d2c988eb50b6214fcbb57\",email:\"test@gmail.com\",groups:\"\",roles:\"539ccf39-0b59-4c40-95f2-50f5be8ee6d3;65072a3b-696e-499b-b01d-9a6838c09014\",permissions:\"\",systemInfos:[{id:\"\",name:\"Internal\",enabled:true}]}}) {updatedNotification {id}}}",
+										"query": "mutation UserUpdate {UserUpdate(input: {typeId: \"User\", productId: \"ProLife\", id: \"9fb8f2a6-3b5f-41ca-a978-108c99f0fce4\", item: {id:\"9fb8f2a6-3b5f-41ca-a978-108c99f0fce4\",productId:\"ProLife\",name:\"Test\",username:\"TestAdmin\",password:\"304e293e3b8d2c988eb50b6214fcbb57\",email:\"test@gmail.com\",groups:[],roles:[\"539ccf39-0b59-4c40-95f2-50f5be8ee6d3\",\"65072a3b-696e-499b-b01d-9a6838c09014\"],permissions:\"\",systemInfos:[{id:\"\",name:\"Internal\",enabled:true}]}}) {updatedNotification {id}}}",
 										"variables": ""
 									}
 								},
