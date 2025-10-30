@@ -1,0 +1,62 @@
+schema {
+	query: Query
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ComplexCollectionFilter.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtBaseTypes.sdl"
+}
+
+type ChartAxes {
+	xLabel: String!
+	yLabel: String!
+}
+
+type LicenseCreationChart {
+	axes: ChartAxes!
+	labels: [String!]!
+	points: [SdlPoint!]!
+}
+
+type LicenseCreationPoint {
+	date: String!
+	count: Int!
+}
+
+type LicenseCreationSummary {
+	totalCreated: Int!
+	maxDay: LicenseCreationPoint
+}
+
+type LicenseCreationInfo {
+	chart: LicenseCreationChart!
+	summary: LicenseCreationSummary!
+}
+
+type LicenseProductStat {
+	productId: ID!
+	productName: String!
+	totalLicenses: Integer!
+}
+
+type LicenseProductStats {
+	productStats: [LicenseProductStat]
+}
+
+enum Product {
+	Software
+	Hardware
+}
+
+type LicenseProductInfo {
+	productInfo: Product!
+}
+
+type Query {
+	GetLicenseCreationInfo (input: TimeFilter): LicenseCreationInfo!
+	GetLicenseProductStats (input: LicenseProductInfo): LicenseProductStats!
+}
+
+

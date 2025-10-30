@@ -167,6 +167,7 @@ ViewBase {
 			}
 		}
 		
+		internalUseSwitchElementView.checked = softwareProductData.m_internalUse
 		group2.updateGui();
 	}
 	
@@ -200,6 +201,7 @@ ViewBase {
 			
 		}
 		
+		softwareProductData.m_internalUse = internalUseSwitchElementView.checked
 		group2.updateModel();
 	}
 	
@@ -505,6 +507,16 @@ ViewBase {
 				RegularExpressionValidator {
 					id: serialNumberRegexp;
 					regularExpression: /^(?!\s*$).+/;
+				}
+
+				SwitchElementView {
+					id: internalUseSwitchElementView
+					name: qsTr("Internal Use");
+					description: qsTr("Activate if the license is for internal use");
+					readOnly: root.readOnly
+					onCheckedChanged: {
+						root.doUpdateModel()
+					}
 				}
 			}
 			

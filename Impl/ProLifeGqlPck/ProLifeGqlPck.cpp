@@ -99,6 +99,11 @@ I_EXPORT_COMPONENT(
 		"Group filter param joiner",
 		"Group Filter Param Joiner");
 
+I_EXPORT_COMPONENT(
+		WorkspaceController,
+		"Workspace controller",
+		"Workspace Controllerr");
+
 
 } // namespace ProLifeGqlPck
 

@@ -239,6 +239,8 @@ ViewBase {
 				}
 			}
 		}
+
+		internalUseSwitchElementView.checked = deviceData.m_internalUse
 	}
 	
 	function updateModel(){
@@ -289,6 +291,8 @@ ViewBase {
 		else{
 			deviceData.m_productionStatus = "";
 		}
+
+		deviceData.m_internalUse = internalUseSwitchElementView.checked
 	}
 	
 	DocumentHistoryPanel {
@@ -583,6 +587,16 @@ ViewBase {
 					
 					onEditingFinished: {
 						deviceEditorContainer.doUpdateModel();
+					}
+				}
+				
+				SwitchElementView {
+					id: internalUseSwitchElementView
+					name: qsTr("Internal Use");
+					description: qsTr("Activate if the sensor is for internal use");
+					readOnly: deviceEditorContainer.readOnly
+					onCheckedChanged: {
+						deviceEditorContainer.doUpdateModel()
 					}
 				}
 			}

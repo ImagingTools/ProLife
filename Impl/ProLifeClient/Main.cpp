@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(prolifeSensorsSdl);
 	Q_INIT_RESOURCE(prolifeLicensesSdl);
 	Q_INIT_RESOURCE(prolifeOrdersSdl);
+	Q_INIT_RESOURCE(prolifeWorkspaceSdl);
 
 	Q_INIT_RESOURCE(imtlicFeaturesSdl);
 	Q_INIT_RESOURCE(imtlicProductsSdl);

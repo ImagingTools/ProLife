@@ -27,32 +27,8 @@ ViewBase {
 		if (!CachedAccountCollection.completed){
 			CachedAccountCollection.updateModel();
 		}
-		
-		if (!CachedLicenseCollection.completed){
-			CachedLicenseCollection.updateModel();
-		}
-		
-		if (!CachedDeviceCollection.completed){
-			CachedDeviceCollection.updateModel();
-		}
-		
-		if (!CachedProductCollection.completed){
-			CachedProductCollection.updateModel();
-		}
-		
-		if (!CachedSoftwareCollection.completed){
-			CachedSoftwareCollection.updateModel();
-		}
-		
-		CachedDeviceCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
-		CachedSoftwareCollection.modelUpdated.connect(orderEditorContainer.doUpdateGui)
 	}
-	
-	Component.onDestruction: {
-		CachedDeviceCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
-		CachedSoftwareCollection.modelUpdated.disconnect(orderEditorContainer.doUpdateGui)
-	}
-	
+
 	onOrderDataChanged: {
 		checkPermissions();
 	}

@@ -19,21 +19,11 @@ ApplicationMain {
 		target: AuthorizationController;
 		
 		function onLoggedIn(){
-			CachedProductCollection.updateModel();
-			CachedLicenseCollection.updateModel();
 			CachedAccountCollection.updateModel();
-			CachedOrderCollection.updateModel();
-			CachedDeviceCollection.updateModel();
-			CachedSoftwareCollection.updateModel();
 		}
 		
 		function onLoggedOut(){
-			CachedProductCollection.clearModel();
-			CachedLicenseCollection.clearModel();
 			CachedAccountCollection.clearModel();
-			CachedOrderCollection.clearModel();
-			CachedDeviceCollection.clearModel();
-			CachedSoftwareCollection.clearModel();
 		}
 	}
 	

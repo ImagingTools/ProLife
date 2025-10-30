@@ -31,6 +31,9 @@ list(APPEND webdirs ${buildwebdir}/src/prolifeLicensesSdl)
 list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeOrdersSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeOrdersSdl)
 
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeWorkspaceSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeWorkspaceSdl)
+
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 
