@@ -10,6 +10,10 @@
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/IProductInstanceInfo.h>
 
+// ProLife includes
+#include <prolifedata/prolifedata.h>
+#include <prolifedata/IDeviceInfo.h>
+
 
 namespace prolifegql
 {
@@ -17,12 +21,12 @@ namespace prolifegql
 
 // protected methods
 
-sdl::prolife::Workspace::CLicenseCreationInfo CWorkspaceControllerComp::OnGetLicenseCreationInfo(
+sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCreationInfo(
 			const sdl::prolife::Workspace::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::prolife::Workspace::CLicenseCreationInfo response;
+	sdl::prolife::Workspace::CLineChartData response;
 	if (!m_softwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
 		return response;
@@ -61,15 +65,12 @@ sdl::prolife::Workspace::CLicenseCreationInfo CWorkspaceControllerComp::OnGetLic
 	iprm::CParamsSet selectionParams;
 	selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
 
-	sdl::prolife::Workspace::CLicenseCreationSummary::V1_0 licenseCreationSummary;
 	imtbase::ICollectionInfo::Ids elementIds = m_userActionCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
-	sdl::prolife::Workspace::CLicenseCreationChart::V1_0 licenseCreationChart;
-	licenseCreationChart.axes.Emplace();
-	licenseCreationChart.labels.Emplace();
-	licenseCreationChart.points.Emplace();
+	response.Version_1_0->axes.Emplace();
+	response.Version_1_0->labels.Emplace();
+	response.Version_1_0->points.Emplace();
 
-	licenseCreationChart.axes->xLabel = "Days";
-	licenseCreationChart.axes->yLabel = "Created Licenses";
+	response.Version_1_0->axes->yLabel = "Created Licenses";
 
 	QMap<QDate, int> licenseCountByDateMap;
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
@@ -88,57 +89,140 @@ sdl::prolife::Workspace::CLicenseCreationInfo CWorkspaceControllerComp::OnGetLic
 		}
 	}
 
-	QDate startDate = QDate::currentDate();
-	QDate endDate = QDate::currentDate();
-	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK){
-		startDate = endDate.addDays(-6);
+	QDate currentDate = QDate::currentDate();
+	QDate startDate, endDate;
+	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
+		endDate = currentDate;
+		startDate = currentDate.addDays(-6);
 	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH){
-		startDate = endDate.addDays(-30);
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && mode == imtbase::ITimeFilterParam::IM_CURRENT){
+		startDate = QDate(currentDate.year(), currentDate.month(), 1);
+		endDate = startDate.addMonths(1).addDays(-1);
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && mode == imtbase::ITimeFilterParam::IM_LAST){
+		endDate = QDate(currentDate.year(), currentDate.month(), 1).addDays(-1);
+		startDate = QDate(endDate.year(), endDate.month(), 1);
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && mode == imtbase::ITimeFilterParam::IM_CURRENT){
+		startDate = QDate(currentDate.year(), 1, 1);
+		endDate = QDate(currentDate.year(), 12, 31);
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && mode == imtbase::ITimeFilterParam::IM_LAST){
+		startDate = QDate(currentDate.year() - 1, 1, 1);
+		endDate = QDate(currentDate.year() - 1, 12, 31);
+	}
+	else{
+		endDate = currentDate;
+		startDate = currentDate.addDays(-6);
 	}
 
-	int dayIndex = 1;
 	int totalCreated = 0;
 	int maxCount = 0;
-	QDate maxDate;
+	QString maxLabel;
 
-	for (QDate date = startDate; date <= endDate; date = date.addDays(1), ++dayIndex) {
-		int count = licenseCountByDateMap.contains(date) ? licenseCountByDateMap[date] : 0;
+	auto addPoint = [&](int x, int y, const QString& label){
+		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 point;
+		point.x = x;
+		point.y = y;
+		response.Version_1_0->points->push_back(point);
+		response.Version_1_0->labels->push_back(label);
+	};
 
-		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 sdlPoint;
-		sdlPoint.x = dayIndex;
-		sdlPoint.y = count;
+	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
+		response.Version_1_0->axes->xLabel = "Days";
 
-		licenseCreationChart.points->push_back(sdlPoint);
-		licenseCreationChart.labels->push_back(date.toString("dd MMM"));
+		int dayIndex = 0;
+		for (QDate d = startDate; d <= endDate; d = d.addDays(1), ++dayIndex){
+			int count = licenseCountByDateMap.value(d, 0);
+			addPoint(dayIndex, count, d.toString("dd MMM"));
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = d.toString("dd MMM");
+			}
+		}
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH){
+		response.Version_1_0->axes->xLabel = "Weeks";
 
-		totalCreated += count;
-		if (count > maxCount) {
-			maxCount = count;
-			maxDate = date;
+		int weekIndex = 0;
+		QDate iter = startDate;
+
+		while (iter <= endDate){
+			QDate weekStart = iter;
+			QDate weekEnd = weekStart.addDays(6);
+			if (weekEnd > endDate)
+				weekEnd = endDate;
+
+			int count = 0;
+			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1))
+				count += licenseCountByDateMap.value(d, 0);
+
+			QString rangeLabel;
+			if (weekStart.month() == weekEnd.month()){
+				rangeLabel = QString("%1–%2 %3")
+							.arg(weekStart.toString("dd"))
+							.arg(weekEnd.toString("dd"))
+							.arg(weekEnd.toString("MMM"));
+			}
+			else{
+				rangeLabel = QString("%1–%2")
+							.arg(weekStart.toString("dd MMM"))
+							.arg(weekEnd.toString("dd MMM"));
+			}
+
+			addPoint(weekIndex, count, rangeLabel);
+
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = weekStart.toString("dd MMM");
+			}
+
+			iter = weekEnd.addDays(1);
+			++weekIndex;
+		}
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR){
+		response.Version_1_0->axes->xLabel = "Months";
+
+		for (int month = 1; month <= 12; ++month){
+			QDate monthStart(startDate.year(), month, 1);
+			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
+	
+			int count = 0;
+			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1))
+				count += licenseCountByDateMap.value(d, 0);
+	
+			addPoint(month - 1, count, monthStart.toString("MMM"));
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = monthStart.toString("MMM");
+			}
 		}
 	}
 
-	sdl::prolife::Workspace::CLicenseCreationPoint::V1_0 licenseCreationPoint;
-	licenseCreationPoint.date = maxDate.toString("dd MMM");
-	licenseCreationPoint.count = maxCount;
+	sdl::prolife::Workspace::CChartSummary::V1_0 licenseChartSummary;
+	licenseChartSummary.total = totalCreated;
 
-	licenseCreationSummary.maxDay = licenseCreationPoint;
-	licenseCreationSummary.totalCreated = totalCreated;
+	sdl::prolife::Workspace::CChartSegment::V1_0 maxChartSegment;
+	maxChartSegment.value = maxCount;
+	maxChartSegment.label = maxLabel;
+	licenseChartSummary.maxItem = maxChartSegment;
 
-	response.Version_1_0->chart = licenseCreationChart;
-	response.Version_1_0->summary = licenseCreationSummary;
+	response.Version_1_0->summary = licenseChartSummary;
 
 	return response;
 }
 
 
-sdl::prolife::Workspace::CLicenseProductStats CWorkspaceControllerComp::OnGetLicenseProductStats(
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetLicenseProductStats(
 			const sdl::prolife::Workspace::CGetLicenseProductStatsGqlRequest& getLicenseProductStatsRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::prolife::Workspace::CLicenseProductStats response;
+	sdl::prolife::Workspace::CPieChartData response;
 
 	if (!m_softwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
@@ -186,13 +270,12 @@ sdl::prolife::Workspace::CLicenseProductStats CWorkspaceControllerComp::OnGetLic
 
 	softwareSelectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
 
-	response.Version_1_0->productStats.Emplace();
+	response.Version_1_0->segments.Emplace();
 
 	imtbase::ICollectionInfo::Ids softwareProductIds = m_productCollectionCompPtr->GetElementIds(0, -1, &softwareSelectionParams);
 	for (const imtbase::ICollectionInfo::Id& productId : softwareProductIds){
-		sdl::prolife::Workspace::CLicenseProductStat::V1_0 licenseProductStat;
-		licenseProductStat.productId = productId;
-		licenseProductStat.productName = m_productCollectionCompPtr->GetElementInfo(productId, imtbase::ICollectionInfo::EIT_NAME).toString();
+		sdl::prolife::Workspace::CChartSegment::V1_0 licenseProductStat;
+		licenseProductStat.label = m_productCollectionCompPtr->GetElementInfo(productId, imtbase::ICollectionInfo::EIT_NAME).toString();
 
 		int count = 0;
 		iprm::CParamsSet paramsSet;
@@ -234,55 +317,93 @@ sdl::prolife::Workspace::CLicenseProductStats CWorkspaceControllerComp::OnGetLic
 			count = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		}
 
-		licenseProductStat.totalLicenses = count;
-		response.Version_1_0->productStats->append(licenseProductStat);
+		licenseProductStat.value = count;
+		response.Version_1_0->segments->append(licenseProductStat);
 	}
 
 	return response;
 }
 
 
-// private methods
-
-QDateTime CWorkspaceControllerComp::GetLicenseFileCreationDate(const QByteArray& softwareId) const
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareStatusInfo(
+			const sdl::prolife::Workspace::CGetHardwareStatusInfoGqlRequest& getHardwareStatusInfoRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
 {
-	if (!m_userActionCollectionCompPtr.IsValid()){
-		return QDateTime();
+	sdl::prolife::Workspace::CPieChartData response;
+
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	response.Version_1_0.Emplace();
+
+	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds();
+	QMap<int, int> hardwareStatutesMap;
+	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
+		idoc::MetaInfoPtr metaInfoPtr = m_hardwareCollectionCompPtr->GetDataMetaInfo(elementId);
+		if (metaInfoPtr.IsValid()){
+			int status = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_STATUS).toInt();
+			if (hardwareStatutesMap.contains(status)){
+				hardwareStatutesMap[status]++;
+			}
+			else{
+				hardwareStatutesMap[status] = 1;
+			}
+		}
+	}
+
+	response.Version_1_0->segments.Emplace();
+	for (auto it = hardwareStatutesMap.constBegin(); it != hardwareStatutesMap.constEnd(); ++it){
+		sdl::prolife::Workspace::CChartSegment::V1_0 hardwareStatusItem;
+		hardwareStatusItem.label = prolifedata::GetNameFromDeviceProductionStatus((prolifedata::IDeviceInfo::DeviceProductionStatus)it.key());
+		hardwareStatusItem.value = it.value();
+
+		response.Version_1_0->segments->push_back(hardwareStatusItem);
+	}
+
+	return response;
+}
+
+
+sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummaryInfo(
+			const sdl::prolife::Workspace::CGetTotalSummaryInfoGqlRequest& getTotalSummaryInfoRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CTotalSummaryInfo response;
+
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
 	}
 
 	if (!m_softwareCollectionCompPtr.IsValid()){
-		return QDateTime();
+		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
 	}
 
-	idoc::MetaInfoPtr metaInfoPtr = m_softwareCollectionCompPtr->GetDataMetaInfo(softwareId);
-	if (!metaInfoPtr.IsValid()){
-		return QDateTime();
-	}
+	response.Version_1_0.Emplace();
+	response.Version_1_0->summaryInfos.Emplace();
 
-	QByteArray deviceId = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toByteArray();
+	sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 softwareCollectionInfo;
+	softwareCollectionInfo.total = m_softwareCollectionCompPtr->GetElementsCount();
+	softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
+	softwareCollectionInfo.title = QStringLiteral("Software");
+	softwareCollectionInfo.icon = QStringLiteral("Icons/Key");
+	softwareCollectionInfo.objectTypeId = QByteArrayLiteral("SoftwareProduct");
+	response.Version_1_0->summaryInfos->push_back(softwareCollectionInfo);
 
-	iprm::CParamsSet paramsSet;
+	sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 hardwareCollectionInfo;
+	hardwareCollectionInfo.total = m_hardwareCollectionCompPtr->GetElementsCount();
+	hardwareCollectionInfo.collectionId = QByteArrayLiteral("Devices");
+	hardwareCollectionInfo.title = QStringLiteral("Hardware");
+	hardwareCollectionInfo.icon = QStringLiteral("Icons/Sensor");
+	hardwareCollectionInfo.objectTypeId = QByteArrayLiteral("Device");
+	response.Version_1_0->summaryInfos->push_back(hardwareCollectionInfo);
 
-	imtbase::CComplexCollectionFilter complexFilter;
-	imtbase::IComplexCollectionFilter::FieldFilter targetIdFieldFilter;
-	targetIdFieldFilter.fieldId = "targetId";
-	targetIdFieldFilter.filterValue = deviceId;
-	targetIdFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-	complexFilter.AddFieldFilter(targetIdFieldFilter);
-
-	imtbase::IComplexCollectionFilter::FieldFilter actionTypeFieldFilter;
-	actionTypeFieldFilter.fieldId = "actionTypeId";
-	actionTypeFieldFilter.filterValue = "CreateLicenseFile";
-	actionTypeFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-	complexFilter.AddFieldFilter(actionTypeFieldFilter);
-
-	paramsSet.SetEditableParameter("ComplexFilter", &complexFilter);
-	imtbase::ICollectionInfo::Ids elementIds = m_userActionCollectionCompPtr->GetElementIds(0, -1, &paramsSet);
-	if (elementIds.isEmpty()){
-		return QDateTime();
-	}
-
-	return m_userActionCollectionCompPtr->GetElementInfo(elementIds[0], imtbase::ICollectionInfo::MIT_INSERTION_TIME).toDateTime();
+	return response;
 }
 
 

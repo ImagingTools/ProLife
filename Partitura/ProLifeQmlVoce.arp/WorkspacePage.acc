@@ -108,7 +108,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Workspace"/>
+                        <Data IsEnabled="true" Value="Dashboard"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Priority" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="1"/>

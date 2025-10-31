@@ -26,17 +26,22 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual sdl::prolife::Workspace::CLicenseCreationInfo OnGetLicenseCreationInfo(
+	virtual sdl::prolife::Workspace::CLineChartData OnGetLicenseCreationInfo(
 				const sdl::prolife::Workspace::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CLicenseProductStats OnGetLicenseProductStats(
-			const sdl::prolife::Workspace::CGetLicenseProductStatsGqlRequest& getLicenseProductStatsRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& errorMessage) const override;
-
-private:
-	QDateTime GetLicenseFileCreationDate(const QByteArray& softwareId) const;
+	virtual sdl::prolife::Workspace::CPieChartData OnGetLicenseProductStats(
+				const sdl::prolife::Workspace::CGetLicenseProductStatsGqlRequest& getLicenseProductStatsRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+		virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareStatusInfo(
+				const sdl::prolife::Workspace::CGetHardwareStatusInfoGqlRequest& getHardwareStatusInfoRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CTotalSummaryInfo OnGetTotalSummaryInfo(
+				const sdl::prolife::Workspace::CGetTotalSummaryInfoGqlRequest& getTotalSummaryInfoRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

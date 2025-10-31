@@ -10,39 +10,46 @@ import {
 }
 
 type ChartAxes {
-	xLabel: String!
-	yLabel: String!
+	xLabel: String
+	yLabel: String
 }
 
-type LicenseCreationChart {
+type ChartSegment {
+	label: String!
+	value: Int!
+	color: String
+}
+
+type ChartBar {
+	label: String!
+	total: Int!
+	segments: [ChartSegment!]!
+}
+
+type ChartSummary {
+	total: Int!
+	maxItem: ChartSegment
+}
+
+type PieChartData {
+	axes: ChartAxes
+	segments: [ChartSegment!]!
+	summary: ChartSummary
+}
+
+type BarChartData {
+	axes: ChartAxes!
+	labels: [String!]!
+	bars: [ChartBar!]!
+	stacked: Boolean! # true если stacked, false — обычная bar
+	summary: ChartSummary
+}
+
+type LineChartData {
 	axes: ChartAxes!
 	labels: [String!]!
 	points: [SdlPoint!]!
-}
-
-type LicenseCreationPoint {
-	date: String!
-	count: Int!
-}
-
-type LicenseCreationSummary {
-	totalCreated: Int!
-	maxDay: LicenseCreationPoint
-}
-
-type LicenseCreationInfo {
-	chart: LicenseCreationChart!
-	summary: LicenseCreationSummary!
-}
-
-type LicenseProductStat {
-	productId: ID!
-	productName: String!
-	totalLicenses: Integer!
-}
-
-type LicenseProductStats {
-	productStats: [LicenseProductStat]
+	summary: ChartSummary
 }
 
 enum Product {
@@ -54,9 +61,23 @@ type LicenseProductInfo {
 	productInfo: Product!
 }
 
+type CollectionSummaryInfo {
+	total: Integer!
+	collectionId: ID!
+	title: String!
+	icon: String!
+	objectTypeId: ID!
+}
+
+type TotalSummaryInfo {
+	summaryInfos: [CollectionSummaryInfo!]!
+}
+
 type Query {
-	GetLicenseCreationInfo (input: TimeFilter): LicenseCreationInfo!
-	GetLicenseProductStats (input: LicenseProductInfo): LicenseProductStats!
+	GetLicenseCreationInfo (input: TimeFilter): LineChartData!
+	GetLicenseProductStats (input: LicenseProductInfo): PieChartData!
+	GetHardwareStatusInfo: PieChartData!
+	GetTotalSummaryInfo: TotalSummaryInfo!
 }
 
 
