@@ -22,7 +22,7 @@ public:
 
 	I_BEGIN_COMPONENT(CGroupFilterParamJoinerComp);
 		I_REGISTER_INTERFACE(prolifedata::IGroupFilterParamJoiner);
-		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all devices", true, "");
+		I_ASSIGN(m_permissionIdAttrPtr, "PermissionId", "Permission ID for show all items", true, "");
 		I_ASSIGN(m_checkPermissionCompPtr, "PermissionChecker", "Checker of the permissions", false, "PermissionChecker");
 	I_END_COMPONENT;
 	

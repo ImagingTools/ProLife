@@ -39,5 +39,8 @@
         <file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
         <file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
  	<file alias="ProLife/WorkspacePage.qml">WorkspacePage.qml</file>
+	<file alias="ProLife/GqlPiechartView.qml">GqlPiechartView.qml</file>
+	<file alias="ProLife/GqlLinechartView.qml">GqlLinechartView.qml</file>
+	<file alias="ProLife/GqlBarchartView.qml">GqlBarchartView.qml</file>
     </qresource>
 </RCC>

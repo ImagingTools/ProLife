@@ -23,7 +23,7 @@ type ChartSegment {
 type ChartBar {
 	label: String!
 	total: Int!
-	segments: [ChartSegment!]!
+	segments: [ChartSegment]!
 }
 
 type ChartSummary {
@@ -33,15 +33,13 @@ type ChartSummary {
 
 type PieChartData {
 	axes: ChartAxes
-	segments: [ChartSegment!]!
+	segments: [ChartSegment]!
 	summary: ChartSummary
 }
 
 type BarChartData {
 	axes: ChartAxes!
-	labels: [String!]!
 	bars: [ChartBar!]!
-	stacked: Boolean! # true если stacked, false — обычная bar
 	summary: ChartSummary
 }
 
@@ -50,15 +48,6 @@ type LineChartData {
 	labels: [String!]!
 	points: [SdlPoint!]!
 	summary: ChartSummary
-}
-
-enum Product {
-	Software
-	Hardware
-}
-
-type LicenseProductInfo {
-	productInfo: Product!
 }
 
 type CollectionSummaryInfo {
@@ -75,7 +64,10 @@ type TotalSummaryInfo {
 
 type Query {
 	GetLicenseCreationInfo (input: TimeFilter): LineChartData!
-	GetLicenseProductStats (input: LicenseProductInfo): PieChartData!
+	GetSoftwareUsedBarChart (input: TimeFilter): BarChartData!
+	GetSoftwareUsedPieChart : PieChartData!
+	GetHardwareUsedBarChart (input: TimeFilter): BarChartData!
+	GetHardwareUsedPieChart : PieChartData!
 	GetHardwareStatusInfo: PieChartData!
 	GetTotalSummaryInfo: TotalSummaryInfo!
 }

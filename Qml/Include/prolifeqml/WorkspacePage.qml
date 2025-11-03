@@ -66,114 +66,6 @@ ViewBase {
 			contentHeight: 2000//topFlow.height + flow.height
 			clip: true;
 
-			Component.onCompleted: {
-				softwareProductStatsRequest.send()
-				hardwareProductStatsRequest.send()
-				licenseCreationInfoRequest.send()
-				hardwareStatusInfoRequest.send()
-				getTotalSummaryInfoRequest.send()
-			}
-	
-			function createSegments(productStats){
-				let segments = []
-				for (let i = 0; i < productStats.count; ++i){
-					let obj = {}
-					let item = productStats.get(i).item
-					obj.value = item.m_value
-					obj.label = item.m_label
-					obj.color = root.palette[i % root.palette.length]
-					segments.push(obj)
-				}
-		
-				return segments
-			}
-		
-			GqlSdlRequestSender {
-				id: softwareProductStatsRequest
-				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseProductStats
-				inputObjectComp: Component {
-					LicenseProductInfo {
-						m_productInfo: "Software"
-					}
-				}
-				sdlObjectComp: Component {
-					PieChartData {
-						onFinished: {
-							let segments = flickable.createSegments(m_segments)
-							piechartElementView.bottomItem.segments = segments
-						}
-					}
-				}
-			}
-		
-			GqlSdlRequestSender {
-				id: hardwareProductStatsRequest
-				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseProductStats
-				inputObjectComp: Component {
-					LicenseProductInfo {
-						m_productInfo: "Hardware"
-					}
-				}
-		
-				sdlObjectComp: Component {
-					PieChartData {
-						onFinished: {
-							let segments = flickable.createSegments(m_segments)
-							hardwarePiechartElementView.bottomItem.segments = segments
-						}
-					}
-				}
-			}
-		
-			TimeFilter {
-				id: timeFilter
-				m_interpretationMode: "For"
-			}
-		
-			GqlSdlRequestSender {
-				id: licenseCreationInfoRequest
-				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
-				inputObjectComp: Component {
-					TimeFilter {
-						m_timeUnit: "Week"
-						m_interpretationMode: "For"
-					}
-				}
-		
-				sdlObjectComp: Component {
-					LineChartData {
-						onFinished: {
-							graph2dElementView.bottomItem.legendX = m_axes.m_xLabel
-							graph2dElementView.bottomItem.legendY = m_axes.m_yLabel
-							graph2dElementView.bottomItem.title = ""
-							
-							let linePoints = []
-							for (let i = 0; i < m_points.count; ++i){
-								let point = m_points.get(i).item
-								linePoints.push(Qt.point(point.m_x, point.m_y))
-							}
-		
-							graph2dElementView.bottomItem.labelXValues = m_labels
-							graph2dElementView.bottomItem.linePoints = linePoints
-							graph2dElementView.bottomItem.requestPaint()
-						}
-					}
-				}
-			}
-
-			GqlSdlRequestSender {
-				id: hardwareStatusInfoRequest
-				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
-				sdlObjectComp: Component {
-					PieChartData {
-						onFinished: {
-							let segments = flickable.createSegments(m_segments)
-							hardwareStatusPiechartElementView.bottomItem.segments = segments
-						}
-					}
-				}
-			}
-
 			GqlSdlRequestSender {
 				id: getTotalSummaryInfoRequest
 				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getTotalSummaryInfo
@@ -184,6 +76,10 @@ ViewBase {
 						}
 					}
 				}
+
+				Component.onCompleted: {
+					send()
+				}
 			}
 
 			Flow {
@@ -193,10 +89,6 @@ ViewBase {
 				anchors.right: root.right
 				anchors.margins: Style.marginXL
 				spacing: Style.marginXL
-
-				onHeightChanged: {
-					console.log("topFlow onHeightChanged", height)
-				}
 
 				Repeater {
 					id: collectionInfoRepeater
@@ -254,111 +146,44 @@ ViewBase {
 				anchors.margins: Style.marginXL
 				spacing: Style.marginXL
 
-				onHeightChanged: {
-					console.log("flow onHeightChanged", height)
+				GqlPiechartView {
+					id: getHardwareUsedPieChartRequest
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
+					name: qsTr("Hardware Used")
 				}
-				
-				ComboBoxElementView {
-					id: graph2dElementView
+
+				GqlBarchartView {
 					width: Style.sizeHintL
+					name: qsTr("Hardware Used")
+					currentIndex: 0
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+				}
+
+				GqlPiechartView {
+					id: hardwareStatusInfoRequest
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
+					name: qsTr("Hardware Status")
+				}
+
+				GqlPiechartView {
+					id: getSoftwareUsedPieChartRequest
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
+					name: qsTr("Software Used")
+				}
+
+				GqlBarchartView {
+					width: Style.sizeHintL
+					name: qsTr("Software Used")
+					currentIndex: 0
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
+					ySteps: 5
+				}
+
+				GqlLinechartView {
+					width: Style.sizeHintL
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					name: qsTr("License Creation")
 					currentIndex: 0
-					controlWidth: 130
-					model: TreeItemModel {
-						Component.onCompleted: {
-							let index = insertNewItem()
-							setData("id", "Week", index)
-							setData("name", qsTr("Last Week"), index)
-							setData("mode", "For", index)
-
-							index = insertNewItem()
-							setData("id", "Month", index)
-							setData("name", qsTr("This Month"), index)
-							setData("mode", "Current", index)
-
-							index = insertNewItem()
-							setData("id", "Month", index)
-							setData("name", qsTr("Last Month"), index)
-							setData("mode", "Last", index)
-
-							index = insertNewItem()
-							setData("id", "Year", index)
-							setData("name", qsTr("This Year"), index)
-							setData("mode", "Current", index)
-
-							index = insertNewItem()
-							setData("id", "Year", index)
-							setData("name", qsTr("Last Year"), index)
-							setData("mode", "Last", index)
-						}
-					}
-	
-					onCurrentIndexChanged: {
-						if (currentIndex < 0){
-							return
-						}
-	
-						let unit = model.getData("id", currentIndex)
-						let mode = model.getData("mode", currentIndex)
-
-						timeFilter.m_timeUnit = unit
-						timeFilter.m_interpretationMode = mode
-
-						licenseCreationInfoRequest.send(timeFilter)
-					}
-			
-					bottomComp: Component {
-						Graph2d {
-							width: Style.sizeHintL
-							height: Style.sizeHintM
-							hasData: true
-							gridStepMajorX: 1
-							gridStepMajorY: 1
-							alwaysShowOrigin: true
-							xScale: 2
-							hasMinorGrid: false 
-							hasTooltip: false
-						}
-					}
-				}
-
-				ElementView {
-					id: piechartElementView
-					width: Style.sizeHintM
-					name: qsTr("Software Used")
-
-					bottomComp: Component {
-						Piechart {
-							id: piechart
-							ring: false
-							showLegend: true
-						}
-					}
-				}
-			
-				ElementView {
-					id: hardwarePiechartElementView
-					width: Style.sizeHintM
-					name: qsTr("Hardware Used")
-					bottomComp: Component {
-						Piechart {
-							id: piechart
-							ring: false
-						}
-					}
-				}
-				
-				ElementView {
-					id: hardwareStatusPiechartElementView
-					width: Style.sizeHintM
-					name: qsTr("Hardware Status")
-			
-					bottomComp: Component {
-						Piechart {
-							id: piechart
-							ring: false
-						}
-					}
 				}
 			}
 		}

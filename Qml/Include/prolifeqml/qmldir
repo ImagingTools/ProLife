@@ -14,3 +14,6 @@ AccountFilterComboBox 1.0 AccountFilterComboBox.qml
 LicenseFilterDelegate 1.0 LicenseFilterDelegate.qml
 CustomerFilterDelegate 1.0 CustomerFilterDelegate.qml
 WorkspacePage 1.0 WorkspacePage.qml
+GqlPiechartView 1.0 GqlPiechartView.qml
+GqlLinechartView 1.0 GqlLinechartView.qml
+GqlBarchartView 1.0 GqlBarchartView.qml
