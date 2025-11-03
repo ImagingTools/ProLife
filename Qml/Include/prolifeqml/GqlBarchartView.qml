@@ -14,10 +14,6 @@ ComboBoxElementView {
 
 	property int ySteps: 1
 
-	Component.onCompleted: {
-		updateModel()
-	}
-
 	property var palette: [
 		"#4CAF50", // Green
 		"#FFC107", // Amber

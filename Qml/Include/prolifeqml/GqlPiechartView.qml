@@ -10,10 +10,6 @@ ElementView {
 	id: piechartElementView
 	width: Style.sizeHintM
 
-	Component.onCompleted: {
-		updateModel()
-	}
-
 	property string gqlCommandId
 
 	property var palette: [

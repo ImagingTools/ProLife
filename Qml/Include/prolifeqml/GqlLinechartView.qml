@@ -13,10 +13,6 @@ ComboBoxElementView {
 	name: qsTr("License Creation")
 	controlWidth: 130
 
-	Component.onCompleted: {
-		updateModel()
-	}
-
 	property string gqlCommandId
 
 	function updateModel(){

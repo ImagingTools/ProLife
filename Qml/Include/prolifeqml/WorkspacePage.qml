@@ -146,44 +146,75 @@ ViewBase {
 				anchors.margins: Style.marginXL
 				spacing: Style.marginXL
 
+				Component.onCompleted: {
+					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+					if (viewLicenses){
+						getSoftwareUsedPieChartRequest.visible = true
+						getSoftwareUsedBarChart.visible = true
+						getLicenseCreationInfo.visible = true
+						getSoftwareUsedPieChartRequest.updateModel()
+						getSoftwareUsedBarChart.updateModel()
+						getLicenseCreationInfo.updateModel()
+					}
+
+					let viewSensors = PermissionsController.checkPermission("ViewSensors")
+					if (viewSensors){
+						getHardwareUsedPieChartRequest.visible = true
+						getHardwareUsedBarChart.visible = true
+						hardwareStatusInfoRequest.visible = true
+						getHardwareUsedPieChartRequest.updateModel()
+						getHardwareUsedBarChart.updateModel()
+						hardwareStatusInfoRequest.updateModel()
+					}
+				}
+
 				GqlPiechartView {
 					id: getHardwareUsedPieChartRequest
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
 					name: qsTr("Hardware Used")
+					visible: false
 				}
 
 				GqlBarchartView {
+					id: getHardwareUsedBarChart
 					width: Style.sizeHintL
 					name: qsTr("Hardware Used")
 					currentIndex: 0
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+					visible: false
 				}
 
 				GqlPiechartView {
 					id: hardwareStatusInfoRequest
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 					name: qsTr("Hardware Status")
+					visible: false
 				}
 
 				GqlPiechartView {
 					id: getSoftwareUsedPieChartRequest
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
 					name: qsTr("Software Used")
+					visible: false
 				}
 
 				GqlBarchartView {
+					id: getSoftwareUsedBarChart
 					width: Style.sizeHintL
 					name: qsTr("Software Used")
 					currentIndex: 0
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 					ySteps: 5
+					visible: false
 				}
 
 				GqlLinechartView {
+					id: getLicenseCreationInfo
 					width: Style.sizeHintL
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					name: qsTr("License Creation")
 					currentIndex: 0
+					visible: false
 				}
 			}
 		}
