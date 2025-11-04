@@ -14,22 +14,10 @@ ComboBoxElementView {
 
 	property int ySteps: 1
 
-	property var palette: [
-		"#4CAF50", // Green
-		"#FFC107", // Amber
-		"#2196F3", // Blue
-		"#F44336", // Red
-		"#9C27B0", // Purple
-		"#00BCD4", // Cyan
-		"#8BC34A", // Light Green
-		"#FF9800", // Orange
-		"#E91E63", // Pink
-		"#607D8B"  // Blue Grey
-	]
-
 	property string gqlCommandId
 
 	function updateModel(){
+		loading.start()
 		barChartRequest.send(timeFilter)
 	}
 
@@ -95,7 +83,7 @@ ComboBoxElementView {
 						let segmentObj = {}
 						segmentObj.label = segmentItem.m_label
 						segmentObj.value = segmentItem.m_value
-						segmentObj.color = root.palette[j % root.palette.length]
+						segmentObj.color = segmentItem.m_color
 						segments.push(segmentObj)
 					}
 
@@ -108,6 +96,7 @@ ComboBoxElementView {
 				stackedBarChart.xLabel = barChart.m_axes.m_xLabel
 				stackedBarChart.yLabel = barChart.m_axes.m_yLabel
 				stackedBarChart.bars = bars
+				loading.stop()
 			}
 		}
 	}
@@ -128,5 +117,13 @@ ComboBoxElementView {
 				}
 			}
 		}
+	}
+
+	Loading {
+		id: loading
+		z: parent.z + 1
+		anchors.fill: parent
+		color: Style.baseColor
+		visible: false
 	}
 }

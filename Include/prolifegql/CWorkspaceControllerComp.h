@@ -76,6 +76,7 @@ private:
 	QString GetProductNameForHardware(const QByteArray& hardwareId) const;
 	QString GetProductNameForSoftware(const QByteArray& softwareId) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
+	QString GenerateColorFromString(const QString& text) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

@@ -17,24 +17,15 @@ ViewBase {
 		}
 	}
 
-	property var palette: [
-		"#4CAF50", // Green
-		"#FFC107", // Amber
-		"#2196F3", // Blue
-		"#F44336", // Red
-		"#9C27B0", // Purple
-		"#00BCD4", // Cyan
-		"#8BC34A", // Light Green
-		"#FF9800", // Orange
-		"#E91E63", // Pink
-		"#607D8B"  // Blue Grey
-	]
-
 	Component.onCompleted: {
 		stackView.addPage(workspacePageComp)
-		stackView.addPage(userActionsPageComp)
+
+		let viewUserActions = PermissionsController.checkPermission("ViewUserActions")
+		if (viewUserActions){
+			stackView.addPage(userActionsPageComp)
+		}
 		stackView.setCurrentIndex(0)
-	
+
 		if (commandsController){
 			commandsController.setIsToggleable("Workspace", true)
 			commandsController.setToggled("Workspace", true)

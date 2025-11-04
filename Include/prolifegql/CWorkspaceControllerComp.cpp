@@ -31,6 +31,21 @@ QMap<int, QString> s_deviceStatusColor({
 			{prolifedata::IDeviceInfo::DPS_IN_REPAIR, "#8BC34A"},
 			{prolifedata::IDeviceInfo::DPS_DECOMMISSIONED, "#795548"}});
 
+static QStringList s_standardColors = {
+			"#4CAF50", // Green
+			"#2196F3", // Blue
+			"#FFC107", // Amber
+			"#F44336", // Red
+			"#9C27B0", // Purple
+			"#009688", // Teal
+			"#FF9800", // Orange
+			"#795548", // Brown
+			"#3F51B5", // Indigo
+			"#8BC34A", // Light Green
+			"#00BCD4", // Cyan
+			"#E91E63"  // Pink
+};
+
 
 // protected methods
 
@@ -291,7 +306,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
 		chartSegment.value = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
-
+		chartSegment.color = GenerateColorFromString(*chartSegment.label);
 		response.Version_1_0->segments->push_back(chartSegment);
 	}
 
@@ -384,6 +399,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
 		chartSegment.value = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
+		chartSegment.color = GenerateColorFromString(*chartSegment.label);
 
 		response.Version_1_0->segments->push_back(chartSegment);
 	}
@@ -591,6 +607,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
 				seg.value = it.value();
+				seg.color = GenerateColorFromString(it.key());
 				bar.segments->push_back(seg);
 				dailyTotal += it.value();
 			}
@@ -628,6 +645,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
 				seg.value = it.value();
+				seg.color = GenerateColorFromString(it.key());
 				bar.segments->push_back(seg);
 				weekTotal += it.value();
 			}
@@ -662,6 +680,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
 				seg.value = it.value();
+				seg.color = GenerateColorFromString(it.key());
 				bar.segments->push_back(seg);
 				monthTotal += it.value();
 			}
@@ -772,6 +791,18 @@ bool CWorkspaceControllerComp::JoinGroupFilter(const imtgql::IGqlRequest& gqlReq
 	}
 
 	return true;
+}
+
+
+QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) const
+{
+	if (text.isEmpty()){
+		return QString("#CCCCCC");
+	}
+
+	uint hash = qHash(text);
+	int index = static_cast<int>(hash % s_standardColors.size());
+	return s_standardColors[index];
 }
 
 

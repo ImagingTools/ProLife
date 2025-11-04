@@ -12,19 +12,6 @@ ElementView {
 
 	property string gqlCommandId
 
-	property var palette: [
-		"#4CAF50", // Green
-		"#FFC107", // Amber
-		"#2196F3", // Blue
-		"#F44336", // Red
-		"#9C27B0", // Purple
-		"#00BCD4", // Cyan
-		"#8BC34A", // Light Green
-		"#FF9800", // Orange
-		"#E91E63", // Pink
-		"#607D8B"  // Blue Grey
-	]
-
 	bottomComp: Component {
 		Piechart {
 			id: piechart
@@ -33,6 +20,7 @@ ElementView {
 	}
 
 	function updateModel(){
+		loading.start()
 		piechartInfoRequest.send()
 	}
 
@@ -48,12 +36,21 @@ ElementView {
 						let item = m_segments.get(i).item
 						obj.value = item.m_value
 						obj.label = item.m_label
-						obj.color = item.m_color || piechartElementView.palette[i % piechartElementView.palette.length]
+						obj.color = item.m_color
 						segments.push(obj)
 					}
 					piechartElementView.bottomItem.segments = segments
+					loading.stop()
 				}
 			}
 		}
+	}
+
+	Loading {
+		id: loading
+		z: parent.z + 1
+		anchors.fill: parent
+		color: Style.baseColor
+		visible: false
 	}
 }
