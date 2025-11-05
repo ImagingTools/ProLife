@@ -246,6 +246,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 				iprm::CParamsSet selectionParams;
 				selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
 
+				JoinGroupFilter(gqlRequest, selectionParams);
 				imtbase::ICollectionInfo::Ids softwareIds = m_softwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 				for (const QByteArray& softwareId : softwareIds){
 					QString productName = GetProductNameForSoftware(softwareId);
@@ -266,7 +267,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUsedPieChart(
 			const sdl::prolife::Workspace::CGetSoftwareUsedPieChartGqlRequest& /*getSoftwareUsedPieChartRequest*/,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& /*errorMessage*/) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
@@ -302,6 +303,8 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+
+		JoinGroupFilter(gqlRequest, paramsSet);
 
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
 		chartSegment.value = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
@@ -358,7 +361,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUsedPieChart(
 			const sdl::prolife::Workspace::CGetHardwareUsedPieChartGqlRequest& /*getHardwareUsedPieChartRequest*/,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& /*errorMessage*/) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
@@ -396,6 +399,8 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
 
+		JoinGroupFilter(gqlRequest, paramsSet);
+
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
 		chartSegment.value = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
@@ -410,7 +415,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareStatusInfo(
 			const sdl::prolife::Workspace::CGetHardwareStatusInfoGqlRequest& getHardwareStatusInfoRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
@@ -422,7 +427,10 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareSt
 
 	response.Version_1_0.Emplace();
 
-	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds();
+	iprm::CParamsSet selectionParams;
+	JoinGroupFilter(gqlRequest, selectionParams);
+
+	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	QMap<int, int> hardwareStatutesMap;
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
 		idoc::MetaInfoPtr metaInfoPtr = m_hardwareCollectionCompPtr->GetDataMetaInfo(elementId);
@@ -490,7 +498,11 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 	bool viewLicenses = m_checkPermissionCompPtr->CheckPermission(userPermissions, {"ViewLicenses"});
 	if (viewLicenses || isAdmin){
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 softwareCollectionInfo;
-		softwareCollectionInfo.total = m_softwareCollectionCompPtr->GetElementsCount();
+
+		iprm::CParamsSet paramsSet;
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		softwareCollectionInfo.total = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
 		softwareCollectionInfo.title = QStringLiteral("Software");
 		softwareCollectionInfo.icon = QStringLiteral("Icons/Key");
@@ -501,7 +513,12 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 	bool viewSensors = m_checkPermissionCompPtr->CheckPermission(userPermissions, {"ViewSensors"});
 	if (viewSensors || isAdmin){
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 hardwareCollectionInfo;
-		hardwareCollectionInfo.total = m_hardwareCollectionCompPtr->GetElementsCount();
+
+		iprm::CParamsSet paramsSet;
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		hardwareCollectionInfo.total = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+
 		hardwareCollectionInfo.collectionId = QByteArrayLiteral("Devices");
 		hardwareCollectionInfo.title = QStringLiteral("Hardware");
 		hardwareCollectionInfo.icon = QStringLiteral("Icons/Sensor");
@@ -512,7 +529,11 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 	bool viewOrders = m_checkPermissionCompPtr->CheckPermission(userPermissions, {"ViewOrders"});
 	if (viewOrders || isAdmin){
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 orderCollectionInfo;
-		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount();
+
+		iprm::CParamsSet paramsSet;
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
 		orderCollectionInfo.title = QStringLiteral("Orders");
 		orderCollectionInfo.icon = QStringLiteral("Icons/Order");
@@ -732,7 +753,7 @@ QByteArrayList CWorkspaceControllerComp::GetUserActionsByCreateLicenseFile(
 	iprm::CParamsSet selectionParams;
 	selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
 
-	// JoinGroupFilter(gqlRequest, selectionParams);
+	JoinGroupFilter(gqlRequest, selectionParams);
 
 	return m_userActionCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 }
@@ -784,10 +805,10 @@ bool CWorkspaceControllerComp::JoinGroupFilter(const imtgql::IGqlRequest& gqlReq
 	QByteArrayList userGroupIds = userInfoPtr->GetGroups();
 
 	if (!userInfoPtr->IsAdmin()){
-		imtauth::CUserGroupFilter* groupFilterPtr = new imtauth::CUserGroupFilter();
+		istd::TDelPtr<imtauth::CUserGroupFilter> groupFilterPtr = new imtauth::CUserGroupFilter();
 		groupFilterPtr->SetUserId(userId);
 		groupFilterPtr->SetGroupIds(userGroupIds);
-		filterParam.SetEditableParameter("GroupFilter", groupFilterPtr, true);
+		filterParam.SetEditableParameter("GroupFilter", groupFilterPtr.PopPtr(), true);
 	}
 
 	return true;

@@ -6,9 +6,7 @@
 
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilterHelper.h>
-
-// ProLife includes
-#include <prolifedata/IGroupFilter.h>
+#include <imtauth/IUserGroupFilter.h>
 
 
 namespace prolifedb
@@ -25,7 +23,7 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 	if (paramIds.contains("GroupFilter")){
-		iprm::TParamsPtr<prolifedata::IGroupFilter> filterParamPtr(&filterParams, "GroupFilter");
+		iprm::TParamsPtr<imtauth::IUserGroupFilter> filterParamPtr(&filterParams, "GroupFilter");
 		if (filterParamPtr.IsValid()){
 			QByteArray userId = filterParamPtr->GetUserId();
 			QByteArrayList groupIds = filterParamPtr->GetGroupIds();

@@ -4,8 +4,8 @@
 // ACF includes
 #include <iprm/TParamsPtr.h>
 
-// ProLife includes
-#include <prolifedata/IGroupFilter.h>
+// ImtCore includes
+#include <imtauth/IUserGroupFilter.h>
 
 
 namespace prolifedb
@@ -22,7 +22,7 @@ QString COrderDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IPa
 
 	iprm::IParamsSet::Ids paramIds = filterParams.GetParamIds();
 	if (paramIds.contains("GroupFilter")){
-		iprm::TParamsPtr<prolifedata::IGroupFilter> filterParamPtr(&filterParams, "GroupFilter");
+		iprm::TParamsPtr<imtauth::IUserGroupFilter> filterParamPtr(&filterParams, "GroupFilter");
 		if (filterParamPtr.IsValid()){
 			QByteArray userId = filterParamPtr->GetUserId();
 			QByteArrayList groupIds = filterParamPtr->GetGroupIds();

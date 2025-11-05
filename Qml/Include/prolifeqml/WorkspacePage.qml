@@ -16,16 +16,16 @@ ViewBase {
 			typeId: "Workspace"
 		}
 	}
-
+	
 	Component.onCompleted: {
 		stackView.addPage(workspacePageComp)
-
+		
 		let viewUserActions = PermissionsController.checkPermission("ViewUserActions")
 		if (viewUserActions){
 			stackView.addPage(userActionsPageComp)
 		}
 		stackView.setCurrentIndex(0)
-
+		
 		if (commandsController){
 			commandsController.setIsToggleable("Workspace", true)
 			commandsController.setToggled("Workspace", true)
@@ -33,7 +33,7 @@ ViewBase {
 			commandsController.setToggled("UserActions", false)
 		}
 	}
-
+	
 	onCommandActivated: {
 		if (commandId === "Workspace"){
 			stackView.setCurrentIndex(0)
@@ -41,183 +41,224 @@ ViewBase {
 		else if (commandId === "UserActions"){
 			stackView.setCurrentIndex(1)
 		}
-
+		
 		commandsController.setToggled("Workspace", commandId === "Workspace")
 		commandsController.setToggled("UserActions", commandId === "UserActions")
 	}
-
+	
 	Component {
 		id: workspacePageComp
-		Flickable {
-			id: flickable
-			anchors.fill: root
-			boundsBehavior: Flickable.StopAtBounds;
-	
-			contentWidth: topFlow.width
-			contentHeight: 2000//topFlow.height + flow.height
-			clip: true;
-
-			GqlSdlRequestSender {
-				id: getTotalSummaryInfoRequest
-				gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getTotalSummaryInfo
-				sdlObjectComp: Component {
-					TotalSummaryInfo {
-						onFinished: {
-							collectionInfoRepeater.model = m_summaryInfos
+		
+		Item {
+			id: mainItem
+			
+			CustomScrollbar {
+				id: scrollbar;
+				
+				z: parent.z + 1;
+				
+				anchors.right: parent.right;
+				anchors.top: flickable.top;
+				anchors.bottom: flickable.bottom;
+				
+				secondSize: 10;
+				targetItem: flickable;
+				
+				radius: 2;
+			}
+			
+			CustomScrollbar{
+				id: scrollHoriz;
+				
+				z: parent.z + 1;
+				
+				anchors.left: flickable.left;
+				anchors.right: flickable.right;
+				anchors.bottom: flickable.bottom;
+				
+				secondSize: 10;
+				
+				vertical: false;
+				targetItem: flickable;
+			}
+			
+			Flickable {
+				id: flickable
+				width: mainItem.width
+				height: mainItem.height
+				boundsBehavior: Flickable.StopAtBounds;
+				
+				contentWidth: Math.max(topRow.width, softwareRow.width, hardwareRow.width)
+				contentHeight: contentColumn.height + Style.sizeHintBXS
+				clip: true
+				
+				GqlSdlRequestSender {
+					id: getTotalSummaryInfoRequest
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getTotalSummaryInfo
+					sdlObjectComp: Component {
+						TotalSummaryInfo {
+							onFinished: {
+								collectionInfoRepeater.model = m_summaryInfos
+							}
 						}
 					}
+					
+					Component.onCompleted: {
+						send()
+					}
 				}
-
-				Component.onCompleted: {
-					send()
-				}
-			}
-
-			Flow {
-				id: topFlow
-				anchors.top: root.top
-				anchors.left: root.left
-				anchors.right: root.right
-				anchors.margins: Style.marginXL
-				spacing: Style.marginXL
-
-				Repeater {
-					id: collectionInfoRepeater
-					delegate: Component {
-						ElementView {
-							width: Style.sizeHintM
-							name: model.item.m_total
-							titleFontSize: Style.fontSizeBXL
-							controlComp: Component {
-								Row {
-									height: Style.controlHeightM
-									spacing: Style.marginM
-									Button {
-										width: Style.sizeHintBXS
-										height: Style.controlHeightM
-										text: qsTr("Create New")
-										onClicked: {
-											let params = {}
-											params.createNew = true
-											let objectTypeId = model.item.m_objectTypeId
-											let collectionId = model.item.m_collectionId
-											NavigationController.navigate(collectionId + "/" + objectTypeId, params)
+				
+				Column {
+					id: contentColumn
+					anchors.top: flickable.top
+					anchors.topMargin: Style.marginXL
+					anchors.left: flickable.left
+					anchors.leftMargin: Style.marginXL
+					anchors.right: flickable.right
+					anchors.rightMargin: Style.marginXL
+					width: flickable.width
+					spacing: Style.marginXL
+					
+					Row {
+						id: topRow
+						spacing: Style.marginXL
+						visible: collectionInfoRepeater.count > 0
+						Repeater {
+							id: collectionInfoRepeater
+							delegate: Component {
+								ElementView {
+									width: Style.sizeHintM
+									name: model.item.m_total
+									titleFontSize: Style.fontSizeBXL
+									anchors.verticalCenter: parent.verticalCenter
+									
+									controlComp: Component {
+										Row {
+											height: Style.controlHeightM
+											spacing: Style.marginM
+											Button {
+												width: Style.sizeHintBXS
+												height: Style.controlHeightM
+												text: qsTr("Create New")
+												onClicked: {
+													let params = {}
+													params.createNew = true
+													let objectTypeId = model.item.m_objectTypeId
+													let collectionId = model.item.m_collectionId
+													NavigationController.navigate(collectionId + "/" + objectTypeId, params)
+												}
+											}
+											
+											Button {
+												width: Style.sizeHintBXS
+												height: Style.controlHeightM
+												text: qsTr("View All")
+												onClicked: {
+													NavigationController.navigate(model.item.m_collectionId)
+												}
+											}
 										}
 									}
-
-									Button {
-										width: Style.sizeHintBXS
-										height: Style.controlHeightM
-										text: qsTr("View All")
-										onClicked: {
-											NavigationController.navigate(model.item.m_collectionId)
-										}
+									
+									StickerView {
+										anchors.verticalCenter: parent.top
+										anchors.left: parent.left
+										anchors.leftMargin: Style.marginM
+										color: Style.iconColorOnSelected
+										text: model.item.m_title
 									}
 								}
 							}
-
-							StickerView {
-								anchors.verticalCenter: parent.top
-								anchors.left: parent.left
-								anchors.leftMargin: Style.marginM
-								color: Style.iconColorOnSelected
-								text: model.item.m_title
-							}
 						}
 					}
-				}
-			}
 
-			Flow {
-				id: flow
-				anchors.top: topFlow.bottom
-				anchors.bottom: root.bottom
-				anchors.left: root.left
-				anchors.right: root.right
-				anchors.margins: Style.marginXL
-				spacing: Style.marginXL
-
-				Component.onCompleted: {
-					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-					if (viewLicenses){
-						getSoftwareUsedPieChartRequest.visible = true
-						getSoftwareUsedBarChart.visible = true
-						getLicenseCreationInfo.visible = true
-						getSoftwareUsedPieChartRequest.updateModel()
-						getSoftwareUsedBarChart.updateModel()
-						getLicenseCreationInfo.updateModel()
+					Row {
+						id: softwareRow
+						height: getSoftwareUsedPieChartRequest.height
+						spacing: Style.marginXL
+						visible: false
+						clip: true
+						Component.onCompleted: {
+							let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+							if (viewLicenses){
+								softwareRow.visible = true
+								getSoftwareUsedPieChartRequest.updateModel()
+								getSoftwareUsedBarChart.updateModel()
+							}
+						}
+						
+						GqlPiechartView {
+							id: getSoftwareUsedPieChartRequest
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
+							name: qsTr("Software Used")
+						}
+						
+						GqlBarchartView {
+							id: getSoftwareUsedBarChart
+							width: Style.sizeHintL
+							name: qsTr("Software Used")
+							currentIndex: 0
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
+							ySteps: 5
+						}
+						
+						GqlLinechartView {
+							id: getLicenseCreationInfo
+							width: Style.sizeHintL
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
+							name: qsTr("License Creation")
+							currentIndex: 0
+						}
 					}
-
-					let viewSensors = PermissionsController.checkPermission("ViewSensors")
-					if (viewSensors){
-						getHardwareUsedPieChartRequest.visible = true
-						getHardwareUsedBarChart.visible = true
-						hardwareStatusInfoRequest.visible = true
-						getHardwareUsedPieChartRequest.updateModel()
-						getHardwareUsedBarChart.updateModel()
-						hardwareStatusInfoRequest.updateModel()
+					
+					Row {
+						id: hardwareRow
+						height: getHardwareUsedPieChartRequest.height
+						spacing: Style.marginXL
+						visible: false
+						clip: true
+						Component.onCompleted: {
+							let viewSensors = PermissionsController.checkPermission("ViewSensors")
+							if (viewSensors){
+								hardwareRow.visible = true
+								getHardwareUsedPieChartRequest.updateModel()
+								getHardwareUsedBarChart.updateModel()
+								hardwareStatusInfoRequest.updateModel()
+							}
+						}
+						
+						GqlPiechartView {
+							id: getHardwareUsedPieChartRequest
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
+							name: qsTr("Hardware Used")
+						}
+						
+						GqlBarchartView {
+							id: getHardwareUsedBarChart
+							width: Style.sizeHintL
+							name: qsTr("Hardware Used")
+							currentIndex: 0
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+						}
+						
+						GqlPiechartView {
+							id: hardwareStatusInfoRequest
+							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
+							name: qsTr("Hardware Status")
+						}
 					}
-				}
-
-				GqlPiechartView {
-					id: getHardwareUsedPieChartRequest
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
-					name: qsTr("Hardware Used")
-					visible: false
-				}
-
-				GqlBarchartView {
-					id: getHardwareUsedBarChart
-					width: Style.sizeHintL
-					name: qsTr("Hardware Used")
-					currentIndex: 0
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
-					visible: false
-				}
-
-				GqlPiechartView {
-					id: hardwareStatusInfoRequest
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
-					name: qsTr("Hardware Status")
-					visible: false
-				}
-
-				GqlPiechartView {
-					id: getSoftwareUsedPieChartRequest
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
-					name: qsTr("Software Used")
-					visible: false
-				}
-
-				GqlBarchartView {
-					id: getSoftwareUsedBarChart
-					width: Style.sizeHintL
-					name: qsTr("Software Used")
-					currentIndex: 0
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
-					ySteps: 5
-					visible: false
-				}
-
-				GqlLinechartView {
-					id: getLicenseCreationInfo
-					width: Style.sizeHintL
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
-					name: qsTr("License Creation")
-					currentIndex: 0
-					visible: false
 				}
 			}
 		}
 	}
-
+	
 	Component {
 		id: userActionsPageComp
 		UserActionCollectionView {
 			height: 500
 		}
 	}
-
+	
 	StackView {
 		id: stackView
 		anchors.fill: parent

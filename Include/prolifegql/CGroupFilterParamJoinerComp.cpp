@@ -4,8 +4,8 @@
 // ACF includes
 #include <iprm/CParamsSet.h>
 
-// ProLife includes
-#include <prolifedata/CGroupFilter.h>
+// ImtCore includes
+#include <imtauth/CUserGroupFilter.h>
 
 
 namespace prolifegql
@@ -51,7 +51,7 @@ bool CGroupFilterParamJoinerComp::JoinGroupFilterParam(const imtgql::IGqlRequest
 	if (filterByGroup){
 		iprm::CParamsSet* paramSetPtr = dynamic_cast<iprm::CParamsSet*>(&filterParam);
 		
-		prolifedata::CGroupFilter* groupFilterPtr = new prolifedata::CGroupFilter();
+		imtauth::CUserGroupFilter* groupFilterPtr = new imtauth::CUserGroupFilter();
 		groupFilterPtr->SetUserId(userId);
 		groupFilterPtr->SetGroupIds(userGroupIds);
 		paramSetPtr->SetEditableParameter("GroupFilter", groupFilterPtr, true);

@@ -109,6 +109,9 @@
                     <AttributeInfo Id="WebCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/Views/*"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="WebSocketRequestManager" Type="Reference" ExportId="WebSocketRequestManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="WorkspacePageQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/WorkspacePage.qml"/>
                     </AttributeInfo>
