@@ -16,7 +16,25 @@ ComboBoxElementView {
 	property string gqlCommandId
 
 	function updateModel(){
+		if (!visible){
+			internal.updateRequested = true
+			return
+		}
+
+		loading.start()
 		licenseCreationInfoRequest.send(timeFilter)
+	}
+
+	onVisibleChanged: {
+		if (visible && internal.updateRequested){
+			updateModel()
+			internal.updateRequested = false
+		}
+	}
+
+	QtObject {
+		id: internal
+		property bool updateRequested: false
 	}
 
 	model: TreeItemModel {
@@ -77,6 +95,14 @@ ComboBoxElementView {
 		}
 	}
 
+	Loading {
+		id: loading
+		z: parent.z + 1
+		anchors.fill: parent
+		color: Style.baseColor
+		visible: false
+	}
+
 	TimeFilter {
 		id: timeFilter
 		m_timeUnit: "Week"
@@ -102,6 +128,7 @@ ComboBoxElementView {
 					graph2dElementView.bottomItem.labelXValues = m_labels
 					graph2dElementView.bottomItem.linePoints = linePoints
 					graph2dElementView.bottomItem.requestPaint()
+					loading.stop()
 				}
 			}
 		}

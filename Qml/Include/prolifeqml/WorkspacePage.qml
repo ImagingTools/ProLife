@@ -184,6 +184,7 @@ ViewBase {
 								softwareRow.visible = true
 								getSoftwareUsedPieChartRequest.updateModel()
 								getSoftwareUsedBarChart.updateModel()
+								getLicenseCreationInfo.updateModel()
 							}
 						}
 						
