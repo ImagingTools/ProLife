@@ -107,7 +107,6 @@ ViewBase {
 						send()
 					}
 				}
-				
 				Column {
 					id: contentColumn
 					anchors.top: flickable.top
@@ -172,19 +171,34 @@ ViewBase {
 						}
 					}
 
-					Row {
+					Flow {
 						id: softwareRow
-						height: getSoftwareUsedPieChartRequest.height
+						width: parent.width
 						spacing: Style.marginXL
-						visible: false
 						clip: true
 						Component.onCompleted: {
 							let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
 							if (viewLicenses){
-								softwareRow.visible = true
+								getSoftwareUsedPieChartRequest.visible = true
 								getSoftwareUsedPieChartRequest.updateModel()
+								
+								getSoftwareUsedBarChart.visible = true
 								getSoftwareUsedBarChart.updateModel()
+								
+								getLicenseCreationInfo.visible = true
 								getLicenseCreationInfo.updateModel()
+							}
+
+							let viewSensors = PermissionsController.checkPermission("ViewSensors")
+							if (viewSensors){
+								getHardwareUsedPieChartRequest.visible = true
+								getHardwareUsedPieChartRequest.updateModel()
+								
+								getHardwareUsedBarChart.visible = true
+								getHardwareUsedBarChart.updateModel()
+								
+								hardwareStatusInfoRequest.visible = true
+								hardwareStatusInfoRequest.updateModel()
 							}
 						}
 						
@@ -192,60 +206,52 @@ ViewBase {
 							id: getSoftwareUsedPieChartRequest
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
 							name: qsTr("Software Used")
+							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+							visible: false
 						}
 						
 						GqlBarchartView {
 							id: getSoftwareUsedBarChart
-							width: Style.sizeHintL
 							name: qsTr("Software Used")
 							currentIndex: 0
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 							ySteps: 5
+							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+							visible: false
 						}
 						
 						GqlLinechartView {
 							id: getLicenseCreationInfo
-							width: Style.sizeHintL
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 							name: qsTr("License Creation")
 							currentIndex: 0
-						}
-					}
-					
-					Row {
-						id: hardwareRow
-						height: getHardwareUsedPieChartRequest.height
-						spacing: Style.marginXL
-						visible: false
-						clip: true
-						Component.onCompleted: {
-							let viewSensors = PermissionsController.checkPermission("ViewSensors")
-							if (viewSensors){
-								hardwareRow.visible = true
-								getHardwareUsedPieChartRequest.updateModel()
-								getHardwareUsedBarChart.updateModel()
-								hardwareStatusInfoRequest.updateModel()
-							}
+							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+							visible: false
 						}
 						
 						GqlPiechartView {
 							id: getHardwareUsedPieChartRequest
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
 							name: qsTr("Hardware Used")
+							subscriptionCommandId: "OnDevicesCollectionChanged"
+							visible: false
 						}
 						
 						GqlBarchartView {
 							id: getHardwareUsedBarChart
-							width: Style.sizeHintL
 							name: qsTr("Hardware Used")
 							currentIndex: 0
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+							subscriptionCommandId: "OnDevicesCollectionChanged"
+							visible: false
 						}
 						
 						GqlPiechartView {
 							id: hardwareStatusInfoRequest
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 							name: qsTr("Hardware Status")
+							subscriptionCommandId: "OnDevicesCollectionChanged"
+							visible: false
 						}
 					}
 				}

@@ -122,7 +122,6 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 							if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
 								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
-									
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
 									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
 

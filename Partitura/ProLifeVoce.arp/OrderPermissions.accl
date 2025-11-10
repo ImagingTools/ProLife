@@ -2,22 +2,17 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5423" Description="ACF"/>
-            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5430" Description="ACF"/>
+            <Version Id="1" Number="2253" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="ObjectCollectionPermissions" X="500" Y="425" Note=""/>
         <Element ComponentName="OrderAdd" X="200" Y="275" Note=""/>
-        <Element ComponentName="OrderCommands" X="875" Y="375" Note=""/>
-        <Element ComponentName="OrderItem" X="550" Y="475" Note=""/>
+        <Element ComponentName="OrderItem" X="925" Y="400" Note=""/>
         <Element ComponentName="OrderUpdate" X="875" Y="275" Note=""/>
-        <Element ComponentName="OrdersCommands" X="875" Y="475" Note=""/>
-        <Element ComponentName="OrdersInfo" X="550" Y="375" Note=""/>
         <Element ComponentName="OrdersList" X="550" Y="275" Note=""/>
-        <Element ComponentName="OrdersRemove" X="200" Y="400" Note=""/>
-        <Element ComponentName="OrdersRemove_1" X="200" Y="350" Note=""/>
-        <Element ComponentName="OrdersSetDescription" X="200" Y="475" Note=""/>
         <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

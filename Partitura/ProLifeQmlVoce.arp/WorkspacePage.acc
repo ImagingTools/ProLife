@@ -146,6 +146,9 @@
         <Element Id="WorkspaceController" PackageId="ProLifeGqlPck" ComponentId="WorkspaceController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Permissions"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="HardwareCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -160,6 +163,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ShowComponentId" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareCollection" Type="Reference" ExportId="SoftwareRepository">
                         <Data IsEnabled="false"/>
@@ -295,6 +301,25 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="GetTotalSummaryInfo" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="GetTotalSummaryInfo"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>*</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="PermissionsJoiner" PackageId="ImtServerAppPck" ComponentId="CommandPermissionsProviderJoiner">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -307,6 +332,7 @@
                                             <Value>GetHardwareUsedBarChart</Value>
                                             <Value>GetHardwareUsedPieChart</Value>
                                             <Value>GetHardwareStatusInfo</Value>
+                                            <Value>GetTotalSummaryInfo</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

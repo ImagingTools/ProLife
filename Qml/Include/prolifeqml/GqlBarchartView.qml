@@ -11,14 +11,24 @@ import imtbaseComplexCollectionFilterSdl 1.0
 ComboBoxElementView {
 	id: barChartElementView
 	controlWidth: 130
+	width: Style.sizeHintM
 
 	property int ySteps: 1
 
 	property string gqlCommandId
+	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	function updateModel(){
 		loading.start()
 		barChartRequest.send(timeFilter)
+	}
+
+	SubscriptionClient {
+		id: subscriptionClient
+		onMessageReceived: {
+			console.log("GqlBarchartView.qml onMessageReceived")
+			barChartElementView.updateModel()
+		}
 	}
 
 	model:	TreeItemModel {
@@ -68,7 +78,7 @@ ComboBoxElementView {
 	bottomComp: Component {
 		StackedBarChart {
 			id: stackedBarChart
-			height: Style.sizeHintM
+			height: Style.sizeHintS
 			ySteps: barChartElementView.ySteps
 
 			function createFromObject(barChart){

@@ -11,7 +11,7 @@
         <Element ComponentName="CheckPermissionOr" X="225" Y="300" Note=""/>
         <Element ComponentName="CommandsController" X="600" Y="325" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="125" Note=""/>
-        <Element ComponentName="Permissions" X="100" Y="200" Note=""/>
+        <Element ComponentName="Permissions" X="975" Y="250" Note=""/>
         <Element ComponentName="UserActions" X="900" Y="575" Note=""/>
         <Element ComponentName="Workspace" X="300" Y="575" Note=""/>
         <Element ComponentName="WorkspaceController" X="225" Y="125" Note=""/>
@@ -19,12 +19,13 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="GetHardwareStatusInfo" X="950" Y="350" Note=""/>
+                <Element ComponentName="GetHardwareStatusInfo" X="925" Y="350" Note=""/>
                 <Element ComponentName="GetHardwareUsedBarChart" X="225" Y="350" Note=""/>
                 <Element ComponentName="GetHardwareUsedPieChart" X="600" Y="350" Note=""/>
                 <Element ComponentName="GetLicenseCreationInfo" X="225" Y="250" Note=""/>
                 <Element ComponentName="GetSoftwareUsedBarChart" X="600" Y="250" Note=""/>
                 <Element ComponentName="GetSoftwareUsedPieChart" X="950" Y="250" Note=""/>
+                <Element ComponentName="GetTotalSummaryInfo" X="225" Y="475" Note=""/>
                 <Element ComponentName="PermissionsJoiner" X="575" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>

@@ -11,17 +11,26 @@ ElementView {
 	width: Style.sizeHintM
 
 	property string gqlCommandId
+	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	bottomComp: Component {
 		Piechart {
 			id: piechart
 			ring: false
+			height: Style.sizeHintS
 		}
 	}
 
 	function updateModel(){
 		loading.start()
 		piechartInfoRequest.send()
+	}
+
+	SubscriptionClient {
+		id: subscriptionClient
+		onMessageReceived: {
+			piechartElementView.updateModel()
+		}
 	}
 
 	GqlSdlRequestSender {

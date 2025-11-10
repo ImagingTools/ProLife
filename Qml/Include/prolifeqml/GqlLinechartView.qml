@@ -12,8 +12,10 @@ ComboBoxElementView {
 	id: graph2dElementView
 	name: qsTr("License Creation")
 	controlWidth: 130
+	width: Style.sizeHintL
 
 	property string gqlCommandId
+	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	function updateModel(){
 		if (!visible){
@@ -29,6 +31,13 @@ ComboBoxElementView {
 		if (visible && internal.updateRequested){
 			updateModel()
 			internal.updateRequested = false
+		}
+	}
+
+	SubscriptionClient {
+		id: subscriptionClient
+		onMessageReceived: {
+			graph2dElementView.updateModel()
 		}
 	}
 
@@ -82,8 +91,7 @@ ComboBoxElementView {
 
 	bottomComp: Component {
 		Graph2d {
-			width: Style.sizeHintL
-			height: Style.sizeHintM
+			height: Style.sizeHintS
 			hasData: true
 			gridStepMajorX: 1
 			gridStepMajorY: 1

@@ -323,9 +323,6 @@
                     <AttributeInfo Id="ServerConnectionInterface" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/ServerConnectionInterface"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="SessionCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/UserSessionsRepository"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="SmtpClient"/>
                     </AttributeInfo>
