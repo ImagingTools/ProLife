@@ -97,23 +97,20 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 		objectId = *arguments.input.Version_1_0->elementId;
 	}
 
-	sdl::imtbase::ImtCollection::CElementMetaInfo::V1_0 elementMetaInfo;
-	sdl::imtbase::ImtBaseTypes::CParameter::V1_0 parameter;
-	parameter.id = QByteArrayLiteral("Licenses");
-	parameter.typeId = "";
-	parameter.name = QStringLiteral("Licenses");
-
+	int softwareCount = 0;
 	QString parameterData;
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_bindingCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		const prolifedata::IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const prolifedata::IHardwareProductBinding*>(dataPtr.GetPtr());
 		if (bindingInfoPtr != nullptr){
 			QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
+			softwareCount = softwareIds.size();
 			for (const QByteArray& softwareId : softwareIds){
 				imtbase::IObjectCollection::DataPtr productDataPtr;
 				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
 					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 					if (productInstanceInfoPtr != nullptr){
+						QByteArray softwareId = productInstanceInfoPtr->GetSerialNumber();
 						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
 
@@ -123,9 +120,10 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
-									QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
-
-									parameterData += licenseName + " (" + licenseDefinitionId + ")\n";
+									parameterData += licenseName;
+									if (!softwareId.isEmpty()){
+										parameterData += " (" + softwareId + ")\n";
+									}
 								}
 							}
 						}
@@ -134,6 +132,12 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 			}
 		}
 	}
+
+	sdl::imtbase::ImtCollection::CElementMetaInfo::V1_0 elementMetaInfo;
+	sdl::imtbase::ImtBaseTypes::CParameter::V1_0 parameter;
+	parameter.id = QByteArrayLiteral("Licenses");
+	parameter.typeId = "";
+	parameter.name = QStringLiteral("Licenses") + " (" + QString::number(softwareCount) + ")";
 
 	if (parameterData.isEmpty()){
 		parameterData = QStringLiteral("No Licenses");
@@ -502,10 +506,9 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArrayList softwareIds = GetBindedSoftware(id);
 	for (const QByteArray& softwareId : softwareIds){
 		sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0 softwareBindingInfo;
-		softwareBindingInfo.softwareId = softwareId;
-		softwareBindingInfo.softwareName = GetSoftwareName(softwareId);
-
-		softwareBindingInfoList << softwareBindingInfo;
+		if (GetSoftwareInfo(softwareId, softwareBindingInfo)){
+			softwareBindingInfoList << softwareBindingInfo;
+		}
 	}
 
 	representationPayload.softwareBindingInfos = softwareBindingInfoList;
@@ -875,10 +878,10 @@ QByteArrayList CDeviceCollectionControllerComp::GetBindedSoftware(const QByteArr
 }
 
 
-QString CDeviceCollectionControllerComp::GetSoftwareName(const QByteArray& softwareId) const
+bool CDeviceCollectionControllerComp::GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const
 {
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
-		return QString();
+		return false;
 	}
 
 	imtbase::IObjectCollection::DataPtr productDataPtr;
@@ -896,14 +899,18 @@ QString CDeviceCollectionControllerComp::GetSoftwareName(const QByteArray& softw
 						QString licenseName = licenseDefinitionPtr->GetLicenseName();
 						QByteArray licenseDefinitionId = licenseDefinitionPtr->GetLicenseId();
 
-						return licenseName + " (" + licenseDefinitionId + ")";
+						softwareInfo.id = softwareId;
+						softwareInfo.softwareId = productInstanceInfoPtr->GetSerialNumber();
+						softwareInfo.softwareName = licenseName + " (" + licenseDefinitionId + ")";
+
+						return true;
 					}
 				}
 			}
 		}
 	}
 
-	return QString();
+	return false;
 }
 
 

@@ -626,11 +626,14 @@ ViewBase {
 
 					function updateHeaders(){
 						headersModel.clear();
-						
-						headersModel.insertNewItem();
-						
-						headersModel.setData("id", "softwareName");
-						headersModel.setData("name", qsTr("Software Name"));
+
+						let index = headersModel.insertNewItem();
+						headersModel.setData("id", "softwareId", index);
+						headersModel.setData("name", qsTr("Software-ID"), index);
+
+						index = headersModel.insertNewItem();
+						headersModel.setData("id", "softwareName", index);
+						headersModel.setData("name", qsTr("Software Name"), index);
 
 						licenseInformationTable.table.headers = headersModel;
 					}

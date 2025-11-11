@@ -77,7 +77,7 @@ private:
 	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
-	QString GetSoftwareName(const QByteArray& softwareId) const;
+	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
