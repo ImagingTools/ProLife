@@ -19,16 +19,32 @@ ComboBoxElementView {
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	function updateModel(){
+		if (!visible){
+			internal.updateRequested = true
+			return
+		}
+
 		loading.start()
 		barChartRequest.send(timeFilter)
+	}
+
+	onVisibleChanged: {
+		if (visible && internal.updateRequested){
+			updateModel()
+			internal.updateRequested = false
+		}
 	}
 
 	SubscriptionClient {
 		id: subscriptionClient
 		onMessageReceived: {
-			console.log("GqlBarchartView.qml onMessageReceived")
 			barChartElementView.updateModel()
 		}
+	}
+
+	QtObject {
+		id: internal
+		property bool updateRequested: false
 	}
 
 	model:	TreeItemModel {

@@ -22,8 +22,20 @@ ElementView {
 	}
 
 	function updateModel(){
+		if (!visible){
+			internal.updateRequested = true
+			return
+		}
+
 		loading.start()
 		piechartInfoRequest.send()
+	}
+
+	onVisibleChanged: {
+		if (visible && internal.updateRequested){
+			updateModel()
+			internal.updateRequested = false
+		}
 	}
 
 	SubscriptionClient {
@@ -31,6 +43,11 @@ ElementView {
 		onMessageReceived: {
 			piechartElementView.updateModel()
 		}
+	}
+
+	QtObject {
+		id: internal
+		property bool updateRequested: false
 	}
 
 	GqlSdlRequestSender {

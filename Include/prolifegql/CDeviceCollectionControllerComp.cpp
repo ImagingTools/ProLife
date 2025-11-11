@@ -120,9 +120,11 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
-									parameterData += licenseName;
-									if (!softwareId.isEmpty()){
-										parameterData += " (" + softwareId + ")\n";
+									if (softwareId.isEmpty()){
+										parameterData += licenseName + "\n";
+									}
+									else{
+										parameterData += licenseName + " (" + softwareId + ")\n";
 									}
 								}
 							}

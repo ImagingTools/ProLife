@@ -88,7 +88,7 @@ ViewBase {
 				height: mainItem.height
 				boundsBehavior: Flickable.StopAtBounds;
 				
-				contentWidth: Math.max(topRow.width, softwareRow.width, hardwareRow.width)
+				contentWidth: Math.max(topRow.width+ 2*Style.marginXL, softwareRow.width + 2*Style.marginXL)
 				contentHeight: contentColumn.height + Style.sizeHintBXS
 				clip: true
 				
@@ -233,7 +233,7 @@ ViewBase {
 							id: getHardwareUsedPieChartRequest
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
 							name: qsTr("Hardware Used")
-							subscriptionCommandId: "OnDevicesCollectionChanged"
+							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 							visible: false
 						}
 						
@@ -242,7 +242,7 @@ ViewBase {
 							name: qsTr("Hardware Used")
 							currentIndex: 0
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
-							subscriptionCommandId: "OnDevicesCollectionChanged"
+							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 							visible: false
 						}
 						
