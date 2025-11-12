@@ -240,6 +240,8 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewLicenses</Value>
+                                <Value>BindSensor</Value>
+                                <Value>UnbindSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
