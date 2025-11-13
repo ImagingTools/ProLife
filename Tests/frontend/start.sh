@@ -7,6 +7,27 @@ RET=0
 # TeamCity service messages
 echo "##teamcity[blockOpened name='Environment Setup']"
 
+# Увеличиваем лимит подключений PostgreSQL, чтобы избежать 'too many clients already'
+PG_CONF="/etc/postgresql/16/main/postgresql.conf"
+
+echo "##teamcity[progressMessage 'Configuring PostgreSQL max_connections...']"
+
+# max_connections
+if grep -q "^max_connections" "$PG_CONF"; then
+    sed -i 's/^max_connections.*/max_connections = 300/' "$PG_CONF"
+else
+    echo "max_connections = 300" >> "$PG_CONF"
+fi
+
+# superuser_reserved_connections
+if grep -q "^superuser_reserved_connections" "$PG_CONF"; then
+    sed -i 's/^superuser_reserved_connections.*/superuser_reserved_connections = 5/' "$PG_CONF"
+else
+    echo "superuser_reserved_connections = 5" >> "$PG_CONF"
+fi
+
+echo "max_connections configured to 300"
+
 # Запуск PostgreSQL
 echo "##teamcity[progressMessage 'Starting PostgreSQL...']"
 pg_ctlcluster 16 main start || {
