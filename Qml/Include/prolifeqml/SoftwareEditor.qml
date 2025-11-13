@@ -59,16 +59,13 @@ ViewBase {
 		}
 
 		let canAddLicense = PermissionsController.checkPermission("AddLicense");
+		if (softwareProductData.m_inUse){
+			readOnly = true
+			return
+		}
+
 		if (isNew && canAddLicense){
-			projectInput.readOnly = false;
-			
-			ordersCB.changeable = true;
-			productCB.changeable = true;
-			licenseCB.changeable = true;
-			
-			serialNumberInput.readOnly = false;
-			expirationEditor.readOnly = false;
-			unlimitedSwitch.readOnly = false;
+			readOnly = false
 		}
 		else{
 			let canChangeProject = PermissionsController.checkPermission("ChangeProjectForLicense");
@@ -131,6 +128,7 @@ ViewBase {
 		serialNumberInput.readOnly = readOnly;
 		expirationEditor.readOnly = readOnly;
 		unlimitedSwitch.readOnly = readOnly;
+		internalUseSwitchElementView.readOnly = readOnly
 	}
 	
 	function updateGui(){
@@ -198,7 +196,6 @@ ViewBase {
 		}
 		else{
 			softwareProductData.m_productId = "";
-			
 		}
 		
 		softwareProductData.m_internalUse = internalUseSwitchElementView.checked
