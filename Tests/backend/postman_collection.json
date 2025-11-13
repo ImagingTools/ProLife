@@ -56,7 +56,8 @@
 													""
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -173,7 +174,7 @@
 													"    \"data\": {\r",
 													"        \"PagesData\": [\r",
 													"            {\r",
-													"                \"id\": \"UserActions\",\r",
+													"                \"id\": \"Workspace\",\r",
 													"                \"name\": \"Workspace\",\r",
 													"                \"description\": \"\",\r",
 													"                \"isEnabled\": false,\r",
@@ -183,8 +184,8 @@
 													"                \"priority\": 100,\r",
 													"                \"alignment\": 32,\r",
 													"                \"isToggled\": false,\r",
-													"                \"source\": \"qrc:/qml/imtcolgui/CollectionWorkspacePageView.qml\",\r",
-													"                \"startItem\": \"qrc:/qml/imtauthgui/UserActionCollectionView.qml\"\r",
+													"                \"source\": \"qrc:/qml/imtdocgui/SingleDocumentWorkspacePageView.qml\",\r",
+													"                \"startItem\": \"qrc:/qml/ProLife/WorkspacePage.qml\"\r",
 													"            },\r",
 													"            {\r",
 													"                \"id\": \"Devices\",\r",
@@ -40780,7 +40781,8 @@
 													"            \"licenseName\": \"e6825aac-b58f-4c9c-98ef-5a27e3996e72\",\r",
 													"            \"project\": \"Intrinsic decalibrated- Remote support Quiss needed\",\r",
 													"            \"productionStatus\": \"Defected\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -40795,7 +40797,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -40866,10 +40869,12 @@
 													"            \"productionStatus\": \"Finished\",\r",
 													"            \"softwareBindingInfos\": [\r",
 													"                {\r",
-													"                    \"softwareId\": \"87ba953f-d47a-4725-97f1-2e657788a702\",\r",
+													"                    \"id\": \"87ba953f-d47a-4725-97f1-2e657788a702\",\r",
+													"                    \"softwareId\": \"22188\",\r",
 													"                    \"softwareName\": \"RTV AddOn - Area (12.10194)\"\r",
 													"                }\r",
-													"            ]\r",
+													"            ],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -40884,7 +40889,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -43710,8 +43716,8 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
-													"                        \"data\": \"RTV AddOn - Area (12.10194)\\n\"\r",
+													"                        \"name\": \"Licenses (1)\",\r",
+													"                        \"data\": \"RTV AddOn - Area (22188)\\n\"\r",
 													"                    }\r",
 													"                ]\r",
 													"            }\r",
@@ -43729,7 +43735,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -43794,8 +43801,8 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
-													"                        \"data\": \"RTV License (12.10179 (4222 8000 00))\\nRTV AddOn - Patch (12.10146)\\nRTV AddOn - Reference (12.10185)\\nRTV AddOn - Area (12.10194)\\nRTV AddOn - Position Correction (12.10186)\\nRTV AddOn - Ab-/Presence (12.10197)\\n\"\r",
+													"                        \"name\": \"Licenses (6)\",\r",
+													"                        \"data\": \"RTV License\\nRTV AddOn - Patch\\nRTV AddOn - Reference\\nRTV AddOn - Area\\nRTV AddOn - Position Correction\\nRTV AddOn - Ab-/Presence (Testsystem_Labor)\\n\"\r",
 													"                    }\r",
 													"                ]\r",
 													"            }\r",
@@ -43813,7 +43820,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -50432,11 +50440,11 @@
 													"            \"inUse\": false,\r",
 													"            \"orderUuid\": \"\",\r",
 													"            \"licenseUuid\": \"2eeac38f-cd9e-412d-b01c-79781dec8da8\",\r",
-													"            \"expiration\": \"19.03.2032\"\r",
+													"            \"expiration\": \"19.03.2032\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
-													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
 													"});\r",
@@ -50447,7 +50455,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -59772,6 +59781,7 @@
 															"            \"parentGroups\": [\r",
 															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
 															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
 															"            \"roles\": [],\r",
 															"            \"users\": [\r",
 															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
@@ -59788,7 +59798,6 @@
 															"        }\r",
 															"    }\r",
 															"}\r",
-															"\r",
 															"pm.test('Query is successful', function () {\r",
 															"    pm.response.to.be.ok;\r",
 															"});\r",
@@ -67974,14 +67983,17 @@
 													"            \"productionStatus\": \"Finished\",\r",
 													"            \"softwareBindingInfos\": [\r",
 													"                {\r",
-													"                    \"softwareId\": \"9622df49-fcc8-4f72-bef7-cd5378c4048a\",\r",
+													"                    \"id\": \"9622df49-fcc8-4f72-bef7-cd5378c4048a\",\r",
+													"                    \"softwareId\": \"2\",\r",
 													"                    \"softwareName\": \"[InDev] RTV.t AddOn - Repair Function ([InDev] 12.10134 (4222 8000 13))\"\r",
 													"                },\r",
 													"                {\r",
-													"                    \"softwareId\": \"07941b2b-d68e-43dd-b956-2334963aa8f6\",\r",
+													"                    \"id\": \"07941b2b-d68e-43dd-b956-2334963aa8f6\",\r",
+													"                    \"softwareId\": \"1\",\r",
 													"                    \"softwareName\": \"[InDev] RTV.t License ([InDev] 12.10087 (4222 8000 11))\"\r",
 													"                }\r",
-													"            ]\r",
+													"            ],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -67996,7 +68008,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -68143,7 +68156,8 @@
 													"            \"licenseName\": \"8c7efad1-90d3-4dd5-b264-f1c590dec7e2\",\r",
 													"            \"project\": \"\",\r",
 													"            \"productionStatus\": \"Finished\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -68158,7 +68172,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -68301,8 +68316,8 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
-													"                        \"data\": \"RTV.3d License (12.10128 (4222 8000 05))\\nRTV.3d AddOn - Advanced (12.10135)\\nRTV.3d AddOn - Sealer (12.10191)\\nRTV.3d AddOn - Z Position Correction (12.10195)\\nRTV.3d AddOn - 3D-Position Correction (12.10140)\\nRTV.3d AddOn - Triangular Bead (12.10177)\\nRTV.3d AddOn - RTV.3d Data Export (Trial - no final sales article) (12.10199)\\n\"\r",
+													"                        \"name\": \"Licenses (7)\",\r",
+													"                        \"data\": \"RTV.3d License\\nRTV.3d AddOn - Advanced\\nRTV.3d AddOn - Sealer\\nRTV.3d AddOn - Z Position Correction\\nRTV.3d AddOn - 3D-Position Correction\\nRTV.3d AddOn - Triangular Bead\\nRTV.3d AddOn - RTV.3d Data Export (Trial - no final sales article) (Yatong-24001_1st Station)\\n\"\r",
 													"                    }\r",
 													"                ]\r",
 													"            }\r",
@@ -68320,7 +68335,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -68385,8 +68401,8 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
-													"                        \"data\": \"[InDev] RTV.t AddOn - Repair Function ([InDev] 12.10134 (4222 8000 13))\\n[InDev] RTV.t License ([InDev] 12.10087 (4222 8000 11))\\n\"\r",
+													"                        \"name\": \"Licenses (2)\",\r",
+													"                        \"data\": \"[InDev] RTV.t AddOn - Repair Function (2)\\n[InDev] RTV.t License (1)\\n\"\r",
 													"                    }\r",
 													"                ]\r",
 													"            }\r",
@@ -68404,7 +68420,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -68469,7 +68486,7 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
+													"                        \"name\": \"Licenses (0)\",\r",
 													"                        \"data\": \"No Licenses\"\r",
 													"                    }\r",
 													"                ]\r",
@@ -68487,7 +68504,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69068,12 +69086,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"GetObjectVisualStatus\": {\r",
-													"            \"objectId\": \"87ba953f-d47a-4725-97f1-2e657788a702\",\r",
-													"            \"icon\": \"Icons/Key\",\r",
-													"            \"text\": \"RTV Software (22188)\",\r",
-													"            \"description\": \"\"\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -69088,7 +69104,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69227,24 +69244,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 1\r",
-													"            },\r",
-													"            \"items\": [\r",
-													"                {\r",
-													"                    \"typeId\": \"Account\",\r",
-													"                    \"id\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
-													"                    \"customerId\": \"\",\r",
-													"                    \"name\": \"AC Tools\",\r",
-													"                    \"description\": \"Atlas Copco Tools Central Europe GmbH\",\r",
-													"                    \"email\": \"tools.de@atlascopco.com\",\r",
-													"                    \"added\": \"16.10.2023 04:25:03\",\r",
-													"                    \"timeStamp\": \"27.01.2025 09:58:23\"\r",
-													"                }\r",
-													"            ]\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -69253,23 +69256,15 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(response).to.eql(responseSchema);\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69555,12 +69550,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"GetObjectVisualStatus\": {\r",
-													"            \"objectId\": \"05ff8582-c88f-4e6b-9ae0-88d08f224eba\",\r",
-													"            \"icon\": \"Icons/Deployment\",\r",
-													"            \"text\": \"22188\",\r",
-													"            \"description\": \"\"\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -69575,7 +69568,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69714,48 +69708,27 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 1\r",
-													"            },\r",
-													"            \"items\": [\r",
-													"                {\r",
-													"                    \"typeId\": \"Account\",\r",
-													"                    \"id\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
-													"                    \"customerId\": \"\",\r",
-													"                    \"name\": \"AC Tools\",\r",
-													"                    \"description\": \"Atlas Copco Tools Central Europe GmbH\",\r",
-													"                    \"email\": \"tools.de@atlascopco.com\",\r",
-													"                    \"added\": \"16.10.2023 04:25:03\",\r",
-													"                    \"timeStamp\": \"27.01.2025 09:58:23\"\r",
-													"                }\r",
-													"            ]\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
+													"\r",
 													"pm.test('Query is successful', function () {\r",
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(response).to.eql(responseSchema);\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69813,13 +69786,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 0\r",
-													"            },\r",
-													"            \"items\": []\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -69828,23 +69798,15 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(response).to.eql(responseSchema);\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -69875,106 +69837,6 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "query AccountsList {AccountsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0},distinctFields:[]}}}) {items {id name customerId email description}}}",
-												"variables": ""
-											}
-										},
-										"url": {
-											"raw": "http://localhost:7778/ProLife/graphql",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "7778",
-											"path": [
-												"ProLife",
-												"graphql"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "AccountsList (TextFilter)",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"// Ожидаемая схема ответа\r",
-													"const responseSchema = {\r",
-													"    \"data\": {\r",
-													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 1\r",
-													"            },\r",
-													"            \"items\": [\r",
-													"                {\r",
-													"                    \"typeId\": \"Account\",\r",
-													"                    \"id\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
-													"                    \"customerId\": \"\",\r",
-													"                    \"name\": \"AC Tools\",\r",
-													"                    \"description\": \"Atlas Copco Tools Central Europe GmbH\",\r",
-													"                    \"email\": \"tools.de@atlascopco.com\",\r",
-													"                    \"added\": \"16.10.2023 04:25:03\",\r",
-													"                    \"timeStamp\": \"27.01.2025 09:58:23\"\r",
-													"                }\r",
-													"            ]\r",
-													"        }\r",
-													"    }\r",
-													"}\r",
-													"\r",
-													"pm.test('Query is successful', function () {\r",
-													"    pm.response.to.be.ok;\r",
-													"});\r",
-													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
-													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"// Сравнение всего ответа с ожидаемой схемой\r",
-													"pm.test(\"Response matches expected schema\", () => {\r",
-													"    pm.expect(response).to.eql(responseSchema);\r",
-													"});"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"auth": {
-											"type": "apikey",
-											"apikey": [
-												{
-													"key": "value",
-													"value": "{{access_token}}",
-													"type": "string"
-												},
-												{
-													"key": "key",
-													"value": "x-authentication-token",
-													"type": "string"
-												},
-												{
-													"key": "in",
-													"value": "header",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "query AccountsList {AccountsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[{fieldFilters:[{fieldId:\"customerId\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"name\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"email\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"description\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]}],groupFilters:[],logicalOperation:\"Or\"}],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name customerId email description}}}",
 												"variables": ""
 											}
 										},
@@ -70078,12 +69940,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"GetObjectVisualStatus\": {\r",
-													"            \"objectId\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
-													"            \"icon\": \"Icons/Account\",\r",
-													"            \"text\": \"AC Tools\",\r",
-													"            \"description\": \"Atlas Copco Tools Central Europe GmbH\"\r",
+													"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -70098,7 +69958,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -71490,11 +71351,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"074c2bdb-906a-4888-a147-ae72b98f4e9b\",\r",
-															"            \"text\": \"Roles / Sensor Production User\",\r",
-															"            \"description\": \"\"\r",
+															"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -71509,7 +71369,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -71724,11 +71585,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
-															"            \"text\": \"Users / AC TOOLS License User\",\r",
-															"            \"description\": \"\"\r",
+															"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -71743,7 +71603,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -71801,13 +71662,34 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"errors\": {\r",
+															"    \"data\": {\r",
 															"        \"UserItem\": {\r",
-															"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
-															"            \"type\": \"Warning\"\r",
+															"            \"email\": \"tools.de@atlascopco.com\",\r",
+															"            \"groups\": [\r",
+															"                \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\"\r",
+															"            ],\r",
+															"            \"id\": \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"            \"name\": \"AC TOOLS License User\",\r",
+															"            \"password\": \"53a634ac9f17fbde7dba41c3f43fb4e1\",\r",
+															"            \"permissions\": [\r",
+															"                \"CreateLicenseFile\",\r",
+															"                \"ViewSensors\"\r",
+															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
+															"            \"roles\": [\r",
+															"                \"24bb5756-5f69-4052-b723-1aa0b9a57969\"\r",
+															"            ],\r",
+															"            \"systemInfos\": [\r",
+															"                {\r",
+															"                    \"enabled\": true,\r",
+															"                    \"id\": \"\",\r",
+															"                    \"name\": \"Internal\"\r",
+															"                }\r",
+															"            ],\r",
+															"            \"username\": \"ACTOOLS_User\"\r",
 															"        }\r",
 															"    }\r",
-															"};\r",
+															"}\r",
 															"\r",
 															"pm.test('Query is successful', function () {\r",
 															"    pm.response.to.be.ok;\r",
@@ -71819,7 +71701,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -72186,13 +72069,31 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"errors\": {\r",
+															"    \"data\": {\r",
 															"        \"GroupItem\": {\r",
-															"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
-															"            \"type\": \"Warning\"\r",
+															"            \"description\": \"Atlas Copco\",\r",
+															"            \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
+															"            \"name\": \"AC TOOLS\",\r",
+															"            \"parentGroups\": [\r",
+															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
+															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
+															"            \"roles\": [],\r",
+															"            \"users\": [\r",
+															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
+															"                \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"                \"691d7bd7-b351-432f-80f2-dcbf08e428f8\",\r",
+															"                \"70d1aac5-f3ee-487e-85d9-078b8116d981\",\r",
+															"                \"8b06eee4-bf2f-44c6-b929-d542f01532b7\",\r",
+															"                \"9c110c0c-a92e-4a3f-a206-ee3ae3017564\",\r",
+															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
+															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
+															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
-															"};\r",
+															"}\r",
 															"\r",
 															"pm.test('Query is successful', function () {\r",
 															"    pm.response.to.be.ok;\r",
@@ -72204,7 +72105,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -72262,11 +72164,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
-															"            \"text\": \"Groups / AC TOOLS\",\r",
-															"            \"description\": \"Atlas Copco\"\r",
+															"            \"message\": \"Invalid permissions for the user 'AC TOOLS License User'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -72281,7 +72182,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -85226,10 +85128,12 @@
 													"            \"productionStatus\": \"Finished\",\r",
 													"            \"softwareBindingInfos\": [\r",
 													"                {\r",
-													"                    \"softwareId\": \"0404f6ab-ef02-424e-8d29-ef4f28cbd7a3\",\r",
+													"                    \"id\": \"0404f6ab-ef02-424e-8d29-ef4f28cbd7a3\",\r",
+													"                    \"softwareId\": \"Temp License_PO_Test\",\r",
 													"                    \"softwareName\": \"[InDev] RTV.t License ([InDev] 12.10087 (4222 8000 11))\"\r",
 													"                }\r",
-													"            ]\r",
+													"            ],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -85244,7 +85148,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -85387,8 +85292,8 @@
 													"                    {\r",
 													"                        \"id\": \"Licenses\",\r",
 													"                        \"typeId\": \"\",\r",
-													"                        \"name\": \"Licenses\",\r",
-													"                        \"data\": \"[InDev] RTV.t License ([InDev] 12.10087 (4222 8000 11))\\n\"\r",
+													"                        \"name\": \"Licenses (1)\",\r",
+													"                        \"data\": \"[InDev] RTV.t License (Temp License_PO_Test)\\n\"\r",
 													"                    }\r",
 													"                ]\r",
 													"            }\r",
@@ -85406,7 +85311,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -117281,7 +117187,8 @@
 													"            \"inUse\": true,\r",
 													"            \"orderUuid\": \"\",\r",
 													"            \"licenseUuid\": \"f60945a6-4510-4497-8f73-81abc104ad25\",\r",
-													"            \"expiration\": \"\"\r",
+													"            \"expiration\": \"\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -117296,7 +117203,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -120449,24 +120357,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 1\r",
-													"            },\r",
-													"            \"items\": [\r",
-													"                {\r",
-													"                    \"typeId\": \"Account\",\r",
-													"                    \"id\": \"fe9b44e6-9ad0-422e-b0ef-11cba32d9e02\",\r",
-													"                    \"customerId\": \"\",\r",
-													"                    \"name\": \"Scheugenpflug\",\r",
-													"                    \"description\": \"Scheugenpflug GmbH\",\r",
-													"                    \"email\": \"sales.de@scheugenpflug-dispensing.com\",\r",
-													"                    \"added\": \"16.10.2023 14:58:51\",\r",
-													"                    \"timeStamp\": \"29.11.2024 10:59:25\"\r",
-													"                }\r",
-													"            ]\r",
+													"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -120475,23 +120369,15 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(response).to.eql(responseSchema);\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -120549,13 +120435,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 0\r",
-													"            },\r",
-													"            \"items\": []\r",
+													"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -120564,23 +120447,15 @@
 													"    pm.response.to.be.ok;\r",
 													"});\r",
 													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
 													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
 													"// Сравнение всего ответа с ожидаемой схемой\r",
 													"pm.test(\"Response matches expected schema\", () => {\r",
 													"    pm.expect(response).to.eql(responseSchema);\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -120611,95 +120486,6 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "query AccountsList {AccountsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0},distinctFields:[]}}}) {items {id name customerId email description}}}",
-												"variables": ""
-											}
-										},
-										"url": {
-											"raw": "http://localhost:7778/ProLife/graphql",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "7778",
-											"path": [
-												"ProLife",
-												"graphql"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "AccountsList (TextFilter)",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"// Ожидаемая схема ответа\r",
-													"const responseSchema = {\r",
-													"    \"data\": {\r",
-													"        \"AccountsList\": {\r",
-													"            \"notification\": {\r",
-													"                \"pagesCount\": 1,\r",
-													"                \"totalCount\": 0\r",
-													"            },\r",
-													"            \"items\": []\r",
-													"        }\r",
-													"    }\r",
-													"}\r",
-													"\r",
-													"pm.test('Query is successful', function () {\r",
-													"    pm.response.to.be.ok;\r",
-													"});\r",
-													"\r",
-													"responseSchema.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"\r",
-													"const response = pm.response.json();\r",
-													"response.data.AccountsList.items.forEach(item => {\r",
-													"    delete item.timeStamp;\r",
-													"    delete item.added;\r",
-													"});\r",
-													"// Сравнение всего ответа с ожидаемой схемой\r",
-													"pm.test(\"Response matches expected schema\", () => {\r",
-													"    pm.expect(response).to.eql(responseSchema);\r",
-													"});"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"auth": {
-											"type": "apikey",
-											"apikey": [
-												{
-													"key": "value",
-													"value": "{{access_token}}",
-													"type": "string"
-												},
-												{
-													"key": "key",
-													"value": "x-authentication-token",
-													"type": "string"
-												},
-												{
-													"key": "in",
-													"value": "header",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "query AccountsList {AccountsList(input: {viewParams: {count: 25, offset: 0, filterModel: {sortingInfo:[{fieldId:\"name\",sortingOrder:\"ASC\"}],fieldsFilter:{fieldFilters:[],groupFilters:[{fieldFilters:[{fieldId:\"customerId\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"name\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"email\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]},{fieldId:\"description\",filterValue:\"tools\",filterValueType:\"String\",filterOperations:[\"Contains\"]}],groupFilters:[],logicalOperation:\"Or\"}],logicalOperation:\"And\"},timeFilter:{timeRange:{Begin:\"\",End:\"\"},timeUnit:\"\",interpretationMode:\"\",unitMultiplier:0},distinctFields:[]}}}) {items {id name customerId email description}}}",
 												"variables": ""
 											}
 										},
@@ -120803,12 +120589,10 @@
 												"exec": [
 													"// Ожидаемая схема ответа\r",
 													"const responseSchema = {\r",
-													"    \"data\": {\r",
+													"    \"errors\": {\r",
 													"        \"GetObjectVisualStatus\": {\r",
-													"            \"objectId\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
-													"            \"icon\": \"Icons/Account\",\r",
-													"            \"text\": \"AC Tools\",\r",
-													"            \"description\": \"Atlas Copco Tools Central Europe GmbH\"\r",
+													"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+													"            \"type\": \"Warning\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -120823,7 +120607,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -122213,11 +121998,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"074c2bdb-906a-4888-a147-ae72b98f4e9b\",\r",
-															"            \"text\": \"Roles / Sensor Production User\",\r",
-															"            \"description\": \"\"\r",
+															"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -122232,7 +122016,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -122447,11 +122232,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
-															"            \"text\": \"Users / AC TOOLS License User\",\r",
-															"            \"description\": \"\"\r",
+															"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -122466,7 +122250,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -122909,13 +122694,31 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"errors\": {\r",
+															"    \"data\": {\r",
 															"        \"GroupItem\": {\r",
-															"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
-															"            \"type\": \"Warning\"\r",
+															"            \"description\": \"Atlas Copco\",\r",
+															"            \"id\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
+															"            \"name\": \"AC TOOLS\",\r",
+															"            \"parentGroups\": [\r",
+															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
+															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
+															"            \"roles\": [],\r",
+															"            \"users\": [\r",
+															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
+															"                \"599400c0-f468-42db-9f35-53bd36c26a6c\",\r",
+															"                \"691d7bd7-b351-432f-80f2-dcbf08e428f8\",\r",
+															"                \"70d1aac5-f3ee-487e-85d9-078b8116d981\",\r",
+															"                \"8b06eee4-bf2f-44c6-b929-d542f01532b7\",\r",
+															"                \"9c110c0c-a92e-4a3f-a206-ee3ae3017564\",\r",
+															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
+															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
+															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"            ]\r",
 															"        }\r",
 															"    }\r",
-															"};\r",
+															"}\r",
 															"\r",
 															"pm.test('Query is successful', function () {\r",
 															"    pm.response.to.be.ok;\r",
@@ -122927,7 +122730,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -122985,11 +122789,10 @@
 														"exec": [
 															"// Ожидаемая схема ответа\r",
 															"const responseSchema = {\r",
-															"    \"data\": {\r",
+															"    \"errors\": {\r",
 															"        \"GetObjectVisualStatus\": {\r",
-															"            \"objectId\": \"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",\r",
-															"            \"text\": \"Groups / AC TOOLS\",\r",
-															"            \"description\": \"Atlas Copco\"\r",
+															"            \"message\": \"Invalid permissions for the user 'ELD-Admin'\",\r",
+															"            \"type\": \"Warning\"\r",
 															"        }\r",
 															"    }\r",
 															"}\r",
@@ -123004,7 +122807,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -124786,7 +124590,7 @@
 													"    \"data\": {\r",
 													"        \"CreateLicenseFile\": {\r",
 													"            \"name\": \"77_17_77_66_77_77_License.lic\",\r",
-													"            \"data\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxBY2Y+DQogICAgPEFjZkhlYWRlcj4NCiAgICAgICAgPFZlcnNpb25JbmZvcz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIwIiBOdW1iZXI9IjUzMzIiIERlc2NyaXB0aW9uPSJBQ0YiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIxIiBOdW1iZXI9IjIyMzAiIERlc2NyaXB0aW9uPSJBQ0YtU29sdXRpb25zIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTAiIE51bWJlcj0iOTE2IiBEZXNjcmlwdGlvbj0iSUFDRiIvPg0KICAgICAgICAgICAgPFZlcnNpb24gSWQ9IjEwMjMiIE51bWJlcj0iMzk1MjY0IiBEZXNjcmlwdGlvbj0iUXQgRnJhbWV3b3JrIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTk3NyIgTnVtYmVyPSIxMzYyOCIgRGVzY3JpcHRpb249IkltdENvcmUiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIyMDIyIiBOdW1iZXI9IjEzNjEzIiBEZXNjcmlwdGlvbj0iUHJvTGlmZSIvPg0KICAgICAgICA8L1ZlcnNpb25JbmZvcz4NCiAgICA8L0FjZkhlYWRlcj4NCiAgICA8UHJvZHVjdElkPlJUVlNvZnR3YXJlPC9Qcm9kdWN0SWQ+DQogICAgPFNlcmlhbE51bWJlcj48L1NlcmlhbE51bWJlcj4NCiAgICA8SW5Vc2U+ZmFsc2U8L0luVXNlPg0KICAgIDxQcm9qZWN0PjwvUHJvamVjdD4NCiAgICA8SW5zdGFuY2VJZD43NzoxNzo3Nzo2Njo3Nzo3NzwvSW5zdGFuY2VJZD4NCiAgICA8Q3VzdG9tZXJJZD48L0N1c3RvbWVySWQ+DQogICAgPExpY2Vuc2VzPg0KICAgICAgICA8TGljZW5zZUluc3RhbmNlPg0KICAgICAgICAgICAgPExpY2Vuc2VEYXRhIExpY2Vuc2VJZD0iMTIuMTAxNzgiIExpY2Vuc2VOYW1lPSJSVFYgQWRkT24gLSBEb3QiIExpY2Vuc2VEZXNjcmlwdGlvbj0iIiBQcm9kdWN0SWQ9IiI+DQogICAgICAgICAgICAgICAgPEZlYXR1cmVzPg0KICAgICAgICAgICAgICAgICAgICA8RmVhdHVyZSBJRD0iTXVsdGlEb3RJbnNwZWN0aW9uIiBOYW1lPSJNdWx0aSBEb3QgSW5zcGVjdGlvbiIvPg0KICAgICAgICAgICAgICAgIDwvRmVhdHVyZXM+DQogICAgICAgICAgICAgICAgPERlcGVuZGVuY2llcy8+DQogICAgICAgICAgICAgICAgPEV4cGlyYXRpb25UaW1lPjwvRXhwaXJhdGlvblRpbWU+DQogICAgICAgICAgICA8L0xpY2Vuc2VEYXRhPg0KICAgICAgICA8L0xpY2Vuc2VJbnN0YW5jZT4NCiAgICAgICAgPExpY2Vuc2VJbnN0YW5jZT4NCiAgICAgICAgICAgIDxMaWNlbnNlRGF0YSBMaWNlbnNlSWQ9IjEyLjEwMTg1IiBMaWNlbnNlTmFtZT0iUlRWIEFkZE9uIC0gUmVmZXJlbmNlIiBMaWNlbnNlRGVzY3JpcHRpb249IiIgUHJvZHVjdElkPSIiPg0KICAgICAgICAgICAgICAgIDxGZWF0dXJlcz4NCiAgICAgICAgICAgICAgICAgICAgPEZlYXR1cmUgSUQ9IlJlZmVyZW5jZSIgTmFtZT0iUmVmZXJlbmNlIi8+DQogICAgICAgICAgICAgICAgPC9GZWF0dXJlcz4NCiAgICAgICAgICAgICAgICA8RGVwZW5kZW5jaWVzLz4NCiAgICAgICAgICAgICAgICA8RXhwaXJhdGlvblRpbWU+MjAyNi0wMS0yM1QwMDowMDowMC4wMDA8L0V4cGlyYXRpb25UaW1lPg0KICAgICAgICAgICAgPC9MaWNlbnNlRGF0YT4NCiAgICAgICAgPC9MaWNlbnNlSW5zdGFuY2U+DQogICAgPC9MaWNlbnNlcz4NCjwvQWNmPg0K\"\r",
+													"            \"data\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxBY2Y+DQogICAgPEFjZkhlYWRlcj4NCiAgICAgICAgPFZlcnNpb25JbmZvcz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIwIiBOdW1iZXI9IjU0MzAiIERlc2NyaXB0aW9uPSJBQ0YiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIxIiBOdW1iZXI9IjIyNTMiIERlc2NyaXB0aW9uPSJBQ0YtU29sdXRpb25zIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTAiIE51bWJlcj0iOTI1IiBEZXNjcmlwdGlvbj0iSUFDRiIvPg0KICAgICAgICAgICAgPFZlcnNpb24gSWQ9IjEwMjMiIE51bWJlcj0iMzk1MjY0IiBEZXNjcmlwdGlvbj0iUXQgRnJhbWV3b3JrIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTk3NyIgTnVtYmVyPSIxNTI3MCIgRGVzY3JpcHRpb249IkltdENvcmUiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIyMDIyIiBOdW1iZXI9IjE1MjY2IiBEZXNjcmlwdGlvbj0iUHJvTGlmZSIvPg0KICAgICAgICA8L1ZlcnNpb25JbmZvcz4NCiAgICA8L0FjZkhlYWRlcj4NCiAgICA8UHJvZHVjdElkPlJUVlNvZnR3YXJlPC9Qcm9kdWN0SWQ+DQogICAgPFNlcmlhbE51bWJlcj48L1NlcmlhbE51bWJlcj4NCiAgICA8SW5Vc2U+ZmFsc2U8L0luVXNlPg0KICAgIDxJbnRlcm5hbFVzZT5mYWxzZTwvSW50ZXJuYWxVc2U+DQogICAgPFByb2plY3Q+PC9Qcm9qZWN0Pg0KICAgIDxJbnN0YW5jZUlkPjc3OjE3Ojc3OjY2Ojc3Ojc3PC9JbnN0YW5jZUlkPg0KICAgIDxDdXN0b21lcklkPjwvQ3VzdG9tZXJJZD4NCiAgICA8TGljZW5zZXM+DQogICAgICAgIDxMaWNlbnNlSW5zdGFuY2U+DQogICAgICAgICAgICA8TGljZW5zZURhdGEgTGljZW5zZUlkPSIxMi4xMDE3OCIgTGljZW5zZU5hbWU9IlJUViBBZGRPbiAtIERvdCIgTGljZW5zZURlc2NyaXB0aW9uPSIiIFByb2R1Y3RJZD0iIj4NCiAgICAgICAgICAgICAgICA8RmVhdHVyZXM+DQogICAgICAgICAgICAgICAgICAgIDxGZWF0dXJlIElEPSJNdWx0aURvdEluc3BlY3Rpb24iIE5hbWU9Ik11bHRpIERvdCBJbnNwZWN0aW9uIi8+DQogICAgICAgICAgICAgICAgPC9GZWF0dXJlcz4NCiAgICAgICAgICAgICAgICA8RGVwZW5kZW5jaWVzLz4NCiAgICAgICAgICAgICAgICA8RXhwaXJhdGlvblRpbWU+PC9FeHBpcmF0aW9uVGltZT4NCiAgICAgICAgICAgIDwvTGljZW5zZURhdGE+DQogICAgICAgIDwvTGljZW5zZUluc3RhbmNlPg0KICAgICAgICA8TGljZW5zZUluc3RhbmNlPg0KICAgICAgICAgICAgPExpY2Vuc2VEYXRhIExpY2Vuc2VJZD0iMTIuMTAxODUiIExpY2Vuc2VOYW1lPSJSVFYgQWRkT24gLSBSZWZlcmVuY2UiIExpY2Vuc2VEZXNjcmlwdGlvbj0iIiBQcm9kdWN0SWQ9IiI+DQogICAgICAgICAgICAgICAgPEZlYXR1cmVzPg0KICAgICAgICAgICAgICAgICAgICA8RmVhdHVyZSBJRD0iUmVmZXJlbmNlIiBOYW1lPSJSZWZlcmVuY2UiLz4NCiAgICAgICAgICAgICAgICA8L0ZlYXR1cmVzPg0KICAgICAgICAgICAgICAgIDxEZXBlbmRlbmNpZXMvPg0KICAgICAgICAgICAgICAgIDxFeHBpcmF0aW9uVGltZT4yMDI2LTAxLTIzVDAwOjAwOjAwLjAwMDwvRXhwaXJhdGlvblRpbWU+DQogICAgICAgICAgICA8L0xpY2Vuc2VEYXRhPg0KICAgICAgICA8L0xpY2Vuc2VJbnN0YW5jZT4NCiAgICA8L0xpY2Vuc2VzPg0KPC9BY2Y+DQo=\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -124827,6 +124631,7 @@
 													"    <ProductId>RTVSoftware</ProductId>\r",
 													"    <SerialNumber></SerialNumber>\r",
 													"    <InUse>false</InUse>\r",
+													"    <InternalUse>false</InternalUse>\r",
 													"    <Project></Project>\r",
 													"    <InstanceId>77:17:77:66:77:77</InstanceId>\r",
 													"    <CustomerId></CustomerId>\r",
@@ -124859,12 +124664,16 @@
 													"    expectedText = expectedText.replace(/>\\s+</g, \"><\").trim();\r",
 													"\r",
 													"\r",
+													"\r",
+													"console.log(cleaned.trim())\r",
+													"console.log(expectedText.trim())\r",
 													"    // Сравниваем с ожидаемым\r",
 													"    pm.expect(cleaned.trim()).to.eql(expectedText.trim());\r",
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -125098,7 +124907,7 @@
 													"    \"data\": {\r",
 													"        \"CreateLicenseFile\": {\r",
 													"            \"name\": \"8c_1f_64_50_10_fb_License.lic\",\r",
-													"            \"data\": \"c+HKrpnyuuFSQsD3ZW5AAOPVqBizfL5Y3NBxTqLBBDj19NltIjfE6ULm1WmouJn0L07SiAeg5VYgxEoAtxztOxHv7sYky+fppjByaVc6z8XjWx4jhksQTEjjmBvvTNPodmezX5d0FZgjo4JC/GSdSqz6Tt5HwzZ4U27u0QwBia0OjHDtKdlqZ6g3sPuKz7xE1YNQ2KRKvJ6aWPf5opC8ZsjgbHLGis1b103OYKc/B1mnfXnqtQFugdieN1g4S3NNCxn1k+pXPXu3+P0siL6NkQwVDFV3QcgpVH+503kN3/F28kXf5YG+pnft3PWkMc40jj+estoQXNaJXrFchrROmI+bTHOn7AFbr3Oe+mHO4ARuYWvxoyUxJdGesUin2K79HL3Wql4lESc93zo/gD+L29ipICa7JI+oYE8NlI2g9uDcRMf/TNVxcN0WlSXY/ZfdYV5XW1e5Lo+8P7jdqTPQJA9o53nJPVWm9k9Sa2dPGq5n3/NqdY70n6NdHcwLuK6Y5AE7qUEzRfdO31dNErfUZ9CisognC6HUANINBoKCmvp35T6NusbKxd5Kt1KwTh4bVvzkcWWpLYH+jshWLK2C0Tg7ARbDpnA7HjIA1DpXv5FtLKHbZDjPMjhK3LNT3MJyGRtKl37amFkbMTai/1YhUSl7geaUzCJYPC+u0gMOWCcD/kpn1CgV0RuLLY6ILjj0XfAQcxG1HJlCHUN+eTu9WtORpo22UksnVfQzLR3unD4DBefcryUYYYrTP7Xwl5NS6/yR8YJCMhZqHvGMm6Rdb0hOFSlpDTCxY9yMRpHMHpfG32O2CwmX4x441AceLqG/y0Lg+xA/7yNFV71f7uBSyOlbKZeyp30ZJGB4vi1M47a24GRjhsTKuWQroyafLHB6K8JQc6/oSY3kqNbRxY2pQn7Zq8+np5xP948mHmO2hTJpYDNSASNlS5IdL2NWMs4ezWvklE4CrSXRuXi1KHDoMzzMc/UOLCSI8QePLgShrhunlaxpyzHUijTjbXpZdE0Zg3GmJdo6S3Vi1OcRJ6Arl/ICxTbgH0rZ68VHeJ9DlqvqFKXgDiryX0pQAjw+B+1uTM+tpI8FRteMNws4iJy9caiu9r7VPahEMlA5yaOID++H/cEIwGDx/7a9reRJ/u683anlBez3SKsPoacz1vgFvSqWWxlUhDCmI0QruacvcRg+PzakPWT9uUoD4iKLIf6aWZxK84VntYHZCCThcbRRP8Sucae+UomGkzyaKXG8KmCnUPPjzIl1RBeEWDGVEhttmP9EoT8ku2M+Uf1XuV4TimIldowtwlZ0NrFA6JdWplzjOGdIdxn+ETnJrGD5y9HWGAMs26QA1H+NaTqxNtGnCM3jONp9IcXb3VVXZ+Pyky8BnjFbMPINfY1OPO312zhkNJ6e5k8sYkMjCSYh6GhMcBkKlI2YUhIfgeWCIzbljO2vMg2sH0NnTwDXXBzed6AMxNQGDs5/VGKG1NgAdMH9Xk3gOQijsHesjC/OL44oXX0CTpQNqVaZN6FZ8/m98IFN8ot5+y5GpizXUVPmatPTjJFnesd7Thtre3KVim+o5kzFGsK9F3BRAnbqTWrcm3s0y9IsLRCiLWO3++8+24ODlcChxPVBFOu1rlobwtkdPNa+U7RMQnQJHomHJRMvajX6ugH8WBQtl11bdnQylCeWesYEkZpniQcHOmUwDvSW0FLXn3rrJX1GskNuxrRg9t5kT1m5rwUr0nPEQef/wobIAvnG48+RqGxhVNNz2Yyipy6E6QQtN0i2JS8Og3+BU5enE+rPVV0nrYymbrrClEfd4k2t2A+AWEvFwRmuxtTdG3zw6wvu9atWupqcnIPJZoJ5Qk/aVoNqsPlM7uZiBsMKy+0QpGo0RXragtG4Z+lqUt3MAngOO7dQ5huwcnuESsxccUJY57mSYsGYepa8uAvJFMOUETAwWzBaAFeHmmuqFTUabe+A6mpmtE9jdyJM7gTmH4tG4zVssP/OMSrM3L/18g==\"\r",
+													"            \"data\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxBY2Y+DQogICAgPEFjZkhlYWRlcj4NCiAgICAgICAgPFZlcnNpb25JbmZvcz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIwIiBOdW1iZXI9IjU0MzAiIERlc2NyaXB0aW9uPSJBQ0YiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIxIiBOdW1iZXI9IjIyNTMiIERlc2NyaXB0aW9uPSJBQ0YtU29sdXRpb25zIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTAiIE51bWJlcj0iOTI1IiBEZXNjcmlwdGlvbj0iSUFDRiIvPg0KICAgICAgICAgICAgPFZlcnNpb24gSWQ9IjEwMjMiIE51bWJlcj0iMzk1MjY0IiBEZXNjcmlwdGlvbj0iUXQgRnJhbWV3b3JrIi8+DQogICAgICAgICAgICA8VmVyc2lvbiBJZD0iMTk3NyIgTnVtYmVyPSIxNTI3MCIgRGVzY3JpcHRpb249IkltdENvcmUiLz4NCiAgICAgICAgICAgIDxWZXJzaW9uIElkPSIyMDIyIiBOdW1iZXI9IjE1MjY2IiBEZXNjcmlwdGlvbj0iUHJvTGlmZSIvPg0KICAgICAgICA8L1ZlcnNpb25JbmZvcz4NCiAgICA8L0FjZkhlYWRlcj4NCiAgICA8UHJvZHVjdElkPlJUVi4zZFNvZnR3YXJlPC9Qcm9kdWN0SWQ+DQogICAgPFNlcmlhbE51bWJlcj48L1NlcmlhbE51bWJlcj4NCiAgICA8SW5Vc2U+ZmFsc2U8L0luVXNlPg0KICAgIDxJbnRlcm5hbFVzZT5mYWxzZTwvSW50ZXJuYWxVc2U+DQogICAgPFByb2plY3Q+PC9Qcm9qZWN0Pg0KICAgIDxJbnN0YW5jZUlkPjhjOjFmOjY0OjUwOjEwOmZiPC9JbnN0YW5jZUlkPg0KICAgIDxDdXN0b21lcklkPjwvQ3VzdG9tZXJJZD4NCiAgICA8TGljZW5zZXM+DQogICAgICAgIDxMaWNlbnNlSW5zdGFuY2U+DQogICAgICAgICAgICA8TGljZW5zZURhdGEgTGljZW5zZUlkPSIxMi4xMDEyOCAoNDIyMiA4MDAwIDA1KSIgTGljZW5zZU5hbWU9IlJUVi4zZCBMaWNlbnNlIiBMaWNlbnNlRGVzY3JpcHRpb249IiIgUHJvZHVjdElkPSIiPg0KICAgICAgICAgICAgICAgIDxGZWF0dXJlcz4NCiAgICAgICAgICAgICAgICAgICAgPEZlYXR1cmUgSUQ9IkF1dG9tYXRpYyIgTmFtZT0iQXV0b21hdGljIi8+DQogICAgICAgICAgICAgICAgICAgIDxGZWF0dXJlIElEPSJEYXRhRXhwb3J0IiBOYW1lPSJEYXRhIEV4cG9ydCIvPg0KICAgICAgICAgICAgICAgICAgICA8RmVhdHVyZSBJRD0iUmVwb3J0IiBOYW1lPSJSZXBvcnQiLz4NCiAgICAgICAgICAgICAgICAgICAgPEZlYXR1cmUgSUQ9IlJlc3VsdE92ZXJ2aWV3IiBOYW1lPSJSZXN1bHQgT3ZlcnZpZXciLz4NCiAgICAgICAgICAgICAgICAgICAgPEZlYXR1cmUgSUQ9IlZvbHVtZUluc3BlY3Rpb24iIE5hbWU9IlZvbHVtZSBJbnNwZWN0aW9uIi8+DQogICAgICAgICAgICAgICAgPC9GZWF0dXJlcz4NCiAgICAgICAgICAgICAgICA8RGVwZW5kZW5jaWVzLz4NCiAgICAgICAgICAgICAgICA8RXhwaXJhdGlvblRpbWU+PC9FeHBpcmF0aW9uVGltZT4NCiAgICAgICAgICAgIDwvTGljZW5zZURhdGE+DQogICAgICAgIDwvTGljZW5zZUluc3RhbmNlPg0KICAgIDwvTGljZW5zZXM+DQo8L0FjZj4NCg==\"\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -125140,6 +124949,7 @@
 													"    <ProductId>RTV.3dSoftware</ProductId>\r",
 													"    <SerialNumber></SerialNumber>\r",
 													"    <InUse>false</InUse>\r",
+													"    <InternalUse>false</InternalUse>\r",
 													"    <Project></Project>\r",
 													"    <InstanceId>8c:1f:64:50:10:fb</InstanceId>\r",
 													"    <CustomerId></CustomerId>\r",
@@ -125171,7 +124981,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -126918,7 +126729,8 @@
 													"            \"inUse\": false,\r",
 													"            \"orderUuid\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac7bd21\",\r",
 													"            \"licenseUuid\": \"c34f2966-7179-4ea8-a5de-336024cb0312\",\r",
-													"            \"expiration\": \"\"\r",
+													"            \"expiration\": \"\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -126933,7 +126745,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127077,7 +126890,8 @@
 													"            \"licenseName\": \"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",\r",
 													"            \"project\": \"\",\r",
 													"            \"productionStatus\": \"Finished\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127092,7 +126906,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127160,7 +126975,8 @@
 													"            \"inUse\": false,\r",
 													"            \"orderUuid\": \"\",\r",
 													"            \"licenseUuid\": \"c34f2966-7179-4ea8-a5de-336024cb0312\",\r",
-													"            \"expiration\": \"\"\r",
+													"            \"expiration\": \"\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127175,7 +126991,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127243,7 +127060,8 @@
 													"            \"inUse\": true,\r",
 													"            \"orderUuid\": \"\",\r",
 													"            \"licenseUuid\": \"7ccfcfd7-c765-4ffa-92fc-03966e263443\",\r",
-													"            \"expiration\": \"\"\r",
+													"            \"expiration\": \"\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127258,7 +127076,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127327,7 +127146,8 @@
 													"            \"licenseName\": \"10effcc9-0160-4484-8548-4d9466969081\",\r",
 													"            \"project\": \"314222\",\r",
 													"            \"productionStatus\": \"Finished\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127342,7 +127162,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127486,7 +127307,8 @@
 													"            \"licenseName\": \"10effcc9-0160-4484-8548-4d9466969081\",\r",
 													"            \"project\": \"314222\",\r",
 													"            \"productionStatus\": \"Finished\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127501,7 +127323,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127570,7 +127393,8 @@
 													"            \"licenseName\": \"7788e22f-c94a-4c3f-ba97-f0866f4756d2\",\r",
 													"            \"project\": \"\",\r",
 													"            \"productionStatus\": \"Finished\",\r",
-													"            \"softwareBindingInfos\": []\r",
+													"            \"softwareBindingInfos\": [],\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127585,7 +127409,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -127653,7 +127478,8 @@
 													"            \"inUse\": true,\r",
 													"            \"orderUuid\": \"f8ef2f85-ce5d-4b12-ab7d-6004dac7bd21\",\r",
 													"            \"licenseUuid\": \"7ccfcfd7-c765-4ffa-92fc-03966e263443\",\r",
-													"            \"expiration\": \"\"\r",
+													"            \"expiration\": \"\",\r",
+													"            \"internalUse\": false\r",
 													"        }\r",
 													"    }\r",
 													"}\r",
@@ -127668,7 +127494,8 @@
 													"});"
 												],
 												"type": "text/javascript",
-												"packages": {}
+												"packages": {},
+												"requests": {}
 											}
 										}
 									],
@@ -129556,7 +129383,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129586,7 +129414,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e02a5e\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e02a5e\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"1\",email:\"test@mail.ru\",groups:\"\",roles:\"\",permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
+														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e02a5e\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e02a5e\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"1\",email:\"test@mail.ru\",groups:[],roles:[],permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -129632,7 +129460,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129662,7 +129491,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"1\",email:\"test@mail.ru\",groups:\"\",roles:\"\",permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
+														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"1\",email:\"test@mail.ru\",groups:[],roles:[],permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -129708,7 +129537,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129738,7 +129568,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"\",password:\"1\",email:\"test@mail.ru\",groups:\"\",roles:\"\",permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
+														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"\",password:\"1\",email:\"test@mail.ru\",groups:[],roles:[],permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -129784,7 +129614,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129814,7 +129645,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"Test2\",password:\"1\",email:\"test@mail.ru\",groups:\"\",roles:\"\",permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
+														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"Test\",username:\"Test2\",password:\"1\",email:\"test@mail.ru\",groups:[],roles:[],permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -129860,7 +129691,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129890,7 +129722,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"\",username:\"Test2\",password:\"1\",email:\"test2@mail.ru\",groups:\"\",roles:\"\",permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
+														"query": "mutation UserAdd {UserAdd(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e05555\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e05555\",productId:\"ProLife\",name:\"\",username:\"Test2\",password:\"1\",email:\"test2@mail.ru\",groups:[],roles:[],permissions:\"\",systemInfos:[]}}) {addedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -129935,7 +129767,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
@@ -129965,7 +129798,7 @@
 												"body": {
 													"mode": "graphql",
 													"graphql": {
-														"query": "mutation UserUpdate {UserUpdate(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e02a5e\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e02a5e\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"c2db0793a2b8c8f20af9215f4c5b0711\",email:\"test@mail.ru\",groups:\"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\",roles:\"9c341c6c-74fe-4375-b280-fcbe61cda9df\",permissions:\"\",systemInfos:[{id:\"\",name:\"Internal\",enabled:true}]}}) {updatedNotification {id}}}",
+														"query": "mutation UserUpdate {UserUpdate(input: {typeId: \"User\", productId: \"ProLife\", id: \"4dbd73aa-b103-484e-ac69-caad51e02a5e\", item: {id:\"4dbd73aa-b103-484e-ac69-caad51e02a5e\",productId:\"ProLife\",name:\"Test\",username:\"Test1\",password:\"c2db0793a2b8c8f20af9215f4c5b0711\",email:\"test@mail.ru\",groups:[\"3bcd9f47-4818-4a98-be60-e0b3b0d234c8\"],roles:[\"9c341c6c-74fe-4375-b280-fcbe61cda9df\"],permissions:\"\",systemInfos:[{id:\"\",name:\"Internal\",enabled:true}]}}) {updatedNotification {id}}}",
 														"variables": ""
 													}
 												},
@@ -130001,6 +129834,7 @@
 															"            \"parentGroups\": [\r",
 															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
 															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
 															"            \"roles\": [],\r",
 															"            \"users\": [\r",
 															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
@@ -130012,7 +129846,8 @@
 															"                \"b128578a-fba3-4a58-a592-ae73e363cb80\",\r",
 															"                \"dad913dc-6141-44a6-8ba0-5cf2184e512b\",\r",
 															"                \"e18c0fb9-39e5-4c60-aefd-5595bf30d3e5\",\r",
-															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\"\r",
+															"                \"f487e739-6e26-4b6e-8d3b-082d2c37f96f\",\r",
+															"                \"4dbd73aa-b103-484e-ac69-caad51e02a5e\"\r",
 															"            ]\r",
 															"        }\r",
 															"    }\r",
@@ -130170,6 +130005,7 @@
 															"            \"parentGroups\": [\r",
 															"                \"8b30c362-1b81-4106-a020-885f060fd719\"\r",
 															"            ],\r",
+															"            \"productId\": \"ProLife\",\r",
 															"            \"roles\": [],\r",
 															"            \"users\": [\r",
 															"                \"28463162-ffd2-4648-b399-f57f5ab82a68\",\r",
@@ -130273,7 +130109,8 @@
 															"});"
 														],
 														"type": "text/javascript",
-														"packages": {}
+														"packages": {},
+														"requests": {}
 													}
 												}
 											],
