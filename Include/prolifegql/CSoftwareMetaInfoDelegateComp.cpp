@@ -66,7 +66,10 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	
 	QString productName = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 	representation["ProductName"] = QString(productName);
-	
+
+	bool isInternalUse = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_INTERNAL_USE).toBool();
+	representation["InternalUse"] = isInternalUse;
+
 	return true;
 }
 
@@ -140,7 +143,11 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 	if (representation.contains("ProductName")){
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME, representation.value("ProductName"));
 	}
-	
+
+	if (representation.contains("InternalUse")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_INTERNAL_USE, representation.value("InternalUse"));
+	}
+
 	return true;
 }
 

@@ -63,7 +63,10 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 	
 	int softwareCount = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
 	representation["SoftwareCount"] = softwareCount;
-	
+
+	bool isInternalUse = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_INTERNAL_USE).toBool();
+	representation["InternalUse"] = isInternalUse;
+
 	return true;
 }
 
@@ -133,7 +136,11 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 	if (representation.contains("SoftwareCount")){
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES, representation.value("SoftwareCount"));
 	}
-	
+
+	if (representation.contains("InternalUse")){
+		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_INTERNAL_USE, representation.value("InternalUse"));
+	}
+
 	return true;
 }
 

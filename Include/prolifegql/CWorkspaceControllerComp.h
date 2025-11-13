@@ -7,6 +7,7 @@
 // ImtCore includes
 #include <imtbase/IObjectCollection.h>
 #include <imtbase/CTimeFilterParam.h>
+#include <imtbase/CComplexCollectionFilter.h>
 #include <imtserverapp/CTimeFilterParamRepresentationController.h>
 
 // ProLife includes
@@ -77,6 +78,7 @@ private:
 	QString GetProductNameForSoftware(const QByteArray& softwareId) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	QString GenerateColorFromString(const QString& text) const;
+	void AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

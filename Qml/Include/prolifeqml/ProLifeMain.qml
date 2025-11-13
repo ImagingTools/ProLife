@@ -19,10 +19,12 @@ ApplicationMain {
 		target: AuthorizationController;
 		
 		function onLoggedIn(){
+			CachedOrderCollection.updateModel();
 			CachedAccountCollection.updateModel();
 		}
 		
 		function onLoggedOut(){
+			CachedOrderCollection.clearModel();
 			CachedAccountCollection.clearModel();
 		}
 	}

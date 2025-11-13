@@ -220,6 +220,9 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewOrders</Value>
+                                <Value>ChangeOrder</Value>
+                                <Value>ChangeOrderForLicense</Value>
+                                <Value>ChangeOrderForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

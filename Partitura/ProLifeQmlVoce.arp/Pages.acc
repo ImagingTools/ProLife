@@ -293,14 +293,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewLicenses</Value>
-                                <Value>ChangeProjectForLicense</Value>
-                                <Value>ChangeProductForLicense</Value>
-                                <Value>ChangeOrderForLicense</Value>
-                                <Value>ChangeProductLicenses</Value>
-                                <Value>ChangeExpiration</Value>
-                                <Value>ChangeLicenseNumber</Value>
-                                <Value>AddLicense</Value>
-                                <Value>RemoveLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

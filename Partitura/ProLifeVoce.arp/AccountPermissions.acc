@@ -82,6 +82,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewAccounts</Value>
+                                <Value>ChangeCustomer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

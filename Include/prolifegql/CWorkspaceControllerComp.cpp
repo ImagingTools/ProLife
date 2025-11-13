@@ -242,6 +242,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 
 				imtbase::CComplexCollectionFilter complexFilter;
 				complexFilter.AddFieldFilter(actionTypeFieldFilter);
+				AddInternalUseFieldFilter(complexFilter);
 
 				iprm::CParamsSet selectionParams;
 				selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
@@ -300,6 +301,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		imtbase::CComplexCollectionFilter complexCollectionFilter;
 		complexCollectionFilter.AddFieldFilter(inUseFieldFilter);
 		complexCollectionFilter.AddFieldFilter(productUuidfieldFilter);
+		AddInternalUseFieldFilter(complexCollectionFilter);
 
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
@@ -395,6 +397,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		imtbase::CComplexCollectionFilter complexCollectionFilter;
 		complexCollectionFilter.AddFieldFilter(deviceTypeFieldFilter);
 		complexCollectionFilter.AddFieldFilter(softwareCountFieldFilter);
+		AddInternalUseFieldFilter(complexCollectionFilter);
 
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
@@ -824,6 +827,17 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 	uint hash = qHash(text);
 	int index = static_cast<int>(hash % s_standardColors.size());
 	return s_standardColors[index];
+}
+
+
+void CWorkspaceControllerComp::AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter) const
+{
+	imtbase::IComplexCollectionFilter::FieldFilter internalUseFieldFilter;
+	internalUseFieldFilter.fieldId = "InternalUse";
+	internalUseFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
+	internalUseFieldFilter.filterValue = false;
+
+	collectionFilter.AddFieldFilter(internalUseFieldFilter);
 }
 
 
