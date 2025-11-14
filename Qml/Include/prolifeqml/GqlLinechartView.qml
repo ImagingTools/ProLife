@@ -14,8 +14,12 @@ ComboBoxElementView {
 	controlWidth: 130
 	width: Style.sizeHintL
 
+	clip: true
+
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
+
+	property real chartHeight: Style.sizeHintS
 
 	function updateModel(){
 		if (!visible){
@@ -50,7 +54,7 @@ ComboBoxElementView {
 		Component.onCompleted: {
 			let index = insertNewItem()
 			setData("id", "Week", index)
-			setData("name", qsTr("Last Week"), index)
+			setData("name", qsTr("Last 7 Days"), index)
 			setData("mode", "For", index)
 
 			index = insertNewItem()
@@ -91,7 +95,7 @@ ComboBoxElementView {
 
 	bottomComp: Component {
 		Graph2d {
-			height: Style.sizeHintS
+			height: graph2dElementView.chartHeight
 			hasData: true
 			gridStepMajorX: 1
 			gridStepMajorY: 1

@@ -242,7 +242,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 
 				imtbase::CComplexCollectionFilter complexFilter;
 				complexFilter.AddFieldFilter(actionTypeFieldFilter);
-				AddInternalUseFieldFilter(complexFilter);
+				AddInternalUseFieldFilter(complexFilter, false);
 
 				iprm::CParamsSet selectionParams;
 				selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
@@ -301,7 +301,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		imtbase::CComplexCollectionFilter complexCollectionFilter;
 		complexCollectionFilter.AddFieldFilter(inUseFieldFilter);
 		complexCollectionFilter.AddFieldFilter(productUuidfieldFilter);
-		AddInternalUseFieldFilter(complexCollectionFilter);
+		AddInternalUseFieldFilter(complexCollectionFilter, false);
 
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
@@ -397,7 +397,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		imtbase::CComplexCollectionFilter complexCollectionFilter;
 		complexCollectionFilter.AddFieldFilter(deviceTypeFieldFilter);
 		complexCollectionFilter.AddFieldFilter(softwareCountFieldFilter);
-		AddInternalUseFieldFilter(complexCollectionFilter);
+		AddInternalUseFieldFilter(complexCollectionFilter, false);
 
 		iprm::CParamsSet paramsSet;
 		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
@@ -505,7 +505,17 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		iprm::CParamsSet paramsSet;
 		JoinGroupFilter(gqlRequest, paramsSet);
 
-		softwareCollectionInfo.total = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		softwareCollectionInfo.total = totalCount;
+
+		imtbase::CComplexCollectionFilter complexCollectionFilter;
+		AddInternalUseFieldFilter(complexCollectionFilter, true);
+		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+
+		int internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		softwareCollectionInfo.internalUseCount = internalUseCount;
+		softwareCollectionInfo.inProductionCount = totalCount - internalUseCount;
+
 		softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
 		softwareCollectionInfo.title = QStringLiteral("Software");
 		softwareCollectionInfo.icon = QStringLiteral("Icons/Key");
@@ -520,7 +530,16 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		iprm::CParamsSet paramsSet;
 		JoinGroupFilter(gqlRequest, paramsSet);
 
-		hardwareCollectionInfo.total = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		hardwareCollectionInfo.total = totalCount;
+
+		imtbase::CComplexCollectionFilter complexCollectionFilter;
+		AddInternalUseFieldFilter(complexCollectionFilter, true);
+		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+
+		int internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		hardwareCollectionInfo.internalUseCount = internalUseCount;
+		hardwareCollectionInfo.inProductionCount = totalCount - internalUseCount;
 
 		hardwareCollectionInfo.collectionId = QByteArrayLiteral("Devices");
 		hardwareCollectionInfo.title = QStringLiteral("Hardware");
@@ -830,12 +849,12 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 }
 
 
-void CWorkspaceControllerComp::AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter) const
+void CWorkspaceControllerComp::AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter, bool internalUse) const
 {
 	imtbase::IComplexCollectionFilter::FieldFilter internalUseFieldFilter;
 	internalUseFieldFilter.fieldId = "InternalUse";
 	internalUseFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-	internalUseFieldFilter.filterValue = false;
+	internalUseFieldFilter.filterValue = internalUse;
 
 	collectionFilter.AddFieldFilter(internalUseFieldFilter);
 }

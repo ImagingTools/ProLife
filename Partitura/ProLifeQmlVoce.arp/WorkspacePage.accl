@@ -10,10 +10,10 @@
     <PositionMap>
         <Element ComponentName="CheckPermissionOr" X="225" Y="300" Note=""/>
         <Element ComponentName="CommandsController" X="600" Y="325" Note=""/>
+        <Element ComponentName="Dashboard" X="300" Y="575" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="125" Note=""/>
         <Element ComponentName="Permissions" X="975" Y="250" Note=""/>
         <Element ComponentName="UserActions" X="900" Y="575" Note=""/>
-        <Element ComponentName="Workspace" X="300" Y="575" Note=""/>
         <Element ComponentName="WorkspaceController" X="225" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>

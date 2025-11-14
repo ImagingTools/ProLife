@@ -13,11 +13,15 @@ ElementView {
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
+	clip: true
+
+	property real chartHeight: Style.sizeHintS
+
 	bottomComp: Component {
 		Piechart {
 			id: piechart
 			ring: false
-			height: Style.sizeHintS
+			height: piechartElementView.chartHeight
 		}
 	}
 

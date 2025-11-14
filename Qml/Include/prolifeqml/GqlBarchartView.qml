@@ -13,10 +13,14 @@ ComboBoxElementView {
 	controlWidth: 130
 	width: Style.sizeHintM
 
+	clip: true
+
 	property int ySteps: 1
 
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
+
+	property real chartHeight: Style.sizeHintS
 
 	function updateModel(){
 		if (!visible){
@@ -52,7 +56,7 @@ ComboBoxElementView {
 		Component.onCompleted: {
 			let index = insertNewItem()
 			setData("id", "Week", index)
-			setData("name", qsTr("Last Week"), index)
+			setData("name", qsTr("Last 7 Days"), index)
 			setData("mode", "For", index)
 
 			index = insertNewItem()
@@ -94,7 +98,7 @@ ComboBoxElementView {
 	bottomComp: Component {
 		StackedBarChart {
 			id: stackedBarChart
-			height: Style.sizeHintS
+			height: barChartElementView.chartHeight
 			ySteps: barChartElementView.ySteps
 
 			function createFromObject(barChart){

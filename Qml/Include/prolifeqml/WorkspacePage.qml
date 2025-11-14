@@ -27,71 +27,81 @@ ViewBase {
 		stackView.setCurrentIndex(0)
 		
 		if (commandsController){
-			commandsController.setIsToggleable("Workspace", true)
-			commandsController.setToggled("Workspace", true)
+			commandsController.setIsToggleable("Dashboard", true)
+			commandsController.setToggled("Dashboard", true)
 			commandsController.setIsToggleable("UserActions", true)
 			commandsController.setToggled("UserActions", false)
 		}
 	}
-	
+
 	onCommandActivated: {
-		if (commandId === "Workspace"){
+		if (commandId === "UserActions"){
+			NavigationController.push("Workspace/UserActions")
+		}
+		
+		checkCurrentPage(commandId)
+	}
+
+	function checkCurrentPage(commandId){
+		if (commandId === "Dashboard"){
 			stackView.setCurrentIndex(0)
 		}
 		else if (commandId === "UserActions"){
 			stackView.setCurrentIndex(1)
 		}
 		
-		commandsController.setToggled("Workspace", commandId === "Workspace")
+		commandsController.setToggled("Dashboard", commandId === "Dashboard")
 		commandsController.setToggled("UserActions", commandId === "UserActions")
+	}
+
+	NavigableItem {
+		id: navigableItem
+		parentSegment: "Workspace"
+		paths: ["Dashboard", "UserActions"]
+		onActivated: {
+			if (matchedPath === paths[0]){
+				root.checkCurrentPage("Dashboard")
+			}
+			else if (matchedPath === paths[1]){
+				root.checkCurrentPage("UserActions")
+			}
+		}
+		
+		onParentActivated: {
+			root.checkCurrentPage("Dashboard")
+		}
 	}
 	
 	Component {
 		id: workspacePageComp
-		
+
 		Item {
-			id: mainItem
-			
-			CustomScrollbar {
-				id: scrollbar;
-				
-				z: parent.z + 1;
-				
-				anchors.right: parent.right;
-				anchors.top: flickable.top;
-				anchors.bottom: flickable.bottom;
-				
-				secondSize: 10;
-				targetItem: flickable;
-				
-				radius: 2;
-			}
-			
-			CustomScrollbar{
-				id: scrollHoriz;
-				
-				z: parent.z + 1;
-				
-				anchors.left: flickable.left;
-				anchors.right: flickable.right;
-				anchors.bottom: flickable.bottom;
-				
-				secondSize: 10;
-				
-				vertical: false;
-				targetItem: flickable;
-			}
-			
-			Flickable {
-				id: flickable
-				width: mainItem.width
-				height: mainItem.height
-				boundsBehavior: Flickable.StopAtBounds;
-				
-				contentWidth: Math.max(topRow.width+ 2*Style.marginXL, softwareRow.width + 2*Style.marginXL)
-				contentHeight: contentColumn.height + Style.sizeHintBXS
-				clip: true
-				
+			id: chartsBlock
+			anchors.fill: parent
+
+			property int spacing: Style.marginL
+			property int chartDefaultWidth: 500
+			property int chartCountPerRow: 3
+			property real chartWidth:
+				(width >= chartDefaultWidth * chartCountPerRow + spacing * (chartCountPerRow - 1))
+				? chartDefaultWidth
+				: (width - 2*spacing * (chartCountPerRow - 1)) / chartCountPerRow
+			property real rowHeight:
+				(!row1.visible && !row2.visible)
+					? height - topRow.height - 2*spacing
+				: (row1.visible && row2.visible)
+					? (height - topRow.height - 4*spacing) / 2
+				: height - topRow.height - 3*spacing
+
+			Row {
+				id: topRow
+				anchors.top: parent.top
+				anchors.topMargin: chartsBlock.spacing
+				anchors.horizontalCenter: parent.horizontalCenter
+				spacing: chartsBlock.spacing
+				visible: collectionInfoRepeater.count > 0
+				height: 100
+
 				GqlSdlRequestSender {
 					id: getTotalSummaryInfoRequest
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getTotalSummaryInfo
@@ -107,156 +117,205 @@ ViewBase {
 						send()
 					}
 				}
-				Column {
-					id: contentColumn
-					anchors.top: flickable.top
-					anchors.topMargin: Style.marginXL
-					anchors.left: flickable.left
-					anchors.leftMargin: Style.marginXL
-					anchors.right: flickable.right
-					anchors.rightMargin: Style.marginXL
-					width: flickable.width
-					spacing: Style.marginXL
-					
-					Row {
-						id: topRow
-						spacing: Style.marginXL
-						visible: collectionInfoRepeater.count > 0
-						Repeater {
-							id: collectionInfoRepeater
-							delegate: Component {
-								ElementView {
-									width: Style.sizeHintM
-									name: model.item.m_total
-									titleFontSize: Style.fontSizeBXL
-									anchors.verticalCenter: parent.verticalCenter
-									
-									controlComp: Component {
-										Row {
-											height: Style.controlHeightM
-											spacing: Style.marginM
-											Button {
-												width: Style.sizeHintBXS
-												height: Style.controlHeightM
-												text: qsTr("Create New")
-												onClicked: {
-													let params = {}
-													params.createNew = true
-													let objectTypeId = model.item.m_objectTypeId
-													let collectionId = model.item.m_collectionId
-													NavigationController.navigate(collectionId + "/" + objectTypeId, params)
-												}
-											}
-											
-											Button {
-												width: Style.sizeHintBXS
-												height: Style.controlHeightM
-												text: qsTr("View All")
-												onClicked: {
-													NavigationController.navigate(model.item.m_collectionId)
-												}
-											}
+
+				SubscriptionClient {
+					gqlCommandId: "OnDevicesCollectionChanged"
+					onMessageReceived: {
+						getTotalSummaryInfoRequest.send()
+					}
+				}
+
+				SubscriptionClient {
+					gqlCommandId: "OnSoftwareProductsCollectionChanged"
+					onMessageReceived: {
+						getTotalSummaryInfoRequest.send()
+					}
+				}
+
+				SubscriptionClient {
+					gqlCommandId: "OnOrdersCollectionChanged"
+					onMessageReceived: {
+						getTotalSummaryInfoRequest.send()
+					}
+				}
+
+				Repeater {
+					id: collectionInfoRepeater
+					delegate: Component {
+						ElementView {
+							width: chartsBlock.chartWidth
+							name: model.item.m_total + " (" + model.item.m_internalUseCount + ")"
+							titleFontSize: Style.fontSizeBXL
+							anchors.verticalCenter: parent.verticalCenter
+							
+							onWidthChanged: {
+								if (!controlItem){
+									return
+								}
+
+								if (contentWidth > (controlItem.contentWidth + 2 * contentMargin)){
+									controlItem.width = controlItem.contentWidth
+								}
+								else{
+									controlItem.width = 0
+								}
+							}
+
+							controlComp: Component {
+								Item {
+									width: contentWidth
+									height: Style.controlHeightM
+									clip: true
+									visible: width > 0
+									property int contentWidth: createNewButton.width + viewAllButton.width + 3*Style.spacingM
+									Button {
+										id: createNewButton
+										anchors.left: parent.left
+										anchors.leftMargin: Style.spacingM
+										height: Style.controlHeightM
+										text: qsTr("Create New")
+										widthFromDecorator: true
+										onClicked: {
+											let params = {}
+											params.createNew = true
+											let objectTypeId = model.item.m_objectTypeId
+											let collectionId = model.item.m_collectionId
+											NavigationController.navigate(collectionId + "/" + objectTypeId, params)
 										}
 									}
 									
-									StickerView {
-										anchors.verticalCenter: parent.top
-										anchors.left: parent.left
-										anchors.leftMargin: Style.marginM
-										color: Style.iconColorOnSelected
-										text: model.item.m_title
+									Button {
+										id: viewAllButton
+										anchors.left: createNewButton.right
+										anchors.leftMargin: Style.spacingM
+										height: Style.controlHeightM
+										text: qsTr("View All")
+										widthFromDecorator: true
+										onClicked: {
+											let objectTypeId = model.item.m_objectTypeId
+											let collectionId = model.item.m_collectionId
+											NavigationController.navigate(collectionId + "/" + objectTypeId)
+										}
 									}
 								}
 							}
-						}
-					}
 
-					Flow {
-						id: softwareRow
-						width: parent.width
-						spacing: Style.marginXL
-						clip: true
-						Component.onCompleted: {
-							let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-							if (viewLicenses){
-								getSoftwareUsedPieChartRequest.visible = true
-								getSoftwareUsedPieChartRequest.updateModel()
-								
-								getSoftwareUsedBarChart.visible = true
-								getSoftwareUsedBarChart.updateModel()
-								
-								getLicenseCreationInfo.visible = true
-								getLicenseCreationInfo.updateModel()
+							StickerView {
+								anchors.verticalCenter: parent.top
+								anchors.left: parent.left
+								anchors.leftMargin: Style.marginM
+								color: Style.iconColorOnSelected
+								text: model.item.m_title
 							}
-
-							let viewSensors = PermissionsController.checkPermission("ViewSensors")
-							if (viewSensors){
-								getHardwareUsedPieChartRequest.visible = true
-								getHardwareUsedPieChartRequest.updateModel()
-								
-								getHardwareUsedBarChart.visible = true
-								getHardwareUsedBarChart.updateModel()
-								
-								hardwareStatusInfoRequest.visible = true
-								hardwareStatusInfoRequest.updateModel()
-							}
-						}
-						
-						GqlPiechartView {
-							id: getSoftwareUsedPieChartRequest
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
-							name: qsTr("Software Used")
-							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							visible: false
-						}
-						
-						GqlBarchartView {
-							id: getSoftwareUsedBarChart
-							name: qsTr("Software Used")
-							currentIndex: 0
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
-							ySteps: 5
-							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							visible: false
-						}
-						
-						GqlLinechartView {
-							id: getLicenseCreationInfo
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
-							name: qsTr("License Creation")
-							currentIndex: 0
-							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							visible: false
-						}
-						
-						GqlPiechartView {
-							id: getHardwareUsedPieChartRequest
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
-							name: qsTr("Hardware Used")
-							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							visible: false
-						}
-						
-						GqlBarchartView {
-							id: getHardwareUsedBarChart
-							name: qsTr("Hardware Used")
-							currentIndex: 0
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
-							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							visible: false
-						}
-						
-						GqlPiechartView {
-							id: hardwareStatusInfoRequest
-							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
-							name: qsTr("Hardware Status")
-							subscriptionCommandId: "OnDevicesCollectionChanged"
-							visible: false
 						}
 					}
 				}
 			}
+
+			/* ROW 1 */
+			Row {
+				id: row1
+				anchors.horizontalCenter: parent.horizontalCenter
+				anchors.top: topRow.bottom
+				anchors.topMargin: chartsBlock.spacing
+				height: chartsBlock.rowHeight
+				spacing: chartsBlock.spacing
+
+				visible: false
+				property real chartHeight: row1.height - 100
+
+				Component.onCompleted: {
+					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+					if (viewLicenses){
+						softwareUsedPieChart.updateModel()
+						softwareUsedBarChart.updateModel()
+						licenseCreationInfo.updateModel()
+						row1.visible = true
+					}
+				}
+		
+				GqlPiechartView {
+					id: softwareUsedPieChart
+					width: chartsBlock.chartWidth
+					chartHeight: row1.chartHeight
+					name: qsTr("Software In Use")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+				}
+		
+				GqlBarchartView {
+					id: softwareUsedBarChart
+					width: chartsBlock.chartWidth
+					chartHeight: row1.chartHeight
+					name: qsTr("Software In Use")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					currentIndex: 0
+				}
+		
+				GqlLinechartView {
+					id: licenseCreationInfo
+					width: chartsBlock.chartWidth
+					chartHeight: row1.chartHeight
+					name: qsTr("License Creation")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					currentIndex: 0
+				}
+			}
+		
+			/* ROW 2 */
+			Row {
+				id: row2
+				anchors.top: row1.bottom
+				anchors.topMargin: chartsBlock.spacing
+				anchors.horizontalCenter: parent.horizontalCenter
+				height: chartsBlock.rowHeight
+				spacing: chartsBlock.spacing
+				visible: false
+
+				property real chartHeight: row2.height - 100
+
+				Component.onCompleted: {
+					let viewHardware = PermissionsController.checkPermission("ViewSensors")
+					if (viewHardware){
+						hardwareUsedPieChart.updateModel()
+						hardwareUsedBarChart.updateModel()
+						hardwareStatusInfo.updateModel()
+						row2.visible = true
+					}
+				}
+		
+				GqlPiechartView {
+					id: hardwareUsedPieChart
+					width: chartsBlock.chartWidth
+					chartHeight: row2.chartHeight
+					name: qsTr("Hardware In Use")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+				}
+		
+				GqlBarchartView {
+					id: hardwareUsedBarChart
+					width: chartsBlock.chartWidth
+					chartHeight: row2.chartHeight
+					name: qsTr("Hardware In Use")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					currentIndex: 0
+				}
+		
+				GqlPiechartView {
+					id: hardwareStatusInfo
+					width: chartsBlock.chartWidth
+					chartHeight: row2.chartHeight
+					name: qsTr("Hardware Status")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
+					subscriptionCommandId: "OnDevicesCollectionChanged"
+				}
+			}
 		}
+		
 	}
 	
 	Component {

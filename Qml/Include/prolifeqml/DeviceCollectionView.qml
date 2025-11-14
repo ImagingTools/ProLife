@@ -33,11 +33,17 @@ RemoteCollectionView {
 	
 	function registerFilters(){
 		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
-		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+
+		if (PermissionsController.checkPermission("ViewAccounts")){
+			registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		}
+
 		registerFieldFilterDelegate("SensorStatus", statusDelegateFilterComp)
 		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
 		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)
 		setFilterDependency(DeviceItemTypeMetaInfo.s_licenseUuid, DeviceItemTypeMetaInfo.s_productUuid)
+
+		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
 	}
 
 	Component {
@@ -59,6 +65,21 @@ RemoteCollectionView {
 				createAndAddOption("6", qsTr("Defect"), "", true)
 				createAndAddOption("7", qsTr("In Repair"), "", true)
 				createAndAddOption("8", qsTr("Decommissioned"), "", true)
+			}
+		}
+	}
+
+	Component {
+		id: internalUseDelegateFilterComp
+		FieldFilterDelegate {
+			name: qsTr("Use Info")
+
+			defaultFieldFilter.m_fieldId: "InternalUse"
+			defaultFieldFilter.m_filterValueType: "Bool"
+
+			Component.onCompleted: {
+				createAndAddOption("true", qsTr("Internal Use"), "", true)
+				createAndAddOption("false", qsTr("Production Use"), "", true)
 			}
 		}
 	}

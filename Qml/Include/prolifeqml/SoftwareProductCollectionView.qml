@@ -45,10 +45,16 @@ RemoteCollectionView {
 	
 	function registerFilters(){
 		registerFieldFilterDelegate("LicenseStatus", licenseStatusDelegateFilterComp)
-		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		
+		if (PermissionsController.checkPermission("ViewAccounts")){
+			registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		}
+
 		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
 		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)
 		setFilterDependency(SoftwareProductItemTypeMetaInfo.s_licenseUuid, SoftwareProductItemTypeMetaInfo.s_productUuid)
+
+		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
 	}
 
 	Component {
@@ -144,7 +150,22 @@ RemoteCollectionView {
 			}
 		}
 	}
-	
+
+	Component {
+		id: internalUseDelegateFilterComp
+		FieldFilterDelegate {
+			name: qsTr("Use Info")
+
+			defaultFieldFilter.m_fieldId: "InternalUse"
+			defaultFieldFilter.m_filterValueType: "Bool"
+
+			Component.onCompleted: {
+				createAndAddOption("true", qsTr("Internal Use"), "", true)
+				createAndAddOption("false", qsTr("Production Use"), "", true)
+			}
+		}
+	}
+
 	Component {
 		id: productsDelegateFilterComp
 		

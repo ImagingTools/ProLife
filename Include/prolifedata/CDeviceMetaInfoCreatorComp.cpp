@@ -54,6 +54,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_STATUS, deviceInfoPtr->GetDeviceProductionStatus());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_PROJECT, deviceInfoPtr->GetProject());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_INTERNAL_USE, deviceInfoPtr->IsInternalUse());
 	
 	QByteArray customerId;
 	if (m_orderCollectionCompPtr.IsValid()){
