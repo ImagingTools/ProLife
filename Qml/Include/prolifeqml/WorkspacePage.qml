@@ -100,7 +100,7 @@ ViewBase {
 				anchors.horizontalCenter: parent.horizontalCenter
 				spacing: chartsBlock.spacing
 				visible: collectionInfoRepeater.count > 0
-				height: 100
+				height: 85
 
 				GqlSdlRequestSender {
 					id: getTotalSummaryInfoRequest
