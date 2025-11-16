@@ -225,13 +225,11 @@ ViewBase {
 				if (currentIndex >= 0){
 					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)){
 						let licenseName = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)
-						
 						typeValue.text = licenseName;
 					}
 					
 					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
 						let licenseId = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
-						
 						articleValue.text = licenseId;
 					}
 					
@@ -243,6 +241,11 @@ ViewBase {
 						else{
 							expirationValue.text = expiration;
 						}
+					}
+					
+					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)){
+						let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)
+						softwareValue.text = serialNumber;
 					}
 				}
 				
