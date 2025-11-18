@@ -40,13 +40,14 @@ ComboBoxElementView {
 		let magnitude = Math.pow(10, Math.floor(Math.log10(rough)))
 		let normalized = rough / magnitude
 	
-		let nice;
+		let nice
 		if (normalized <= 1)      nice = 1
 		else if (normalized <= 2) nice = 2
 		else if (normalized <= 5) nice = 5
 		else                      nice = 10
 	
-		return nice * magnitude
+		let result = nice * magnitude
+		return Math.round(result)
 	}
 
 	onVisibleChanged: {
