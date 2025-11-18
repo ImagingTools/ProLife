@@ -31,6 +31,23 @@ ComboBoxElementView {
 		licenseCreationInfoRequest.send(timeFilter)
 	}
 
+	function niceStep(maxValue){
+		if (maxValue <= 0)
+			return 1
+	
+		let rough = maxValue / 5
+		let magnitude = Math.pow(10, Math.floor(Math.log10(rough)))
+		let normalized = rough / magnitude
+	
+		let nice;
+		if (normalized <= 1)      nice = 1
+		else if (normalized <= 2) nice = 2
+		else if (normalized <= 5) nice = 5
+		else                      nice = 10
+	
+		return nice * magnitude
+	}
+
 	onVisibleChanged: {
 		if (visible && internal.updateRequested){
 			updateModel()
@@ -139,6 +156,14 @@ ComboBoxElementView {
 
 					graph2dElementView.bottomItem.labelXValues = m_labels
 					graph2dElementView.bottomItem.linePoints = linePoints
+					
+					if (m_summary){
+						let maxItem = m_summary.m_maxItem
+						if (maxItem){
+							let maxValue = maxItem.m_value
+							graph2dElementView.bottomItem.gridStepMajorY = graph2dElementView.niceStep(maxValue)
+						}
+					}
 					graph2dElementView.bottomItem.requestPaint()
 					loading.stop()
 				}

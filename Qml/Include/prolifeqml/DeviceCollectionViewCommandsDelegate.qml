@@ -159,10 +159,6 @@ DocumentCollectionViewDelegate {
 						}
 
 						if (commandId == container.createLicenseFileCommand){
-							if (!documentModel.m_productionStatus){
-								return;
-							}
-
 							if (documentModel.m_productionStatus !== "Finished"){
 								ModalDialogManager.showInfoDialog(qsTr("The production status should be 'Finished'"))
 								return;
@@ -171,8 +167,7 @@ DocumentCollectionViewDelegate {
 							container.onCreateLicenseFile(documentId)
 						}
 						else if (commandId == container.transferLicensesCommand){
-							if (!documentModel.m_softwareBindingInfos ||
-								!documentModel.m_productionStatus){
+							if (!documentModel.m_softwareBindingInfos){
 								return;
 							}
 

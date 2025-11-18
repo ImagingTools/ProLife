@@ -32,6 +32,23 @@ ComboBoxElementView {
 		barChartRequest.send(timeFilter)
 	}
 
+	function niceStep(maxValue){
+		if (maxValue <= 0)
+			return 1
+	
+		let rough = maxValue / 5
+		let magnitude = Math.pow(10, Math.floor(Math.log10(rough)))
+		let normalized = rough / magnitude
+	
+		let nice;
+		if (normalized <= 1)      nice = 1
+		else if (normalized <= 2) nice = 2
+		else if (normalized <= 5) nice = 5
+		else                      nice = 10
+	
+		return nice * magnitude
+	}
+
 	onVisibleChanged: {
 		if (visible && internal.updateRequested){
 			updateModel()
@@ -121,6 +138,14 @@ ComboBoxElementView {
 					barObj.label = barItem.m_label
 					
 					bars.push(barObj)
+				}
+
+				if (barChart.m_summary){
+					let maxItem = barChart.m_summary.m_maxItem
+					if (maxItem){
+						let maxValue = maxItem.m_value
+						stackedBarChart.ySteps = barChartElementView.niceStep(maxValue)
+					}
 				}
 
 				stackedBarChart.xLabel = barChart.m_axes.m_xLabel
