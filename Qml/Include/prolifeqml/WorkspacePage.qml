@@ -80,7 +80,7 @@ ViewBase {
 			anchors.fill: parent
 
 			property int spacing: Style.marginL
-			property int chartDefaultWidth: 500
+			property int chartDefaultWidth: 600
 			property int chartCountPerRow: 3
 			property real chartWidth:
 				(width >= chartDefaultWidth * chartCountPerRow + spacing * (chartCountPerRow - 1))
@@ -100,7 +100,7 @@ ViewBase {
 				anchors.horizontalCenter: parent.horizontalCenter
 				spacing: chartsBlock.spacing
 				visible: collectionInfoRepeater.count > 0
-				height: 85
+				height: 110
 
 				GqlSdlRequestSender {
 					id: getTotalSummaryInfoRequest
@@ -143,10 +143,11 @@ ViewBase {
 					id: collectionInfoRepeater
 					delegate: Component {
 						ElementView {
-							width: chartsBlock.chartWidth
-							name: model.item.m_total + " (" + model.item.m_internalUseCount + ")"
-							titleFontSize: Style.fontSizeBXL
 							anchors.verticalCenter: parent.verticalCenter
+							width: chartsBlock.chartWidth
+							name: model.item.m_total
+							titleFontSize: Style.fontSizeBXL
+							contentMargin: Style.marginM
 							
 							onWidthChanged: {
 								if (!controlItem){
@@ -158,6 +159,72 @@ ViewBase {
 								}
 								else{
 									controlItem.width = 0
+								}
+							}
+							bottomComp: Component {
+								Row {
+									height: Style.marginL
+									spacing: Style.marginXL
+									visible: model.item.m_collectionId === "SoftwareProducts" || model.item.m_collectionId === "Devices"
+									Row {
+										id: inUseRow
+										anchors.verticalCenter: parent.verticalCenter
+										spacing: Style.marginS
+										height: parent.height
+
+										Rectangle {
+											id: inUseRect
+											anchors.verticalCenter: parent.verticalCenter
+											width: Style.buttonWidthXXS
+											height: width
+											radius: width
+											color: "green"
+										}
+
+										BaseText {
+											anchors.verticalCenter: parent.verticalCenter
+											text: qsTr("Running: ") + model.item.m_inUseCount
+										}
+									}
+									Row {
+										id: notInUseRow
+										anchors.verticalCenter: parent.verticalCenter
+										spacing: Style.marginS
+										height: parent.height
+
+										Rectangle {
+											id: notInUseRect
+											anchors.verticalCenter: parent.verticalCenter
+											width: Style.buttonWidthXXS
+											height: width
+											radius: width
+											color: "gray"
+										}
+
+										BaseText {
+											anchors.verticalCenter: parent.verticalCenter
+											text: qsTr("In Stock: ") + model.item.m_notInUseCount
+										}
+									}
+									Row {
+										id: internaUseRow
+										anchors.verticalCenter: parent.verticalCenter
+										spacing: Style.marginS
+										height: parent.height
+
+										Rectangle {
+											anchors.verticalCenter: parent.verticalCenter
+											width: Style.buttonWidthXXS
+											height: width
+											radius: width
+											color: "blue"
+										}
+
+										BaseText {
+											anchors.verticalCenter: parent.verticalCenter
+											text: qsTr("Internal: ") + model.item.m_internalUseCount
+										}
+									}
 								}
 							}
 

@@ -638,6 +638,10 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	
 	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
 
+	if (representation.inUse){
+		softwareInfoPtr->SetInUse(*representation.inUse);
+	}
+
 	if (representation.internalUse){
 		softwareInfoPtr->SetInternalUse(*representation.internalUse);
 	}

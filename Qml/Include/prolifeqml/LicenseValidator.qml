@@ -13,13 +13,6 @@ DocumentValidator {
             return false;
         }
 
-        let inUse = documentModel.m_inUse;
-        if (inUse){
-            data.message = qsTr("The product cannot be edited as it is in use");
-
-            return false;
-        }
-
         if (documentModel.m_productId === ""){
             data.message = qsTr("Please select a product");
 

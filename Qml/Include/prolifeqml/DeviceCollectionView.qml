@@ -72,14 +72,14 @@ RemoteCollectionView {
 	Component {
 		id: internalUseDelegateFilterComp
 		FieldFilterDelegate {
-			name: qsTr("Use Info")
+			name: qsTr("Usage")
 
 			defaultFieldFilter.m_fieldId: "InternalUse"
 			defaultFieldFilter.m_filterValueType: "Bool"
 
 			Component.onCompleted: {
-				createAndAddOption("true", qsTr("Internal Use"), "", true)
-				createAndAddOption("false", qsTr("Production Use"), "", true)
+				createAndAddOption("false", qsTr("For Production"), "", true)
+				createAndAddOption("true", qsTr("For Internal Purposes"), "", true)
 			}
 		}
 	}

@@ -508,13 +508,21 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
 
-		imtbase::CComplexCollectionFilter complexCollectionFilter;
-		AddInternalUseFieldFilter(complexCollectionFilter, true);
-		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", true));
 
-		int internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		softwareCollectionInfo.internalUseCount = internalUseCount;
-		softwareCollectionInfo.inProductionCount = totalCount - internalUseCount;
+		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+
+		iprm::CParamsSet inUseParamsSet;
+		JoinGroupFilter(gqlRequest, inUseParamsSet);
+		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
+		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
+
+		iprm::CParamsSet notInUseParamsSet;
+		JoinGroupFilter(gqlRequest, notInUseParamsSet);
+		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", false));
+		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
 		softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
 		softwareCollectionInfo.title = QStringLiteral("Software");
@@ -533,13 +541,20 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
-		imtbase::CComplexCollectionFilter complexCollectionFilter;
-		AddInternalUseFieldFilter(complexCollectionFilter, true);
-		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", true));
+		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 
-		int internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		hardwareCollectionInfo.internalUseCount = internalUseCount;
-		hardwareCollectionInfo.inProductionCount = totalCount - internalUseCount;
+		iprm::CParamsSet inUseParamsSet;
+		JoinGroupFilter(gqlRequest, inUseParamsSet);
+		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_GREATER));
+		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
+
+		iprm::CParamsSet notInUseParamsSet;
+		JoinGroupFilter(gqlRequest, notInUseParamsSet);
+		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_EQUAL));
+		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
 		hardwareCollectionInfo.collectionId = QByteArrayLiteral("Devices");
 		hardwareCollectionInfo.title = QStringLiteral("Hardware");
@@ -857,6 +872,22 @@ void CWorkspaceControllerComp::AddInternalUseFieldFilter(imtbase::CComplexCollec
 	internalUseFieldFilter.filterValue = internalUse;
 
 	collectionFilter.AddFieldFilter(internalUseFieldFilter);
+}
+
+
+void CWorkspaceControllerComp::AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const
+{
+	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
+	if (complexFilterPtr == nullptr){
+		complexFilterPtr = new imtbase::CComplexCollectionFilter();
+		paramsSet.SetEditableParameter("ComplexFilter", complexFilterPtr, true);
+	}
+
+	if (complexFilterPtr == nullptr){
+		return;
+	}
+
+	complexFilterPtr->AddFieldFilter(fieldFilter);
 }
 
 

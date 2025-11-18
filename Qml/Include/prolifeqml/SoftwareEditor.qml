@@ -60,12 +60,12 @@ ViewBase {
 
 		let canAddLicense = PermissionsController.checkPermission("AddLicense");
 		if (softwareProductData.m_inUse){
-			readOnly = true
+			setReadOnly(true)
 			return
 		}
 
 		if (isNew && canAddLicense){
-			readOnly = false
+			setReadOnly(false)
 		}
 		else{
 			let canChangeProject = PermissionsController.checkPermission("ChangeProjectForLicense");
@@ -109,11 +109,11 @@ ViewBase {
 		}
 		
 		if (softwareProductData.m_inUse){
-			root.readOnly = true;
+			setReadOnly(true)
 			setAlertPanel(alertComp);
 		}
 		else{
-			root.readOnly = false;
+			setReadOnly(false)
 			setAlertPanel(undefined);
 		}
 	}
@@ -128,7 +128,7 @@ ViewBase {
 		serialNumberInput.readOnly = readOnly;
 		expirationEditor.readOnly = readOnly;
 		unlimitedSwitch.readOnly = readOnly;
-		internalUseSwitchElementView.readOnly = readOnly
+		// internalUseSwitchElementView.readOnly = readOnly
 	}
 	
 	function updateGui(){

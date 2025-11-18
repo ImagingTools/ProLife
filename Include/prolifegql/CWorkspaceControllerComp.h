@@ -79,6 +79,7 @@ private:
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter, bool internalUse) const;
+	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

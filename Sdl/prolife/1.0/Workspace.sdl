@@ -52,8 +52,9 @@ type LineChartData {
 
 type CollectionSummaryInfo {
 	total: Integer!
+	notInUseCount: Integer
+	inUseCount: Integer
 	internalUseCount: Integer
-	inProductionCount: Integer
 	collectionId: ID!
 	title: String!
 	icon: String!
