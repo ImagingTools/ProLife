@@ -145,7 +145,12 @@ ComboBoxElementView {
 					let maxItem = barChart.m_summary.m_maxItem
 					if (maxItem){
 						let maxValue = maxItem.m_value
-						stackedBarChart.ySteps = barChartElementView.niceStep(maxValue)
+						let niceStep = barChartElementView.niceStep(maxValue)
+						if (niceStep <= 0){
+							niceStep = 1
+						}
+
+						stackedBarChart.ySteps = niceStep
 					}
 				}
 

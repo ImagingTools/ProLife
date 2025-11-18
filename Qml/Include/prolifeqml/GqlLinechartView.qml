@@ -116,7 +116,7 @@ ComboBoxElementView {
 			height: graph2dElementView.chartHeight
 			hasData: true
 			gridStepMajorX: 1
-			// gridStepMajorY: 3
+			gridStepMajorY: 1
 			alwaysShowOrigin: true
 			xScale: 2
 			hasMinorGrid: false 
@@ -162,7 +162,12 @@ ComboBoxElementView {
 						let maxItem = m_summary.m_maxItem
 						if (maxItem){
 							let maxValue = maxItem.m_value
-							graph2dElementView.bottomItem.gridStepMajorY = graph2dElementView.niceStep(maxValue)
+							let niceStep = graph2dElementView.niceStep(maxValue)
+							if (niceStep <= 0){
+								niceStep = 1
+							}
+
+							graph2dElementView.bottomItem.gridStepMajorY = niceStep
 						}
 					}
 					graph2dElementView.bottomItem.requestPaint()
