@@ -65,14 +65,19 @@ type TotalSummaryInfo {
 	summaryInfos: [CollectionSummaryInfo!]!
 }
 
+input ChartInput {
+	timeFilter: TimeFilter
+	customerId: ID
+}
+
 type Query {
-	GetLicenseCreationInfo (input: TimeFilter): LineChartData!
-	GetSoftwareUsedBarChart (input: TimeFilter): BarChartData!
-	GetSoftwareUsedPieChart : PieChartData!
-	GetHardwareUsedBarChart (input: TimeFilter): BarChartData!
-	GetHardwareUsedPieChart : PieChartData!
-	GetHardwareStatusInfo: PieChartData!
-	GetTotalSummaryInfo: TotalSummaryInfo!
+	GetLicenseCreationInfo (input: ChartInput): LineChartData!
+	GetSoftwareUsedBarChart (input: ChartInput): BarChartData!
+	GetSoftwareUsedPieChart (input: ChartInput): PieChartData!
+	GetHardwareUsedBarChart (input: ChartInput): BarChartData!
+	GetHardwareUsedPieChart (input: ChartInput): PieChartData!
+	GetHardwareStatusInfo (input: ChartInput): PieChartData!
+	GetTotalSummaryInfo (input: ChartInput): TotalSummaryInfo!
 }
 
 

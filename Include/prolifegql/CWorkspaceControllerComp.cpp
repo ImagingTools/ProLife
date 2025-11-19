@@ -71,6 +71,11 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 		return response;
 	}
 
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
+
 	response.Version_1_0.Emplace();
 
 	response.Version_1_0->axes.Emplace();
@@ -79,19 +84,31 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 
 	response.Version_1_0->axes->yLabel = "Created Licenses";
 
-	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, *arguments.input.Version_1_0);
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
+	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, timeFilter);
 	QMap<QDate, int> licenseCountByDateMap;
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (m_userActionCollectionCompPtr->GetObjectData(elementId, dataPtr)){
 			const imtauth::IUserRecentAction* userActionPtr = dynamic_cast<imtauth::IUserRecentAction*>(dataPtr.GetPtr());
 			if (userActionPtr != nullptr){
-				QDateTime timestamp = userActionPtr->GetTimestamp();
-				if (licenseCountByDateMap.contains(timestamp.date())){
-					licenseCountByDateMap[timestamp.date()]++;
-				}
-				else{
-					licenseCountByDateMap[timestamp.date()] = 1;
+				imtauth::IUserRecentAction::TargetInfo targetInfo = userActionPtr->GetTargetInfo();
+				idoc::MetaInfoPtr metaInfoPtr = m_hardwareCollectionCompPtr->GetDataMetaInfo(targetInfo.id);
+				if (metaInfoPtr.IsValid()){
+					bool isInternal = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_INTERNAL_USE).toBool();
+					if (!isInternal){
+						QDateTime timestamp = userActionPtr->GetTimestamp();
+						if (licenseCountByDateMap.contains(timestamp.date())){
+							licenseCountByDateMap[timestamp.date()]++;
+						}
+						else{
+							licenseCountByDateMap[timestamp.date()] = 1;
+						}
+					}
 				}
 			}
 		}
@@ -101,7 +118,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 	imtbase::ITimeFilterParam::InterpretationMode mode;
 
 	QDate startDate, endDate;
-	PrepareDateFilter(*arguments.input.Version_1_0, startDate, endDate, timeUnit, mode);
+	PrepareDateFilter(timeFilter, startDate, endDate, timeUnit, mode);
 
 	int totalCreated = 0;
 	int maxCount = 0;
@@ -222,7 +239,17 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		return response;
 	}
 
-	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, *arguments.input.Version_1_0);
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
+	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, timeFilter);
 	QMap<QDate, QMap<QString, int>> licenseTypeCountByDate;
 	for (const QByteArray& id : elementIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
@@ -235,30 +262,33 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 			QDateTime timestamp = userActionPtr->GetTimestamp();
 			imtauth::IUserRecentAction::TargetInfo targetInfo = userActionPtr->GetTargetInfo();
 			if (targetInfo.typeId == QByteArrayLiteral("Device")){
-				imtbase::IComplexCollectionFilter::FieldFilter actionTypeFieldFilter;
-				actionTypeFieldFilter.fieldId = "HardwareId";
-				actionTypeFieldFilter.filterValue = targetInfo.id;
-				actionTypeFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-
-				imtbase::CComplexCollectionFilter complexFilter;
-				complexFilter.AddFieldFilter(actionTypeFieldFilter);
-				AddInternalUseFieldFilter(complexFilter, false);
-
 				iprm::CParamsSet selectionParams;
-				selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
+				AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("HardwareId", targetInfo.id));
+				AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+
+				if (!customerId.isEmpty()){
+					AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+				}
 
 				JoinGroupFilter(gqlRequest, selectionParams);
+
 				imtbase::ICollectionInfo::Ids softwareIds = m_softwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 				for (const QByteArray& softwareId : softwareIds){
-					QString productName = GetProductNameForSoftware(softwareId);
-					licenseTypeCountByDate[timestamp.date()][productName]++;
+					idoc::MetaInfoPtr metaInfoPtr = m_softwareCollectionCompPtr->GetDataMetaInfo(softwareId);
+					if (metaInfoPtr.IsValid()){
+						bool internalUse = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toBool();
+						if (!internalUse){
+							QString productName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
+							licenseTypeCountByDate[timestamp.date()][productName]++;
+						}
+					}
 				}
 			}
 		}
 	}
 
 	response.Version_1_0.Emplace();
-	if (!BuildBarChart(licenseTypeCountByDate, *arguments.input.Version_1_0, "Created Licenses", *response.Version_1_0)){
+	if (!BuildBarChart(licenseTypeCountByDate, timeFilter, "Created Licenses", *response.Version_1_0)){
 		errorMessage = QString("Unable to build bar chart data. Internal error");
 		return response;
 	}
@@ -267,44 +297,39 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 }
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUsedPieChart(
-			const sdl::prolife::Workspace::CGetSoftwareUsedPieChartGqlRequest& /*getSoftwareUsedPieChartRequest*/,
+			const sdl::prolife::Workspace::CGetSoftwareUsedPieChartGqlRequest& getSoftwareUsedPieChartRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
-	imtbase::CComplexCollectionFilter complexFilter;
+	auto arguments = getSoftwareUsedPieChartRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get software used pie chart. Error: GraphQL version unsupported");
+		return response;
+	}
 
-	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-	fieldFilter.fieldId = "CategoryId";
-	fieldFilter.filterValue = "Software";
-	fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-	complexFilter.AddFieldFilter(fieldFilter);
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
 
 	iprm::CParamsSet selectionParams;
-	selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
+	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CategoryId", "Software"));
 
 	imtbase::ICollectionInfo::Ids elementIds = m_productCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
-		imtbase::IComplexCollectionFilter::FieldFilter productUuidfieldFilter;
-		productUuidfieldFilter.fieldId = "ProductUuid";
-		productUuidfieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-		productUuidfieldFilter.filterValue = elementId;
-
-		imtbase::IComplexCollectionFilter::FieldFilter inUseFieldFilter;
-		inUseFieldFilter.fieldId = "InUse";
-		inUseFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-		inUseFieldFilter.filterValue = true;
-
-		imtbase::CComplexCollectionFilter complexCollectionFilter;
-		complexCollectionFilter.AddFieldFilter(inUseFieldFilter);
-		complexCollectionFilter.AddFieldFilter(productUuidfieldFilter);
-		AddInternalUseFieldFilter(complexCollectionFilter, false);
-
 		iprm::CParamsSet paramsSet;
-		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("ProductUuid", elementId));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
 
 		JoinGroupFilter(gqlRequest, paramsSet);
 
@@ -326,13 +351,28 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 {
 	sdl::prolife::Workspace::CBarChartData response;
 
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
 	const sdl::prolife::Workspace::GetHardwareUsedBarChartRequestArguments arguments = getHardwareUsedBarChartRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get hardware used bar chart. Error: GraphQL version unsupported");
 		return response;
 	}
 
-	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, *arguments.input.Version_1_0);
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
+	QByteArrayList elementIds = GetUserActionsByCreateLicenseFile(gqlRequest, timeFilter);
 	QMap<QDate, QMap<QString, int>> licenseTypeCountByDate;
 	for (const QByteArray& id : elementIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
@@ -345,14 +385,27 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 			QDateTime timestamp = userActionPtr->GetTimestamp();
 			imtauth::IUserRecentAction::TargetInfo targetInfo = userActionPtr->GetTargetInfo();
 			if (targetInfo.typeId == QByteArrayLiteral("Device")){
-				QString productName = GetProductNameForHardware(targetInfo.id);
-				licenseTypeCountByDate[timestamp.date()][productName]++;
+				idoc::MetaInfoPtr metaInfoPtr = m_hardwareCollectionCompPtr->GetDataMetaInfo(targetInfo.id);
+				if (metaInfoPtr.IsValid()){
+					if (!customerId.isEmpty()){
+						QByteArray deviceCustomerId = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+						if (customerId != deviceCustomerId){
+							continue;
+						}
+					}
+
+					bool isInternal = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_INTERNAL_USE).toBool();
+					if (!isInternal){
+						QString productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
+						licenseTypeCountByDate[timestamp.date()][productName]++;
+					}
+				}
 			}
 		}
 	}
 
 	response.Version_1_0.Emplace();
-	if (!BuildBarChart(licenseTypeCountByDate, *arguments.input.Version_1_0, "Created Licenses", *response.Version_1_0)){
+	if (!BuildBarChart(licenseTypeCountByDate, timeFilter, "Created Licenses", *response.Version_1_0)){
 		errorMessage = QString("Unable to build bar chart data. Internal error");
 		return response;
 	}
@@ -362,45 +415,44 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUsedPieChart(
-			const sdl::prolife::Workspace::CGetHardwareUsedPieChartGqlRequest& /*getHardwareUsedPieChartRequest*/,
+			const sdl::prolife::Workspace::CGetHardwareUsedPieChartGqlRequest& getHardwareUsedPieChartRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
+	auto arguments = getHardwareUsedPieChartRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get hardware used pie chart. Error: GraphQL version unsupported");
+		return response;
+	}
 
-	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-	fieldFilter.fieldId = "CategoryId";
-	fieldFilter.filterValue = "Hardware";
-	fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
 
-	imtbase::CComplexCollectionFilter complexFilter;
-	complexFilter.AddFieldFilter(fieldFilter);
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
 
 	iprm::CParamsSet selectionParams;
-	selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
+	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CategoryId", "Hardware"));
 
 	imtbase::ICollectionInfo::Ids elementIds = m_productCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
-		imtbase::IComplexCollectionFilter::FieldFilter deviceTypeFieldFilter;
-		deviceTypeFieldFilter.fieldId = "DeviceType";
-		deviceTypeFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-		deviceTypeFieldFilter.filterValue = elementId;
-
-		imtbase::IComplexCollectionFilter::FieldFilter softwareCountFieldFilter;
-		softwareCountFieldFilter.fieldId = "SoftwareCount";
-		softwareCountFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER;
-		softwareCountFieldFilter.filterValue = 0;
-
-		imtbase::CComplexCollectionFilter complexCollectionFilter;
-		complexCollectionFilter.AddFieldFilter(deviceTypeFieldFilter);
-		complexCollectionFilter.AddFieldFilter(softwareCountFieldFilter);
-		AddInternalUseFieldFilter(complexCollectionFilter, false);
-
 		iprm::CParamsSet paramsSet;
-		paramsSet.SetEditableParameter("ComplexFilter", &complexCollectionFilter);
+
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("DeviceType", elementId));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
 
 		JoinGroupFilter(gqlRequest, paramsSet);
 
@@ -428,9 +480,24 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareSt
 		return response;
 	}
 
+	auto arguments = getHardwareStatusInfoRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
+
 	response.Version_1_0.Emplace();
 
 	iprm::CParamsSet selectionParams;
+	if (!customerId.isEmpty()){
+		AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+	}
+	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
 	JoinGroupFilter(gqlRequest, selectionParams);
 
 	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
@@ -484,6 +551,17 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		return response;
 	}
 
+	auto arguments = getTotalSummaryInfoRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	QByteArray customerId;
+	if (arguments.input.Version_1_0->customerId.HasValue()){
+		customerId = *arguments.input.Version_1_0->customerId;
+	}
+
 	bool isAdmin = false;
 	QByteArrayList userPermissions;
 	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
@@ -504,6 +582,9 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 		iprm::CParamsSet paramsSet;
 		JoinGroupFilter(gqlRequest, paramsSet);
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
@@ -516,12 +597,20 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		JoinGroupFilter(gqlRequest, inUseParamsSet);
 		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
 		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		if (!customerId.isEmpty()){
+			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
 		JoinGroupFilter(gqlRequest, notInUseParamsSet);
 		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", false));
 		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		if (!customerId.isEmpty()){
+			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
 		softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
@@ -537,23 +626,35 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 		iprm::CParamsSet paramsSet;
 		JoinGroupFilter(gqlRequest, paramsSet);
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", true));
+
 		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 
 		iprm::CParamsSet inUseParamsSet;
 		JoinGroupFilter(gqlRequest, inUseParamsSet);
 		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_GREATER));
 		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		if (!customerId.isEmpty()){
+			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
 		JoinGroupFilter(gqlRequest, notInUseParamsSet);
 		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_EQUAL));
 		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		if (!customerId.isEmpty()){
+			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
 		hardwareCollectionInfo.collectionId = QByteArrayLiteral("Devices");
@@ -569,6 +670,9 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 		iprm::CParamsSet paramsSet;
 		JoinGroupFilter(gqlRequest, paramsSet);
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
 
 		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
@@ -787,42 +891,14 @@ QByteArrayList CWorkspaceControllerComp::GetUserActionsByCreateLicenseFile(
 	actionTypeFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
 	complexFilter.AddFieldFilter(actionTypeFieldFilter);
 
+	complexFilter.SetDistinctFieldsList({"targetId"});
+
 	iprm::CParamsSet selectionParams;
 	selectionParams.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	JoinGroupFilter(gqlRequest, selectionParams);
 
 	return m_userActionCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
-}
-
-
-QString CWorkspaceControllerComp::GetProductNameForHardware(const QByteArray& hardwareId) const
-{
-	if (!m_hardwareCollectionCompPtr.IsValid()){
-		return QString();
-	}
-
-	idoc::MetaInfoPtr metaInfoPtr = m_hardwareCollectionCompPtr->GetDataMetaInfo(hardwareId);
-	if (!metaInfoPtr.IsValid()){
-		return QString();
-	}
-
-	return metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
-}
-
-
-QString CWorkspaceControllerComp::GetProductNameForSoftware(const QByteArray& softwareId) const
-{
-	if (!m_softwareCollectionCompPtr.IsValid()){
-		return QString();
-	}
-
-	idoc::MetaInfoPtr metaInfoPtr = m_softwareCollectionCompPtr->GetDataMetaInfo(softwareId);
-	if (!metaInfoPtr.IsValid()){
-		return QString();
-	}
-
-	return metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
 }
 
 
@@ -861,17 +937,6 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 	uint hash = qHash(text);
 	int index = static_cast<int>(hash % s_standardColors.size());
 	return s_standardColors[index];
-}
-
-
-void CWorkspaceControllerComp::AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter, bool internalUse) const
-{
-	imtbase::IComplexCollectionFilter::FieldFilter internalUseFieldFilter;
-	internalUseFieldFilter.fieldId = "InternalUse";
-	internalUseFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL;
-	internalUseFieldFilter.filterValue = internalUse;
-
-	collectionFilter.AddFieldFilter(internalUseFieldFilter);
 }
 
 

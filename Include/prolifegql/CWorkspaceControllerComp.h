@@ -74,11 +74,8 @@ private:
 	QByteArrayList GetUserActionsByCreateLicenseFile(
 				const imtgql::CGqlRequest& gqlRequest,
 				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl) const;
-	QString GetProductNameForHardware(const QByteArray& hardwareId) const;
-	QString GetProductNameForSoftware(const QByteArray& softwareId) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	QString GenerateColorFromString(const QString& text) const;
-	void AddInternalUseFieldFilter(imtbase::CComplexCollectionFilter& collectionFilter, bool internalUse) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 
 private:

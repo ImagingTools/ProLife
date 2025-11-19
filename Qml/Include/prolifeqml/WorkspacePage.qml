@@ -6,6 +6,8 @@ import imtauthgui 1.0
 import imtgui 1.0
 import prolifeWorkspaceSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
+import imtlicgui 1.0
+import imtcolgui 1.0
 import com.imtcore.imtqml 1.0
 
 ViewBase {
@@ -33,6 +35,8 @@ ViewBase {
 			commandsController.setToggled("UserActions", false)
 		}
 	}
+
+	property string customerId
 
 	onCommandActivated: {
 		if (commandId === "UserActions"){
@@ -71,7 +75,28 @@ ViewBase {
 			root.checkCurrentPage("Dashboard")
 		}
 	}
-	
+
+	function navigateToHardware(productName){
+		let productId = CachedProductCollection.getProductIdByName(productName)
+		let params = {}
+		params.productId = productId
+		params.customerId = root.customerId
+		params.inUse = true
+
+		NavigationController.navigate("Devices/<product-use-filter>", params)
+	}
+
+	function navigateToSoftware(productName){
+		let productId = CachedProductCollection.getProductIdByName(productName)
+		
+		let params = {}
+		params.productId = productId
+		params.customerId = root.customerId
+		params.inUse = true
+		
+		NavigationController.navigate("SoftwareProducts/<product-filter>", params)
+	}
+
 	Component {
 		id: workspacePageComp
 
@@ -93,6 +118,30 @@ ViewBase {
 					? (height - topRow.height - 4*spacing) / 2
 				: height - topRow.height - 3*spacing
 
+			Item {
+				x: topRow.x
+				y: -height - ((root.commandsPanelHeight - height) / 2)
+				z: parent.z + 1
+				width: customerFilterDelegate.width
+				height: customerFilterDelegate.height
+				
+				CustomerFilterDelegate {
+					id: customerFilterDelegate
+					
+					collectionFilter: CollectionFilter {}
+					visible: stackView.currentIndex == 0
+					
+					onOptionSelectionChanged: {
+						if (optionIds.length > 0){
+							root.customerId = optionIds[0]
+						}
+						else{
+							root.customerId = ""
+						}
+					}
+				}
+			}
+
 			Row {
 				id: topRow
 				anchors.top: parent.top
@@ -102,40 +151,62 @@ ViewBase {
 				visible: collectionInfoRepeater.count > 0
 				height: 110
 
+				property string customerId: root.customerId
+
+				signal loadingStart()
+				signal loadingStop()
+				
+				onCustomerIdChanged: {
+					getTotalSummaryInfoRequest.updateModel()
+				}
+
 				GqlSdlRequestSender {
 					id: getTotalSummaryInfoRequest
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getTotalSummaryInfo
+					inputObjectComp: Component {
+						ChartInput {
+							m_customerId: root.customerId
+						}
+					}
+
 					sdlObjectComp: Component {
 						TotalSummaryInfo {
 							onFinished: {
 								collectionInfoRepeater.model = m_summaryInfos
+								topRow.loadingStop()
 							}
 						}
 					}
 					
-					Component.onCompleted: {
+					function updateModel(){
+						console.log("getTotalSummaryInfoRequest updateModel")
+						topRow.loadingStart()
 						send()
+					}
+					
+					Component.onCompleted: {
+						updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnDevicesCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.send()
+						getTotalSummaryInfoRequest.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnSoftwareProductsCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.send()
+						getTotalSummaryInfoRequest.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnOrdersCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.send()
+						getTotalSummaryInfoRequest.updateModel()
 					}
 				}
 
@@ -267,12 +338,29 @@ ViewBase {
 								}
 							}
 
+							Loading {
+								id: loading
+								anchors.fill: parent
+								color: Style.baseColor
+								visible: false
+							}
+
 							StickerView {
 								anchors.verticalCenter: parent.top
 								anchors.left: parent.left
 								anchors.leftMargin: Style.marginM
 								color: Style.iconColorOnSelected
 								text: model.item.m_title
+							}
+
+							Connections {
+								target: topRow
+								function onLoadingStart(){
+									loading.start()
+								}
+								function onLoadingStop(){
+									loading.stop()
+								}
 							}
 						}
 					}
@@ -289,7 +377,7 @@ ViewBase {
 				spacing: chartsBlock.spacing
 
 				visible: false
-				property real chartHeight: row1.height - 100
+				property real chartHeight: row1.height - 90
 
 				Component.onCompleted: {
 					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
@@ -308,6 +396,11 @@ ViewBase {
 					name: qsTr("Software In Use")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					legendClickable: true
+					customerId: root.customerId
+					onLegendClicked: {
+						root.navigateToSoftware(label)
+					}
 				}
 		
 				GqlBarchartView {
@@ -318,6 +411,11 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0
+					customerId: root.customerId
+					legendClickable: true
+					onLegendClicked: {
+						root.navigateToSoftware(label)
+					}
 				}
 		
 				GqlLinechartView {
@@ -328,6 +426,7 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0
+					customerId: root.customerId
 				}
 			}
 		
@@ -341,7 +440,7 @@ ViewBase {
 				spacing: chartsBlock.spacing
 				visible: false
 
-				property real chartHeight: row2.height - 100
+				property real chartHeight: row2.height - 90
 
 				Component.onCompleted: {
 					let viewHardware = PermissionsController.checkPermission("ViewSensors")
@@ -360,6 +459,11 @@ ViewBase {
 					name: qsTr("Hardware In Use")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					legendClickable: true
+					customerId: root.customerId
+					onLegendClicked: {
+						root.navigateToHardware(label)
+					}
 				}
 		
 				GqlBarchartView {
@@ -370,6 +474,11 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0
+					customerId: root.customerId
+					legendClickable: true
+					onLegendClicked: {
+						root.navigateToHardware(label)
+					}
 				}
 		
 				GqlPiechartView {
@@ -379,6 +488,20 @@ ViewBase {
 					name: qsTr("Hardware Status")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 					subscriptionCommandId: "OnDevicesCollectionChanged"
+					customerId: root.customerId
+					legendClickable: true
+					onLegendClicked: {
+						let params = {}
+						let statusId = deviceProductionStatus.getStatusIdByName(label)
+						params.statusId = String(deviceProductionStatus.getStatusIndex(statusId))
+						params.customerId = root.customerId
+
+						NavigationController.navigate("Devices/<status-filter>", params)
+					}
+					
+					DeviceProductionStatus {
+						id: deviceProductionStatus
+					}
 				}
 			}
 		}

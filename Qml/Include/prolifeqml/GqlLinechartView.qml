@@ -13,13 +13,14 @@ ComboBoxElementView {
 	name: qsTr("License Creation")
 	controlWidth: 130
 	width: Style.sizeHintL
-
+	contentMargin: Style.marginM
 	clip: true
 
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	property real chartHeight: Style.sizeHintS
+	property string customerId: ""
 
 	function updateModel(){
 		if (!visible){
@@ -28,7 +29,7 @@ ComboBoxElementView {
 		}
 
 		loading.start()
-		licenseCreationInfoRequest.send(timeFilter)
+		licenseCreationInfoRequest.send()
 	}
 
 	function niceStep(maxValue){
@@ -49,7 +50,15 @@ ComboBoxElementView {
 		return Math.round(result)
 	}
 
+	onCustomerIdChanged: {
+		updateModel()
+	}
+
 	onVisibleChanged: {
+		requestUpdateModel()
+	}
+
+	function requestUpdateModel(){
 		if (visible && internal.updateRequested){
 			updateModel()
 			internal.updateRequested = false
@@ -142,6 +151,12 @@ ComboBoxElementView {
 	GqlSdlRequestSender {
 		id: licenseCreationInfoRequest
 		gqlCommandId: graph2dElementView.gqlCommandId
+		inputObjectComp: Component {
+			ChartInput {
+				m_timeFilter: timeFilter
+				m_customerId: graph2dElementView.customerId
+			}
+		}
 		sdlObjectComp: Component {
 			LineChartData {
 				onFinished: {

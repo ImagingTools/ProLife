@@ -69,6 +69,56 @@ RemoteCollectionView {
 		}
 	}
 
+	NavigableItem {
+		paths: ["<status-filter>"]
+		parentSegment: container.collectionId
+		onActivated: {
+			container.collectionFilter.clearAllFilters()
+
+			if (params.customerId !== ""){
+				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
+				customersFilterDelegate.setSelectedId(params.customerId, true)
+			}
+
+			let statusFilterDelegate = container.filterMenu.getFilterDelegate("SensorStatus")
+			statusFilterDelegate.setSelectedId(params.statusId, true)
+
+			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
+			internalUseFilterDelegate.setSelectedId("false", true)
+
+			container.collectionFilter.filterChanged()
+		}
+	}
+
+	NavigableItem {
+		paths: ["<product-use-filter>"]
+		parentSegment: container.collectionId
+		onActivated: {
+			container.collectionFilter.clearAllFilters()
+
+			let productId = params.productId
+			let inUse = params.inUse
+
+			if (params.customerId !== ""){
+				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
+				customersFilterDelegate.setSelectedId(params.customerId, true)
+			}
+
+			let productFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid)
+			productFilterDelegate.setSelectedId(productId, true)
+
+			if (inUse){
+				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
+				licenseStatusFilterDelegate.setSelectedIndex(1, true)
+			}
+
+			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
+			internalUseFilterDelegate.setSelectedId("false", true)
+
+			container.collectionFilter.filterChanged()
+		}
+	}
+
 	Component {
 		id: internalUseDelegateFilterComp
 		FieldFilterDelegate {

@@ -150,6 +150,34 @@ RemoteCollectionView {
 			}
 		}
 	}
+	
+	NavigableItem {
+		paths: ["<product-filter>"]
+		parentSegment: container.collectionId
+		onActivated: {
+			console.log("SoftwareProduct filter onActivated", params)
+			let productId = params.productId
+			let inUse = params.inUse
+
+			if (params.customerId !== ""){
+				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
+				customersFilterDelegate.setSelectedId(params.customerId, true)
+			}
+
+			let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
+			productFilterDelegate.setSelectedId(productId, true)
+
+			if (inUse){
+				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
+				licenseStatusFilterDelegate.setSelectedIndex(2, true)
+			}
+
+			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
+			internalUseFilterDelegate.setSelectedId("false", true)
+
+			container.collectionFilter.filterChanged()
+		}
+	}
 
 	Component {
 		id: internalUseDelegateFilterComp

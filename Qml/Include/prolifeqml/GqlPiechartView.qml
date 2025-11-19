@@ -9,19 +9,28 @@ import prolifeWorkspaceSdl 1.0
 ElementView {
 	id: piechartElementView
 	width: Style.sizeHintM
+	contentMargin: Style.marginM
 
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
 
 	clip: true
+	property bool legendClickable: false
 
 	property real chartHeight: Style.sizeHintS
+	property string customerId: ""
+
+	signal legendClicked(string id, string  label, string color, int value)
 
 	bottomComp: Component {
 		Piechart {
 			id: piechart
 			ring: false
 			height: piechartElementView.chartHeight
+			legendClickable: piechartElementView.legendClickable
+			onLegendClicked: {
+				piechartElementView.legendClicked(id, label, color, value)
+			}
 		}
 	}
 
@@ -35,7 +44,15 @@ ElementView {
 		piechartInfoRequest.send()
 	}
 
+	onCustomerIdChanged: {
+		updateModel()
+	}
+
 	onVisibleChanged: {
+		requestUpdateModel()
+	}
+
+	function requestUpdateModel(){
 		if (visible && internal.updateRequested){
 			updateModel()
 			internal.updateRequested = false
@@ -57,6 +74,11 @@ ElementView {
 	GqlSdlRequestSender {
 		id: piechartInfoRequest
 		gqlCommandId: piechartElementView.gqlCommandId
+		inputObjectComp: Component {
+			ChartInput {
+				m_customerId: piechartElementView.customerId
+			}
+		}
 		sdlObjectComp: Component {
 			PieChartData {
 				onFinished: {

@@ -12,15 +12,19 @@ ComboBoxElementView {
 	id: barChartElementView
 	controlWidth: 130
 	width: Style.sizeHintM
-
+	contentMargin: Style.marginM
 	clip: true
 
 	property int ySteps: 1
 
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId
+	property string customerId: ""
 
 	property real chartHeight: Style.sizeHintS
+
+	property bool legendClickable: false
+	signal legendClicked(string id, string  label, string color, int value)
 
 	function updateModel(){
 		if (!visible){
@@ -29,7 +33,7 @@ ComboBoxElementView {
 		}
 
 		loading.start()
-		barChartRequest.send(timeFilter)
+		barChartRequest.send()
 	}
 
 	function niceStep(maxValue){
@@ -50,7 +54,16 @@ ComboBoxElementView {
 		return Math.round(result)
 	}
 
+	onCustomerIdChanged: {
+		console.log("onCustomerIdChanged", customerId)
+		updateModel()
+	}
+
 	onVisibleChanged: {
+		requestUpdateModel()
+	}
+
+	function requestUpdateModel(){
 		if (visible && internal.updateRequested){
 			updateModel()
 			internal.updateRequested = false
@@ -118,6 +131,10 @@ ComboBoxElementView {
 			id: stackedBarChart
 			height: barChartElementView.chartHeight
 			ySteps: barChartElementView.ySteps
+			legendClickable: barChartElementView.legendClickable
+			onLegendClicked: {
+				barChartElementView.legendClicked(id, label, color, value)
+			}
 
 			function createFromObject(barChart){
 				let bars = []
@@ -171,6 +188,13 @@ ComboBoxElementView {
 	GqlSdlRequestSender {
 		id: barChartRequest
 		gqlCommandId: barChartElementView.gqlCommandId
+		inputObjectComp: Component {
+			ChartInput {
+				m_timeFilter: timeFilter
+				m_customerId: barChartElementView.customerId
+			}
+		}
+
 		sdlObjectComp: Component {
 			BarChartData {
 				onFinished: {

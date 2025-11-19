@@ -32,6 +32,17 @@ ProductionStatusModel {
 		return status;
 	}
 
+	function getStatusIdByName(statusName){
+		for (let i = 0; i < m_statusModel.count; i++){
+			let name = m_statusModel.get(i).item.m_name
+			if (name === statusName){
+				return m_statusModel.get(i).item.m_id
+			}
+		}
+
+		return ""
+	}
+
 	function getStatusIndex(statusId){
 		for (let i = 0; i < m_statusModel.count; i++){
 			let id = m_statusModel.get(i).item.m_id;
