@@ -73,7 +73,7 @@ RemoteCollectionView {
 		paths: ["<status-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			container.collectionFilter.clearAllFilters()
+			container.collectionFilter.clearAllFilters(true)
 
 			if (params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
@@ -86,6 +86,8 @@ RemoteCollectionView {
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
 			internalUseFilterDelegate.setSelectedId("false", true)
 
+			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
+
 			container.collectionFilter.filterChanged()
 		}
 	}
@@ -94,7 +96,7 @@ RemoteCollectionView {
 		paths: ["<product-use-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			container.collectionFilter.clearAllFilters()
+			container.collectionFilter.clearAllFilters(true)
 
 			let productId = params.productId
 			let inUse = params.inUse
@@ -114,6 +116,8 @@ RemoteCollectionView {
 
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
 			internalUseFilterDelegate.setSelectedId("false", true)
+
+			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 
 			container.collectionFilter.filterChanged()
 		}

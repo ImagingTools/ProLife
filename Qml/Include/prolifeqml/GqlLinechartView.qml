@@ -131,6 +131,8 @@ ComboBoxElementView {
 			hasMinorGrid: false 
 			hasTooltip: false
 			fitToWidth: true
+			legendFontSize: Style.fontSizeS
+			labelFontSize: Style.fontSizeS
 		}
 	}
 

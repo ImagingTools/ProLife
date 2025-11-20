@@ -55,7 +55,6 @@ ComboBoxElementView {
 	}
 
 	onCustomerIdChanged: {
-		console.log("onCustomerIdChanged", customerId)
 		updateModel()
 	}
 

@@ -377,7 +377,7 @@ ViewBase {
 				spacing: chartsBlock.spacing
 
 				visible: false
-				property real chartHeight: row1.height - 90
+				property real chartHeight: row1.height - 85
 
 				Component.onCompleted: {
 					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
@@ -440,7 +440,7 @@ ViewBase {
 				spacing: chartsBlock.spacing
 				visible: false
 
-				property real chartHeight: row2.height - 90
+				property real chartHeight: row2.height - 85
 
 				Component.onCompleted: {
 					let viewHardware = PermissionsController.checkPermission("ViewSensors")

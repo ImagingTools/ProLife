@@ -156,6 +156,8 @@ RemoteCollectionView {
 		parentSegment: container.collectionId
 		onActivated: {
 			console.log("SoftwareProduct filter onActivated", params)
+			container.collectionFilter.clearAllFilters(true)
+
 			let productId = params.productId
 			let inUse = params.inUse
 
@@ -175,6 +177,7 @@ RemoteCollectionView {
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
 			internalUseFilterDelegate.setSelectedId("false", true)
 
+			container.collectionFilter.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")
 			container.collectionFilter.filterChanged()
 		}
 	}

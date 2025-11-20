@@ -623,6 +623,13 @@ ViewBase {
 							licenseInformationTable.updateHeaders()
 						}
 					}
+					
+					Connections {
+						target: licenseInformationTable.table
+						function onHeadersChanged(){
+							target.setColumnContentById("softwareId", softwareIdLinkDelegateComp)
+						}
+					}
 
 					function updateHeaders(){
 						headersModel.clear();
@@ -636,6 +643,24 @@ ViewBase {
 						headersModel.setData("name", qsTr("Software Name"), index);
 
 						licenseInformationTable.table.headers = headersModel;
+					}
+
+					Component {
+						id: softwareIdLinkDelegateComp
+						
+						TextLinkCellDelegate {
+							id: objectLinkDelegate
+							onLinkActivated: {
+								let softwareId = table.elements.getData("m_id", rowIndex)
+								NavigationController.navigate("SoftwareProducts/SoftwareProduct/" + softwareId)
+							}
+							
+							onReused: {
+								if (table){
+									text = table.elements.getData("m_softwareId", rowIndex)
+								}
+							}
+						}
 					}
 				}
 			}
