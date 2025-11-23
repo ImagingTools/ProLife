@@ -393,7 +393,7 @@ ViewBase {
 					id: softwareUsedPieChart
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
-					name: qsTr("Software In Use")
+					name: qsTr("Active Software Instances by Product")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedPieChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
@@ -407,7 +407,7 @@ ViewBase {
 					id: softwareUsedBarChart
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
-					name: qsTr("Software In Use")
+					name: qsTr("Active Software Instances by Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0
@@ -422,7 +422,7 @@ ViewBase {
 					id: licenseCreationInfo
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
-					name: qsTr("License Creation")
+					name: qsTr("License Creation Activity")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0
@@ -456,7 +456,7 @@ ViewBase {
 					id: hardwareUsedPieChart
 					width: chartsBlock.chartWidth
 					chartHeight: row2.chartHeight
-					name: qsTr("Hardware In Use")
+					name: qsTr("Active Hardware Instances by Product")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedPieChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
@@ -470,7 +470,7 @@ ViewBase {
 					id: hardwareUsedBarChart
 					width: chartsBlock.chartWidth
 					chartHeight: row2.chartHeight
-					name: qsTr("Hardware In Use")
+					name: qsTr("Active Hardware Instances by Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					currentIndex: 0

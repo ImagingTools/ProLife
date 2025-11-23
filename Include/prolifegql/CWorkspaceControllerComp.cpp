@@ -763,7 +763,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			bar.segments.Emplace();
 
 			const auto& typeMap = map.value(d);
-			int dailyTotal = 0, colorIndex = 0;
+			int dailyTotal = 0;
 	
 			for (auto it = typeMap.constBegin(); it != typeMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
@@ -802,7 +802,6 @@ bool CWorkspaceControllerComp::BuildBarChart(
 				: QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
 	
 			barChartData.axes->xLabel = "Weeks";
-			int colorIndex = 0;
 			for (auto it = weeklyMap.constBegin(); it != weeklyMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
@@ -837,7 +836,6 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			bar.label = monthStart.toString("MMM");
 			barChartData.axes->xLabel = "Month";
 
-			int colorIndex = 0;
 			for (auto it = monthMap.constBegin(); it != monthMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
