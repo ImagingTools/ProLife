@@ -5,6 +5,74 @@ const path = require('path');
 
 var frameCount = 0;
 
+
+const clickOnElement = async (page, path) => {
+  // Находим элемент по пути и ждём появления
+  const locator = page.locator(createStrPath(path) + ' [objectName="MouseArea"][visible]').first();
+  await locator.waitFor({ timeout: 5000 });
+
+  // Скроллим к нему (иногда нужно)
+  await locator.scrollIntoViewIfNeeded();
+
+  // Получаем реальный DOM-element-хэндл
+  const element = await locator.elementHandle();
+  if (!element) {
+    throw new Error("ElementHandle is null for path: " + path);
+  }
+
+  // Получаем координаты
+  const box = await element.boundingBox();
+  if (!box) {
+    throw new Error("boundingBox is null for path: " + path);
+  }
+
+  // Вычисляем центр
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+
+  // Кликаем по координатам
+  await clickAt(page, x, y)
+};
+
+const clickOnPage = async (page, pageId) => {
+  await clickOnElement(page, ["MenuPanel", pageId + "Button"])
+}
+
+const clickOnCommand = async (page, commandId) => {
+  await clickOnElement(page, ["CommandsView", commandId + "Button"])
+}
+
+const clickOnButton = async (page, buttonPath) => {
+  await clickOnElement(page, buttonPath)
+}
+
+function createStrPath(path) {
+  let result = ""
+
+  for (let i = 0; i < path.length; ++i){
+    if (result.length > 0){
+      result += ' '
+    }
+    result += '[objectName="' + path[i] + '"]'
+  }
+
+  return result
+}
+
+const fillTextInput = async (page, text, path) => {
+  const textInput = await page.$(createStrPath(path) + ' [objectName="TextInput"] input')
+  if (textInput) {
+    const rect = await textInput.boundingBox()
+    await clickAt(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    await page.keyboard.type(text);
+  }  
+}
+
+const selectComboBox = async (page, selectedText, path) => {
+  await clickOnElement(page, path)
+  await clickOnElement(page, ["PopupMenuDialog", selectedText])
+}
+
 const reloadPage = async (page, url = 'http://localhost:7778') => {
   await page.goto(url);
   await waitForPageStability(page);
@@ -51,14 +119,12 @@ async function waitForPageStability(page, options = {}) {
     screenshotDir = path.join(process.cwd(), 'screenshots_debug'),
   } = options;
 
-  // Подготовка директории для скриншотов
   if (debugScreenshots) {
     fs.mkdirSync(screenshotDir, { recursive: true });
   }
 
   const startTime = Date.now();
 
-  // Параллельно ждем networkidle и domcontentloaded
   await Promise.all([
     page.waitForLoadState('networkidle'),
     page.waitForLoadState('domcontentloaded')
@@ -89,8 +155,6 @@ async function waitForPageStability(page, options = {}) {
       previousScreenshot = currentScreenshot;
     }
   }
-
-  // throw new Error('Timeout: visual stability not reached after ${maxTotalTime}ms');
 }
 
 const addMask = async (page, maskParams) => {
@@ -122,4 +186,4 @@ const removeMask = async (page) => {
   });
 };
 
-module.exports = { delay, reloadPage, clickAt, checkScreenshot, login, wheelScroll, waitForPageStability};
+module.exports = { delay, reloadPage, clickAt, checkScreenshot, login, wheelScroll, waitForPageStability, clickOnPage, clickOnCommand, selectComboBox, fillTextInput, clickOnButton};
