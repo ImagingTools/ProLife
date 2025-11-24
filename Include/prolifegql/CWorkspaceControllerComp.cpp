@@ -21,29 +21,31 @@ namespace prolifegql
 
 
 QMap<int, QString> s_deviceStatusColor({
-			{prolifedata::IDeviceInfo::DPS_NONE, "#FFC107"},
-			{prolifedata::IDeviceInfo::DPS_ACCEPTED, "#4CAF50"},
-			{prolifedata::IDeviceInfo::DPS_IN_PROGRESS, "#03A9F4"},
-			{prolifedata::IDeviceInfo::DPS_CANCELED, "#9E9E9E"},
-			{prolifedata::IDeviceInfo::DPS_ON_HOLD, "#FFC107"},
-			{prolifedata::IDeviceInfo::DPS_FINISHED, "#9C27B0"},
-			{prolifedata::IDeviceInfo::DPS_DEFECTED, "#F44336"},
-			{prolifedata::IDeviceInfo::DPS_IN_REPAIR, "#8BC34A"},
-			{prolifedata::IDeviceInfo::DPS_DECOMMISSIONED, "#795548"}});
+	{prolifedata::IDeviceInfo::DPS_NONE, "#FFC107"},
+	{prolifedata::IDeviceInfo::DPS_ACCEPTED, "#4CAF50"},
+	{prolifedata::IDeviceInfo::DPS_IN_PROGRESS, "#03A9F4"},
+	{prolifedata::IDeviceInfo::DPS_CANCELED, "#9E9E9E"},
+	{prolifedata::IDeviceInfo::DPS_ON_HOLD, "#FFC107"},
+	{prolifedata::IDeviceInfo::DPS_FINISHED, "#9C27B0"},
+	{prolifedata::IDeviceInfo::DPS_DEFECTED, "#F44336"},
+	{prolifedata::IDeviceInfo::DPS_IN_REPAIR, "#8BC34A"},
+	{prolifedata::IDeviceInfo::DPS_DECOMMISSIONED, "#795548"}
+});
+
 
 static QStringList s_standardColors = {
-			"#4CAF50", // Green
-			"#2196F3", // Blue
-			"#FFC107", // Amber
-			"#F44336", // Red
-			"#9C27B0", // Purple
-			"#009688", // Teal
-			"#FF9800", // Orange
-			"#795548", // Brown
-			"#3F51B5", // Indigo
-			"#8BC34A", // Light Green
-			"#00BCD4", // Cyan
-			"#E91E63"  // Pink
+	"#4CAF50", // Green
+	"#2196F3", // Blue
+	"#FFC107", // Amber
+	"#F44336", // Red
+	"#9C27B0", // Purple
+	"#009688", // Teal
+	"#FF9800", // Orange
+	"#795548", // Brown
+	"#3F51B5", // Indigo
+	"#8BC34A", // Light Green
+	"#00BCD4", // Cyan
+	"#E91E63"  // Pink
 };
 
 
@@ -65,7 +67,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 		return response;
 	}
 
-	const  sdl::prolife::Workspace::GetLicenseCreationInfoRequestArguments arguments = getLicenseCreationInfoRequest.GetRequestedArguments();
+	const sdl::prolife::Workspace::GetLicenseCreationInfoRequestArguments arguments = getLicenseCreationInfoRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get license creation info. Error: GraphQL request version unsupported");
 		return response;
@@ -165,14 +167,12 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 			QString rangeLabel;
 			if (weekStart.month() == weekEnd.month()){
 				rangeLabel = QString("%1–%2 %3")
-							.arg(weekStart.toString("dd"))
-							.arg(weekEnd.toString("dd"))
-							.arg(weekEnd.toString("MMM"));
+								 .arg(weekStart.toString("dd"))
+								 .arg(weekEnd.toString("dd"))
+								 .arg(weekEnd.toString("MMM"));
 			}
 			else{
-				rangeLabel = QString("%1–%2")
-							.arg(weekStart.toString("dd MMM"))
-							.arg(weekEnd.toString("dd MMM"));
+				rangeLabel = QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
 			}
 
 			addPoint(weekIndex, count, rangeLabel);
@@ -193,11 +193,11 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 		for (int month = 1; month <= 12; ++month){
 			QDate monthStart(startDate.year(), month, 1);
 			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
-	
+
 			int count = 0;
 			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1))
 				count += licenseCountByDateMap.value(d, 0);
-	
+
 			addPoint(month - 1, count, monthStart.toString("MMM"));
 			totalCreated += count;
 			if (count > maxCount){
@@ -290,6 +290,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 	response.Version_1_0.Emplace();
 	if (!BuildBarChart(licenseTypeCountByDate, timeFilter, "Created Licenses", *response.Version_1_0)){
 		errorMessage = QString("Unable to build bar chart data. Internal error");
+
 		return response;
 	}
 
@@ -308,6 +309,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 	auto arguments = getSoftwareUsedPieChartRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get software used pie chart. Error: GraphQL version unsupported");
+
 		return response;
 	}
 
@@ -353,12 +355,14 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 
 	if (!m_hardwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+
 		return response;
 	}
 
 	const sdl::prolife::Workspace::GetHardwareUsedBarChartRequestArguments arguments = getHardwareUsedBarChartRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get hardware used bar chart. Error: GraphQL version unsupported");
+
 		return response;
 	}
 
@@ -538,22 +542,26 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 	if (!m_hardwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+
 		return response;
 	}
 
 	if (!m_softwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
+
 		return response;
 	}
 
 	if (!m_orderCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CWorkspaceControllerComp");
+
 		return response;
 	}
 
 	auto arguments = getTotalSummaryInfoRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
+
 		return response;
 	}
 
@@ -764,7 +772,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 
 			const auto& typeMap = map.value(d);
 			int dailyTotal = 0;
-	
+
 			for (auto it = typeMap.constBegin(); it != typeMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
 				seg.label = it.key();
@@ -778,23 +786,26 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			barChartData.bars->push_back(bar);
 			barChartData.axes->xLabel = "Days";
 			totalCreated += dailyTotal;
-			if (dailyTotal > maxCount){ maxCount = dailyTotal; maxLabel = *bar.label; }
+			if (dailyTotal > maxCount){
+				maxCount = dailyTotal;
+				maxLabel = *bar.label;
+			}
 		}
 	}
 	else if (unit == imtbase::ITimeFilterParam::TU_MONTH){
 		for (QDate iter = startDate; iter <= endDate; iter = iter.addDays(7)){
 			QDate weekStart = iter;
 			QDate weekEnd = std::min(weekStart.addDays(6), endDate);
-	
+
 			int weekTotal = 0;
 			QMap<QString, int> weeklyMap;
-	
+
 			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1)){
 				const auto& valueMap = map.value(d);
 				for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it)
 					weeklyMap[it.key()] += it.value();
 			}
-	
+
 			sdl::prolife::Workspace::CChartBar::V1_0 bar;
 			bar.segments.Emplace();
 			bar.label = (weekStart.month() == weekEnd.month())
@@ -810,27 +821,30 @@ bool CWorkspaceControllerComp::BuildBarChart(
 				bar.segments->push_back(seg);
 				weekTotal += it.value();
 			}
-	
+
 			bar.total = weekTotal;
 			barChartData.bars->push_back(bar);
 			totalCreated += weekTotal;
-			if (weekTotal > maxCount){ maxCount = weekTotal; maxLabel = *bar.label; }
+			if (weekTotal > maxCount){
+				maxCount = weekTotal;
+				maxLabel = *bar.label;
+			}
 		}
 	}
 	else if (unit == imtbase::ITimeFilterParam::TU_YEAR){
 		for (int month = 1; month <= 12; ++month){
 			QDate monthStart(startDate.year(), month, 1);
 			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
-	
+
 			int monthTotal = 0;
 			QMap<QString, int> monthMap;
-	
+
 			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1)){
 				const auto& valueMap = map.value(d);
 				for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it)
 					monthMap[it.key()] += it.value();
 			}
-	
+
 			sdl::prolife::Workspace::CChartBar::V1_0 bar;
 			bar.segments.Emplace();
 			bar.label = monthStart.toString("MMM");
@@ -848,7 +862,10 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			bar.total = monthTotal;
 			barChartData.bars->push_back(bar);
 			totalCreated += monthTotal;
-			if (monthTotal > maxCount){ maxCount = monthTotal; maxLabel = *bar.label; }
+			if (monthTotal > maxCount){
+				maxCount = monthTotal;
+				maxLabel = *bar.label;
+			}
 		}
 	}
 
@@ -932,7 +949,7 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 		return QString("#CCCCCC");
 	}
 
-	uint hash = qHash(text);
+	size_t hash = qHash(text);
 	int index = static_cast<int>(hash % s_standardColors.size());
 	return s_standardColors[index];
 }
