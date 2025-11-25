@@ -981,7 +981,7 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 		return QString("#CCCCCC");
 	}
 
-	size_t hash = qHash(text);
+	uint hash = qHash(text);
 	int index = static_cast<int>(hash % s_standardColors.size());
 	return s_standardColors[index];
 }
