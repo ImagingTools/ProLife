@@ -86,6 +86,13 @@ RemoteCollectionView {
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
 			internalUseFilterDelegate.setSelectedId("false", true)
 
+			if (params.timeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
+				let name = params.timeFilter.name
+				let data = params.timeFilter.data
+				timeFilterDelegate.setTimeFilter(data, name, true)
+			}
+
 			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 
 			container.collectionFilter.filterChanged()
@@ -112,6 +119,13 @@ RemoteCollectionView {
 			if (inUse){
 				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
 				licenseStatusFilterDelegate.setSelectedIndex(1, true)
+			}
+
+			if (params.timeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
+				let name = params.timeFilter.name
+				let data = params.timeFilter.data
+				timeFilterDelegate.setTimeFilter(data, name, true)
 			}
 
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")

@@ -5,6 +5,7 @@ import imtguigql 1.0
 import imtauthgui 1.0
 import imtgui 1.0
 import prolifeWorkspaceSdl 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 ElementView {
 	id: piechartElementView
@@ -19,6 +20,10 @@ ElementView {
 
 	property real chartHeight: Style.sizeHintS
 	property string customerId: ""
+	property TimeFilter timeFilter: TimeFilter {
+		m_timeUnit: "Week"
+		m_interpretationMode: "For"
+	}
 
 	signal legendClicked(string id, string  label, string color, int value)
 
@@ -45,6 +50,10 @@ ElementView {
 	}
 
 	onCustomerIdChanged: {
+		updateModel()
+	}
+
+	onTimeFilterChanged: {
 		updateModel()
 	}
 
@@ -77,6 +86,7 @@ ElementView {
 		inputObjectComp: Component {
 			ChartInput {
 				m_customerId: piechartElementView.customerId
+				m_timeFilter: piechartElementView.timeFilter
 			}
 		}
 		sdlObjectComp: Component {

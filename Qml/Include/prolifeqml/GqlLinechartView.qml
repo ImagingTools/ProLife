@@ -8,9 +8,8 @@ import prolifeWorkspaceSdl 1.0
 import com.imtcore.imtqml 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
-ComboBoxElementView {
+ElementView {
 	id: graph2dElementView
-	name: qsTr("License Creation")
 	controlWidth: 130
 	width: Style.sizeHintL
 	contentMargin: Style.marginM
@@ -21,6 +20,10 @@ ComboBoxElementView {
 
 	property real chartHeight: Style.sizeHintS
 	property string customerId: ""
+	property TimeFilter timeFilter: TimeFilter {
+		m_timeUnit: "Week"
+		m_interpretationMode: "For"
+	}
 
 	function updateModel(){
 		if (!visible){
@@ -54,6 +57,10 @@ ComboBoxElementView {
 		updateModel()
 	}
 
+	onTimeFilterChanged: {
+		updateModel()
+	}
+
 	onVisibleChanged: {
 		requestUpdateModel()
 	}
@@ -75,49 +82,6 @@ ComboBoxElementView {
 	QtObject {
 		id: internal
 		property bool updateRequested: false
-	}
-
-	model: TreeItemModel {
-		Component.onCompleted: {
-			let index = insertNewItem()
-			setData("id", "Week", index)
-			setData("name", qsTr("Last 7 Days"), index)
-			setData("mode", "For", index)
-
-			index = insertNewItem()
-			setData("id", "Month", index)
-			setData("name", qsTr("This Month"), index)
-			setData("mode", "Current", index)
-
-			index = insertNewItem()
-			setData("id", "Month", index)
-			setData("name", qsTr("Last Month"), index)
-			setData("mode", "Last", index)
-
-			index = insertNewItem()
-			setData("id", "Year", index)
-			setData("name", qsTr("This Year"), index)
-			setData("mode", "Current", index)
-
-			index = insertNewItem()
-			setData("id", "Year", index)
-			setData("name", qsTr("Last Year"), index)
-			setData("mode", "Last", index)
-		}
-	}
-
-	onCurrentIndexChanged: {
-		if (currentIndex < 0){
-			return
-		}
-
-		let unit = model.getData("id", currentIndex)
-		let mode = model.getData("mode", currentIndex)
-
-		timeFilter.m_timeUnit = unit
-		timeFilter.m_interpretationMode = mode
-
-		updateModel()
 	}
 
 	bottomComp: Component {
@@ -144,18 +108,12 @@ ComboBoxElementView {
 		visible: false
 	}
 
-	TimeFilter {
-		id: timeFilter
-		m_timeUnit: "Week"
-		m_interpretationMode: "For"
-	}
-
 	GqlSdlRequestSender {
 		id: licenseCreationInfoRequest
 		gqlCommandId: graph2dElementView.gqlCommandId
 		inputObjectComp: Component {
 			ChartInput {
-				m_timeFilter: timeFilter
+				m_timeFilter: graph2dElementView.timeFilter
 				m_customerId: graph2dElementView.customerId
 			}
 		}

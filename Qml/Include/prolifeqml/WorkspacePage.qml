@@ -37,6 +37,11 @@ ViewBase {
 	}
 
 	property string customerId
+	property TimeFilter timeFilter: null
+	property TimeFilter defaultTimeFilter: TimeFilter {
+		m_timeUnit: "Week"
+		m_interpretationMode: "For"
+	}
 
 	onCommandActivated: {
 		if (commandId === "UserActions"){
@@ -76,27 +81,6 @@ ViewBase {
 		}
 	}
 
-	function navigateToHardware(productName){
-		let productId = CachedProductCollection.getProductIdByName(productName)
-		let params = {}
-		params.productId = productId
-		params.customerId = root.customerId
-		params.inUse = true
-
-		NavigationController.navigate("Devices/<product-use-filter>", params)
-	}
-
-	function navigateToSoftware(productName){
-		let productId = CachedProductCollection.getProductIdByName(productName)
-		
-		let params = {}
-		params.productId = productId
-		params.customerId = root.customerId
-		params.inUse = true
-		
-		NavigationController.navigate("SoftwareProducts/<product-filter>", params)
-	}
-
 	Component {
 		id: workspacePageComp
 
@@ -118,25 +102,94 @@ ViewBase {
 					? (height - topRow.height - 4*spacing) / 2
 				: height - topRow.height - 3*spacing
 
+			function navigateToHardware(productName){
+				let productId = CachedProductCollection.getProductIdByName(productName)
+				let params = {}
+				params.productId = productId
+				params.customerId = root.customerId
+				params.inUse = true
+		
+				if (root.timeFilter){
+					let timeFilterObj = {}
+					timeFilterObj.name = timeFilterDelegate.mainButtonText
+					timeFilterObj.data = root.timeFilter
+					params.timeFilter = timeFilterObj
+				}
+		
+				NavigationController.navigate("Devices/<product-use-filter>", params)
+			}
+		
+			function navigateToSoftware(productName){
+				let productId = CachedProductCollection.getProductIdByName(productName)
+				
+				let params = {}
+				params.productId = productId
+				params.customerId = root.customerId
+				params.inUse = true
+		
+				if (root.timeFilter){
+					let timeFilterObj = {}
+					timeFilterObj.name = timeFilterDelegate.mainButtonText
+					timeFilterObj.data = root.timeFilter
+					params.timeFilter = timeFilterObj
+				}
+		
+				NavigationController.navigate("SoftwareProducts/<product-filter>", params)
+			}
+
 			Item {
 				x: topRow.x
 				y: -height - ((root.commandsPanelHeight - height) / 2)
 				z: parent.z + 1
-				width: customerFilterDelegate.width
-				height: customerFilterDelegate.height
+				width: filterRow.width
+				height: filterRow.height
 				
-				CustomerFilterDelegate {
-					id: customerFilterDelegate
-					
-					collectionFilter: CollectionFilter {}
-					visible: stackView.currentIndex == 0
-					
-					onOptionSelectionChanged: {
-						if (optionIds.length > 0){
-							root.customerId = optionIds[0]
+				visible: stackView.currentIndex == 0
+
+				Row {
+					id: filterRow
+					height: customerFilterDelegate.height
+					spacing: Style.spacingM
+					TimeFilterDelegate {
+						id: timeFilterDelegate
+						objectName: "TimeFilterDelegate"
+						collectionFilter: CollectionFilter {}
+						canTimeRangeEdit:false
+						timeFilter: TimeFilter {
+							m_timeUnit: "Week"
+							m_interpretationMode: "For"
 						}
-						else{
-							root.customerId = ""
+						
+						onAccepted: {
+							root.timeFilter = timeFilter.copyMe()
+						}
+
+						onClearFilter: {
+							root.timeFilter = null
+						}
+
+						onOpenFilter: {
+							if (timeFilterParamView){
+								timeFilterParamView.setItemVisible(0, false)
+								timeFilterParamView.setItemVisible(1, false)
+								timeFilterParamView.setItemName(2, qsTr("Last 7 Days"))
+								timeFilterParamView.setItemMode(2, "For")
+							}
+						}
+					}
+					
+					CustomerFilterDelegate {
+						id: customerFilterDelegate
+						objectName: "CustomerFilterDelegate"
+						collectionFilter: CollectionFilter {}
+
+						onOptionSelectionChanged: {
+							if (optionIds.length > 0){
+								root.customerId = optionIds[0]
+							}
+							else{
+								root.customerId = ""
+							}
 						}
 					}
 				}
@@ -152,12 +205,35 @@ ViewBase {
 				height: 110
 
 				property string customerId: root.customerId
+				property TimeFilter timeFilter: root.timeFilter
+				property bool updateRequested: false
 
 				signal loadingStart()
 				signal loadingStop()
 				
 				onCustomerIdChanged: {
-					getTotalSummaryInfoRequest.updateModel()
+					updateModel()
+				}
+
+				onTimeFilterChanged: {
+					updateModel()
+				}
+
+				onVisibleChanged: {
+					if (visible && updateRequested){
+						updateModel()
+						updateRequested = false
+					}
+				}
+				
+				function updateModel(){
+					if (!visible){
+						updateRequested = true
+						return
+					}
+
+					topRow.loadingStart()
+					getTotalSummaryInfoRequest.send()
 				}
 
 				GqlSdlRequestSender {
@@ -166,6 +242,7 @@ ViewBase {
 					inputObjectComp: Component {
 						ChartInput {
 							m_customerId: root.customerId
+							m_timeFilter: root.timeFilter
 						}
 					}
 
@@ -177,36 +254,30 @@ ViewBase {
 							}
 						}
 					}
-					
-					function updateModel(){
-						console.log("getTotalSummaryInfoRequest updateModel")
-						topRow.loadingStart()
-						send()
-					}
-					
+
 					Component.onCompleted: {
-						updateModel()
+						send()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnDevicesCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.updateModel()
+						topRow.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnSoftwareProductsCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.updateModel()
+						topRow.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnOrdersCollectionChanged"
 					onMessageReceived: {
-						getTotalSummaryInfoRequest.updateModel()
+						topRow.updateModel()
 					}
 				}
 
@@ -219,7 +290,8 @@ ViewBase {
 							name: model.item.m_total
 							titleFontSize: Style.fontSizeBXL
 							contentMargin: Style.marginM
-							
+							objectName: model.item.m_collectionId +  "Info"
+
 							onWidthChanged: {
 								if (!controlItem){
 									return
@@ -313,6 +385,7 @@ ViewBase {
 										height: Style.controlHeightM
 										text: qsTr("Create New")
 										widthFromDecorator: true
+										objectName: "CreateNewButton"
 										onClicked: {
 											let params = {}
 											params.createNew = true
@@ -329,6 +402,7 @@ ViewBase {
 										height: Style.controlHeightM
 										text: qsTr("View All")
 										widthFromDecorator: true
+										objectName: "ViewAllButton"
 										onClicked: {
 											let objectTypeId = model.item.m_objectTypeId
 											let collectionId = model.item.m_collectionId
@@ -391,6 +465,7 @@ ViewBase {
 		
 				GqlPiechartView {
 					id: softwareUsedPieChart
+					objectName: "SoftwareUsedPieChart"
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
 					name: qsTr("Active Software Instances by Product")
@@ -398,35 +473,38 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
+					timeFilter: root.timeFilter
 					onLegendClicked: {
-						root.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(label)
 					}
 				}
 		
 				GqlBarchartView {
 					id: softwareUsedBarChart
+					objectName: "SoftwareUsedBarChart"
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
 					name: qsTr("Active Software Instances by Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					currentIndex: 0
 					customerId: root.customerId
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					legendClickable: true
 					onLegendClicked: {
-						root.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(label)
 					}
 				}
 		
 				GqlLinechartView {
 					id: licenseCreationInfo
+					objectName: "LicenseCreationInfo"
 					width: chartsBlock.chartWidth
 					chartHeight: row1.chartHeight
 					name: qsTr("License Creation Activity")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					currentIndex: 0
 					customerId: root.customerId
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 				}
 			}
 		
@@ -454,6 +532,7 @@ ViewBase {
 		
 				GqlPiechartView {
 					id: hardwareUsedPieChart
+					objectName: "HardwareUsedPieChart"
 					width: chartsBlock.chartWidth
 					chartHeight: row2.chartHeight
 					name: qsTr("Active Hardware Instances by Product")
@@ -461,40 +540,51 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
+					timeFilter: root.timeFilter
 					onLegendClicked: {
-						root.navigateToHardware(label)
+						chartsBlock.navigateToHardware(label)
 					}
 				}
 		
 				GqlBarchartView {
 					id: hardwareUsedBarChart
+					objectName: "HardwareUsedBarChart"
 					width: chartsBlock.chartWidth
 					chartHeight: row2.chartHeight
 					name: qsTr("Active Hardware Instances by Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					currentIndex: 0
 					customerId: root.customerId
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					legendClickable: true
 					onLegendClicked: {
-						root.navigateToHardware(label)
+						chartsBlock.navigateToHardware(label)
 					}
 				}
 		
 				GqlPiechartView {
 					id: hardwareStatusInfo
+					objectName: "HardwareStatusInfo"
 					width: chartsBlock.chartWidth
 					chartHeight: row2.chartHeight
 					name: qsTr("Hardware Status")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 					subscriptionCommandId: "OnDevicesCollectionChanged"
 					customerId: root.customerId
+					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
 						let params = {}
 						let statusId = deviceProductionStatus.getStatusIdByName(label)
 						params.statusId = String(deviceProductionStatus.getStatusIndex(statusId))
 						params.customerId = root.customerId
+						
+						if (root.timeFilter){
+							let timeFilterObj = {}
+							timeFilterObj.name = timeFilterDelegate.mainButtonText
+							timeFilterObj.data = root.timeFilter
+							params.timeFilter = timeFilterObj
+						}
 
 						NavigationController.navigate("Devices/<status-filter>", params)
 					}

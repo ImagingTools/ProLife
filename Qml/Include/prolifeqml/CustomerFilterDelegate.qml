@@ -7,7 +7,7 @@ import imtauthgui 1.0
 FieldFilterDelegate {
 	id: customersDelegateFilter
 	name: qsTr("Customers")
-	visibleItemCount: 15
+	visibleItemCount: 20
 	defaultFieldFilter.m_fieldId: "CustomerId"
 	
 	OptionsListAdapter {

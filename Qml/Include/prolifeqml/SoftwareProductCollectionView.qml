@@ -155,11 +155,9 @@ RemoteCollectionView {
 		paths: ["<product-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			console.log("SoftwareProduct filter onActivated", params)
 			container.collectionFilter.clearAllFilters(true)
 
 			let productId = params.productId
-			let inUse = params.inUse
 
 			if (params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
@@ -169,9 +167,16 @@ RemoteCollectionView {
 			let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
 			productFilterDelegate.setSelectedId(productId, true)
 
-			if (inUse){
+			if (params.inUse){
 				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
 				licenseStatusFilterDelegate.setSelectedIndex(2, true)
+			}
+
+			if (params.timeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
+				let name = params.timeFilter.name
+				let data = params.timeFilter.data
+				timeFilterDelegate.setTimeFilter(data, name, true)
 			}
 
 			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")

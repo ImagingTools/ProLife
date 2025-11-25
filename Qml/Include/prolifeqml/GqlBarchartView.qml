@@ -8,7 +8,7 @@ import prolifeWorkspaceSdl 1.0
 import com.imtcore.imtqml 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
-ComboBoxElementView {
+ElementView {
 	id: barChartElementView
 	controlWidth: 130
 	width: Style.sizeHintM
@@ -22,6 +22,8 @@ ComboBoxElementView {
 	property string customerId: ""
 
 	property real chartHeight: Style.sizeHintS
+	
+	property TimeFilter timeFilter: null
 
 	property bool legendClickable: false
 	signal legendClicked(string id, string  label, string color, int value)
@@ -58,6 +60,10 @@ ComboBoxElementView {
 		updateModel()
 	}
 
+	onTimeFilterChanged: {
+		updateModel()
+	}
+
 	onVisibleChanged: {
 		requestUpdateModel()
 	}
@@ -79,50 +85,6 @@ ComboBoxElementView {
 	QtObject {
 		id: internal
 		property bool updateRequested: false
-	}
-
-	model:	TreeItemModel {
-		id: dateModel
-		Component.onCompleted: {
-			let index = insertNewItem()
-			setData("id", "Week", index)
-			setData("name", qsTr("Last 7 Days"), index)
-			setData("mode", "For", index)
-
-			index = insertNewItem()
-			setData("id", "Month", index)
-			setData("name", qsTr("This Month"), index)
-			setData("mode", "Current", index)
-
-			index = insertNewItem()
-			setData("id", "Month", index)
-			setData("name", qsTr("Last Month"), index)
-			setData("mode", "Last", index)
-
-			index = insertNewItem()
-			setData("id", "Year", index)
-			setData("name", qsTr("This Year"), index)
-			setData("mode", "Current", index)
-
-			index = insertNewItem()
-			setData("id", "Year", index)
-			setData("name", qsTr("Last Year"), index)
-			setData("mode", "Last", index)
-		}
-	}
-
-	onCurrentIndexChanged: {
-		if (currentIndex < 0){
-			return
-		}
-
-		let unit = model.getData("id", currentIndex)
-		let mode = model.getData("mode", currentIndex)
-
-		timeFilter.m_timeUnit = unit
-		timeFilter.m_interpretationMode = mode
-
-		updateModel()
 	}
 
 	bottomComp: Component {
@@ -178,18 +140,12 @@ ComboBoxElementView {
 		}
 	}
 
-	TimeFilter {
-		id: timeFilter
-		m_timeUnit: "Week"
-		m_interpretationMode: "For"
-	}
-
 	GqlSdlRequestSender {
 		id: barChartRequest
 		gqlCommandId: barChartElementView.gqlCommandId
 		inputObjectComp: Component {
 			ChartInput {
-				m_timeFilter: timeFilter
+				m_timeFilter: barChartElementView.timeFilter
 				m_customerId: barChartElementView.customerId
 			}
 		}

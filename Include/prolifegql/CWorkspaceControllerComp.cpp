@@ -318,6 +318,11 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		customerId = *arguments.input.Version_1_0->customerId;
 	}
 
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	iprm::CParamsSet selectionParams;
 	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CategoryId", "Software"));
 
@@ -328,6 +333,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("ProductUuid", elementId));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		AddTimeFilter(paramsSet, timeFilter);
 
 		if (!customerId.isEmpty()){
 			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
@@ -336,10 +342,14 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 		JoinGroupFilter(gqlRequest, paramsSet);
 
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
-		chartSegment.value = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
-		chartSegment.color = GenerateColorFromString(*chartSegment.label);
-		response.Version_1_0->segments->push_back(chartSegment);
+
+		int elementsCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		if (elementsCount > 0){
+			chartSegment.value = elementsCount;
+			chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
+			chartSegment.color = GenerateColorFromString(*chartSegment.label);
+			response.Version_1_0->segments->push_back(chartSegment);
+		}
 	}
 
 	return response;
@@ -453,6 +463,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("DeviceType", elementId));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		AddTimeFilter(paramsSet, timeFilter);
 
 		if (!customerId.isEmpty()){
 			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
@@ -461,11 +472,14 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 		JoinGroupFilter(gqlRequest, paramsSet);
 
 		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
-		chartSegment.value = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
-		chartSegment.color = GenerateColorFromString(*chartSegment.label);
-
-		response.Version_1_0->segments->push_back(chartSegment);
+		int elementsCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		if (elementsCount > 0){
+			chartSegment.value = elementsCount;
+			chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
+			chartSegment.color = GenerateColorFromString(*chartSegment.label);
+	
+			response.Version_1_0->segments->push_back(chartSegment);
+		}
 	}
 
 	return response;
@@ -495,12 +509,18 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareSt
 		customerId = *arguments.input.Version_1_0->customerId;
 	}
 
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	response.Version_1_0.Emplace();
 
 	iprm::CParamsSet selectionParams;
 	if (!customerId.isEmpty()){
 		AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 	}
+	AddTimeFilter(selectionParams, timeFilter);
 	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
 	JoinGroupFilter(gqlRequest, selectionParams);
 
@@ -570,6 +590,11 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		customerId = *arguments.input.Version_1_0->customerId;
 	}
 
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	bool isAdmin = false;
 	QByteArrayList userPermissions;
 	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
@@ -593,6 +618,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(paramsSet, timeFilter);
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
@@ -608,6 +634,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(inUseParamsSet, timeFilter);
 
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
@@ -618,6 +645,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(notInUseParamsSet, timeFilter);
 
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -637,6 +665,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(paramsSet, timeFilter);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
@@ -652,6 +681,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(inUseParamsSet, timeFilter);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
@@ -662,6 +692,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(notInUseParamsSet, timeFilter);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -681,6 +712,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		if (!customerId.isEmpty()){
 			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
 		}
+		AddTimeFilter(paramsSet, timeFilter);
 
 		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
@@ -968,6 +1000,27 @@ void CWorkspaceControllerComp::AddFieldFilter(iprm::CParamsSet& paramsSet, const
 	}
 
 	complexFilterPtr->AddFieldFilter(fieldFilter);
+}
+
+
+void CWorkspaceControllerComp::AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const
+{
+	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
+	if (complexFilterPtr == nullptr){
+		complexFilterPtr = new imtbase::CComplexCollectionFilter();
+		paramsSet.SetEditableParameter("ComplexFilter", complexFilterPtr, true);
+	}
+
+	if (complexFilterPtr == nullptr){
+		return;
+	}
+
+	imtbase::CTimeFilterParam timeFilterParam;
+	if (!m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilterParam, timeFilter)){
+		return;
+	}
+
+	complexFilterPtr->SetTimeFilter(timeFilterParam);
 }
 
 
