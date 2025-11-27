@@ -70,55 +70,41 @@ RemoteCollectionView {
 	}
 
 	NavigableItem {
-		paths: ["<status-filter>"]
+		paths: ["<hardware-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
 			container.collectionFilter.clearAllFilters(true)
 
-			if (params.customerId !== ""){
+			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
 				customersFilterDelegate.setSelectedId(params.customerId, true)
 			}
 
-			let statusFilterDelegate = container.filterMenu.getFilterDelegate("SensorStatus")
-			statusFilterDelegate.setSelectedId(params.statusId, true)
-
-			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
-			internalUseFilterDelegate.setSelectedId("false", true)
-
-			if (params.timeFilter){
-				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
-				let name = params.timeFilter.name
-				let data = params.timeFilter.data
-				timeFilterDelegate.setTimeFilter(data, name, true)
+			if (params.productId !== undefined && params.productId !== ""){
+				let productFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid)
+				productFilterDelegate.setSelectedId(params.productId, true)
 			}
 
-			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
-
-			container.collectionFilter.filterChanged()
-		}
-	}
-
-	NavigableItem {
-		paths: ["<product-use-filter>"]
-		parentSegment: container.collectionId
-		onActivated: {
-			container.collectionFilter.clearAllFilters(true)
-
-			let productId = params.productId
-			let inUse = params.inUse
-
-			if (params.customerId !== ""){
-				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
-				customersFilterDelegate.setSelectedId(params.customerId, true)
+			if (params.licenseId !== undefined && params.licenseId !== ""){
+				let licenseFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_licenseUuid)
+				licenseFilterDelegate.setSelectedId(params.licenseId, true)
 			}
 
-			let productFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid)
-			productFilterDelegate.setSelectedId(productId, true)
+			if (params.statusId !== undefined && params.statusId !== ""){
+				let statusFilterDelegate = container.filterMenu.getFilterDelegate("SensorStatus")
+				statusFilterDelegate.setSelectedId(params.statusId, true)
+			}
 
-			if (inUse){
-				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
-				licenseStatusFilterDelegate.setSelectedIndex(1, true)
+			if (params.inUse !== undefined){
+				if (params.inUse){
+					let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
+					licenseStatusFilterDelegate.setSelectedIndex(1, true)
+				}
+			}
+
+			if (params.internalUse !== undefined){
+				let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
+				internalUseFilterDelegate.setSelectedId("false", params.internalUse)
 			}
 
 			if (params.timeFilter){
@@ -127,9 +113,6 @@ RemoteCollectionView {
 				let data = params.timeFilter.data
 				timeFilterDelegate.setTimeFilter(data, name, true)
 			}
-
-			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
-			internalUseFilterDelegate.setSelectedId("false", true)
 
 			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 

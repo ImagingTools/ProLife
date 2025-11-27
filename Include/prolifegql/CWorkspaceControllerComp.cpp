@@ -10,10 +10,12 @@
 #include <imtauth/CUserGroupFilter.h>
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/IProductInstanceInfo.h>
+#include <imtlic/ILicenseDefinition.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/ICustomerInfo.h>
 
 
 namespace prolifegql
@@ -45,7 +47,51 @@ static QStringList s_standardColors = {
 	"#3F51B5", // Indigo
 	"#8BC34A", // Light Green
 	"#00BCD4", // Cyan
-	"#E91E63"  // Pink
+	"#E91E63", // Pink
+
+	"#673AB7", // Deep Purple
+	"#CDDC39", // Lime
+	"#FF5722", // Deep Orange
+	"#607D8B", // Blue Grey
+	"#FFEB3B", // Yellow
+	"#9E9E9E", // Grey
+	"#03A9F4", // Light Blue
+	"#8BC34A", // Light Green
+	"#FF4081", // Pink A200
+	"#7C4DFF", // Deep Purple A200
+
+	"#18FFFF", // Cyan A100
+	"#64FFDA", // Teal A100
+	"#69F0AE", // Green A100
+	"#B2FF59", // Light Green A100
+	"#EEFF41", // Lime A100
+	"#FFFF00", // Yellow A100
+	"#FFD740", // Amber A100
+	"#FF9E80", // Deep Orange A100
+	"#FF80AB", // Pink A100
+	"#EA80FC", // Purple A100
+
+	"#80DEEA", // Light Blue 100
+	"#80CBC4", // Teal 100
+	"#C5E1A5", // Light Green 200
+	"#E6EE9C", // Lime 200
+	"#FFF59D", // Yellow 200
+	"#FFE082", // Amber 200
+	"#EF9A9A", // Red 200
+	"#CE93D8", // Purple 200
+	"#9FA8DA", // Indigo 200
+	"#90CAF9", // Blue 200
+
+	"#26A69A", // Teal 400
+	"#42A5F5", // Blue 400
+	"#7E57C2", // Deep Purple 400
+	"#AB47BC", // Purple 400
+	"#EC407A", // Pink 400
+	"#D4E157", // Lime 400
+	"#FFCA28", // Amber 400
+	"#FF7043", // Deep Orange 400
+	"#5C6BC0", // Indigo 400
+	"#66BB6A"  // Green 400
 };
 
 
@@ -341,10 +387,10 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 
 		JoinGroupFilter(gqlRequest, paramsSet);
 
-		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
-
 		int elementsCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		if (elementsCount > 0){
+			sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
+
 			chartSegment.value = elementsCount;
 			chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
 			chartSegment.color = GenerateColorFromString(*chartSegment.label);
@@ -471,9 +517,10 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 
 		JoinGroupFilter(gqlRequest, paramsSet);
 
-		sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
 		int elementsCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		if (elementsCount > 0){
+			sdl::prolife::Workspace::CChartSegment::V1_0 chartSegment;
+
 			chartSegment.value = elementsCount;
 			chartSegment.label = m_productCollectionCompPtr->GetElementInfo(elementId, imtbase::ICollectionInfo::EIT_NAME).toString();
 			chartSegment.color = GenerateColorFromString(*chartSegment.label);
@@ -720,6 +767,154 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		orderCollectionInfo.icon = QStringLiteral("Icons/Order");
 		orderCollectionInfo.objectTypeId = QByteArrayLiteral("Order");
 		response.Version_1_0->summaryInfos->push_back(orderCollectionInfo);
+	}
+
+	return response;
+}
+
+
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCustomerPieChart(
+			const sdl::prolife::Workspace::CGetHardwareCustomerPieChartGqlRequest& /*getHardwareCustomerPieChartRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& /*errorMessage*/) const
+{
+	sdl::prolife::Workspace::CPieChartData response;
+
+	if (!m_accountCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'AccountCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	response.Version_1_0.Emplace();
+	response.Version_1_0->segments.Emplace();
+
+	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
+	for (const QByteArray& elementId : elementIds){
+		iprm::CParamsSet paramsSet;
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		int count = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		if (count > 0){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_accountCollectionCompPtr->GetObjectData(elementId, dataPtr)){
+				const prolifedata::ICustomerInfo* accountInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
+				if (accountInfoPtr != nullptr){
+					QString customerName = accountInfoPtr->GetName();
+					response.Version_1_0->segments->push_back(CreateChartSegment(count, customerName, GenerateColorFromString(customerName), elementId));
+				}
+			}
+		}
+	}
+
+	return response;
+}
+
+
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCustomerPieChart(
+			const sdl::prolife::Workspace::CGetSoftwareCustomerPieChartGqlRequest& /*getSoftwareCustomerPieChartRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& /*errorMessage*/) const
+{
+	sdl::prolife::Workspace::CPieChartData response;
+
+	if (!m_accountCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'AccountCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	if (!m_softwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	response.Version_1_0.Emplace();
+	response.Version_1_0->segments.Emplace();
+
+	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
+	for (const QByteArray& elementId : elementIds){
+		iprm::CParamsSet paramsSet;
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		int count = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		if (count > 0){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_accountCollectionCompPtr->GetObjectData(elementId, dataPtr)){
+				const prolifedata::ICustomerInfo* accountInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
+				if (accountInfoPtr != nullptr){
+					QString customerName = accountInfoPtr->GetName();
+					response.Version_1_0->segments->push_back(CreateChartSegment(count, customerName, GenerateColorFromString(customerName), elementId));
+				}
+			}
+		}
+	}
+
+	return response;
+}
+
+
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareConfigurationPieChart(
+			const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& /*getHardwareConfigurationPieChartRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& /*errorMessage*/) const
+{
+	sdl::prolife::Workspace::CPieChartData response;
+
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	if (!m_licenseCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'LicenseCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	if (!m_productCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'ProductCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	response.Version_1_0.Emplace();
+	response.Version_1_0->segments.Emplace();
+
+	iprm::CParamsSet selectionParams;
+	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CategoryId", "Hardware"));
+
+	imtbase::ICollectionInfo::Ids productElementIds = m_productCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
+	for (const imtbase::ICollectionInfo::Id& productElementId : productElementIds){
+		iprm::CParamsSet paramsSet;
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("ProductId", productElementId));
+		imtbase::ICollectionInfo::Ids licenseElementIds = m_licenseCollectionCompPtr->GetElementIds(0, -1, &paramsSet);
+
+		for (const imtbase::ICollectionInfo::Id& licenseElementId : licenseElementIds){
+			iprm::CParamsSet hardwareSelectionParams;
+			AddFieldFilter(hardwareSelectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+			AddFieldFilter(hardwareSelectionParams, imtbase::IComplexCollectionFilter::FieldFilter("ConfigurationType", licenseElementId));
+			JoinGroupFilter(gqlRequest, hardwareSelectionParams);
+
+			QString licenseName;
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_licenseCollectionCompPtr->GetObjectData(licenseElementId, dataPtr)){
+				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
+				if (licenseInfoPtr != nullptr){
+					licenseName = licenseInfoPtr->GetLicenseName();
+				}
+			}
+
+			int count = m_hardwareCollectionCompPtr->GetElementsCount(&hardwareSelectionParams);
+			if (count > 0){
+				response.Version_1_0->segments->push_back(CreateChartSegment(count, licenseName, GenerateColorFromString(licenseName), licenseElementId));
+			}
+		}
 	}
 
 	return response;
@@ -981,7 +1176,9 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 		return QString("#CCCCCC");
 	}
 
-	uint hash = qHash(text);
+	QString uniqueKey = text + "_suffix";
+	uint hash = qHash(uniqueKey);
+
 	int index = static_cast<int>(hash % s_standardColors.size());
 	return s_standardColors[index];
 }
@@ -1021,6 +1218,18 @@ void CWorkspaceControllerComp::AddTimeFilter(iprm::CParamsSet& paramsSet, const 
 	}
 
 	complexFilterPtr->SetTimeFilter(timeFilterParam);
+}
+
+
+sdl::prolife::Workspace::CChartSegment::V1_0 CWorkspaceControllerComp::CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId) const
+{
+	sdl::prolife::Workspace::CChartSegment::V1_0 segment;
+	segment.id = segmentId;
+	segment.label = label;
+	segment.value = value;
+	segment.color = color;
+
+	return segment;
 }
 
 

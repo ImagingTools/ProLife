@@ -96,6 +96,7 @@ ElementView {
 					for (let i = 0; i < m_segments.count; ++i){
 						let obj = {}
 						let item = m_segments.get(i).item
+						obj.id = item.m_id
 						obj.value = item.m_value
 						obj.label = item.m_label
 						obj.color = item.m_color

@@ -26,6 +26,11 @@ ViewBase {
 		if (viewUserActions){
 			stackView.addPage(userActionsPageComp)
 		}
+
+		if (PermissionsController.checkPermission("ViewAnalytics")){
+			stackView.addPage(statisticsPageComp)
+		}
+
 		stackView.setCurrentIndex(0)
 		
 		if (commandsController){
@@ -33,6 +38,8 @@ ViewBase {
 			commandsController.setToggled("Dashboard", true)
 			commandsController.setIsToggleable("UserActions", true)
 			commandsController.setToggled("UserActions", false)
+			commandsController.setIsToggleable("Analytics", true)
+			commandsController.setToggled("Analytics", false)
 		}
 	}
 
@@ -44,10 +51,8 @@ ViewBase {
 	}
 
 	onCommandActivated: {
-		if (commandId === "UserActions"){
-			NavigationController.push("Workspace/UserActions")
-		}
-		
+		NavigationController.push("Workspace/" + commandId)
+
 		checkCurrentPage(commandId)
 	}
 
@@ -58,22 +63,21 @@ ViewBase {
 		else if (commandId === "UserActions"){
 			stackView.setCurrentIndex(1)
 		}
-		
+		else if (commandId === "Analytics"){
+			stackView.setCurrentIndex(2)
+		}
+
 		commandsController.setToggled("Dashboard", commandId === "Dashboard")
 		commandsController.setToggled("UserActions", commandId === "UserActions")
+		commandsController.setToggled("Analytics", commandId === "Analytics")
 	}
 
 	NavigableItem {
 		id: navigableItem
 		parentSegment: "Workspace"
-		paths: ["Dashboard", "UserActions"]
+		paths: ["Dashboard", "UserActions", "Analytics"]
 		onActivated: {
-			if (matchedPath === paths[0]){
-				root.checkCurrentPage("Dashboard")
-			}
-			else if (matchedPath === paths[1]){
-				root.checkCurrentPage("UserActions")
-			}
+			root.checkCurrentPage(matchedPath)
 		}
 		
 		onParentActivated: {
@@ -95,6 +99,7 @@ ViewBase {
 				(width >= chartDefaultWidth * chartCountPerRow + spacing * (chartCountPerRow - 1))
 				? chartDefaultWidth
 				: (width - 2*spacing * (chartCountPerRow - 1)) / chartCountPerRow
+
 			property real rowHeight:
 				(!row1.visible && !row2.visible)
 					? height - topRow.height - 2*spacing
@@ -102,12 +107,17 @@ ViewBase {
 					? (height - topRow.height - 4*spacing) / 2
 				: height - topRow.height - 3*spacing
 
-			function navigateToHardware(productName){
+			function navigateToHardware(productName, inUse, statusId){
 				let productId = CachedProductCollection.getProductIdByName(productName)
 				let params = {}
 				params.productId = productId
 				params.customerId = root.customerId
-				params.inUse = true
+				params.inUse = inUse
+				params.internalUse = false
+
+				if (statusId){
+					params.statusId = statusId
+				}
 		
 				if (root.timeFilter){
 					let timeFilterObj = {}
@@ -116,7 +126,7 @@ ViewBase {
 					params.timeFilter = timeFilterObj
 				}
 		
-				NavigationController.navigate("Devices/<product-use-filter>", params)
+				NavigationController.navigate("Devices/<hardware-filter>", params)
 			}
 		
 			function navigateToSoftware(productName){
@@ -134,11 +144,11 @@ ViewBase {
 					params.timeFilter = timeFilterObj
 				}
 		
-				NavigationController.navigate("SoftwareProducts/<product-filter>", params)
+				NavigationController.navigate("SoftwareProducts/<software-filter>", params)
 			}
 
 			Item {
-				x: topRow.x
+				x: row1.visible ? row1.x : row2.visible ? row2.x : Style.spacingM
 				y: -height - ((root.commandsPanelHeight - height) / 2)
 				z: parent.z + 1
 				width: filterRow.width
@@ -166,15 +176,6 @@ ViewBase {
 
 						onClearFilter: {
 							root.timeFilter = null
-						}
-
-						onOpenFilter: {
-							if (timeFilterParamView){
-								timeFilterParamView.setItemVisible(0, false)
-								timeFilterParamView.setItemVisible(1, false)
-								timeFilterParamView.setItemName(2, qsTr("Last 7 Days"))
-								timeFilterParamView.setItemMode(2, "For")
-							}
 						}
 					}
 					
@@ -292,8 +293,17 @@ ViewBase {
 							contentMargin: Style.marginM
 							objectName: model.item.m_collectionId +  "Info"
 
+							Component.onCompleted: {
+								checkWidth()
+							}
+
 							onWidthChanged: {
+								checkWidth()
+							}
+							
+							function checkWidth(){
 								if (!controlItem){
+									controlItem.width = 0
 									return
 								}
 
@@ -304,6 +314,7 @@ ViewBase {
 									controlItem.width = 0
 								}
 							}
+
 							bottomComp: Component {
 								Row {
 									height: Style.marginL
@@ -542,7 +553,7 @@ ViewBase {
 					customerId: root.customerId
 					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label)
+						chartsBlock.navigateToHardware(label, true)
 					}
 				}
 		
@@ -558,7 +569,7 @@ ViewBase {
 					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label)
+						chartsBlock.navigateToHardware(label, true)
 					}
 				}
 		
@@ -574,19 +585,8 @@ ViewBase {
 					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						let params = {}
 						let statusId = deviceProductionStatus.getStatusIdByName(label)
-						params.statusId = String(deviceProductionStatus.getStatusIndex(statusId))
-						params.customerId = root.customerId
-						
-						if (root.timeFilter){
-							let timeFilterObj = {}
-							timeFilterObj.name = timeFilterDelegate.mainButtonText
-							timeFilterObj.data = root.timeFilter
-							params.timeFilter = timeFilterObj
-						}
-
-						NavigationController.navigate("Devices/<status-filter>", params)
+						chartsBlock.navigateToHardware(label, false, String(deviceProductionStatus.getStatusIndex(statusId)))
 					}
 					
 					DeviceProductionStatus {
@@ -595,7 +595,6 @@ ViewBase {
 				}
 			}
 		}
-		
 	}
 	
 	Component {
@@ -604,7 +603,13 @@ ViewBase {
 			height: 500
 		}
 	}
-	
+
+	Component {
+		id: statisticsPageComp
+		StatisticsPage {
+		}
+	}
+
 	StackView {
 		id: stackView
 		anchors.fill: parent

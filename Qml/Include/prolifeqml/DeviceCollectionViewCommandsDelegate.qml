@@ -711,8 +711,9 @@ DocumentCollectionViewDelegate {
 						function registerFilters(){
 							registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
 							registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
-							registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
-							
+							if (PermissionsController.checkPermission("ViewAccounts")){
+								registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+							}
 						}
 					}
 				}

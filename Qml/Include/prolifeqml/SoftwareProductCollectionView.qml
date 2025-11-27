@@ -152,20 +152,20 @@ RemoteCollectionView {
 	}
 	
 	NavigableItem {
-		paths: ["<product-filter>"]
+		paths: ["<software-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
 			container.collectionFilter.clearAllFilters(true)
-
-			let productId = params.productId
 
 			if (params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
 				customersFilterDelegate.setSelectedId(params.customerId, true)
 			}
 
-			let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
-			productFilterDelegate.setSelectedId(productId, true)
+			if (params.productId !== undefined && params.productId !== ""){
+				let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
+				productFilterDelegate.setSelectedId(productId, params.productId)
+			}
 
 			if (params.inUse){
 				let licenseStatusFilterDelegate = container.filterMenu.getFilterDelegate("LicenseStatus")
@@ -179,8 +179,10 @@ RemoteCollectionView {
 				timeFilterDelegate.setTimeFilter(data, name, true)
 			}
 
-			let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
-			internalUseFilterDelegate.setSelectedId("false", true)
+			if (params.internalUse !== undefined){
+				let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
+				internalUseFilterDelegate.setSelectedId("false", params.internalUse)
+			}
 
 			container.collectionFilter.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")
 			container.collectionFilter.filterChanged()

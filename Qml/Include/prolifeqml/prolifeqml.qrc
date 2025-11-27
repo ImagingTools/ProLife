@@ -42,5 +42,6 @@
 	<file alias="ProLife/GqlPiechartView.qml">GqlPiechartView.qml</file>
 	<file alias="ProLife/GqlLinechartView.qml">GqlLinechartView.qml</file>
 	<file alias="ProLife/GqlBarchartView.qml">GqlBarchartView.qml</file>
+	<file alias="ProLife/StatisticsPage.qml">StatisticsPage.qml</file>
     </qresource>
 </RCC>

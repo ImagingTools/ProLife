@@ -15,6 +15,7 @@ type ChartAxes {
 }
 
 type ChartSegment {
+	id: ID
 	label: String!
 	value: Int!
 	color: String
@@ -78,6 +79,9 @@ type Query {
 	GetHardwareUsedPieChart (input: ChartInput): PieChartData!
 	GetHardwareStatusInfo (input: ChartInput): PieChartData!
 	GetTotalSummaryInfo (input: ChartInput): TotalSummaryInfo!
+	GetHardwareCustomerPieChart (input: ChartInput): PieChartData!
+	GetSoftwareCustomerPieChart (input: ChartInput): PieChartData!
+	GetHardwareConfigurationPieChart (input: ChartInput): PieChartData!
 }
 
 

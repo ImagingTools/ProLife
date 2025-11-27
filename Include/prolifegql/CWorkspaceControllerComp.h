@@ -27,8 +27,10 @@ public:
 		I_ASSIGN(m_softwareCollectionCompPtr, "SoftwareCollection", "Software collection", true, "SoftwareCollection");
 		I_ASSIGN(m_hardwareCollectionCompPtr, "HardwareCollection", "Hardware collection", true, "HardwareCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
+		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_userActionCollectionCompPtr, "UserActionCollection", "User action collection", true, "UserActionCollection");
+		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 	I_END_COMPONENT
 
 protected:
@@ -59,6 +61,18 @@ protected:
 				const sdl::prolife::Workspace::CGetTotalSummaryInfoGqlRequest& getTotalSummaryInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareCustomerPieChart(
+				const sdl::prolife::Workspace::CGetHardwareCustomerPieChartGqlRequest& getHardwareCustomerPieChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CPieChartData OnGetSoftwareCustomerPieChart(
+				const sdl::prolife::Workspace::CGetSoftwareCustomerPieChartGqlRequest& getSoftwareCustomerPieChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareConfigurationPieChart(
+				const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& getHardwareConfigurationPieChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 private:
 	bool PrepareDateFilter(
@@ -78,13 +92,16 @@ private:
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
+	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr); // Lisa Licenses
 	I_REF(imtbase::IObjectCollection, m_userActionCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 
 private:
 	imtserverapp::CTimeFilterParamRepresentationController m_timeFilterParamRepresentationController;
