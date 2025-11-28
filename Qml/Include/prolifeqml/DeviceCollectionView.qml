@@ -104,7 +104,12 @@ RemoteCollectionView {
 
 			if (params.internalUse !== undefined){
 				let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
-				internalUseFilterDelegate.setSelectedId("false", params.internalUse)
+				if (!params.internalUse){
+					internalUseFilterDelegate.setSelectedId("false", true)
+				}
+				else{
+					internalUseFilterDelegate.setSelectedId("true", true)
+				}
 			}
 
 			if (params.timeFilter){

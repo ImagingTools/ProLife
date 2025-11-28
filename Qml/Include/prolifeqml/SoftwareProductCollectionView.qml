@@ -164,7 +164,7 @@ RemoteCollectionView {
 
 			if (params.productId !== undefined && params.productId !== ""){
 				let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
-				productFilterDelegate.setSelectedId(productId, params.productId)
+				productFilterDelegate.setSelectedId(params.productId, true)
 			}
 
 			if (params.inUse){
@@ -181,7 +181,12 @@ RemoteCollectionView {
 
 			if (params.internalUse !== undefined){
 				let internalUseFilterDelegate = container.filterMenu.getFilterDelegate("internalUse")
-				internalUseFilterDelegate.setSelectedId("false", params.internalUse)
+				if (!params.internalUse){
+					internalUseFilterDelegate.setSelectedId("false", true)
+				}
+				else{
+					internalUseFilterDelegate.setSelectedId("true", true)
+				}
 			}
 
 			container.collectionFilter.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")

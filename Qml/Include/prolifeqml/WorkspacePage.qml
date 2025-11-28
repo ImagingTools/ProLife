@@ -136,6 +136,7 @@ ViewBase {
 				params.productId = productId
 				params.customerId = root.customerId
 				params.inUse = true
+				params.internalUse = false
 		
 				if (root.timeFilter){
 					let timeFilterObj = {}
