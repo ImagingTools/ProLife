@@ -155,7 +155,9 @@ RemoteCollectionView {
 		paths: ["<software-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
+			console.log("clearAllFilters 1",params)
 			container.collectionFilter.clearAllFilters(true)
+			console.log("clearAllFilters 2")
 
 			if (params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")

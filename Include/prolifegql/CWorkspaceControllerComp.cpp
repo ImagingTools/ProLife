@@ -1170,16 +1170,26 @@ bool CWorkspaceControllerComp::JoinGroupFilter(const imtgql::IGqlRequest& gqlReq
 }
 
 
+uint CWorkspaceControllerComp::fnv1a(const QByteArray& data) const
+{
+	uint hash = 2166136261u;
+	for (uchar c : data){
+		hash ^= c;
+		hash *= 16777619u;
+	}
+
+	return hash;
+}
+
+
 QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) const
 {
 	if (text.isEmpty()){
-		return QString("#CCCCCC");
+		return "#CCCCCC";
 	}
 
-	QString uniqueKey = text + "_suffix";
-	uint hash = qHash(uniqueKey);
-
-	int index = static_cast<int>(hash % s_standardColors.size());
+	uint hash = fnv1a(text.toUtf8());
+	int index = hash % s_standardColors.size();
 	return s_standardColors[index];
 }
 

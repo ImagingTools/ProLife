@@ -44,10 +44,10 @@ ViewBase {
 	}
 
 	property string customerId
-	property TimeFilter timeFilter: null
+	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
-		m_timeUnit: "Week"
-		m_interpretationMode: "For"
+		m_timeUnit: "Year"
+		m_interpretationMode: "This"
 	}
 
 	onCommandActivated: {
@@ -165,12 +165,12 @@ ViewBase {
 						id: timeFilterDelegate
 						objectName: "TimeFilterDelegate"
 						collectionFilter: CollectionFilter {}
-						canTimeRangeEdit:false
-						timeFilter: TimeFilter {
-							m_timeUnit: "Week"
-							m_interpretationMode: "For"
+						canTimeRangeEdit: false
+
+						Component.onCompleted: {
+							setTimeFilter(root.defaultTimeFilter, qsTr("This year"), true)
 						}
-						
+
 						onAccepted: {
 							root.timeFilter = timeFilter.copyMe()
 						}
@@ -485,7 +485,7 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
-					timeFilter: root.timeFilter
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					onLegendClicked: {
 						chartsBlock.navigateToSoftware(label)
 					}
@@ -552,7 +552,7 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
-					timeFilter: root.timeFilter
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					onLegendClicked: {
 						chartsBlock.navigateToHardware(label, true)
 					}
@@ -583,7 +583,7 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 					subscriptionCommandId: "OnDevicesCollectionChanged"
 					customerId: root.customerId
-					timeFilter: root.timeFilter
+					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
 					legendClickable: true
 					onLegendClicked: {
 						let statusId = deviceProductionStatus.getStatusIdByName(label)

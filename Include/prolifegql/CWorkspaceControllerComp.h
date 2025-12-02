@@ -89,6 +89,7 @@ private:
 				const imtgql::CGqlRequest& gqlRequest,
 				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
+	uint fnv1a(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
