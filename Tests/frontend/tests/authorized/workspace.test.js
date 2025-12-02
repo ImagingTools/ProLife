@@ -50,3 +50,9 @@ test('Create New / View All', async ({ page }) => {
   await checkScreenshot(page, '9-workspace-order-create-new.png')
   await clickOnPage(page, "Workspace"); // Workspace page click
 });
+
+test('Analytics', async ({ page }) => {
+  await clickOnCommand(page, "Analytics"); // Analytics tab click
+  await checkScreenshot(page, '10-workspace-analytics.png')
+});
+
