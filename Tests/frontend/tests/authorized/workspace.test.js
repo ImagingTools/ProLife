@@ -16,8 +16,9 @@ test('User Actions', async ({ page }) => {
 });
 
 test('Graphics Time Filter', async ({ page }) => {
-  await selectComboBox(page, "ThisMonth", ["SoftwareUsedBarChart", "ComboBox"])
-  await checkScreenshot(page, '2-software-barchart-this-month.png')
+  await clickOnButton(page, ["TimeFilterDelegate"]) // Date filter click
+  await clickOnButton(page, ["TimeFilterParamView", "Month_Current"]) // This Month click
+  await checkScreenshot(page, '2-workspace-time-filter.png')
 });
 
 test('Customer Filter', async ({ page }) => {
