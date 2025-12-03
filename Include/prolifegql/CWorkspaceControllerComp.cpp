@@ -119,11 +119,6 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 		return response;
 	}
 
-	QByteArray customerId;
-	if (arguments.input.Version_1_0->customerId.HasValue()){
-		customerId = *arguments.input.Version_1_0->customerId;
-	}
-
 	response.Version_1_0.Emplace();
 
 	response.Version_1_0->axes.Emplace();
@@ -162,106 +157,10 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 		}
 	}
 
-	imtbase::ITimeFilterParam::TimeUnit timeUnit;
-	imtbase::ITimeFilterParam::InterpretationMode mode;
-
-	QDate startDate, endDate;
-	PrepareDateFilter(timeFilter, startDate, endDate, timeUnit, mode);
-
-	int totalCreated = 0;
-	int maxCount = 0;
-	QString maxLabel;
-
-	auto addPoint = [&](int x, int y, const QString& label){
-		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 point;
-		point.x = x;
-		point.y = y;
-		response.Version_1_0->points->push_back(point);
-		response.Version_1_0->labels->push_back(label);
-	};
-
-	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
-		response.Version_1_0->axes->xLabel = "Days";
-
-		int dayIndex = 0;
-		for (QDate d = startDate; d <= endDate; d = d.addDays(1), ++dayIndex){
-			int count = licenseCountByDateMap.value(d, 0);
-			addPoint(dayIndex, count, d.toString("dd MMM"));
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = d.toString("dd MMM");
-			}
-		}
+	if (!BuildLineChart(licenseCountByDateMap, getLicenseCreationInfoRequest.GetRequestedArguments().input, "Created Licenses", *response.Version_1_0)){
+		errorMessage = QString("Unable to build line chart data. Internal error");
+		return response;
 	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH){
-		response.Version_1_0->axes->xLabel = "Weeks";
-
-		int weekIndex = 0;
-		QDate iter = startDate;
-
-		while (iter <= endDate){
-			QDate weekStart = iter;
-			QDate weekEnd = weekStart.addDays(6);
-			if (weekEnd > endDate)
-				weekEnd = endDate;
-
-			int count = 0;
-			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1))
-				count += licenseCountByDateMap.value(d, 0);
-
-			QString rangeLabel;
-			if (weekStart.month() == weekEnd.month()){
-				rangeLabel = QString("%1–%2 %3")
-								 .arg(weekStart.toString("dd"))
-								 .arg(weekEnd.toString("dd"))
-								 .arg(weekEnd.toString("MMM"));
-			}
-			else{
-				rangeLabel = QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
-			}
-
-			addPoint(weekIndex, count, rangeLabel);
-
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = weekStart.toString("dd MMM");
-			}
-
-			iter = weekEnd.addDays(1);
-			++weekIndex;
-		}
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR){
-		response.Version_1_0->axes->xLabel = "Months";
-
-		for (int month = 1; month <= 12; ++month){
-			QDate monthStart(startDate.year(), month, 1);
-			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
-
-			int count = 0;
-			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1))
-				count += licenseCountByDateMap.value(d, 0);
-
-			addPoint(month - 1, count, monthStart.toString("MMM"));
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = monthStart.toString("MMM");
-			}
-		}
-	}
-
-	sdl::prolife::Workspace::CChartSummary::V1_0 licenseChartSummary;
-	licenseChartSummary.total = totalCreated;
-
-	sdl::prolife::Workspace::CChartSegment::V1_0 maxChartSegment;
-	maxChartSegment.value = maxCount;
-	maxChartSegment.label = maxLabel;
-	licenseChartSummary.maxItem = maxChartSegment;
-
-	response.Version_1_0->summary = licenseChartSummary;
 
 	return response;
 }
@@ -921,7 +820,135 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 }
 
 
+
+sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCreationBarChart(
+			const sdl::prolife::Workspace::CGetSoftwareCreationBarChartGqlRequest& getSoftwareCreationBarChartRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CBarChartData response;
+
+	if (!m_softwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	return GetItemsCreationBarChart(
+				*m_softwareCollectionCompPtr,
+				getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
+				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
+				errorMessage);
+}
+
+
+sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareCreationBarChart(
+			const sdl::prolife::Workspace::CGetHardwareCreationBarChartGqlRequest& getHardwareCreationBarChartRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CBarChartData response;
+
+	if (!m_hardwareCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	return GetItemsCreationBarChart(
+				*m_hardwareCollectionCompPtr,
+				getHardwareCreationBarChartRequest.GetRequestedArguments().input,
+				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
+				errorMessage);
+}
+
+
+sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCreationLineChart(
+			const sdl::prolife::Workspace::CGetOrderCreationLineChartGqlRequest& request,
+			const imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CLineChartData response;
+
+	if (!m_orderCollectionCompPtr.IsValid()) {
+		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	iprm::CParamsSet selectionParams;
+	const auto& input = request.GetRequestedArguments().input;
+	PrepareChartFilter(selectionParams, input, true);
+
+	QMap<QDate, int> dailyCounts;
+
+	const imtbase::ICollectionInfo::Ids elementIds = m_orderCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
+	for (const imtbase::ICollectionInfo::Id& id : elementIds){
+		idoc::MetaInfoPtr elementMetaInfoPtr = m_orderCollectionCompPtr->GetElementMetaInfo(id);
+		if (!elementMetaInfoPtr.IsValid()){
+			continue;
+		}
+
+		const QDate date = elementMetaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME)
+							.toDateTime()
+							.date();
+
+		QString dateStr = date.toString();
+		dailyCounts[date] += 1;
+	}
+
+	response.Version_1_0.Emplace();
+
+	if (!BuildLineChart(dailyCounts, input, "Created Orders", *response.Version_1_0)) {
+		errorMessage = "Unable to build line chart data. Internal error";
+	}
+	
+	return response;
+}
+
+
+
 // private methods
+
+sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarChart(
+			const imtbase::IObjectCollection& collection,
+			const sdl::prolife::Workspace::CChartInput& chartInput,
+			int nameMetaInfoType,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CBarChartData response;
+
+	if (!chartInput.Version_1_0.HasValue()){
+		Q_ASSERT(false);
+		return response;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (chartInput.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *chartInput.Version_1_0->timeFilter;
+	}
+
+	iprm::CParamsSet selectionParams;
+	AddTimeFilter(selectionParams, timeFilter);
+
+	QMap<QDate, QMap<QString, int>> resultMap;
+	imtbase::ICollectionInfo::Ids elementIds = collection.GetElementIds(0, -1, &selectionParams);
+	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
+		idoc::MetaInfoPtr elementMetaInfoPtr = collection.GetElementMetaInfo(elementId);
+		idoc::MetaInfoPtr dataMetaInfoPtr = collection.GetDataMetaInfo(elementId);
+		if (elementMetaInfoPtr.IsValid() && dataMetaInfoPtr.IsValid()){
+			QDateTime insertionTime = elementMetaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME).toDateTime();
+			QString productName = dataMetaInfoPtr->GetMetaInfo(nameMetaInfoType).toString();
+			resultMap[insertionTime.date()][productName]++;
+		}
+	}
+
+	response.Version_1_0.Emplace();
+	if (!BuildBarChart(resultMap, timeFilter, "Created Instances", *response.Version_1_0)){
+		errorMessage = QString("Unable to build bar chart data. Internal error");
+		return response;
+	}
+
+	return response;
+}
+
 
 bool CWorkspaceControllerComp::PrepareDateFilter(
 			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
@@ -935,30 +962,31 @@ bool CWorkspaceControllerComp::PrepareDateFilter(
 		return false;
 	}
 
-	imtbase::ITimeFilterParam::TimeUnit unit = timeFilter.GetTimeUnit();
-	timeUnit = unit;
+	timeUnit = timeFilter.GetTimeUnit();
+	if (timeUnit == imtbase::ITimeFilterParam::TU_CUSTOM){
+		timeUnit = imtbase::ITimeFilterParam::TU_YEAR;
+	}
 
-	imtbase::ITimeFilterParam::InterpretationMode mode = timeFilter.GetInterpretationMode();
-	timeMode = mode;
+	timeMode = timeFilter.GetInterpretationMode();
 
 	QDate currentDate = QDate::currentDate();
-	if (unit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
+	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && timeMode == imtbase::ITimeFilterParam::IM_FOR){
 		endDate = currentDate;
 		startDate = currentDate.addDays(-6);
 	}
-	else if (unit == imtbase::ITimeFilterParam::TU_MONTH && mode == imtbase::ITimeFilterParam::IM_CURRENT){
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && timeMode == imtbase::ITimeFilterParam::IM_CURRENT){
 		startDate = QDate(currentDate.year(), currentDate.month(), 1);
 		endDate = startDate.addMonths(1).addDays(-1);
 	}
-	else if (unit == imtbase::ITimeFilterParam::TU_MONTH && mode == imtbase::ITimeFilterParam::IM_LAST){
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && timeMode == imtbase::ITimeFilterParam::IM_LAST){
 		endDate = QDate(currentDate.year(), currentDate.month(), 1).addDays(-1);
 		startDate = QDate(endDate.year(), endDate.month(), 1);
 	}
-	else if (unit == imtbase::ITimeFilterParam::TU_YEAR && mode == imtbase::ITimeFilterParam::IM_CURRENT){
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && timeMode == imtbase::ITimeFilterParam::IM_CURRENT){
 		startDate = QDate(currentDate.year(), 1, 1);
 		endDate = QDate(currentDate.year(), 12, 31);
 	}
-	else if (unit == imtbase::ITimeFilterParam::TU_YEAR && mode == imtbase::ITimeFilterParam::IM_LAST){
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && timeMode == imtbase::ITimeFilterParam::IM_LAST){
 		startDate = QDate(currentDate.year() - 1, 1, 1);
 		endDate = QDate(currentDate.year() - 1, 12, 31);
 	}
@@ -978,8 +1006,8 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const
 {
 	QDate startDate, endDate;
-	imtbase::ITimeFilterParam::TimeUnit unit;
-	imtbase::ITimeFilterParam::InterpretationMode mode;
+	imtbase::ITimeFilterParam::TimeUnit unit = imtbase::ITimeFilterParam::TU_YEAR;
+	imtbase::ITimeFilterParam::InterpretationMode mode = imtbase::ITimeFilterParam::IM_CURRENT;
 
 	PrepareDateFilter(timeFilterSdl, startDate, endDate, unit, mode);
 
@@ -1038,7 +1066,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			bar.label = (weekStart.month() == weekEnd.month())
 				? QString("%1–%2 %3").arg(weekStart.toString("dd")).arg(weekEnd.toString("dd")).arg(weekEnd.toString("MMM"))
 				: QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
-	
+
 			barChartData.axes->xLabel = "Weeks";
 			for (auto it = weeklyMap.constBegin(); it != weeklyMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
@@ -1075,7 +1103,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 			sdl::prolife::Workspace::CChartBar::V1_0 bar;
 			bar.segments.Emplace();
 			bar.label = monthStart.toString("MMM");
-			barChartData.axes->xLabel = "Month";
+			barChartData.axes->xLabel = "Months";
 
 			for (auto it = monthMap.constBegin(); it != monthMap.constEnd(); ++it){
 				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
@@ -1106,6 +1134,127 @@ bool CWorkspaceControllerComp::BuildBarChart(
 	summary.maxItem = maxSeg;
 
 	barChartData.summary = summary;
+
+	return true;
+}
+
+
+
+bool CWorkspaceControllerComp::BuildLineChart(
+			const QMap<QDate, int>& map,
+			const sdl::prolife::Workspace::CChartInput& chartInput,
+			const QString& yLabel,
+			sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const
+{
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (chartInput.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *chartInput.Version_1_0->timeFilter;
+	}
+
+	imtbase::ITimeFilterParam::TimeUnit timeUnit = imtbase::ITimeFilterParam::TU_YEAR;
+	imtbase::ITimeFilterParam::InterpretationMode mode = imtbase::ITimeFilterParam::IM_CURRENT;
+
+	QDate startDate, endDate;
+	PrepareDateFilter(timeFilter, startDate, endDate, timeUnit, mode);
+
+	int totalCreated = 0;
+	int maxCount = 0;
+	QString maxLabel;
+
+	lineChartData.points.Emplace();
+	lineChartData.labels.Emplace();
+	lineChartData.axes.Emplace();
+
+	auto addPoint = [&](int x, int y, const QString& label){
+		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 point;
+		point.x = x;
+		point.y = y;
+		lineChartData.points->push_back(point);
+		lineChartData.labels->push_back(label);
+	};
+
+	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
+		lineChartData.axes->xLabel = "Days";
+
+		int dayIndex = 0;
+		for (QDate d = startDate; d <= endDate; d = d.addDays(1), ++dayIndex){
+			int count = map.value(d, 0);
+			addPoint(dayIndex, count, d.toString("dd MMM"));
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = d.toString("dd MMM");
+			}
+		}
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH){
+		lineChartData.axes->xLabel = "Weeks";
+
+		int weekIndex = 0;
+		QDate iter = startDate;
+
+		while (iter <= endDate){
+			QDate weekStart = iter;
+			QDate weekEnd = weekStart.addDays(6);
+			if (weekEnd > endDate)
+				weekEnd = endDate;
+
+			int count = 0;
+			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1))
+				count += map.value(d, 0);
+
+			QString rangeLabel;
+			if (weekStart.month() == weekEnd.month()){
+				rangeLabel = QString("%1–%2 %3")
+								 .arg(weekStart.toString("dd"))
+								 .arg(weekEnd.toString("dd"))
+								 .arg(weekEnd.toString("MMM"));
+			}
+			else{
+				rangeLabel = QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
+			}
+
+			addPoint(weekIndex, count, rangeLabel);
+
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = weekStart.toString("dd MMM");
+			}
+
+			iter = weekEnd.addDays(1);
+			++weekIndex;
+		}
+	}
+	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR){
+		lineChartData.axes->xLabel = "Months";
+
+		for (int month = 1; month <= 12; ++month){
+			QDate monthStart(startDate.year(), month, 1);
+			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
+
+			int count = 0;
+			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1))
+				count += map.value(d, 0);
+
+			addPoint(month - 1, count, monthStart.toString("MMM"));
+			totalCreated += count;
+			if (count > maxCount){
+				maxCount = count;
+				maxLabel = monthStart.toString("MMM");
+			}
+		}
+	}
+
+	sdl::prolife::Workspace::CChartSummary::V1_0 licenseChartSummary;
+	licenseChartSummary.total = totalCreated;
+
+	sdl::prolife::Workspace::CChartSegment::V1_0 maxChartSegment;
+	maxChartSegment.value = maxCount;
+	maxChartSegment.label = maxLabel;
+	licenseChartSummary.maxItem = maxChartSegment;
+
+	lineChartData.summary = licenseChartSummary;
 
 	return true;
 }
@@ -1210,7 +1359,10 @@ void CWorkspaceControllerComp::AddFieldFilter(iprm::CParamsSet& paramsSet, const
 }
 
 
-void CWorkspaceControllerComp::AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const
+void CWorkspaceControllerComp::AddTimeFilter(
+			iprm::CParamsSet& paramsSet,
+			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter,
+			bool isObligatory) const
 {
 	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
 	if (complexFilterPtr == nullptr){
@@ -1240,6 +1392,46 @@ sdl::prolife::Workspace::CChartSegment::V1_0 CWorkspaceControllerComp::CreateCha
 	segment.color = color;
 
 	return segment;
+}
+
+
+void CWorkspaceControllerComp::PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput, bool timeIsObligatory) const
+{
+	if (!chartInput.Version_1_0.HasValue()){
+		return;
+	}
+
+	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
+	if (complexFilterPtr == nullptr){
+		complexFilterPtr = new imtbase::CComplexCollectionFilter();
+		paramsSet.SetEditableParameter("ComplexFilter", complexFilterPtr, true);
+	}
+
+	if (complexFilterPtr == nullptr){
+		return;
+	}
+
+	bool timeFilterAdded = false;
+	if (chartInput.Version_1_0->timeFilter.HasValue()){
+		imtbase::CTimeFilterParam timeFilterParam;
+		if (m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilterParam, *chartInput.Version_1_0->timeFilter)){
+			complexFilterPtr->SetTimeFilter(timeFilterParam);
+			timeFilterAdded = true;
+		}
+	}
+
+	if (!timeFilterAdded && timeIsObligatory){
+		imtbase::CTimeFilterParam timeFilterParam;
+		timeFilterParam.SetTimeUnit(imtbase::ITimeFilterParam::TU_YEAR, imtbase::ITimeFilterParam::IM_CURRENT);
+		complexFilterPtr->SetTimeFilter(timeFilterParam);
+	}
+
+	if (chartInput.Version_1_0->customerId.HasValue()){
+		QByteArray customerId = *chartInput.Version_1_0->customerId;
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+	}
 }
 
 

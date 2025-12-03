@@ -73,8 +73,25 @@ protected:
 				const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& getHardwareConfigurationPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CBarChartData OnGetSoftwareCreationBarChart(
+				const sdl::prolife::Workspace::CGetSoftwareCreationBarChartGqlRequest& getSoftwareCreationBarChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CBarChartData OnGetHardwareCreationBarChart(
+				const sdl::prolife::Workspace::CGetHardwareCreationBarChartGqlRequest& getHardwareCreationBarChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::prolife::Workspace::CLineChartData OnGetOrderCreationLineChart(
+				const sdl::prolife::Workspace::CGetOrderCreationLineChartGqlRequest& getOrderCreationLineChartRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 private:
+	sdl::prolife::Workspace::CBarChartData GetItemsCreationBarChart(
+				const imtbase::IObjectCollection& collection,
+				const sdl::prolife::Workspace::CChartInput& chartInput,
+				int nameMetaInfoType,
+				QString& errorMessage) const;
 	bool PrepareDateFilter(
 				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
 				QDate& startDate,
@@ -82,9 +99,14 @@ private:
 				imtbase::ITimeFilterParam::TimeUnit& unit,
 				imtbase::ITimeFilterParam::InterpretationMode& mode) const;
 	bool BuildBarChart(const QMap<QDate, QMap<QString, int>>& map,
-					const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
-					const QString& yLabel,
-					sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const;
+				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
+				const QString& yLabel,
+				sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const;
+	bool BuildLineChart(
+				const QMap<QDate, int>& map,
+				const sdl::prolife::Workspace::CChartInput& chartInput,
+				const QString& yLabel,
+				sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const;
 	QByteArrayList GetUserActionsByCreateLicenseFile(
 				const imtgql::CGqlRequest& gqlRequest,
 				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl) const;
@@ -92,8 +114,9 @@ private:
 	uint fnv1a(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
-	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
+	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter, bool isObligatory = false) const;
 	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
+	void PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput, bool timeIsObligatory = false) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

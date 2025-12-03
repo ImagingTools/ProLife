@@ -82,6 +82,9 @@ type Query {
 	GetHardwareCustomerPieChart (input: ChartInput): PieChartData!
 	GetSoftwareCustomerPieChart (input: ChartInput): PieChartData!
 	GetHardwareConfigurationPieChart (input: ChartInput): PieChartData!
+	GetSoftwareCreationBarChart (input: ChartInput): BarChartData!
+	GetHardwareCreationBarChart (input: ChartInput): BarChartData!
+	GetOrderCreationLineChart (input: ChartInput): LineChartData!
 }
 
 

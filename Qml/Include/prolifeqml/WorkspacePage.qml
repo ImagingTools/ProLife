@@ -608,6 +608,7 @@ ViewBase {
 	Component {
 		id: statisticsPageComp
 		StatisticsPage {
+			commandsPanelHeight: root.commandsPanelHeight
 		}
 	}
 
