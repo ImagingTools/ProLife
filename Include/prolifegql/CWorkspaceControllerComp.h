@@ -88,6 +88,7 @@ protected:
 
 private:
 	sdl::prolife::Workspace::CBarChartData GetItemsCreationBarChart(
+				const ::imtgql::CGqlRequest& gqlRequest,
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& chartInput,
 				int nameMetaInfoType,

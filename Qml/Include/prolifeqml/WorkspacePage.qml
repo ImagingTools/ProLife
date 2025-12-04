@@ -427,7 +427,7 @@ ViewBase {
 							Loading {
 								id: loading
 								anchors.fill: parent
-								color: Style.baseColor
+								background.color: Style.baseColor
 								visible: false
 							}
 

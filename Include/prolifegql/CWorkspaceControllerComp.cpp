@@ -823,7 +823,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 
 sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCreationBarChart(
 			const sdl::prolife::Workspace::CGetSoftwareCreationBarChartGqlRequest& getSoftwareCreationBarChartRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
@@ -834,6 +834,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCr
 	}
 
 	return GetItemsCreationBarChart(
+				gqlRequest,
 				*m_softwareCollectionCompPtr,
 				getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
@@ -843,7 +844,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCr
 
 sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareCreationBarChart(
 			const sdl::prolife::Workspace::CGetHardwareCreationBarChartGqlRequest& getHardwareCreationBarChartRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
@@ -854,6 +855,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareCr
 	}
 
 	return GetItemsCreationBarChart(
+				gqlRequest,
 				*m_hardwareCollectionCompPtr,
 				getHardwareCreationBarChartRequest.GetRequestedArguments().input,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
@@ -908,6 +910,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCrea
 // private methods
 
 sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarChart(
+			const ::imtgql::CGqlRequest& gqlRequest,
 			const imtbase::IObjectCollection& collection,
 			const sdl::prolife::Workspace::CChartInput& chartInput,
 			int nameMetaInfoType,
@@ -927,15 +930,16 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 
 	iprm::CParamsSet selectionParams;
 	AddTimeFilter(selectionParams, timeFilter);
+	JoinGroupFilter(gqlRequest, selectionParams);
 
 	QMap<QDate, QMap<QString, int>> resultMap;
 	imtbase::ICollectionInfo::Ids elementIds = collection.GetElementIds(0, -1, &selectionParams);
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
-		idoc::MetaInfoPtr elementMetaInfoPtr = collection.GetElementMetaInfo(elementId);
 		idoc::MetaInfoPtr dataMetaInfoPtr = collection.GetDataMetaInfo(elementId);
-		if (elementMetaInfoPtr.IsValid() && dataMetaInfoPtr.IsValid()){
-			QDateTime insertionTime = elementMetaInfoPtr->GetMetaInfo(imtbase::IObjectCollection::MIT_INSERTION_TIME).toDateTime();
+		idoc::MetaInfoPtr elementMetaInfoPtr = collection.GetElementMetaInfo(elementId);
+		if ( dataMetaInfoPtr.IsValid() && elementMetaInfoPtr.IsValid()){
 			QString productName = dataMetaInfoPtr->GetMetaInfo(nameMetaInfoType).toString();
+			QDateTime insertionTime = elementMetaInfoPtr->GetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME).toDateTime();
 			resultMap[insertionTime.date()][productName]++;
 		}
 	}
@@ -1139,7 +1143,6 @@ bool CWorkspaceControllerComp::BuildBarChart(
 }
 
 
-
 bool CWorkspaceControllerComp::BuildLineChart(
 			const QMap<QDate, int>& map,
 			const sdl::prolife::Workspace::CChartInput& chartInput,
@@ -1164,6 +1167,8 @@ bool CWorkspaceControllerComp::BuildLineChart(
 	lineChartData.points.Emplace();
 	lineChartData.labels.Emplace();
 	lineChartData.axes.Emplace();
+
+	lineChartData.axes->yLabel = yLabel;
 
 	auto addPoint = [&](int x, int y, const QString& label){
 		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 point;

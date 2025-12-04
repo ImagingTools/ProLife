@@ -113,7 +113,7 @@ ElementView {
 		id: loading
 		z: parent.z + 1
 		anchors.fill: parent
-		color: Style.baseColor
+		background.color: Style.baseColor
 		visible: false
 	}
 }

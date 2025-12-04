@@ -8,13 +8,16 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Analytics" X="750" Y="575" Note=""/>
-        <Element ComponentName="CheckPermissionOr" X="225" Y="300" Note=""/>
-        <Element ComponentName="CommandsController" X="600" Y="325" Note=""/>
-        <Element ComponentName="Dashboard" X="400" Y="575" Note=""/>
+        <Element ComponentName="Analytics" X="600" Y="600" Note=""/>
+        <Element ComponentName="AnalyticsCommandsController" X="975" Y="425" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="150" Y="275" Note=""/>
+        <Element ComponentName="Dashboard" X="100" Y="600" Note=""/>
         <Element ComponentName="Demultiplexer" X="600" Y="125" Note=""/>
-        <Element ComponentName="Permissions" X="975" Y="250" Note=""/>
-        <Element ComponentName="UserActions" X="575" Y="575" Note=""/>
+        <Element ComponentName="Orders" X="1100" Y="600" Note=""/>
+        <Element ComponentName="Permissions" X="375" Y="275" Note=""/>
+        <Element ComponentName="Software_Hardware" X="850" Y="600" Note=""/>
+        <Element ComponentName="UserActions" X="350" Y="600" Note=""/>
+        <Element ComponentName="WorkspaceCommandsController" X="375" Y="425" Note=""/>
         <Element ComponentName="WorkspaceController" X="225" Y="125" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
