@@ -95,10 +95,7 @@ ViewBase {
 			property int spacing: Style.marginL
 			property int chartDefaultWidth: 600
 			property int chartCountPerRow: 3
-			property real chartWidth:
-				(width >= chartDefaultWidth * chartCountPerRow + spacing * (chartCountPerRow - 1))
-				? chartDefaultWidth
-				: (width - 2*spacing * (chartCountPerRow - 1)) / chartCountPerRow
+			property real chartWidth: (width- 4*spacing) / 3 
 
 			property real rowHeight:
 				(!row1.visible && !row2.visible)

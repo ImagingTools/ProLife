@@ -303,12 +303,18 @@ ViewBase {
 		Item {
 			Row {
 				anchors.top: parent.top
-				anchors.horizontalCenter: parent.horizontalCenter
+				anchors.left: parent.left
+				anchors.leftMargin: root.spacing
+				anchors.right: parent.right
+				anchors.rightMargin: root.spacing
+				anchors.bottom: parent.bottom
+				anchors.bottomMargin: root.spacing
+				
 				GqlLinechartView {
 					id: getOrderCreationLineChart
 					objectName: "OrderCreationLineChart"
-					width: root.chartDefaultWidth
-					chartHeight: 400
+					width: parent.width
+					chartHeight: parent.height - 85
 					name: qsTr("Order Creation By Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getOrderCreationLineChart
 					subscriptionCommandId: "OnOrdersCollectionChanged"
