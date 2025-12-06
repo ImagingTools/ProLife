@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5434" Description="ACF"/>
-            <Version Id="1" Number="2255" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+            <Version Id="0" Number="5436" Description="ACF"/>
+            <Version Id="1" Number="2254" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395266" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -752,9 +752,6 @@
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -857,9 +854,6 @@
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -882,9 +876,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
@@ -926,9 +917,6 @@
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -967,11 +955,8 @@
                     <Component ExportedId="CachedSoftwareRepository" ComponentId="CachedSoftwareRepository"/>
                     <Component ExportedId="DeviceDatabaseDelegate" ComponentId="DeviceSqlRepository/DeviceDatabaseDelegate"/>
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
-                    <Component ExportedId="FeatureSqlRepository" ComponentId="LisaRepositories/FeatureSqlRepository"/>
-                    <Component ExportedId="LicenseSqlRepository" ComponentId="LisaRepositories/LicenseSqlRepository"/>
                     <Component ExportedId="OrderDatabaseDelegate" ComponentId="OrderSqlRepository/OrderDatabaseDelegate"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
-                    <Component ExportedId="ProductSqlRepository" ComponentId="LisaRepositories/ProductRepository"/>
                     <Component ExportedId="SoftwareProductDatabaseDelegate" ComponentId="SoftwareSqlRepository/SoftwareProductDatabaseDelegate"/>
                     <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
                     <Component ExportedId="SoftwareTransferDatabaseDelegate" ComponentId="SoftwareTransferSqlRepository/SqlDatabaseDocumentDelegate"/>

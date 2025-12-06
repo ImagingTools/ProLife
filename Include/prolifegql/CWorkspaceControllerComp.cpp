@@ -1367,7 +1367,7 @@ void CWorkspaceControllerComp::AddFieldFilter(iprm::CParamsSet& paramsSet, const
 void CWorkspaceControllerComp::AddTimeFilter(
 			iprm::CParamsSet& paramsSet,
 			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter,
-			bool isObligatory) const
+			bool /*isObligatory*/) const
 {
 	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
 	if (complexFilterPtr == nullptr){
