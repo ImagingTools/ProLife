@@ -673,9 +673,9 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCustomerPieChart(
-			const sdl::prolife::Workspace::CGetHardwareCustomerPieChartGqlRequest& /*getHardwareCustomerPieChartRequest*/,
+			const sdl::prolife::Workspace::CGetHardwareCustomerPieChartGqlRequest& getHardwareCustomerPieChartRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 
@@ -689,6 +689,17 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 		return response;
 	}
 
+	auto arguments = getHardwareCustomerPieChartRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get hardware customer pie chart. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
@@ -697,6 +708,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 		iprm::CParamsSet paramsSet;
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		AddTimeFilter(paramsSet, timeFilter);
 		JoinGroupFilter(gqlRequest, paramsSet);
 
 		int count = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
@@ -717,9 +729,9 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCustomerPieChart(
-			const sdl::prolife::Workspace::CGetSoftwareCustomerPieChartGqlRequest& /*getSoftwareCustomerPieChartRequest*/,
+			const sdl::prolife::Workspace::CGetSoftwareCustomerPieChartGqlRequest& getSoftwareCustomerPieChartRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 
@@ -733,6 +745,17 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 		return response;
 	}
 
+	auto arguments = getSoftwareCustomerPieChartRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get software customer pie chart. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
@@ -741,6 +764,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 		iprm::CParamsSet paramsSet;
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		AddTimeFilter(paramsSet, timeFilter);
 		JoinGroupFilter(gqlRequest, paramsSet);
 
 		int count = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
@@ -761,9 +785,9 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareConfigurationPieChart(
-			const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& /*getHardwareConfigurationPieChartRequest*/,
+			const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& getHardwareConfigurationPieChartRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			QString& /*errorMessage*/) const
+			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 
@@ -782,6 +806,17 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 		return response;
 	}
 
+	auto arguments = getHardwareConfigurationPieChartRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to get hardware configuration pie chart. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (arguments.input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *arguments.input.Version_1_0->timeFilter;
+	}
+
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
@@ -798,6 +833,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 			iprm::CParamsSet hardwareSelectionParams;
 			AddFieldFilter(hardwareSelectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
 			AddFieldFilter(hardwareSelectionParams, imtbase::IComplexCollectionFilter::FieldFilter("ConfigurationType", licenseElementId));
+			AddTimeFilter(hardwareSelectionParams, timeFilter);
 			JoinGroupFilter(gqlRequest, hardwareSelectionParams);
 
 			QString licenseName;

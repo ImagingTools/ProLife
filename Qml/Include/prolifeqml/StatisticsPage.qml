@@ -242,6 +242,14 @@ ViewBase {
 								navigationParams.customerId = id
 								navigationParams.inUse = undefined
 								navigationParams.internalUse = false
+
+								if (root.timeFilter){
+									let timeFilterObj = {}
+									timeFilterObj.name = timeFilterDelegate.mainButtonText
+									timeFilterObj.data = root.timeFilter
+									navigationParams.timeFilter = timeFilterObj
+								}
+
 								NavigationController.navigate("Devices/<hardware-filter>", navigationParams)
 							}
 						}
@@ -265,6 +273,14 @@ ViewBase {
 								navigationParams.customerId = id
 								navigationParams.inUse = undefined
 								navigationParams.internalUse = false
+								
+								if (root.timeFilter){
+									let timeFilterObj = {}
+									timeFilterObj.name = timeFilterDelegate.mainButtonText
+									timeFilterObj.data = root.timeFilter
+									navigationParams.timeFilter = timeFilterObj
+								}
+								
 								NavigationController.navigate("SoftwareProducts/<software-filter>", navigationParams)
 							}
 						}
@@ -274,7 +290,6 @@ ViewBase {
 				GqlPiechartView {
 					id: getHardwareConfigurationPieChart
 					objectName: "HardwareConfigurationPieChart"
-					// width: root.chartDefaultWidth
 					width: root.width / 3 - 4+root.spacing
 					chartHeight: parent.height - 85
 					name: qsTr("Hardware Configuration")
@@ -291,6 +306,14 @@ ViewBase {
 						navigationParams.licenseId = id
 						navigationParams.productId = CachedProductCollection.getProductIdByLicenseId(id)
 						navigationParams.internalUse = false
+
+						if (root.timeFilter){
+							let timeFilterObj = {}
+							timeFilterObj.name = timeFilterDelegate.mainButtonText
+							timeFilterObj.data = root.timeFilter
+							navigationParams.timeFilter = timeFilterObj
+						}
+
 						NavigationController.navigate("Devices/<hardware-filter>", navigationParams)
 					}
 				}
