@@ -47,7 +47,7 @@ ViewBase {
 	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
 		m_timeUnit: "Year"
-		m_interpretationMode: "This"
+		m_interpretationMode: "Current"
 	}
 
 	onCommandActivated: {

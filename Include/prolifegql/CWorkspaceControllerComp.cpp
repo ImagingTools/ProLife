@@ -930,6 +930,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 
 	iprm::CParamsSet selectionParams;
 	AddTimeFilter(selectionParams, timeFilter);
+	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
 	JoinGroupFilter(gqlRequest, selectionParams);
 
 	QMap<QDate, QMap<QString, int>> resultMap;

@@ -27,7 +27,7 @@ ViewBase {
 	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
 		m_timeUnit: "Year"
-		m_interpretationMode: "This"
+		m_interpretationMode: "Current"
 	}
 
 	onCommandActivated: {
@@ -164,7 +164,7 @@ ViewBase {
 								let productId = CachedProductCollection.getProductIdByName(label)
 								let params = {}
 								params.productId = productId
-								
+								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
 									timeFilterObj.name = timeFilterDelegate.mainButtonText
@@ -191,7 +191,7 @@ ViewBase {
 								let productId = CachedProductCollection.getProductIdByName(label)
 								let params = {}
 								params.productId = productId
-								
+								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
 									timeFilterObj.name = timeFilterDelegate.mainButtonText
