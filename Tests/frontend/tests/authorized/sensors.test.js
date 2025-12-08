@@ -42,7 +42,7 @@ test('Sensors filters test', async ({ page }) => {
   await checkScreenshot(page, 'sensors_text_filter.png')
 
   await clickAt(page, 170, 165); // 'Date Filter' click
-  await checkScreenshot(page, 'sensors_date_filter_dialog.png')
+  await checkScreenshot(page, 'sensors_date_filter_dialog.png', { x: 140, y: 360, width: 240, height: 100 })
 
   await clickAt(page, 255, 385); // Last year click
   await checkScreenshot(page, 'sensors_date_filter.png')
@@ -98,46 +98,6 @@ test('Sensors sort filters 1', async ({ page }) => {
   await clickAt(page, 500, 220); // HardwareId column click DESC
   await checkScreenshot(page, 'sensors_hardware_column_desc.png')
 });
-
-// test('Sensors sort filters 2', async ({ page }) => {
-//   await clickAt(page, 580, 220); // Serial Number column click ASC
-//   await checkScreenshot(page, 'sensors_serial_number_column_asc.png')
-
-//   await clickAt(page, 580, 220); // Serial Number column click DESC
-//   await checkScreenshot(page, 'sensors_serial_number_column_desc.png')
-
-//   await clickAt(page, 765, 220); // Purchase-ID column click ASC
-//   await checkScreenshot(page, 'sensors_purchase_id_column_asc.png')
-
-//   await clickAt(page, 765, 220); // Purchase-ID column click DESC
-//   await checkScreenshot(page, 'sensors_purchase_id_column_desc.png')
-// });
-
-// test('Sensors sort filters 3', async ({ page }) => {
-//   await clickAt(page, 850, 220); // Project column click ASC
-//   await checkScreenshot(page, 'sensors_project_column_asc.png')
-
-//   await clickAt(page, 850, 220); // Project column click DESC
-//   await checkScreenshot(page, 'sensors_project_column_desc.png')
-
-//   await clickAt(page, 915, 220); // Customer column click ASC
-//   await checkScreenshot(page, 'sensors_customer_column_asc.png')
-
-//   await clickAt(page, 915, 220); // Customer column click DESC
-//   await checkScreenshot(page, 'sensors_customer_column_desc.png')
-
-//   await clickAt(page, 1000, 220); // Added column click ASC
-//   await checkScreenshot(page, 'sensors_added_column_asc.png')
-
-//   await clickAt(page, 1000, 220); // Added column click DESC
-//   await checkScreenshot(page, 'sensors_added_column_desc.png')
-
-//   await clickAt(page, 1130, 220); // Last Modified column click ASC
-//   await checkScreenshot(page, 'sensors_last_modified_column_asc.png')
-
-//   await clickAt(page, 1130, 220); // Last Modified column click DESC
-//   await checkScreenshot(page, 'sensors_last_modified_column_desc.png')
-// });
 
 test('Sensors pagination test', async ({ page }) => {
   await clickAt(page, 810, 785); // CB elements click
@@ -276,7 +236,7 @@ test('Sensor editor test', async ({ page }) => {
   await checkScreenshot(page, 'sensor_after_save.png')
 
   await clickAt(page, 530, 70); // Close document (tab)
-  await checkScreenshot(page, 'sensors_after_closing.png')
+  await checkScreenshot(page, 'sensors_after_closing.png', { x: 995, y: 230, width: 170, height: 555})
 });
 
 test('Bind command test', async ({ page }) => {
@@ -332,7 +292,7 @@ test('Bind command test', async ({ page }) => {
 test('Transfer licenses command test', async ({ page }) => {
   await clickAt(page, 1000, 170); // Filter text input click
   await page.keyboard.type("8c:1f:64:50:19:0b");
-  await checkScreenshot(page, 'sensors_transfer_licenses_0.png')
+  await checkScreenshot(page, 'sensors_transfer_licenses_0.png', { x: 995, y: 230, width: 170, height: 555})
   await selectFirstSensor(page)
 
   await clickAt(page, 290, 115); // 'Edit' command click

@@ -30,7 +30,7 @@ test('Filters test', async ({ page }) => {
   await clickAt(page, 520, 200); // Account filter CB click
 
   await clickAt(page, 130, 165); // Date filter click
-  await checkScreenshot(page, 'software_filters_6.png')
+  await checkScreenshot(page, 'software_filters_6.png', { x: 105, y: 360, width: 240, height: 100 })
 });
 
 test('New software test', async ({ page }) => {

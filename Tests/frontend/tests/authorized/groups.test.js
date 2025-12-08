@@ -125,5 +125,5 @@ test('Groups filter tests', async ({ page }) => {
   await clickAt(page, 45, 25); // Remove focus
 
   await clickAt(page, 300, 135); // Date filter click
-  await checkScreenshot(page, 'groups_filters_date.png', { x: 275, y: 415, width: 240, height: 100 })
+  await checkScreenshot(page, 'groups_filters_date.png', { x: 275, y: 325, width: 240, height: 100 })
 });
