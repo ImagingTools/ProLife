@@ -21,8 +21,17 @@ start "" /B "C:\Program Files\ImagingTools\LisaServer\LisaServer.exe"
 start "" /B "C:\Program Files\ImagingTools\PumaServer\PumaServer.exe"
 start "" /B "C:\Program Files\ImagingTools\ProLifeServer\ProLifeServer.exe"
 
+timeout /t 10 >nul
+
 rem === Выполнение API-тестов ===
 echo === Running Newman tests ===
 if not exist C:\test-results mkdir C:\test-results
+
 newman run C:\postman_collection.json -r cli,junit --reporter-junit-export C:\test-results\postman-report.xml
-if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+set NEWMAN_EXIT=%ERRORLEVEL%
+
+echo === Newman finished with exit code %NEWMAN_EXIT% ===
+echo === Contents of C:\test-results: ===
+dir C:\test-results
+
+exit /b %NEWMAN_EXIT%
