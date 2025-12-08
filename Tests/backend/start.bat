@@ -27,7 +27,10 @@ rem === Выполнение API-тестов ===
 echo === Running Newman tests ===
 if not exist C:\test-results mkdir C:\test-results
 
-newman run C:\postman_collection.json -r cli,junit --reporter-junit-export C:\test-results\postman-report.xml
+newman run C:\postman_collection.json ^
+    --reporters cli,junitfull ^
+    --reporter-junitfull-export C:\test-results\postman-report.xml
+
 set NEWMAN_EXIT=%ERRORLEVEL%
 
 echo === Newman finished with exit code %NEWMAN_EXIT% ===
