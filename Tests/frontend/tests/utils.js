@@ -92,7 +92,7 @@ const wheelScroll = async (page, deltaY) => {
 const checkScreenshot = async (page, filename, maskParams) => {
   await addMask(page, maskParams);
   await waitForPageStability(page);
-  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0.001});
+  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0});
   await removeMask(page);
 };
 
@@ -110,50 +110,60 @@ async function login(page, username, password) {
   await clickAt(page, 700, 600); // Click 'Login' button
 }
 
+async function waitForDomStability(page, options = {}) {
+  const {
+    idleTime = 500,
+    timeout = 5000,
+    checkInterval = 100,
+  } = options;
+
+  const startTime = Date.now();
+  let lastHtml = '';
+  let stableSince = Date.now();
+
+  while (Date.now() - startTime < timeout) {
+    try {
+      const currentHtml = await page.evaluate(() => document.documentElement.outerHTML);
+
+      if (currentHtml !== lastHtml) {
+        lastHtml = currentHtml;
+        stableSince = Date.now();
+      } else if (Date.now() - stableSince >= idleTime) {
+        return;
+      }
+
+      await page.waitForTimeout(checkInterval);
+    } catch (e) {
+      if (e.message.includes('Execution context was destroyed')) {
+        // Страница ушла — ждём новую загрузку и сбрасываем состояние
+        await page.waitForLoadState('domcontentloaded');
+        lastHtml = '';
+        stableSince = Date.now();
+        continue;
+      }
+      throw e;
+    }
+  }
+
+  throw new Error(`Page did not stabilize within ${timeout}ms`);
+}
+
 async function waitForPageStability(page, options = {}) {
   const {
     maxTotalTime = 5000,
-    visualCheckInterval = 500,
-    visualStableFrames = 2,
-    debugScreenshots = false,
-    screenshotDir = path.join(process.cwd(), 'screenshots_debug'),
+    domStableTime = 800,
+    networkIdleTimeout = 2000,
+    debug = false,
   } = options;
 
-  if (debugScreenshots) {
-    fs.mkdirSync(screenshotDir, { recursive: true });
-  }
+  await waitForDomStability(page, {
+    idleTime: domStableTime,
+    timeout: maxTotalTime,
+    checkInterval: 100
+  });
 
-  const startTime = Date.now();
-
-  await Promise.all([
-    page.waitForLoadState('networkidle'),
-    page.waitForLoadState('domcontentloaded')
-  ]);
-
-  let stableFrames = 0;
-  let previousScreenshot = await page.screenshot({ animations: 'disabled' });
-
-  while (Date.now() - startTime < maxTotalTime){
-    await page.waitForTimeout(visualCheckInterval);
-
-    const currentScreenshot = await page.screenshot({ animations: 'disabled' });
-
-    if (debugScreenshots){
-      const filename_ = 'frame_' + frameCount + '.png';
-      fs.writeFileSync(path.join(screenshotDir, filename_), currentScreenshot);
-      frameCount++;
-    }
-
-    if (previousScreenshot.equals(currentScreenshot)){
-      stableFrames++;
-      if (stableFrames >= visualStableFrames){
-        return;
-      }
-    } 
-    else{
-      stableFrames = 0;
-      previousScreenshot = currentScreenshot;
-    }
+  if (debug) {
+    console.log('Page stabilized');
   }
 }
 
