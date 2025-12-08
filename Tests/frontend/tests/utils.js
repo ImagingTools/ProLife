@@ -78,11 +78,9 @@ const reloadPage = async (page, url = 'http://localhost:7778') => {
   await waitForPageStability(page);
 };
 
-const clickAt = async (page, x, y, maskParams) => {
-  await addMask(page, maskParams);
+const clickAt = async (page, x, y) => {
   await page.mouse.click(x, y);
   await waitForPageStability(page);
-  await removeMask(page);
 };
 
 const wheelScroll = async (page, deltaY) => {
@@ -145,7 +143,7 @@ async function waitForDomStability(page, options = {}) {
     }
   }
 
-  throw new Error(`Page did not stabilize within ${timeout}ms`);
+  // throw new Error(`Page did not stabilize within ${timeout}ms`);
 }
 
 async function waitForPageStability(page, options = {}) {

@@ -1,10 +1,10 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, wheelScroll} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, wheelScroll, clickOnPage, clickOnButton} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
-  await clickAt(page, 40, 750); // Administration page click
-  await clickAt(page, 173, 125); // Users subpage click
+  await clickOnPage(page, "Administration")// Administration page click
+  await clickOnButton(page, ["AdministrationView", "Users"])// Users subpage click
 });
 
 test('Start users page', async ({ page }) => {

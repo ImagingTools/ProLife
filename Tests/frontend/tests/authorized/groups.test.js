@@ -3,8 +3,8 @@ const { reloadPage, clickAt, checkScreenshot, wheelScroll} = require('../utils')
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
-  await clickAt(page, 40, 750); // Administration page click
-  await clickAt(page, 173, 165); // Groups subpage click
+  await clickOnPage(page, "Administration")// Administration page click
+  await clickOnButton(page, ["AdministrationView", "Groups"])// Groups subpage click
 });
 
 test('Start groups page', async ({ page }) => {

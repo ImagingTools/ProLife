@@ -3,7 +3,7 @@ const { reloadPage, clickAt, checkScreenshot, login, wheelScroll, delay} = requi
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
-  await clickAt(page, 40, 170); // Hardware page click
+  await clickOnPage(page, "Devices"); // Devices page click
 });
 
 test('Start sensors page', async ({ page }) => {
