@@ -23,5 +23,6 @@ start "" /B "C:\Program Files\ImagingTools\ProLifeServer\ProLifeServer.exe"
 
 rem === Выполнение API-тестов ===
 echo === Running Newman tests ===
-newman run C:\postman_collection.json
+if not exist C:\test-results mkdir C:\test-results
+newman run C:\postman_collection.json -r cli,junit --reporter-junit-export C:\test-results\postman-report.xml
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%

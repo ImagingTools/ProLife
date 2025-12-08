@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022
 SHELL ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
 RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 RUN choco install -y nodejs
-RUN npm install -g newman
+RUN npm install -g newman newman-reporter-junit
 RUN choco install -y postgresql17 --params '"/Password=root"'
 
 # Добавим bin в PATH
