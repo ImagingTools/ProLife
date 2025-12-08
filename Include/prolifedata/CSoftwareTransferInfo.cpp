@@ -125,11 +125,11 @@ bool CSoftwareTransferInfo::CopyFrom(const IChangeable& object, CompatibilityMod
 }
 
 
-istd::IChangeable* CSoftwareTransferInfo::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CSoftwareTransferInfo::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<CSoftwareTransferInfo> clonePtr(new CSoftwareTransferInfo());
+	istd::IChangeableUniquePtr clonePtr(new CSoftwareTransferInfo());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

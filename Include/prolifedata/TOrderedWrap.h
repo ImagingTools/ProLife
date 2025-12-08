@@ -29,7 +29,7 @@ public:
 	virtual int GetSupportedOperations() const override;
 	virtual bool CopyFrom(const istd::IChangeable& object, istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) override;
 	virtual bool IsEqual(const istd::IChangeable& object) const override;
-	virtual istd::IChangeable* CloneMe(istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) const override;
+	virtual istd::IChangeableUniquePtr CloneMe(istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) const override;
 	virtual bool ResetData(istd::IChangeable::CompatibilityMode mode = istd::IChangeable::CM_WITHOUT_REFS) override;
 
 private:
@@ -119,11 +119,11 @@ bool TOrderedWrap<Base>::IsEqual(const istd::IChangeable& object) const
 
 
 template<class Base>
-istd::IChangeable* TOrderedWrap<Base>::CloneMe(istd::IChangeable::CompatibilityMode mode) const
+istd::IChangeableUniquePtr TOrderedWrap<Base>::CloneMe(istd::IChangeable::CompatibilityMode mode) const
 {
-	istd::TDelPtr<TOrderedWrap<Base>> clonePtr(new TOrderedWrap<Base>());
+	istd::IChangeableUniquePtr clonePtr(new TOrderedWrap<Base>());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

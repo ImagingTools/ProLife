@@ -68,7 +68,7 @@ protected:
 	virtual QByteArray GetLicenseId(const QByteArray& licenseUuid, const imtbase::CTreeItemModel& licensesModel) const;
 	virtual QString GetLicenseName(const QByteArray& licenseId, const imtbase::CTreeItemModel& licensesModel) const;
 
-	virtual const imtlic::CLicenseDefinition* GetLicenseInfo(const QByteArray& licenseId) const;
+	virtual istd::TUniqueInterfacePtr<imtlic::CLicenseDefinition> GetLicenseInfo(const QByteArray& licenseId) const;
 
 	virtual QByteArray GetFeatureId(const QByteArray& featureUuid, const imtbase::CTreeItemModel& featuresModel) const;
 	virtual QString GetFeatureName(const QByteArray& featureUuid, const imtbase::CTreeItemModel& featuresModel) const;

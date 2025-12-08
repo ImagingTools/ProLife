@@ -95,11 +95,11 @@ bool CGroupFilter::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*
 }
 
 
-istd::IChangeable* CGroupFilter::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CGroupFilter::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<CGroupFilter> clonePtr(new CGroupFilter());
+	istd::IChangeableUniquePtr clonePtr(new CGroupFilter());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

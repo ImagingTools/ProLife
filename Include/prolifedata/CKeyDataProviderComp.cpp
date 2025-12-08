@@ -445,7 +445,7 @@ QString CKeyDataProviderComp::GetLicenseName(const QByteArray& licenseId, const 
 }
 
 
-const imtlic::CLicenseDefinition* CKeyDataProviderComp::GetLicenseInfo(const QByteArray& licenseId) const
+istd::TUniqueInterfacePtr<imtlic::CLicenseDefinition> CKeyDataProviderComp::GetLicenseInfo(const QByteArray& licenseId) const
 {
 	if (m_licenseCollectionCompPtr.IsValid()){
 		imtbase::ICollectionInfo::Ids licenseCollectionIds = m_licenseCollectionCompPtr->GetElementIds();
@@ -455,12 +455,11 @@ const imtlic::CLicenseDefinition* CKeyDataProviderComp::GetLicenseInfo(const QBy
 				imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 				if (licenseInfoPtr != nullptr){
 					if (licenseCollectionId == licenseId){
-						istd::IChangeable* clonedObjectPtr = licenseInfoPtr->CloneMe();
-						if (clonedObjectPtr != nullptr){
-							return dynamic_cast<imtlic::CLicenseDefinition*>(clonedObjectPtr);
-						}
+						istd::TUniqueInterfacePtr<imtlic::CLicenseDefinition> retVal;
 
-						break;
+						retVal.MoveCastedPtr(licenseInfoPtr->CloneMe());
+
+						return retVal;
 					}
 				}
 			}

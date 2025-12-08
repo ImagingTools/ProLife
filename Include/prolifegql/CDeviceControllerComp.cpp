@@ -1107,10 +1107,10 @@ prolifedata::IHardwareProductBinding* CDeviceControllerComp::GetOrCreateDeviceBi
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
-		istd::TDelPtr<prolifedata::IHardwareProductBinding> deviceBindingInfoPtr;
-		deviceBindingInfoPtr.SetCastedOrRemove(dataPtr.GetPtr()->CloneMe());
+		istd::TUniqueInterfacePtr<prolifedata::IHardwareProductBinding> deviceBindingInfoPtr;
+		deviceBindingInfoPtr.MoveCastedPtr(dataPtr.GetPtr()->CloneMe());
 
-		return deviceBindingInfoPtr.PopPtr();
+		return deviceBindingInfoPtr.PopInterfacePtr();
 	}
 
 	istd::TDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;

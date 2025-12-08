@@ -247,11 +247,11 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 }
 
 
-istd::IChangeable* COrderInfo::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr COrderInfo::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<COrderInfo> clonePtr(new COrderInfo());
+	istd::IChangeableUniquePtr clonePtr(new COrderInfo());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

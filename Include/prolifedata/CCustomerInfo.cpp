@@ -92,11 +92,11 @@ bool CCustomerInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode
 }
 
 
-istd::IChangeable* CCustomerInfo::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CCustomerInfo::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<CCustomerInfo> clonePtr(new CCustomerInfo());
+	istd::IChangeableUniquePtr clonePtr(new CCustomerInfo());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

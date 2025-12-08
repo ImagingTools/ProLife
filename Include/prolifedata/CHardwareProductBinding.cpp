@@ -126,11 +126,11 @@ bool CHardwareProductBinding::CopyFrom(const IChangeable& object, CompatibilityM
 }
 
 
-istd::IChangeable* CHardwareProductBinding::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CHardwareProductBinding::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<CHardwareProductBinding> clonePtr(new CHardwareProductBinding());
+	istd::IChangeableUniquePtr clonePtr(new CHardwareProductBinding());
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;

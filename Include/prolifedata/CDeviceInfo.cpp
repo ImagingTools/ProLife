@@ -254,11 +254,11 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 }
 
 
-istd::IChangeable* CDeviceInfo::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CDeviceInfo::CloneMe(CompatibilityMode mode) const
 {
-	istd::TDelPtr<CDeviceInfo> clonePtr(new CDeviceInfo);
+	istd::IChangeableUniquePtr clonePtr(new CDeviceInfo);
 	if (clonePtr->CopyFrom(*this, mode)){
-		return clonePtr.PopPtr();
+		return clonePtr;
 	}
 
 	return nullptr;
