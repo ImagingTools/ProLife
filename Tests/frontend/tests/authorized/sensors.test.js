@@ -42,7 +42,7 @@ test('Sensors filters test', async ({ page }) => {
   await checkScreenshot(page, 'sensors_text_filter.png')
 
   await clickAt(page, 170, 165); // 'Date Filter' click
-  await checkScreenshot(page, 'sensors_date_filter_dialog.png', { x: 140, y: 360, width: 240, height: 100 })
+  await checkScreenshot(page, 'sensors_date_filter_dialog.png', { x: 140, y: 360, width: 240, height: 130 })
 
   await clickAt(page, 255, 385); // Last year click
   await checkScreenshot(page, 'sensors_date_filter.png')
