@@ -897,6 +897,16 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	workspaceManagementFeatureInfo->InsertSubFeature(viewAllUserActionsFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> viewAnalyticsFeatureInfo;
+	viewAnalyticsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewAnalyticsFeatureInfo->SetFeatureId("ViewAnalytics");
+	viewAnalyticsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Analytics"));
+	viewAnalyticsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View analytics page"));
+	viewAnalyticsFeatureInfo->SetOptional(false);
+	viewAnalyticsFeatureInfo->SetIsPermission(true);
+
+	workspaceManagementFeatureInfo->InsertSubFeature(viewAnalyticsFeatureInfo.PopPtr());
+
 	productInfo.AddFeature("df22ac46-7253-4b13-a1b8-d4391943adde", *workspaceManagementFeatureInfo.GetPtr());
 
 }
