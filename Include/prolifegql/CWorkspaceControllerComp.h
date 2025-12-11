@@ -26,10 +26,7 @@ public:
 	I_BEGIN_COMPONENT(CWorkspaceControllerComp)
 		I_ASSIGN(m_softwareCollectionCompPtr, "SoftwareCollection", "Software collection", true, "SoftwareCollection");
 		I_ASSIGN(m_hardwareCollectionCompPtr, "HardwareCollection", "Hardware collection", true, "HardwareCollection");
-		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
-		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
-		I_ASSIGN(m_userActionCollectionCompPtr, "UserActionCollection", "User action collection", true, "UserActionCollection");
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 	I_END_COMPONENT
 
@@ -99,6 +96,9 @@ private:
 				QDate& endDate,
 				imtbase::ITimeFilterParam::TimeUnit& unit,
 				imtbase::ITimeFilterParam::InterpretationMode& mode) const;
+	bool BuildPieChart(
+				const QMap<QPair<QByteArray, QString>, int>& map,
+				sdl::prolife::Workspace::CPieChartData::V1_0& pieChartData) const;
 	bool BuildBarChart(const QMap<QDate, QMap<QString, int>>& map,
 				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
 				const QString& yLabel,
@@ -108,28 +108,38 @@ private:
 				const sdl::prolife::Workspace::CChartInput& chartInput,
 				const QString& yLabel,
 				sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const;
-	QByteArrayList GetUserActionsByCreateLicenseFile(
-				const imtgql::CGqlRequest& gqlRequest,
-				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	uint fnv1a(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter, bool isObligatory = false) const;
+	void AddLicenseCreationTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
 	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
-	void PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput, bool timeIsObligatory = false) const;
+	void PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const;
+	sdl::prolife::Workspace::CBarChartData BuildProductUsageBarChart(
+				const imtbase::IObjectCollection& collection,
+				int productNameMetaInfoType,
+				const sdl::prolife::Workspace::CChartInput& input,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+				QString& errorMessage) const;
+	sdl::prolife::Workspace::CPieChartData BuildProductUsagePieChart(
+				const imtbase::IObjectCollection& collection,
+				int productNameMetaInfoType,
+				const sdl::prolife::Workspace::CChartInput& input,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+				QString& errorMessage) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr); // Lisa Licenses
-	I_REF(imtbase::IObjectCollection, m_userActionCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 
 private:
 	imtserverapp::CTimeFilterParamRepresentationController m_timeFilterParamRepresentationController;
+	mutable QHash<QString, QString> m_colorCache;
 };
 
 

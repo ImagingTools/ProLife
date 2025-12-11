@@ -615,6 +615,17 @@ void CDeviceCollectionControllerComp::SetAdditionalFilters(
 }
 
 
+// reimplemented (icomp::CComponentBase)
+
+void CDeviceCollectionControllerComp::OnComponentCreated()
+{
+	BaseClass::OnComponentCreated();
+
+	m_timeFilterParamRepresentationControllerPtr.SetPtr(new imtserverapp::CTimeFilterParamRepresentationController("LicenseCreationTimeFilter"));
+	RegisterFilterToSelectionParams(m_licenseCreationTimeParam, *m_timeFilterParamRepresentationControllerPtr.GetPtr());
+}
+
+
 // private methods
 
 bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(

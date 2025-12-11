@@ -68,6 +68,9 @@ protected:
 
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
+	// reimplemented (icomp::CComponentBase)
+	virtual void OnComponentCreated() override;
+
 private:
 	bool FillObjectFromRepresentation(
 				const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
@@ -78,6 +81,10 @@ private:
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
 	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
+
+private:
+	imtbase::CTimeFilterParam m_licenseCreationTimeParam;
+	istd::TDelPtr<imtserverapp::CTimeFilterParamRepresentationController> m_timeFilterParamRepresentationControllerPtr;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);

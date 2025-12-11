@@ -44,6 +44,8 @@ RemoteCollectionView {
 	}
 	
 	function registerFilters(){
+		registerFilter("LicenseCreationTimeFilter", licenseCreationTimeFilter)
+
 		registerFieldFilterDelegate("LicenseStatus", licenseStatusDelegateFilterComp)
 		
 		if (PermissionsController.checkPermission("ViewAccounts")){
@@ -55,6 +57,7 @@ RemoteCollectionView {
 		setFilterDependency(SoftwareProductItemTypeMetaInfo.s_licenseUuid, SoftwareProductItemTypeMetaInfo.s_productUuid)
 
 		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
+		registerFieldFilterDelegate("LicenseCreationTimeFilter", licenseCreationTimeDelegateFilterComp)
 	}
 
 	Component {
@@ -155,9 +158,7 @@ RemoteCollectionView {
 		paths: ["<software-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			console.log("clearAllFilters 1",params)
-			container.collectionFilter.clearAllFilters(true)
-			console.log("clearAllFilters 2")
+			container.filterMenu.clearAllFilters(true)
 
 			if (params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
@@ -176,9 +177,12 @@ RemoteCollectionView {
 
 			if (params.timeFilter){
 				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
-				let name = params.timeFilter.name
-				let data = params.timeFilter.data
-				timeFilterDelegate.setTimeFilter(data, name, true)
+				timeFilterDelegate.setTimeUnit(params.timeFilter.mode, params.timeFilter.unit, true)
+			}
+
+			if (params.licenseCreationTimeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("LicenseCreationTimeFilter")
+				timeFilterDelegate.setTimeUnit(params.licenseCreationTimeFilter.mode, params.licenseCreationTimeFilter.unit, true)
 			}
 
 			if (params.internalUse !== undefined){
@@ -190,9 +194,24 @@ RemoteCollectionView {
 					internalUseFilterDelegate.setSelectedId("true", true)
 				}
 			}
-
 			container.collectionFilter.setSortingInfo(SoftwareProductItemTypeMetaInfo.s_timeStamp, "DESC")
-			container.collectionFilter.filterChanged()
+	
+			container.filterMenu.filterChanged()
+		}
+	}
+
+	TimeFilter {
+		id: licenseCreationTimeFilter
+	}
+
+	Component {
+		id: licenseCreationTimeDelegateFilterComp
+		TimeFilterDelegate {
+			name: qsTr("License Creation Date")
+			canTimeRangeEdit: false
+			onAccepted: {
+				licenseCreationTimeFilter.copyFrom(timeFilter)
+			}
 		}
 	}
 

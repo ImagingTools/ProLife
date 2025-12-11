@@ -26,12 +26,18 @@ RemoteCollectionView {
 
 	visibleMetaInfo: true;
 
+	TimeFilter {
+		id: licenseCreationTimeFilter
+	}
+
 	Component.onCompleted: {
 		table.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 		registerFilters()
 	}
 	
 	function registerFilters(){
+		registerFilter("LicenseCreationTimeFilter", licenseCreationTimeFilter)
+	
 		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
 
 		if (PermissionsController.checkPermission("ViewAccounts")){
@@ -44,6 +50,7 @@ RemoteCollectionView {
 		setFilterDependency(DeviceItemTypeMetaInfo.s_licenseUuid, DeviceItemTypeMetaInfo.s_productUuid)
 
 		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
+		registerFieldFilterDelegate("LicenseCreationTimeFilter", licenseCreationTimeDelegateFilterComp)
 	}
 
 	Component {
@@ -73,7 +80,8 @@ RemoteCollectionView {
 		paths: ["<hardware-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			container.collectionFilter.clearAllFilters(true)
+			console.log("<hardware-filter>", params)
+			container.filterMenu.clearAllFilters(true)
 
 			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
@@ -112,16 +120,19 @@ RemoteCollectionView {
 				}
 			}
 
+			if (params.licenseCreationTimeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("LicenseCreationTimeFilter")
+				timeFilterDelegate.setTimeUnit(params.licenseCreationTimeFilter.mode, params.licenseCreationTimeFilter.unit, true)
+			}
+
 			if (params.timeFilter){
 				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
-				let name = params.timeFilter.name
-				let data = params.timeFilter.data
-				timeFilterDelegate.setTimeFilter(data, name, true)
+				timeFilterDelegate.setTimeUnit(params.timeFilter.mode, params.timeFilter.unit, true)
 			}
 
 			container.collectionFilter.setSortingInfo(DeviceItemTypeMetaInfo.s_timeStamp, "DESC")
 
-			container.collectionFilter.filterChanged()
+			container.filterMenu.filterChanged()
 		}
 	}
 
@@ -144,6 +155,17 @@ RemoteCollectionView {
 		id: licenseDelegateFilterComp
 		
 		LicenseFilterDelegate {
+		}
+	}
+
+	Component {
+		id: licenseCreationTimeDelegateFilterComp
+		TimeFilterDelegate {
+			name: qsTr("License Creation Date")
+			canTimeRangeEdit: false
+			onAccepted: {
+				licenseCreationTimeFilter.copyFrom(timeFilter)
+			}
 		}
 	}
 	

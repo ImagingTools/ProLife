@@ -52,7 +52,6 @@ ViewBase {
 
 	onCommandActivated: {
 		NavigationController.push("Workspace/" + commandId)
-
 		checkCurrentPage(commandId)
 	}
 
@@ -93,8 +92,6 @@ ViewBase {
 			anchors.fill: parent
 
 			property int spacing: Style.marginL
-			property int chartDefaultWidth: 600
-			property int chartCountPerRow: 3
 			property real chartWidth: (width- 4*spacing) / 3 
 
 			property real rowHeight:
@@ -104,7 +101,7 @@ ViewBase {
 					? (height - topRow.height - 4*spacing) / 2
 				: height - topRow.height - 3*spacing
 
-			function navigateToHardware(productName, inUse, statusId){
+			function navigateToHardware(productName, inUse, statusId, isLicenseCreation){
 				let productId = CachedProductCollection.getProductIdByName(productName)
 				let params = {}
 				params.productId = productId
@@ -118,9 +115,15 @@ ViewBase {
 		
 				if (root.timeFilter){
 					let timeFilterObj = {}
-					timeFilterObj.name = timeFilterDelegate.mainButtonText
-					timeFilterObj.data = root.timeFilter
-					params.timeFilter = timeFilterObj
+					timeFilterObj.unit = root.timeFilter.m_timeUnit
+					timeFilterObj.mode = root.timeFilter.m_interpretationMode
+
+					if (isLicenseCreation){
+						params.licenseCreationTimeFilter = timeFilterObj
+					}
+					else{
+						params.timeFilter = timeFilterObj
+					}
 				}
 		
 				NavigationController.navigate("Devices/<hardware-filter>", params)
@@ -137,9 +140,9 @@ ViewBase {
 		
 				if (root.timeFilter){
 					let timeFilterObj = {}
-					timeFilterObj.name = timeFilterDelegate.mainButtonText
-					timeFilterObj.data = root.timeFilter
-					params.timeFilter = timeFilterObj
+					timeFilterObj.unit = root.timeFilter.m_timeUnit
+					timeFilterObj.mode = root.timeFilter.m_interpretationMode
+					params.licenseCreationTimeFilter = timeFilterObj
 				}
 		
 				NavigationController.navigate("SoftwareProducts/<software-filter>", params)
@@ -158,21 +161,23 @@ ViewBase {
 					id: filterRow
 					height: customerFilterDelegate.height
 					spacing: Style.spacingM
+
 					TimeFilterDelegate {
 						id: timeFilterDelegate
 						objectName: "TimeFilterDelegate"
-						collectionFilter: CollectionFilter {}
+						name: qsTr("Date")
 						canTimeRangeEdit: false
+						showFilterDetails: true
 
 						Component.onCompleted: {
-							setTimeFilter(root.defaultTimeFilter, qsTr("This year"), true)
+							setTimeUnit("Current", "Year", true)
 						}
 
 						onAccepted: {
 							root.timeFilter = timeFilter.copyMe()
 						}
 
-						onClearFilter: {
+						onCleared: {
 							root.timeFilter = null
 						}
 					}
@@ -482,7 +487,7 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					onLegendClicked: {
 						chartsBlock.navigateToSoftware(label)
 					}
@@ -497,7 +502,7 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
 						chartsBlock.navigateToSoftware(label)
@@ -513,7 +518,7 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 				}
 			}
 		
@@ -549,9 +554,9 @@ ViewBase {
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					legendClickable: true
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true)
+						chartsBlock.navigateToHardware(label, true, undefined, true)
 					}
 				}
 		
@@ -564,10 +569,10 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
 					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true)
+						chartsBlock.navigateToHardware(label, true, undefined, true)
 					}
 				}
 		
@@ -580,11 +585,11 @@ ViewBase {
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareStatusInfo
 					subscriptionCommandId: "OnDevicesCollectionChanged"
 					customerId: root.customerId
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
 						let statusId = deviceProductionStatus.getStatusIdByName(label)
-						chartsBlock.navigateToHardware(label, false, String(deviceProductionStatus.getStatusIndex(statusId)))
+						chartsBlock.navigateToHardware(label, false, String(deviceProductionStatus.getStatusIndex(statusId)), false)
 					}
 					
 					DeviceProductionStatus {

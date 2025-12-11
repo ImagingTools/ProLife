@@ -800,6 +800,17 @@ void CSoftwareProductCollectionControllerComp::SetAdditionalFilters(
 }
 
 
+// reimplemented (icomp::CComponentBase)
+
+void CSoftwareProductCollectionControllerComp::OnComponentCreated()
+{
+	BaseClass::OnComponentCreated();
+
+	m_timeFilterParamRepresentationControllerPtr.SetPtr(new imtserverapp::CTimeFilterParamRepresentationController("LicenseCreationTimeFilter"));
+	RegisterFilterToSelectionParams(m_licenseCreationTimeParam, *m_timeFilterParamRepresentationControllerPtr.GetPtr());
+}
+
+
 bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	const imtgql::CGqlRequest& /*rawGqlRequest*/,
 	const sdl::prolife::Licenses::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,

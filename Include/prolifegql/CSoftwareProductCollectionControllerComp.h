@@ -61,6 +61,9 @@ protected:
 				QString& errorMessage) const override;
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
+	// reimplemented (icomp::CComponentBase)
+	virtual void OnComponentCreated() override;
+
 private:
 	bool FillObjectFromRepresentation(
 				const sdl::prolife::Licenses::CSoftwareProductData::V1_0& representation,
@@ -69,6 +72,10 @@ private:
 				QString& errorMessage) const;
 	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
+
+private:
+	imtbase::CTimeFilterParam m_licenseCreationTimeParam;
+	istd::TDelPtr<imtserverapp::CTimeFilterParamRepresentationController> m_timeFilterParamRepresentationControllerPtr;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);

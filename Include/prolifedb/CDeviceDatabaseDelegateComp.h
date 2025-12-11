@@ -21,6 +21,7 @@ public:
 	virtual QString CreateAdditionalFiltersQuery(const iprm::IParamsSet& filterParams) const override;
 	virtual bool CreateTextFilterQuery(const imtbase::IComplexCollectionFilter& collectionFilter, QString& textFilterQuery) const override;
 	virtual QByteArray CreateJoinTablesQuery() const override;
+	virtual QByteArray GetCustomColumnsQuery() const override;
 };
 
 

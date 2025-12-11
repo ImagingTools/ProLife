@@ -48,6 +48,26 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 		}
 	}
 
+	if (paramIds.contains("LicenseCreationTimeFilter")){
+		iprm::TParamsPtr<imtbase::ITimeFilterParam> filterParamPtr(&filterParams, "LicenseCreationTimeFilter");
+		if (filterParamPtr.IsValid()){
+			QString timeFilterQuery;
+			if (CreateTimeFilterQuery(*filterParamPtr.GetPtr(), timeFilterQuery, QStringLiteral("lic.\"LicenseCreationDate\""))){
+				if (!filterQuery.isEmpty()){
+					filterQuery = "(" + filterQuery + ")";
+				}
+
+				if (!filterQuery.isEmpty() && !timeFilterQuery.isEmpty()){
+					filterQuery += QStringLiteral(" AND ");
+				}
+
+				if (!timeFilterQuery.isEmpty()){
+					filterQuery += "(" + timeFilterQuery + ")";
+				}
+			}
+		}
+	}
+
 	return filterQuery;
 }
 
@@ -92,7 +112,22 @@ QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 					OR users."DocumentId"::text = root1."RevisionInfo"->>'OwnerId')
 					AND users."State" = 'Active'
 				)
+			LEFT JOIN LATERAL (
+				SELECT
+					si."TimeStamp" AS "LicenseCreationDate"
+				FROM "Devices" AS si
+				WHERE si."DocumentId" = root."DocumentId"
+					AND (si."DataMetaInfo"->>'SoftwareCount')::int > 0
+				ORDER BY si."TimeStamp" ASC
+				LIMIT 1
+			) AS lic ON TRUE
 	)");
+}
+
+
+QByteArray CDeviceDatabaseDelegateComp::GetCustomColumnsQuery() const
+{
+	return QByteArray(R"(lic."LicenseCreationDate" as "LicenseCreationDate")");
 }
 
 

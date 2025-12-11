@@ -14,13 +14,6 @@ ViewBase {
 	id: root
 
 	commandsSeparatorVisible: false
-	property int chartDefaultWidth: 600
-	property int chartCountPerRow: 3
-	property real chartWidth:
-		(width >= chartDefaultWidth * chartCountPerRow + Style.marginL * (chartCountPerRow - 1))
-		? chartDefaultWidth
-		: (width - 2*Style.marginL * (chartCountPerRow - 1)) / chartCountPerRow
-
 	property int spacing: Style.marginL
 	property int commandsPanelHeight: Style.marginL
 
@@ -88,18 +81,19 @@ ViewBase {
 		TimeFilterDelegate {
 			id: timeFilterDelegate
 			objectName: "TimeFilterDelegate"
-			collectionFilter: CollectionFilter {}
 			canTimeRangeEdit: false
+			showFilterDetails: true
+			name: qsTr("Creation Date")
 
 			Component.onCompleted: {
-				setTimeFilter(root.defaultTimeFilter, qsTr("This year"), true)
+				setTimeUnit("Current", "Year", true)
 			}
 
 			onAccepted: {
 				root.timeFilter = timeFilter.copyMe()
 			}
 
-			onClearFilter: {
+			onCleared: {
 				root.timeFilter = null
 			}
 		}
@@ -159,7 +153,7 @@ ViewBase {
 							subscriptionCommandId: "OnDevicesCollectionChanged"
 							legendClickable: true
 							visible: false
-							timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+							timeFilter: root.timeFilter
 							onLegendClicked: {
 								let productId = CachedProductCollection.getProductIdByName(label)
 								let params = {}
@@ -167,8 +161,8 @@ ViewBase {
 								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
-									timeFilterObj.name = timeFilterDelegate.mainButtonText
-									timeFilterObj.data = root.timeFilter
+									timeFilterObj.unit = root.timeFilter.m_timeUnit
+									timeFilterObj.mode = root.timeFilter.m_interpretationMode
 									params.timeFilter = timeFilterObj
 								}
 								
@@ -184,7 +178,7 @@ ViewBase {
 							name: qsTr("Software Instances by Period")
 							gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareCreationBarChart
 							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-							timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+							timeFilter: root.timeFilter
 							legendClickable: true
 							visible: false
 							onLegendClicked: {
@@ -194,8 +188,8 @@ ViewBase {
 								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
-									timeFilterObj.name = timeFilterDelegate.mainButtonText
-									timeFilterObj.data = root.timeFilter
+									timeFilterObj.unit = root.timeFilter.m_timeUnit
+									timeFilterObj.mode = root.timeFilter.m_interpretationMode
 									params.timeFilter = timeFilterObj
 								}
 								
@@ -233,7 +227,7 @@ ViewBase {
 							subscriptionCommandId: "OnDevicesCollectionChanged"
 							legendClickable: true
 							visible: false
-							timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+							timeFilter: root.timeFilter
 							Component.onCompleted: {
 								updateModel()
 							}
@@ -245,8 +239,8 @@ ViewBase {
 
 								if (root.timeFilter){
 									let timeFilterObj = {}
-									timeFilterObj.name = timeFilterDelegate.mainButtonText
-									timeFilterObj.data = root.timeFilter
+									timeFilterObj.unit = root.timeFilter.m_timeUnit
+									timeFilterObj.mode = root.timeFilter.m_interpretationMode
 									navigationParams.timeFilter = timeFilterObj
 								}
 
@@ -264,7 +258,7 @@ ViewBase {
 							subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
 							legendClickable: true
 							visible: false
-							timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+							timeFilter: root.timeFilter
 							Component.onCompleted: {
 								updateModel()
 							}
@@ -276,8 +270,8 @@ ViewBase {
 								
 								if (root.timeFilter){
 									let timeFilterObj = {}
-									timeFilterObj.name = timeFilterDelegate.mainButtonText
-									timeFilterObj.data = root.timeFilter
+									timeFilterObj.unit = root.timeFilter.m_timeUnit
+									timeFilterObj.mode = root.timeFilter.m_interpretationMode
 									navigationParams.timeFilter = timeFilterObj
 								}
 								
@@ -297,7 +291,7 @@ ViewBase {
 					subscriptionCommandId: "OnDevicesCollectionChanged"
 					legendClickable: true
 					visible: false
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 					Component.onCompleted: {
 						updateModel()
 					}
@@ -309,8 +303,8 @@ ViewBase {
 
 						if (root.timeFilter){
 							let timeFilterObj = {}
-							timeFilterObj.name = timeFilterDelegate.mainButtonText
-							timeFilterObj.data = root.timeFilter
+							timeFilterObj.unit = root.timeFilter.m_timeUnit
+							timeFilterObj.mode = root.timeFilter.m_interpretationMode
 							navigationParams.timeFilter = timeFilterObj
 						}
 
@@ -341,7 +335,7 @@ ViewBase {
 					name: qsTr("Order Creation By Period")
 					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getOrderCreationLineChart
 					subscriptionCommandId: "OnOrdersCollectionChanged"
-					timeFilter: root.timeFilter ? root.timeFilter : root.defaultTimeFilter
+					timeFilter: root.timeFilter
 				}
 			}
 		}

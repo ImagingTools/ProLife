@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5434" Description="ACF"/>
-            <Version Id="1" Number="2255" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5440" Description="ACF"/>
+            <Version Id="1" Number="2256" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -237,9 +237,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
@@ -531,16 +528,10 @@
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
@@ -550,9 +541,6 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -585,21 +573,15 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="PagesDemultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="AccountSqlRepository" ComponentId="Repositories/AccountSqlRepository"/>
         <Component ExportedId="AccountsController" ComponentId="PageData/AccountsPage"/>
         <Component ExportedId="AccountsPage" ComponentId="CustomersPage"/>
-        <Component ExportedId="BindingProductsRepository" ComponentId="Repositories/BindingProductsRepository"/>
         <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
-        <Component ExportedId="DeviceSqlCollection" ComponentId="Repositories/DeviceSqlCollection"/>
-        <Component ExportedId="DeviceSqlRepository" ComponentId="Repositories/DeviceSqlRepository"/>
         <Component ExportedId="DevicesController" ComponentId="PageData/DevicesPage"/>
         <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
-        <Component ExportedId="OrderSqlRepository" ComponentId="Repositories/OrderSqlRepository"/>
         <Component ExportedId="OrdersController" ComponentId="PageData/OrdersPage"/>
         <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
         <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController"/>
         <Component ExportedId="SoftwareProductsController" ComponentId="PageData/SoftwareProductsPage"/>
         <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
-        <Component ExportedId="SoftwareSqlRepository" ComponentId="Repositories/SoftwareSqlRepository"/>
     </ExportedComponents>
 </Acf>

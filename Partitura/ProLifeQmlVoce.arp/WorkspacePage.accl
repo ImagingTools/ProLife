@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5434" Description="ACF"/>
-            <Version Id="1" Number="2255" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5440" Description="ACF"/>
+            <Version Id="1" Number="2256" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -23,10 +23,16 @@
     <EmbeddedRegistries>
         <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="GetHardwareStatusInfo" X="925" Y="350" Note=""/>
+                <Element ComponentName="GetHardwareConfigurationPieChart" X="600" Y="475" Note=""/>
+                <Element ComponentName="GetHardwareCreationBarChart" X="950" Y="575" Note=""/>
+                <Element ComponentName="GetHardwareCustomerPieChart" X="575" Y="575" Note=""/>
+                <Element ComponentName="GetHardwareStatusInfo" X="950" Y="350" Note=""/>
                 <Element ComponentName="GetHardwareUsedBarChart" X="225" Y="350" Note=""/>
                 <Element ComponentName="GetHardwareUsedPieChart" X="600" Y="350" Note=""/>
                 <Element ComponentName="GetLicenseCreationInfo" X="225" Y="250" Note=""/>
+                <Element ComponentName="GetOrderCreationLineChart" X="950" Y="675" Note=""/>
+                <Element ComponentName="GetSoftwareCreationBarChart" X="950" Y="475" Note=""/>
+                <Element ComponentName="GetSoftwareCustomerPieChart" X="575" Y="675" Note=""/>
                 <Element ComponentName="GetSoftwareUsedBarChart" X="600" Y="250" Note=""/>
                 <Element ComponentName="GetSoftwareUsedPieChart" X="950" Y="250" Note=""/>
                 <Element ComponentName="GetTotalSummaryInfo" X="225" Y="475" Note=""/>

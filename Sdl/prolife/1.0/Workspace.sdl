@@ -33,7 +33,6 @@ type ChartSummary {
 }
 
 type PieChartData {
-	axes: ChartAxes
 	segments: [ChartSegment]!
 	summary: ChartSummary
 }
