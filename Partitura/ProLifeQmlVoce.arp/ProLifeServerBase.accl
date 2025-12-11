@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5436" Description="ACF"/>
-            <Version Id="1" Number="2254" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="395266" Description="Qt Framework"/>
+            <Version Id="0" Number="5442" Description="ACF"/>
+            <Version Id="1" Number="2256" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
@@ -27,6 +27,21 @@
         <Element ComponentName="UsersModelUpdateBridge" X="200" Y="675" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
+                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
+                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
+                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
+                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
+                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Migrations">
             <PositionMap>
                 <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
@@ -47,21 +62,6 @@
                 <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
                 <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
                 <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Repositories">
-            <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
-                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
-                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
