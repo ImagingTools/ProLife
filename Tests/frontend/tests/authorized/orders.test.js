@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, clickOnPage} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, clickOnPage, selectComboBox} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -11,7 +11,7 @@ test('Start orders page', async ({ page }) => {
 });
 
 test('Orders filters test', async ({ page }) => {
-  await clickAt(page, 230, 165); // Customers filter click
+  await selectComboBox(page, "IAS", ["FilterPanel", "CustomersFilter"])// Customers filter CB click
   await checkScreenshot(page, 'orders_account_filter.png')
 });
 
@@ -78,7 +78,7 @@ test('New order test', async ({ page }) => {
   await checkScreenshot(page, 'orders_new_editor_14.png')
 
   await clickAt(page, 765, 690); // Expiration check box click
-  await checkScreenshot(page, 'orders_new_editor_15.png')
+  await checkScreenshot(page, 'orders_new_editor_15.png', {path: ["ExpirationControl"]})
 
   await clickAt(page, 1020, 85); // Hardware category click
   await checkScreenshot(page, 'orders_new_editor_16.png')

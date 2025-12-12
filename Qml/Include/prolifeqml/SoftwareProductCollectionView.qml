@@ -207,6 +207,7 @@ RemoteCollectionView {
 	Component {
 		id: licenseCreationTimeDelegateFilterComp
 		TimeFilterDelegate {
+			objectName: "LicenseCreationDateFilter"
 			name: qsTr("License Creation Date")
 			canTimeRangeEdit: false
 			onAccepted: {
@@ -218,6 +219,7 @@ RemoteCollectionView {
 	Component {
 		id: internalUseDelegateFilterComp
 		FieldFilterDelegate {
+			objectName: "UsageFilter"
 			name: qsTr("Usage")
 
 			defaultFieldFilter.m_fieldId: "InternalUse"
@@ -235,6 +237,7 @@ RemoteCollectionView {
 		
 		FieldFilterDelegate {
 			id: productsDelegateFilter
+			objectName: "ProductsFilter"
 			name: qsTr("Products")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_productUuid
@@ -255,6 +258,7 @@ RemoteCollectionView {
 		
 		FieldFilterDelegate {
 			id: productsDelegateFilter
+			objectName: "LicensesFilter"
 			name: qsTr("Licenses")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_licenseUuid
@@ -278,6 +282,7 @@ RemoteCollectionView {
 		id: licenseStatusDelegateFilterComp
 		FieldFilterDelegate {
 			id: licenseDelegateFilter
+			objectName: "LicenseStatusFilter"
 			name: qsTr("License Status")
 
 			Component.onCompleted: {
@@ -320,6 +325,7 @@ RemoteCollectionView {
 		id: customersDelegateFilterComp
 		FieldFilterDelegate {
 			id: customersDelegateFilter
+			objectName: "CustomersFilter"
 			name: qsTr("Customers")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: "CustomerId"

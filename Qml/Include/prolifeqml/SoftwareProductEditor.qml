@@ -414,6 +414,7 @@ ViewBase {
 				
 				controlComp: Component {
 					Item {
+						objectName: "ExpirationControl"
 						width: 300;
 						height: 30;
 						

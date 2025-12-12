@@ -1,10 +1,5 @@
 const {expect } = require('@playwright/test');
 const delay = (time = 5000) => new Promise(resolve => setTimeout(resolve, time));
-const fs = require('fs');
-const path = require('path');
-
-var frameCount = 0;
-
 
 const clickOnElement = async (page, path) => {
   // Находим элемент по пути и ждём появления
@@ -60,10 +55,11 @@ function createStrPath(path) {
 }
 
 const fillTextInput = async (page, text, path) => {
-  const textInput = await page.$(createStrPath(path) + ' [objectName="TextInput"] input')
+  // const textInput = await page.$(createStrPath(path) + ' [objectName="TextInput"] input')
+  const textInput = page.locator(createStrPath(path) + ' [objectName="TextInput"][visible]').first();
   if (textInput) {
     const rect = await textInput.boundingBox()
-    await clickAt(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    await clickAt(page, rect.x + rect.width / 2, rect.y + rect.height / 2);
     await page.keyboard.type(text);
   }  
 }
@@ -88,10 +84,21 @@ const wheelScroll = async (page, deltaY) => {
 };
 
 const checkScreenshot = async (page, filename, maskParams) => {
-  await addMask(page, maskParams);
-  await waitForPageStability(page);
-  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0});
-  await removeMask(page);
+  try {
+    await addMask(page, maskParams);
+    await waitForPageStability(page);
+
+    await expect(page).toHaveScreenshot(filename, {
+      fullPage: true,
+      threshold: 0.05,
+      maxDiffPixelRatio: 0
+    });
+  } catch (err) {
+    console.error(`Screenshot failed: ${filename}`);
+    console.error(err.message);
+  } finally {
+    await removeMask(page);
+  }
 };
 
 async function login(page, username, password) {
@@ -133,7 +140,6 @@ async function waitForDomStability(page, options = {}) {
       await page.waitForTimeout(checkInterval);
     } catch (e) {
       if (e.message.includes('Execution context was destroyed')) {
-        // Страница ушла — ждём новую загрузку и сбрасываем состояние
         await page.waitForLoadState('domcontentloaded');
         lastHtml = '';
         stableSince = Date.now();
@@ -142,16 +148,12 @@ async function waitForDomStability(page, options = {}) {
       throw e;
     }
   }
-
-  // throw new Error(`Page did not stabilize within ${timeout}ms`);
 }
 
 async function waitForPageStability(page, options = {}) {
   const {
     maxTotalTime = 5000,
     domStableTime = 800,
-    networkIdleTimeout = 2000,
-    debug = false,
   } = options;
 
   await waitForDomStability(page, {
@@ -159,33 +161,69 @@ async function waitForPageStability(page, options = {}) {
     timeout: maxTotalTime,
     checkInterval: 100
   });
-
-  if (debug) {
-    console.log('Page stabilized');
-  }
 }
 
 const addMask = async (page, maskParams) => {
   if (!maskParams) return;
 
+  let rect = null;
+
+  // 1. Если передан path — находим элемент и получаем boundingBox
+  if (maskParams.path) {
+    const locator = page.locator(createStrPath(maskParams.path));
+    await locator.waitFor({ timeout: 3000 });
+
+    const element = await locator.elementHandle();
+    if (!element)
+      throw new Error("Element not found for mask path: " + maskParams.path.join(" > "));
+
+    rect = await element.boundingBox();
+    if (!rect)
+      throw new Error("boundingBox is null for mask element");
+  }
+
+  // 2. Если переданы x,y,width,height — используем их
+  if (!rect && maskParams.x !== undefined) {
+    rect = {
+      x: maskParams.x,
+      y: maskParams.y,
+      width: maskParams.width,
+      height: maskParams.height
+    };
+  }
+
+  if (!rect) {
+    throw new Error("Mask must have path or coordinates");
+  }
+
+  // 3. Padding (если указан)
+  const pad = maskParams.padding || 0;
+
+  const x = rect.x - pad;
+  const y = rect.y - pad;
+  const width = rect.width + pad * 2;
+  const height = rect.height + pad * 2;
+
+  // 4. Рисуем маску
   await page.evaluate(({ x, y, width, height }) => {
     const mask = document.createElement('div');
     Object.assign(mask.style, {
       position: 'fixed',
-      top: (typeof y === 'number' ? y + 'px' : y) || '0px',
-      left: (typeof x === 'number' ? x + 'px' : x) || '0px',
-      width: (typeof width === 'number' ? width + 'px' : width) || '100px',
-      height: (typeof height === 'number' ? height + 'px' : height) || '100px',
+      top: y + 'px',
+      left: x + 'px',
+      width: width + 'px',
+      height: height + 'px',
       backgroundColor: '#000000',
       zIndex: '9999',
       pointerEvents: 'none',
     });
     mask.setAttribute('data-mask', 'true');
     document.body.appendChild(mask);
-  }, maskParams);
+  }, { x, y, width, height });
 
   await page.waitForFunction(() => !!document.querySelector('div[data-mask="true"]'));
 };
+
 
 const removeMask = async (page) => {
   await page.evaluate(() => {

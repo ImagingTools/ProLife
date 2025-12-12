@@ -109,13 +109,13 @@ private:
 				const QString& yLabel,
 				sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
-	uint fnv1a(const QByteArray& data) const;
+	uint FNV1A(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
 	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter, bool isObligatory = false) const;
 	void AddLicenseCreationTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
 	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
-	void PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const;
+	void PrepareFilterFromChartInput(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const;
 	sdl::prolife::Workspace::CBarChartData BuildProductUsageBarChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
@@ -129,6 +129,11 @@ private:
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+				QString& errorMessage) const;
+	sdl::prolife::Workspace::CPieChartData BuildProductByCustomerPieChart(
+				const imtbase::IObjectCollection& collection,
+				const sdl::prolife::Workspace::CChartInput& input,
+				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
 
 private:

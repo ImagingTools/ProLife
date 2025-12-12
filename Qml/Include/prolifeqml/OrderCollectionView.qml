@@ -71,6 +71,7 @@ RemoteCollectionView {
 		id: customersDelegateFilterComp
 		FieldFilterDelegate {
 			id: customersDelegateFilter
+			objectName: "CustomersFilter"
 			name: qsTr("Customers")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: "CustomerId"

@@ -460,54 +460,16 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Workspace::CPieChartData response;
-
-	if (!m_accountCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'AccountCollection' was not set", "CWorkspaceControllerComp");
-		return response;
-	}
-
 	if (!m_hardwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
-		return response;
+		return sdl::prolife::Workspace::CPieChartData();
 	}
 
-	auto arguments = getHardwareCustomerPieChartRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0.HasValue()){
-		errorMessage = QString("Unable to get hardware customer pie chart. Error: GraphQL version unsupported");
-		return response;
-	}
-
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
-	}
-
-	response.Version_1_0.Emplace();
-	response.Version_1_0->segments.Emplace();
-
-	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
-	for (const QByteArray& elementId : elementIds){
-		iprm::CParamsSet paramsSet;
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		AddTimeFilter(paramsSet, timeFilter);
-		JoinGroupFilter(gqlRequest, paramsSet);
-
-		int count = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		if (count > 0){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_accountCollectionCompPtr->GetObjectData(elementId, dataPtr)){
-				const prolifedata::ICustomerInfo* accountInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
-				if (accountInfoPtr != nullptr){
-					QString customerName = accountInfoPtr->GetName();
-					response.Version_1_0->segments->push_back(CreateChartSegment(count, customerName, GenerateColorFromString(customerName), elementId));
-				}
-			}
-		}
-	}
-
-	return response;
+	return BuildProductByCustomerPieChart(
+				*m_hardwareCollectionCompPtr.GetPtr(),
+				getHardwareCustomerPieChartRequest.GetRequestedArguments().input,
+				gqlRequest,
+				errorMessage);
 }
 
 
@@ -516,54 +478,16 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Workspace::CPieChartData response;
-
-	if (!m_accountCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'AccountCollection' was not set", "CWorkspaceControllerComp");
-		return response;
-	}
-
 	if (!m_softwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
-		return response;
+		return sdl::prolife::Workspace::CPieChartData();
 	}
 
-	auto arguments = getSoftwareCustomerPieChartRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0.HasValue()){
-		errorMessage = QString("Unable to get software customer pie chart. Error: GraphQL version unsupported");
-		return response;
-	}
-
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
-	}
-
-	response.Version_1_0.Emplace();
-	response.Version_1_0->segments.Emplace();
-
-	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
-	for (const QByteArray& elementId : elementIds){
-		iprm::CParamsSet paramsSet;
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		AddTimeFilter(paramsSet, timeFilter);
-		JoinGroupFilter(gqlRequest, paramsSet);
-
-		int count = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
-		if (count > 0){
-			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_accountCollectionCompPtr->GetObjectData(elementId, dataPtr)){
-				const prolifedata::ICustomerInfo* accountInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
-				if (accountInfoPtr != nullptr){
-					QString customerName = accountInfoPtr->GetName();
-					response.Version_1_0->segments->push_back(CreateChartSegment(count, customerName, GenerateColorFromString(customerName), elementId));
-				}
-			}
-		}
-	}
-
-	return response;
+	return BuildProductByCustomerPieChart(
+				*m_softwareCollectionCompPtr.GetPtr(),
+				getSoftwareCustomerPieChartRequest.GetRequestedArguments().input,
+				gqlRequest,
+				errorMessage);
 }
 
 
@@ -676,7 +600,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCrea
 
 	iprm::CParamsSet selectionParams;
 	const auto& input = request.GetRequestedArguments().input;
-	PrepareChartFilter(selectionParams, input);
+	PrepareFilterFromChartInput(selectionParams, input);
 
 	QMap<QDate, int> map;
 
@@ -1180,7 +1104,7 @@ bool CWorkspaceControllerComp::JoinGroupFilter(const imtgql::IGqlRequest& gqlReq
 }
 
 
-uint CWorkspaceControllerComp::fnv1a(const QByteArray& data) const
+uint CWorkspaceControllerComp::FNV1A(const QByteArray& data) const
 {
 	uint hash = 2166136261u;
 	for (uchar c : data){
@@ -1203,7 +1127,7 @@ QString CWorkspaceControllerComp::GenerateColorFromString(const QString& text) c
 		return it.value();
 	}
 
-	uint hash = fnv1a(text.toUtf8());
+	uint hash = FNV1A(text.toUtf8());
 	int index = hash % s_standardColors.size();
 	QString color = s_standardColors[index];
 
@@ -1278,7 +1202,7 @@ sdl::prolife::Workspace::CChartSegment::V1_0 CWorkspaceControllerComp::CreateCha
 }
 
 
-void CWorkspaceControllerComp::PrepareChartFilter(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const
+void CWorkspaceControllerComp::PrepareFilterFromChartInput(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const
 {
 	if (!chartInput.Version_1_0.HasValue()){
 		return;
@@ -1399,6 +1323,57 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductUsa
 		errorMessage = "Unable to build pie chart data. Internal error";
 	}
 
+	return response;
+}
+
+
+sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByCustomerPieChart(
+			const imtbase::IObjectCollection& collection,
+			const sdl::prolife::Workspace::CChartInput& input,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	sdl::prolife::Workspace::CPieChartData response;
+
+	if (!m_accountCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'AccountCollection' was not set", "CWorkspaceControllerComp");
+		return response;
+	}
+
+	if (!input.Version_1_0.HasValue()){
+		errorMessage = QString("Unable to build pie chart by customer. Error: GraphQL version unsupported");
+		return response;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (input.Version_1_0->timeFilter.HasValue()){
+		timeFilter = *input.Version_1_0->timeFilter;
+	}
+
+	response.Version_1_0.Emplace();
+	response.Version_1_0->segments.Emplace();
+
+	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
+	for (const QByteArray& elementId : elementIds){
+		iprm::CParamsSet paramsSet;
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
+		AddTimeFilter(paramsSet, timeFilter);
+		JoinGroupFilter(gqlRequest, paramsSet);
+
+		int count = collection.GetElementsCount(&paramsSet);
+		if (count > 0){
+			imtbase::IObjectCollection::DataPtr dataPtr;
+			if (m_accountCollectionCompPtr->GetObjectData(elementId, dataPtr)){
+				const prolifedata::ICustomerInfo* accountInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
+				if (accountInfoPtr != nullptr){
+					QString customerName = accountInfoPtr->GetName();
+					response.Version_1_0->segments->push_back(CreateChartSegment(count, customerName, GenerateColorFromString(customerName), elementId));
+				}
+			}
+		}
+	}
+	
 	return response;
 }
 

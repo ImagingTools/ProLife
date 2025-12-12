@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, clickOnPage} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, clickOnPage, fillTextInput, clickOnCommand, clickOnButton, selectComboBox} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -26,50 +26,36 @@ test('Select sensor test', async ({ page }) => {
 test('Revision command test', async ({ page }) => {
   await selectFirstSensor(page)
 
-  await clickAt(page, 930, 115); // 'Revision' command click
+  await clickOnCommand(page, "Revision") // 'Revision' command click
   await checkScreenshot(page, 'revision_dialog.png')
 
   await clickAt(page, 580, 150); // Select first revision
   await checkScreenshot(page, 'first_revision.png')
 });
 
-test('CreateLicenseFile command test', async ({ page }) => {
-});
-
 test('Sensors filters test', async ({ page }) => {
-  await clickAt(page, 1075, 170); // 'Text Filter' click
-  await page.keyboard.type("ias");
+  await fillTextInput(page, "ias", ["FilterPanel", "SearchTextInput"])
   await checkScreenshot(page, 'sensors_text_filter.png')
 
-  await clickAt(page, 170, 165); // 'Date Filter' click
-  await checkScreenshot(page, 'sensors_date_filter_dialog.png', { x: 140, y: 360, width: 240, height: 130 })
-
-  await clickAt(page, 255, 385); // Last year click
+  await clickOnButton(page, ["FilterPanel", "CreationDateFilter"]) // Date filter CB click
+  await clickOnButton(page, ["TimeFilterParamView", "Year_Last"]) // Last Year click
   await checkScreenshot(page, 'sensors_date_filter.png')
 
-  await clickAt(page, 610, 165); // Sensor Status Filter click
-  await clickAt(page, 630, 200); // None status selected
+  await selectComboBox(page, "None", ["FilterPanel", "SensorStatusFilter"]) // Sensor status filter click
   await checkScreenshot(page, 'sensors_new_sensors_filter.png')
-
-  await clickAt(page, 350, 165); // License Status filter click
-  await checkScreenshot(page, 'sensors_licenses_filter.png')
-
-  await clickAt(page, 395, 200); // Sensor without licenses click
+ 
+  await selectComboBox(page, "Sensorswithoutalicense", ["FilterPanel", "LicenseFilter"]) // License Status Filter click -> without licenses
   await checkScreenshot(page, 'sensors_without_licenses_filter.png')
 
-  await clickAt(page, 350, 165); // License filter click
-  await clickAt(page, 385, 230); // Sensor with licenses click
+  await selectComboBox(page, "Sensorswithlicense", ["FilterPanel", "LicenseFilter"]) // License Status Filter click-> with licenses
   await checkScreenshot(page, 'sensors_with_licenses_filter.png')
 
-  await clickAt(page, 1140, 165); // Clear text filter
-  await clickAt(page, 700, 165); // Clear Status filter
-  await clickAt(page, 250, 165); // Date clear filter
+  await clickOnButton(page, ["SearchTextInput", "ClearText"])
+  await clickOnButton(page, ["FilterPanel", "SensorStatusFilter", "ClearButton"])
+  await clickOnButton(page, ["FilterPanel", "CreationDateFilter", "ClearButton"])
   await checkScreenshot(page, 'sensors_clear_filters.png')
 
-  await clickAt(page, 490, 165); // Customers filter click
-  await checkScreenshot(page, 'sensors_account_filter_dialog.png')
-
-  await clickAt(page, 550, 535); // Quiss account select
+  await selectComboBox(page, "QUISS", ["FilterPanel", "CustomersFilter"]) // Customers filter click -> QUISS selected
   await checkScreenshot(page, 'sensors_quiss_account_filter.png')
 });
 
@@ -109,7 +95,7 @@ test('Sensors pagination test', async ({ page }) => {
 });
 
 test('Sensors new command test', async ({ page }) => {
-  await clickAt(page, 170, 115); // New command click
+  await clickOnCommand(page, "New") 
   await checkScreenshot(page, 'sensors_new_editor.png')
 
   await clickAt(page, 575, 250); // Device type combobox click
@@ -175,7 +161,7 @@ test('Sensors new command test', async ({ page }) => {
 
 test('Sensor editor test', async ({ page }) => {
   await selectFirstSensor(page)
-  await clickAt(page, 290, 115); // 'Edit' command click
+  await clickOnCommand(page, "Edit") 
   await checkScreenshot(page, 'sensor_editor.png')
 
   await clickAt(page, 1366, 178); // Hide document history
@@ -205,23 +191,23 @@ test('Sensor editor test', async ({ page }) => {
   await clickAt(page, 487, 493); // Select defect status
   await checkScreenshot(page, 'sensor_select_defect_status.png')
 
-  await clickAt(page, 240, 120); // 'Undo' command click
+  await clickOnCommand(page, "Undo") // 'Undo' command click
   await checkScreenshot(page, 'sensor_after_undo.png')
 
-  await clickAt(page, 330, 120); // 'Redo' command click
+  await clickOnCommand(page, "Redo") // 'Redo' command click
   await checkScreenshot(page, 'sensor_after_redo.png')
 
-  await clickAt(page, 550, 115); // Bind command click
+  await clickOnCommand(page, "Bind") // Bind command click
   await checkScreenshot(page, 'sensors_editor_bind_without_mac_address.png')
 
   await clickAt(page, 865, 445); // OK click
 
-  await clickAt(page, 700, 115); // Create license file command click
+  await clickOnCommand(page, "CreateLicenseFile") // Create license file command click
   await checkScreenshot(page, 'sensors_editor_clf_err.png')
 
   await clickAt(page, 865, 445); // OK click
 
-  await clickAt(page, 880, 115); // Transfer licenses command click
+  await clickOnCommand(page, "TransferLicenses") // Transfer licenses command click
   await checkScreenshot(page, 'sensors_editor_tl.png')
   await clickAt(page, 890, 445); // OK click
   
@@ -232,7 +218,7 @@ test('Sensor editor test', async ({ page }) => {
   await page.keyboard.type('22:88:44:11:14:34');
   await checkScreenshot(page, 'sensors_new_editor_mac_address_valid.png')
 
-  await clickAt(page, 140, 120); // 'Save' command click
+  await clickOnCommand(page, "Save") // 'Save' command click
   await checkScreenshot(page, 'sensor_after_save.png')
 
   await clickAt(page, 530, 70); // Close document (tab)
@@ -245,7 +231,7 @@ test('Bind command test', async ({ page }) => {
   await checkScreenshot(page, 'bind_sensors_0.png')
   await selectFirstSensor(page)
 
-  await clickAt(page, 455, 115); // 'Bind' command click
+  await clickOnCommand(page, "Bind") // 'Bind' command click
   await checkScreenshot(page, 'bind_sensors_1.png')
 
   await clickAt(page, 1000, 190); // Product combobox click
@@ -295,8 +281,8 @@ test('Transfer licenses command test', async ({ page }) => {
   await checkScreenshot(page, 'sensors_transfer_licenses_0.png', { x: 995, y: 230, width: 170, height: 555})
   await selectFirstSensor(page)
 
-  await clickAt(page, 290, 115); // 'Edit' command click
-  await clickAt(page, 880, 115); // 'Transfer Licenses' command click
+  await clickOnCommand(page, "Edit") // 'Edit' command click
+  await clickOnCommand(page, "TransferLicenses")// 'Transfer Licenses' command click
   await checkScreenshot(page, 'sensors_transfer_licenses_1.png')
 
   await clickAt(page, 410, 200); // Select first element
@@ -306,7 +292,7 @@ test('Transfer licenses command test', async ({ page }) => {
   await checkScreenshot(page, 'sensors_transfer_licenses_3.png', { x: 1055, y: 235, width: 205, height: 20 })
 
   await clickAt(page, 525, 70); // Close document from tab
-  await checkScreenshot(page, 'sensors_transfer_licenses_4.png')
+  await checkScreenshot(page, 'sensors_transfer_licenses_4.png', { x: 995, y: 230, width: 170, height: 555})
 });
 
 async function selectFirstSensor(page) {

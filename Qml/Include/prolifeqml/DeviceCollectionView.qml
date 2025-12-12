@@ -57,6 +57,7 @@ RemoteCollectionView {
 		id: statusDelegateFilterComp
 		FieldFilterDelegate {
 			id: statusDelegateFilter
+			objectName: "SensorStatusFilter"
 			name: qsTr("Sensor Status")
 			defaultFieldFilter.m_fieldId: "Status"
 			defaultFieldFilter.m_filterValueType: "Integer"
@@ -80,7 +81,6 @@ RemoteCollectionView {
 		paths: ["<hardware-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			console.log("<hardware-filter>", params)
 			container.filterMenu.clearAllFilters(true)
 
 			if (params.customerId !== undefined && params.customerId !== ""){
@@ -139,6 +139,7 @@ RemoteCollectionView {
 	Component {
 		id: internalUseDelegateFilterComp
 		FieldFilterDelegate {
+			objectName: "UsageFilter"
 			name: qsTr("Usage")
 
 			defaultFieldFilter.m_fieldId: "InternalUse"
@@ -155,12 +156,14 @@ RemoteCollectionView {
 		id: licenseDelegateFilterComp
 		
 		LicenseFilterDelegate {
+			objectName: "LicenseFilter"
 		}
 	}
 
 	Component {
 		id: licenseCreationTimeDelegateFilterComp
 		TimeFilterDelegate {
+			objectName: "LicenseCreationDateFilter"
 			name: qsTr("License Creation Date")
 			canTimeRangeEdit: false
 			onAccepted: {
@@ -173,6 +176,7 @@ RemoteCollectionView {
 		id: customersDelegateFilterComp
 		
 		CustomerFilterDelegate {
+			objectName: "CustomersFilter"
 		}
 	}
 
@@ -181,6 +185,7 @@ RemoteCollectionView {
 		
 		FieldFilterDelegate {
 			id: productsDelegateFilter
+			objectName: "ProductsFilter"
 			name: qsTr("Products")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_productUuid
@@ -209,6 +214,7 @@ RemoteCollectionView {
 		
 		FieldFilterDelegate {
 			id: productsDelegateFilter
+			objectName: "LicensesFilter"
 			name: qsTr("Licenses")
 			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_licenseUuid
