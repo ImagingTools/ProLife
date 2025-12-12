@@ -102048,6 +102048,737 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "GetSoftwareCreationBarChart (Last Year)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetSoftwareCreationBarChart\": {\r",
+													"            \"axes\": {\r",
+													"                \"xLabel\": \"Months\",\r",
+													"                \"yLabel\": \"Created Instances\"\r",
+													"            },\r",
+													"            \"bars\": [\r",
+													"                {\r",
+													"                    \"label\": \"Jan\",\r",
+													"                    \"total\": 33,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 2,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 31,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Feb\",\r",
+													"                    \"total\": 59,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 12,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 47,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Mar\",\r",
+													"                    \"total\": 51,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 27,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 24,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Apr\",\r",
+													"                    \"total\": 32,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 10,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 20,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 2,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"May\",\r",
+													"                    \"total\": 36,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 35,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Jun\",\r",
+													"                    \"total\": 24,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 18,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 6,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Jul\",\r",
+													"                    \"total\": 48,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 2,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 41,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 5,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Aug\",\r",
+													"                    \"total\": 31,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 20,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 11,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Sep\",\r",
+													"                    \"total\": 79,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 39,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 40,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Oct\",\r",
+													"                    \"total\": 99,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 57,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 41,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Nov\",\r",
+													"                    \"total\": 28,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 21,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 6,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Dec\",\r",
+													"                    \"total\": 0,\r",
+													"                    \"segments\": []\r",
+													"                }\r",
+													"            ],\r",
+													"            \"summary\": {\r",
+													"                \"total\": 520,\r",
+													"                \"maxItem\": {\r",
+													"                    \"label\": \"Oct\",\r",
+													"                    \"value\": 99\r",
+													"                }\r",
+													"            }\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetSoftwareCreationBarChart {GetSoftwareCreationBarChart(input: {__typename: \"ChartInput\", timeFilter: {__typename:\"TimeFilter\",timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0}, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetSoftwareCreationBarChart (All Time)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetSoftwareCreationBarChart\": {\r",
+													"            \"axes\": {\r",
+													"                \"xLabel\": \"Years\",\r",
+													"                \"yLabel\": \"Created Instances\"\r",
+													"            },\r",
+													"            \"bars\": [\r",
+													"                {\r",
+													"                    \"label\": \"2023\",\r",
+													"                    \"total\": 543,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 57,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 486,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"2024\",\r",
+													"                    \"total\": 520,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 56,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 353,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 111,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"2025\",\r",
+													"                    \"total\": 21,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Software\",\r",
+													"                            \"value\": 14,\r",
+													"                            \"color\": \"#7E57C2\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Software\",\r",
+													"                            \"value\": 6,\r",
+													"                            \"color\": \"#9E9E9E\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Software\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#FF5722\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                }\r",
+													"            ],\r",
+													"            \"summary\": {\r",
+													"                \"total\": 1084,\r",
+													"                \"maxItem\": {\r",
+													"                    \"label\": \"2023\",\r",
+													"                    \"value\": 543\r",
+													"                }\r",
+													"            }\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetSoftwareCreationBarChart {GetSoftwareCreationBarChart(input: {__typename: \"ChartInput\", timeFilter: null, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetSoftwareCustomerPieChart (Last Year)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetSoftwareCustomerPieChart\": {\r",
+													"            \"segments\": [\r",
+													"                {\r",
+													"                    \"id\": \"90369409-0326-4a82-9686-850ce3f83389\",\r",
+													"                    \"label\": \"IAS\",\r",
+													"                    \"value\": 301,\r",
+													"                    \"color\": \"#673AB7\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"6df39e58-a966-4df1-a370-bc3e487dfe07\",\r",
+													"                    \"label\": \"QUISS\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#9C27B0\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"b872e38b-9a60-4331-9485-63eb55f9a3f5\",\r",
+													"                    \"label\": \"INEOS Automotive S.A.S\",\r",
+													"                    \"value\": 4,\r",
+													"                    \"color\": \"#8BC34A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"37b38eaa-397e-49fb-968a-5598b57e2a47\",\r",
+													"                    \"label\": \"ISRA VISION\",\r",
+													"                    \"value\": 71,\r",
+													"                    \"color\": \"#7E57C2\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"5881a612-e356-4a4c-95d5-55dd053cc1d9\",\r",
+													"                    \"label\": \"Inalfa\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"e85e1baf-d02c-4474-a43e-e8194499a651\",\r",
+													"                    \"label\": \"Mercedes-Benz AG\",\r",
+													"                    \"value\": 2,\r",
+													"                    \"color\": \"#F44336\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"ceea6c30-2f34-4521-a940-3d0400fbcaac\",\r",
+													"                    \"label\": \"HAHN Automation Group GmbH\",\r",
+													"                    \"value\": 2,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"fe9b44e6-9ad0-422e-b0ef-11cba32d9e02\",\r",
+													"                    \"label\": \"Scheugenpflug\",\r",
+													"                    \"value\": 38,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetSoftwareCustomerPieChart {GetSoftwareCustomerPieChart(input: {__typename: \"ChartInput\", timeFilter: {__typename:\"TimeFilter\",timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0}, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetSoftwareCustomerPieChart (All Time)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetSoftwareCustomerPieChart\": {\r",
+													"            \"segments\": [\r",
+													"                {\r",
+													"                    \"id\": \"90369409-0326-4a82-9686-850ce3f83389\",\r",
+													"                    \"label\": \"IAS\",\r",
+													"                    \"value\": 546,\r",
+													"                    \"color\": \"#673AB7\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"f5ca388c-6e66-4784-81c8-12e38a9ef18e\",\r",
+													"                    \"label\": \"Perceptron\",\r",
+													"                    \"value\": 24,\r",
+													"                    \"color\": \"#E91E63\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"6df39e58-a966-4df1-a370-bc3e487dfe07\",\r",
+													"                    \"label\": \"QUISS\",\r",
+													"                    \"value\": 21,\r",
+													"                    \"color\": \"#9C27B0\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"b872e38b-9a60-4331-9485-63eb55f9a3f5\",\r",
+													"                    \"label\": \"INEOS Automotive S.A.S\",\r",
+													"                    \"value\": 4,\r",
+													"                    \"color\": \"#8BC34A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"d9bf2081-e1df-4d21-9db1-45cc033acc5d\",\r",
+													"                    \"label\": \"Webasto Gruppe\",\r",
+													"                    \"value\": 2,\r",
+													"                    \"color\": \"#CE93D8\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"37b38eaa-397e-49fb-968a-5598b57e2a47\",\r",
+													"                    \"label\": \"ISRA VISION\",\r",
+													"                    \"value\": 230,\r",
+													"                    \"color\": \"#7E57C2\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"5881a612-e356-4a4c-95d5-55dd053cc1d9\",\r",
+													"                    \"label\": \"Inalfa\",\r",
+													"                    \"value\": 4,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"22397ad6-2572-4be1-91ec-b48dbd40808e\",\r",
+													"                    \"label\": \"Liberty Reach Inc.\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"e85e1baf-d02c-4474-a43e-e8194499a651\",\r",
+													"                    \"label\": \"Mercedes-Benz AG\",\r",
+													"                    \"value\": 6,\r",
+													"                    \"color\": \"#F44336\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"ceea6c30-2f34-4521-a940-3d0400fbcaac\",\r",
+													"                    \"label\": \"HAHN Automation Group GmbH\",\r",
+													"                    \"value\": 4,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"fe9b44e6-9ad0-422e-b0ef-11cba32d9e02\",\r",
+													"                    \"label\": \"Scheugenpflug\",\r",
+													"                    \"value\": 76,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetSoftwareCustomerPieChart {GetSoftwareCustomerPieChart(input: {__typename: \"ChartInput\", timeFilter: null, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
@@ -102712,6 +103443,745 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "query GetHardwareStatusInfo {GetHardwareStatusInfo(input: {__typename: \"ChartInput\", timeFilter: null, customerId: \"37b38eaa-397e-49fb-968a-5598b57e2a47\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetHardwareCreationBarChart (Last Year)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetHardwareCreationBarChart\": {\r",
+													"            \"axes\": {\r",
+													"                \"xLabel\": \"Months\",\r",
+													"                \"yLabel\": \"Created Instances\"\r",
+													"            },\r",
+													"            \"bars\": [\r",
+													"                {\r",
+													"                    \"label\": \"Jan\",\r",
+													"                    \"total\": 46,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 4,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 42,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Feb\",\r",
+													"                    \"total\": 18,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 17,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Mar\",\r",
+													"                    \"total\": 35,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 3,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 32,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Apr\",\r",
+													"                    \"total\": 14,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 4,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 9,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"May\",\r",
+													"                    \"total\": 20,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 3,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 17,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Jun\",\r",
+													"                    \"total\": 19,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 16,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 3,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Jul\",\r",
+													"                    \"total\": 20,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 3,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 16,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Aug\",\r",
+													"                    \"total\": 60,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 3,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 56,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Sep\",\r",
+													"                    \"total\": 20,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 20,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Oct\",\r",
+													"                    \"total\": 40,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 38,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 2,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Nov\",\r",
+													"                    \"total\": 14,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 11,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 2,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"Dec\",\r",
+													"                    \"total\": 1,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                }\r",
+													"            ],\r",
+													"            \"summary\": {\r",
+													"                \"total\": 307,\r",
+													"                \"maxItem\": {\r",
+													"                    \"label\": \"Aug\",\r",
+													"                    \"value\": 60\r",
+													"                }\r",
+													"            }\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetHardwareCreationBarChart {GetHardwareCreationBarChart(input: {__typename: \"ChartInput\", timeFilter: {__typename:\"TimeFilter\",timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0}, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetHardwareCreationBarChart (All Time)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetHardwareCreationBarChart\": {\r",
+													"            \"axes\": {\r",
+													"                \"xLabel\": \"Years\",\r",
+													"                \"yLabel\": \"Created Instances\"\r",
+													"            },\r",
+													"            \"bars\": [\r",
+													"                {\r",
+													"                    \"label\": \"2023\",\r",
+													"                    \"total\": 407,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 37,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 370,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"2024\",\r",
+													"                    \"total\": 307,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 23,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 274,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.t Hardware\",\r",
+													"                            \"value\": 10,\r",
+													"                            \"color\": \"#64FFDA\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                },\r",
+													"                {\r",
+													"                    \"label\": \"2025\",\r",
+													"                    \"total\": 9,\r",
+													"                    \"segments\": [\r",
+													"                        {\r",
+													"                            \"label\": \"RTV Hardware\",\r",
+													"                            \"value\": 8,\r",
+													"                            \"color\": \"#90CAF9\"\r",
+													"                        },\r",
+													"                        {\r",
+													"                            \"label\": \"RTV.3d Hardware\",\r",
+													"                            \"value\": 1,\r",
+													"                            \"color\": \"#FFF59D\"\r",
+													"                        }\r",
+													"                    ]\r",
+													"                }\r",
+													"            ],\r",
+													"            \"summary\": {\r",
+													"                \"total\": 723,\r",
+													"                \"maxItem\": {\r",
+													"                    \"label\": \"2023\",\r",
+													"                    \"value\": 407\r",
+													"                }\r",
+													"            }\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetHardwareCreationBarChart {GetHardwareCreationBarChart(input: {__typename: \"ChartInput\", timeFilter: null, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetHardwareCustomerPieChart (Last Year)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetHardwareCustomerPieChart\": {\r",
+													"            \"segments\": [\r",
+													"                {\r",
+													"                    \"id\": \"90369409-0326-4a82-9686-850ce3f83389\",\r",
+													"                    \"label\": \"IAS\",\r",
+													"                    \"value\": 159,\r",
+													"                    \"color\": \"#673AB7\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
+													"                    \"label\": \"AC Tools\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#FFC107\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"6df39e58-a966-4df1-a370-bc3e487dfe07\",\r",
+													"                    \"label\": \"QUISS\",\r",
+													"                    \"value\": 3,\r",
+													"                    \"color\": \"#9C27B0\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"b872e38b-9a60-4331-9485-63eb55f9a3f5\",\r",
+													"                    \"label\": \"INEOS Automotive S.A.S\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#8BC34A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"37b38eaa-397e-49fb-968a-5598b57e2a47\",\r",
+													"                    \"label\": \"ISRA VISION\",\r",
+													"                    \"value\": 35,\r",
+													"                    \"color\": \"#7E57C2\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"5881a612-e356-4a4c-95d5-55dd053cc1d9\",\r",
+													"                    \"label\": \"Inalfa\",\r",
+													"                    \"value\": 3,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"e85e1baf-d02c-4474-a43e-e8194499a651\",\r",
+													"                    \"label\": \"Mercedes-Benz AG\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#F44336\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"ceea6c30-2f34-4521-a940-3d0400fbcaac\",\r",
+													"                    \"label\": \"HAHN Automation Group GmbH\",\r",
+													"                    \"value\": 2,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"fe9b44e6-9ad0-422e-b0ef-11cba32d9e02\",\r",
+													"                    \"label\": \"Scheugenpflug\",\r",
+													"                    \"value\": 21,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetHardwareCustomerPieChart {GetHardwareCustomerPieChart(input: {__typename: \"ChartInput\", timeFilter: {__typename:\"TimeFilter\",timeUnit:\"Year\",interpretationMode:\"Last\",unitMultiplier:0}, customerId: \"\"}) {}}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7778/ProLife/graphql",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7778",
+											"path": [
+												"ProLife",
+												"graphql"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetHardwareCustomerPieChart(All Time)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const dynamicSchema = {\r",
+													"    \"data\": {\r",
+													"        \"GetHardwareCustomerPieChart\": {\r",
+													"            \"segments\": [\r",
+													"                {\r",
+													"                    \"id\": \"90369409-0326-4a82-9686-850ce3f83389\",\r",
+													"                    \"label\": \"IAS\",\r",
+													"                    \"value\": 383,\r",
+													"                    \"color\": \"#673AB7\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"7a550af6-3998-4b26-8602-83289c45eb60\",\r",
+													"                    \"label\": \"AC Tools\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#FFC107\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"f5ca388c-6e66-4784-81c8-12e38a9ef18e\",\r",
+													"                    \"label\": \"Perceptron\",\r",
+													"                    \"value\": 15,\r",
+													"                    \"color\": \"#E91E63\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"6df39e58-a966-4df1-a370-bc3e487dfe07\",\r",
+													"                    \"label\": \"QUISS\",\r",
+													"                    \"value\": 18,\r",
+													"                    \"color\": \"#9C27B0\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"b872e38b-9a60-4331-9485-63eb55f9a3f5\",\r",
+													"                    \"label\": \"INEOS Automotive S.A.S\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#8BC34A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"d9bf2081-e1df-4d21-9db1-45cc033acc5d\",\r",
+													"                    \"label\": \"Webasto Gruppe\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#CE93D8\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"37b38eaa-397e-49fb-968a-5598b57e2a47\",\r",
+													"                    \"label\": \"ISRA VISION\",\r",
+													"                    \"value\": 149,\r",
+													"                    \"color\": \"#7E57C2\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"5881a612-e356-4a4c-95d5-55dd053cc1d9\",\r",
+													"                    \"label\": \"Inalfa\",\r",
+													"                    \"value\": 6,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"22397ad6-2572-4be1-91ec-b48dbd40808e\",\r",
+													"                    \"label\": \"Liberty Reach Inc.\",\r",
+													"                    \"value\": 1,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"e85e1baf-d02c-4474-a43e-e8194499a651\",\r",
+													"                    \"label\": \"Mercedes-Benz AG\",\r",
+													"                    \"value\": 7,\r",
+													"                    \"color\": \"#F44336\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"ceea6c30-2f34-4521-a940-3d0400fbcaac\",\r",
+													"                    \"label\": \"HAHN Automation Group GmbH\",\r",
+													"                    \"value\": 2,\r",
+													"                    \"color\": \"#EF9A9A\"\r",
+													"                },\r",
+													"                {\r",
+													"                    \"id\": \"fe9b44e6-9ad0-422e-b0ef-11cba32d9e02\",\r",
+													"                    \"label\": \"Scheugenpflug\",\r",
+													"                    \"value\": 40,\r",
+													"                    \"color\": \"#42A5F5\"\r",
+													"                }\r",
+													"            ]\r",
+													"        }\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"// --- TESTS ---\r",
+													"pm.test('Query is successful', function () {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response matches dynamic last year schema\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.eql(dynamicSchema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {},
+												"requests": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "{{access_token}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "x-authentication-token",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "ProductId",
+												"value": "ProLife",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetHardwareCustomerPieChart {GetHardwareCustomerPieChart(input: {__typename: \"ChartInput\", timeFilter: null, customerId: \"\"}) {}}",
 												"variables": ""
 											}
 										},
