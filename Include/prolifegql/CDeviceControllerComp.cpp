@@ -689,7 +689,7 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 	QString username;
 	const imtgql::IGqlContext* gqlContextPtr = createLicenseFileRequest.GetRequestContext();
 	if (gqlContextPtr != nullptr){
-		imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
+		const imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<const imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
 		if (userInfoPtr != nullptr){
 			userId = userInfoPtr->GetObjectUuid();
 			isAdmin = userInfoPtr->IsAdmin();
@@ -812,7 +812,7 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 		return retVal;
 	}
 
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr == nullptr){
 		errorMessage = QString("Unable to decrypt license file. Error: User info is invalid");
 		return retVal;

@@ -24,7 +24,7 @@ bool CGroupFilterParamJoinerComp::JoinGroupFilterParam(const imtgql::IGqlRequest
 		return false;
 	}
 	
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr == nullptr){
 		SendErrorMessage(0, QString("Unable to join group filter. Error: User info from GraphQL context invalid"), "CGroupFilterParamJoinerComp");
 		return false;

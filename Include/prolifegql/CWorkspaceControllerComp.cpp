@@ -1085,7 +1085,7 @@ bool CWorkspaceControllerComp::JoinGroupFilter(const imtgql::IGqlRequest& gqlReq
 		return false;
 	}
 
-	imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 	if (userInfoPtr == nullptr){
 		return false;
 	}
