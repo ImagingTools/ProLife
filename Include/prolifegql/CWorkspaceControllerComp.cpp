@@ -7,11 +7,9 @@
 // ImtCore includes
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/CTimeFilterParam.h>
-#include <imtauth/IUserRecentAction.h>
 #include <imtauth/CUserGroupFilter.h>
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/IProductInstanceInfo.h>
-#include <imtlic/ILicenseDefinition.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -36,7 +34,7 @@ QMap<int, QString> s_deviceStatusColor({
 });
 
 
-static QStringList s_standardColors ={
+static QStringList s_standardColors = {
 	"#4CAF50", // Green
 	"#2196F3", // Blue
 	"#FFC107", // Amber
@@ -49,7 +47,7 @@ static QStringList s_standardColors ={
 	"#8BC34A", // Light Green
 	"#00BCD4", // Cyan
 	"#E91E63", // Pink
-
+	
 	"#673AB7", // Deep Purple
 	"#CDDC39", // Lime
 	"#FF5722", // Deep Orange
@@ -60,7 +58,7 @@ static QStringList s_standardColors ={
 	"#8BC34A", // Light Green
 	"#FF4081", // Pink A200
 	"#7C4DFF", // Deep Purple A200
-
+	
 	"#18FFFF", // Cyan A100
 	"#64FFDA", // Teal A100
 	"#69F0AE", // Green A100
@@ -71,7 +69,7 @@ static QStringList s_standardColors ={
 	"#FF9E80", // Deep Orange A100
 	"#FF80AB", // Pink A100
 	"#EA80FC", // Purple A100
-
+	
 	"#80DEEA", // Light Blue 100
 	"#80CBC4", // Teal 100
 	"#C5E1A5", // Light Green 200
@@ -82,7 +80,7 @@ static QStringList s_standardColors ={
 	"#CE93D8", // Purple 200
 	"#9FA8DA", // Indigo 200
 	"#90CAF9", // Blue 200
-
+	
 	"#26A69A", // Teal 400
 	"#42A5F5", // Blue 400
 	"#7E57C2", // Deep Purple 400
@@ -120,28 +118,10 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 	response.Version_1_0->axes.Emplace();
 	response.Version_1_0->labels.Emplace();
 	response.Version_1_0->points.Emplace();
-
 	response.Version_1_0->axes->yLabel = "Created Licenses";
 
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
-	}
-
-	QByteArray customerId;
-	if (arguments.input.Version_1_0->customerId.HasValue()){
-		customerId = *arguments.input.Version_1_0->customerId;
-	}
-
 	iprm::CParamsSet selectionParams;
-
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
-	JoinGroupFilter(gqlRequest, selectionParams);
-	if (!customerId.isEmpty()){
-		AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-	}
-	AddLicenseCreationTimeFilter(selectionParams, timeFilter);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, OT_SOFTWARE);
 
 	QMap<QDate, int> licenseCountByDateMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_softwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -171,9 +151,10 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				getSoftwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter("InUse", true),
+				OT_SOFTWARE,
 				errorMessage);
 }
+
 
 sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUsedPieChart(
 			const sdl::prolife::Workspace::CGetSoftwareUsedPieChartGqlRequest& getSoftwareUsedPieChartRequest,
@@ -185,7 +166,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				getSoftwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter("InUse", true),
+				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -200,7 +181,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				getHardwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER),
+				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -215,7 +196,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				getHardwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER),
+				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -238,25 +219,10 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareSt
 		return response;
 	}
 
-	QByteArray customerId;
-	if (arguments.input.Version_1_0->customerId.HasValue()){
-		customerId = *arguments.input.Version_1_0->customerId;
-	}
-
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
-	}
-
 	response.Version_1_0.Emplace();
 
 	iprm::CParamsSet selectionParams;
-	if (!customerId.isEmpty()){
-		AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-	}
-	AddTimeFilter(selectionParams, timeFilter);
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	JoinGroupFilter(gqlRequest, selectionParams);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
 
 	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	QMap<int, int> hardwareStatutesMap;
@@ -291,37 +257,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 
 	if (!m_hardwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
-
 		return response;
 	}
 
 	if (!m_softwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareCollection' was not set", "CWorkspaceControllerComp");
-
 		return response;
 	}
 
 	if (!m_orderCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CWorkspaceControllerComp");
-
 		return response;
 	}
 
 	auto arguments = getTotalSummaryInfoRequest.GetRequestedArguments();
 	if (!arguments.input.Version_1_0.HasValue()){
 		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
-
 		return response;
-	}
-
-	QByteArray customerId;
-	if (arguments.input.Version_1_0->customerId.HasValue()){
-		customerId = *arguments.input.Version_1_0->customerId;
-	}
-
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
 	}
 
 	bool isAdmin = false;
@@ -343,41 +295,26 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 softwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		JoinGroupFilter(gqlRequest, paramsSet);
-		if (!customerId.isEmpty()){
-			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(paramsSet, timeFilter);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_SOFTWARE);
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
 
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", true));
+		iprm::CParamsSet internalUseParamsSet;
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION, OT_SOFTWARE);
 
-		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		JoinGroupFilter(gqlRequest, inUseParamsSet);
-		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", true));
-		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		if (!customerId.isEmpty()){
-			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(inUseParamsSet, timeFilter);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION, OT_SOFTWARE);
 
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		JoinGroupFilter(gqlRequest, notInUseParamsSet);
-		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", false));
-		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		if (!customerId.isEmpty()){
-			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(notInUseParamsSet, timeFilter);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION, OT_SOFTWARE);
 
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
-
+		
 		softwareCollectionInfo.collectionId = QByteArrayLiteral("SoftwareProducts");
 		softwareCollectionInfo.title = QStringLiteral("Software");
 		softwareCollectionInfo.icon = QStringLiteral("Icons/Key");
@@ -390,38 +327,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 hardwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		JoinGroupFilter(gqlRequest, paramsSet);
-		if (!customerId.isEmpty()){
-			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(paramsSet, timeFilter);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", true));
+		iprm::CParamsSet internalUseParamsSet;
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
 
-		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
+		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		JoinGroupFilter(gqlRequest, inUseParamsSet);
-		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_GREATER));
-		AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		if (!customerId.isEmpty()){
-			AddFieldFilter(inUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(inUseParamsSet, timeFilter);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION, OT_HARDWARE);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		JoinGroupFilter(gqlRequest, notInUseParamsSet);
-		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FO_EQUAL));
-		AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		if (!customerId.isEmpty()){
-			AddFieldFilter(notInUseParamsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(notInUseParamsSet, timeFilter);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION, OT_HARDWARE);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -437,11 +359,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 orderCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		JoinGroupFilter(gqlRequest, paramsSet);
-		if (!customerId.isEmpty()){
-			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-		AddTimeFilter(paramsSet, timeFilter);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_ORDER);
 
 		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
@@ -469,6 +387,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 				*m_hardwareCollectionCompPtr.GetPtr(),
 				getHardwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
+				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -487,6 +406,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 				*m_softwareCollectionCompPtr.GetPtr(),
 				getSoftwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
+				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -497,7 +417,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
-
+	
 	if (!m_hardwareCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'HardwareCollection' was not set", "CWorkspaceControllerComp");
 		return response;
@@ -509,16 +429,8 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 		return response;
 	}
 
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (arguments.input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *arguments.input.Version_1_0->timeFilter;
-	}
-
 	iprm::CParamsSet selectionParams;
-
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	AddTimeFilter(selectionParams, timeFilter);
-	JoinGroupFilter(gqlRequest, selectionParams);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
 
 	QMap<QPair<QByteArray, QString>, int> map;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_hardwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -561,6 +473,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCr
 				*m_softwareCollectionCompPtr,
 				getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
+				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -582,13 +495,14 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareCr
 				*m_hardwareCollectionCompPtr,
 				getHardwareCreationBarChartRequest.GetRequestedArguments().input,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
+				OT_HARDWARE,
 				errorMessage);
 }
 
 
 sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCreationLineChart(
 			const sdl::prolife::Workspace::CGetOrderCreationLineChartGqlRequest& request,
-			const imtgql::CGqlRequest& /*gqlRequest*/,
+			const imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CLineChartData response;
@@ -600,7 +514,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCrea
 
 	iprm::CParamsSet selectionParams;
 	const auto& input = request.GetRequestedArguments().input;
-	PrepareFilterFromChartInput(selectionParams, input);
+	PrepareFilters(selectionParams, input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_ORDER);
 
 	QMap<QDate, int> map;
 
@@ -624,20 +538,20 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCrea
 	if (!BuildLineChart(map, input, "Created Orders", *response.Version_1_0)){
 		errorMessage = "Unable to build line chart data. Internal error";
 	}
-	
+
 	return response;
 }
-
 
 
 // private methods
 
 sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarChart(
-			const ::imtgql::CGqlRequest& gqlRequest,
-			const imtbase::IObjectCollection& collection,
-			const sdl::prolife::Workspace::CChartInput& chartInput,
-			int nameMetaInfoType,
-			QString& errorMessage) const
+				const ::imtgql::CGqlRequest& gqlRequest,
+				const imtbase::IObjectCollection& collection,
+				const sdl::prolife::Workspace::CChartInput& chartInput,
+				int nameMetaInfoType,
+				const ObjectType& objectType,
+				QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
 
@@ -646,15 +560,8 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 		return response;
 	}
 
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (chartInput.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *chartInput.Version_1_0->timeFilter;
-	}
-
 	iprm::CParamsSet selectionParams;
-	AddTimeFilter(selectionParams, timeFilter);
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	JoinGroupFilter(gqlRequest, selectionParams);
+	PrepareFilters(selectionParams, chartInput, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, objectType);
 
 	QMap<QDate, QMap<QString, int>> resultMap;
 	imtbase::ICollectionInfo::Ids elementIds = collection.GetElementIds(0, -1, &selectionParams);
@@ -669,59 +576,13 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 	}
 
 	response.Version_1_0.Emplace();
-	if (!BuildBarChart(resultMap, timeFilter, "Created Instances", *response.Version_1_0)){
+	if (!BuildBarChart(resultMap, chartInput, "Created Instances", *response.Version_1_0)){
 		errorMessage = QString("Unable to build bar chart data. Internal error");
 		return response;
 	}
 
 	return response;
 }
-
-
-bool CWorkspaceControllerComp::PrepareDateFilter(
-			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
-			QDate& startDate,
-			QDate& endDate,
-			imtbase::ITimeFilterParam::TimeUnit& timeUnit,
-			imtbase::ITimeFilterParam::InterpretationMode& timeMode) const
-{
-	imtbase::CTimeFilterParam timeFilter;
-	if (!m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilter, timeFilterSdl)){
-		return false;
-	}
-
-	timeUnit = timeFilter.GetTimeUnit();
-	timeMode = timeFilter.GetInterpretationMode();
-
-	QDate currentDate = QDate::currentDate();
-	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && timeMode == imtbase::ITimeFilterParam::IM_FOR){
-		endDate = currentDate;
-		startDate = currentDate.addDays(-6);
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && timeMode == imtbase::ITimeFilterParam::IM_CURRENT){
-		startDate = QDate(currentDate.year(), currentDate.month(), 1);
-		endDate = startDate.addMonths(1).addDays(-1);
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH && timeMode == imtbase::ITimeFilterParam::IM_LAST){
-		endDate = QDate(currentDate.year(), currentDate.month(), 1).addDays(-1);
-		startDate = QDate(endDate.year(), endDate.month(), 1);
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && timeMode == imtbase::ITimeFilterParam::IM_CURRENT){
-		startDate = QDate(currentDate.year(), 1, 1);
-		endDate = QDate(currentDate.year(), 12, 31);
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR && timeMode == imtbase::ITimeFilterParam::IM_LAST){
-		startDate = QDate(currentDate.year() - 1, 1, 1);
-		endDate = QDate(currentDate.year() - 1, 12, 31);
-	}
-	else{
-		endDate = currentDate;
-		startDate = currentDate.addDays(-6);
-	}
-
-	return true;
-}
-
 
 
 bool CWorkspaceControllerComp::BuildPieChart(
@@ -740,15 +601,14 @@ bool CWorkspaceControllerComp::BuildPieChart(
 
 bool CWorkspaceControllerComp::BuildBarChart(
 			const QMap<QDate, QMap<QString, int>>& map,
-			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
+			const sdl::prolife::Workspace::CChartInput& input,
 			const QString& yLabel,
 			sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const
 {
-	QDate startDate, endDate;
 	imtbase::ITimeFilterParam::TimeUnit unit = imtbase::ITimeFilterParam::TU_CUSTOM;
 	imtbase::ITimeFilterParam::InterpretationMode mode = imtbase::ITimeFilterParam::IM_FOR;
 
-	PrepareDateFilter(timeFilterSdl, startDate, endDate, unit, mode);
+	ExtractTimeUnitFromInput(input, unit, mode);
 
 	int totalCreated = 0;
 	int maxCount = 0;
@@ -758,156 +618,59 @@ bool CWorkspaceControllerComp::BuildBarChart(
 	barChartData.axes.Emplace();
 	barChartData.axes->yLabel = yLabel;
 
-	if (unit == imtbase::ITimeFilterParam::TU_WEEK){
-		for (QDate d = startDate; d <= endDate; d = d.addDays(1)){
-			sdl::prolife::Workspace::CChartBar::V1_0 bar;
-			bar.label = d.toString("dd MMM");
-			bar.segments.Emplace();
+	auto addBar = [&](const QDate& periodStart, const QDate& periodEnd){
+		sdl::prolife::Workspace::CChartBar::V1_0 bar;
+		bar.segments.Emplace();
 
-			const auto& typeMap = map.value(d);
-			int dailyTotal = 0;
-
-			for (auto it = typeMap.constBegin(); it != typeMap.constEnd(); ++it){
-				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
-				seg.label = it.key();
-				seg.value = it.value();
-				seg.color = GenerateColorFromString(it.key());
-				bar.segments->push_back(seg);
-				dailyTotal += it.value();
+		QMap<QString, int> aggregatedMap;
+		for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)){
+			const auto& valueMap = map.value(d);
+			for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it){
+				aggregatedMap[it.key()] += it.value();
 			}
+		}
 
-			bar.total = dailyTotal;
-			barChartData.bars->push_back(bar);
+		int periodTotal = 0;
+		for (auto it = aggregatedMap.constBegin(); it != aggregatedMap.constEnd(); ++it){
+			sdl::prolife::Workspace::CChartSegment::V1_0 seg;
+			seg.label = it.key();
+			seg.value = it.value();
+			seg.color = GenerateColorFromString(it.key());
+			bar.segments->push_back(seg);
+			periodTotal += it.value();
+		}
+
+		bar.total = periodTotal;
+		totalCreated += periodTotal;
+
+		if (unit == imtbase::ITimeFilterParam::TU_WEEK){
+			bar.label = periodStart.toString("dd MMM");
 			barChartData.axes->xLabel = "Days";
-			totalCreated += dailyTotal;
-			if (dailyTotal > maxCount){
-				maxCount = dailyTotal;
-				maxLabel = *bar.label;
-			}
 		}
-	}
-	else if (unit == imtbase::ITimeFilterParam::TU_MONTH){
-		for (QDate iter = startDate; iter <= endDate; iter = iter.addDays(7)){
-			QDate weekStart = iter;
-			QDate weekEnd = std::min(weekStart.addDays(6), endDate);
-
-			int weekTotal = 0;
-			QMap<QString, int> weeklyMap;
-
-			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1)){
-				const auto& valueMap = map.value(d);
-				for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it)
-					weeklyMap[it.key()] += it.value();
-			}
-
-			sdl::prolife::Workspace::CChartBar::V1_0 bar;
-			bar.segments.Emplace();
-			bar.label = (weekStart.month() == weekEnd.month())
-				? QString("%1–%2 %3").arg(weekStart.toString("dd")).arg(weekEnd.toString("dd")).arg(weekEnd.toString("MMM"))
-				: QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
-
+		else if (unit == imtbase::ITimeFilterParam::TU_MONTH){
+			bar.label = (periodStart.month() == periodEnd.month())
+						? QString("%1–%2 %3").arg(periodStart.toString("dd")).arg(periodEnd.toString("dd")).arg(periodEnd.toString("MMM"))
+						: QString("%1–%2").arg(periodStart.toString("dd MMM")).arg(periodEnd.toString("dd MMM"));
 			barChartData.axes->xLabel = "Weeks";
-			for (auto it = weeklyMap.constBegin(); it != weeklyMap.constEnd(); ++it){
-				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
-				seg.label = it.key();
-				seg.value = it.value();
-				seg.color = GenerateColorFromString(it.key());
-				bar.segments->push_back(seg);
-				weekTotal += it.value();
-			}
-
-			bar.total = weekTotal;
-			barChartData.bars->push_back(bar);
-			totalCreated += weekTotal;
-			if (weekTotal > maxCount){
-				maxCount = weekTotal;
-				maxLabel = *bar.label;
-			}
 		}
-	}
-	else if (unit == imtbase::ITimeFilterParam::TU_YEAR){
-		for (int month = 1; month <= 12; ++month){
-			QDate monthStart(startDate.year(), month, 1);
-			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
-
-			int monthTotal = 0;
-			QMap<QString, int> monthMap;
-
-			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1)){
-				const auto& valueMap = map.value(d);
-				for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it){
-					monthMap[it.key()] += it.value();
-				}
-			}
-
-			sdl::prolife::Workspace::CChartBar::V1_0 bar;
-			bar.segments.Emplace();
-			bar.label = monthStart.toString("MMM");
+		else if (unit == imtbase::ITimeFilterParam::TU_YEAR){
+			bar.label = periodStart.toString("MMM");
 			barChartData.axes->xLabel = "Months";
-
-			for (auto it = monthMap.constBegin(); it != monthMap.constEnd(); ++it){
-				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
-				seg.label = it.key();
-				seg.value = it.value();
-				seg.color = GenerateColorFromString(it.key());
-				bar.segments->push_back(seg);
-				monthTotal += it.value();
-			}
-
-			bar.total = monthTotal;
-			barChartData.bars->push_back(bar);
-			totalCreated += monthTotal;
-			if (monthTotal > maxCount){
-				maxCount = monthTotal;
-				maxLabel = *bar.label;
-			}
 		}
-	}
-	else{
-		QSet<int> years;
-		for (auto it = map.constBegin(); it != map.constEnd(); ++it){
-			years.insert(it.key().year());
+		else{
+			bar.label = QString::number(periodStart.year());
+			barChartData.axes->xLabel = "Years";
 		}
 
-		QList<int> sortedYears = years.values();
-		std::sort(sortedYears.begin(), sortedYears.end());
-	
-		barChartData.axes->xLabel = "Years";
-	
-		for (int year : sortedYears){
-			int yearTotal = 0;
-			QMap<QString, int> yearMap;
-
-			for (QDate d = QDate(year, 1, 1); d <= QDate(year, 12, 31); d = d.addDays(1)){
-				const auto& valueMap = map.value(d);
-				for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it){
-					yearMap[it.key()] += it.value();
-				}
-			}
-
-			sdl::prolife::Workspace::CChartBar::V1_0 bar;
-			bar.segments.Emplace();
-			bar.label = QString::number(year);
-
-			for (auto it = yearMap.constBegin(); it != yearMap.constEnd(); ++it){
-				sdl::prolife::Workspace::CChartSegment::V1_0 seg;
-				seg.label = it.key();
-				seg.value = it.value();
-				seg.color = GenerateColorFromString(it.key());
-				bar.segments->push_back(seg);
-				yearTotal += it.value();
-			}
-
-			bar.total = yearTotal;
-			barChartData.bars->push_back(bar);
-
-			totalCreated += yearTotal;
-			if (yearTotal > maxCount){
-				maxCount = yearTotal;
-				maxLabel = *bar.label;
-			}
+		if (periodTotal > maxCount){
+			maxCount = periodTotal;
+			maxLabel = *bar.label;
 		}
-	}
+
+		barChartData.bars->push_back(bar);
+	};
+
+	AggregateByTime(unit, mode, addBar);
 
 	// --- Summary ---
 	sdl::prolife::Workspace::CChartSummary::V1_0 summary;
@@ -926,153 +689,91 @@ bool CWorkspaceControllerComp::BuildBarChart(
 
 bool CWorkspaceControllerComp::BuildLineChart(
 			const QMap<QDate, int>& map,
-			const sdl::prolife::Workspace::CChartInput& chartInput,
+			const sdl::prolife::Workspace::CChartInput& input,
 			const QString& yLabel,
 			sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const
 {
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (chartInput.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *chartInput.Version_1_0->timeFilter;
-	}
-
-	imtbase::ITimeFilterParam::TimeUnit timeUnit = imtbase::ITimeFilterParam::TU_CUSTOM;
+	imtbase::ITimeFilterParam::TimeUnit unit = imtbase::ITimeFilterParam::TU_CUSTOM;
 	imtbase::ITimeFilterParam::InterpretationMode mode = imtbase::ITimeFilterParam::IM_FOR;
 
-	QDate startDate, endDate;
-	PrepareDateFilter(timeFilter, startDate, endDate, timeUnit, mode);
-
-	int totalCreated = 0;
-	int maxCount = 0;
-	QString maxLabel;
+	ExtractTimeUnitFromInput(input, unit, mode);
 
 	lineChartData.points.Emplace();
 	lineChartData.labels.Emplace();
 	lineChartData.axes.Emplace();
-
 	lineChartData.axes->yLabel = yLabel;
 
-	auto addPoint = [&](int x, int y, const QString& label){
+	int totalCreated = 0;
+	int maxCount = 0;
+	QString maxLabel;
+	int xIndex = 0;
+
+	auto addPoint = [&](const QDate& periodStart, const QDate& periodEnd){
+		int count = 0;
+		QString label;
+
+		if (unit == imtbase::ITimeFilterParam::TU_WEEK){
+			count = map.value(periodStart, 0);
+			label = periodStart.toString("dd MMM");
+			lineChartData.axes->xLabel = "Days";
+		}
+		else if (unit == imtbase::ITimeFilterParam::TU_MONTH){
+			for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)){
+				count += map.value(d, 0);
+			}
+
+			label = (periodStart.month() == periodEnd.month())
+					? QString("%1–%2 %3")
+						.arg(periodStart.toString("dd"))
+						.arg(periodEnd.toString("dd"))
+						.arg(periodEnd.toString("MMM"))
+					: QString("%1–%2").arg(periodStart.toString("dd MMM")).arg(periodEnd.toString("dd MMM"));
+			lineChartData.axes->xLabel = "Weeks";
+		}
+		else if (unit == imtbase::ITimeFilterParam::TU_YEAR){
+			for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)){
+				count += map.value(d, 0);
+			}
+
+			label = periodStart.toString("MMM");
+			lineChartData.axes->xLabel = "Months";
+		}
+		else{
+			for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)){
+				count += map.value(d, 0);
+			}
+
+			label = QString::number(periodStart.year());
+			lineChartData.axes->xLabel = "Years";
+		}
+
 		sdl::imtbase::ImtBaseTypes::CSdlPoint::V1_0 point;
-		point.x = x;
-		point.y = y;
+		point.x = xIndex;
+		point.y = count;
 		lineChartData.points->push_back(point);
 		lineChartData.labels->push_back(label);
+
+		totalCreated += count;
+		if (count > maxCount){
+			maxCount = count;
+			maxLabel = label;
+		}
+
+		++xIndex;
 	};
 
-	if (timeUnit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
-		lineChartData.axes->xLabel = "Days";
+	AggregateByTime(unit, mode, addPoint);
 
-		int dayIndex = 0;
-		for (QDate d = startDate; d <= endDate; d = d.addDays(1), ++dayIndex){
-			int count = map.value(d, 0);
-			addPoint(dayIndex, count, d.toString("dd MMM"));
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = d.toString("dd MMM");
-			}
-		}
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_MONTH){
-		lineChartData.axes->xLabel = "Weeks";
+	// --- Summary ---
+	sdl::prolife::Workspace::CChartSummary::V1_0 summary;
+	summary.total = totalCreated;
 
-		int weekIndex = 0;
-		QDate iter = startDate;
+	sdl::prolife::Workspace::CChartSegment::V1_0 maxSeg;
+	maxSeg.value = maxCount;
+	maxSeg.label = maxLabel;
+	summary.maxItem = maxSeg;
 
-		while (iter <= endDate){
-			QDate weekStart = iter;
-			QDate weekEnd = weekStart.addDays(6);
-			if (weekEnd > endDate)
-				weekEnd = endDate;
-
-			int count = 0;
-			for (QDate d = weekStart; d <= weekEnd; d = d.addDays(1))
-				count += map.value(d, 0);
-
-			QString rangeLabel;
-			if (weekStart.month() == weekEnd.month()){
-				rangeLabel = QString("%1–%2 %3")
-								 .arg(weekStart.toString("dd"))
-								 .arg(weekEnd.toString("dd"))
-								 .arg(weekEnd.toString("MMM"));
-			}
-			else{
-				rangeLabel = QString("%1–%2").arg(weekStart.toString("dd MMM")).arg(weekEnd.toString("dd MMM"));
-			}
-
-			addPoint(weekIndex, count, rangeLabel);
-
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = weekStart.toString("dd MMM");
-			}
-
-			iter = weekEnd.addDays(1);
-			++weekIndex;
-		}
-	}
-	else if (timeUnit == imtbase::ITimeFilterParam::TU_YEAR){
-		lineChartData.axes->xLabel = "Months";
-
-		for (int month = 1; month <= 12; ++month){
-			QDate monthStart(startDate.year(), month, 1);
-			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
-
-			int count = 0;
-			for (QDate d = monthStart; d <= monthEnd; d = d.addDays(1)){
-				count += map.value(d, 0);
-			}
-
-			addPoint(month - 1, count, monthStart.toString("MMM"));
-			totalCreated += count;
-			if (count > maxCount){
-				maxCount = count;
-				maxLabel = monthStart.toString("MMM");
-			}
-		}
-	}
-	else{
-		lineChartData.axes->xLabel = "Years";
-
-		QSet<int> years;
-		for (auto it = map.constBegin(); it != map.constEnd(); ++it){
-			years.insert(it.key().year());
-		}
-
-		QList<int> sortedYears = years.values();
-		std::sort(sortedYears.begin(), sortedYears.end());
-
-		int index = 0;
-		for (int year : sortedYears){
-			int yearTotal = 0;
-	
-			for (auto it = map.constBegin(); it != map.constEnd(); ++it){
-				if (it.key().year() == year)
-					yearTotal += it.value();
-			}
-	
-			addPoint(index, yearTotal, QString::number(year));
-	
-			totalCreated += yearTotal;
-			if (yearTotal > maxCount){
-				maxCount = yearTotal;
-				maxLabel = QString::number(year);
-			}
-	
-			++index;
-		}
-	}
-
-	sdl::prolife::Workspace::CChartSummary::V1_0 licenseChartSummary;
-	licenseChartSummary.total = totalCreated;
-
-	sdl::prolife::Workspace::CChartSegment::V1_0 maxChartSegment;
-	maxChartSegment.value = maxCount;
-	maxChartSegment.label = maxLabel;
-	licenseChartSummary.maxItem = maxChartSegment;
-
-	lineChartData.summary = licenseChartSummary;
+	lineChartData.summary = summary;
 
 	return true;
 }
@@ -1153,43 +854,6 @@ void CWorkspaceControllerComp::AddFieldFilter(iprm::CParamsSet& paramsSet, const
 }
 
 
-void CWorkspaceControllerComp::AddTimeFilter(
-			iprm::CParamsSet& paramsSet,
-			const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter,
-			bool /*isObligatory*/) const
-{
-	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
-	if (complexFilterPtr == nullptr){
-		complexFilterPtr = new imtbase::CComplexCollectionFilter();
-		paramsSet.SetEditableParameter("ComplexFilter", complexFilterPtr, true);
-	}
-
-	if (complexFilterPtr == nullptr){
-		return;
-	}
-
-	imtbase::CTimeFilterParam timeFilterParam;
-	if (!m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilterParam, timeFilter)){
-		return;
-	}
-
-	complexFilterPtr->SetTimeFilter(timeFilterParam);
-}
-
-
-void CWorkspaceControllerComp::AddLicenseCreationTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const
-{
-	imtbase::CTimeFilterParam* timeFilterParamPtr = new imtbase::CTimeFilterParam();
-	timeFilterParamPtr->SetTimeUnit(imtbase::ITimeFilterParam::TU_CUSTOM, imtbase::ITimeFilterParam::IM_FOR);
-
-	if (timeFilter.timeUnit.HasValue() && timeFilter.interpretationMode.HasValue()){
-		m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(*timeFilterParamPtr, timeFilter);
-	}
-
-	paramsSet.SetEditableParameter("LicenseCreationTimeFilter", timeFilterParamPtr, true);
-}
-
-
 sdl::prolife::Workspace::CChartSegment::V1_0 CWorkspaceControllerComp::CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId) const
 {
 	sdl::prolife::Workspace::CChartSegment::V1_0 segment;
@@ -1202,31 +866,12 @@ sdl::prolife::Workspace::CChartSegment::V1_0 CWorkspaceControllerComp::CreateCha
 }
 
 
-void CWorkspaceControllerComp::PrepareFilterFromChartInput(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const
-{
-	if (!chartInput.Version_1_0.HasValue()){
-		return;
-	}
-
-	if (chartInput.Version_1_0->timeFilter.HasValue()){
-		AddTimeFilter(paramsSet, *chartInput.Version_1_0->timeFilter);
-	}
-
-	if (chartInput.Version_1_0->customerId.HasValue()){
-		QByteArray customerId = *chartInput.Version_1_0->customerId;
-		if (!customerId.isEmpty()){
-			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-		}
-	}
-}
-
-
 sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsageBarChart(
 			const imtbase::IObjectCollection& collection,
 			int productNameMetaInfoType,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
@@ -1235,24 +880,8 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 		return response;
 	}
 
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *input.Version_1_0->timeFilter;
-	}
-
-	QByteArray customerId;
-	if (input.Version_1_0->customerId.HasValue()){
-		customerId = *input.Version_1_0->customerId;
-	}
-
 	iprm::CParamsSet selectionParams;
-	AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	AddFieldFilter(selectionParams, inUseField);
-	JoinGroupFilter(gqlRequest, selectionParams);
-	if (!customerId.isEmpty()){
-		AddFieldFilter(selectionParams, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-	}
-	AddLicenseCreationTimeFilter(selectionParams, timeFilter);
+	PrepareFilters(selectionParams, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, objectType);
 
 	QMap<QDate, QMap<QString, int>> usageMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = collection.CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -1268,7 +897,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 	}
 
 	response.Version_1_0.Emplace();
-	if (!BuildBarChart(usageMap, timeFilter, "Created Licenses", *response.Version_1_0)){
+	if (!BuildBarChart(usageMap, input, "Created Licenses", *response.Version_1_0)){
 		errorMessage = "Unable to build bar chart data. Internal error";
 	}
 
@@ -1281,29 +910,13 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductUsa
 			int productNameMetaInfoType,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 
-	QByteArray customerId;
-	if (input.Version_1_0->customerId.HasValue()){
-		customerId = *input.Version_1_0->customerId;
-	}
-
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *input.Version_1_0->timeFilter;
-	}
-
 	iprm::CParamsSet paramsSet;
-	AddFieldFilter(paramsSet, inUseField);
-	AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-	AddLicenseCreationTimeFilter(paramsSet, timeFilter);
-	if (!customerId.isEmpty()){
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
-	}
-	JoinGroupFilter(gqlRequest, paramsSet);
+	PrepareFilters(paramsSet, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, objectType);
 
 	QMap<QPair<QByteArray, QString>, int> map;
 	imtbase::IObjectCollectionIterator* iteratorPtr = collection.CreateObjectCollectionIterator(QByteArray(), 0, -1, &paramsSet);
@@ -1331,6 +944,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 			const imtbase::IObjectCollection& collection,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
+			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
@@ -1345,11 +959,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 		return response;
 	}
 
-	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
-	if (input.Version_1_0->timeFilter.HasValue()){
-		timeFilter = *input.Version_1_0->timeFilter;
-	}
-
 	response.Version_1_0.Emplace();
 	response.Version_1_0->segments.Emplace();
 
@@ -1357,9 +966,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 	for (const QByteArray& elementId : elementIds){
 		iprm::CParamsSet paramsSet;
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
-		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", false));
-		AddTimeFilter(paramsSet, timeFilter);
-		JoinGroupFilter(gqlRequest, paramsSet);
+		PrepareFilters(paramsSet, input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, objectType);
 
 		int count = collection.GetElementsCount(&paramsSet);
 		if (count > 0){
@@ -1373,8 +980,168 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 			}
 		}
 	}
-	
+
 	return response;
+}
+
+
+void CWorkspaceControllerComp::AggregateByTime(
+			const imtbase::ITimeFilterParam::TimeUnit& unit,
+			const imtbase::ITimeFilterParam::InterpretationMode& mode,
+			const std::function<void(const QDate& periodStart, const QDate& periodEnd)>& fn) const
+{
+	QDate currentDate = QDate::currentDate();
+
+	if (unit == imtbase::ITimeFilterParam::TU_WEEK && mode == imtbase::ITimeFilterParam::IM_FOR){
+		QDate startDate = currentDate.addDays(-6);
+		QDate endDate = currentDate;
+		for (QDate d = startDate; d <= endDate; d = d.addDays(1)){
+			fn(d, d);
+		}
+	}
+	else if (unit == imtbase::ITimeFilterParam::TU_MONTH){
+		QDate startDate, endDate;
+		if (mode == imtbase::ITimeFilterParam::IM_CURRENT){
+			startDate = QDate(currentDate.year(), currentDate.month(), 1);
+			endDate = startDate.addMonths(1).addDays(-1);
+		}
+		else if (mode == imtbase::ITimeFilterParam::IM_LAST){
+			endDate = QDate(currentDate.year(), currentDate.month(), 1).addDays(-1);
+			startDate = QDate(endDate.year(), endDate.month(), 1);
+		}
+
+		for (QDate iter = startDate; iter <= endDate; iter = iter.addDays(7)){
+			QDate weekStart = iter;
+			QDate weekEnd = std::min(weekStart.addDays(6), endDate);
+			fn(weekStart, weekEnd);
+		}
+	}
+	else if (unit == imtbase::ITimeFilterParam::TU_YEAR){
+		QDate startDate, endDate;
+		if (mode == imtbase::ITimeFilterParam::IM_CURRENT){
+			startDate = QDate(currentDate.year(), 1, 1);
+			endDate = QDate(currentDate.year(), 12, 31);
+		}
+		else if (mode == imtbase::ITimeFilterParam::IM_LAST){
+			startDate = QDate(currentDate.year() - 1, 1, 1);
+			endDate = QDate(currentDate.year() - 1, 12, 31);
+		}
+
+		for (int month = 1; month <= 12; ++month){
+			QDate monthStart(startDate.year(), month, 1);
+			QDate monthEnd = monthStart.addMonths(1).addDays(-1);
+			fn(monthStart, monthEnd);
+		}
+	}
+	else{
+		// Default last 5 years
+		int startYear = currentDate.year() - 4;
+		int endYear = currentDate.year();
+		for (int year = startYear; year <= endYear; ++year){
+			fn(QDate(year, 1, 1), QDate(year, 12, 31));
+		}
+	}
+}
+
+
+void CWorkspaceControllerComp::PrepareFilters(
+			iprm::CParamsSet& paramsSet,
+			const sdl::prolife::Workspace::CChartInput& input,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			bool joinGroupFilter,
+			std::optional<bool> internalUse,
+			std::optional<bool> inUse,
+			const TimeFilterType& timeFilterType,
+			const ObjectType& objectType) const
+{
+	if (!input.Version_1_0.HasValue()){
+		return;
+	}
+
+	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
+	if (complexFilterPtr == nullptr){
+		complexFilterPtr = new imtbase::CComplexCollectionFilter();
+		paramsSet.SetEditableParameter("ComplexFilter", complexFilterPtr, true);
+	}
+
+	if (complexFilterPtr == nullptr){
+		return;
+	}
+
+	if (input.Version_1_0->timeFilter.HasValue()){
+		imtbase::CTimeFilterParam timeFilterParam;
+		if (!m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilterParam, *input.Version_1_0->timeFilter)){
+			return;
+		}
+
+		if (timeFilterType == TFT_BY_CREATION){
+			complexFilterPtr->SetTimeFilter(timeFilterParam);
+		}
+		else if (timeFilterType == TFT_BY_LICENSE_CREATION){
+			istd::TDelPtr<imtbase::CTimeFilterParam> timeFilterParamPtr;
+			istd::IChangeableUniquePtr clonedObjectPtr = timeFilterParam.CloneMe();
+			if (clonedObjectPtr.IsValid()){
+				timeFilterParamPtr.SetCastedOrRemove(clonedObjectPtr.PopInterfacePtr());
+				paramsSet.SetEditableParameter("LicenseCreationTimeFilter", timeFilterParamPtr.PopPtr(), true);
+			}
+		}
+	}
+
+	if (input.Version_1_0->customerId.HasValue()){
+		QByteArray customerId = *input.Version_1_0->customerId;
+		if (!customerId.isEmpty()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", customerId));
+		}
+	}
+
+	if (internalUse.has_value()){
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", *internalUse));
+	}
+
+	if (objectType == OT_SOFTWARE){
+		if (inUse.has_value()){
+			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", *inUse));
+		}
+	}
+	else if (objectType == OT_HARDWARE){
+		if (inUse.has_value()){
+			if (*inUse){
+				AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER));
+			}
+			else{
+				AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL));
+			}
+		}
+	}
+
+	if (joinGroupFilter){
+		JoinGroupFilter(gqlRequest, paramsSet);
+	}
+}
+
+
+void CWorkspaceControllerComp::ExtractTimeUnitFromInput(
+			const sdl::prolife::Workspace::CChartInput& input,
+			imtbase::ITimeFilterParam::TimeUnit& unit,
+			imtbase::ITimeFilterParam::InterpretationMode& timeMode) const
+{
+	if (!input.Version_1_0.HasValue()){
+		return;
+	}
+
+	sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0 timeFilter;
+	if (!input.Version_1_0->timeFilter.HasValue()){
+		return;
+	}
+	timeFilter = *input.Version_1_0->timeFilter;
+
+	imtbase::CTimeFilterParam timeFilterParam;
+	if (!m_timeFilterParamRepresentationController.GetDataModelFromSdlRepresentation(timeFilterParam, timeFilter)){
+		return;
+	}
+
+	unit = timeFilterParam.GetTimeUnit();
+	timeMode = timeFilterParam.GetInterpretationMode();
 }
 
 

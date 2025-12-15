@@ -39,14 +39,14 @@ type PieChartData {
 
 type BarChartData {
 	axes: ChartAxes!
-	bars: [ChartBar!]!
+	bars: [ChartBar]!
 	summary: ChartSummary
 }
 
 type LineChartData {
 	axes: ChartAxes!
-	labels: [String!]!
-	points: [SdlPoint!]!
+	labels: [String]!
+	points: [SdlPoint]!
 	summary: ChartSummary
 }
 
@@ -62,7 +62,7 @@ type CollectionSummaryInfo {
 }
 
 type TotalSummaryInfo {
-	summaryInfos: [CollectionSummaryInfo!]!
+	summaryInfos: [CollectionSummaryInfo]!
 }
 
 input ChartInput {

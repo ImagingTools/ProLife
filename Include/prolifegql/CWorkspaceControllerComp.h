@@ -31,6 +31,19 @@ public:
 	I_END_COMPONENT
 
 protected:
+	enum TimeFilterType
+	{
+		TFT_BY_CREATION,
+		TFT_BY_LICENSE_CREATION,
+	};
+
+	enum ObjectType
+	{
+		OT_SOFTWARE,
+		OT_HARDWARE,
+		OT_ORDER
+	};
+
 	virtual sdl::prolife::Workspace::CLineChartData OnGetLicenseCreationInfo(
 				const sdl::prolife::Workspace::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
@@ -89,52 +102,59 @@ private:
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& chartInput,
 				int nameMetaInfoType,
+				const ObjectType& objectType,
 				QString& errorMessage) const;
-	bool PrepareDateFilter(
-				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
-				QDate& startDate,
-				QDate& endDate,
-				imtbase::ITimeFilterParam::TimeUnit& unit,
-				imtbase::ITimeFilterParam::InterpretationMode& mode) const;
 	bool BuildPieChart(
 				const QMap<QPair<QByteArray, QString>, int>& map,
 				sdl::prolife::Workspace::CPieChartData::V1_0& pieChartData) const;
 	bool BuildBarChart(const QMap<QDate, QMap<QString, int>>& map,
-				const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilterSdl,
+				const sdl::prolife::Workspace::CChartInput& input,
 				const QString& yLabel,
 				sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const;
 	bool BuildLineChart(
 				const QMap<QDate, int>& map,
-				const sdl::prolife::Workspace::CChartInput& chartInput,
+				const sdl::prolife::Workspace::CChartInput& input,
 				const QString& yLabel,
 				sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	uint FNV1A(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
-	void AddTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter, bool isObligatory = false) const;
-	void AddLicenseCreationTimeFilter(iprm::CParamsSet& paramsSet, const sdl::imtbase::ComplexCollectionFilter::CTimeFilter::V1_0& timeFilter) const;
 	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
-	void PrepareFilterFromChartInput(iprm::CParamsSet& paramsSet, const sdl::prolife::Workspace::CChartInput& chartInput) const;
 	sdl::prolife::Workspace::CBarChartData BuildProductUsageBarChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+				const ObjectType& objectType,
 				QString& errorMessage) const;
 	sdl::prolife::Workspace::CPieChartData BuildProductUsagePieChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
-				imtbase::IComplexCollectionFilter::FieldFilter inUseField,
+				const ObjectType& objectType,
 				QString& errorMessage) const;
 	sdl::prolife::Workspace::CPieChartData BuildProductByCustomerPieChart(
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
+				const ObjectType& objectType,
 				QString& errorMessage) const;
+	void AggregateByTime(
+				const imtbase::ITimeFilterParam::TimeUnit& unit,
+				const imtbase::ITimeFilterParam::InterpretationMode& timeMode,
+				const std::function<void(const QDate& start, const QDate& end)>& fn) const;
+	void PrepareFilters(
+				iprm::CParamsSet& paramsSet,
+				const sdl::prolife::Workspace::CChartInput& input,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				bool joinGroupFilter,
+				std::optional<bool> internalUse,
+				std::optional<bool> inUse,
+				const TimeFilterType& timeFilterType,
+				const ObjectType& objectType) const;
+	void ExtractTimeUnitFromInput(const sdl::prolife::Workspace::CChartInput& input, imtbase::ITimeFilterParam::TimeUnit& unit, imtbase::ITimeFilterParam::InterpretationMode& timeMode) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
