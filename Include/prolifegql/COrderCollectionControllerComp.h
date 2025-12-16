@@ -42,6 +42,10 @@ protected:
 				const QByteArrayList& elementIds,
 				const imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
+	virtual void OnAfterSetObjectDescription(
+				const QByteArray& objectId,
+				const QString& description,
+				const imtgql::CGqlRequest& gqlRequest) const override;
 
 	// reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(

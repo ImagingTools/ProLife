@@ -219,6 +219,30 @@ bool COrderCollectionControllerComp::OnBeforeRemoveElements(
 }
 
 
+void COrderCollectionControllerComp::OnAfterSetObjectDescription(
+			const QByteArray& objectId,
+			const QString& description,
+			const imtgql::CGqlRequest& /*gqlRequest*/) const
+{
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT(false);
+		return;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
+		if (orderInfoPtr != nullptr){
+			orderInfoPtr->SetDescription(description);
+
+			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *orderInfoPtr)){
+				SendWarningMessage(0, QString("Unable to set description for object '%1'. Error: Set object data failed").arg(QString::fromUtf8(objectId)));
+			}
+		}
+	}
+}
+
+
 // reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
 
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(

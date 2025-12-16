@@ -16,6 +16,30 @@ namespace prolifegql
 
 // protected methods
 
+void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
+			const QByteArray& objectId,
+			const QString& description,
+			const imtgql::CGqlRequest& gqlRequest) const
+{
+	if (!m_objectCollectionCompPtr.IsValid()){
+		Q_ASSERT(false);
+		return;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+		prolifedata::ICustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
+		if (customerInfoPtr != nullptr){
+			customerInfoPtr->SetDescription(description);
+
+			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *customerInfoPtr)){
+				SendWarningMessage(0, QString("Unable to set description for object '%1'. Error: Set object data failed").arg(QString::fromUtf8(objectId)));
+			}
+		}
+	}
+}
+
+
 // reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(

@@ -24,6 +24,11 @@ public:
 	I_END_COMPONENT;
 
 protected:
+	virtual void OnAfterSetObjectDescription(
+				const QByteArray& objectId,
+				const QString& description,
+				const imtgql::CGqlRequest& gqlRequest) const override;
+
 	// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
