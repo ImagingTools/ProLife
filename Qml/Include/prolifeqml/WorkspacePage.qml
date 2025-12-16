@@ -418,9 +418,16 @@ ViewBase {
 										widthFromDecorator: true
 										objectName: "ViewAllButton"
 										onClicked: {
-											let objectTypeId = model.item.m_objectTypeId
 											let collectionId = model.item.m_collectionId
-											NavigationController.navigate(collectionId + "/" + objectTypeId)
+											if (collectionId === "Devices"){
+												NavigationController.navigate("Devices/<hardware-filter>", {})
+											}
+											else if (collectionId === "SoftwareProducts"){
+												NavigationController.navigate("SoftwareProducts/<software-filter>", {})
+											}
+											else if (collectionId === "Orders"){
+												NavigationController.navigate("Orders/<order-filter>", {})
+											}
 										}
 									}
 								}

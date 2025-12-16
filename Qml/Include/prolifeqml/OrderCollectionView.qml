@@ -67,6 +67,24 @@ RemoteCollectionView {
 		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 	}
 
+	NavigableItem {
+		paths: ["<order-filter>"]
+		parentSegment: container.collectionId
+		onActivated: {
+			let documentManager = MainDocumentManager.getDocumentManager(container.collectionId)
+			if (documentManager){
+				let docManagerView = documentManager.getActiveView()
+				if (docManagerView){
+					docManagerView.setCurrentTabIndex(0)
+				}
+			}
+
+			container.filterMenu.clearAllFilters(true)
+			container.table.setSortingInfo(OrderItemTypeMetaInfo.s_timeStamp, "DESC")
+			container.filterMenu.filterChanged()
+		}
+	}
+
 	Component {
 		id: customersDelegateFilterComp
 		FieldFilterDelegate {

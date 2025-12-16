@@ -158,6 +158,14 @@ RemoteCollectionView {
 		paths: ["<software-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
+			let documentManager = MainDocumentManager.getDocumentManager(container.collectionId)
+			if (documentManager){
+				let docManagerView = documentManager.getActiveView()
+				if (docManagerView){
+					docManagerView.setCurrentTabIndex(0)
+				}
+			}
+
 			container.filterMenu.clearAllFilters(true)
 
 			if (params.customerId !== ""){
