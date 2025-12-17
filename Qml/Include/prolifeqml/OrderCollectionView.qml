@@ -80,6 +80,17 @@ RemoteCollectionView {
 			}
 
 			container.filterMenu.clearAllFilters(true)
+
+			if (params.timeFilter){
+				let timeFilterDelegate = container.filterMenu.getFilterDelegate("DateFilter")
+				timeFilterDelegate.setTimeUnit(params.timeFilter.mode, params.timeFilter.unit, true)
+			}
+
+			if (params.customerId !== ""){
+				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
+				customersFilterDelegate.setSelectedId(params.customerId, true)
+			}
+
 			container.table.setSortingInfo(OrderItemTypeMetaInfo.s_timeStamp, "DESC")
 			container.filterMenu.filterChanged()
 		}

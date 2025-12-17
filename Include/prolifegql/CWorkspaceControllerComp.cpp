@@ -291,23 +291,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 softwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION);
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 		
@@ -323,23 +323,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 hardwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION);
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -881,6 +881,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
+				qDebug() << name << timestamp;
 				usageMap[timestamp.date()][name]++;
 			}
 		}

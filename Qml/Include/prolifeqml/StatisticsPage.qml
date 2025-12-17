@@ -36,7 +36,7 @@ ViewBase {
 	Component.onCompleted: {
 		let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
 		let viewSensors = PermissionsController.checkPermission("ViewSensors")
-		if (viewLicenses && viewSensors){
+		if (viewLicenses || viewSensors){
 			stackView.addPage(softwareHadrwarePageComp)
 		}
 

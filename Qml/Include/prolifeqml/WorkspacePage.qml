@@ -102,17 +102,31 @@ ViewBase {
 				: height - topRow.height - 3*spacing
 
 			function navigateToHardware(productName, inUse, statusId, isLicenseCreation){
-				let productId = CachedProductCollection.getProductIdByName(productName)
 				let params = {}
-				params.productId = productId
+
+				if (productName !== undefined){
+					let productId = CachedProductCollection.getProductIdByName(productName)
+					params.productId = productId
+				}
+
 				params.customerId = root.customerId
-				params.inUse = inUse
+				
+				if (inUse !== undefined){
+					params.inUse = inUse
+				}
+
 				params.internalUse = false
 
 				if (statusId){
 					params.statusId = statusId
 				}
-		
+
+				applyTimeFilter(params, isLicenseCreation)
+
+				NavigationController.navigate("Devices/<hardware-filter>", params)
+			}
+
+			function applyTimeFilter(params, isLicenseCreation){
 				if (root.timeFilter){
 					let timeFilterObj = {}
 					timeFilterObj.unit = root.timeFilter.m_timeUnit
@@ -125,25 +139,20 @@ ViewBase {
 						params.timeFilter = timeFilterObj
 					}
 				}
-		
-				NavigationController.navigate("Devices/<hardware-filter>", params)
 			}
 		
 			function navigateToSoftware(productName){
-				let productId = CachedProductCollection.getProductIdByName(productName)
-				
 				let params = {}
-				params.productId = productId
+				if (productName !== undefined){
+					let productId = CachedProductCollection.getProductIdByName(productName)
+					params.productId = productId
+				}
+
 				params.customerId = root.customerId
 				params.inUse = true
 				params.internalUse = false
-		
-				if (root.timeFilter){
-					let timeFilterObj = {}
-					timeFilterObj.unit = root.timeFilter.m_timeUnit
-					timeFilterObj.mode = root.timeFilter.m_interpretationMode
-					params.licenseCreationTimeFilter = timeFilterObj
-				}
+
+				applyTimeFilter(params, true)
 		
 				NavigationController.navigate("SoftwareProducts/<software-filter>", params)
 			}
@@ -418,15 +427,20 @@ ViewBase {
 										widthFromDecorator: true
 										objectName: "ViewAllButton"
 										onClicked: {
+											let params = {}
+											params.customerId = root.customerId
 											let collectionId = model.item.m_collectionId
 											if (collectionId === "Devices"){
-												NavigationController.navigate("Devices/<hardware-filter>", {})
+												chartsBlock.applyTimeFilter(params, true)
+												NavigationController.navigate("Devices/<hardware-filter>", params)
 											}
 											else if (collectionId === "SoftwareProducts"){
-												NavigationController.navigate("SoftwareProducts/<software-filter>", {})
+												chartsBlock.applyTimeFilter(params, true)
+												NavigationController.navigate("SoftwareProducts/<software-filter>", params)
 											}
 											else if (collectionId === "Orders"){
-												NavigationController.navigate("Orders/<order-filter>", {})
+												chartsBlock.applyTimeFilter(params, false)
+												NavigationController.navigate("Orders/<order-filter>",params)
 											}
 										}
 									}
@@ -476,10 +490,12 @@ ViewBase {
 
 				Component.onCompleted: {
 					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-					if (viewLicenses){
+					let viewHardware = PermissionsController.checkPermission("ViewSensors")
+					if (viewLicenses && viewHardware){
 						softwareUsedPieChart.updateModel()
 						softwareUsedBarChart.updateModel()
-						licenseCreationInfo.updateModel()
+						hardwareUsedPieChart.updateModel()
+						hardwareStatusInfo.updateModel()
 						row1.visible = true
 					}
 				}
@@ -499,58 +515,7 @@ ViewBase {
 						chartsBlock.navigateToSoftware(label)
 					}
 				}
-		
-				GqlBarchartView {
-					id: softwareUsedBarChart
-					objectName: "SoftwareUsedBarChart"
-					width: chartsBlock.chartWidth
-					chartHeight: row1.chartHeight
-					name: qsTr("Active Software Instances by Period")
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
-					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					customerId: root.customerId
-					timeFilter: root.timeFilter
-					legendClickable: true
-					onLegendClicked: {
-						chartsBlock.navigateToSoftware(label)
-					}
-				}
-		
-				GqlLinechartView {
-					id: licenseCreationInfo
-					objectName: "LicenseCreationInfo"
-					width: chartsBlock.chartWidth
-					chartHeight: row1.chartHeight
-					name: qsTr("License Creation Activity")
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
-					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					customerId: root.customerId
-					timeFilter: root.timeFilter
-				}
-			}
-		
-			/* ROW 2 */
-			Row {
-				id: row2
-				anchors.top: row1.bottom
-				anchors.topMargin: chartsBlock.spacing
-				anchors.horizontalCenter: parent.horizontalCenter
-				height: chartsBlock.rowHeight
-				spacing: chartsBlock.spacing
-				visible: false
 
-				property real chartHeight: row2.height - 85
-
-				Component.onCompleted: {
-					let viewHardware = PermissionsController.checkPermission("ViewSensors")
-					if (viewHardware){
-						hardwareUsedPieChart.updateModel()
-						hardwareUsedBarChart.updateModel()
-						hardwareStatusInfo.updateModel()
-						row2.visible = true
-					}
-				}
-		
 				GqlPiechartView {
 					id: hardwareUsedPieChart
 					objectName: "HardwareUsedPieChart"
@@ -566,23 +531,7 @@ ViewBase {
 						chartsBlock.navigateToHardware(label, true, undefined, true)
 					}
 				}
-		
-				GqlBarchartView {
-					id: hardwareUsedBarChart
-					objectName: "HardwareUsedBarChart"
-					width: chartsBlock.chartWidth
-					chartHeight: row2.chartHeight
-					name: qsTr("Active Hardware Instances by Period")
-					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
-					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
-					customerId: root.customerId
-					timeFilter: root.timeFilter
-					legendClickable: true
-					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true, undefined, true)
-					}
-				}
-		
+
 				GqlPiechartView {
 					id: hardwareStatusInfo
 					objectName: "HardwareStatusInfo"
@@ -602,6 +551,74 @@ ViewBase {
 					DeviceProductionStatus {
 						id: deviceProductionStatus
 					}
+				}
+			}
+		
+			/* ROW 2 */
+			Row {
+				id: row2
+				anchors.top: row1.bottom
+				anchors.topMargin: chartsBlock.spacing
+				anchors.horizontalCenter: parent.horizontalCenter
+				height: chartsBlock.rowHeight
+				spacing: chartsBlock.spacing
+				visible: false
+
+				property real chartHeight: row2.height - 85
+
+				Component.onCompleted: {
+					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+					let viewHardware = PermissionsController.checkPermission("ViewSensors")
+					if (viewLicenses && viewHardware){
+						softwareUsedBarChart.updateModel()
+						hardwareUsedBarChart.updateModel()
+						licenseCreationInfo.updateModel()
+						row2.visible = true
+					}
+				}
+
+				GqlBarchartView {
+					id: softwareUsedBarChart
+					objectName: "SoftwareUsedBarChart"
+					width: chartsBlock.chartWidth
+					chartHeight: row1.chartHeight
+					name: qsTr("Active Software Instances by Period")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getSoftwareUsedBarChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					customerId: root.customerId
+					timeFilter: root.timeFilter
+					legendClickable: true
+					onLegendClicked: {
+						chartsBlock.navigateToSoftware(label)
+					}
+				}
+		
+				GqlBarchartView {
+					id: hardwareUsedBarChart
+					objectName: "HardwareUsedBarChart"
+					width: chartsBlock.chartWidth
+					chartHeight: row2.chartHeight
+					name: qsTr("Active Hardware Instances by Period")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getHardwareUsedBarChart
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					customerId: root.customerId
+					timeFilter: root.timeFilter
+					legendClickable: true
+					onLegendClicked: {
+						chartsBlock.navigateToHardware(label, true, undefined, true)
+					}
+				}
+
+				GqlLinechartView {
+					id: licenseCreationInfo
+					objectName: "LicenseCreationInfo"
+					width: chartsBlock.chartWidth
+					chartHeight: row1.chartHeight
+					name: qsTr("License Creation Activity")
+					gqlCommandId: ProlifeWorkspaceSdlCommandIds.s_getLicenseCreationInfo
+					subscriptionCommandId: "OnSoftwareProductsCollectionChanged"
+					customerId: root.customerId
+					timeFilter: root.timeFilter
 				}
 			}
 		}
