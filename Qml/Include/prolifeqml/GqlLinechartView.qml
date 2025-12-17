@@ -12,7 +12,7 @@ ElementView {
 	id: graph2dElementView
 	controlWidth: 130
 	width: Style.sizeHintL
-	contentMargin: Style.marginM
+	contentSpacing: Style.marginM
 	clip: true
 
 	property string gqlCommandId

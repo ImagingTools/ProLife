@@ -48,9 +48,7 @@ RemoteCollectionView {
 
 		registerFieldFilterDelegate("LicenseStatus", licenseStatusDelegateFilterComp)
 		
-		if (PermissionsController.checkPermission("ViewAccounts")){
-			registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
-		}
+		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 
 		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
 		registerFieldFilterDelegate(SoftwareProductItemTypeMetaInfo.s_licenseUuid, licensesDelegateFilterComp)

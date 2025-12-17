@@ -10,7 +10,7 @@ import imtbaseComplexCollectionFilterSdl 1.0
 ElementView {
 	id: piechartElementView
 	width: Style.sizeHintM
-	contentMargin: Style.marginM
+	contentSpacing: Style.marginM
 
 	property string gqlCommandId
 	property alias subscriptionCommandId: subscriptionClient.gqlCommandId

@@ -302,7 +302,7 @@ ViewBase {
 							width: chartsBlock.chartWidth
 							name: model.item.m_total
 							titleFontSize: Style.fontSizeBXL
-							contentMargin: Style.marginM
+							contentSpacing: Style.marginM
 							objectName: model.item.m_collectionId +  "Info"
 
 							Component.onCompleted: {
@@ -499,7 +499,7 @@ ViewBase {
 						row1.visible = true
 					}
 				}
-		
+
 				GqlPiechartView {
 					id: softwareUsedPieChart
 					objectName: "SoftwareUsedPieChart"

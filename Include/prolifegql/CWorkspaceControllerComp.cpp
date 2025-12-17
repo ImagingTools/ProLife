@@ -881,7 +881,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
-				qDebug() << name << timestamp;
 				usageMap[timestamp.date()][name]++;
 			}
 		}

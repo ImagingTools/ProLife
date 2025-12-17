@@ -12,7 +12,7 @@ ElementView {
 	id: barChartElementView
 	controlWidth: 130
 	width: Style.sizeHintM
-	contentMargin: Style.marginM
+	contentSpacing: Style.marginM
 	clip: true
 
 	property int ySteps: 1
