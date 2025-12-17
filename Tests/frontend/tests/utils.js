@@ -84,21 +84,10 @@ const wheelScroll = async (page, deltaY) => {
 };
 
 const checkScreenshot = async (page, filename, maskParams) => {
-  try {
-    await addMask(page, maskParams);
-    await waitForPageStability(page);
-
-    await expect(page).toHaveScreenshot(filename, {
-      fullPage: true,
-      threshold: 0.05,
-      maxDiffPixelRatio: 0
-    });
-  } catch (err) {
-    console.error(`Screenshot failed: ${filename}`);
-    console.error(err.message);
-  } finally {
-    await removeMask(page);
-  }
+  await addMask(page, maskParams);
+  await waitForPageStability(page);
+  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0});
+  await removeMask(page);
 };
 
 async function login(page, username, password) {
