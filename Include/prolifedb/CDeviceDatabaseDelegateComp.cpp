@@ -117,7 +117,7 @@ QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 					si."TimeStamp" AS "LicenseCreationDate"
 				FROM "Devices" AS si
 				WHERE si."DocumentId" = root."DocumentId"
-					AND (si."DataMetaInfo"->>'SoftwareCount')::int > 0
+					AND (si."DataMetaInfo"->>'InUse')::boolean = TRUE
 				ORDER BY si."TimeStamp" ASC
 				LIMIT 1
 			) AS lic ON TRUE

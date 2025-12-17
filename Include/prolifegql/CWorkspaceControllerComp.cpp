@@ -121,7 +121,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetLicenseCr
 	response.Version_1_0->axes->yLabel = "Created Licenses";
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, OT_SOFTWARE);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 	QMap<QDate, int> licenseCountByDateMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_softwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -151,7 +151,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUs
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				getSoftwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -166,7 +165,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUs
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				getSoftwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -181,7 +179,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareUs
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				getHardwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -196,7 +193,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareUs
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				getHardwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -222,7 +218,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareSt
 	response.Version_1_0.Emplace();
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	QMap<int, int> hardwareStatutesMap;
@@ -295,23 +291,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 softwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_SOFTWARE);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION, OT_SOFTWARE);
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION);
 
 		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION, OT_SOFTWARE);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION);
 
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION, OT_SOFTWARE);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION);
 
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 		
@@ -327,23 +323,23 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 hardwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
+		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION, OT_HARDWARE);
+		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION, OT_HARDWARE);
+		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -359,7 +355,7 @@ sdl::prolife::Workspace::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalS
 		sdl::prolife::Workspace::CCollectionSummaryInfo::V1_0 orderCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_ORDER);
+		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
@@ -387,7 +383,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCu
 				*m_hardwareCollectionCompPtr.GetPtr(),
 				getHardwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -406,7 +401,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCu
 				*m_softwareCollectionCompPtr.GetPtr(),
 				getSoftwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
-				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -430,7 +424,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::OnGetHardwareCo
 	}
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, OT_HARDWARE);
+	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 	QMap<QPair<QByteArray, QString>, int> map;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_hardwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -473,7 +467,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCr
 				*m_softwareCollectionCompPtr,
 				getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
-				OT_SOFTWARE,
 				errorMessage);
 }
 
@@ -495,7 +488,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::OnGetHardwareCr
 				*m_hardwareCollectionCompPtr,
 				getHardwareCreationBarChartRequest.GetRequestedArguments().input,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
-				OT_HARDWARE,
 				errorMessage);
 }
 
@@ -514,7 +506,7 @@ sdl::prolife::Workspace::CLineChartData CWorkspaceControllerComp::OnGetOrderCrea
 
 	iprm::CParamsSet selectionParams;
 	const auto& input = request.GetRequestedArguments().input;
-	PrepareFilters(selectionParams, input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION, OT_ORDER);
+	PrepareFilters(selectionParams, input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 	QMap<QDate, int> map;
 
@@ -550,7 +542,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& chartInput,
 				int nameMetaInfoType,
-				const ObjectType& objectType,
 				QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
@@ -561,7 +552,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::GetItemsCreatio
 	}
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, chartInput, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, objectType);
+	PrepareFilters(selectionParams, chartInput, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 	QMap<QDate, QMap<QString, int>> resultMap;
 	imtbase::ICollectionInfo::Ids elementIds = collection.GetElementIds(0, -1, &selectionParams);
@@ -871,7 +862,6 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 			int productNameMetaInfoType,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CBarChartData response;
@@ -881,7 +871,7 @@ sdl::prolife::Workspace::CBarChartData CWorkspaceControllerComp::BuildProductUsa
 	}
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, objectType);
+	PrepareFilters(selectionParams, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 	QMap<QDate, QMap<QString, int>> usageMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = collection.CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -910,13 +900,12 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductUsa
 			int productNameMetaInfoType,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
 
 	iprm::CParamsSet paramsSet;
-	PrepareFilters(paramsSet, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION, objectType);
+	PrepareFilters(paramsSet, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 	QMap<QPair<QByteArray, QString>, int> map;
 	imtbase::IObjectCollectionIterator* iteratorPtr = collection.CreateObjectCollectionIterator(QByteArray(), 0, -1, &paramsSet);
@@ -944,7 +933,6 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 			const imtbase::IObjectCollection& collection,
 			const sdl::prolife::Workspace::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
-			const ObjectType& objectType,
 			QString& errorMessage) const
 {
 	sdl::prolife::Workspace::CPieChartData response;
@@ -966,7 +954,7 @@ sdl::prolife::Workspace::CPieChartData CWorkspaceControllerComp::BuildProductByC
 	for (const QByteArray& elementId : elementIds){
 		iprm::CParamsSet paramsSet;
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("CustomerId", elementId));
-		PrepareFilters(paramsSet, input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION, objectType);
+		PrepareFilters(paramsSet, input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 		int count = collection.GetElementsCount(&paramsSet);
 		if (count > 0){
@@ -1051,8 +1039,7 @@ void CWorkspaceControllerComp::PrepareFilters(
 			bool joinGroupFilter,
 			std::optional<bool> internalUse,
 			std::optional<bool> inUse,
-			const TimeFilterType& timeFilterType,
-			const ObjectType& objectType) const
+			const TimeFilterType& timeFilterType) const
 {
 	if (!input.Version_1_0.HasValue()){
 		return;
@@ -1098,20 +1085,8 @@ void CWorkspaceControllerComp::PrepareFilters(
 		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InternalUse", *internalUse));
 	}
 
-	if (objectType == OT_SOFTWARE){
-		if (inUse.has_value()){
-			AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", *inUse));
-		}
-	}
-	else if (objectType == OT_HARDWARE){
-		if (inUse.has_value()){
-			if (*inUse){
-				AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_GREATER));
-			}
-			else{
-				AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("SoftwareCount", 0, imtbase::IComplexCollectionFilter::FieldOperation::FO_EQUAL));
-			}
-		}
+	if (inUse.has_value()){
+		AddFieldFilter(paramsSet, imtbase::IComplexCollectionFilter::FieldFilter("InUse", *inUse));
 	}
 
 	if (joinGroupFilter){

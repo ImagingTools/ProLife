@@ -37,13 +37,6 @@ protected:
 		TFT_BY_LICENSE_CREATION,
 	};
 
-	enum ObjectType
-	{
-		OT_SOFTWARE,
-		OT_HARDWARE,
-		OT_ORDER
-	};
-
 	virtual sdl::prolife::Workspace::CLineChartData OnGetLicenseCreationInfo(
 				const sdl::prolife::Workspace::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
@@ -102,7 +95,6 @@ private:
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& chartInput,
 				int nameMetaInfoType,
-				const ObjectType& objectType,
 				QString& errorMessage) const;
 	bool BuildPieChart(
 				const QMap<QPair<QByteArray, QString>, int>& map,
@@ -126,20 +118,17 @@ private:
 				int productNameMetaInfoType,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
-				const ObjectType& objectType,
 				QString& errorMessage) const;
 	sdl::prolife::Workspace::CPieChartData BuildProductUsagePieChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
-				const ObjectType& objectType,
 				QString& errorMessage) const;
 	sdl::prolife::Workspace::CPieChartData BuildProductByCustomerPieChart(
 				const imtbase::IObjectCollection& collection,
 				const sdl::prolife::Workspace::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
-				const ObjectType& objectType,
 				QString& errorMessage) const;
 	void AggregateByTime(
 				const imtbase::ITimeFilterParam::TimeUnit& unit,
@@ -152,8 +141,7 @@ private:
 				bool joinGroupFilter,
 				std::optional<bool> internalUse,
 				std::optional<bool> inUse,
-				const TimeFilterType& timeFilterType,
-				const ObjectType& objectType) const;
+				const TimeFilterType& timeFilterType) const;
 	void ExtractTimeUnitFromInput(const sdl::prolife::Workspace::CChartInput& input, imtbase::ITimeFilterParam::TimeUnit& unit, imtbase::ITimeFilterParam::InterpretationMode& timeMode) const;
 
 private:

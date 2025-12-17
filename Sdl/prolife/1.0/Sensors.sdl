@@ -50,7 +50,7 @@ type DeviceItem {
 	macAddress: String
 	serialNumber: String
 	project: String
-	softwareLinksCount: Integer
+	inUse: Bool
 	added: String
 	timeStamp: String
 }

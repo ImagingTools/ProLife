@@ -17,17 +17,17 @@ FieldFilterDelegate {
 	
 	FieldFilter {
 		id: withoutLicenseFilter
-		m_fieldId: "SoftwareCount"
-		m_filterValue: "0"
-		m_filterValueType: "Integer"
+		m_fieldId: "InUse"
+		m_filterValue: "false"
+		m_filterValueType: "Bool"
 		m_filterOperations: ["Equal"]
 	}
 	
 	FieldFilter {
 		id: withLicenseFilter
-		m_fieldId: "SoftwareCount"
-		m_filterValue: "0"
-		m_filterValueType: "Integer"
-		m_filterOperations: ["Greater"]
+		m_fieldId: "InUse"
+		m_filterValue: "true"
+		m_filterValueType: "Bool"
+		m_filterOperations: ["Equal"]
 	}
 }

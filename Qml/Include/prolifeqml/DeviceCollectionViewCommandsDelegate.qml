@@ -293,8 +293,8 @@ DocumentCollectionViewDelegate {
 			onBind(hardwareId, macAddress)
 		}
 		else if (commandId === createLicenseFileCommand){
-			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
-			if (count <= 0){
+			let inUse = elementsModel.getData(DeviceItemTypeMetaInfo.s_inUse, indexes[0])
+			if (!inUse){
 				ModalDialogManager.openDialog(errorDialogComp, {"message": qsTr("No license is linked")})
 				return;
 			}
@@ -322,8 +322,8 @@ DocumentCollectionViewDelegate {
 			onCreateLicenseFile(hardwareId)
 		}
 		else if (commandId === transferLicensesCommand){
-			let count = elementsModel.getData(DeviceItemTypeMetaInfo.s_softwareLinksCount, indexes[0])
-			if (count <= 0){
+			let inUse = elementsModel.getData(DeviceItemTypeMetaInfo.s_inUse, indexes[0])
+			if (!inUse){
 				ModalDialogManager.openDialog(transferErrorDialogComp, {})
 				return;
 			}

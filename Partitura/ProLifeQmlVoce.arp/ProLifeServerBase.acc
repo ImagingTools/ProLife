@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5442" Description="ACF"/>
+            <Version Id="0" Number="5445" Description="ACF"/>
             <Version Id="1" Number="2256" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
@@ -557,6 +557,7 @@
                                             <Value>DatabaseConverterComp</Value>
                                             <Value>MigrationController15</Value>
                                             <Value>MigrationController16</Value>
+                                            <Value>MigrationController17</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -691,6 +692,30 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="To" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="16"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="MigrationController17" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="From" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="17"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="MigrationFolderPath" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="MigrationFilePath"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="To" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="17"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>

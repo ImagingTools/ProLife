@@ -42,20 +42,20 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	if (deviceInfoPtr == nullptr){
 		return false;
 	}
-	
+
 	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
-	
+
 	QByteArray orderId = deviceInfoPtr->GetOrderId();
 	QByteArray productId = deviceInfoPtr->GetDeviceType();
 	QByteArray licenseId = deviceInfoPtr->GetConfigurationType();
-	
+
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_MAC_ADDRESS, deviceInfoPtr->GetMacAddress());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, deviceInfoPtr->GetSerialNumber());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_STATUS, deviceInfoPtr->GetDeviceProductionStatus());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_PROJECT, deviceInfoPtr->GetProject());
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_INTERNAL_USE, deviceInfoPtr->IsInternalUse());
-	
+
 	QByteArray customerId;
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
@@ -72,9 +72,9 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	}
-	
+
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_ID, customerId);
-	
+
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
 		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
@@ -86,42 +86,40 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	}
-	
+
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_TYPE, productId);
-	
+
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
-				
 				QByteArray id = productInfoPtr->GetProductId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PRODUCT_ID, id);
-				
+
 				QString productName = productInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_PRODUCT_NAME, productName);
 			}
 		}
 	}
-	
+
 	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, licenseId);
-	
+
 	if (m_licenseCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr licenseDataPtr;
 		if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
 			const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 			if (licenseInfoPtr != nullptr){
-				
 				QByteArray id = licenseInfoPtr->GetLicenseId();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_ID, id);
-				
+
 				QString licenseName = licenseInfoPtr->GetLicenseName();
 				metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_NAME, licenseName);
 			}
 		}
 	}
-	
-	int softwareCount = 0;
+
+	bool inUse = false;
 	if (m_deviceBindingCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr bindingDataPtr;
 		if (m_deviceBindingCollectionCompPtr->GetObjectData(objectId, bindingDataPtr)){
@@ -129,13 +127,13 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			if (bindingInfoPtr != nullptr){
 				QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
 				softwareIds.removeAll("");
-				
-				softwareCount = softwareIds.size();
+
+				inUse = softwareIds.size() > 0;
 			}
 		}
 	}
-	
-	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_COUNT_BINDED_LICENSES, softwareCount);
+
+	metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_IN_USE, inUse);
 
 	return true;
 }
@@ -147,7 +145,6 @@ QString CDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*metaInfoType
 {
 	return QString();
 }
-
 
 
 } // namespace imtauth

@@ -354,8 +354,8 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.deliveryIdLink = objectLink;
 	}
 
-	if (requestInfo.items.isSoftwareLinksCountRequested){
-		representationObject.softwareLinksCount = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_COUNT_BINDED_LICENSES).toInt();
+	if (requestInfo.items.isInUseRequested){
+		representationObject.inUse = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_IN_USE).toBool();
 	}
 
 	if (requestInfo.items.isStatusRequested){
