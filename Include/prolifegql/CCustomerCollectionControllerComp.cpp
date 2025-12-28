@@ -427,11 +427,11 @@ const iprm::IParamsSet* CCustomerCollectionControllerComp::CreateComplexFilter(c
 	fieldFilter.fieldId = fieldId;
 	fieldFilter.filterValue = fieldValue;
 	
-	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
 	groupFilter.fieldFilters << fieldFilter;
 
 	imtbase::CComplexCollectionFilter* complexFilterPtr = new imtbase::CComplexCollectionFilter();
-	complexFilterPtr->SetFieldsFilter(groupFilter);
+	complexFilterPtr->SetFilterExpression(groupFilter);
 	
 	iprm::CParamsSet* filterParamPtr = new iprm::CParamsSet();
 	filterParamPtr->SetEditableParameter("ComplexFilter", complexFilterPtr, true);

@@ -171,11 +171,11 @@ bool CheckDeviceMacAddressExists(const QByteArray& deviceUuid, const QByteArray&
 	fieldFilter.fieldId = "MacAddress";
 	fieldFilter.filterValue = macAddress;
 	
-	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
 	groupFilter.fieldFilters << fieldFilter;
 	
 	imtbase::CComplexCollectionFilter complexFilter;
-	complexFilter.SetFieldsFilter(groupFilter);
+	complexFilter.SetFilterExpression(groupFilter);
 	
 	iprm::CParamsSet filterParam;
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
@@ -207,11 +207,11 @@ bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArra
 	fieldFilter.fieldId = "SerialNumber";
 	fieldFilter.filterValue = serialNumber;
 	
-	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
 	groupFilter.fieldFilters << fieldFilter;
 	
 	imtbase::CComplexCollectionFilter complexFilter;
-	complexFilter.SetFieldsFilter(groupFilter);
+	complexFilter.SetFilterExpression(groupFilter);
 	
 	iprm::CParamsSet filterParam;
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
@@ -243,11 +243,11 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 	fieldFilter.fieldId = "SerialNumber";
 	fieldFilter.filterValue = serialNumber;
 	
-	imtbase::IComplexCollectionFilter::GroupFilter groupFilter;
+	imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
 	groupFilter.fieldFilters << fieldFilter;
 	
 	imtbase::CComplexCollectionFilter complexFilter;
-	complexFilter.SetFieldsFilter(groupFilter);
+	complexFilter.SetFilterExpression(groupFilter);
 	
 	iprm::CParamsSet filterParam;
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);

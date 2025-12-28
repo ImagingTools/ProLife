@@ -79,9 +79,9 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 	bool retVal = BaseClass::CreateTextFilterQuery(collectionFilter, textFilterQuery);
 	if (retVal){
 		QSet<QByteArray> filteringFieldIds =
-			imtbase::CComplexCollectionFilterHelper::GetFilteringFieldIds(collectionFilter.GetFieldsFilter());
+			imtbase::CComplexCollectionFilterHelper::GetFilteringFieldIds(collectionFilter.GetFilterExpression());
 
-		QString textFilter = imtbase::CComplexCollectionFilterHelper::GetTextFilter(collectionFilter.GetFieldsFilter()).replace(":", "");
+		QString textFilter = imtbase::CComplexCollectionFilterHelper::GetTextFilter(collectionFilter.GetFilterExpression()).replace(":", "");
 		if (!textFilter.isEmpty() && filteringFieldIds.contains("MacAddress")){
 			QString macAddressTextFilter = QString(R"(('s' || replace("MacAddress", ':', '')) ILIKE '%%1%')").arg(textFilter);
 			if (textFilterQuery.isEmpty()){
