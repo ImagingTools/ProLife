@@ -2,14 +2,15 @@
 
 
 // ACF includes
-#include <istd/TDelPtr.h>
-#include <istd/CChangeNotifier.h>
-#include <istd/CChangeGroup.h>
-#include <iser/IArchive.h>
 #include <iser/CArchiveTag.h>
 #include <iser/CPrimitiveTypesSerializer.h>
+#include <iser/IArchive.h>
+#include <istd/CChangeGroup.h>
+#include <istd/CChangeNotifier.h>
+#include <istd/TDelPtr.h>
 
 // ImtCore includes
+#include <imtcore/Version.h>
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
 #include <imtlic/CProductInstanceInfo.h>
@@ -70,6 +71,7 @@ void COrderInfo::SetOrderId(const QByteArray& orderId)
 		m_orderId = orderId;
 	}
 }
+
 
 QByteArray COrderInfo::GetPurchaseOrderId() const
 {
