@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5398" Description="ACF"/>
-            <Version Id="1" Number="2250" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5445" Description="ACF"/>
+            <Version Id="1" Number="2257" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -21,6 +21,15 @@
         <Element ComponentName="Support" X="1050" Y="375" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="DatabaseParams">
+            <PositionMap>
+                <Element ComponentName="Database" X="525" Y="125" Note=""/>
+                <Element ComponentName="LisaDatabaseAccessSettings" X="925" Y="325" Note=""/>
+                <Element ComponentName="ProLifeDatabaseAccessSettings" X="200" Y="325" Note=""/>
+                <Element ComponentName="PumaDatabaseAccessSettings" X="575" Y="325" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="BackupParams">
             <PositionMap>
                 <Element ComponentName="Backup" X="550" Y="75" Note=""/>
@@ -37,15 +46,6 @@
                 <Element ComponentName="Server" X="575" Y="125" Note=""/>
                 <Element ComponentName="ServerConnectionInterface" X="975" Y="250" Note=""/>
                 <Element ComponentName="ServerConnectionParams" X="575" Y="550" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DatabaseParams">
-            <PositionMap>
-                <Element ComponentName="Database" X="525" Y="125" Note=""/>
-                <Element ComponentName="LisaDatabaseAccessSettings" X="925" Y="325" Note=""/>
-                <Element ComponentName="ProLifeDatabaseAccessSettings" X="200" Y="325" Note=""/>
-                <Element ComponentName="PumaDatabaseAccessSettings" X="575" Y="325" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
