@@ -1,8 +1,5 @@
 @echo on
-set OUTPUT_FILE=tempFile.txt
-..\..\..\..\ImtCore\3rdParty\Python\3.8\python.exe ..\..\..\..\ImtCore\Build\GetSvnVersion.py -D ..\..\..\ -F %OUTPUT_FILE%
-set /p APP_VERSION=< %OUTPUT_FILE% 
-IF EXIST %OUTPUT_FILE% DEL /F %OUTPUT_FILE%
+for /f %%i in ('..\..\..\..\ImtCore\3rdParty\Python\3.8\python.exe ..\..\..\..\ImtCore\Build\GetSvnVersion.py -D ..\..\..\') do set APP_VERSION=%%i
 
 set PROLIFE_BUILD_DIR=..\..\..\Bin\Release_Qt6_VC17_x64
 iscc ProLifeServer.iss
