@@ -1,0 +1,18 @@
+[submodule "3rdParty/Acf"]
+	path = 3rdParty/Acf
+	url = https://github.com/ImagingTools/Acf.git
+[submodule "3rdParty/AcfSln"]
+	path = 3rdParty/AcfSln
+	url = https://github.com/ImagingTools/AcfSln.git
+[submodule "3rdParty/ImtCore"]
+	path = 3rdParty/ImtCore
+	url = https://github.com/ImagingTools/ImtCore.git
+[submodule "3rdParty/Lisa"]
+	path = 3rdParty/Lisa
+	url = https://github.com/ImagingTools/Lisa.git
+[submodule "3rdParty/Puma"]
+	path = 3rdParty/Puma
+	url = https://github.com/ImagingTools/Puma.git
+[submodule "3rdParty/Agentino"]
+	path = 3rdParty/Agentino
+	url = https://github.com/ImagingTools/Agentino.git
