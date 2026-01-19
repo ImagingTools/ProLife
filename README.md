@@ -221,6 +221,31 @@ We welcome contributions! Please follow these guidelines:
 
 For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md) (if available).
 
+## Security
+
+### EU Cyber Resilience Act (CRA) Compliance
+
+ProLife complies with the EU Cyber Resilience Act (Regulation (EU) 2024/2847). We provide:
+
+- **Software Bill of Materials (SBOM)** - Complete component inventory in CycloneDX format
+- **Vulnerability Disclosure Policy** - Coordinated disclosure process
+- **Security Updates** - Timely patches for security issues
+- **CE Declaration** - EU conformity documentation
+
+### Reporting Security Vulnerabilities
+
+**Please do NOT report security vulnerabilities through public GitHub issues.**
+
+To report a security vulnerability, please email: **security@imagingtools.com**
+
+We will respond within 3 business days. For more details, see [SECURITY.md](SECURITY.md).
+
+### Security Documentation
+
+- [SECURITY.md](SECURITY.md) - Complete security policy and vulnerability reporting
+- [docs/compliance/eu-cra/](docs/compliance/eu-cra/) - EU CRA compliance documentation
+- [docs/sbom/](docs/sbom/) - Software Bill of Materials (SBOM)
+
 ## License
 
 Copyright (C) 2017-2020 ImagingTools GmbH
@@ -231,9 +256,10 @@ This software may be used under the terms of the ImagingTools License Agreement.
 
 For questions or issues:
 
-- GitHub Issues: https://github.com/ImagingTools/ProLife/issues
-- Documentation: See `Docs/` directory
-- Contact: development team
+- **GitHub Issues:** https://github.com/ImagingTools/ProLife/issues
+- **Security Contact:** security@imagingtools.com
+- **Documentation:** See `Docs/` directory
+- **General Support:** development team
 
 ## Acknowledgments
 

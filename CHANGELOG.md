@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Root README.md with project overview and quick start guide
 - CMake configuration updates to support submodule paths
 - Automatic fallback to submodule paths when environment variables are not set
+- **EU Cyber Resilience Act (CRA) compliance support**
+  - SECURITY.md with vulnerability disclosure policy
+  - EU CRA compliance documentation (docs/compliance/eu-cra/)
+  - Software Bill of Materials (SBOM) framework (docs/sbom/)
+  - SBOM generation script (scripts/generate-sbom.sh)
+  - CE Declaration template
+  - Vulnerability management process documentation
+  - Security acknowledgments file (SECURITY_ACKNOWLEDGMENTS.md)
+  - Security contact information and reporting procedures
 
 ### Changed
 - Dependency management migrated from environment variables to Git submodules
