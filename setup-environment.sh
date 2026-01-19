@@ -14,7 +14,7 @@ echo "=========================================="
 echo ""
 
 # Check Git version
-GIT_VERSION=$(git --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+GIT_VERSION=$(git --version | sed -E 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 echo "Git version: $GIT_VERSION"
 
 # Initialize submodules
@@ -24,9 +24,9 @@ echo "This may take a few minutes on first run."
 echo ""
 
 if git submodule update --init --recursive; then
-    echo "✓ Submodules initialized successfully"
+    echo "[OK] Submodules initialized successfully"
 else
-    echo "✗ Failed to initialize submodules"
+    echo "[ERROR] Failed to initialize submodules"
     echo ""
     echo "Some submodules may be private and require authentication."
     echo "Please ensure you have:"

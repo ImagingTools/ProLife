@@ -24,7 +24,7 @@ echo.
 
 git submodule update --init --recursive
 if %errorlevel% neq 0 (
-    echo X Failed to initialize submodules
+    echo [ERROR] Failed to initialize submodules
     echo.
     echo Some submodules may be private and require authentication.
     echo Please ensure you have:
@@ -39,7 +39,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo √ Submodules initialized successfully
+echo [OK] Submodules initialized successfully
 echo.
 
 REM Show submodule status
