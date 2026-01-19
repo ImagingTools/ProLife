@@ -121,3 +121,7 @@ Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 Partitura/ProLifeVoce.arp/VersionInfo.acc
+
+# Generated SBOM files (keep example and template, ignore generated ones)
+docs/sbom/sbom-*.json
+!docs/sbom/sbom-example.json
