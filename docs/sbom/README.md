@@ -86,10 +86,15 @@ Each ProLife SBOM includes:
 Install CycloneDX CLI tool:
 
 ```bash
-# Using npm
-npm install -g @cyclonedx/cyclonedx-npm
+# Using npm (installs the general-purpose CLI tool)
+npm install -g @cyclonedx/cyclonedx-cli
 
-# Or download from https://github.com/CycloneDX/cyclonedx-cli/releases
+# Or download binary from https://github.com/CycloneDX/cyclonedx-cli/releases
+```
+
+For npm-specific projects, you can also use:
+```bash
+npm install -g @cyclonedx/cyclonedx-npm
 ```
 
 ### For CMake Projects (C++)
@@ -114,10 +119,10 @@ cyclonedx-cli sbom \
 # Navigate to frontend directory
 cd Tests/frontend
 
-# Generate SBOM
+# Generate SBOM using cyclonedx-npm
 cyclonedx-npm --output-file ../../docs/sbom/sbom-frontend.json
 
-# Include in main SBOM
+# Merge with main SBOM using cyclonedx-cli
 cyclonedx-cli merge \
   --input-files docs/sbom/sbom-main.json docs/sbom/sbom-frontend.json \
   --output-file docs/sbom/sbom-complete.json

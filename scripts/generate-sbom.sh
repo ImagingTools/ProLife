@@ -72,7 +72,21 @@ echo "  Output: ${OUTPUT_FILE}"
 echo ""
 
 # Generate UUID (try multiple methods)
-UUID=$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid 2>/dev/null || echo "00000000-0000-0000-0000-000000000000")
+if command -v uuidgen &> /dev/null; then
+    UUID=$(uuidgen)
+elif [ -r /proc/sys/kernel/random/uuid ]; then
+    UUID=$(cat /proc/sys/kernel/random/uuid)
+else
+    # Fallback: generate pseudo-UUID from timestamp and random
+    TIMESTAMP=$(date +%s%N)
+    RANDOM_PART=$(( RANDOM * RANDOM ))
+    UUID=$(printf "%08x-%04x-%04x-%04x-%012x" \
+        $((TIMESTAMP & 0xFFFFFFFF)) \
+        $((TIMESTAMP >> 32 & 0xFFFF)) \
+        $(( (TIMESTAMP >> 48 & 0x0FFF) | 0x4000 )) \
+        $(( (RANDOM_PART & 0x3FFF) | 0x8000 )) \
+        $((RANDOM_PART & 0xFFFFFFFFFFFF)))
+fi
 
 # Generate base SBOM structure
 cat > "${OUTPUT_FILE}" << EOF

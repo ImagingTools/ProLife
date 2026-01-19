@@ -184,7 +184,10 @@ A comprehensive Software Bill of Materials (SBOM) is provided with this product:
 
 **Security Update Period:** Minimum 5 years from release date  
 **Support Level:** Active security updates and patches  
-**End of Support Date:** [CALCULATED: RELEASE_DATE + 5 years]
+**End of Support Date:** [END_OF_SUPPORT_DATE]
+
+> **Note:** To calculate End of Support Date: Add 5 years to the Release Date above.  
+> Example: If Release Date is 2026-01-19, End of Support Date is 2031-01-19.
 
 Security updates will be provided for:
 - Critical vulnerabilities: 14 days
