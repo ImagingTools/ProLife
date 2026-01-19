@@ -4,6 +4,7 @@
 
 **Product Name:** ProLife Medical Imaging and Laboratory Information Management System  
 **Product Type:** Software with Digital Elements  
+**License Type:** Commercial (Proprietary) - ImagingTools Enterprise License Agreement  
 **Product Version:** [VERSION]  
 **Product Code:** [PRODUCT_CODE]  
 **Release Date:** [RELEASE_DATE]

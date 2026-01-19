@@ -2,6 +2,8 @@
 
 This guide helps you quickly understand and implement EU Cyber Resilience Act (CRA) compliance for ProLife deployments and distributions.
 
+**Important:** ProLife is a **commercial software product** distributed under the ImagingTools Enterprise License Agreement. This guide covers EU CRA compliance requirements for commercial software distribution.
+
 ## For Users and Administrators
 
 ### What You Need to Know

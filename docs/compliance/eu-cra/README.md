@@ -8,10 +8,11 @@ This directory contains documentation demonstrating ProLife's compliance with th
 
 **Product:** ProLife Medical Imaging and Laboratory Information Management System  
 **Manufacturer:** ImagingTools GmbH  
+**License Type:** Commercial (Proprietary)  
 **Compliance Version:** 1.0  
 **Last Updated:** 2026-01-19
 
-ProLife is compliant with the essential cybersecurity requirements outlined in Annex I of the EU CRA.
+ProLife is a **commercial software product** distributed under the ImagingTools Enterprise License Agreement. It is compliant with the essential cybersecurity requirements outlined in Annex I of the EU CRA.
 
 ## Documentation Structure
 
@@ -158,6 +159,18 @@ We continuously monitor compliance through:
 - **Regulatory Updates:** Monitoring of EU CRA guidance and updates
 - **Industry Standards:** Alignment with ETSI EN 303 645 and ISO 27001
 - **Third-Party Audits:** Annual security audits by certified auditors
+
+## Licensing and Distribution
+
+ProLife is a **commercial software product** and is distributed under the ImagingTools Enterprise License Agreement. Key licensing aspects:
+
+- **Primary License:** ImagingTools Commercial License (proprietary)
+- **Distribution:** Commercial licensing model with per-user and per-device options
+- **Third-Party Components:** ProLife incorporates open-source and commercial third-party libraries, each with their own licenses (detailed in the SBOM)
+- **License Compliance:** All third-party component licenses are tracked and complied with
+- **License File:** Full commercial license terms available in `Install/Commercial/License.txt`
+
+**Note:** While ProLife itself is commercial software, it may incorporate third-party open-source components (such as Qt, OpenSSL, etc.) under their respective licenses (LGPL, Apache, etc.). The SBOM provides complete transparency of all components and their licenses.
 
 ## Contact Information
 

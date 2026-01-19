@@ -4,6 +4,13 @@
 
 This directory contains Software Bill of Materials (SBOM) files for ProLife releases, as required by the EU Cyber Resilience Act (CRA).
 
+**Important:** ProLife is distributed under a **commercial license** (ImagingTools Enterprise License Agreement). The SBOM includes all components used in ProLife, including:
+- ProLife proprietary components (commercial license)
+- Third-party commercial components (various commercial licenses)
+- Third-party open-source components (LGPL, Apache, BSD, etc.)
+
+All component licenses are clearly identified in the SBOM for compliance and transparency.
+
 ## What is an SBOM?
 
 A Software Bill of Materials (SBOM) is a comprehensive inventory of all components, libraries, and dependencies used in a software product. It provides transparency into the software supply chain and enables:
