@@ -148,6 +148,54 @@
     },
     {
       "type": "application",
+      "bom-ref": "nginx@1.25.0",
+      "name": "nginx",
+      "version": "1.25.0",
+      "description": "HTTP and reverse proxy server",
+      "supplier": {
+        "name": "F5, Inc."
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:generic/nginx@1.25.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://nginx.org"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "playwright@1.52.0",
+      "name": "Playwright",
+      "version": "1.52.0",
+      "description": "Browser automation framework for testing",
+      "supplier": {
+        "name": "Microsoft Corporation"
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40playwright/test@1.52.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://playwright.dev"
+        }
+      ]
+    },
+    {
+      "type": "application",
       "bom-ref": "acf@1.0.0",
       "name": "Advanced Computing Framework (Acf)",
       "version": "1.0.0",
@@ -159,6 +207,22 @@
         {
           "type": "vcs",
           "url": "https://github.com/ImagingTools/Acf"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "acfsln@1.0.0",
+      "name": "ACF Solution (AcfSln)",
+      "version": "1.0.0",
+      "description": "ACF solution files and configurations",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/AcfSln"
         }
       ]
     },
@@ -177,6 +241,54 @@
           "url": "https://github.com/ImagingTools/ImtCore"
         }
       ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "lisa@1.0.0",
+      "name": "Lisa",
+      "version": "1.0.0",
+      "description": "Lisa application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Lisa"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "puma@1.0.0",
+      "name": "Puma",
+      "version": "1.0.0",
+      "description": "Puma application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Puma"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "agentino@1.0.0",
+      "name": "Agentino",
+      "version": "1.0.0",
+      "description": "Agentino application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Agentino"
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -186,8 +298,14 @@
         "qt@6.5.0",
         "cmake@3.26.0",
         "openssl@3.0.0",
+        "nginx@1.25.0",
+        "playwright@1.52.0",
         "acf@1.0.0",
-        "imtcore@1.0.0"
+        "acfsln@1.0.0",
+        "imtcore@1.0.0",
+        "lisa@1.0.0",
+        "puma@1.0.0",
+        "agentino@1.0.0"
       ]
     },
     {
@@ -203,11 +321,35 @@
       "dependsOn": []
     },
     {
+      "ref": "nginx@1.25.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "playwright@1.52.0",
+      "dependsOn": []
+    },
+    {
       "ref": "acf@1.0.0",
       "dependsOn": []
     },
     {
+      "ref": "acfsln@1.0.0",
+      "dependsOn": []
+    },
+    {
       "ref": "imtcore@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "lisa@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "puma@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "agentino@1.0.0",
       "dependsOn": []
     }
   ],

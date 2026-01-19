@@ -244,6 +244,7 @@ We will respond within 3 business days. For more details, see [SECURITY.md](SECU
 
 - [SECURITY.md](SECURITY.md) - Complete security policy and vulnerability reporting
 - [docs/compliance/eu-cra/](docs/compliance/eu-cra/) - EU CRA compliance documentation
+- [docs/compliance/THIRD_PARTY_COMPONENTS.md](docs/compliance/THIRD_PARTY_COMPONENTS.md) - Complete list of third-party components and licenses
 - [docs/sbom/](docs/sbom/) - Software Bill of Materials (SBOM)
 
 ## License

@@ -19,10 +19,10 @@ ProLife is a **commercial software product** distributed under the ImagingTools 
 This compliance package includes:
 
 1. **CE_Declaration_Template.md** - CE marking declaration of conformity template
-2. **Technical_Documentation.md** - Technical documentation as required by Article 24
-3. **Risk_Assessment.md** - Cybersecurity risk assessment documentation
-4. **Vulnerability_Management.md** - Vulnerability handling and disclosure procedures
-5. **SBOM.md** - Software Bill of Materials generation and maintenance
+2. **Vulnerability_Management.md** - Vulnerability handling and disclosure procedures
+3. **Quick_Start_Guide.md** - Role-specific quick reference guide
+4. **[THIRD_PARTY_COMPONENTS.md](../THIRD_PARTY_COMPONENTS.md)** - Comprehensive list of all third-party components and licenses
+5. **[SBOM Documentation](../../sbom/)** - Software Bill of Materials generation and maintenance
 
 ## Essential Cybersecurity Requirements
 
