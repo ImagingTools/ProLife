@@ -42,8 +42,15 @@ jobs:
           IAT=$((NOW - 60))
           EXP=$((NOW + 600))
 
+          # Validate APP_ID is numeric
+          APP_ID="${{ secrets.APP_ID }}"
+          if ! [[ "$APP_ID" =~ ^[0-9]+$ ]]; then
+            echo "Error: APP_ID must be numeric"
+            exit 1
+          fi
+
           HEADER='{"alg":"RS256","typ":"JWT"}'
-          PAYLOAD='{"iat":'$IAT',"exp":'$EXP',"iss":"${{ secrets.APP_ID }}"}'
+          PAYLOAD='{"iat":'$IAT',"exp":'$EXP',"iss":"'$APP_ID'"}'
 
           HEADER_B64=$(echo -n "$HEADER" | base64 | tr -d '=' | \
             tr '/+' '_-' | tr -d '\n')

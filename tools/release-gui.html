@@ -219,7 +219,7 @@
                 
                 <div class="form-group">
                     <label for="repo">Repository</label>
-                    <input type="text" id="repo" name="repo" value="ImagingTools/ProLife" required>
+                    <input type="text" id="repo" name="repo" placeholder="ImagingTools/ProLife" required>
                     <div class="help-text">Format: owner/repo</div>
                 </div>
                 
@@ -338,7 +338,8 @@
             }
 
             // Validate tag formats (should start with 'v' and contain version number)
-            const tagPattern = /^v?\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?$/;
+            // Restrict pre-release identifiers to alphanumeric and hyphens only
+            const tagPattern = /^v?\d+\.\d+\.\d+(-[a-zA-Z0-9-]+)?$/;
             if (!tagPattern.test(target_tag)) {
                 showFeedback('Invalid target tag format. Expected: v1.2.3 or 1.2.3', 'error');
                 return;
