@@ -136,13 +136,23 @@ Under the EU CRA, ProLife is classified as:
 
 ProLife provides a comprehensive SBOM for transparency and supply chain security:
 
-- **Format:** CycloneDX 1.5 JSON
-- **Content:** All components, libraries, and dependencies
-- **Updates:** Generated for each release
+- **Formats:** 
+  - CycloneDX 1.5 JSON (industry standard)
+  - SPDX 2.3 JSON (ISO/IEC 5962:2021 international standard)
+- **Content:** All components, libraries, and dependencies with SPDX license identifiers
+- **Updates:** Generated for each release in both formats
 - **Access:** Included in release packages and available online
 - **Verification:** Digitally signed for authenticity
+- **License Tracking:** Standardized SPDX license identifiers for all components
 
-See `docs/sbom/` directory for SBOM files.
+**SPDX Benefits:**
+- ISO/IEC 5962:2021 international standard compliance
+- Standardized license identifiers (e.g., `LGPL-3.0-only`, `Apache-2.0`)
+- Support for custom licenses (e.g., `LicenseRef-ImagingTools-Commercial`)
+- Clear copyright attribution
+- Wide tool compatibility
+
+See `docs/sbom/` directory for SBOM files in both formats.
 
 ## Security Support Lifecycle
 

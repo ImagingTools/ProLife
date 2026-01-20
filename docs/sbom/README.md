@@ -20,27 +20,41 @@ A Software Bill of Materials (SBOM) is a comprehensive inventory of all componen
 - Supply chain risk assessment
 - Incident response and remediation
 
-## SBOM Format
+## SBOM Formats
 
-ProLife SBOMs are provided in **CycloneDX 1.5** format (JSON), which is:
+ProLife SBOMs are provided in **two industry-standard formats** for maximum compatibility:
+
+### 1. CycloneDX 1.5 (JSON)
 
 - Industry-standard format supported by the EU CRA
 - Machine-readable for automated processing
 - Extensible and comprehensive
 - Compatible with vulnerability scanning tools
+- **File:** `sbom-<version>.json`
+
+### 2. SPDX 2.3 (JSON)
+
+- ISO/IEC 5962:2021 international standard
+- Wide industry adoption and tool support
+- Comprehensive license information
+- Clear copyright and attribution tracking
+- **File:** `sbom-<version>.spdx.json`
+
+Both formats provide complete transparency into the software supply chain and are accepted for regulatory compliance.
 
 ## SBOM Files
 
-Each release of ProLife includes an SBOM file:
+Each release of ProLife includes SBOM files in both formats:
 
-- **Format:** CycloneDX 1.5 JSON
-- **Naming:** `sbom-<version>.json` (e.g., `sbom-1.0.0.json`)
+- **CycloneDX:** `sbom-<version>.json` (e.g., `sbom-1.0.0.json`)
+- **SPDX:** `sbom-<version>.spdx.json` (e.g., `sbom-1.0.0.spdx.json`)
 - **Location:** This directory (`docs/sbom/`)
 - **Signature:** Each SBOM is signed for verification
 
 ### Current Release
 
-- **Latest SBOM:** `sbom-latest.json` (symbolic link to current version)
+- **Latest CycloneDX:** `sbom-latest.json` (symbolic link to current version)
+- **Latest SPDX:** `sbom-latest.spdx.json` (symbolic link to current version)
 - **Version:** [Generated for each release]
 
 ## SBOM Contents
@@ -61,10 +75,17 @@ Each ProLife SBOM includes:
 - Dependency graph
 
 ### 3. License Information
-- License identifier (SPDX)
+- License identifier (SPDX standardized)
 - License text reference
 - License compliance status
 - Multiple licenses (where applicable)
+- Custom/proprietary license definitions
+
+**SPDX Format Benefits:**
+- Standardized SPDX license identifiers (e.g., `LGPL-3.0-only`, `Apache-2.0`)
+- Support for custom licenses (e.g., `LicenseRef-ImagingTools-Commercial`)
+- Clear license declarations and conclusions
+- Copyright text attribution
 
 ### 4. Vulnerability Information
 - Known CVEs affecting components
@@ -83,10 +104,10 @@ Each ProLife SBOM includes:
 
 ### Prerequisites
 
-Install CycloneDX CLI tool:
+Install SBOM generation tools:
 
 ```bash
-# Using npm (installs the general-purpose CLI tool)
+# CycloneDX CLI (for CycloneDX format)
 npm install -g @cyclonedx/cyclonedx-cli
 
 # Or download binary from https://github.com/CycloneDX/cyclonedx-cli/releases
@@ -97,8 +118,22 @@ For npm-specific projects, you can also use:
 npm install -g @cyclonedx/cyclonedx-npm
 ```
 
+**SPDX Tools:**
+
+```bash
+# SPDX SBOM Generator (for SPDX format)
+# Download from https://github.com/opensbom-generator/spdx-sbom-generator/releases
+
+# Or using Go
+go install github.com/opensbom-generator/spdx-sbom-generator/cmd/generator@latest
+
+# SPDX Tools (Python-based validation and conversion)
+pip install spdx-tools
+```
+
 ### For CMake Projects (C++)
 
+**CycloneDX Format:**
 ```bash
 # Navigate to build directory
 cd Build/CMake/build
@@ -111,6 +146,16 @@ cyclonedx-cli sbom \
   --input-file CMakeCache.txt \
   --output-file ../../../docs/sbom/sbom-$(cat ../../../VERSION).json \
   --format json
+```
+
+**SPDX Format:**
+```bash
+# Generate SPDX SBOM for CMake project
+spdx-sbom-generator -p . \
+  -o ../../../docs/sbom/sbom-$(cat ../../../VERSION).spdx.json
+
+# Or manually using the ProLife script (generates both formats)
+../../../scripts/generate-sbom.sh
 ```
 
 ### For npm Dependencies (Frontend)
@@ -139,8 +184,10 @@ SBOM generation is integrated into the release process:
 
 ## Validating an SBOM
 
+### CycloneDX Validation
+
 ```bash
-# Validate SBOM format
+# Validate CycloneDX SBOM format
 cyclonedx-cli validate --input-file docs/sbom/sbom-1.0.0.json
 
 # Check for vulnerabilities
@@ -148,6 +195,35 @@ grype sbom:docs/sbom/sbom-1.0.0.json
 
 # Or using syft
 syft sbom:docs/sbom/sbom-1.0.0.json -o table
+```
+
+### SPDX Validation
+
+```bash
+# Validate SPDX SBOM format
+pyspdxtools -i docs/sbom/sbom-1.0.0.spdx.json
+
+# Or using spdx-tools
+spdx-tools validate docs/sbom/sbom-1.0.0.spdx.json
+
+# Check SPDX license compliance
+spdx-tools check-licenses docs/sbom/sbom-1.0.0.spdx.json
+```
+
+### Converting Between Formats
+
+```bash
+# Convert CycloneDX to SPDX (using compatible tools)
+cyclonedx-cli convert \
+  --input-file docs/sbom/sbom-1.0.0.json \
+  --output-file docs/sbom/sbom-1.0.0.spdx.json \
+  --output-format spdxjson
+
+# Convert SPDX to CycloneDX (using compatible tools)
+spdx-tools convert \
+  --from docs/sbom/sbom-1.0.0.spdx.json \
+  --to docs/sbom/sbom-1.0.0.json \
+  --format cyclonedx
 ```
 
 ## Using SBOMs for Vulnerability Management
@@ -168,6 +244,7 @@ trivy sbom docs/sbom/sbom-latest.json
 
 Check license compliance:
 
+**CycloneDX:**
 ```bash
 # Using CycloneDX CLI
 cyclonedx-cli analyze --input-file docs/sbom/sbom-latest.json --licenses
@@ -177,6 +254,21 @@ cyclonedx-cli report \
   --input-file docs/sbom/sbom-latest.json \
   --report-format html \
   --output-file license-report.html
+```
+
+**SPDX:**
+```bash
+# Check SPDX license compliance
+spdx-tools check-licenses docs/sbom/sbom-latest.spdx.json
+
+# Generate license report from SPDX
+spdx-tools report \
+  --input docs/sbom/sbom-latest.spdx.json \
+  --format html \
+  --output license-report-spdx.html
+
+# Verify SPDX license identifiers
+spdx-tools validate-licenses docs/sbom/sbom-latest.spdx.json
 ```
 
 ### 3. Supply Chain Analysis
@@ -230,25 +322,38 @@ Each SBOM includes:
 
 ## Integration with Security Tools
 
-ProLife SBOMs are compatible with:
+ProLife SBOMs (both CycloneDX and SPDX) are compatible with:
 
-- **Grype** - Vulnerability scanner
-- **Trivy** - Comprehensive security scanner
+**Vulnerability Scanners:**
+- **Grype** - Vulnerability scanner (supports both formats)
+- **Trivy** - Comprehensive security scanner (supports both formats)
 - **OWASP Dependency-Check** - Vulnerability identification
 - **Syft** - SBOM generator and analyzer
+
+**SBOM Tools:**
+- **CycloneDX CLI** - CycloneDX format tools
+- **SPDX Tools** - SPDX format validation and conversion
+- **NTIA SBOM Tool** - SBOM quality checking
+
+**Integration Platforms:**
 - **GitHub Dependency Graph** - Native GitHub integration
 - **Dependabot** - Automated dependency updates
+- **Snyk** - Security and license scanning
+- **FOSSA** - License compliance platform
 
 ## EU CRA Compliance
 
 SBOMs fulfill EU CRA requirements:
 
-- **Article 14(4):** Machine-readable SBOM provided
+- **Article 14(4):** Machine-readable SBOM provided (both CycloneDX and SPDX)
 - **Article 14(5):** SBOM includes all components and dependencies
 - **Annex I, Part II:** Vulnerability information included
 - **Transparency:** Public availability of SBOM
+- **ISO/IEC 5962:2021:** SPDX format is an international standard
 
-## SBOM Example Structure
+## SBOM Example Structures
+
+### CycloneDX Format Example
 
 ```json
 {
@@ -296,12 +401,88 @@ SBOMs fulfill EU CRA requirements:
 }
 ```
 
+### SPDX Format Example
+
+```json
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "ProLife-1.0.0",
+  "documentNamespace": "https://imagingtools.com/spdx/prolife-1.0.0",
+  "creationInfo": {
+    "created": "2026-01-19T13:00:00Z",
+    "creators": [
+      "Organization: ImagingTools GmbH",
+      "Tool: ProLife SBOM Generator-1.0.0"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-ProLife",
+      "name": "ProLife",
+      "versionInfo": "1.0.0",
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Commercial",
+      "licenseDeclared": "LicenseRef-ImagingTools-Commercial",
+      "copyrightText": "Copyright (C) 2017-2026 ImagingTools GmbH"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Qt",
+      "name": "Qt Framework",
+      "versionInfo": "6.5.0",
+      "supplier": "Organization: The Qt Company",
+      "licenseConcluded": "LGPL-3.0-only",
+      "licenseDeclared": "LGPL-3.0-only",
+      "copyrightText": "Copyright (C) The Qt Company Ltd."
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-ProLife"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Qt"
+    }
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "LicenseRef-ImagingTools-Commercial",
+      "name": "ImagingTools Enterprise License Agreement",
+      "extractedText": "See Install/Commercial/License.txt for full license text."
+    }
+  ]
+}
+```
+
+**Key SPDX Features:**
+- **Standardized License IDs:** SPDX license identifiers (e.g., `LGPL-3.0-only`, `Apache-2.0`)
+- **Custom Licenses:** Support for proprietary licenses using `LicenseRef-` prefix
+- **Copyright Attribution:** Clear copyright text for each package
+- **Relationship Model:** Explicit dependency relationships
+- **ISO Standard:** SPDX 2.3 is ISO/IEC 5962:2021
+
 ## Resources
 
+### CycloneDX Resources
 - [CycloneDX Specification](https://cyclonedx.org/specification/overview/)
 - [CycloneDX Tool Center](https://cyclonedx.org/tool-center/)
+- [CycloneDX GitHub](https://github.com/CycloneDX)
+
+### SPDX Resources
+- [SPDX Specification](https://spdx.github.io/spdx-spec/)
+- [SPDX License List](https://spdx.org/licenses/)
+- [SPDX Tools](https://github.com/spdx/tools-python)
+- [SPDX GitHub](https://github.com/spdx)
+
+### General SBOM Resources
 - [SBOM Best Practices](https://www.cisa.gov/sbom)
 - [EU CRA SBOM Requirements](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act)
+- [NTIA SBOM Resources](https://www.ntia.gov/sbom)
 
 ## Support
 

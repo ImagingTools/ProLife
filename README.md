@@ -227,7 +227,8 @@ For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md) (if available).
 
 ProLife complies with the EU Cyber Resilience Act (Regulation (EU) 2024/2847). We provide:
 
-- **Software Bill of Materials (SBOM)** - Complete component inventory in CycloneDX format
+- **Software Bill of Materials (SBOM)** - Complete component inventory in CycloneDX 1.5 and SPDX 2.3 formats
+- **SPDX License Identifiers** - Standardized license tracking (ISO/IEC 5962:2021)
 - **Vulnerability Disclosure Policy** - Coordinated disclosure process
 - **Security Updates** - Timely patches for security issues
 - **CE Declaration** - EU conformity documentation

@@ -159,7 +159,77 @@ cat > "${OUTPUT_FILE}" << EOF
 }
 EOF
 
-echo -e "${GREEN}✓ Base SBOM structure generated${NC}"
+echo -e "${GREEN}✓ CycloneDX SBOM structure generated${NC}"
+
+# Generate SPDX format SBOM
+SPDX_OUTPUT_FILE="${SBOM_DIR}/sbom-${VERSION}.spdx.json"
+echo ""
+echo "Generating SPDX SBOM..."
+echo "  Output: ${SPDX_OUTPUT_FILE}"
+echo ""
+
+cat > "${SPDX_OUTPUT_FILE}" << 'SPDX_EOF'
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "ProLife-VERSION_PLACEHOLDER",
+  "documentNamespace": "https://imagingtools.com/spdx/prolife-VERSION_PLACEHOLDER",
+  "creationInfo": {
+    "created": "BUILD_DATE_PLACEHOLDER",
+    "creators": [
+      "Organization: ImagingTools GmbH",
+      "Tool: ProLife SBOM Generator-1.0.0"
+    ],
+    "licenseListVersion": "3.21"
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-ProLife",
+      "name": "ProLife",
+      "versionInfo": "VERSION_PLACEHOLDER",
+      "downloadLocation": "https://github.com/ImagingTools/ProLife",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Commercial",
+      "licenseDeclared": "LicenseRef-ImagingTools-Commercial",
+      "copyrightText": "Copyright (C) 2017-2026 ImagingTools GmbH",
+      "summary": "ProLife Medical Imaging and Laboratory Information Management System",
+      "homepage": "https://github.com/ImagingTools/ProLife",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "url",
+          "referenceLocator": "https://github.com/ImagingTools/ProLife/security"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-ProLife"
+    }
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "LicenseRef-ImagingTools-Commercial",
+      "name": "ImagingTools Enterprise License Agreement",
+      "extractedText": "See Install/Commercial/License.txt for full license text.\n\nThis is a commercial license agreement between ImagingTools GmbH and the licensee.",
+      "seeAlsos": [
+        "https://github.com/ImagingTools/ProLife/blob/main/Install/Commercial/License.txt"
+      ]
+    }
+  ]
+}
+SPDX_EOF
+
+# Replace placeholders in SPDX file
+sed -i "s/VERSION_PLACEHOLDER/${VERSION}/g" "${SPDX_OUTPUT_FILE}"
+sed -i "s/BUILD_DATE_PLACEHOLDER/${BUILD_DATE}/g" "${SPDX_OUTPUT_FILE}"
+
+echo -e "${GREEN}✓ SPDX SBOM structure generated${NC}"
 
 # Check for submodules and add them
 if [ -f "${PROJECT_ROOT}/.gitmodules" ]; then
@@ -184,14 +254,22 @@ if [ -f "${PROJECT_ROOT}/.gitmodules" ]; then
 fi
 
 echo ""
-echo -e "${GREEN}SBOM generated successfully!${NC}"
+echo -e "${GREEN}SBOM files generated successfully!${NC}"
+echo ""
+echo "Generated files:"
+echo "  CycloneDX: ${OUTPUT_FILE}"
+echo "  SPDX:      ${SPDX_OUTPUT_FILE}"
 echo ""
 echo "Next steps:"
-echo "  1. Review the generated SBOM: ${OUTPUT_FILE}"
+echo "  1. Review the generated SBOMs"
 echo "  2. Add detailed component information for dependencies"
-echo "  3. Run vulnerability scan: grype sbom:${OUTPUT_FILE}"
-echo "  4. Validate SBOM: cyclonedx-cli validate --input-file ${OUTPUT_FILE}"
-echo "  5. Sign SBOM for distribution"
+echo "  3. Run vulnerability scans:"
+echo "     - grype sbom:${OUTPUT_FILE}"
+echo "     - trivy sbom ${SPDX_OUTPUT_FILE}"
+echo "  4. Validate SBOMs:"
+echo "     - cyclonedx-cli validate --input-file ${OUTPUT_FILE}"
+echo "     - pyspdxtools -i ${SPDX_OUTPUT_FILE}"
+echo "  5. Sign SBOMs for distribution"
 echo ""
 echo "For more information, see: docs/sbom/README.md"
 echo ""
