@@ -65,6 +65,7 @@ git submodule update --init --recursive
 Comprehensive documentation is available in the following files:
 
 - **[BUILDING.md](BUILDING.md)** - Detailed build instructions for all platforms
+- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Guide for using release preparation tools
 - **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release process and versioning strategy
 - **[3rdParty/README.md](3rdParty/README.md)** - Submodule management guide
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines (if available)
@@ -207,7 +208,25 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-See [RELEASE_STRATEGY.md](RELEASE_STRATEGY.md) for the complete release process.
+### Release Preparation Tools
+
+Use the provided scripts to simplify release management:
+
+```bash
+# Linux/macOS
+./prepare-release.sh --help
+
+# Windows
+prepare-release.bat --help
+```
+
+Key features:
+- Create release branches automatically
+- Manage submodule versions
+- Pin dependencies to specific commits/tags
+- Generate version reports
+
+See [RELEASE_GUIDE.md](RELEASE_GUIDE.md) for detailed instructions and [RELEASE_STRATEGY.md](RELEASE_STRATEGY.md) for the complete release process.
 
 ## Contributing
 
