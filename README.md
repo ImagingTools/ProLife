@@ -65,8 +65,10 @@ git submodule update --init --recursive
 Comprehensive documentation is available in the following files:
 
 - **[BUILDING.md](BUILDING.md)** - Detailed build instructions for all platforms
-- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Guide for using release preparation tools
+- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Release preparation guide (English)
+- **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Руководство по подготовке релиза (Russian)
 - **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release process and versioning strategy
+- **[tools/README.md](tools/README.md)** - Automated release tools documentation
 - **[3rdParty/README.md](3rdParty/README.md)** - Submodule management guide
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines (if available)
 
@@ -208,25 +210,47 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-### Release Preparation Tools
+### Quick Release Preparation
 
-Use the provided scripts to simplify release management:
+For Russian speakers: См. **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** для подробной инструкции.
+
+Use the automated tools for quick release preparation:
 
 ```bash
-# Linux/macOS
-./prepare-release.sh --help
+# One-command release preparation
+./tools/quick-release.sh 2.1.0
 
-# Windows
-prepare-release.bat --help
+# Or step-by-step
+./tools/validate-release.sh validate    # Check current state
+./tools/validate-release.sh auto-update # Update submodules
+./prepare-release.sh --pin-submodules   # Pin versions
 ```
+
+### Release Preparation Tools
+
+Several scripts are provided to simplify release management:
+
+**Automated Tools** (recommended):
+- `tools/quick-release.sh` - One-command automated release preparation
+- `tools/validate-release.sh` - Validation and automation toolkit
+
+**Manual Tools**:
+- `prepare-release.sh` (Linux/macOS) - Manual submodule management
+- `prepare-release.bat` (Windows) - Manual submodule management
 
 Key features:
 - Create release branches automatically
-- Manage submodule versions
+- Auto-update submodules to latest tagged versions
+- Manage submodule versions interactively
 - Pin dependencies to specific commits/tags
+- Validate release readiness
 - Generate version reports
 
-See [RELEASE_GUIDE.md](RELEASE_GUIDE.md) for detailed instructions and [RELEASE_STRATEGY.md](RELEASE_STRATEGY.md) for the complete release process.
+See:
+- **[tools/README.md](tools/README.md)** - Detailed tool documentation
+- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Complete release guide (English)
+- **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Полное руководство (Russian)
+- **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release strategy and process
 
 ## Contributing
 

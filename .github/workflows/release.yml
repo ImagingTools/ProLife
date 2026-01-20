@@ -34,6 +34,20 @@ jobs:
         with:
           ref: ${{ inputs.release_branch }}
           fetch-depth: 0  # Fetch full history for changelog generation
+          submodules: recursive
+
+      - name: Validate submodules
+        run: |
+          echo "Validating submodules..."
+          chmod +x tools/validate-release.sh
+          ./tools/validate-release.sh validate ${{ inputs.target_tag }} || true
+          echo "Submodule validation complete"
+
+      - name: Generate submodule report
+        run: |
+          echo "Generating submodule version report..."
+          ./tools/validate-release.sh report SUBMODULE_VERSIONS.md
+          cat SUBMODULE_VERSIONS.md
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -79,7 +93,7 @@ jobs:
       - name: Commit changes
         id: commit
         run: |
-          git add CHANGELOG.md Build/CMake/CMakeLists.txt
+          git add CHANGELOG.md Build/CMake/CMakeLists.txt SUBMODULE_VERSIONS.md
           if git diff --staged --quiet; then
             echo "No changes to commit"
             echo "has_changes=false" >> $GITHUB_OUTPUT
