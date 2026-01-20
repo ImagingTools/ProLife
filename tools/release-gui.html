@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProLife Release Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .feedback.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 ProLife Release Manager</h1>
+        <p class="subtitle">Trigger release preparation workflow via GitHub Actions</p>
+        
+        <form id="releaseForm">
+            <div class="section">
+                <div class="section-title">GitHub Configuration</div>
+                
+                <div class="form-group">
+                    <label for="repo">Repository</label>
+                    <input type="text" id="repo" name="repo" placeholder="ImagingTools/ProLife" required>
+                    <div class="help-text">Format: owner/repo</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workflow">Workflow File</label>
+                    <input type="text" id="workflow" name="workflow" value="app-dispatch.yml" required>
+                    <div class="help-text">Workflow filename (e.g., app-dispatch.yml)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="token">GitHub Token</label>
+                    <input type="password" id="token" name="token" required>
+                    <div class="help-text">Fine-grained token with workflow permissions</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Release Parameters</div>
+                
+                <div class="form-group">
+                    <label for="release_branch">Release Branch</label>
+                    <input type="text" id="release_branch" name="release_branch" value="main" required>
+                    <div class="help-text">Branch to release from (e.g., main, develop)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target_tag">Target Tag</label>
+                    <input type="text" id="target_tag" name="target_tag" placeholder="v1.0.0" required>
+                    <div class="help-text">New release tag (e.g., v1.2.3)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="base_tag">Base Tag</label>
+                    <input type="text" id="base_tag" name="base_tag" placeholder="v0.9.0" required>
+                    <div class="help-text">Previous tag for changelog generation (e.g., v1.2.2)</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="dry_run" name="dry_run" checked>
+                        <label for="dry_run">Dry Run (recommended for testing)</label>
+                    </div>
+                    <div class="help-text">When enabled, skips tagging and release creation</div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    Trigger Release Workflow
+                </button>
+                <button type="reset" class="btn-secondary">Reset</button>
+            </div>
+        </form>
+        
+        <div id="feedback" class="feedback"></div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('releaseForm');
+        const feedback = document.getElementById('feedback');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        function showFeedback(message, type) {
+            feedback.textContent = message;
+            feedback.className = `feedback ${type}`;
+            feedback.style.display = 'block';
+            
+            // Auto-hide success messages after 10 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 10000);
+            }
+        }
+        
+        function setLoading(loading) {
+            if (loading) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner"></span>Triggering Workflow...';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Trigger Release Workflow';
+            }
+        }
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const repo = formData.get('repo');
+            const workflow = formData.get('workflow');
+            const token = formData.get('token');
+            const release_branch = formData.get('release_branch');
+            const target_tag = formData.get('target_tag');
+            const base_tag = formData.get('base_tag');
+            const dry_run = formData.get('dry_run') ? 'true' : 'false';
+
+            // Validate inputs
+            if (!repo || !workflow || !token || !release_branch || !target_tag || !base_tag) {
+                showFeedback('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Validate repository format (owner/repo)
+            const repoPattern = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
+            if (!repoPattern.test(repo)) {
+                showFeedback('Invalid repository format. Expected: owner/repo', 'error');
+                return;
+            }
+
+            // Validate workflow filename
+            const workflowPattern = /^[a-zA-Z0-9_.-]+\.ya?ml$/;
+            if (!workflowPattern.test(workflow)) {
+                showFeedback('Invalid workflow filename. Expected: filename.yml or filename.yaml', 'error');
+                return;
+            }
+
+            // Validate tag formats (should start with 'v' and contain version number)
+            // Restrict pre-release identifiers to alphanumeric and hyphens only
+            const tagPattern = /^v?\d+\.\d+\.\d+(-[a-zA-Z0-9-]+)?$/;
+            if (!tagPattern.test(target_tag)) {
+                showFeedback('Invalid target tag format. Expected: v1.2.3 or 1.2.3', 'error');
+                return;
+            }
+            if (!tagPattern.test(base_tag)) {
+                showFeedback('Invalid base tag format. Expected: v1.2.3 or 1.2.3', 'error');
+                return;
+            }
+
+            setLoading(true);
+            showFeedback('Dispatching workflow...', 'info');
+
+            try {
+                // Build URL with validated inputs (already validated above)
+                const url = `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Authorization': `Bearer ${token}`,
+                        'X-GitHub-Api-Version': '2022-11-28',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ref: release_branch,
+                        inputs: {
+                            release_branch: release_branch,
+                            target_tag: target_tag,
+                            base_tag: base_tag,
+                            dry_run: dry_run
+                        }
+                    })
+                });
+                
+                if (response.ok || response.status === 204) {
+                    showFeedback(
+                        `✅ Success! Workflow dispatched for ${target_tag}. ` +
+                        `Check the Actions tab in GitHub to monitor progress. ` +
+                        `(Dry run: ${dry_run})`,
+                        'success'
+                    );
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    const errorMessage = errorData.message || `HTTP ${response.status}: ${response.statusText}`;
+                    showFeedback(
+                        `❌ Failed to dispatch workflow: ${errorMessage}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showFeedback(
+                    `❌ Error: ${error.message}. Please check your network connection and try again.`,
+                    'error'
+                );
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        form.addEventListener('reset', () => {
+            feedback.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
