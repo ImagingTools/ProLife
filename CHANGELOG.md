@@ -20,11 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - SECURITY.md with vulnerability disclosure policy
   - EU CRA compliance documentation (docs/compliance/eu-cra/)
   - Software Bill of Materials (SBOM) framework (docs/sbom/)
-  - SBOM generation script (scripts/generate-sbom.sh)
+  - SBOM generation script (scripts/generate-sbom.sh) - supports CycloneDX 1.5 and SPDX 2.3 formats
   - CE Declaration template
   - Vulnerability management process documentation
   - Security acknowledgments file (SECURITY_ACKNOWLEDGMENTS.md)
   - Security contact information and reporting procedures
+  - Comprehensive third-party components documentation (docs/compliance/THIRD_PARTY_COMPONENTS.md)
+  - SPDX 2.3 support for SBOM generation (ISO/IEC 5962:2021)
+  - Qt LGPL-3.0 license compliance documentation (docs/compliance/Qt_LGPL_Compliance.md)
 
 ### Changed
 - Dependency management migrated from environment variables to Git submodules

@@ -170,6 +170,14 @@ ProLife complies with the LGPL-3.0 license for Qt by:
 - Providing information about Qt usage in documentation
 - Commercial Qt license is also available for customers who prefer it
 
+**Detailed LGPL Compliance Documentation:**  
+See [Qt_LGPL_Compliance.md](Qt_LGPL_Compliance.md) for comprehensive documentation on:
+- Dynamic linking verification
+- User modification rights
+- Installation information for replacing Qt
+- Source code availability
+- Complete LGPL-3.0 compliance checklist
+
 ### Attribution Requirements
 
 The following components require attribution in documentation:

@@ -22,7 +22,8 @@ This compliance package includes:
 2. **Vulnerability_Management.md** - Vulnerability handling and disclosure procedures
 3. **Quick_Start_Guide.md** - Role-specific quick reference guide
 4. **[THIRD_PARTY_COMPONENTS.md](../THIRD_PARTY_COMPONENTS.md)** - Comprehensive list of all third-party components and licenses
-5. **[SBOM Documentation](../../sbom/)** - Software Bill of Materials generation and maintenance
+5. **[Qt_LGPL_Compliance.md](../Qt_LGPL_Compliance.md)** - Qt Framework LGPL-3.0 license compliance documentation
+6. **[SBOM Documentation](../../sbom/)** - Software Bill of Materials generation and maintenance
 
 ## Essential Cybersecurity Requirements
 
