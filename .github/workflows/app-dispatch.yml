@@ -90,11 +90,12 @@ jobs:
           echo "Dispatching release workflow..."
 
           # Get the workflow ID to avoid 404 errors due to API caching
+          WORKFLOW_PATH=".github/workflows/release.yml"
           WORKFLOW_ID=$(gh workflow list --json name,id,path \
-            --jq '.[] | select(.path == ".github/workflows/release.yml") | .id')
+            --jq '.[] | select(.path == "'"$WORKFLOW_PATH"'") | .id')
 
           if [ -z "$WORKFLOW_ID" ]; then
-            echo "Error: Failed to find workflow ID for release.yml"
+            echo "Error: Failed to find workflow ID for $WORKFLOW_PATH"
             echo "Available workflows:"
             gh workflow list
             exit 1
