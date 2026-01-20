@@ -272,7 +272,6 @@ for /f "tokens=1,2" %%a in ('git submodule status') do (
     set "path=%%b"
     
     REM Remove leading +/- if present
-    set "commit=!commit:~1!"
     if "!commit:~0,1!"=="+" set "commit=!commit:~1!"
     if "!commit:~0,1!"=="-" set "commit=!commit:~1!"
     
