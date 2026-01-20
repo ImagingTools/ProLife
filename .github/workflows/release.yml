@@ -1,0 +1,159 @@
+name: Release Preparation
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'main'
+      target_tag:
+        description: 'Target release tag (e.g., v1.2.3)'
+        required: true
+      base_tag:
+        description: 'Base tag for changelog generation (e.g., v1.2.2)'
+        required: true
+      dry_run:
+        description: 'Dry run (skip tagging and release)'
+        required: true
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_branch }}
+          fetch-depth: 0  # Fetch full history for changelog generation
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install conventional-changelog-cli
+        run: npm install -g conventional-changelog-cli
+
+      - name: Generate changelog
+        run: |
+          echo "Generating changelog from ${{ inputs.base_tag }} to HEAD..."
+          conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+          echo "Changelog generated successfully"
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Remove 'v' prefix from tag to get version number
+          VERSION="${{ inputs.target_tag }}"
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Bump version in CMakeLists.txt
+        run: |
+          # Update version in CMakeLists.txt
+          # CUSTOMIZATION: Modify this sed pattern if your version
+          # placeholder is different
+          VERSION="${{ steps.version.outputs.version }}"
+          sed -i "s/project(ProLifeAll VERSION [0-9.]*)/project(ProLifeAll VERSION $VERSION)/" \
+            Build/CMake/CMakeLists.txt
+          echo "Version bumped to $VERSION in Build/CMake/CMakeLists.txt"
+
+          # Verify the change
+          grep "project(ProLifeAll VERSION" Build/CMake/CMakeLists.txt
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git add CHANGELOG.md Build/CMake/CMakeLists.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore: prepare release ${{ inputs.target_tag }}"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes committed successfully"
+          fi
+
+      - name: Push changes
+        if: steps.commit.outputs.has_changes == 'true'
+        run: |
+          git push origin ${{ inputs.release_branch }}
+          BRANCH="${{ inputs.release_branch }}"
+          echo "Changes pushed to $BRANCH"
+
+      - name: Create and push tag
+        if: |
+          inputs.dry_run == 'false' &&
+          steps.commit.outputs.has_changes == 'true'
+        run: |
+          TAG="${{ inputs.target_tag }}"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+          echo "Tag $TAG created and pushed"
+
+      - name: Build artifacts
+        run: |
+          echo "Building artifacts..."
+          # CUSTOMIZATION: Add your actual build commands here
+          # For now, we'll create a placeholder artifact
+          mkdir -p artifacts
+          echo "ProLife Release ${{ inputs.target_tag }}" > artifacts/README.txt
+          echo "Build timestamp: $(date)" >> artifacts/README.txt
+          tar -czf prolife-${{ inputs.target_tag }}.tar.gz artifacts/
+          echo "Artifacts built successfully"
+
+      - name: Upload artifacts to workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: prolife-release-${{ inputs.target_tag }}
+          path: prolife-${{ inputs.target_tag }}.tar.gz
+          retention-days: 90
+
+      - name: Create GitHub Release
+        if: inputs.dry_run == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.target_tag }}
+          name: Release ${{ inputs.target_tag }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+          files: |
+            prolife-${{ inputs.target_tag }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          TAG="${{ inputs.target_tag }}"
+          BASE="${{ inputs.base_tag }}"
+          BRANCH="${{ inputs.release_branch }}"
+          DRY="${{ inputs.dry_run }}"
+          echo "## Release Preparation Complete! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Tag:** $TAG" >> $GITHUB_STEP_SUMMARY
+          echo "- **Base Tag:** $BASE" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run:** $DRY" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "$DRY" == "true" ]; then
+            echo "✅ Dry run completed - no tag or release created" \
+              >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Release $TAG published" >> $GITHUB_STEP_SUMMARY
+          fi
