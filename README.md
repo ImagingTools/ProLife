@@ -65,6 +65,7 @@ git submodule update --init --recursive
 Comprehensive documentation is available in the following files:
 
 - **[BUILDING.md](BUILDING.md)** - Detailed build instructions for all platforms
+- **[RELEASE_PROCESS.md](RELEASE_PROCESS.md)** - Complete release process guide (cross-platform)
 - **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Release preparation guide (English)
 - **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Руководство по подготовке релиза (Russian)
 - **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release process and versioning strategy
@@ -212,10 +213,13 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 
 ### Quick Release Preparation
 
+For comprehensive release documentation: See **[RELEASE_PROCESS.md](RELEASE_PROCESS.md)** for complete cross-platform instructions.
+
 For Russian speakers: См. **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** для подробной инструкции.
 
 Use the automated tools for quick release preparation:
 
+**Linux/macOS:**
 ```bash
 # One-command release preparation
 ./tools/quick-release.sh 2.1.0
@@ -226,17 +230,28 @@ Use the automated tools for quick release preparation:
 ./prepare-release.sh --pin-submodules   # Pin versions
 ```
 
+**Windows:**
+```cmd
+REM One-command release preparation
+tools\quick-release.bat 2.1.0
+
+REM Or step-by-step
+tools\validate-release.bat validate    REM Check current state
+tools\validate-release.bat auto-update REM Update submodules
+prepare-release.bat --pin-submodules   REM Pin versions
+```
+
 ### Release Preparation Tools
 
 Several scripts are provided to simplify release management:
 
 **Automated Tools** (recommended):
-- `tools/quick-release.sh` - One-command automated release preparation
-- `tools/validate-release.sh` - Validation and automation toolkit
+- `tools/quick-release.sh` / `tools/quick-release.bat` - One-command automated release preparation
+- `tools/validate-release.sh` / `tools/validate-release.bat` - Validation and automation toolkit
+- `tools/set-submodule-versions.sh` / `tools/set-submodule-versions.bat` - Interactive submodule version management
 
 **Manual Tools**:
-- `prepare-release.sh` (Linux/macOS) - Manual submodule management
-- `prepare-release.bat` (Windows) - Manual submodule management
+- `prepare-release.sh` (Linux/macOS) / `prepare-release.bat` (Windows) - Manual submodule management
 
 Key features:
 - Create release branches automatically
@@ -245,8 +260,10 @@ Key features:
 - Pin dependencies to specific commits/tags
 - Validate release readiness
 - Generate version reports
+- **Cross-platform support**: Works on Windows, Linux, and macOS
 
 See:
+- **[RELEASE_PROCESS.md](RELEASE_PROCESS.md)** - Complete release process guide
 - **[tools/README.md](tools/README.md)** - Detailed tool documentation
 - **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Complete release guide (English)
 - **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Полное руководство (Russian)
