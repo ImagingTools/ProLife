@@ -307,7 +307,7 @@
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(form);
             const repo = formData.get('repo');
             const workflow = formData.get('workflow');
@@ -316,17 +316,43 @@
             const target_tag = formData.get('target_tag');
             const base_tag = formData.get('base_tag');
             const dry_run = formData.get('dry_run') ? 'true' : 'false';
-            
+
             // Validate inputs
             if (!repo || !workflow || !token || !release_branch || !target_tag || !base_tag) {
                 showFeedback('Please fill in all required fields', 'error');
                 return;
             }
-            
+
+            // Validate repository format (owner/repo)
+            const repoPattern = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
+            if (!repoPattern.test(repo)) {
+                showFeedback('Invalid repository format. Expected: owner/repo', 'error');
+                return;
+            }
+
+            // Validate workflow filename
+            const workflowPattern = /^[a-zA-Z0-9_.-]+\.ya?ml$/;
+            if (!workflowPattern.test(workflow)) {
+                showFeedback('Invalid workflow filename. Expected: filename.yml or filename.yaml', 'error');
+                return;
+            }
+
+            // Validate tag formats (should start with 'v' and contain version number)
+            const tagPattern = /^v?\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?$/;
+            if (!tagPattern.test(target_tag)) {
+                showFeedback('Invalid target tag format. Expected: v1.2.3 or 1.2.3', 'error');
+                return;
+            }
+            if (!tagPattern.test(base_tag)) {
+                showFeedback('Invalid base tag format. Expected: v1.2.3 or 1.2.3', 'error');
+                return;
+            }
+
             setLoading(true);
             showFeedback('Dispatching workflow...', 'info');
-            
+
             try {
+                // Build URL with validated inputs (already validated above)
                 const url = `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`;
                 
                 const response = await fetch(url, {

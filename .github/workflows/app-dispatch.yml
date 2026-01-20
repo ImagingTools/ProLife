@@ -25,6 +25,8 @@ on:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -66,8 +68,9 @@ jobs:
           TOKEN=$(echo "$RESPONSE" | jq -r .token)
 
           if [ "$TOKEN" == "null" ] || [ -z "$TOKEN" ]; then
-            echo "Failed to generate token"
-            echo "$RESPONSE"
+            echo "Failed to generate GitHub App token"
+            echo "Please verify APP_ID, APP_INSTALLATION_ID, and" \
+              "APP_PRIVATE_KEY secrets are correctly configured"
             exit 1
           fi
 
