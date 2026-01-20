@@ -88,28 +88,12 @@ jobs:
       - name: Dispatch release workflow
         run: |
           echo "Dispatching release workflow..."
-
-          # Get the workflow ID to avoid 404 errors due to API caching
-          WORKFLOW_PATH=".github/workflows/release.yml"
-          WORKFLOW_ID=$(gh workflow list --json name,id,path \
-            --jq '.[] | select(.path == "'"$WORKFLOW_PATH"'") | .id')
-
-          if [ -z "$WORKFLOW_ID" ]; then
-            echo "Error: Failed to find workflow ID for $WORKFLOW_PATH"
-            echo "Available workflows:"
-            gh workflow list
-            exit 1
-          fi
-
-          echo "Found workflow ID: $WORKFLOW_ID"
-
-          gh workflow run "$WORKFLOW_ID" \
+          gh workflow run .github/workflows/release.yml \
             --ref ${{ inputs.release_branch }} \
             -f release_branch="${{ inputs.release_branch }}" \
             -f target_tag="${{ inputs.target_tag }}" \
             -f base_tag="${{ inputs.base_tag }}" \
             -f dry_run="${{ inputs.dry_run }}"
-
           echo "Release workflow dispatched successfully"
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
