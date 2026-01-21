@@ -309,6 +309,21 @@ jobs:
         with:
           arch: x64
 
+      - name: Cache CMake/Ninja build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build
+            3rdParty/Acf/build
+            3rdParty/AcfSln/build
+            3rdParty/ImtCore/build
+            3rdParty/Lisa/build
+            3rdParty/Puma/build
+            3rdParty/Agentino/build
+          key: ${{ runner.os }}-cmake-build-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('3rdParty/**') }}
+          restore-keys: |
+            ${{ runner.os }}-cmake-build-
+
       - name: Build Acf
         if: hashFiles('3rdParty/Acf/Build/CMake/CMakeLists.txt') != ''
         run: |
