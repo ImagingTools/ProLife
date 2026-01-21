@@ -1,8 +1,30 @@
 # ProLife Release Automation Tools
 
-This directory contains automated tools for release preparation and validation.
+⚠️ **DEPRECATED:** This directory contains legacy command-line tools.
 
-## Tools Overview
+## 🚀 Recommended: Use ProLife Release App
+
+For a modern, user-friendly experience, use the new **ProLife Release App**:
+
+```bash
+# Windows
+ProLifeReleaseApp.bat
+
+# Linux/macOS
+./ProLifeReleaseApp.sh
+```
+
+See [RELEASE_APP_README.md](../RELEASE_APP_README.md) for details.
+
+The GUI app provides:
+- Visual submodule version selection
+- One-click build and release
+- InnoSetup integration
+- Real-time logs and progress
+
+## Legacy Command-Line Tools
+
+These tools are kept for CI/CD integration and advanced users who prefer command-line workflows.
 
 ### validate-release.sh
 

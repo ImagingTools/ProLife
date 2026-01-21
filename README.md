@@ -210,7 +210,28 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-### Quick Release Preparation
+### 🚀 ProLife Release App (Recommended)
+
+**NEW!** Use the graphical ProLife Release App for simplified release management:
+
+```bash
+# Windows
+ProLifeReleaseApp.bat
+
+# Linux/macOS
+./ProLifeReleaseApp.sh
+```
+
+The Release App provides:
+- **GUI for submodule version selection** - choose versions from dropdown lists
+- **Automatic build process** - build project with one click
+- **InnoSetup integration** - create installer EXE automatically
+- **Live logs** - monitor all operations in real-time
+- **Cross-platform** - works on Windows, Linux, and macOS
+
+See **[RELEASE_APP_README.md](RELEASE_APP_README.md)** for detailed usage instructions.
+
+### Quick Release Preparation (Command Line)
 
 For Russian speakers: См. **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** для подробной инструкции.
 
