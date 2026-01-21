@@ -314,6 +314,11 @@ jobs:
         if: hashFiles('3rdParty/Acf/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/Acf
+          # Generate version files
+          if (Test-Path "Build/Git/GenerateVersion.bat") {
+            Write-Host "Generating version files for Acf..."
+            cmd /c "Build\Git\GenerateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -325,6 +330,11 @@ jobs:
         if: hashFiles('3rdParty/AcfSln/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/AcfSln
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for AcfSln..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -336,6 +346,11 @@ jobs:
         if: hashFiles('3rdParty/ImtCore/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/ImtCore
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for ImtCore..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -347,6 +362,11 @@ jobs:
         if: hashFiles('3rdParty/Lisa/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/Lisa
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Lisa..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -358,6 +378,11 @@ jobs:
         if: hashFiles('3rdParty/Puma/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/Puma
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Puma..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -369,6 +394,11 @@ jobs:
         if: hashFiles('3rdParty/Agentino/Build/CMake/CMakeLists.txt') != ''
         run: |
           cd 3rdParty/Agentino
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Agentino..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -378,6 +408,11 @@ jobs:
 
       - name: Build ProLife
         run: |
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for ProLife..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
           mkdir build -Force
           cd build
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
