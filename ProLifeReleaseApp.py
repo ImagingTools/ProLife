@@ -7,12 +7,15 @@ A GUI application for managing ProLife releases:
 """
 
 import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+from tkinter import ttk, messagebox, scrolledtext, filedialog
 import subprocess
 import os
 import sys
 import json
 import threading
+import re
+import time
+import datetime
 from pathlib import Path
 
 
@@ -23,7 +26,7 @@ class ProLifeReleaseApp:
         self.root.geometry("900x700")
         
         # Get repository root
-        self.repo_root = Path(__file__).parent.absolute()
+        self.repo_root = Path(__file__).resolve().parent
         self.submodules_path = self.repo_root / "3rdParty"
         self.innosetup_script = self.repo_root / "Impl" / "ProLifeServer" / "Install" / "ProLifeServer.iss"
         
@@ -264,7 +267,6 @@ class ProLifeReleaseApp:
                     if tags_result.returncode == 0:
                         tags = [tag.strip() for tag in tags_result.stdout.split('\n') if tag.strip()]
                         # Filter semantic version tags and sort
-                        import re
                         sem_ver_tags = [tag for tag in tags if re.match(r'^v?\d+\.\d+\.\d+', tag)]
                         sem_ver_tags.sort(reverse=True)
                         if sem_ver_tags:
@@ -321,7 +323,6 @@ class ProLifeReleaseApp:
             
             if values:
                 # Find latest semantic version
-                import re
                 sem_vers = [v for v in values if re.match(r'^v?\d+\.\d+\.\d+', v)]
                 if sem_vers:
                     combo.set(sem_vers[0])
@@ -540,6 +541,8 @@ class ProLifeReleaseApp:
                                    "1. Pin submodules\n"
                                    "2. Build project\n"
                                    "3. Create installer\n\n"
+                                   "Note: Build and installer steps run asynchronously.\n"
+                                   "Monitor logs to ensure build completes before installer starts.\n\n"
                                    "Continue?"):
             return
         
@@ -552,7 +555,6 @@ class ProLifeReleaseApp:
             try:
                 # Step 1: Pin submodules
                 self.pin_submodules()
-                import time
                 time.sleep(2)  # Wait for pinning
                 
                 # Step 2: Build project
@@ -561,7 +563,7 @@ class ProLifeReleaseApp:
                 
                 self.log("="*60)
                 self.log("Release preparation started")
-                self.log("Note: Build and installer creation run asynchronously")
+                self.log("IMPORTANT: Wait for build to complete before starting installer")
                 self.log("Monitor the logs for completion status")
                 self.log("="*60)
                 
@@ -576,7 +578,7 @@ class ProLifeReleaseApp:
     
     def log(self, message, error=False):
         """Add message to log"""
-        timestamp = __import__('datetime').datetime.now().strftime("%H:%M:%S")
+        timestamp = datetime.datetime.now().strftime("%H:%M:%S")
         
         if error:
             line = f"[{timestamp}] ERROR: {message}\n"
@@ -597,8 +599,6 @@ class ProLifeReleaseApp:
     
     def save_logs(self):
         """Save logs to file"""
-        from tkinter import filedialog
-        
         filename = filedialog.asksaveasfilename(
             defaultextension=".txt",
             filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
