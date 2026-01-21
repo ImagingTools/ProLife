@@ -182,15 +182,14 @@ jobs:
             echo "No changes to commit"
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
-            git commit -m "chore: prepare release ${{ inputs.target_tag }}
-
-          Submodule versions:
-          - Acf: ${{ inputs.acf_version }}
-          - AcfSln: ${{ inputs.acfsln_version }}
-          - ImtCore: ${{ inputs.imtcore_version }}
-          - Lisa: ${{ inputs.lisa_version }}
-          - Puma: ${{ inputs.puma_version }}
-          - Agentino: ${{ inputs.agentino_version }}"
+            git commit -m "chore: prepare release ${{ inputs.target_tag }}" \
+              -m "Submodule versions:" \
+              -m "- Acf: ${{ inputs.acf_version }}" \
+              -m "- AcfSln: ${{ inputs.acfsln_version }}" \
+              -m "- ImtCore: ${{ inputs.imtcore_version }}" \
+              -m "- Lisa: ${{ inputs.lisa_version }}" \
+              -m "- Puma: ${{ inputs.puma_version }}" \
+              -m "- Agentino: ${{ inputs.agentino_version }}"
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "Changes committed successfully"
           fi

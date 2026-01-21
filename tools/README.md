@@ -2,25 +2,23 @@
 
 ⚠️ **DEPRECATED:** This directory contains legacy command-line tools.
 
-## 🚀 Recommended: Use ProLife Release App
+## 🚀 Recommended: Use GitHub Workflow
 
-For a modern, user-friendly experience, use the new **ProLife Release App**:
+For a modern, user-friendly experience, use the **GitHub Actions workflow**:
 
-```bash
-# Windows
-ProLifeReleaseApp.bat
+1. Go to **Actions** → **App Dispatch Release**
+2. Click **Run workflow**
+3. Fill in parameters (target tag, submodule versions, etc.)
+4. Click **Run workflow**
 
-# Linux/macOS
-./ProLifeReleaseApp.sh
-```
+See [RELEASE_APP_GUIDE.md](../RELEASE_APP_GUIDE.md) for details.
 
-See [RELEASE_APP_README.md](../RELEASE_APP_README.md) for details.
-
-The GUI app provides:
-- Visual submodule version selection
-- One-click build and release
-- InnoSetup integration
-- Real-time logs and progress
+The GitHub workflow provides:
+- Web-based interface (no installation needed)
+- Submodule version selection
+- Automatic "latest" version detection
+- One-click release process
+- Full audit trail in GitHub Actions
 
 ## Legacy Command-Line Tools
 
