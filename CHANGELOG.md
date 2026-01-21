@@ -1,21 +1,9 @@
-# [](https://github.com/ImagingTools/ProLife/compare/v1.0.1...v) (2026-01-21)
+#  (2026-01-21)
 
 
 ### Bug Fixes
 
 * remove MSVC toolset 14.3 from Windows build workflow ([e114953](https://github.com/ImagingTools/ProLife/commit/e1149531c3ab6df247774504c0263889b6f2a751))
-
-
-
-## [1.0.1](https://github.com/ImagingTools/ProLife/compare/v1.0.0...v1.0.1) (2026-01-21)
-
-
-
-# [1.0.0](https://github.com/ImagingTools/ProLife/compare/1.0.0...v1.0.0) (2026-01-21)
-
-
-### Bug Fixes
-
 * remove SUBMODULE_VERSIONS.md from .gitignore ([4a8a49d](https://github.com/ImagingTools/ProLife/commit/4a8a49d6c05144797b6d0a07c36dee61ac931ddf))
 * use workflow ID instead of filename to avoid 404 errors ([83d2bee](https://github.com/ImagingTools/ProLife/commit/83d2beeeb307f084cec9bb80b5a7d27182c56437))
 
