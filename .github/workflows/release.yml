@@ -240,7 +240,14 @@ jobs:
           
           # XML-escape function to prevent injection
           xml_escape() {
-            echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g'
+            local input="$1"
+            # Escape XML special characters in order: & < > " '
+            input="${input//&/&amp;}"
+            input="${input//</&lt;}"
+            input="${input//>/&gt;}"
+            input="${input//\"/&quot;}"
+            input="${input//\'/&apos;}"
+            echo "$input"
           }
           
           # Escape all values for safe XML inclusion
@@ -251,22 +258,26 @@ jobs:
           # Construct XML payload (single line to avoid YAML issues)
           XML_PAYLOAD="<build><buildType id=\"${BUILD_TYPE_ID}\"/><properties><property name=\"env.RELEASE_TAG\" value=\"${RELEASE_TAG}\"/><property name=\"env.RELEASE_BRANCH\" value=\"${RELEASE_BRANCH}\"/></properties></build>"
           
+          # Use a unique separator that won't appear in normal responses
+          # This allows us to reliably separate the HTTP status code from the body
+          SEPARATOR="|||HTTP_CODE|||"
+          
           # Trigger TeamCity build via REST API with timeout and error handling
-          RESPONSE=$(curl -s -w "|||%{http_code}" -X POST \
+          RESPONSE=$(curl -s -w "${SEPARATOR}%{http_code}" -X POST \
             --max-time 30 \
             --fail-with-body \
             "${TEAMCITY_URL}/app/rest/buildQueue" \
             -H "Authorization: Bearer ${TEAMCITY_TOKEN}" \
             -H "Content-Type: application/xml" \
-            -d "${XML_PAYLOAD}" 2>&1 || echo "|||000")
+            -d "${XML_PAYLOAD}" 2>&1 || echo "${SEPARATOR}000")
           
           # Parse response using the separator
-          HTTP_CODE="${RESPONSE##*|||}"
-          BODY="${RESPONSE%|||*}"
+          HTTP_CODE="${RESPONSE##*${SEPARATOR}}"
+          BODY="${RESPONSE%${SEPARATOR}*}"
           
           # Validate and check HTTP status code
-          if ! [[ "$HTTP_CODE" =~ ^[0-9]+$ ]]; then
-            echo "❌ Failed to connect to TeamCity or invalid response"
+          if ! [[ "$HTTP_CODE" =~ ^[0-9]+$ ]] || [ "$HTTP_CODE" == "000" ]; then
+            echo "❌ Failed to connect to TeamCity or network error occurred"
             echo "$BODY"
             exit 1
           fi
