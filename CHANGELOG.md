@@ -1,4 +1,13 @@
-# [](https://github.com/ImagingTools/ProLife/compare/v1.0.0...v) (2026-01-21)
+# [](https://github.com/ImagingTools/ProLife/compare/v1.0.1...v) (2026-01-21)
+
+
+### Bug Fixes
+
+* remove MSVC toolset 14.3 from Windows build workflow ([e114953](https://github.com/ImagingTools/ProLife/commit/e1149531c3ab6df247774504c0263889b6f2a751))
+
+
+
+## [1.0.1](https://github.com/ImagingTools/ProLife/compare/v1.0.0...v1.0.1) (2026-01-21)
 
 
 
