@@ -271,3 +271,192 @@ jobs:
           else
             echo "✅ Release $TAG published" >> $GITHUB_STEP_SUMMARY
           fi
+
+  build-windows:
+    runs-on: windows-2022
+    needs: release
+    if: inputs.dry_run == 'false'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_tag }}
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Install Qt 6.8.0
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          modules: 'qtwebsockets qtnetworkauth'
+          cache: true
+
+      - name: Install Ninja and Inno Setup
+        run: |
+          choco install ninja innosetup -y
+          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        shell: pwsh
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: 14.3
+
+      - name: Build Acf
+        if: hashFiles('3rdParty/Acf/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Acf
+          # Generate version files
+          if (Test-Path "Build/Git/GenerateVersion.bat") {
+            Write-Host "Generating version files for Acf..."
+            cmd /c "Build\Git\GenerateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ Acf built successfully"
+        shell: pwsh
+
+      - name: Build AcfSln
+        if: hashFiles('3rdParty/AcfSln/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/AcfSln
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for AcfSln..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ AcfSln built successfully"
+        shell: pwsh
+
+      - name: Build ImtCore
+        if: hashFiles('3rdParty/ImtCore/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/ImtCore
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for ImtCore..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ ImtCore built successfully"
+        shell: pwsh
+
+      - name: Build Lisa
+        if: hashFiles('3rdParty/Lisa/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Lisa
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Lisa..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ Lisa built successfully"
+        shell: pwsh
+
+      - name: Build Puma
+        if: hashFiles('3rdParty/Puma/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Puma
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Puma..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ Puma built successfully"
+        shell: pwsh
+
+      - name: Build Agentino
+        if: hashFiles('3rdParty/Agentino/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Agentino
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for Agentino..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ Agentino built successfully"
+        shell: pwsh
+
+      - name: Build ProLife
+        run: |
+          # Generate version files
+          if (Test-Path "Build/Git/UpdateVersion.bat") {
+            Write-Host "Generating version files for ProLife..."
+            cmd /c "Build\Git\UpdateVersion.bat"
+          }
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ ProLife built successfully"
+        shell: pwsh
+
+      - name: Package Windows artifacts
+        run: |
+          mkdir artifacts -Force
+          # Copy build artifacts from various possible locations
+          if (Test-Path "Bin") {
+            Write-Host "Copying from Bin directory..."
+            Copy-Item -Path "Bin\*" -Destination "artifacts\" -Recurse -Force
+          }
+          if (Test-Path "build\bin") {
+            Write-Host "Copying from build\bin directory..."
+            Copy-Item -Path "build\bin\*" -Destination "artifacts\" -Recurse -Force
+          }
+          if (Test-Path "Lib") {
+            Write-Host "Copying from Lib directory..."
+            Copy-Item -Path "Lib\*" -Destination "artifacts\" -Recurse -Force
+          }
+          # Create archive even if directories are empty (for validation)
+          if ((Get-ChildItem -Path "artifacts" -Recurse).Count -eq 0) {
+            Write-Host "Warning: No artifacts found, creating empty archive"
+            New-Item -Path "artifacts\README.txt" -ItemType File -Value "Windows build for ${{ inputs.target_tag }}" -Force
+          }
+          Compress-Archive -Path "artifacts\*" -DestinationPath "prolife-windows-${{ inputs.target_tag }}.zip"
+          Write-Host "✅ Windows artifacts packaged"
+        shell: pwsh
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: prolife-windows-${{ inputs.target_tag }}
+          path: prolife-windows-${{ inputs.target_tag }}.zip
+          retention-days: 90
+
+      - name: Upload to Release
+        if: inputs.dry_run == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.target_tag }}
+          files: prolife-windows-${{ inputs.target_tag }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
