@@ -243,23 +243,20 @@ jobs:
             echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'\''/\&apos;/g'
           }
           
-          # Escape values for safe XML inclusion
+          # Escape all values for safe XML inclusion
+          BUILD_TYPE_ID=$(xml_escape "${TEAMCITY_BUILD_TYPE_ID}")
           RELEASE_TAG=$(xml_escape "${{ inputs.target_tag }}")
           RELEASE_BRANCH=$(xml_escape "${{ inputs.release_branch }}")
           
+          # Construct XML payload (single line to avoid YAML issues)
+          XML_PAYLOAD="<build><buildType id=\"${BUILD_TYPE_ID}\"/><properties><property name=\"env.RELEASE_TAG\" value=\"${RELEASE_TAG}\"/><property name=\"env.RELEASE_BRANCH\" value=\"${RELEASE_BRANCH}\"/></properties></build>"
+          
           # Trigger TeamCity build via REST API
-          # Build from the tag that was just created and pushed
           RESPONSE=$(curl -s -w "|||%{http_code}" -X POST \
             "${TEAMCITY_URL}/app/rest/buildQueue" \
             -H "Authorization: Bearer ${TEAMCITY_TOKEN}" \
             -H "Content-Type: application/xml" \
-            -d "<build>
-                  <buildType id=\"${TEAMCITY_BUILD_TYPE_ID}\"/>
-                  <properties>
-                    <property name=\"env.RELEASE_TAG\" value=\"${RELEASE_TAG}\"/>
-                    <property name=\"env.RELEASE_BRANCH\" value=\"${RELEASE_BRANCH}\"/>
-                  </properties>
-                </build>")
+            -d "${XML_PAYLOAD}")
           
           # Parse response using the separator
           HTTP_CODE="${RESPONSE##*|||}"
