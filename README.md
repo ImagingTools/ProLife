@@ -210,7 +210,29 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-### Quick Release Preparation
+### 🚀 ProLife Release App (GitHub Workflow)
+
+**NEW!** Use the automated GitHub workflow for streamlined release management:
+
+**How to use:**
+1. Go to **Actions** → **App Dispatch Release**
+2. Click **Run workflow**
+3. Fill in parameters:
+   - Release version (e.g., `v2.1.0`)
+   - Submodule versions (or use `latest` for automatic selection)
+   - Dry run (test first, then real release)
+4. Click **Run workflow**
+
+The workflow will:
+- ✅ **Automatically update** all submodule versions
+- ✅ **Generate** CHANGELOG
+- ✅ **Update** version in CMakeLists.txt
+- ✅ **Create** commit, tag, and GitHub Release
+- ✅ **Build** and upload artifacts
+
+See **[RELEASE_APP_GUIDE.md](RELEASE_APP_GUIDE.md)** for detailed instructions.
+
+### Quick Release Preparation (Command Line)
 
 For Russian speakers: См. **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** для подробной инструкции.
 

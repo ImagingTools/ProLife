@@ -13,6 +13,31 @@ on:
       base_tag:
         description: 'Base tag for changelog generation (e.g., v1.2.2)'
         required: true
+      # Submodule versions
+      acf_version:
+        description: 'Acf version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
+      acfsln_version:
+        description: 'AcfSln version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
+      imtcore_version:
+        description: 'ImtCore version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
+      lisa_version:
+        description: 'Lisa version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
+      puma_version:
+        description: 'Puma version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
+      agentino_version:
+        description: 'Agentino version (tag, branch, or "latest")'
+        required: false
+        default: 'latest'
       dry_run:
         description: 'Dry run (skip tagging and release)'
         required: true
@@ -87,12 +112,18 @@ jobs:
 
       - name: Dispatch release workflow
         run: |
-          echo "Dispatching release workflow..."
+          echo "Dispatching release workflow with submodule versions..."
           gh workflow run .github/workflows/release.yml \
             --ref ${{ inputs.release_branch }} \
             -f release_branch="${{ inputs.release_branch }}" \
             -f target_tag="${{ inputs.target_tag }}" \
             -f base_tag="${{ inputs.base_tag }}" \
+            -f acf_version="${{ inputs.acf_version }}" \
+            -f acfsln_version="${{ inputs.acfsln_version }}" \
+            -f imtcore_version="${{ inputs.imtcore_version }}" \
+            -f lisa_version="${{ inputs.lisa_version }}" \
+            -f puma_version="${{ inputs.puma_version }}" \
+            -f agentino_version="${{ inputs.agentino_version }}" \
             -f dry_run="${{ inputs.dry_run }}"
           echo "Release workflow dispatched successfully"
         env:
@@ -113,6 +144,14 @@ jobs:
           echo "- **Base Tag:** $BASE" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** $BRANCH" >> $GITHUB_STEP_SUMMARY
           echo "- **Dry Run:** $DRY" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Submodule Versions:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Acf:** ${{ inputs.acf_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **AcfSln:** ${{ inputs.acfsln_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **ImtCore:** ${{ inputs.imtcore_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lisa:** ${{ inputs.lisa_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Puma:** ${{ inputs.puma_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Agentino:** ${{ inputs.agentino_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           ACTIONS_URL="../../actions/workflows/release.yml"
           echo "Check the [Actions tab]($ACTIONS_URL) to monitor" \

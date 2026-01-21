@@ -1,8 +1,28 @@
 # ProLife Release Automation Tools
 
-This directory contains automated tools for release preparation and validation.
+⚠️ **DEPRECATED:** This directory contains legacy command-line tools.
 
-## Tools Overview
+## 🚀 Recommended: Use GitHub Workflow
+
+For a modern, user-friendly experience, use the **GitHub Actions workflow**:
+
+1. Go to **Actions** → **App Dispatch Release**
+2. Click **Run workflow**
+3. Fill in parameters (target tag, submodule versions, etc.)
+4. Click **Run workflow**
+
+See [RELEASE_APP_GUIDE.md](../RELEASE_APP_GUIDE.md) for details.
+
+The GitHub workflow provides:
+- Web-based interface (no installation needed)
+- Submodule version selection
+- Automatic "latest" version detection
+- One-click release process
+- Full audit trail in GitHub Actions
+
+## Legacy Command-Line Tools
+
+These tools are kept for CI/CD integration and advanced users who prefer command-line workflows.
 
 ### validate-release.sh
 
