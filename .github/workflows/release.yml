@@ -228,7 +228,9 @@ jobs:
       # - Release version from the target_tag input
       # ============================================================================
       - name: Trigger TeamCity Build
-        if: inputs.dry_run == 'false'
+        if: |
+          inputs.dry_run == 'false' &&
+          steps.commit.outputs.has_changes == 'true'
         env:
           TEAMCITY_TOKEN: ${{ secrets.TEAMCITY_TOKEN }}
           TEAMCITY_URL: ${{ secrets.TEAMCITY_URL }}
@@ -236,14 +238,8 @@ jobs:
         run: |
           echo "Triggering TeamCity build for ${{ inputs.target_tag }}..."
           
-          # Determine the branch/tag reference to build
-          if [ "${{ steps.commit.outputs.has_changes }}" == "true" ]; then
-            BUILD_REF="${{ inputs.target_tag }}"
-          else
-            BUILD_REF="${{ inputs.release_branch }}"
-          fi
-          
           # Trigger TeamCity build via REST API
+          # Build from the tag that was just created and pushed
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "${TEAMCITY_URL}/app/rest/buildQueue" \
             -H "Authorization: Bearer ${TEAMCITY_TOKEN}" \
@@ -252,7 +248,7 @@ jobs:
                   <buildType id=\"${TEAMCITY_BUILD_TYPE_ID}\"/>
                   <properties>
                     <property name=\"env.RELEASE_TAG\" value=\"${{ inputs.target_tag }}\"/>
-                    <property name=\"env.RELEASE_BRANCH\" value=\"${BUILD_REF}\"/>
+                    <property name=\"env.RELEASE_BRANCH\" value=\"${{ inputs.target_tag }}\"/>
                   </properties>
                 </build>")
           
