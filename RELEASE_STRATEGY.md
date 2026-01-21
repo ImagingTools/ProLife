@@ -303,15 +303,21 @@ When a dependency introduces breaking changes:
 # Example CI configuration snippet
 steps:
   - name: Checkout with submodules
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
     with:
       submodules: recursive
-      token: ${{ secrets.GITHUB_TOKEN }}
+      # For private submodules, use PERSONAL_ACCESS_TOKEN instead of GITHUB_TOKEN
+      token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   
   - name: Update submodules
     run: |
       git submodule update --init --recursive
 ```
+
+**Note:** When working with private submodules, you must:
+1. Create a Personal Access Token (PAT) with `repo` scope
+2. Add it as a repository secret named `PERSONAL_ACCESS_TOKEN`
+3. The default `GITHUB_TOKEN` does not have access to private repositories outside the current repo
 
 ## Version Control Best Practices
 
