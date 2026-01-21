@@ -271,3 +271,167 @@ jobs:
           else
             echo "✅ Release $TAG published" >> $GITHUB_STEP_SUMMARY
           fi
+
+  build-windows:
+    runs-on: windows-2022
+    needs: release
+    if: inputs.dry_run == 'false'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_tag }}
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Install Qt 6.8.0
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          modules: 'qtwebsockets qtnetworkauth'
+          cache: true
+
+      - name: Install Ninja and Inno Setup
+        run: |
+          choco install ninja innosetup -y
+          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        shell: pwsh
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: 14.3
+
+      - name: Build Acf
+        if: hashFiles('3rdParty/Acf/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Acf
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ Acf built successfully"
+          } else {
+            Write-Host "⚠️ Acf does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build AcfSln
+        if: hashFiles('3rdParty/AcfSln/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/AcfSln
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ AcfSln built successfully"
+          } else {
+            Write-Host "⚠️ AcfSln does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build ImtCore
+        if: hashFiles('3rdParty/ImtCore/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/ImtCore
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ ImtCore built successfully"
+          } else {
+            Write-Host "⚠️ ImtCore does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build Lisa
+        if: hashFiles('3rdParty/Lisa/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Lisa
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ Lisa built successfully"
+          } else {
+            Write-Host "⚠️ Lisa does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build Puma
+        if: hashFiles('3rdParty/Puma/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Puma
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ Puma built successfully"
+          } else {
+            Write-Host "⚠️ Puma does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build Agentino
+        if: hashFiles('3rdParty/Agentino/Build/CMake/CMakeLists.txt') != ''
+        run: |
+          cd 3rdParty/Agentino
+          if (Test-Path "Build/CMake/CMakeLists.txt") {
+            mkdir build -Force
+            cd build
+            cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+            Write-Host "✅ Agentino built successfully"
+          } else {
+            Write-Host "⚠️ Agentino does not have Build/CMake/CMakeLists.txt, skipping"
+          }
+        shell: pwsh
+
+      - name: Build ProLife
+        run: |
+          mkdir build -Force
+          cd build
+          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          Write-Host "✅ ProLife built successfully"
+        shell: pwsh
+
+      - name: Package Windows artifacts
+        run: |
+          mkdir artifacts
+          # Copy build artifacts
+          if (Test-Path "Bin") {
+            Copy-Item -Path "Bin\*" -Destination "artifacts\" -Recurse -Force
+          }
+          Compress-Archive -Path "artifacts\*" -DestinationPath "prolife-windows-${{ inputs.target_tag }}.zip"
+          Write-Host "✅ Windows artifacts packaged"
+        shell: pwsh
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: prolife-windows-${{ inputs.target_tag }}
+          path: prolife-windows-${{ inputs.target_tag }}.zip
+          retention-days: 90
+
+      - name: Upload to Release
+        if: inputs.dry_run == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.target_tag }}
+          files: prolife-windows-${{ inputs.target_tag }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
