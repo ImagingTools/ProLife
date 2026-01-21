@@ -60,6 +60,7 @@ jobs:
           ref: ${{ inputs.release_branch }}
           fetch-depth: 0  # Fetch full history for changelog generation
           submodules: recursive
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Update submodule versions
         run: |
