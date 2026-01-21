@@ -238,22 +238,32 @@ jobs:
         run: |
           echo "Triggering TeamCity build for ${{ inputs.target_tag }}..."
           
+          # XML-escape function to prevent injection
+          xml_escape() {
+            echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'\''/\&apos;/g'
+          }
+          
+          # Escape values for safe XML inclusion
+          RELEASE_TAG=$(xml_escape "${{ inputs.target_tag }}")
+          RELEASE_BRANCH=$(xml_escape "${{ inputs.release_branch }}")
+          
           # Trigger TeamCity build via REST API
           # Build from the tag that was just created and pushed
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+          RESPONSE=$(curl -s -w "|||%{http_code}" -X POST \
             "${TEAMCITY_URL}/app/rest/buildQueue" \
             -H "Authorization: Bearer ${TEAMCITY_TOKEN}" \
             -H "Content-Type: application/xml" \
             -d "<build>
                   <buildType id=\"${TEAMCITY_BUILD_TYPE_ID}\"/>
                   <properties>
-                    <property name=\"env.RELEASE_TAG\" value=\"${{ inputs.target_tag }}\"/>
-                    <property name=\"env.RELEASE_BRANCH\" value=\"${{ inputs.target_tag }}\"/>
+                    <property name=\"env.RELEASE_TAG\" value=\"${RELEASE_TAG}\"/>
+                    <property name=\"env.RELEASE_BRANCH\" value=\"${RELEASE_BRANCH}\"/>
                   </properties>
                 </build>")
           
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
+          # Parse response using the separator
+          HTTP_CODE="${RESPONSE##*|||}"
+          BODY="${RESPONSE%|||*}"
           
           if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
             echo "✅ TeamCity build triggered successfully (HTTP $HTTP_CODE)"
