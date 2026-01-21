@@ -1,6 +1,6 @@
 # Submodule Versions for Release
 
-Generated: 2026-01-21 05:21:32
+Generated: 2026-01-21 06:23:57
 
 ## Submodules
 
@@ -14,7 +14,7 @@ Generated: 2026-01-21 05:21:32
 ### AcfSln
 - **Path:** `3rdParty/AcfSln`
 - **Repository:** https://github.com/ImagingTools/AcfSln.git
-- **Commit:** `9025bd35549e0248eda9f2a742f39538e582a778`
+- **Commit:** `f132632174374c1a731f5502c5b1f0893f469fc6`
 - **Tag:** `N/A`
 - **Branch:** `HEAD`
 
