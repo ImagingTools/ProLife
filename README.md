@@ -210,26 +210,27 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-### 🚀 ProLife Release App (Recommended)
+### 🚀 ProLife Release App (GitHub Workflow)
 
-**NEW!** Use the graphical ProLife Release App for simplified release management:
+**NEW!** Use the automated GitHub workflow for streamlined release management:
 
-```bash
-# Windows
-ProLifeReleaseApp.bat
+**How to use:**
+1. Go to **Actions** → **App Dispatch Release**
+2. Click **Run workflow**
+3. Fill in parameters:
+   - Release version (e.g., `v2.1.0`)
+   - Submodule versions (or use `latest` for automatic selection)
+   - Dry run (test first, then real release)
+4. Click **Run workflow**
 
-# Linux/macOS
-./ProLifeReleaseApp.sh
-```
+The workflow will:
+- ✅ **Automatically update** all submodule versions
+- ✅ **Generate** CHANGELOG
+- ✅ **Update** version in CMakeLists.txt
+- ✅ **Create** commit, tag, and GitHub Release
+- ✅ **Build** and upload artifacts
 
-The Release App provides:
-- **GUI for submodule version selection** - choose versions from dropdown lists
-- **Automatic build process** - build project with one click
-- **InnoSetup integration** - create installer EXE automatically
-- **Live logs** - monitor all operations in real-time
-- **Cross-platform** - works on Windows, Linux, and macOS
-
-See **[RELEASE_APP_README.md](RELEASE_APP_README.md)** for detailed usage instructions.
+See **[RELEASE_APP_GUIDE.md](RELEASE_APP_GUIDE.md)** for detailed instructions.
 
 ### Quick Release Preparation (Command Line)
 
