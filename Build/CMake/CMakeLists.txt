@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Version placeholder - updated by release workflow
-project(ProLifeAll VERSION 1.0.0)
+project(ProLifeAll VERSION 1.0.1)
 
 if(NOT DEFINED QT_VERSION_MAJOR)
 	find_package(QT NAMES Qt6 Qt5 COMPONENTS Core)
