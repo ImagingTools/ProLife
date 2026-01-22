@@ -95,6 +95,32 @@ set(AUX_INCLUDE_DIR "${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/GeneratedFiles
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
 
+# Configure 3rd-party dependencies to build from source
+# Disable building tests, examples, and samples
+set(BUILD_TESTING OFF CACHE BOOL "Disable building tests for 3rd-party dependencies" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples for 3rd-party dependencies" FORCE)
+set(ACF_BUILD_SAMPLES OFF CACHE BOOL "Disable building ACF samples" FORCE)
+
+# Add 3rd-party dependencies as subdirectories
+if(EXISTS "${ACFDIR}/CMakeLists.txt")
+	add_subdirectory("${ACFDIR}" "${AUX_INCLUDE_DIR}/Acf")
+endif()
+if(EXISTS "${ACFSLNDIR}/CMakeLists.txt")
+	add_subdirectory("${ACFSLNDIR}" "${AUX_INCLUDE_DIR}/AcfSln")
+endif()
+if(EXISTS "${IMTCOREDIR}/CMakeLists.txt")
+	add_subdirectory("${IMTCOREDIR}" "${AUX_INCLUDE_DIR}/ImtCore")
+endif()
+if(EXISTS "${PUMADIR}/CMakeLists.txt")
+	add_subdirectory("${PUMADIR}" "${AUX_INCLUDE_DIR}/Puma")
+endif()
+if(EXISTS "${LISADIR}/CMakeLists.txt")
+	add_subdirectory("${LISADIR}" "${AUX_INCLUDE_DIR}/Lisa")
+endif()
+if(EXISTS "${AGENTINODIR}/CMakeLists.txt")
+	add_subdirectory("${AGENTINODIR}" "${AUX_INCLUDE_DIR}/Agentino")
+endif()
+
 # Sdl
 include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
