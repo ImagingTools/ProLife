@@ -50,7 +50,12 @@ set "REPO_ROOT=%~dp0..\.."
 pushd "%REPO_ROOT%"
 
 REM List of submodules and their script paths
-set "SUBMODULES=3rdParty/Acf:Build\Git\GenerateVersion.bat 3rdParty/AcfSln:Build\Git\UpdateVersion.bat 3rdParty/ImtCore:Build\Git\UpdateVersion.bat 3rdParty/Lisa:Build\Git\UpdateVersion.bat 3rdParty/Puma:Build\Git\UpdateVersion.bat 3rdParty/Agentino:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=3rdParty\Acf:Build\Git\GenerateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\AcfSln:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\ImtCore:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Lisa:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Puma:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Agentino:Build\Git\UpdateVersion.bat"
 
 REM Iterate over submodules and execute version scripts
 for %%S in (%SUBMODULES%) do (
