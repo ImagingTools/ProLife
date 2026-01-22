@@ -74,6 +74,10 @@ endif()
 
 if(NOT DEFINED PROLIFEDIR)
 	set(PROLIFEDIR "$ENV{PROLIFEDIR}")
+	if("${PROLIFEDIR}" STREQUAL "")
+		get_filename_component(PROLIFEDIR "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+		message(STATUS "PROLIFEDIR not set, using: ${PROLIFEDIR}")
+	endif()
 endif()
 
 if(NOT DEFINED IMTCOREDIR_BUILD)
