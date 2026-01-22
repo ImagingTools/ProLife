@@ -17,6 +17,8 @@ case "$(uname -s)" in
             cmd //c "$SCRIPT_FILE"
         else
             echo "Error: $SCRIPT_FILE not found"
+            echo "Checking Build/Git directory:"
+            ls -la "Build/Git/" 2>/dev/null || echo "Directory Build/Git does not exist"
             exit 1
         fi
         ;;
