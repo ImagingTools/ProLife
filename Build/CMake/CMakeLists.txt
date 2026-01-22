@@ -112,40 +112,85 @@ endif()
 # Sdl
 include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")
 add_subdirectory("${INCLUDE_DIR}/../Sdl/prolife/CMake" "${AUX_INCLUDE_DIR}/prolifesdl")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifesdl ImtCoreAll AcfStatic)
+endif()
 
 # Include
 add_subdirectory("${INCLUDE_DIR}/prolifedata/CMake" "${AUX_INCLUDE_DIR}/prolifedata")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifedata ImtCoreAll AcfStatic)
+endif()
+
 add_subdirectory("${INCLUDE_DIR}/prolifedb/CMake" "${AUX_INCLUDE_DIR}/prolifedb")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifedb ImtCoreAll AcfStatic)
+endif()
 
 add_subdirectory("${INCLUDE_DIR}/prolifegql/CMake" "${AUX_INCLUDE_DIR}/prolifegql")
 add_dependencies(prolifegql prolifesdl)
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifegql ImtCoreAll AcfStatic)
+endif()
 
 add_subdirectory("${INCLUDE_DIR}/../Qml/Include/prolifeqml/CMake" "${AUX_INCLUDE_DIR}/prolifeqml")
 add_dependencies(prolifeqml prolifesdl)
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifeqml ImtCoreAll AcfStatic)
+endif()
 
 add_subdirectory("${INCLUDE_DIR}/prolifestyle/CMake" "${AUX_INCLUDE_DIR}/prolifestyle")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(prolifestyle ImtCoreAll AcfStatic)
+endif()
 
 # Tests
 #add_subdirectory("${INCLUDE_DIR}/prolifetest/CMake" "${AUX_INCLUDE_DIR}/prolifetest")
 
 # Plug-ins
 add_subdirectory("${IMPL_DIR}/Plugins/ProLifeSettingsPlugin/CMake" "${AUX_INCLUDE_DIR}/ProLifeSettingsPlugin")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeSettingsPlugin ImtCoreAll AcfStatic)
+endif()
 
 # Impl
 add_subdirectory("${IMPL_DIR}/ProLifeLoc/CMake" "${AUX_INCLUDE_DIR}/ProLifeLoc")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeLoc AcfStatic)
+endif()
+
 add_subdirectory("${IMPL_DIR}/ProLifeClient/CMake" "${AUX_INCLUDE_DIR}/ProLifeClient")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeClient ImtCoreAll AcfStatic)
+endif()
+
 add_subdirectory("${IMPL_DIR}/ProLifeServer/CMake" "${AUX_INCLUDE_DIR}/ProLifeServer")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeServer AcfStatic)
+endif()
 add_subdirectory("${IMPL_DIR}/ProLifeDataPck/CMake" "${AUX_INCLUDE_DIR}/ProLifeDataPck")
 add_dependencies(ProLifeDataPck prolifedata)
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeDataPck ImtCoreAll AcfStatic)
+endif()
 
 add_subdirectory("${IMPL_DIR}/ProLifeDbPck/CMake" "${AUX_INCLUDE_DIR}/ProLifeDbPck")
 add_dependencies(ProLifeDbPck prolifedb)
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeDbPck ImtCoreAll AcfStatic)
+endif()
 
 add_subdirectory("${IMPL_DIR}/ProLifeGqlPck/CMake" "${AUX_INCLUDE_DIR}/ProLifeGqlPck")
 add_dependencies(ProLifeGqlPck prolifegql)
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeGqlPck ImtCoreAll AcfStatic)
+endif()
 
 # add_subdirectory("${IMPL_DIR}/ProLifeConverter/CMake" "${AUX_INCLUDE_DIR}/ProLifeConverter")
 add_subdirectory("${IMPL_DIR}/ProLifeServerConfigurator/CMake" "${AUX_INCLUDE_DIR}/ProLifeServerConfigurator")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	add_dependencies(ProLifeServerConfigurator AcfStatic)
+endif()
 
 file(COPY ../Migrations DESTINATION ${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 
