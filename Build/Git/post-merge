@@ -4,65 +4,28 @@ echo "Running post-merge hook..."
 
 REPO_ROOT="$(pwd)"
 
-# --- 1. Logic for root repository (ProLife) ---
+# Execute UpdateVersion script based on OS
 case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*|Windows_NT)
         SCRIPT_FILE="$REPO_ROOT/Build/Git/UpdateVersion.bat"
         if [ -f "$SCRIPT_FILE" ]; then
-            echo "Executing root UpdateVersion..."
+            echo "Executing UpdateVersion..."
             cd "$REPO_ROOT"
             cmd //c "$SCRIPT_FILE"
         else
-            echo "Root script not found: $SCRIPT_FILE"
+            echo "Script not found: $SCRIPT_FILE"
         fi
         ;;
     *)
         SCRIPT_FILE="$REPO_ROOT/Build/Git/UpdateVersion.sh"
         if [ -f "$SCRIPT_FILE" ]; then
-            echo "Executing root UpdateVersion..."
+            echo "Executing UpdateVersion..."
             cd "$REPO_ROOT"
             bash "$SCRIPT_FILE"
         else
-            echo "Root script not found: $SCRIPT_FILE"
+            echo "Script not found: $SCRIPT_FILE"
         fi
         ;;
 esac
-
-# --- 2. Logic for submodules ---
-
-echo "Checking submodules for version scripts..."
-
-# git submodule foreach iterates over active submodules.
-# If a submodule is not checked out, foreach might skip it or the file check will fail.
-
-git submodule foreach '
-    # Determine script name
-    SCRIPT_BASE="UpdateVersion"
-    
-    # If path ends in Acf, change script name
-    case "$path" in
-        *Acf|*acf) 
-            SCRIPT_BASE="GenerateVersion" 
-            ;;
-    esac
-    
-    # Check OS, file existence and execute
-    case "$(uname -s)" in
-        MINGW*|MSYS*|CYGWIN*|Windows_NT)
-            SCRIPT_PATH="Build/Git/${SCRIPT_BASE}.bat"
-            if [ -f "$SCRIPT_PATH" ]; then
-                echo "[$path] Found $SCRIPT_PATH. Executing..."
-                cmd //c "Build/Git\\${SCRIPT_BASE}.bat"
-            fi
-            ;;
-        *)
-            SCRIPT_PATH="Build/Git/${SCRIPT_BASE}.sh"
-            if [ -f "$SCRIPT_PATH" ]; then
-                echo "[$path] Found $SCRIPT_PATH. Executing..."
-                bash "$SCRIPT_PATH"
-            fi
-            ;;
-    esac
-'
 
 echo "Post-merge hook completed"

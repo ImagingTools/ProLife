@@ -41,4 +41,23 @@ set "OUT=%FILE:.xtrsvn=%"
 
 echo Wrote %OUT% with WCREV=%REV_OFFSET% and WCMODS=%DIRTY%
 
+REM --- Logic for submodules ---
+
+echo Checking submodules for version scripts...
+
+REM git submodule foreach iterates over active submodules.
+REM If a submodule is not checked out, foreach might skip it or the file check will fail.
+
+git submodule foreach "^
+    set \"SCRIPT_BASE=UpdateVersion\" ^&^& ^
+    echo !path! ^| findstr /i \"Acf\" >nul ^&^& set \"SCRIPT_BASE=GenerateVersion\" ^&^& ^
+    set \"SCRIPT_PATH=Build\Git\!SCRIPT_BASE!.bat\" ^&^& ^
+    if exist \"!SCRIPT_PATH!\" ( ^
+        echo [!path!] Found !SCRIPT_PATH!. Executing... ^&^& ^
+        cmd /c \"Build\Git\!SCRIPT_BASE!.bat\" ^
+    )^
+"
+
+echo UpdateVersion completed
+
 endlocal
