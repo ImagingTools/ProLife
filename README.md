@@ -1,6 +1,6 @@
 # ProLife
 
-ProLife is a comprehensive software solution for medical imaging and laboratory information management.
+ProLife is a software solution for the information management of product lifecycle (hardware and software). It manages ordering of software and hardware products, licenses, accounting and provides important statistics of your eco system.
 
 ## Overview
 
