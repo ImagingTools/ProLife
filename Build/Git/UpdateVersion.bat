@@ -45,18 +45,42 @@ REM --- Logic for submodules ---
 
 echo Checking submodules for version scripts...
 
-REM git submodule foreach iterates over active submodules.
-REM If a submodule is not checked out, foreach might skip it or the file check will fail.
+REM Navigate to repository root
+set "REPO_ROOT=%~dp0..\.."
+pushd "%REPO_ROOT%"
 
-git submodule foreach "^
-    set \"SCRIPT_BASE=UpdateVersion\" ^&^& ^
-    echo !path! ^| findstr /i \"Acf\" >nul ^&^& set \"SCRIPT_BASE=GenerateVersion\" ^&^& ^
-    set \"SCRIPT_PATH=Build\Git\!SCRIPT_BASE!.bat\" ^&^& ^
-    if exist \"!SCRIPT_PATH!\" ( ^
-        echo [!path!] Found !SCRIPT_PATH!. Executing... ^&^& ^
-        cmd /c \"Build\Git\!SCRIPT_BASE!.bat\" ^
-    )^
-"
+REM List of submodules and their script paths
+set "SUBMODULES=3rdParty\Acf:Build\Git\GenerateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\AcfSln:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\ImtCore:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Lisa:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Puma:Build\Git\UpdateVersion.bat"
+set "SUBMODULES=%SUBMODULES% 3rdParty\Agentino:Build\Git\UpdateVersion.bat"
+
+REM Iterate over submodules and execute version scripts
+for %%S in (%SUBMODULES%) do (
+    for /f "tokens=1,2 delims=:" %%A in ("%%S") do (
+        set "SUBMODULE_PATH=%%A"
+        set "SCRIPT_PATH=%%B"
+        set "FULL_SUBMODULE_PATH=%REPO_ROOT%\%%A"
+        set "FULL_SCRIPT_PATH=%REPO_ROOT%\%%A\%%B"
+        
+        if exist "!FULL_SUBMODULE_PATH!" (
+            if exist "!FULL_SCRIPT_PATH!" (
+                echo [%%A] Found %%B. Executing...
+                pushd "!FULL_SUBMODULE_PATH!"
+                call "%%B"
+                popd
+            ) else (
+                echo [%%A] Skipping (script not found^)
+            )
+        ) else (
+            echo [%%A] Skipping (directory not found^)
+        )
+    )
+)
+
+popd
 
 echo UpdateVersion completed
 
