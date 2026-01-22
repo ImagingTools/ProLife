@@ -3,19 +3,39 @@
 echo "Running post-merge hook..."
 
 REPO_ROOT="$(pwd)"
-BAT_FILE="$REPO_ROOT/Build/Git/UpdateVersion.bat"
 
-echo "Looking for: $BAT_FILE"
-
-if [ -f "$BAT_FILE" ]; then
-    echo "Executing $BAT_FILE..."
-    cd "$REPO_ROOT"
-    cmd //c "$BAT_FILE"
-else
-    echo "Error: $BAT_FILE not found"
-    echo "Checking Build/Git directory:"
-    ls -la "Build/Git/" 2>/dev/null || echo "Directory Build/Git does not exist"
-    exit 1
-fi
+# Detect operating system
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*|Windows_NT)
+        # Windows - use .bat file
+        SCRIPT_FILE="$REPO_ROOT/Build/Git/UpdateVersion.bat"
+        echo "Detected Windows, looking for: $SCRIPT_FILE"
+        
+        if [ -f "$SCRIPT_FILE" ]; then
+            echo "Executing $SCRIPT_FILE..."
+            cd "$REPO_ROOT"
+            cmd //c "$SCRIPT_FILE"
+        else
+            echo "Error: $SCRIPT_FILE not found"
+            exit 1
+        fi
+        ;;
+    *)
+        # Linux/Unix - use .sh file
+        SCRIPT_FILE="$REPO_ROOT/Build/Git/UpdateVersion.sh"
+        echo "Detected Unix/Linux, looking for: $SCRIPT_FILE"
+        
+        if [ -f "$SCRIPT_FILE" ]; then
+            echo "Executing $SCRIPT_FILE..."
+            cd "$REPO_ROOT"
+            bash "$SCRIPT_FILE"
+        else
+            echo "Error: $SCRIPT_FILE not found"
+            echo "Checking Build/Git directory:"
+            ls -la "Build/Git/" 2>/dev/null || echo "Directory Build/Git does not exist"
+            exit 1
+        fi
+        ;;
+esac
 
 echo "Post-merge hook completed"
