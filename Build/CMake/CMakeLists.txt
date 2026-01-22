@@ -5,7 +5,7 @@ project(ProLifeAll VERSION 1.0.1)
 
 if(NOT DEFINED QT_VERSION_MAJOR)
 	find_package(QT NAMES Qt6 Qt5 COMPONENTS Core)
-	find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core Widgets QuickWidgets Core Gui Xml Network Svg Sql WebSockets Qml Concurrent QuickControls2 REQUIRED)
+	find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core Widgets QuickWidgets Core Gui Xml Network Svg Sql WebSockets Qml Concurrent QuickControls2 PrintSupport REQUIRED)
 	if(QT_VERSION_MAJOR EQUAL 6)
 		find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core5Compat REQUIRED)
 	endif()
@@ -95,30 +95,18 @@ set(AUX_INCLUDE_DIR "${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/GeneratedFiles
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
 
-# Configure 3rd-party dependencies to build from source
-# Disable building tests, examples, and samples
-set(BUILD_TESTING OFF CACHE BOOL "Disable building tests for 3rd-party dependencies" FORCE)
-set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples for 3rd-party dependencies" FORCE)
-set(ACF_BUILD_SAMPLES OFF CACHE BOOL "Disable building ACF samples" FORCE)
+option(PROLIFE_USE_BUNDLED_LIBRARIES "Use bundled 3rd-party libraries (build from source)" OFF)
 
-# Add 3rd-party dependencies as subdirectories
-if(EXISTS "${ACFDIR}/CMakeLists.txt")
-	add_subdirectory("${ACFDIR}" "${AUX_INCLUDE_DIR}/Acf")
-endif()
-if(EXISTS "${ACFSLNDIR}/CMakeLists.txt")
-	add_subdirectory("${ACFSLNDIR}" "${AUX_INCLUDE_DIR}/AcfSln")
-endif()
-if(EXISTS "${IMTCOREDIR}/CMakeLists.txt")
-	add_subdirectory("${IMTCOREDIR}" "${AUX_INCLUDE_DIR}/ImtCore")
-endif()
-if(EXISTS "${PUMADIR}/CMakeLists.txt")
-	add_subdirectory("${PUMADIR}" "${AUX_INCLUDE_DIR}/Puma")
-endif()
-if(EXISTS "${LISADIR}/CMakeLists.txt")
-	add_subdirectory("${LISADIR}" "${AUX_INCLUDE_DIR}/Lisa")
-endif()
-if(EXISTS "${AGENTINODIR}/CMakeLists.txt")
-	add_subdirectory("${AGENTINODIR}" "${AUX_INCLUDE_DIR}/Agentino")
+if(PROLIFE_USE_BUNDLED_LIBRARIES)
+	message(STATUS "Building with bundled libraries...")
+
+	add_subdirectory("${PROLIFEDIR}/3rdParty/Acf/Build/CMake"     "${AUX_INCLUDE_DIR}/Acf")
+	add_subdirectory("${PROLIFEDIR}/3rdParty/AcfSln/Build/CMake"  "${AUX_INCLUDE_DIR}/AcfSln")
+	add_subdirectory("${PROLIFEDIR}/3rdParty/ImtCore/Build/CMake" "${AUX_INCLUDE_DIR}/ImtCore")
+	add_subdirectory("${PROLIFEDIR}/3rdParty/Puma/Build/CMake"    "${AUX_INCLUDE_DIR}/Puma")
+	add_subdirectory("${PROLIFEDIR}/3rdParty/Lisa/Build/CMake"    "${AUX_INCLUDE_DIR}/Lisa")
+else()
+	message(STATUS "Using system libraries (via find_package or pre-installed environment)")
 endif()
 
 # Sdl
