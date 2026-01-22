@@ -53,3 +53,31 @@ sed -e "s/\\\$WCREV\\\$/$REV_OFFSET/g" \
     "$FILE" > "$OUT"
 
 echo "Wrote $OUT with WCREV=$REV_OFFSET and WCMODS=$DIRTY"
+
+# --- Logic for submodules ---
+
+echo "Checking submodules for version scripts..."
+
+# git submodule foreach iterates over active submodules.
+# If a submodule is not checked out, foreach might skip it or the file check will fail.
+
+git submodule foreach '
+    # Determine script name
+    SCRIPT_BASE="UpdateVersion"
+    
+    # If path ends in Acf, change script name
+    case "$path" in
+        *Acf|*acf) 
+            SCRIPT_BASE="GenerateVersion" 
+            ;;
+    esac
+    
+    # Check file existence and execute
+    SCRIPT_PATH="Build/Git/${SCRIPT_BASE}.sh"
+    if [ -f "$SCRIPT_PATH" ]; then
+        echo "[$path] Found $SCRIPT_PATH. Executing..."
+        bash "$SCRIPT_PATH"
+    fi
+'
+
+echo "UpdateVersion completed"
