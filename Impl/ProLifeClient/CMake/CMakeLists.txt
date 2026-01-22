@@ -33,7 +33,7 @@ include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
 target_link_libraries(${PROJECT_NAME} ImtCoreLoc ProLifeLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl)
+target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl imt2dsdl)
 target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml)
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml imtstyle imtcol imtcolorsdl imtserverapp)
 target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle prolifesdl)
