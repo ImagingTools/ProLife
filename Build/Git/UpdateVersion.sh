@@ -58,26 +58,32 @@ echo "Wrote $OUT with WCREV=$REV_OFFSET and WCMODS=$DIRTY"
 
 echo "Checking submodules for version scripts..."
 
-# git submodule foreach iterates over active submodules.
-# If a submodule is not checked out, foreach might skip it or the file check will fail.
+# Navigate to repository root
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
-git submodule foreach '
-    # Determine script name
-    SCRIPT_BASE="UpdateVersion"
+# List of submodules and their script paths
+SUBMODULES=(
+    "3rdParty/Acf:Build/Git/GenerateVersion.sh"
+    "3rdParty/AcfSln:Build/Git/UpdateVersion.sh"
+    "3rdParty/ImtCore:Build/Git/UpdateVersion.sh"
+    "3rdParty/Lisa:Build/Git/UpdateVersion.sh"
+    "3rdParty/Puma:Build/Git/UpdateVersion.sh"
+    "3rdParty/Agentino:Build/Git/UpdateVersion.sh"
+)
+
+# Iterate over submodules and execute version scripts
+for entry in "${SUBMODULES[@]}"; do
+    IFS=':' read -r submodule_path script_path <<< "$entry"
     
-    # If path ends in Acf, change script name
-    case "$path" in
-        *Acf|*acf) 
-            SCRIPT_BASE="GenerateVersion" 
-            ;;
-    esac
+    FULL_SUBMODULE_PATH="$REPO_ROOT/$submodule_path"
+    FULL_SCRIPT_PATH="$FULL_SUBMODULE_PATH/$script_path"
     
-    # Check file existence and execute
-    SCRIPT_PATH="Build/Git/${SCRIPT_BASE}.sh"
-    if [ -f "$SCRIPT_PATH" ]; then
-        echo "[$path] Found $SCRIPT_PATH. Executing..."
-        bash "$SCRIPT_PATH"
+    if [ -d "$FULL_SUBMODULE_PATH" ] && [ -f "$FULL_SCRIPT_PATH" ]; then
+        echo "[$submodule_path] Found $script_path. Executing..."
+        (cd "$FULL_SUBMODULE_PATH" && bash "$script_path")
+    else
+        echo "[$submodule_path] Skipping (directory or script not found)"
     fi
-'
+done
 
 echo "UpdateVersion completed"
