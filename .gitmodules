@@ -5,7 +5,7 @@
 [submodule "3rdParty/AcfSln"]
 	path = 3rdParty/AcfSln
 	url = https://github.com/ImagingTools/AcfSln.git
-	branch = main
+	branch = master
 [submodule "3rdParty/ImtCore"]
 	path = 3rdParty/ImtCore
 	url = https://github.com/ImagingTools/ImtCore.git
