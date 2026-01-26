@@ -15,19 +15,16 @@
 # 1. Валидация / Validation
 ./tools/validate-release.sh validate
 
-# 2. Обновление субмодулей / Update submodules
-./tools/validate-release.sh auto-update
+# 2. Создание ветки релиза / Create release branch
+git checkout -b release/v2.1.0
 
-# 3. Создание ветки / Create branch
-./prepare-release.sh --create-release 2.1.0
+# 3. Обновление версии в файлах / Update version in files
+# Edit Build/CMake/CMakeLists.txt and CHANGELOG.md
 
-# 4. Закрепление версий / Pin versions
-./prepare-release.sh --pin-submodules
-
-# 5. Генерация отчета / Generate report
+# 4. Генерация отчета / Generate report
 ./tools/validate-release.sh report
 
-# 6. Финальная валидация / Final validation
+# 5. Финальная валидация / Final validation
 ./tools/validate-release.sh validate v2.1.0
 ```
 
@@ -37,38 +34,33 @@
 |-------------------|----------------------|-------------------|
 | **quick-release.sh** | Автоматическая подготовка релиза | `./tools/quick-release.sh 2.1.0` |
 | **validate-release.sh** | Валидация и автоматизация | `./tools/validate-release.sh validate` |
-| **prepare-release.sh** | Ручное управление субмодулями | `./prepare-release.sh --help` |
 
 ## Основные операции / Common Operations
 
 ### Проверка состояния / Check Status
 ```bash
-./prepare-release.sh --status
 ./tools/validate-release.sh validate
+git status
 ```
 
-### Обновление одного субмодуля / Update One Submodule
-```bash
-./prepare-release.sh --list-tags 3rdParty/Acf
-./prepare-release.sh --update-submodule 3rdParty/Acf v2.0.0
-```
+### Обновление зависимостей / Update Dependencies
 
-### Обновление всех субмодулей / Update All Submodules
+Dependencies must be updated separately in their own repositories:
 ```bash
-./tools/validate-release.sh auto-update
-# или / or
-./prepare-release.sh --update-all
-```
+cd /path/to/ImtCore
+git pull
+# Build and test
 
-### Интерактивное обновление / Interactive Update
-```bash
-./prepare-release.sh --interactive
+cd /path/to/Puma
+git pull
+# Build and test
+
+# ... repeat for other dependencies
 ```
 
 ### Генерация отчета / Generate Report
 ```bash
 ./tools/validate-release.sh report VERSIONS.md
-./prepare-release.sh --report
 ```
 
 ## Типичные сценарии / Common Scenarios
@@ -93,13 +85,6 @@ git tag -a v2.0.1 -m "Hotfix 2.0.1"
 git push origin main --tags
 ```
 
-### Откат субмодуля / Rollback Submodule
-```bash
-./prepare-release.sh --update-submodule 3rdParty/Acf v1.9.0
-git add 3rdParty/Acf
-git commit -m "chore(deps): rollback Acf to v1.9.0"
-```
-
 ## GitHub Actions
 
 ### Запуск workflow / Run Workflow
@@ -113,14 +98,9 @@ git commit -m "chore(deps): rollback Acf to v1.9.0"
 
 ## Решение проблем / Troubleshooting
 
-### Субмодули не инициализированы / Submodules Not Initialized
-```bash
-./prepare-release.sh --init
-```
-
 ### Права доступа / Permission Denied
 ```bash
-chmod +x tools/*.sh prepare-release.sh
+chmod +x tools/*.sh
 ```
 
 ### Незакоммиченные изменения / Uncommitted Changes
@@ -131,12 +111,15 @@ git add . && git commit -m "..."
 git stash
 ```
 
-### Конфликты субмодулей / Submodule Conflicts
+### Зависимости не настроены / Dependencies Not Configured
 ```bash
-cd 3rdParty/Acf
-git fetch --all
-git reset --hard origin/main
-cd ../..
+# Ensure environment variables are set
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
 ```
 
 ## Документация / Documentation
