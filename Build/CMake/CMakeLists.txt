@@ -60,13 +60,6 @@ if(NOT DEFINED ACFSLNDIR)
 	endif()
 endif()
 
-if(NOT DEFINED AGENTINODIR)
-	set(AGENTINODIR "$ENV{AGENTINODIR}")
-	if("${AGENTINODIR}" STREQUAL "")
-		message(FATAL_ERROR "AGENTINODIR not set. Please set AGENTINODIR environment variable or CMake variable.")
-	endif()
-endif()
-
 if(NOT DEFINED PROLIFEDIR)
 	set(PROLIFEDIR "$ENV{PROLIFEDIR}")
 	if("${PROLIFEDIR}" STREQUAL "")
