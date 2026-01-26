@@ -22,53 +22,48 @@ else()
 endif()
 
 # Configure paths to dependent repositories
-# Priority: 1. CMake variable, 2. Environment variable, 3. Submodule path
+# Priority: 1. CMake variable, 2. Environment variable
+# Dependencies must be provided via environment variables or CMake variables
 
 if(NOT DEFINED IMTCOREDIR)
 	set(IMTCOREDIR "$ENV{IMTCOREDIR}")
 	if("${IMTCOREDIR}" STREQUAL "")
-		get_filename_component(IMTCOREDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/ImtCore" ABSOLUTE)
-		message(STATUS "IMTCOREDIR not set, using submodule: ${IMTCOREDIR}")
+		message(FATAL_ERROR "IMTCOREDIR not set. Please set IMTCOREDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED PUMADIR)
 	set(PUMADIR "$ENV{PUMADIR}")
 	if("${PUMADIR}" STREQUAL "")
-		get_filename_component(PUMADIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Puma" ABSOLUTE)
-		message(STATUS "PUMADIR not set, using submodule: ${PUMADIR}")
+		message(FATAL_ERROR "PUMADIR not set. Please set PUMADIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED LISADIR)
 	set(LISADIR "$ENV{LISADIR}")
 	if("${LISADIR}" STREQUAL "")
-		get_filename_component(LISADIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Lisa" ABSOLUTE)
-		message(STATUS "LISADIR not set, using submodule: ${LISADIR}")
+		message(FATAL_ERROR "LISADIR not set. Please set LISADIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED ACFDIR)
 	set(ACFDIR "$ENV{ACFDIR}")
 	if("${ACFDIR}" STREQUAL "")
-		get_filename_component(ACFDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Acf" ABSOLUTE)
-		message(STATUS "ACFDIR not set, using submodule: ${ACFDIR}")
+		message(FATAL_ERROR "ACFDIR not set. Please set ACFDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED ACFSLNDIR)
 	set(ACFSLNDIR "$ENV{ACFSLNDIR}")
 	if("${ACFSLNDIR}" STREQUAL "")
-		get_filename_component(ACFSLNDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/AcfSln" ABSOLUTE)
-		message(STATUS "ACFSLNDIR not set, using submodule: ${ACFSLNDIR}")
+		message(FATAL_ERROR "ACFSLNDIR not set. Please set ACFSLNDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED AGENTINODIR)
 	set(AGENTINODIR "$ENV{AGENTINODIR}")
 	if("${AGENTINODIR}" STREQUAL "")
-		get_filename_component(AGENTINODIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Agentino" ABSOLUTE)
-		message(STATUS "AGENTINODIR not set, using submodule: ${AGENTINODIR}")
+		message(FATAL_ERROR "AGENTINODIR not set. Please set AGENTINODIR environment variable or CMake variable.")
 	endif()
 endif()
 
@@ -99,19 +94,8 @@ set(AUX_INCLUDE_DIR "${PROLIFEDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles")
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
 
-option(PROLIFE_USE_BUNDLED_LIBRARIES "Use bundled 3rd-party libraries (build from source)" OFF)
-
-if(PROLIFE_USE_BUNDLED_LIBRARIES)
-	message(STATUS "Building with bundled libraries...")
-
-	# add_subdirectory("${PROLIFEDIR}/3rdParty/Acf/Build/CMake"     "${PROLIFEDIR}/3rdParty/Acf/AuxInclude/${TARGETNAME}/GeneratedFiles")
-	# add_subdirectory("${PROLIFEDIR}/3rdParty/AcfSln/Build/CMake"  "${PROLIFEDIR}/3rdParty/AcfSln/AuxInclude/${TARGETNAME}/GeneratedFiles")
-	# add_subdirectory("${PROLIFEDIR}/3rdParty/ImtCore/Build/CMake" "${PROLIFEDIR}/3rdParty/ImtCore/AuxInclude/${TARGETNAME}/GeneratedFiles")
-	# add_subdirectory("${PROLIFEDIR}/3rdParty/Puma/Build/CMake"    "${PROLIFEDIR}/3rdParty/Puma/AuxInclude/${TARGETNAME}/GeneratedFiles")
-	# add_subdirectory("${PROLIFEDIR}/3rdParty/Lisa/Build/CMake"    "${PROLIFEDIR}/3rdParty/Lisa/AuxInclude/${TARGETNAME}/GeneratedFiles")
-else()
-	message(STATUS "Using system libraries (via find_package or pre-installed environment)")
-endif()
+# Dependencies are provided via environment variables
+message(STATUS "Using libraries from environment variables")
 
 # Sdl
 include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")

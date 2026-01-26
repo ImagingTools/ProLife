@@ -1,3 +1,8 @@
+# NOTE: This workflow needs to be updated to work without submodules.
+# The 3rdParty folder and submodules have been removed from the repository.
+# Dependencies must now be managed externally via environment variables.
+# This workflow is currently non-functional and requires significant updates.
+
 name: Release Preparation
 
 on:
