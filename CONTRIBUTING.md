@@ -7,7 +7,7 @@ Thank you for your interest in contributing to ProLife! This document provides g
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
-- [Submodule Development](#submodule-development)
+- [Dependency Development](#dependency-development)
 - [Coding Standards](#coding-standards)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Process](#pull-request-process)
@@ -410,7 +410,6 @@ Update relevant files when making significant changes:
 - **README.md**: Project overview and quick start
 - **BUILDING.md**: Build instructions
 - **RELEASE_STRATEGY.md**: Release process
-- **3rdParty/README.md**: Submodule management
 - **CHANGELOG.md**: Version history
 
 ### Generating API Docs

@@ -492,7 +492,6 @@ cmake --install . --config Release --prefix /opt/ProLife
 ## Additional Resources
 
 - `RELEASE_STRATEGY.md` - Release process and versioning
-- `3rdParty/README.md` - Submodule management details
 - `CONTRIBUTING.md` - Development guidelines
 - CMake documentation: https://cmake.org/documentation/
 

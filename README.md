@@ -286,7 +286,7 @@ ProLife is built on the following open-source and proprietary components:
 
 - Qt Framework
 - CMake
-- And various other libraries (see individual submodules)
+- And various other libraries (see dependency repositories: Acf, AcfSln, ImtCore, Lisa, Puma, Agentino)
 
 ---
 
