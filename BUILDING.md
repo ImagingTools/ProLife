@@ -1,12 +1,12 @@
 # Building ProLife
 
-This guide explains how to build ProLife from source, including all its dependencies managed as Git submodules.
+This guide explains how to build ProLife from source, including setting up external dependencies.
 
 ## Prerequisites
 
 ### Required Software
 
-- **Git** 2.13 or later (for submodule support)
+- **Git** 2.13 or later
 - **CMake** 3.26 or later
 - **C++ Compiler**:
   - Windows: Visual Studio 2015, 2017, or 2019 (VC15, VC16, VC17)
@@ -22,41 +22,69 @@ This guide explains how to build ProLife from source, including all its dependen
 
 ## Getting the Source Code
 
-### Initial Clone
+### Clone the Repository
 
-Clone the repository with all submodules:
+Clone the repository:
 
 ```bash
-git clone --recursive https://github.com/ImagingTools/ProLife.git
+git clone https://github.com/ImagingTools/ProLife.git
 cd ProLife
 ```
 
-If you already cloned without `--recursive`, initialize the submodules:
+### Setting Up Dependencies
 
+ProLife requires several external dependencies that must be cloned and built separately:
+- **ImtCore**: Imaging Tools Core library (private)
+- **Lisa**: Lisa application components (private)
+- **Puma**: Puma application components (private)
+- **Acf**: Advanced Computing Framework
+- **AcfSln**: ACF Solution configurations
+- **Agentino**: Agentino application components (private)
+
+Clone these repositories to a location on your system and build them according to their respective documentation.
+
+### Configuring Environment Variables
+
+Before building ProLife, set environment variables to point to your dependency repositories:
+
+**Linux/macOS:**
 ```bash
-git submodule update --init --recursive
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
+export PROLIFEDIR=$(pwd)
 ```
 
-### Authentication for Private Repositories
+**Windows (Command Prompt):**
+```cmd
+set IMTCOREDIR=C:\path\to\ImtCore
+set PUMADIR=C:\path\to\Puma
+set LISADIR=C:\path\to\Lisa
+set ACFDIR=C:\path\to\Acf
+set ACFSLNDIR=C:\path\to\AcfSln
+set AGENTINODIR=C:\path\to\Agentino
+set PROLIFEDIR=%CD%
+```
 
-Some dependencies (ImtCore, Lisa, Puma, Agentino) are private. You need:
+**Windows (PowerShell):**
+```powershell
+$env:IMTCOREDIR = "C:\path\to\ImtCore"
+$env:PUMADIR = "C:\path\to\Puma"
+$env:LISADIR = "C:\path\to\Lisa"
+$env:ACFDIR = "C:\path\to\Acf"
+$env:ACFSLNDIR = "C:\path\to\AcfSln"
+$env:AGENTINODIR = "C:\path\to\Agentino"
+$env:PROLIFEDIR = (Get-Location).Path
+```
 
-1. **SSH Key Method** (Recommended):
-   ```bash
-   # Ensure your SSH key is added to your GitHub account
-   ssh-add ~/.ssh/id_rsa
-   
-   # Configure Git to use SSH URLs
-   git config --global url."git@github.com:".insteadOf "https://github.com/"
-   ```
-
-2. **Personal Access Token Method**:
-   ```bash
-   # Configure credential helper
-   git config --global credential.helper store
-   
-   # You'll be prompted for credentials on first access
-   ```
+Alternatively, you can use the provided setup scripts which will check your environment:
+```bash
+./setup-environment.sh  # Linux/macOS
+setup-environment.bat   # Windows
+```
 
 ## Build Methods
 
@@ -99,33 +127,39 @@ cmake --build . --config Release -j8
 - `QT_VERSION_MAJOR`: Qt version to use (5 or 6)
 - `WEB_COMPILE`: Enable web compatibility (default: ON)
 - `BUILDDIR`: Custom build output directory
-- `IMTCOREDIR`: Path to ImtCore (default: uses submodule at `3rdParty/ImtCore`)
-- `PUMADIR`: Path to Puma (default: uses submodule at `3rdParty/Puma`)
-- `LISADIR`: Path to Lisa (default: uses submodule at `3rdParty/Lisa`)
+- `IMTCOREDIR`: Path to ImtCore (required - must be set via environment variable or CMake argument)
+- `PUMADIR`: Path to Puma (required - must be set via environment variable or CMake argument)
+- `LISADIR`: Path to Lisa (required - must be set via environment variable or CMake argument)
+- `ACFDIR`: Path to Acf (required - must be set via environment variable or CMake argument)
+- `ACFSLNDIR`: Path to AcfSln (required - must be set via environment variable or CMake argument)
+- `AGENTINODIR`: Path to Agentino (required - must be set via environment variable or CMake argument)
 - `PROLIFEDIR`: Path to ProLife (default: detected from environment)
 
-#### Using Submodules (Recommended Approach)
+#### Specifying Dependency Paths
 
-The build system is configured to use submodules by default. You can override environment variables to point to the submodules:
+You can specify dependency paths via environment variables (recommended) or directly via CMake:
 
+**Via environment variables:**
 ```bash
-export IMTCOREDIR="$(pwd)/../../3rdParty/ImtCore"
-export PUMADIR="$(pwd)/../../3rdParty/Puma"
-export LISADIR="$(pwd)/../../3rdParty/Lisa"
-export ACFDIR="$(pwd)/../../3rdParty/Acf"
-export ACFSLNDIR="$(pwd)/../../3rdParty/AcfSln"
-export AGENTINODIR="$(pwd)/../../3rdParty/Agentino"
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
 
 cmake ..
 ```
 
-Or use CMake directly:
-
+**Via CMake arguments:**
 ```bash
 cmake \
-  -DIMTCOREDIR=../../3rdParty/ImtCore \
-  -DPUMADIR=../../3rdParty/Puma \
-  -DLISADIR=../../3rdParty/Lisa \
+  -DIMTCOREDIR=/path/to/ImtCore \
+  -DPUMADIR=/path/to/Puma \
+  -DLISADIR=/path/to/Lisa \
+  -DACFDIR=/path/to/Acf \
+  -DACFSLNDIR=/path/to/AcfSln \
+  -DAGENTINODIR=/path/to/Agentino \
   ..
 ```
 
@@ -280,24 +314,19 @@ Where `<platform>` might be `Win32_VC17`, `x64_VC17`, `Linux_GCC`, etc.
 
 ## Updating Dependencies
 
-### Update All Submodules
+### Update Dependencies
+
+To update dependencies, navigate to each dependency directory and pull the latest changes:
 
 ```bash
-git submodule update --remote --recursive
-```
-
-### Update Specific Submodule
-
-```bash
-cd 3rdParty/ImtCore
-git checkout main
+cd /path/to/ImtCore
 git pull
-cd ../..
-git add 3rdParty/ImtCore
-git commit -m "Update ImtCore to latest"
+cd /path/to/Puma
+git pull
+# ... repeat for other dependencies
 ```
 
-### Rebuild After Submodule Update
+### Rebuild After Dependency Update
 
 ```bash
 cd Build/CMake/build
@@ -306,27 +335,18 @@ cmake --build . --config Release --clean-first
 
 ## Troubleshooting
 
-### Submodule Issues
+### Dependency Issues
 
-**Problem**: Submodule directories are empty
+**Problem**: Missing dependency directories
 
-**Solution**:
+**Solution**: Ensure all dependencies are cloned and environment variables are set correctly:
 ```bash
-git submodule update --init --recursive
+echo $IMTCOREDIR  # Should point to ImtCore directory
+echo $PUMADIR     # Should point to Puma directory
+# etc.
 ```
 
-**Problem**: Authentication failed for private repositories
-
-**Solution**: Configure SSH keys or Personal Access Token as described in the Authentication section.
-
-**Problem**: Submodule in detached HEAD state
-
-**Solution**:
-```bash
-cd 3rdParty/<submodule>
-git checkout main  # or master
-cd ../..
-```
+If not set, configure them as described in the "Configuring Environment Variables" section above.
 
 ### Build Issues
 
@@ -343,20 +363,19 @@ set CMAKE_PREFIX_PATH=C:\Qt\6.x.x\msvc2019_64
 
 **Problem**: Missing IMTCOREDIR or similar environment variable
 
-**Solution**: Use submodule paths or set environment variables:
+**Solution**: Set the required environment variables:
 ```bash
-export IMTCOREDIR="$(pwd)/3rdParty/ImtCore"
-export PUMADIR="$(pwd)/3rdParty/Puma"
-export LISADIR="$(pwd)/3rdParty/Lisa"
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
 ```
 
 **Problem**: Build fails with "file not found" errors
 
-**Solution**: Ensure all submodules are initialized and updated:
-```bash
-git submodule status
-git submodule update --init --recursive
-```
+**Solution**: Ensure all dependencies are properly built and available at the paths specified by environment variables.
 
 **Problem**: Linking errors
 

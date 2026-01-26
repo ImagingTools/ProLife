@@ -18,7 +18,6 @@ build/
 Build/*/*.dir/
 
 # Visual Studio artifacts
-# Note: We keep 3rdParty Visual Studio files tracked
 # Generated .sln and .vcxproj in Build directories
 Build/**/*.sln
 Build/**/*.vcxproj
@@ -32,7 +31,7 @@ Build/**/*.vcxproj.filters
 *.VC.opendb
 .vs/
 ipch/
-# Build output directories (root level only, not in 3rdParty)
+# Build output directories
 /x64/
 /Win32/
 /Debug/

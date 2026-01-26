@@ -26,9 +26,9 @@ Thank you for your interest in contributing to ProLife! This document provides g
 ### Prerequisites
 
 1. Fork the repository
-2. Clone your fork with submodules:
+2. Clone your fork:
    ```bash
-   git clone --recursive https://github.com/YOUR_USERNAME/ProLife.git
+   git clone https://github.com/YOUR_USERNAME/ProLife.git
    cd ProLife
    ```
 
@@ -37,8 +37,17 @@ Thank you for your interest in contributing to ProLife! This document provides g
    git remote add upstream https://github.com/ImagingTools/ProLife.git
    ```
 
-4. Set up the development environment:
+4. Set up the development environment (configure dependency paths):
    ```bash
+   # Set environment variables for dependencies
+   export IMTCOREDIR=/path/to/ImtCore
+   export PUMADIR=/path/to/Puma
+   export LISADIR=/path/to/Lisa
+   export ACFDIR=/path/to/Acf
+   export ACFSLNDIR=/path/to/AcfSln
+   export AGENTINODIR=/path/to/Agentino
+   
+   # Or use the setup script to check environment
    ./setup-environment.sh  # or setup-environment.bat on Windows
    ```
 
@@ -104,22 +113,22 @@ git checkout feature/my-new-feature
 git rebase develop
 ```
 
-## Submodule Development
+## Dependency Development
 
 ### Working on Dependencies
 
-When you need to modify a dependency (Acf, ImtCore, Lisa, Puma, Agentino, AcfSln):
+When you need to modify a dependency (Acf, ImtCore, Lisa, Puma, Agentino, AcfSln), work directly in the dependency's repository:
 
-#### 1. Navigate to the Submodule
+#### 1. Navigate to the Dependency Directory
 
 ```bash
-cd 3rdParty/ImtCore
+cd /path/to/ImtCore  # Your separate clone of the dependency
 ```
 
-#### 2. Create a Feature Branch in the Submodule
+#### 2. Create a Feature Branch
 
 ```bash
-git checkout -b feature/my-submodule-feature
+git checkout -b feature/my-dependency-feature
 ```
 
 #### 3. Make Your Changes
@@ -128,42 +137,27 @@ git checkout -b feature/my-submodule-feature
 # Edit files
 # ...
 
-# Commit in the submodule
+# Commit changes
 git add .
 git commit -m "feat: add feature in ImtCore"
 ```
 
-#### 4. Push Submodule Changes
+#### 4. Push and Create PR
 
 ```bash
-# Push to the submodule repository
-git push origin feature/my-submodule-feature
+# Push to the dependency repository
+git push origin feature/my-dependency-feature
 
-# Create PR in the submodule repository
+# Create PR in the dependency repository
 # Wait for review and merge
 ```
 
-#### 5. Update ProLife to Use New Submodule Version
+#### 5. Test Integration with ProLife
 
-After the submodule PR is merged:
-
-```bash
-cd ../..  # Back to ProLife root
-
-# Update submodule reference
-cd 3rdParty/ImtCore
-git checkout main  # or master
-git pull
-cd ../..
-
-# Commit the submodule pointer update in ProLife
-git add 3rdParty/ImtCore
-git commit -m "chore(deps): update ImtCore to include new feature"
-```
-
-#### 6. Test Integration
+After the dependency PR is merged and you've pulled the latest changes:
 
 ```bash
+cd /path/to/ProLife
 cd Build/CMake/build
 cmake --build . --config Release --clean-first
 ctest --config Release
@@ -175,31 +169,27 @@ For changes spanning multiple repositories:
 
 1. **Plan**: Document all affected repositories
 2. **Implement**: Create feature branches with consistent names across repos
-3. **Test**: Update ProLife to reference feature branches temporarily
-4. **Merge**: Merge dependency PRs first, then update ProLife
+3. **Test**: Point environment variables to your feature branches temporarily
+4. **Merge**: Merge dependency PRs first, then update ProLife if needed
 
 Example for testing with feature branches:
 
 ```bash
-# In ProLife root
-cd 3rdParty/ImtCore
-git checkout feature/cross-repo-change
-cd ../Puma
-git checkout feature/cross-repo-change
-cd ../..
+# Temporarily point to feature branches
+export IMTCOREDIR=/path/to/ImtCore-feature-branch
+export PUMADIR=/path/to/Puma-feature-branch
 
 # Test the integration
 cd Build/CMake/build
 cmake --build . --config Release
 ```
 
-### Submodule Best Practices
+### Dependency Best Practices
 
-- **Always commit submodule changes before ProLife changes**
-- **Test integration after updating submodules**
-- **Document submodule updates in commit messages**
+- **Test integration after updating dependencies**
+- **Document dependency version changes in commit messages**
+- **Coordinate with dependency maintainers for breaking changes**
 - **Use tagged versions for releases**
-- **Don't leave submodules in detached HEAD state**
 
 ## Coding Standards
 
