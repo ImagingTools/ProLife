@@ -73,7 +73,7 @@ ProductionStatusModel {
 
 	function fillModel(){
 		if (!hasStatusModel()){
-			createStatusModel()
+			emplaceStatusModel()
 		}
 
 		m_statusModel.clear();

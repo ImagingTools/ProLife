@@ -95,7 +95,7 @@ Item {
 		m_logicalOperation: deviceCollection.filter.logicalOperation.AND;
 		Component.onCompleted: {
 			if (!hasFieldFilters()){
-				createFieldFilters()
+				emplaceFieldFilters()
 			}
 		}
 	}
@@ -106,7 +106,7 @@ Item {
 		
 		Component.onCompleted: {
 			if (!hasFieldFilters()){
-				createFieldFilters()
+				emplaceFieldFilters()
 			}
 			
 			m_fieldFilters.addElement(orderUuidFilter);
