@@ -1,0 +1,306 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "ProLife-1.0.0",
+  "documentNamespace": "https://imagingtools.com/spdx/prolife-1.0.0",
+  "creationInfo": {
+    "created": "2026-01-19T13:00:00Z",
+    "creators": [
+      "Organization: ImagingTools GmbH",
+      "Tool: ProLife SBOM Generator-1.0.0"
+    ],
+    "licenseListVersion": "3.21"
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-ProLife",
+      "name": "ProLife",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/ProLife",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Commercial",
+      "licenseDeclared": "LicenseRef-ImagingTools-Commercial",
+      "copyrightText": "Copyright (C) 2017-2026 ImagingTools GmbH",
+      "summary": "ProLife Medical Imaging and Laboratory Information Management System",
+      "description": "ProLife is a comprehensive software solution for medical imaging and laboratory information management, distributed under commercial license.",
+      "homepage": "https://github.com/ImagingTools/ProLife",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "url",
+          "referenceLocator": "https://github.com/ImagingTools/ProLife/security"
+        },
+        {
+          "referenceCategory": "OTHER",
+          "referenceType": "vcs",
+          "referenceLocator": "https://github.com/ImagingTools/ProLife.git"
+        }
+      ],
+      "annotations": [
+        {
+          "annotationType": "OTHER",
+          "annotator": "Tool: ProLife SBOM Generator",
+          "annotationDate": "2026-01-19T13:00:00Z",
+          "comment": "EU CRA Compliant: true"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Qt",
+      "name": "Qt Framework",
+      "versionInfo": "6.5.0",
+      "downloadLocation": "https://download.qt.io/",
+      "filesAnalyzed": false,
+      "supplier": "Organization: The Qt Company",
+      "licenseConcluded": "LGPL-3.0-only",
+      "licenseDeclared": "LGPL-3.0-only",
+      "copyrightText": "Copyright (C) The Qt Company Ltd.",
+      "summary": "Cross-platform application framework",
+      "homepage": "https://www.qt.io",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/qt@6.5.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-CMake",
+      "name": "CMake",
+      "versionInfo": "3.26.0",
+      "downloadLocation": "https://cmake.org/download/",
+      "filesAnalyzed": false,
+      "supplier": "Organization: Kitware",
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "Copyright (C) Kitware, Inc.",
+      "summary": "Cross-platform build system",
+      "homepage": "https://cmake.org",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/cmake@3.26.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-OpenSSL",
+      "name": "OpenSSL",
+      "versionInfo": "3.0.0",
+      "downloadLocation": "https://www.openssl.org/source/",
+      "filesAnalyzed": false,
+      "supplier": "Organization: OpenSSL Software Foundation",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "Copyright (C) OpenSSL Software Foundation",
+      "summary": "Cryptography and SSL/TLS toolkit",
+      "homepage": "https://www.openssl.org",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/openssl@3.0.0"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:openssl:openssl:3.0.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-nginx",
+      "name": "nginx",
+      "versionInfo": "1.25.0",
+      "downloadLocation": "https://nginx.org/download/",
+      "filesAnalyzed": false,
+      "supplier": "Organization: F5, Inc.",
+      "licenseConcluded": "BSD-2-Clause",
+      "licenseDeclared": "BSD-2-Clause",
+      "copyrightText": "Copyright (C) F5, Inc.",
+      "summary": "HTTP and reverse proxy server",
+      "homepage": "https://nginx.org",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/nginx@1.25.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Playwright",
+      "name": "Playwright",
+      "versionInfo": "1.52.0",
+      "downloadLocation": "https://registry.npmjs.org/@playwright/test/-/test-1.52.0.tgz",
+      "filesAnalyzed": false,
+      "supplier": "Organization: Microsoft Corporation",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "Copyright (C) Microsoft Corporation",
+      "summary": "Browser automation framework for testing",
+      "homepage": "https://playwright.dev",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/%40playwright/test@1.52.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Acf",
+      "name": "Advanced Computing Framework (Acf)",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/Acf",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "Core computing framework for ProLife"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-AcfSln",
+      "name": "ACF Solution (AcfSln)",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/AcfSln",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "ACF solution files and configurations"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-ImtCore",
+      "name": "Imaging Tools Core (ImtCore)",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/ImtCore",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "Core imaging library"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Lisa",
+      "name": "Lisa",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/Lisa",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "Lisa application components"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Puma",
+      "name": "Puma",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/Puma",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "Puma application components"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Agentino",
+      "name": "Agentino",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/ImagingTools/Agentino",
+      "filesAnalyzed": false,
+      "supplier": "Organization: ImagingTools GmbH",
+      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
+      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
+      "copyrightText": "Copyright (C) ImagingTools GmbH",
+      "summary": "Agentino application components"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-ProLife"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Qt"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-CMake"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-OpenSSL"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-nginx"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEV_DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-Playwright"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Acf"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-AcfSln"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-ImtCore"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Lisa"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Puma"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-ProLife",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Agentino"
+    }
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "LicenseRef-ImagingTools-Commercial",
+      "name": "ImagingTools Enterprise License Agreement",
+      "extractedText": "See Install/Commercial/License.txt for full license text.\n\nThis is a commercial license agreement between ImagingTools GmbH and the licensee.",
+      "seeAlsos": [
+        "https://github.com/ImagingTools/ProLife/blob/main/Install/Commercial/License.txt"
+      ]
+    },
+    {
+      "licenseId": "LicenseRef-ImagingTools-Proprietary",
+      "name": "ImagingTools Proprietary License",
+      "extractedText": "Proprietary software owned by ImagingTools GmbH. All rights reserved.",
+      "seeAlsos": []
+    }
+  ]
+}
