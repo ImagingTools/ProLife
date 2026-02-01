@@ -1,7 +1,7 @@
 #!/bin/bash
 # setup-environment.sh
-# This script initializes the ProLife build environment by setting up submodules
-# and configuring environment variables.
+# This script initializes the ProLife build environment by configuring environment variables.
+# Note: Dependencies must be cloned and built separately. See BUILDING.md for details.
 
 set -e
 
@@ -17,57 +17,64 @@ echo ""
 GIT_VERSION=$(git --version | sed -E 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 echo "Git version: $GIT_VERSION"
 
-# Initialize submodules
+# Check if required dependencies are available
 echo ""
-echo "Initializing Git submodules..."
-echo "This may take a few minutes on first run."
+echo "Checking for required dependencies..."
+echo "Note: All dependencies must be cloned and available externally."
 echo ""
 
-if git submodule update --init --recursive; then
-    echo "[OK] Submodules initialized successfully"
-else
-    echo "[ERROR] Failed to initialize submodules"
-    echo ""
-    echo "Some submodules may be private and require authentication."
-    echo "Please ensure you have:"
-    echo "  - SSH keys configured and added to GitHub"
-    echo "  - Or Personal Access Token with appropriate permissions"
-    echo "  - Repository access granted by the ImagingTools organization"
-    echo ""
-    echo "You can configure Git to use SSH URLs globally:"
-    echo '  git config --global url."git@github.com:".insteadOf "https://github.com/"'
-    echo ""
-    exit 1
+# Set environment variables
+# These should point to your externally managed dependency repositories
+# You can customize these paths before sourcing this script
+
+if [ -z "$IMTCOREDIR" ]; then
+    echo "WARNING: IMTCOREDIR is not set"
 fi
 
-# Show submodule status
-echo ""
-echo "Submodule status:"
-git submodule status
+if [ -z "$PUMADIR" ]; then
+    echo "WARNING: PUMADIR is not set"
+fi
 
-# Set environment variables pointing to submodules
-export IMTCOREDIR="${PROJECT_ROOT}/3rdParty/ImtCore"
-export PUMADIR="${PROJECT_ROOT}/3rdParty/Puma"
-export LISADIR="${PROJECT_ROOT}/3rdParty/Lisa"
-export ACFDIR="${PROJECT_ROOT}/3rdParty/Acf"
-export ACFSLNDIR="${PROJECT_ROOT}/3rdParty/AcfSln"
-export AGENTINODIR="${PROJECT_ROOT}/3rdParty/Agentino"
+if [ -z "$LISADIR" ]; then
+    echo "WARNING: LISADIR is not set"
+fi
+
+if [ -z "$ACFDIR" ]; then
+    echo "WARNING: ACFDIR is not set"
+fi
+
+if [ -z "$ACFSLNDIR" ]; then
+    echo "WARNING: ACFSLNDIR is not set"
+fi
+
+if [ -z "$AGENTINODIR" ]; then
+    echo "WARNING: AGENTINODIR is not set"
+fi
+
 export PROLIFEDIR="${PROJECT_ROOT}"
 
 echo ""
 echo "Environment variables configured:"
-echo "  IMTCOREDIR=${IMTCOREDIR}"
-echo "  PUMADIR=${PUMADIR}"
-echo "  LISADIR=${LISADIR}"
-echo "  ACFDIR=${ACFDIR}"
-echo "  ACFSLNDIR=${ACFSLNDIR}"
-echo "  AGENTINODIR=${AGENTINODIR}"
+echo "  IMTCOREDIR=${IMTCOREDIR:-NOT SET}"
+echo "  PUMADIR=${PUMADIR:-NOT SET}"
+echo "  LISADIR=${LISADIR:-NOT SET}"
+echo "  ACFDIR=${ACFDIR:-NOT SET}"
+echo "  ACFSLNDIR=${ACFSLNDIR:-NOT SET}"
+echo "  AGENTINODIR=${AGENTINODIR:-NOT SET}"
 echo "  PROLIFEDIR=${PROLIFEDIR}"
 
 echo ""
 echo "=========================================="
 echo "Setup complete!"
 echo "=========================================="
+echo ""
+echo "IMPORTANT: Before building, ensure all dependency directories are set:"
+echo "  export IMTCOREDIR=/path/to/ImtCore"
+echo "  export PUMADIR=/path/to/Puma"
+echo "  export LISADIR=/path/to/Lisa"
+echo "  export ACFDIR=/path/to/Acf"
+echo "  export ACFSLNDIR=/path/to/AcfSln"
+echo "  export AGENTINODIR=/path/to/Agentino"
 echo ""
 echo "To build ProLife:"
 echo "  cd Build/CMake"

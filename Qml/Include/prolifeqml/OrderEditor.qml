@@ -147,7 +147,7 @@ ViewBase {
 		}
 
 		if (!orderData.hasOrderProducts()){
-			orderData.createOrderProducts()
+			orderData.emplaceOrderProducts()
 		}
 	}
 	

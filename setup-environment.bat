@@ -1,7 +1,7 @@
 @echo off
 REM setup-environment.bat
-REM This script initializes the ProLife build environment by setting up submodules
-REM and configuring environment variables.
+REM This script initializes the ProLife build environment by configuring environment variables.
+REM Note: Dependencies must be cloned and built separately. See BUILDING.md for details.
 
 setlocal enabledelayedexpansion
 
@@ -17,58 +17,61 @@ REM Check Git version
 git --version
 echo.
 
-REM Initialize submodules
-echo Initializing Git submodules...
-echo This may take a few minutes on first run.
+REM Check if required dependencies are available
+echo Checking for required dependencies...
+echo Note: All dependencies must be cloned and available externally.
 echo.
 
-git submodule update --init --recursive
-if %errorlevel% neq 0 (
-    echo [ERROR] Failed to initialize submodules
-    echo.
-    echo Some submodules may be private and require authentication.
-    echo Please ensure you have:
-    echo   - SSH keys configured and added to GitHub
-    echo   - Or Personal Access Token with appropriate permissions
-    echo   - Repository access granted by the ImagingTools organization
-    echo.
-    echo You can configure Git to use SSH URLs globally:
-    echo   git config --global url."git@github.com:".insteadOf "https://github.com/"
-    echo.
-    pause
-    exit /b 1
+REM Check environment variables
+if "%IMTCOREDIR%"=="" (
+    echo WARNING: IMTCOREDIR is not set
 )
 
-echo [OK] Submodules initialized successfully
-echo.
+if "%PUMADIR%"=="" (
+    echo WARNING: PUMADIR is not set
+)
 
-REM Show submodule status
-echo Submodule status:
-git submodule status
-echo.
+if "%LISADIR%"=="" (
+    echo WARNING: LISADIR is not set
+)
 
-REM Set environment variables pointing to submodules
-set "IMTCOREDIR=%PROJECT_ROOT%\3rdParty\ImtCore"
-set "PUMADIR=%PROJECT_ROOT%\3rdParty\Puma"
-set "LISADIR=%PROJECT_ROOT%\3rdParty\Lisa"
-set "ACFDIR=%PROJECT_ROOT%\3rdParty\Acf"
-set "ACFSLNDIR=%PROJECT_ROOT%\3rdParty\AcfSln"
-set "AGENTINODIR=%PROJECT_ROOT%\3rdParty\Agentino"
+if "%ACFDIR%"=="" (
+    echo WARNING: ACFDIR is not set
+)
+
+if "%ACFSLNDIR%"=="" (
+    echo WARNING: ACFSLNDIR is not set
+)
+
+if "%AGENTINODIR%"=="" (
+    echo WARNING: AGENTINODIR is not set
+)
+
+REM Set PROLIFEDIR
 set "PROLIFEDIR=%PROJECT_ROOT%"
 
+echo.
 echo Environment variables configured:
-echo   IMTCOREDIR=%IMTCOREDIR%
-echo   PUMADIR=%PUMADIR%
-echo   LISADIR=%LISADIR%
-echo   ACFDIR=%ACFDIR%
-echo   ACFSLNDIR=%ACFSLNDIR%
-echo   AGENTINODIR=%AGENTINODIR%
+if defined IMTCOREDIR (echo   IMTCOREDIR=%IMTCOREDIR%) else (echo   IMTCOREDIR=NOT SET)
+if defined PUMADIR (echo   PUMADIR=%PUMADIR%) else (echo   PUMADIR=NOT SET)
+if defined LISADIR (echo   LISADIR=%LISADIR%) else (echo   LISADIR=NOT SET)
+if defined ACFDIR (echo   ACFDIR=%ACFDIR%) else (echo   ACFDIR=NOT SET)
+if defined ACFSLNDIR (echo   ACFSLNDIR=%ACFSLNDIR%) else (echo   ACFSLNDIR=NOT SET)
+if defined AGENTINODIR (echo   AGENTINODIR=%AGENTINODIR%) else (echo   AGENTINODIR=NOT SET)
 echo   PROLIFEDIR=%PROLIFEDIR%
 echo.
 
 echo ==========================================
 echo Setup complete!
 echo ==========================================
+echo.
+echo IMPORTANT: Before building, ensure all dependency directories are set:
+echo   set IMTCOREDIR=C:\path\to\ImtCore
+echo   set PUMADIR=C:\path\to\Puma
+echo   set LISADIR=C:\path\to\Lisa
+echo   set ACFDIR=C:\path\to\Acf
+echo   set ACFSLNDIR=C:\path\to\AcfSln
+echo   set AGENTINODIR=C:\path\to\Agentino
 echo.
 echo To build ProLife with CMake:
 echo   cd Build\CMake

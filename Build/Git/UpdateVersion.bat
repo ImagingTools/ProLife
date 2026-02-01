@@ -41,4 +41,21 @@ set "OUT=%FILE:.xtrsvn=%"
 
 echo Wrote %OUT% with WCREV=%REV_OFFSET% and WCMODS=%DIRTY%
 
+REM --- Logic for dependencies ---
+REM Note: Dependencies should be updated in their own repositories
+REM This script only updates ProLife version information
+
+echo UpdateVersion completed
+goto :EOF
+            )
+        ) else (
+            echo [%%A] Skipping (directory not found^)
+        )
+    )
+)
+
+popd
+
+echo UpdateVersion completed
+
 endlocal

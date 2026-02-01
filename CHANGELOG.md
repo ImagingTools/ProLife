@@ -1,11 +1,11 @@
-# Changelog
+#  (2026-01-21)
 
-All notable changes to ProLife will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Bug Fixes
 
-## [Unreleased]
+* remove MSVC toolset 14.3 from Windows build workflow ([e114953](https://github.com/ImagingTools/ProLife/commit/e1149531c3ab6df247774504c0263889b6f2a751))
+* remove SUBMODULE_VERSIONS.md from .gitignore ([4a8a49d](https://github.com/ImagingTools/ProLife/commit/4a8a49d6c05144797b6d0a07c36dee61ac931ddf))
+* use workflow ID instead of filename to avoid 404 errors ([83d2bee](https://github.com/ImagingTools/ProLife/commit/83d2beeeb307f084cec9bb80b5a7d27182c56437))
 
 ### Added
 - Git submodules for all dependency repositories (Acf, AcfSln, ImtCore, Lisa, Puma, Agentino)
@@ -29,50 +29,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - SPDX 2.3 support for SBOM generation (ISO/IEC 5962:2021)
   - Qt LGPL-3.0 license compliance documentation (docs/compliance/Qt_LGPL_Compliance.md)
 
-### Changed
-- Dependency management migrated from environment variables to Git submodules
-- Build system now supports both environment variable and submodule-based paths
-- Improved project structure for better dependency tracking
+### Features
 
-### Documentation
-- Added comprehensive documentation for release management
-- Added dependency change pipeline documentation
-- Added CI/CD integration recommendations
-- Added troubleshooting guides for common build issues
+* add comprehensive release automation and documentation ([7879bf0](https://github.com/ImagingTools/ProLife/commit/7879bf06d1bab71984d9fcbd423381726db4a157))
+* add PERSONAL_ACCESS_TOKEN for private submodule authentication ([9850134](https://github.com/ImagingTools/ProLife/commit/98501341584fffbd56230afe0c510490986108a0))
 
-## Previous Versions
 
-Historical changes from before the submodule migration are tracked in the respective component repositories.
 
----
+# 1.0.0 (2026-01-16)
 
-## Release Notes Template
 
-Use this template for future releases:
 
-## [X.Y.Z] - YYYY-MM-DD
-
-### Added
-- New features
-
-### Changed
-- Changes in existing functionality
-
-### Deprecated
-- Soon-to-be removed features
-
-### Removed
-- Removed features
-
-### Fixed
-- Bug fixes
-
-### Security
-- Vulnerability fixes
-
-### Dependencies
-- Submodule updates and changes
-
----
-
-[Unreleased]: https://github.com/ImagingTools/ProLife/compare/main...develop

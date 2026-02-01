@@ -1,6 +1,6 @@
 # ProLife
 
-ProLife is a comprehensive software solution for medical imaging and laboratory information management.
+ProLife is a software solution for the information management of product lifecycle (hardware and software). It manages ordering of software and hardware products, licenses, accounting and provides important statistics of your eco system.
 
 ## Overview
 
@@ -13,7 +13,7 @@ ProLife integrates multiple components and dependent libraries to provide a comp
 
 ## Dependencies
 
-ProLife is built on top of several foundational repositories managed as Git submodules:
+ProLife is built on top of several foundational repositories that must be cloned and built separately:
 
 - **Acf**: Advanced Computing Framework
 - **AcfSln**: ACF Solution configurations
@@ -21,6 +21,8 @@ ProLife is built on top of several foundational repositories managed as Git subm
 - **Lisa**: Lisa application components (private)
 - **Puma**: Puma application components (private)
 - **Agentino**: Agentino application components (private)
+
+These dependencies must be available and their paths configured via environment variables before building ProLife.
 
 ## Quick Start
 
@@ -34,13 +36,21 @@ ProLife is built on top of several foundational repositories managed as Git subm
 ### Clone and Build
 
 ```bash
-# Clone with submodules
-git clone --recursive https://github.com/ImagingTools/ProLife.git
+# Clone the repository
+git clone https://github.com/ImagingTools/ProLife.git
 cd ProLife
 
-# Initialize environment (Linux/macOS)
-./setup-environment.sh
+# Set up environment variables for dependencies
+# You must have these repositories cloned and available separately
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
 
+# Or use setup script (will check environment)
+./setup-environment.sh  # Linux/macOS
 # Or on Windows
 setup-environment.bat
 
@@ -51,35 +61,21 @@ cmake ..
 cmake --build . --config Release
 ```
 
-### Alternative: Build After Clone
-
-If you already cloned without `--recursive`:
-
-```bash
-git submodule update --init --recursive
-./setup-environment.sh  # or setup-environment.bat on Windows
-```
-
 ## Documentation
 
 Comprehensive documentation is available in the following files:
 
 - **[BUILDING.md](BUILDING.md)** - Detailed build instructions for all platforms
+- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Release preparation guide (English)
+- **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Руководство по подготовке релиза (Russian)
 - **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release process and versioning strategy
-- **[3rdParty/README.md](3rdParty/README.md)** - Submodule management guide
+- **[tools/README.md](tools/README.md)** - Automated release tools documentation
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines (if available)
 
 ## Project Structure
 
 ```
 ProLife/
-├── 3rdParty/          # Git submodules for dependencies
-│   ├── Acf/
-│   ├── AcfSln/
-│   ├── ImtCore/
-│   ├── Lisa/
-│   ├── Puma/
-│   └── Agentino/
 ├── Build/             # Build configurations and scripts
 │   ├── CMake/         # CMake build files
 │   ├── VC15_64/       # Visual Studio 2015 configs
@@ -136,36 +132,28 @@ make
 
 For detailed build instructions, see [BUILDING.md](BUILDING.md).
 
-## Submodule Management
+## Dependency Management
 
-### Initialize Submodules
-
-```bash
-git submodule update --init --recursive
-```
-
-### Update Submodules
+ProLife dependencies (Acf, AcfSln, ImtCore, Lisa, Puma, Agentino) must be cloned and built separately. Set the following environment variables to point to these repositories:
 
 ```bash
-git submodule update --remote --recursive
+export IMTCOREDIR=/path/to/ImtCore
+export PUMADIR=/path/to/Puma
+export LISADIR=/path/to/Lisa
+export ACFDIR=/path/to/Acf
+export ACFSLNDIR=/path/to/AcfSln
+export AGENTINODIR=/path/to/Agentino
 ```
 
-### Authentication for Private Repositories
-
-Some dependencies are in private repositories. Configure SSH or Personal Access Token:
-
-**SSH Method (Recommended):**
-```bash
-git config --global url."git@github.com:".insteadOf "https://github.com/"
-ssh-add ~/.ssh/id_rsa
+On Windows:
+```cmd
+set IMTCOREDIR=C:\path\to\ImtCore
+set PUMADIR=C:\path\to\Puma
+set LISADIR=C:\path\to\Lisa
+set ACFDIR=C:\path\to\Acf
+set ACFSLNDIR=C:\path\to\AcfSln
+set AGENTINODIR=C:\path\to\Agentino
 ```
-
-**Personal Access Token:**
-```bash
-git config --global credential.helper store
-```
-
-For more details, see [3rdParty/README.md](3rdParty/README.md).
 
 ## Development
 
@@ -207,7 +195,64 @@ ProLife follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 - Release candidates: `v2.1.0-rc1`
 - Beta releases: `v2.1.0-beta1`
 
-See [RELEASE_STRATEGY.md](RELEASE_STRATEGY.md) for the complete release process.
+### 🚀 ProLife Release App (GitHub Workflow)
+
+**NEW!** Use the automated GitHub workflow for streamlined release management:
+
+**How to use:**
+1. Go to **Actions** → **App Dispatch Release**
+2. Click **Run workflow**
+3. Fill in parameters:
+   - Release version (e.g., `v2.1.0`)
+   - Dependency versions
+   - Dry run (test first, then real release)
+4. Click **Run workflow**
+
+The workflow will:
+- ✅ **Generate** CHANGELOG
+- ✅ **Update** version in CMakeLists.txt
+- ✅ **Create** commit, tag, and GitHub Release
+- ✅ **Build** and upload artifacts
+
+See **[RELEASE_APP_GUIDE.md](RELEASE_APP_GUIDE.md)** for detailed instructions.
+
+### Quick Release Preparation (Command Line)
+
+For Russian speakers: См. **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** для подробной инструкции.
+
+Use the automated tools for quick release preparation:
+
+```bash
+# One-command release preparation
+./tools/quick-release.sh 2.1.0
+
+# Or step-by-step validation
+./tools/validate-release.sh validate    # Check current state
+```
+
+### Release Preparation Tools
+
+Several scripts are provided to simplify release management:
+
+**Automated Tools** (recommended):
+- `tools/quick-release.sh` - One-command automated release preparation
+- `tools/validate-release.sh` - Validation and automation toolkit
+
+**Manual Tools**:
+- `prepare-release.sh` (Linux/macOS) - Manual release management
+- `prepare-release.bat` (Windows) - Manual release management
+
+Key features:
+- Create release branches automatically
+- Manage dependency versions
+- Validate release readiness
+- Generate version reports
+
+See:
+- **[tools/README.md](tools/README.md)** - Detailed tool documentation
+- **[RELEASE_GUIDE.md](RELEASE_GUIDE.md)** - Complete release guide (English)
+- **[RELEASE_GUIDE_RU.md](RELEASE_GUIDE_RU.md)** - Полное руководство (Russian)
+- **[RELEASE_STRATEGY.md](RELEASE_STRATEGY.md)** - Release strategy and process
 
 ## Contributing
 
@@ -270,7 +315,7 @@ ProLife is built on the following open-source and proprietary components:
 
 - Qt Framework
 - CMake
-- And various other libraries (see individual submodules)
+- And various other libraries (see dependency repositories: Acf, AcfSln, ImtCore, Lisa, Puma, Agentino)
 
 ---
 

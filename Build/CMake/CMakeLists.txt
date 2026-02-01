@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(ProLifeAll)
+# Version placeholder - updated by release workflow
+project(ProLifeAll VERSION 1.0.1)
 
 if(NOT DEFINED QT_VERSION_MAJOR)
 	find_package(QT NAMES Qt6 Qt5 COMPONENTS Core)
-	find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core Widgets QuickWidgets Core Gui Xml Network Svg Sql WebSockets Qml Concurrent QuickControls2 REQUIRED)
+	find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core Widgets QuickWidgets Core Gui Xml Network Svg Sql WebSockets Qml Concurrent QuickControls2 PrintSupport REQUIRED)
 	if(QT_VERSION_MAJOR EQUAL 6)
 		find_package("Qt${QT_VERSION_MAJOR}" COMPONENTS Core5Compat REQUIRED)
 	endif()
@@ -21,58 +22,50 @@ else()
 endif()
 
 # Configure paths to dependent repositories
-# Priority: 1. CMake variable, 2. Environment variable, 3. Submodule path
+# Priority: 1. CMake variable, 2. Environment variable
+# Dependencies must be provided via environment variables or CMake variables
 
 if(NOT DEFINED IMTCOREDIR)
 	set(IMTCOREDIR "$ENV{IMTCOREDIR}")
 	if("${IMTCOREDIR}" STREQUAL "")
-		get_filename_component(IMTCOREDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/ImtCore" ABSOLUTE)
-		message(STATUS "IMTCOREDIR not set, using submodule: ${IMTCOREDIR}")
+		message(FATAL_ERROR "IMTCOREDIR not set. Please set IMTCOREDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED PUMADIR)
 	set(PUMADIR "$ENV{PUMADIR}")
 	if("${PUMADIR}" STREQUAL "")
-		get_filename_component(PUMADIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Puma" ABSOLUTE)
-		message(STATUS "PUMADIR not set, using submodule: ${PUMADIR}")
+		message(FATAL_ERROR "PUMADIR not set. Please set PUMADIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED LISADIR)
 	set(LISADIR "$ENV{LISADIR}")
 	if("${LISADIR}" STREQUAL "")
-		get_filename_component(LISADIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Lisa" ABSOLUTE)
-		message(STATUS "LISADIR not set, using submodule: ${LISADIR}")
+		message(FATAL_ERROR "LISADIR not set. Please set LISADIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED ACFDIR)
 	set(ACFDIR "$ENV{ACFDIR}")
 	if("${ACFDIR}" STREQUAL "")
-		get_filename_component(ACFDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Acf" ABSOLUTE)
-		message(STATUS "ACFDIR not set, using submodule: ${ACFDIR}")
+		message(FATAL_ERROR "ACFDIR not set. Please set ACFDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED ACFSLNDIR)
 	set(ACFSLNDIR "$ENV{ACFSLNDIR}")
 	if("${ACFSLNDIR}" STREQUAL "")
-		get_filename_component(ACFSLNDIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/AcfSln" ABSOLUTE)
-		message(STATUS "ACFSLNDIR not set, using submodule: ${ACFSLNDIR}")
-	endif()
-endif()
-
-if(NOT DEFINED AGENTINODIR)
-	set(AGENTINODIR "$ENV{AGENTINODIR}")
-	if("${AGENTINODIR}" STREQUAL "")
-		get_filename_component(AGENTINODIR "${CMAKE_CURRENT_LIST_DIR}/../../3rdParty/Agentino" ABSOLUTE)
-		message(STATUS "AGENTINODIR not set, using submodule: ${AGENTINODIR}")
+		message(FATAL_ERROR "ACFSLNDIR not set. Please set ACFSLNDIR environment variable or CMake variable.")
 	endif()
 endif()
 
 if(NOT DEFINED PROLIFEDIR)
 	set(PROLIFEDIR "$ENV{PROLIFEDIR}")
+	if("${PROLIFEDIR}" STREQUAL "")
+		get_filename_component(PROLIFEDIR "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+		message(STATUS "PROLIFEDIR not set, using: ${PROLIFEDIR}")
+	endif()
 endif()
 
 if(NOT DEFINED IMTCOREDIR_BUILD)
@@ -89,10 +82,13 @@ imt_core_upgrade_partitura("${CMAKE_CURRENT_LIST_DIR}/../..")
 get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
 get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
 
-set(AUX_INCLUDE_DIR "${BUILDDIR}/ProLife/AuxInclude/${TARGETNAME}/GeneratedFiles")
+set(AUX_INCLUDE_DIR "${PROLIFEDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles")
 
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
+
+# Dependencies are provided via environment variables
+message(STATUS "Using libraries from environment variables")
 
 # Sdl
 include("${CMAKE_CURRENT_LIST_DIR}/../../../ImtCore/Config/CMake/ImtCoreSdlCustomConfig.cmake")
