@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5445" Description="ACF"/>
-            <Version Id="1" Number="2256" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5715" Description="ACF"/>
+            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -313,6 +313,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/OrderSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PersonalAccessTokenManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/PersonalAccessTokenManager"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaRepositories/ProductRepository"/>
@@ -906,6 +909,24 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="PersonalAccessTokenSqlRepository" PackageId="ImtAuthVoce" ComponentId="PersonalAccessTokenSqlRepository">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                     <Element Id="SoftwareSqlRepository" PackageId="ProLifeVoce" ComponentId="SoftwareSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -979,6 +1000,8 @@
                     <Component ExportedId="DeviceSqlRepository" ComponentId="DeviceSqlRepository"/>
                     <Component ExportedId="OrderDatabaseDelegate" ComponentId="OrderSqlRepository/OrderDatabaseDelegate"/>
                     <Component ExportedId="OrderSqlRepository" ComponentId="OrderSqlRepository"/>
+                    <Component ExportedId="PersonalAccessTokenDatabaseDelegate" ComponentId="PersonalAccessTokenSqlRepository/PersonalAccessTokenDatabaseDelegate"/>
+                    <Component ExportedId="PersonalAccessTokenRepository" ComponentId="PersonalAccessTokenSqlRepository/PersonalAccessTokenRepository"/>
                     <Component ExportedId="SoftwareProductDatabaseDelegate" ComponentId="SoftwareSqlRepository/SoftwareProductDatabaseDelegate"/>
                     <Component ExportedId="SoftwareSqlRepository" ComponentId="SoftwareSqlRepository"/>
                     <Component ExportedId="SoftwareTransferDatabaseDelegate" ComponentId="SoftwareTransferSqlRepository/SqlDatabaseDocumentDelegate"/>

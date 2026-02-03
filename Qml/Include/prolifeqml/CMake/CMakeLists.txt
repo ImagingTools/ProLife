@@ -7,6 +7,10 @@ if(QT_VERSION_MAJOR EQUAL 6)
 	target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif()
 
+if(NOT DEFINED PYTHONEXE)
+	set(PYTHONEXE "$ENV{PYTHONEXE}")
+endif()
+
 set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
 
 # copy prolife qml from to
