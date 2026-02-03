@@ -104,7 +104,7 @@ async function login(page, username, password) {
   await clickAt(page, 700, 600); // Click 'Login' button
 }
 
-async function waitForDomStability(page, options = {}) {
+async function waitForVisualStability(page, options = {}) {
   const {
     idleTime = 500,
     timeout = 5000,
@@ -112,17 +112,38 @@ async function waitForDomStability(page, options = {}) {
   } = options;
 
   const startTime = Date.now();
-  let lastHtml = '';
+  
+  // First, wait for basic page load
+  try {
+    await page.waitForLoadState('domcontentloaded', { timeout: 2000 });
+  } catch (e) {
+    // Continue even if this times out
+  }
+
+  // Wait for network to be mostly idle
+  try {
+    await page.waitForLoadState('networkidle', { timeout: 2000 });
+  } catch (e) {
+    // Continue even if this times out
+  }
+
+  // Now check for visual stability using screenshots
+  let lastScreenshot = null;
   let stableSince = Date.now();
 
   while (Date.now() - startTime < timeout) {
     try {
-      const currentHtml = await page.evaluate(() => document.documentElement.outerHTML);
+      // Take a small screenshot for comparison (just a hash would be ideal, but we'll use full screenshot)
+      const currentScreenshot = await page.screenshot({ type: 'png' });
 
-      if (currentHtml !== lastHtml) {
-        lastHtml = currentHtml;
+      if (!lastScreenshot) {
+        lastScreenshot = currentScreenshot;
+        stableSince = Date.now();
+      } else if (!currentScreenshot.equals(lastScreenshot)) {
+        lastScreenshot = currentScreenshot;
         stableSince = Date.now();
       } else if (Date.now() - stableSince >= idleTime) {
+        // Visual content has been stable for idleTime
         return;
       }
 
@@ -130,13 +151,18 @@ async function waitForDomStability(page, options = {}) {
     } catch (e) {
       if (e.message.includes('Execution context was destroyed')) {
         await page.waitForLoadState('domcontentloaded');
-        lastHtml = '';
+        lastScreenshot = null;
         stableSince = Date.now();
         continue;
       }
       throw e;
     }
   }
+}
+
+async function waitForDomStability(page, options = {}) {
+  // Redirect to visual stability check
+  await waitForVisualStability(page, options);
 }
 
 async function waitForPageStability(page, options = {}) {
