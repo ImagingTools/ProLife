@@ -84,53 +84,10 @@ const wheelScroll = async (page, deltaY) => {
 };
 
 const checkScreenshot = async (page, filename, maskParams) => {
+  await addMask(page, maskParams);
   await waitForPageStability(page);
-  
-  const screenshotOptions = { 
-    fullPage: true, 
-    threshold: 0.05, 
-    maxDiffPixelRatio: 0 
-  };
-  
-  // Add mask if maskParams provided
-  if (maskParams) {
-    // If maskParams has a path, create a locator-based mask
-    if (maskParams.path) {
-      const locator = page.locator(createStrPath(maskParams.path));
-      screenshotOptions.mask = [locator];
-    }
-    // If maskParams has coordinates, inject CSS to create a visual mask
-    else if (maskParams.x !== undefined) {
-      const { x, y, width, height } = maskParams;
-      const pad = maskParams.padding || 0;
-      
-      const maskX = x - pad;
-      const maskY = y - pad;
-      const maskWidth = width + pad * 2;
-      const maskHeight = height + pad * 2;
-      
-      // Inject a style tag to create a pseudo-mask
-      // Note: This mask persists until page navigation, which is acceptable
-      // as tests typically reload pages between scenarios
-      await page.addStyleTag({
-        content: `
-          body::before {
-            content: '';
-            position: fixed;
-            top: ${maskY}px;
-            left: ${maskX}px;
-            width: ${maskWidth}px;
-            height: ${maskHeight}px;
-            background-color: #000000;
-            z-index: 9999;
-            pointer-events: none;
-          }
-        `
-      });
-    }
-  }
-  
-  await expect(page).toHaveScreenshot(filename, screenshotOptions);
+  await expect(page).toHaveScreenshot(filename, { fullPage: true, threshold: 0.05, maxDiffPixelRatio: 0});
+  await removeMask(page);
 };
 
 async function login(page, username, password) {
@@ -147,7 +104,7 @@ async function login(page, username, password) {
   await clickAt(page, 700, 600); // Click 'Login' button
 }
 
-async function waitForVisualStability(page, options = {}) {
+async function waitForDomStability(page, options = {}) {
   const {
     idleTime = 500,
     timeout = 5000,
@@ -155,38 +112,17 @@ async function waitForVisualStability(page, options = {}) {
   } = options;
 
   const startTime = Date.now();
-  
-  // First, wait for basic page load
-  try {
-    await page.waitForLoadState('domcontentloaded', { timeout: 2000 });
-  } catch (e) {
-    // Continue even if this times out
-  }
-
-  // Wait for network to be mostly idle
-  try {
-    await page.waitForLoadState('networkidle', { timeout: 2000 });
-  } catch (e) {
-    // Continue even if this times out
-  }
-
-  // Now check for visual stability using screenshots
-  let lastScreenshot = null;
+  let lastHtml = '';
   let stableSince = Date.now();
 
   while (Date.now() - startTime < timeout) {
     try {
-      // Take a screenshot for comparison
-      const currentScreenshot = await page.screenshot({ type: 'png' });
+      const currentHtml = await page.evaluate(() => document.documentElement.outerHTML);
 
-      if (!lastScreenshot) {
-        lastScreenshot = currentScreenshot;
-        stableSince = Date.now();
-      } else if (Buffer.compare(currentScreenshot, lastScreenshot) !== 0) {
-        lastScreenshot = currentScreenshot;
+      if (currentHtml !== lastHtml) {
+        lastHtml = currentHtml;
         stableSince = Date.now();
       } else if (Date.now() - stableSince >= idleTime) {
-        // Visual content has been stable for idleTime
         return;
       }
 
@@ -194,18 +130,13 @@ async function waitForVisualStability(page, options = {}) {
     } catch (e) {
       if (e.message.includes('Execution context was destroyed')) {
         await page.waitForLoadState('domcontentloaded');
-        lastScreenshot = null;
+        lastHtml = '';
         stableSince = Date.now();
         continue;
       }
       throw e;
     }
   }
-}
-
-async function waitForDomStability(page, options = {}) {
-  // Redirect to visual stability check
-  await waitForVisualStability(page, options);
 }
 
 async function waitForPageStability(page, options = {}) {
@@ -220,5 +151,74 @@ async function waitForPageStability(page, options = {}) {
     checkInterval: 100
   });
 }
+
+const addMask = async (page, maskParams) => {
+  if (!maskParams) return;
+
+  let rect = null;
+
+  // 1. Если передан path — находим элемент и получаем boundingBox
+  if (maskParams.path) {
+    const locator = page.locator(createStrPath(maskParams.path));
+    await locator.waitFor({ timeout: 3000 });
+
+    const element = await locator.elementHandle();
+    if (!element)
+      throw new Error("Element not found for mask path: " + maskParams.path.join(" > "));
+
+    rect = await element.boundingBox();
+    if (!rect)
+      throw new Error("boundingBox is null for mask element");
+  }
+
+  // 2. Если переданы x,y,width,height — используем их
+  if (!rect && maskParams.x !== undefined) {
+    rect = {
+      x: maskParams.x,
+      y: maskParams.y,
+      width: maskParams.width,
+      height: maskParams.height
+    };
+  }
+
+  if (!rect) {
+    throw new Error("Mask must have path or coordinates");
+  }
+
+  // 3. Padding (если указан)
+  const pad = maskParams.padding || 0;
+
+  const x = rect.x - pad;
+  const y = rect.y - pad;
+  const width = rect.width + pad * 2;
+  const height = rect.height + pad * 2;
+
+  // 4. Рисуем маску
+  await page.evaluate(({ x, y, width, height }) => {
+    const mask = document.createElement('div');
+    Object.assign(mask.style, {
+      position: 'fixed',
+      top: y + 'px',
+      left: x + 'px',
+      width: width + 'px',
+      height: height + 'px',
+      backgroundColor: '#000000',
+      zIndex: '9999',
+      pointerEvents: 'none',
+    });
+    mask.setAttribute('data-mask', 'true');
+    document.body.appendChild(mask);
+  }, { x, y, width, height });
+
+  await page.waitForFunction(() => !!document.querySelector('div[data-mask="true"]'));
+};
+
+
+const removeMask = async (page) => {
+  await page.evaluate(() => {
+    const mask = document.querySelector('div[data-mask="true"]');
+    if (mask) mask.remove();
+  });
+};
 
 module.exports = { delay, reloadPage, clickAt, checkScreenshot, login, wheelScroll, waitForPageStability, clickOnPage, clickOnCommand, selectComboBox, fillTextInput, clickOnButton};
