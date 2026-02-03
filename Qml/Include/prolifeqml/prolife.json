@@ -1,0 +1,12 @@
+{
+    "includes": [
+        "${IMTCOREDIR}\\Qml\\web\\imtcore.json"
+    ],
+    "dirs": [
+        "${PROLIFEDIR}\\AuxInclude\\Qt6_VC17_x64\\GeneratedFiles\\prolifesdl\\SDL\\1.0\\QML\\prolifeAccountsSdl",
+        "${PROLIFEDIR}\\AuxInclude\\Qt6_VC17_x64\\GeneratedFiles\\prolifesdl\\SDL\\1.0\\QML\\prolifeLicensesSdl",
+        "${PROLIFEDIR}\\AuxInclude\\Qt6_VC17_x64\\GeneratedFiles\\prolifesdl\\SDL\\1.0\\QML\\prolifeOrdersSdl",
+        "${PROLIFEDIR}\\AuxInclude\\Qt6_VC17_x64\\GeneratedFiles\\prolifesdl\\SDL\\1.0\\QML\\prolifeSensorsSdl",
+        "${PROLIFEDIR}\\AuxInclude\\Qt6_VC17_x64\\GeneratedFiles\\prolifesdl\\SDL\\1.0\\QML\\prolifeWorkspaceSdl"
+    ]
+}

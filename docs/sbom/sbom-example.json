@@ -1,0 +1,357 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-01-19T13:00:00Z",
+    "tools": [
+      {
+        "vendor": "ImagingTools",
+        "name": "ProLife SBOM Generator",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "prolife@1.0.0",
+      "name": "ProLife",
+      "version": "1.0.0",
+      "description": "ProLife Medical Imaging and Laboratory Information Management System",
+      "supplier": {
+        "name": "ImagingTools GmbH",
+        "url": ["https://www.imagingtools.com"],
+        "contact": [
+          {
+            "name": "Security Team",
+            "email": "security@imagingtools.com"
+          }
+        ]
+      },
+      "licenses": [
+        {
+          "license": {
+            "name": "ImagingTools Commercial License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/ImagingTools/ProLife"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/ProLife.git"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "https://github.com/ImagingTools/ProLife/issues"
+        },
+        {
+          "type": "documentation",
+          "url": "https://github.com/ImagingTools/ProLife/tree/main/docs"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "eu:cra:compliant",
+        "value": "true"
+      },
+      {
+        "name": "eu:cra:version",
+        "value": "2024/2847"
+      },
+      {
+        "name": "build:commit",
+        "value": "[COMMIT_SHA]"
+      },
+      {
+        "name": "build:date",
+        "value": "2026-01-19"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "qt@6.5.0",
+      "name": "Qt Framework",
+      "version": "6.5.0",
+      "description": "Cross-platform application framework",
+      "supplier": {
+        "name": "The Qt Company"
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-only"
+          }
+        }
+      ],
+      "purl": "pkg:generic/qt@6.5.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://www.qt.io"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "cmake@3.26.0",
+      "name": "CMake",
+      "version": "3.26.0",
+      "description": "Cross-platform build system",
+      "supplier": {
+        "name": "Kitware"
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:generic/cmake@3.26.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://cmake.org"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "openssl@3.0.0",
+      "name": "OpenSSL",
+      "version": "3.0.0",
+      "description": "Cryptography and SSL/TLS toolkit",
+      "supplier": {
+        "name": "OpenSSL Software Foundation"
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:generic/openssl@3.0.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://www.openssl.org"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "nginx@1.25.0",
+      "name": "nginx",
+      "version": "1.25.0",
+      "description": "HTTP and reverse proxy server",
+      "supplier": {
+        "name": "F5, Inc."
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:generic/nginx@1.25.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://nginx.org"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "playwright@1.52.0",
+      "name": "Playwright",
+      "version": "1.52.0",
+      "description": "Browser automation framework for testing",
+      "supplier": {
+        "name": "Microsoft Corporation"
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40playwright/test@1.52.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://playwright.dev"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "acf@1.0.0",
+      "name": "Advanced Computing Framework (Acf)",
+      "version": "1.0.0",
+      "description": "Core computing framework for ProLife",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Acf"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "acfsln@1.0.0",
+      "name": "ACF Solution (AcfSln)",
+      "version": "1.0.0",
+      "description": "ACF solution files and configurations",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/AcfSln"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "imtcore@1.0.0",
+      "name": "Imaging Tools Core (ImtCore)",
+      "version": "1.0.0",
+      "description": "Core imaging library",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/ImtCore"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "lisa@1.0.0",
+      "name": "Lisa",
+      "version": "1.0.0",
+      "description": "Lisa application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Lisa"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "puma@1.0.0",
+      "name": "Puma",
+      "version": "1.0.0",
+      "description": "Puma application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Puma"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "agentino@1.0.0",
+      "name": "Agentino",
+      "version": "1.0.0",
+      "description": "Agentino application components",
+      "supplier": {
+        "name": "ImagingTools GmbH"
+      },
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ImagingTools/Agentino"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "prolife@1.0.0",
+      "dependsOn": [
+        "qt@6.5.0",
+        "cmake@3.26.0",
+        "openssl@3.0.0",
+        "nginx@1.25.0",
+        "playwright@1.52.0",
+        "acf@1.0.0",
+        "acfsln@1.0.0",
+        "imtcore@1.0.0",
+        "lisa@1.0.0",
+        "puma@1.0.0",
+        "agentino@1.0.0"
+      ]
+    },
+    {
+      "ref": "qt@6.5.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "cmake@3.26.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "openssl@3.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "nginx@1.25.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "playwright@1.52.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "acf@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "acfsln@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "imtcore@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "lisa@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "puma@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "agentino@1.0.0",
+      "dependsOn": []
+    }
+  ],
+  "vulnerabilities": []
+}
