@@ -99,7 +99,7 @@ const checkScreenshot = async (page, filename, maskParams) => {
       const locator = page.locator(createStrPath(maskParams.path));
       screenshotOptions.mask = [locator];
     }
-    // If maskParams has coordinates, use a different approach
+    // If maskParams has coordinates, inject CSS to create a visual mask
     else if (maskParams.x !== undefined) {
       const { x, y, width, height } = maskParams;
       const pad = maskParams.padding || 0;
@@ -110,6 +110,8 @@ const checkScreenshot = async (page, filename, maskParams) => {
       const maskHeight = height + pad * 2;
       
       // Inject a style tag to create a pseudo-mask
+      // Note: This mask persists until page navigation, which is acceptable
+      // as tests typically reload pages between scenarios
       await page.addStyleTag({
         content: `
           body::before {
