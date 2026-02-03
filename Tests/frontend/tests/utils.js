@@ -125,20 +125,10 @@ const checkScreenshot = async (page, filename, maskParams) => {
           }
         `
       });
-      
-      // Wait a bit for the style to be applied
-      await page.waitForTimeout(100);
     }
   }
   
   await expect(page).toHaveScreenshot(filename, screenshotOptions);
-  
-  // Clean up coordinate-based mask if it was added
-  if (maskParams && maskParams.x !== undefined) {
-    // Remove the injected style by reloading styles or by using evaluate
-    // Since we want to avoid page.evaluate, we'll just let it be - it's a pseudo-element
-    // that will be gone on next navigation
-  }
 };
 
 async function login(page, username, password) {
@@ -184,13 +174,13 @@ async function waitForVisualStability(page, options = {}) {
 
   while (Date.now() - startTime < timeout) {
     try {
-      // Take a small screenshot for comparison (just a hash would be ideal, but we'll use full screenshot)
+      // Take a screenshot for comparison
       const currentScreenshot = await page.screenshot({ type: 'png' });
 
       if (!lastScreenshot) {
         lastScreenshot = currentScreenshot;
         stableSince = Date.now();
-      } else if (!currentScreenshot.equals(lastScreenshot)) {
+      } else if (Buffer.compare(currentScreenshot, lastScreenshot) !== 0) {
         lastScreenshot = currentScreenshot;
         stableSince = Date.now();
       } else if (Date.now() - stableSince >= idleTime) {
