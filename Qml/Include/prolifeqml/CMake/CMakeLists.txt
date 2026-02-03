@@ -7,6 +7,10 @@ if(QT_VERSION_MAJOR EQUAL 6)
 	target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif()
 
+if(NOT DEFINED PYTHONEXE)
+	set(PYTHONEXE "$ENV{PYTHONEXE}")
+endif()
+
 set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
 
 # copy prolife qml from to
@@ -40,7 +44,7 @@ list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
-
+	message("PYTHONEXE ${PYTHONEXE}")
 	jqml_compile_web2("${webdirs}" "${buildwebdir}" "${resname}")
 endif()
 
