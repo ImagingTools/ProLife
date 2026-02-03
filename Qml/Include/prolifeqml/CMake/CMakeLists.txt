@@ -40,7 +40,11 @@ list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
-
+	set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
+	set(appicon "../Icons/ProLifeIcon.svg")
+	set(dataroot "/ProLife/Views/")
+	set(startqml "${PROLIFEDIR}/Qml/Include/prolifeqml/ProLifeWeb.qml")
 	jqml_compile_web2("${webdirs}" "${buildwebdir}" "${resname}")
+	# jq_compile_web("${webdirs}", "${buildwebdir}", "${resname}", "${inputjs}", "${appicon}", "${dataroot}", "${startqml}")
 endif()
 
