@@ -55,10 +55,12 @@ function createStrPath(path) {
 }
 
 const fillTextInput = async (page, text, path) => {
-  // const textInput = await page.$(createStrPath(path) + ' [objectName="TextInput"] input')
   const textInput = page.locator(createStrPath(path) + ' [objectName="TextInput"][visible]').first();
   if (textInput) {
     const rect = await textInput.boundingBox()
+    if (!rect) {
+      throw new Error("boundingBox is null for text input at path: " + path.join(" > "));
+    }
     await clickAt(page, rect.x + rect.width / 2, rect.y + rect.height / 2);
     await page.keyboard.type(text);
   }  
@@ -90,18 +92,42 @@ const checkScreenshot = async (page, filename, maskParams) => {
   await removeMask(page);
 };
 
-async function login(page, username, password) {
+/**
+ * Login function - uses hardcoded coordinates as a fallback
+ * NOTE: These coordinates are specific to the default ProLife login screen
+ * For better reliability, consider using clickOnElement with objectNames instead
+ * @param {Page} page - Playwright page object
+ * @param {string} username - Username to login with
+ * @param {string} password - Password to login with
+ * @param {Object} options - Optional coordinates override
+ * @param {number} options.loginX - X coordinate for login field (default: 700)
+ * @param {number} options.loginY - Y coordinate for login field (default: 386)
+ * @param {number} options.passwordX - X coordinate for password field (default: 685)
+ * @param {number} options.passwordY - Y coordinate for password field (default: 455)
+ * @param {number} options.buttonX - X coordinate for login button (default: 700)
+ * @param {number} options.buttonY - Y coordinate for login button (default: 600)
+ */
+async function login(page, username, password, options = {}) {
+  const {
+    loginX = 700,
+    loginY = 386,
+    passwordX = 685,
+    passwordY = 455,
+    buttonX = 700,
+    buttonY = 600
+  } = options;
+
   await reloadPage(page);
 
-  await clickAt(page, 700, 386); // Click 'Login' input field
+  await clickAt(page, loginX, loginY); // Click 'Login' input field
   await page.keyboard.type(username);
 
-  await clickAt(page, 685, 455); // Click 'Password' input field
+  await clickAt(page, passwordX, passwordY); // Click 'Password' input field
   await page.keyboard.type(password);
 
   await delay(500);
 
-  await clickAt(page, 700, 600); // Click 'Login' button
+  await clickAt(page, buttonX, buttonY); // Click 'Login' button
 }
 
 async function waitForDomStability(page, options = {}) {

@@ -8,6 +8,7 @@ const { chromium } = require('@playwright/test');
  * @param {string} options.password - Password for login (default: '1')
  * @param {Object} options.viewport - Viewport size (default: { width: 1400, height: 800 })
  * @param {string} options.storageStatePath - Path to save storage state (default: './storageState.json')
+ * @param {Object} options.loginCoordinates - Optional login coordinates override
  * @returns {Function} Global setup function
  */
 function createGlobalSetup(options = {}) {
@@ -16,7 +17,8 @@ function createGlobalSetup(options = {}) {
     username = 'su',
     password = '1',
     viewport = { width: 1400, height: 800 },
-    storageStatePath = './storageState.json'
+    storageStatePath = './storageState.json',
+    loginCoordinates = {}
   } = options;
 
   return async () => {
@@ -33,7 +35,7 @@ function createGlobalSetup(options = {}) {
     await page.goto(baseURL);
     await waitForPageStability(page);
 
-    await login(page, username, password);
+    await login(page, username, password, loginCoordinates);
 
     await waitForPageStability(page);
 
