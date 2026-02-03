@@ -109,6 +109,15 @@ __pycache__/
 .eggs/
 *.egg
 
+# Node.js artifacts (frontend tests)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.npm/
+.eslintcache
+
 # IDE and Editor files
 .vscode/
 .idea/
