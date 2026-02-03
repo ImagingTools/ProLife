@@ -1,3 +1,7 @@
+// DEPRECATED: Этот файл будет удален после переноса утилит в ImtCore
+// Используйте @imtcore/playwright-utils вместо этого файла
+// См. ../../ImtCore-TestUtils/playwright-utils для нового расположения кода
+
 const {expect } = require('@playwright/test');
 const delay = (time = 5000) => new Promise(resolve => setTimeout(resolve, time));
 

@@ -1,24 +1,12 @@
-const { chromium } = require('@playwright/test');
-const { waitForPageStability, delay, login} = require('./tests/utils');
+// Используем утилиты из общего пакета ImtCore
+// TODO: После переноса в ImtCore заменить путь на: '@imtcore/playwright-utils'
+const { createGlobalSetup } = require('../../ImtCore-TestUtils/playwright-utils');
 
-module.exports = async () => {
-  const browser = await chromium.launch();
-
-  const context = await browser.newContext({
-    viewport: { width: 1400, height: 800 },  // Указываем размер экрана
-  });
-
-  const page = await context.newPage();
-
-  await page.goto('http://localhost:7778');
-  await waitForPageStability(page)
-
-  await login(page, "su", "1")
-
-  await waitForPageStability(page)
-
-  // Сохраняем состояние
-  await context.storageState({ path: './storageState.json' });
-
-  await browser.close();
-};
+// Создаем global setup с настройками по умолчанию
+module.exports = createGlobalSetup({
+  baseURL: 'http://localhost:7778',
+  username: 'su',
+  password: '1',
+  viewport: { width: 1400, height: 800 },
+  storageStatePath: './storageState.json'
+});

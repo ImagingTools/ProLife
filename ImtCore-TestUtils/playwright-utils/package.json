@@ -1,0 +1,20 @@
+{
+  "name": "@imtcore/playwright-utils",
+  "version": "1.0.0",
+  "description": "Common Playwright testing utilities for ImtCore projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test command\" && exit 1"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "utilities",
+    "imtcore"
+  ],
+  "author": "ImagingTools",
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}
