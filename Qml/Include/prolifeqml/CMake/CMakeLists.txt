@@ -41,14 +41,33 @@ list(APPEND webdirs ${buildwebdir}/src/prolifeWorkspaceSdl)
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 
+option(USE_NEW_WEB "Use new web compilation (jq_compile_web)" OFF)
+
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
-	set(resname "prolife")
-	set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
-	set(appicon "../Icons/ProLifeIcon.svg")
-	set(dataroot "/ProLife/Views/")
-	set(startqml "${PROLIFEDIR}/Qml/Include/prolifeqml/ProLifeWeb.qml")
-	jqml_compile_web2("${webdirs}" "${buildwebdir}" "${resname}")
-	# jq_compile_web("${webdirs}", "${buildwebdir}", "${resname}", "${inputjs}", "${appicon}", "${dataroot}", "${startqml}")
+
+	if(USE_NEW_WEB)
+		set(resname "prolife")
+		set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
+		set(appicon "../Icons/ProLifeIcon.svg")
+		set(dataroot "/ProLife/Views/")
+		set(startqml "${PROLIFEDIR}/Qml/Include/prolifeqml/ProLifeWeb.qml")
+		
+		jq_compile_web(
+			"${webdirs}"
+			"${buildwebdir}"
+			"${resname}"
+			"${inputjs}"
+			"${appicon}"
+			"${dataroot}"
+			"${startqml}"
+		)
+	else()
+		jqml_compile_web2(
+			"${webdirs}"
+			"${buildwebdir}"
+			"${resname}"
+		)
+	endif()
 endif()
 
