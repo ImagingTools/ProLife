@@ -45,9 +45,8 @@ option(USE_NEW_WEB "Use new web compilation (jq_compile_web)" OFF)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
-
+	set(resname "prolife")
 	if(USE_NEW_WEB)
-		set(resname "prolife")
 		set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
 		set(appicon "../Icons/ProLifeIcon.svg")
 		set(dataroot "/ProLife/Views/")
