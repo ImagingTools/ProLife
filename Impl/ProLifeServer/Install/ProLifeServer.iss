@@ -46,7 +46,7 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser
+Filename: "{app}\ProLifeServerConfigurator.exe"; Flags: runascurrentuser skipifsilent;
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent;
 
 [UninstallRun]
