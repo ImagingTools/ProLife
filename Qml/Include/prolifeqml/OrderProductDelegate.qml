@@ -67,6 +67,13 @@ ElementView {
 			text: qsTr("New");
 			visible: root.isNew
 		}
+
+		StickerView {
+			anchors.verticalCenter: parent.verticalCenter;
+			color: "orange"
+			text: qsTr("Multi: ") + root.productCount + " " + qsTr("instances")
+			visible: root.isMultiple
+		}
 	}
 	
 	property bool readOnly: false;
@@ -75,6 +82,10 @@ ElementView {
 	property string categoryId: productItem ? productItem.m_categoryId : "";
 	
 	property bool productInUse: softwareCommandsModel.completed && root.inUse;
+
+	// Only for software product
+	property bool isMultiple: productItem ? productItem.m_isMultiple : false
+	property int productCount: productItem ? productItem.m_productCount : false
 	
 	signal removed();
 	signal edited();

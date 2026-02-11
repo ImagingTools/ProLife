@@ -78,8 +78,8 @@ type DeviceData {
 type DeviceBindingData {
 	id: ID!
 	productUuid: ID
-	softwareIds: ID
 	project: String
+	softwareIds: [ID]
 }
 
 input DeviceDataInput {

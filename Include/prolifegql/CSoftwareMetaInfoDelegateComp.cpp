@@ -3,6 +3,7 @@
 
 // Qt includes
 #include <QJsonObject>
+#include <QJsonArray>
 
 // ImtCore includes
 #include <imtlic/IProductInstanceInfo.h>
@@ -34,8 +35,8 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	QString customerName = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 	representation["CustomerName"] = QString(customerName);
 	
-	QByteArray hardwareId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toByteArray();
-	representation["HardwareId"] = QString(hardwareId);
+	QJsonArray hardwareId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toJsonArray();
+	representation["HardwareId"] = hardwareId;
 	
 	QByteArray macAddress = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toByteArray();
 	representation["MacAddress"] = QString(macAddress);
@@ -69,6 +70,12 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 
 	bool isInternalUse = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_INTERNAL_USE).toBool();
 	representation["InternalUse"] = isInternalUse;
+
+	bool isMultiProduct = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_MULTI_PRODUCT).toBool();
+	representation["IsMultiProduct"] = isMultiProduct;
+
+	int productCount = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT).toInt();
+	representation["ProductCount"] = productCount;
 
 	return true;
 }
@@ -144,8 +151,12 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME, representation.value("ProductName"));
 	}
 
-	if (representation.contains("InternalUse")){
-		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_INTERNAL_USE, representation.value("InternalUse"));
+	if (representation.contains("IsMultiProduct")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_MULTI_PRODUCT, representation.value("IsMultiProduct"));
+	}
+
+	if (representation.contains("ProductCount")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT, representation.value("ProductCount"));
 	}
 
 	return true;

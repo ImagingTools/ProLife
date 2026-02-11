@@ -44,8 +44,12 @@ type OrderedProduct {
 	serialNumber: ID
 	inUse: Bool
 	isNew: Bool
-	expiration: String
 	macAddress: ID
+
+	# Only for software
+	expiration: String
+	isMultiple: Bool
+	productCount: Integer
 }
 
 type OrderData {

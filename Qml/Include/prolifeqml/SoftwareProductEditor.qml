@@ -26,7 +26,7 @@ ViewBase {
 	property int productIndex: -1;
 	
 	property OrderedProduct productItem: model ? model : null;
-	property alias instanceCount: spinBoxElementView.value
+	property int instanceCount: isMultipleLicenseSwitch.checked ? 1 : spinBoxElementView.value
 
 	function setReadOnly(readOnly){
 		serialNumberInput.readOnly = readOnly;
@@ -70,6 +70,11 @@ ViewBase {
 					let data = date.split("-");
 					expirationElementView.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
 				}
+			}
+
+			isMultipleLicenseSwitch.setChecked(productItem.m_isMultiple)
+			if (productItem.m_isMultiple){
+				spinBoxElementView.value = productItem.m_productCount
 			}
 		}
 		else{
@@ -123,8 +128,17 @@ ViewBase {
 			else{
 				productItem.m_expiration = "";
 			}
+
+			productItem.m_isMultiple = isMultipleLicenseSwitch.checked
+			if (productItem.m_isMultiple){
+				productItem.m_productCount = spinBoxElementView.value
+			}
+			else{
+				productItem.m_productCount = 1
+			}
 		}
 		else{
+			productItem.m_isMultiple = false
 			productItem.m_licenseUuid = "";
 			productItem.m_licenseId = "";
 			productItem.m_licenseName = "";
@@ -286,12 +300,30 @@ ViewBase {
 			width: parent.width;
 			visible: root.isNewSoftware;
 
+			SwitchElementView {
+				id: isMultipleLicenseSwitch
+				width: parent.width;
+				name: qsTr("Is Multiple");
+				visible: root.productIndex == -1 || root.isNewSoftware
+				
+				onCheckedChanged: {
+					root.doUpdateModel()
+				}
+				
+				Component.onCompleted: {
+					let canAddLicense = PermissionsController.checkPermission("AddLicense")
+					if (!canAddLicense){
+						isMultipleLicenseSwitch.visible = false
+					}
+				}
+			}
+
 			SpinBoxElementView {
 				id: spinBoxElementView
 				name: qsTr("Number")
-				description: qsTr("Max: ") + to
+				description: isMultipleLicenseSwitch.checked ? qsTr("Count of items in this product instance") : qsTr("Max: ") + to
 				from: 1
-				to: 10
+				to: isMultipleLicenseSwitch.checked ? 999999: 10
 				startValue: from
 				visible: root.productIndex == -1
 				onValueChanged: {

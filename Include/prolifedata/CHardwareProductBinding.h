@@ -19,6 +19,7 @@ public:
 	virtual void SetSoftwareIds(QByteArrayList softwareIds) override;
 	virtual bool Bind(const QByteArray& softwareId) override;
 	virtual bool Unbind(const QByteArray& softwareId) override;
+	virtual bool TransferAllLicenses(IHardwareProductBinding& productBinding) override;
 
 	// reimplemented (iser::ISerializable)
 	virtual bool Serialize(iser::IArchive& archive) override;

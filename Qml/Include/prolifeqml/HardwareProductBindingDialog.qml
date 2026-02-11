@@ -92,7 +92,7 @@ Dialog {
 				
 				usedLicensesTableElementView.table.height = tableHeight
 			}
-			
+
 			property DeviceBindingData bindingModel: null
 			property DeviceBindingData originalBindingModel: productEditorDialog.bindingModel
 			onOriginalBindingModelChanged: {
@@ -104,7 +104,7 @@ Dialog {
 			}
 
 			function updateGui(){
-				productComboBoxElementView.changeable = bindingModel.m_softwareIds === ""
+				productComboBoxElementView.changeable = !bindingModel.m_softwareIds.length > 0
 				productComboBoxElementView.currentIndex = -1
 				if (productComboBoxElementView.model){
 					for (let i = 0; i < productComboBoxElementView.model.getItemsCount(); i++){
@@ -177,16 +177,8 @@ Dialog {
 											return
 										}
 
-										let softwareId = usedLicensesTableElementView.table.elements.getData("id", selection[0])
-										let softwareIds = flickableContent.bindingModel.m_softwareIds.split(';')
-										softwareIds.indexOf(softwareId)
-
-										let index = softwareIds.indexOf(softwareId);
-										if (index > -1) {
-											softwareIds.splice(index, 1);
-										}
-
-										flickableContent.bindingModel.m_softwareIds = softwareIds.join(';')
+										flickableContent.bindingModel.m_softwareIds.splice(selection[0], 1)
+										flickableContent.bindingModel.modelChanged()
 
 										usedLicensesTableElementView.table.elements.removeItem(selection[0])
 										usedLicensesTableElementView.table.resetSelection()
@@ -223,6 +215,40 @@ Dialog {
 												return
 											}
 											unbindButton.setEnabled(selection.length > 0)
+										}
+										
+										function onHeadersChanged(){
+											target.setColumnContentById("isMultiple", isMultipleColumnDelegateComp)
+										}
+									}
+									
+									Component {
+										id: isMultipleColumnDelegateComp;
+										TableCellDelegateBase {
+											id: cellDelegate
+				
+											Image {
+												id: image;
+												anchors.verticalCenter: parent.verticalCenter;
+												anchors.left: parent.left;
+												anchors.leftMargin: Style.marginM;
+												width: Style.iconSizeM;
+												height: width;
+												source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
+												sourceSize.width: width;
+												sourceSize.height: height;
+											}
+				
+											onReused: {
+												if (!rowDelegate){
+													return
+												}
+				
+												if (rowIndex >= 0){
+													let isMultiple = cellDelegate.getValue();
+													image.visible = isMultiple;
+												}
+											}
 										}
 									}
 								}
@@ -273,14 +299,12 @@ Dialog {
 										usedLicensesTableElementView.table.resetSelection()
 										for (let i = 0; i < checkedIndexes.length; i++){
 											let index = checkedIndexes[i]
-	
-											let id = availableLicensesModel.getData("id", index)
-											if (flickableContent.bindingModel.m_softwareIds !== ""){
-												flickableContent.bindingModel.m_softwareIds += ";"
-											}
 
-											flickableContent.bindingModel.m_softwareIds += id
+											let softwareId = availableLicensesModel.getData("id", index)
 
+											flickableContent.bindingModel.m_softwareIds.push(softwareId)
+											flickableContent.bindingModel.modelChanged()
+											
 											let index2 = usedLicensesTableElementView.table.elements.insertNewItem()
 											usedLicensesTableElementView.table.elements.copyItemDataFromModel(index2, availableLicensesModel, index)
 										}
@@ -347,18 +371,22 @@ Dialog {
 								usedLicensesTableHeadersModel.setData("id", "serialNumber", index);
 								usedLicensesTableHeadersModel.setData("name", qsTr("Software-ID"), index);
 
+								index = usedLicensesTableHeadersModel.insertNewItem();
+								usedLicensesTableHeadersModel.setData("id", "isMultiple", index);
+								usedLicensesTableHeadersModel.setData("name", qsTr("Is Multiple"), index);
+
 								if (usedLicensesTableElementView.table){
 									usedLicensesTableElementView.table.headers = usedLicensesTableHeadersModel
 								}
 							}
 						}
 	
-						FieldFilter {
+						ArrayFieldFilter {
 							id: hardwareFilter
 							m_fieldId: "HardwareId"
-							m_filterValue: productEditorDialog.hardwareId
+							m_filterValues: [productEditorDialog.hardwareId]
 							m_filterValueType: "String"
-							m_filterOperations: ["Equal"]
+							m_filterOperations: ["ArrayHasAny"]
 						}
 						
 						CollectionDataProvider {
@@ -457,7 +485,7 @@ Dialog {
 		sdlObjectComp: Component {
 			UpdatedNotificationPayload {
 				onFinished: {
-					if (m_id != ''){
+					if (m_id !== ''){
 						productEditorDialog.saved();
 						productEditorDialog.finished(Enums.cancel);
 					}

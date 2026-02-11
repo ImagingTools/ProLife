@@ -37,6 +37,8 @@ type SoftwareProductItem {
 	status: String
 	added: String
 	timeStamp: String
+	isMultiple: Bool
+	productCount: Integer
 }
 
 type SoftwareProductsListPayload {
@@ -55,6 +57,8 @@ type SoftwareProductData {
 	licenseUuid: ID
 	expiration: String
 	internalUse: Bool
+	isMultiple: Bool
+	productCount: Integer
 }
 
 input SoftwareProductDataInput {

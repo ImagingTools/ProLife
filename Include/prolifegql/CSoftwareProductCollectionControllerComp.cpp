@@ -1,6 +1,9 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
 
 
+// ACF includes
+#include <iprm/CIdParam.h>
+
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
 #include <imtlic/CHardwareInstanceInfo.h>
@@ -262,20 +265,23 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isHardwareLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
-		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toString().toUtf8();
-		objectLink.typeId = QByteArrayLiteral("Device");
-		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
-
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
-		urlParam.scheme = scheme;
-		urlParam.path = QStringLiteral("Devices/Device");
-		if (!(*objectLink.id).isEmpty()){
-			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+		QJsonArray hardwareIds = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toJsonArray();
+		if (hardwareIds.size() == 1){
+			sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+			objectLink.id = hardwareIds.at(0).toString().toUtf8();
+			objectLink.typeId = QByteArrayLiteral("Device");
+			objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
+	
+			sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+			urlParam.scheme = scheme;
+			urlParam.path = QStringLiteral("Devices/Device");
+			if (!(*objectLink.id).isEmpty()){
+				urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+			}
+			objectLink.url = urlParam;
+	
+			representationObject.hardwareLink = objectLink;
 		}
-		objectLink.url = urlParam;
-
-		representationObject.hardwareLink = objectLink;
 	}
 
 	if (requestInfo.items.isProductIdRequested){
@@ -377,6 +383,14 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 		QString lastModified = lastModifiedTime.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 		representationObject.timeStamp = (lastModified);
+	}
+
+	if (requestInfo.items.isIsMultipleRequested){
+		representationObject.isMultiple = softwareInfoPtr->IsMultiProduct();
+	}
+
+	if (requestInfo.items.isProductCountRequested){
+		representationObject.productCount = softwareInfoPtr->GetProductCount();
 	}
 
 	return true;
@@ -502,6 +516,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	representationPayload.internalUse = softwareInfoPtr->IsInternalUse();
+	representationPayload.isMultiple = softwareInfoPtr->IsMultiProduct();
+	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 
 	return true;
 }
@@ -644,6 +660,14 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 
 	if (representation.internalUse){
 		softwareInfoPtr->SetInternalUse(*representation.internalUse);
+	}
+
+	if (representation.isMultiple){
+		softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
+	}
+
+	if (representation.productCount){
+		softwareInfoPtr->SetProductCount(*representation.productCount);
 	}
 
 	return true;

@@ -560,7 +560,7 @@
                                             <Value>DatabaseConverterComp</Value>
                                             <Value>MigrationController15</Value>
                                             <Value>MigrationController16</Value>
-                                            <Value>MigrationController17</Value>
+                                            <Value>MigrationController17_18</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -702,7 +702,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="MigrationController17" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                    <Element Id="MigrationController17_18" PackageId="ImtDatabasePck" ComponentId="MigrationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -718,7 +718,7 @@
                                     <Data IsEnabled="true" Value="MigrationFilePath"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="To" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="17"/>
+                                    <Data IsEnabled="true" Value="18"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>

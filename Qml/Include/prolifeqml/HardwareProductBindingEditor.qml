@@ -66,7 +66,7 @@ Dialog {
 			function updateState(){
 				hasSelectedDuplicate = false
 				let isEnabled = productEditor.checkedIndexes.length > 0
-				
+
 				let licenseIds = []
 				for (let i = 0; i < productEditor.checkedIndexes.length; i++){
 					let licenseId = productEditor.availableLicensesModel.getData("licenseId", productEditor.checkedIndexes[i])
@@ -107,6 +107,9 @@ Dialog {
 							addHeader("licenseName", qsTr("Name"))
 							addHeader("licenseId", qsTr("Article"))
 							addHeader("serialNumber", qsTr("Software-ID"))
+							addHeader("isMultiple", qsTr("Is Multiple"))
+							addHeader("licenseCount", qsTr("License Count"))
+							addHeader("productCount", qsTr("Total"))
 							
 							let filteringInfoIds = ["licenseName", "licenseId", "serialNumber"]
 
@@ -173,8 +176,42 @@ Dialog {
 							}
 						}
 						
+						onHeadersChanged: {
+							table.setColumnContentById("isMultiple", isMultipleColumnDelegateComp)
+						}
+
+						Component {
+							id: isMultipleColumnDelegateComp;
+							TableCellDelegateBase {
+								id: cellDelegate
+	
+								Image {
+									id: image;
+									anchors.verticalCenter: parent.verticalCenter;
+									anchors.left: parent.left;
+									anchors.leftMargin: Style.marginM;
+									width: Style.iconSizeM;
+									height: width;
+									source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
+									sourceSize.width: width;
+									sourceSize.height: height;
+								}
+	
+								onReused: {
+									if (!rowDelegate){
+										return
+									}
+	
+									if (rowIndex >= 0){
+										let isMultiple = cellDelegate.getValue();
+										image.visible = isMultiple;
+									}
+								}
+							}
+						}
+
 						onElementsChanged: {
-							table.uncheckAll();
+							table.uncheckAll()
 							productEditor.availableLicensesModel = table.elements
 						}
 						
@@ -232,7 +269,7 @@ Dialog {
 							softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyLicenseIdFilter.m_fieldId);
 							
 							softwareProductCollection.collectionFilter.addFieldFilter(productFilter);
-							softwareProductCollection.collectionFilter.addFieldFilter(emptyHardwareFilter);
+							// softwareProductCollection.collectionFilter.addFieldFilter(emptyHardwareFilter); // ???
 							
 							if (productEditor.usedLicensesModel){
 								for(var i = 0; i < productEditor.usedLicensesModel.getItemsCount(); i++){

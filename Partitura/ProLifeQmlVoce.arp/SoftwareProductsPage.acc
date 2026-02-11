@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5423" Description="ACF"/>
-            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5715" Description="ACF"/>
+            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -60,6 +60,8 @@
                                 <Value>licenseId</Value>
                                 <Value>licenseName</Value>
                                 <Value>serialNumber</Value>
+                                <Value>isMultiple</Value>
+                                <Value>productCount</Value>
                                 <Value>deliveryIdLink</Value>
                                 <Value>purchaseIdLink</Value>
                                 <Value>project</Value>
@@ -78,6 +80,8 @@
                                 <Value>Article</Value>
                                 <Value>Name</Value>
                                 <Value>Software-ID</Value>
+                                <Value>Is Multiple</Value>
+                                <Value>Product Count</Value>
                                 <Value>Delivery-ID</Value>
                                 <Value>Purchase Order-ID</Value>
                                 <Value>Project</Value>

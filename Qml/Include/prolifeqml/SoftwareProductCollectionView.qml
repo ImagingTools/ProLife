@@ -36,6 +36,7 @@ RemoteCollectionView {
 	
 	onHeadersChanged: {
 		container.table.setColumnContentById(SoftwareProductItemTypeMetaInfo.s_status, pairComp);
+		container.table.setColumnContentById(SoftwareProductItemTypeMetaInfo.s_isMultiple, isMultipleColumnDelegateComp);
 	}
 	
 	Component.onCompleted: {
@@ -56,6 +57,36 @@ RemoteCollectionView {
 
 		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
 		registerFieldFilterDelegate("LicenseCreationTimeFilter", licenseCreationTimeDelegateFilterComp)
+	}
+
+	Component {
+		id: isMultipleColumnDelegateComp;
+		TableCellDelegateBase {
+			id: cellDelegate
+
+			Image {
+				id: image;
+				anchors.verticalCenter: parent.verticalCenter;
+				anchors.left: parent.left;
+				anchors.leftMargin: Style.marginM;
+				width: Style.iconSizeM;
+				height: width;
+				source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
+				sourceSize.width: width;
+				sourceSize.height: height;
+			}
+
+			onReused: {
+				if (!rowDelegate){
+					return
+				}
+
+				if (rowIndex >= 0){
+					let isMultiple = cellDelegate.getValue();
+					image.visible = isMultiple;
+				}
+			}
+		}
 	}
 
 	Component {

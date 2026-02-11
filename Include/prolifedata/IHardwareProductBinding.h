@@ -47,6 +47,11 @@ public:
 		Unbind software product
 	*/
 	virtual bool Unbind(const QByteArray& softwareId) = 0;
+
+	/**
+		Transfer all licenses to another hardware
+	*/
+	virtual bool TransferAllLicenses(IHardwareProductBinding& productBinding) = 0;
 };
 
 

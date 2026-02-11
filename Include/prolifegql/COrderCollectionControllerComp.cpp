@@ -480,8 +480,10 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					softwareProduct.categoryId = (softwareProductPtr->GetFactoryId());
 					softwareProduct.productUuid = (softwareProductPtr->GetProductId());
 					softwareProduct.serialNumber = (softwareProductPtr->GetSerialNumber());
-					softwareProduct.inUse = std::move(softwareProductPtr->IsInUse());
-					softwareProduct.isNew = std::move(false);
+					softwareProduct.inUse = softwareProductPtr->IsInUse();
+					softwareProduct.isNew = false;
+					softwareProduct.isMultiple = softwareProductPtr->IsMultiProduct();
+					softwareProduct.productCount = softwareProductPtr->GetProductCount();
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
 					if (m_productCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
@@ -1112,6 +1114,16 @@ bool COrderCollectionControllerComp::CreateNewSoftware(
 		licenseUuid = *product.licenseUuid;
 	}
 
+	bool isMultiple = false;
+	if (product.isMultiple){
+		isMultiple = *product.isMultiple;
+	}
+
+	int productCount = 1;
+	if (product.productCount){
+		productCount = *product.productCount;
+	}
+
 	istd::TDelPtr<prolifedata::COrderedIdentifiableSoftwareInstanceInfo> softwareInstancePtr;
 	softwareInstancePtr.SetPtr(new prolifedata::COrderedIdentifiableSoftwareInstanceInfo);
 
@@ -1119,6 +1131,8 @@ bool COrderCollectionControllerComp::CreateNewSoftware(
 	softwareInstancePtr->SetupProductInstance(productUuid, "", "");
 	softwareInstancePtr->SetSerialNumber(serialNumber);
 	softwareInstancePtr->SetOrderId(orderId);
+	softwareInstancePtr->SetMultiProduct(isMultiple);
+	softwareInstancePtr->SetProductCount(productCount);
 
 	QString expiration;
 	if (product.expiration){

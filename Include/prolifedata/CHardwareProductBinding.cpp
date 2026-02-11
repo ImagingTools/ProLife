@@ -81,6 +81,24 @@ bool CHardwareProductBinding::Unbind(const QByteArray& softwareId)
 }
 
 
+bool CHardwareProductBinding::TransferAllLicenses(IHardwareProductBinding& productBinding)
+{
+	for (const QByteArray& softwareId : std::as_const(m_softwareIds)){
+		if (!productBinding.Bind(softwareId)){
+			return false;
+		}
+	}
+
+	for (const QByteArray& softwareId : std::as_const(m_softwareIds)){
+		if (!Unbind(softwareId)){
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
 // reimplemented (iser::ISerializable)
 
 bool CHardwareProductBinding::Serialize(iser::IArchive& archive)

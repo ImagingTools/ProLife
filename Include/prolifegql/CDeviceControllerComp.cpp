@@ -33,9 +33,9 @@ namespace prolifegql
 // protected methods
 
 sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
-	const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
-	const ::imtgql::CGqlRequest& /*gqlRequest*/,
-	QString& /*errorMessage*/) const
+			const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& /*errorMessage*/) const
 {
 	sdl::prolife::Sensors::CDeviceBindingData retVal;
 	
@@ -92,10 +92,10 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 			}
 		}
 	}
-	
+
 	response.id = deviceId;
-	response.softwareIds = softwareIds.join(';');
-	
+	response.softwareIds.Emplace().FromList(softwareIds);
+
 	return retVal;
 }
 
@@ -132,9 +132,9 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 	}
 
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, dataPtr)){
-		deviceBindingInfoPtr.SetCastedOrRemove(dataPtr.GetPtr(), false);
+	imtbase::IObjectCollection::DataPtr deviceBindingDataPtr;
+	if (m_deviceBindingCollectionCompPtr->GetObjectData(deviceId, deviceBindingDataPtr)){
+		deviceBindingInfoPtr.SetCastedOrRemove(deviceBindingDataPtr.GetPtr(), false);
 	}
 
 	if (!deviceBindingInfoPtr.IsValid()){
@@ -157,27 +157,25 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 
 	response.id = deviceId;
 
-	QByteArrayList newHardwareBindingSoftwareIds;
-	if (deviceBindingData.softwareIds){
-		if (!deviceBindingData.softwareIds->isEmpty()){
-			newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->split(';');
-		}
-	}
-
 	QByteArrayList hardwareBindingSoftwareIds = deviceBindingInfoPtr->GetSoftwareIds();
 
-	QByteArrayList addedLicenses;
-	QByteArrayList removedLicenses;
+	QByteArrayList removedSoftwareIds;
+	QByteArrayList addedSoftwareIds;
 
-	for (const QByteArray& id : newHardwareBindingSoftwareIds){
-		if (!hardwareBindingSoftwareIds.contains(id)){
-			addedLicenses << id;
+	QByteArrayList newHardwareBindingSoftwareIds;
+	if (deviceBindingData.softwareIds){
+		newHardwareBindingSoftwareIds = deviceBindingData.softwareIds->ToList();
+	}
+
+	for (const QByteArray& softwareId : newHardwareBindingSoftwareIds){
+		if (!hardwareBindingSoftwareIds.contains(softwareId)){
+			addedSoftwareIds << softwareId;
 		}
 	}
 
-	for (const QByteArray& id : hardwareBindingSoftwareIds){
-		if (!newHardwareBindingSoftwareIds.contains(id)){
-			removedLicenses << id;
+	for (const QByteArray& softwareId : hardwareBindingSoftwareIds){
+		if (!newHardwareBindingSoftwareIds.contains(softwareId)){
+			removedSoftwareIds << softwareId;
 		}
 	}
 
@@ -220,7 +218,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 							= dynamic_cast<const imtlic::IProductInstanceInfo*>(softwareDataPtr2.GetPtr());
 						if (productInstanceInfoPtr2 != nullptr){
 							imtbase::ICollectionInfo::Ids licenseIds2 = productInstanceInfoPtr2->GetLicenseInstances().GetElementIds();
-							for (const imtbase::ICollectionInfo::Id& licenseId: licenseIds){
+							for (const imtbase::ICollectionInfo::Id& licenseId: std::as_const(licenseIds)){
 								if (licenseIds2.contains(licenseId)){
 									errorMessage = QString("Unable to update device binding. Error: The same licenses are selected");
 									
@@ -237,7 +235,36 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 	deviceBindingInfoPtr->SetHardwareId(deviceId);
 
 	newHardwareBindingSoftwareIds.removeAll("");
-	deviceBindingInfoPtr->SetSoftwareIds(newHardwareBindingSoftwareIds);
+
+	QMap<QByteArray, istd::TDelPtr<imtlic::IProductInstanceInfo>> productInstancesMap;
+
+	for (const QByteArray& softwareId : std::as_const(addedSoftwareIds)){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				int totalCount = productInstanceInfoPtr->GetProductCount();
+				productInstanceInfoPtr->SetProductCount(totalCount - 1);
+				if (deviceBindingInfoPtr->Bind(softwareId)){
+					productInstancesMap[softwareId].SetCastedOrRemove(productInstanceInfoPtr->CloneMe().PopInterfacePtr());
+				}
+			}
+		}
+	}
+
+	for (const QByteArray& softwareId : std::as_const(removedSoftwareIds)){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+			imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+			if (productInstanceInfoPtr != nullptr){
+				if (deviceBindingInfoPtr->Unbind(softwareId)){
+					int totalCount = productInstanceInfoPtr->GetProductCount();
+					productInstanceInfoPtr->SetProductCount(totalCount + 1);
+					productInstancesMap[softwareId].SetCastedOrRemove(productInstanceInfoPtr->CloneMe().PopInterfacePtr());
+				}
+			}
+		}
+	}
 
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){
 		errorMessage = QString("Unable to update hardware binding info");
@@ -246,8 +273,12 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 		return retVal;
 	}
 
-	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
-	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedLicenses, removedLicenses);
+	for (auto iter = productInstancesMap.begin(); iter != productInstancesMap.end(); ++iter){
+		m_softwareProductCollectionCompPtr->SetObjectData(iter.key(), *iter.value().GetPtr());
+	}
+
+	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedSoftwareIds, removedSoftwareIds);
+	CreateSoftwareOperationContext(deviceId, project.toUtf8(), addedSoftwareIds, removedSoftwareIds);
 
 	return retVal;
 }
@@ -372,8 +403,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		}
 	}
 
-	toDeviceBindingInfoPtr->SetSoftwareIds(fromDeviceSoftwareIds);
-	fromDeviceBindingInfoPtr->SetSoftwareIds(QByteArrayList());
+	fromDeviceBindingInfoPtr->TransferAllLicenses(*toDeviceBindingInfoPtr);
 
 	// Update licenses for TO device
 	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr)){

@@ -1,9 +1,13 @@
 #include <prolifedata/CSoftwareMetaInfoCreatorComp.h>
 
 
+// Qt includes
+#include <QJsonArray>
+
 // ACF includes
 #include <imod/TModelWrap.h>
 #include <iprm/CParamsSet.h>
+#include <iprm/CIdParam.h>
 
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>
@@ -123,28 +127,26 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	}
 
 	if (m_hardwareBindingCollectionCompPtr.IsValid()){
-		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-		fieldFilter.fieldId = "SoftwareIds";
-		fieldFilter.filterValue = objectId;
-		fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FO_CONTAINS;
-		
-		imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
-		groupFilter.fieldFilters << fieldFilter;
-		
-		imtbase::CComplexCollectionFilter complexFilter;
-		complexFilter.SetFilterExpression(groupFilter);
-		
 		iprm::CParamsSet filterParam;
-		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
-		
+
+		iprm::CIdParam idParam;
+		idParam.SetId(objectId);
+
+		filterParam.SetEditableParameter("SoftwareFilter", &idParam);
+
 		QByteArrayList ids = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-		
+
 		metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED, !ids.isEmpty());
-		
-		if (!ids.isEmpty()){
+
+		QJsonArray jsonArray;
+		for (const QByteArray& item : std::as_const(ids)){
+			jsonArray.append(QString::fromUtf8(item));
+		}
+
+		metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID, jsonArray);
+
+		if (ids.size() == 1){
 			QByteArray hardwareId = ids[0];
-			metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID, hardwareId);
-			
 			imtbase::IObjectCollection::DataPtr hardwareDataPtr;
 			if (m_deviceCollectionCompPtr->GetObjectData(hardwareId, hardwareDataPtr)){
 				const IDeviceInfo* deviceInfoPtr = dynamic_cast<const IDeviceInfo*>(hardwareDataPtr.GetPtr());
@@ -160,6 +162,8 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE, softwareInfoPtr->IsInUse());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_INTERNAL_USE, softwareInfoPtr->IsInternalUse());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER, softwareInfoPtr->GetSerialNumber());
+	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_MULTI_PRODUCT, softwareInfoPtr->IsMultiProduct());
+	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT, softwareInfoPtr->GetProductCount());
 
 	return true;
 }
