@@ -77,15 +77,46 @@ type SplitLicensePayload {
 	message: String
 }
 
+input ChildLicensesListInput {
+	parentLicenseId: ID!
+}
+
+type ChildLicenseItem {
+	id: ID!
+	accountId: ID
+	accountName: String
+	productCount: Integer
+	hardwareId: String
+	isBound: Bool
+}
+
+type ChildLicensesListPayload {
+	items: [ChildLicenseItem]
+	ok: Boolean
+	message: String
+}
+
+input RevokeLicenseInput {
+	childLicenseId: ID!
+	revokeCount: Integer!
+}
+
+type RevokeLicensePayload {
+	ok: Boolean
+	message: String
+}
+
 type Query {
 	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
 	SoftwareProductItem (input: InputId): SoftwareProductData!
+	ChildLicensesList (input: ChildLicensesListInput): ChildLicensesListPayload!
 }
 
 type Mutation {
 	SoftwareProductUpdate (input: SoftwareProductDataInput): UpdatedNotificationPayload!
 	SoftwareProductAdd (input: SoftwareProductDataInput): AddedNotificationPayload!
 	SplitLicense (input: SplitLicenseInput): SplitLicensePayload!
+	RevokeLicense (input: RevokeLicenseInput): RevokeLicensePayload!
 }
 
 collectionSchema {

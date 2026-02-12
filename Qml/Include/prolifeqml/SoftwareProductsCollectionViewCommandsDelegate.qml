@@ -41,10 +41,15 @@ DocumentCollectionViewDelegate {
 			splitEnabled = isMultiple && productCount > 1;
 		}
 		
+		// Enable Revoke if this is a parent license (has child licenses)
+		// We'll enable it optimistically - the dialog will show if there are no children
+		let revokeEnabled = isEnabled;
+		
 		if(commandsController){
 			commandsController.setCommandIsEnabled("OpenOrder", openOrderEnabled);
 			commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
 			commandsController.setCommandIsEnabled("Split", splitEnabled);
+			commandsController.setCommandIsEnabled("Revoke", revokeEnabled);
 		}
 	}
 	
@@ -100,11 +105,30 @@ DocumentCollectionViewDelegate {
 				"maxAvailableCount": productCount
 			});
 		}
+		else if (commandId === "Revoke"){
+			let indexes = container.collectionView.table.getSelectedIndexes();
+			if (indexes.length === 0){
+				return;
+			}
+			
+			let elementsModel = container.collectionView.table.elements;
+			let licenseId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_id, indexes[0]);
+			
+			ModalDialogManager.openDialog(revokeLicenseDialogComp, {
+				"parentLicenseId": licenseId
+			});
+		}
 	}
 
 	Component {
 		id: splitLicenseDialogComp
 		SplitLicenseDialog {
+		}
+	}
+
+	Component {
+		id: revokeLicenseDialogComp
+		RevokeLicenseDialog {
 		}
 	}
 }
