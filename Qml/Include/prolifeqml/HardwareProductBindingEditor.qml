@@ -108,7 +108,6 @@ Dialog {
 							addHeader("licenseId", qsTr("Article"))
 							addHeader("serialNumber", qsTr("Software-ID"))
 							addHeader("isMultiple", qsTr("Is Multiple"))
-							addHeader("licenseCount", qsTr("License Count"))
 							addHeader("productCount", qsTr("Total"))
 							
 							let filteringInfoIds = ["licenseName", "licenseId", "serialNumber"]

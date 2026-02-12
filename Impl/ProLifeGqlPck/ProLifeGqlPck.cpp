@@ -102,7 +102,12 @@ I_EXPORT_COMPONENT(
 I_EXPORT_COMPONENT(
 		WorkspaceController,
 		"Workspace controller",
-		"Workspace Controllerr");
+		"Workspace Controller");
+
+I_EXPORT_COMPONENT(
+		SoftwareController,
+		"Software controller",
+		"Software Controller");
 
 
 } // namespace ProLifeGqlPck

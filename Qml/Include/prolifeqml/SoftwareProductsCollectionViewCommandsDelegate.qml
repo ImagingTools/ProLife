@@ -32,9 +32,19 @@ DocumentCollectionViewDelegate {
 			}
 		}
 		
+		let splitEnabled = isEnabled;
+		if (splitEnabled){
+			let isMultiple = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_isMultiple, selection[0]);
+			let productCount = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_productCount, selection[0]);
+			
+			// Can only split if it's a multi-product license with at least 2 licenses
+			splitEnabled = isMultiple && productCount > 1;
+		}
+		
 		if(commandsController){
 			commandsController.setCommandIsEnabled("OpenOrder", openOrderEnabled);
 			commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
+			commandsController.setCommandIsEnabled("Split", splitEnabled);
 		}
 	}
 	
@@ -74,6 +84,27 @@ DocumentCollectionViewDelegate {
 			if (orderUuid !== ""){
 				MainDocumentManager.openDocument("Orders", orderUuid, "Order")
 			}
+		}
+		else if (commandId === "Split"){
+			let indexes = container.collectionView.table.getSelectedIndexes();
+			if (indexes.length === 0){
+				return;
+			}
+			
+			let elementsModel = container.collectionView.table.elements;
+			let licenseId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_id, indexes[0]);
+			let productCount = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_productCount, indexes[0]);
+			
+			ModalDialogManager.openDialog(splitLicenseDialogComp, {
+				"licenseId": licenseId,
+				"maxAvailableCount": productCount
+			});
+		}
+	}
+
+	Component {
+		id: splitLicenseDialogComp
+		SplitLicenseDialog {
 		}
 	}
 }

@@ -53,7 +53,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	QByteArray objectId = softwareInfoPtr->GetObjectUuid();
 	
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
-	QByteArray customerId;
+	QByteArray customerId = softwareInfoPtr->GetCustomerId();
 	
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, orderId);
 	
@@ -127,12 +127,19 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	}
 
 	if (m_hardwareBindingCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+		fieldFilter.fieldId = "SoftwareIds";
+		fieldFilter.filterValue = objectId;
+		fieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FO_CONTAINS;
+		
+		imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
+		groupFilter.fieldFilters << fieldFilter;
+		
+		imtbase::CComplexCollectionFilter complexFilter;
+		complexFilter.SetFilterExpression(groupFilter);
+		
 		iprm::CParamsSet filterParam;
-
-		iprm::CIdParam idParam;
-		idParam.SetId(objectId);
-
-		filterParam.SetEditableParameter("SoftwareFilter", &idParam);
+		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 		QByteArrayList ids = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &filterParam);
 

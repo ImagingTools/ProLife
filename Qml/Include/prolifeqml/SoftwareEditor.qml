@@ -166,6 +166,9 @@ ViewBase {
 		}
 		
 		internalUseSwitchElementView.checked = softwareProductData.m_internalUse
+		multipleElementView.checked = softwareProductData.m_isMultiple
+		productCountElementView.value = softwareProductData.m_productCount
+
 		group2.updateGui();
 	}
 	
@@ -199,6 +202,9 @@ ViewBase {
 		}
 		
 		softwareProductData.m_internalUse = internalUseSwitchElementView.checked
+		softwareProductData.m_isMultiple = multipleElementView.checked
+		softwareProductData.m_productCount = productCountElementView.value
+
 		group2.updateModel();
 	}
 	
@@ -512,6 +518,25 @@ ViewBase {
 					description: qsTr("Activate if the license is for internal use");
 					readOnly: root.readOnly
 					onCheckedChanged: {
+						root.doUpdateModel()
+					}
+				}
+
+				SwitchElementView {
+					id: multipleElementView
+					name: qsTr("Is Multiple");
+					readOnly: root.readOnly
+					onCheckedChanged: {
+						root.doUpdateModel()
+					}
+				}
+
+				SpinBoxElementView {
+					id: productCountElementView
+					name: qsTr("Product Count");
+					readOnly: root.readOnly
+					visible: multipleElementView.checked
+					onValueChanged: {
 						root.doUpdateModel()
 					}
 				}
