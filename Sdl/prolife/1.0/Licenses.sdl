@@ -66,6 +66,17 @@ input SoftwareProductDataInput {
 	item: SoftwareProductData!
 }
 
+input SplitLicenseInput {
+	licenseId: ID!
+	licenseCount: Integer!
+	accountId: ID!
+}
+
+type SplitLicensePayload {
+	ok: Boolean
+	message: String
+}
+
 type Query {
 	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
 	SoftwareProductItem (input: InputId): SoftwareProductData!
@@ -74,6 +85,7 @@ type Query {
 type Mutation {
 	SoftwareProductUpdate (input: SoftwareProductDataInput): UpdatedNotificationPayload!
 	SoftwareProductAdd (input: SoftwareProductDataInput): AddedNotificationPayload!
+	SplitLicense (input: SplitLicenseInput): SplitLicensePayload!
 }
 
 collectionSchema {
