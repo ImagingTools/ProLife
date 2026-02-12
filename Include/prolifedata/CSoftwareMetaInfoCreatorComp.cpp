@@ -53,7 +53,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	QByteArray objectId = softwareInfoPtr->GetObjectUuid();
 	
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
-	QByteArray customerId;
+	QByteArray customerId = softwareInfoPtr->GetCustomerId();
 	
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID, orderId);
 	

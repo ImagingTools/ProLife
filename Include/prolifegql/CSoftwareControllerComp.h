@@ -1,6 +1,9 @@
 #pragma once
 
 
+// ImtCore includes
+#include <imtlic/IProductInstanceInfo.h>
+
 // ProLife includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
 

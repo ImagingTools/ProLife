@@ -233,6 +233,40 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SoftwareControllerComp" PackageId="ProLifeGqlPck" ComponentId="SoftwareController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>SplitLicense</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareFactory" Type="Factory" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareInstanceInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SoftwareInstanceInfo" PackageId="ProLifeDataPck" ComponentId="OrderedIdentifiableSoftwareInstanceInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>
@@ -369,34 +403,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="SoftwareControllerComp" PackageId="ProLifeGqlPck" ComponentId="SoftwareController">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareFactory" Type="Factory" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareInstanceInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="OperationContextController"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>SplitLicense</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>

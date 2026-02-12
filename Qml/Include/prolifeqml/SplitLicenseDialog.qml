@@ -2,6 +2,7 @@ import QtQuick 2.12
 import Acf 1.0
 import com.imtcore.imtqml 1.0
 import imtgui 1.0
+import imtauthgui 1.0
 import imtguigql 1.0
 import imtcontrols 1.0
 import prolifeLicensesSdl 1.0
@@ -11,16 +12,13 @@ Dialog {
 	id: splitLicenseDialog
 
 	title: qsTr("Split License")
-	width: 500
-	height: 300
-	canMove: false
+	width: 800
+	height: 500
 
 	property string licenseId: ""
 	property int maxAvailableCount: 0
 	property int currentCount: 1
 	property string errorMessage: ""
-
-	notClosingButtons: Enums.ok
 
 	Component.onCompleted: {
 		splitLicenseDialog.fillButtons()
@@ -36,24 +34,20 @@ Dialog {
 		addButton(Enums.cancel, qsTr("Cancel"), true)
 	}
 
+	property real spinBoxValue: 1
+	property string selectedAccountId: ""
+
 	onFinished: {
-		if (buttonId == Enums.ok){
+		if (buttonId === Enums.ok){
 			// Validate inputs
-			if (licenseCountSpinBox.value <= 0 || licenseCountSpinBox.value >= maxAvailableCount){
+			if (spinBoxValue <= 0 || spinBoxValue >= splitLicenseDialog.maxAvailableCount){
 				return;
 			}
-
-			if (accountComboBox.currentIndex < 0){
-				return;
-			}
-
-			// Get account ID
-			let accountId = accountComboBox.model.getData("id", accountComboBox.currentIndex);
 
 			// Send the split request
-			splitLicenseInput.m_licenseId = licenseId;
-			splitLicenseInput.m_licenseCount = licenseCountSpinBox.value;
-			splitLicenseInput.m_accountId = accountId;
+			splitLicenseInput.m_licenseId = splitLicenseDialog.licenseId
+			splitLicenseInput.m_licenseCount = spinBoxValue
+			splitLicenseInput.m_accountId = selectedAccountId
 
 			splitLicenseRequest.send(splitLicenseInput);
 		}
@@ -85,13 +79,14 @@ Dialog {
 					SpinBoxElementView {
 						id: licenseCountSpinBox
 						width: parent.width
-						name: qsTr("License Count to Split")
-						from: 1
-						to: splitLicenseDialog.maxAvailableCount - 1
-						value: 1
+						name: qsTr("License count to split")
+						from: startValue
+						to: splitLicenseDialog.maxAvailableCount
+						startValue: 1
 						controlWidth: 150
-
+						description: qsTr("Max available count: ") + splitLicenseDialog.maxAvailableCount
 						onValueChanged: {
+							splitLicenseDialog.spinBoxValue = value
 							splitLicenseDialog.setButtonEnabled(Enums.ok, value > 0 && value < splitLicenseDialog.maxAvailableCount && accountComboBox.currentIndex >= 0);
 						}
 					}
@@ -99,12 +94,16 @@ Dialog {
 					ComboBoxElementView {
 						id: accountComboBox
 						width: parent.width
-						name: qsTr("Target Account")
+						name: qsTr("Target account")
 						nameId: "name"
-						model: CachedAccountCollection.accountsModel
-						controlWidth: 300
+						model: CachedAccountCollection.collectionModel
+						controlWidth: 250
 
 						onCurrentIndexChanged: {
+							if (currentIndex >= 0 && model){
+								splitLicenseDialog.selectedAccountId = model.getData("id", currentIndex)
+							}
+
 							splitLicenseDialog.setButtonEnabled(Enums.ok, licenseCountSpinBox.value > 0 && licenseCountSpinBox.value < splitLicenseDialog.maxAvailableCount && currentIndex >= 0);
 						}
 
@@ -118,12 +117,6 @@ Dialog {
 							}
 						}
 					}
-				}
-
-				BaseText {
-					width: parent.width
-					text: qsTr("Maximum available: %1").arg(splitLicenseDialog.maxAvailableCount)
-					color: Style.hintTextColor
 				}
 			}
 		}
@@ -141,13 +134,6 @@ Dialog {
 		sdlObjectComp: Component {
 			SplitLicensePayload {
 				onFinished: {
-					if (m_ok){
-						splitLicenseDialog.errorMessage = "";
-						splitLicenseDialog.finished(Enums.ok);
-					} else {
-						// Display error message to user
-						splitLicenseDialog.errorMessage = m_message || qsTr("Failed to split license");
-					}
 				}
 			}
 		}
