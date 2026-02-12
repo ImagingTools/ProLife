@@ -409,7 +409,10 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 			retVal.Version_1_0->message = errorMessage;
 			// Try to rollback parent update
 			parentSoftwarePtr->SetProductCount(currentParentCount);
-			m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr);
+			if (!m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr)){
+				errorMessage += QString(". CRITICAL: Rollback failed - parent license count may be inconsistent");
+				retVal.Version_1_0->message = errorMessage;
+			}
 			return retVal;
 		}
 		retVal.Version_1_0->message = QString("License revoked successfully. Child license removed.");
@@ -423,7 +426,10 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 			retVal.Version_1_0->message = errorMessage;
 			// Try to rollback parent update
 			parentSoftwarePtr->SetProductCount(currentParentCount);
-			m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr);
+			if (!m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr)){
+				errorMessage += QString(". CRITICAL: Rollback failed - parent license count may be inconsistent");
+				retVal.Version_1_0->message = errorMessage;
+			}
 			return retVal;
 		}
 		retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);

@@ -226,12 +226,15 @@ Dialog {
 						name: qsTr("Number of licenses to revoke")
 						from: 1
 						to: revokeLicenseDialog.selectedChildCount > 0 ? revokeLicenseDialog.selectedChildCount : 1
-						startValue: revokeLicenseDialog.selectedChildCount
+						startValue: revokeLicenseDialog.selectedChildCount > 0 ? revokeLicenseDialog.selectedChildCount : 1
 						controlWidth: 150
 						description: qsTr("Max available: ") + revokeLicenseDialog.selectedChildCount
+						enabled: revokeLicenseDialog.selectedChildCount > 0
 						
 						onValueChanged: {
-							revokeLicenseDialog.revokeCount = value
+							if (revokeLicenseDialog.selectedChildCount > 0) {
+								revokeLicenseDialog.revokeCount = value
+							}
 						}
 					}
 				}
