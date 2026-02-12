@@ -96,12 +96,6 @@ Dialog {
 						}
 					}
 
-					BaseText {
-						width: parent.width
-						text: qsTr("Maximum available: %1").arg(splitLicenseDialog.maxAvailableCount)
-						color: Style.hintTextColor
-					}
-
 					ComboBoxElementView {
 						id: accountComboBox
 						width: parent.width
@@ -124,6 +118,12 @@ Dialog {
 							}
 						}
 					}
+				}
+
+				BaseText {
+					width: parent.width
+					text: qsTr("Maximum available: %1").arg(splitLicenseDialog.maxAvailableCount)
+					color: Style.hintTextColor
 				}
 			}
 		}
