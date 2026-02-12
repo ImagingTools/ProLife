@@ -59,6 +59,7 @@ type SoftwareProductData {
 	internalUse: Bool
 	isMultiple: Bool
 	productCount: Integer
+	parentInstanceId: ID
 }
 
 input SoftwareProductDataInput {
@@ -86,7 +87,7 @@ type ChildLicenseItem {
 	accountId: ID
 	accountName: String
 	productCount: Integer
-	hardwareId: String
+	softwareId: String
 	isBound: Bool
 }
 

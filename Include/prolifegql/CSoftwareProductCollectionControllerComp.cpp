@@ -518,6 +518,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.internalUse = softwareInfoPtr->IsInternalUse();
 	representationPayload.isMultiple = softwareInfoPtr->IsMultiProduct();
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
+	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
 	return true;
 }
@@ -675,6 +676,10 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	softwareInfoPtr->SetProductCount(productCount);
+
+	if (representation.parentInstanceId){
+		softwareInfoPtr->SetParentInstanceId(*representation.parentInstanceId);
+	}
 
 	return true;
 }

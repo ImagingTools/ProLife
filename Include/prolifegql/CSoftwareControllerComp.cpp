@@ -227,12 +227,22 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 
 	QByteArray parentLicenseId = *input.parentLicenseId;
 
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "ParentInstanceId";
+	fieldFilter.filterValue = parentLicenseId;
+
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.AddFieldFilter(fieldFilter);
+
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
 	// Get all objects from collection and filter by ParentInstanceId
-	QList<QByteArray> allIds = m_softwareProductCollectionCompPtr->GetElementIds();
-	
+	QByteArrayList allIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+
 	QList<sdl::prolife::Licenses::CChildLicenseItem::V1_0> childItems;
-	
-	for (const QByteArray& id : allIds){
+
+	for (const QByteArray& id : std::as_const(allIds)){
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (!m_softwareProductCollectionCompPtr->GetObjectData(id, dataPtr)){
 			continue;
@@ -247,36 +257,53 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 
 		// Check if this license has the specified parent
 		QByteArray currentParentId = softwarePtr->GetParentInstanceId();
-		if (currentParentId == parentLicenseId){
-			sdl::prolife::Licenses::CChildLicenseItem::V1_0 item;
+		if (currentParentId != parentLicenseId){
+			continue;
+		}
 
-			item.id = id;
-			item.productCount = softwarePtr->GetProductCount();
+		sdl::prolife::Licenses::CChildLicenseItem::V1_0 item;
 
-			// Get account ID
-			QByteArray customerId = softwarePtr->GetCustomerId();
-			if (!customerId.isEmpty()){
-				item.accountId = customerId;
-				
-				// Try to get account name
-				if (m_accountCollectionCompPtr.IsValid()){
-					imtbase::IObjectCollection::DataPtr accountDataPtr;
-					if (m_accountCollectionCompPtr->GetObjectData(customerId, accountDataPtr)){
-						const prolifedata::ICustomerInfo* accountPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(accountDataPtr.GetPtr());
-						if (accountPtr != nullptr){
-							item.accountName = accountPtr->GetName();
-						}
+		item.id = id;
+		item.productCount = softwarePtr->GetProductCount();
+
+		// Get account ID
+		QByteArray customerId = softwarePtr->GetCustomerId();
+		if (!customerId.isEmpty()){
+			item.accountId = customerId;
+
+			// Try to get account name
+			if (m_accountCollectionCompPtr.IsValid()){
+				imtbase::IObjectCollection::DataPtr accountDataPtr;
+				if (m_accountCollectionCompPtr->GetObjectData(customerId, accountDataPtr)){
+					const prolifedata::ICustomerInfo* accountPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(accountDataPtr.GetPtr());
+					if (accountPtr != nullptr){
+						item.accountName = accountPtr->GetName();
 					}
 				}
 			}
-			
-			// Check if bound to hardware
-			QByteArray serialNumber = softwarePtr->GetSerialNumber();
-			item.isBound = !serialNumber.isEmpty();
-			item.hardwareId = serialNumber;
-			
-			childItems.append(item);
 		}
+
+		if (m_hardwareBindingCollectionCompPtr.IsValid()){
+			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
+			arrayFieldFilter.fieldId = "SoftwareIds";
+			arrayFieldFilter.filterValue = QVariantList({id});
+			arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
+
+			imtbase::CComplexCollectionFilter arrayComplexFilter;
+			arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
+
+			iprm::CParamsSet arrayFilterParam;
+			arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
+
+			QByteArrayList hardwareBindingIds = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
+			item.isBound = !hardwareBindingIds.isEmpty();
+		}
+		
+		// Check if bound to hardware
+		QByteArray serialNumber = softwarePtr->GetSerialNumber();
+		item.softwareId = serialNumber;
+
+		childItems.append(item);
 	}
 
 	retVal.Version_1_0->items.Emplace().FromList(childItems);
