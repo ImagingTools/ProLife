@@ -87,6 +87,10 @@ DocumentCollectionViewDelegate {
 		}
 		else if (commandId === "Split"){
 			let indexes = container.collectionView.table.getSelectedIndexes();
+			if (indexes.length === 0){
+				return;
+			}
+			
 			let elementsModel = container.collectionView.table.elements;
 			let licenseId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_id, indexes[0]);
 			let productCount = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_productCount, indexes[0]);
@@ -101,14 +105,6 @@ DocumentCollectionViewDelegate {
 	Component {
 		id: splitLicenseDialogComp
 		SplitLicenseDialog {
-			onFinished: {
-				if (buttonId === Enums.ok){
-					// Refresh the collection to show updated license counts
-					if (container.collectionView && container.collectionView.dataControllerComp){
-						container.collectionView.dataControllerComp.updateData();
-					}
-				}
-			}
 		}
 	}
 }
