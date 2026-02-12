@@ -164,7 +164,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	
 	// Set the split count and account
 	newSoftwarePtr->SetProductCount(licenseCount);
-	newSoftwarePtr->SetMultiProduct(true);
+	newSoftwarePtr->SetMultiProduct(licenseCount > 1);
 	newSoftwarePtr->SetAccountId(accountId);
 	
 	// Copy license instances

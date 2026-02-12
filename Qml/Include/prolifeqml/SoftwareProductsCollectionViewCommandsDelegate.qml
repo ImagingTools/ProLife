@@ -102,7 +102,7 @@ DocumentCollectionViewDelegate {
 		id: splitLicenseDialogComp
 		SplitLicenseDialog {
 			onFinished: {
-				if (buttonId === Enums.cancel){
+				if (buttonId === Enums.ok){
 					// Refresh the collection to show updated license counts
 					if (container.collectionView && container.collectionView.dataControllerComp){
 						container.collectionView.dataControllerComp.updateData();

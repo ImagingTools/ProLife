@@ -77,7 +77,7 @@ Dialog {
 						name: qsTr("License Count to Split")
 						from: 1
 						to: splitLicenseDialog.maxAvailableCount - 1
-						value: Math.min(1, splitLicenseDialog.maxAvailableCount - 1)
+						value: 1
 						controlWidth: 150
 
 						onValueChanged: {
@@ -131,10 +131,11 @@ Dialog {
 			SplitLicensePayload {
 				onFinished: {
 					if (m_ok){
-						splitLicenseDialog.finished(Enums.cancel);
+						splitLicenseDialog.finished(Enums.ok);
 					} else {
 						// Show error message
 						console.error("Split License Error:", m_message);
+						splitLicenseDialog.finished(Enums.cancel);
 					}
 				}
 			}
