@@ -164,7 +164,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	
 	// Set the split count and account
 	newSoftwarePtr->SetProductCount(licenseCount);
-	newSoftwarePtr->SetMultiProduct(licenseCount > 1);
+	newSoftwarePtr->SetMultiProduct(originalSoftwarePtr->IsMultiProduct());
 	newSoftwarePtr->SetAccountId(accountId);
 	
 	// Copy license instances
@@ -188,10 +188,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	int remainingCount = originalCount - licenseCount;
 	originalSoftwarePtr->SetProductCount(remainingCount);
 	
-	if (remainingCount == 1){
-		// If only one license remains, it's no longer a multi-product
-		originalSoftwarePtr->SetMultiProduct(false);
-	}
+	// Note: We keep the multi-product flag as is, since it indicates the license type's capability,
+	// not just the current count
 	
 	// Notify that objects have changed
 	if (m_softwareOperationContextControllerCompPtr.IsValid()){

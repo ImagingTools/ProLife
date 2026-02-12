@@ -18,6 +18,7 @@ Dialog {
 	property string licenseId: ""
 	property int maxAvailableCount: 0
 	property int currentCount: 1
+	property string errorMessage: ""
 
 	notClosingButtons: Enums.ok
 
@@ -67,6 +68,16 @@ Dialog {
 				anchors.fill: parent
 				anchors.margins: Style.marginL
 				spacing: Style.marginL
+
+				// Error message display
+				BaseText {
+					id: errorText
+					width: parent.width
+					visible: splitLicenseDialog.errorMessage !== ""
+					text: splitLicenseDialog.errorMessage
+					color: Style.errorTextColor
+					wrapMode: Text.WordWrap
+				}
 
 				GroupElementView {
 					width: parent.width
@@ -131,11 +142,11 @@ Dialog {
 			SplitLicensePayload {
 				onFinished: {
 					if (m_ok){
+						splitLicenseDialog.errorMessage = "";
 						splitLicenseDialog.finished(Enums.ok);
 					} else {
-						// Show error message
-						console.error("Split License Error:", m_message);
-						splitLicenseDialog.finished(Enums.cancel);
+						// Display error message to user
+						splitLicenseDialog.errorMessage = m_message || qsTr("Failed to split license");
 					}
 				}
 			}
