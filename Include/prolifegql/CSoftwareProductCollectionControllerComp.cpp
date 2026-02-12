@@ -666,9 +666,15 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
 	}
 
+	int productCount = 1;
+
 	if (representation.productCount){
-		softwareInfoPtr->SetProductCount(*representation.productCount);
+		if (*representation.productCount > 0){
+			productCount = *representation.productCount;
+		}
 	}
+
+	softwareInfoPtr->SetProductCount(productCount);
 
 	return true;
 }
