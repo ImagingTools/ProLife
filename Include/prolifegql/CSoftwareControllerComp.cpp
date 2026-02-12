@@ -11,6 +11,7 @@
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
+#include <prolifedata/ICustomerInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 
 
@@ -20,7 +21,7 @@ namespace prolifegql
 
 sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense(
 			const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CSplitLicensePayload retVal;
@@ -196,7 +197,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 
 sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChildLicensesList(
 			const sdl::prolife::Licenses::CChildLicensesListGqlRequest& childLicensesRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CChildLicensesListPayload retVal;
@@ -227,9 +228,9 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 	QByteArray parentLicenseId = *input.parentLicenseId;
 
 	// Get all objects from collection and filter by ParentInstanceId
-	QList<QByteArray> allIds = m_softwareProductCollectionCompPtr->GetObjectsIds();
+	QList<QByteArray> allIds = m_softwareProductCollectionCompPtr->GetElementIds();
 	
-	QList<sdl::prolife::Licenses::CChildLicenseItem> childItems;
+	QList<sdl::prolife::Licenses::CChildLicenseItem::V1_0> childItems;
 	
 	for (const QByteArray& id : allIds){
 		imtbase::IObjectCollection::DataPtr dataPtr;
@@ -247,25 +248,23 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 		// Check if this license has the specified parent
 		QByteArray currentParentId = softwarePtr->GetParentInstanceId();
 		if (currentParentId == parentLicenseId){
-			sdl::prolife::Licenses::CChildLicenseItem item;
-			item.Version_1_0.Emplace();
-			
-			item.Version_1_0->id = id;
-			item.Version_1_0->productCount = softwarePtr->GetProductCount();
-			
+			sdl::prolife::Licenses::CChildLicenseItem::V1_0 item;
+
+			item.id = id;
+			item.productCount = softwarePtr->GetProductCount();
+
 			// Get account ID
 			QByteArray customerId = softwarePtr->GetCustomerId();
 			if (!customerId.isEmpty()){
-				item.Version_1_0->accountId = customerId;
+				item.accountId = customerId;
 				
 				// Try to get account name
 				if (m_accountCollectionCompPtr.IsValid()){
 					imtbase::IObjectCollection::DataPtr accountDataPtr;
 					if (m_accountCollectionCompPtr->GetObjectData(customerId, accountDataPtr)){
-						imtbase::IIdentifiableInfo* accountPtr = 
-							dynamic_cast<imtbase::IIdentifiableInfo*>(accountDataPtr.GetPtr());
+						const prolifedata::ICustomerInfo* accountPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(accountDataPtr.GetPtr());
 						if (accountPtr != nullptr){
-							item.Version_1_0->accountName = accountPtr->GetName();
+							item.accountName = accountPtr->GetName();
 						}
 					}
 				}
@@ -273,14 +272,14 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 			
 			// Check if bound to hardware
 			QByteArray serialNumber = softwarePtr->GetSerialNumber();
-			item.Version_1_0->isBound = !serialNumber.isEmpty();
-			item.Version_1_0->hardwareId = serialNumber;
+			item.isBound = !serialNumber.isEmpty();
+			item.hardwareId = serialNumber;
 			
 			childItems.append(item);
 		}
 	}
 
-	retVal.Version_1_0->items = childItems;
+	retVal.Version_1_0->items.Emplace().FromList(childItems);
 	retVal.Version_1_0->ok = true;
 	retVal.Version_1_0->message = QString("Found %1 child license(s)").arg(childItems.size());
 
@@ -290,7 +289,7 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 
 sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicense(
 			const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
-			const ::imtgql::CGqlRequest& gqlRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CRevokeLicensePayload retVal;
@@ -404,7 +403,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	// Update or delete child license
 	if (revokeCount == currentChildCount){
 		// Remove child license entirely
-		if (!m_softwareProductCollectionCompPtr->RemoveObject(childLicenseId)){
+		if (!m_softwareProductCollectionCompPtr->RemoveElements({childLicenseId})){
 			errorMessage = QString("Unable to revoke license. Error: Failed to remove child license");
 			retVal.Version_1_0->message = errorMessage;
 			// Try to rollback parent update
