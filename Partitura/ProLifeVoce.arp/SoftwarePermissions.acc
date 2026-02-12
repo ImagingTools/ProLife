@@ -159,6 +159,8 @@
                                 <Value>SoftwareProductsList</Value>
                                 <Value>SoftwareProductItem</Value>
                                 <Value>SplitLicense</Value>
+                                <Value>ChildLicensesList</Value>
+                                <Value>RevokeLicense</Value>
                                 <Value>ObjectCollectionPermissions</Value>
                             </Values>
                         </Data>
@@ -265,6 +267,44 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>SplitLicense</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ChildLicensesList" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ChildLicensesList"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ViewLicenses</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="RevokeLicense" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="RevokeLicense"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>RevokeLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
