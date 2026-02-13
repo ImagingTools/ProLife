@@ -686,8 +686,9 @@ ViewBase {
 					parentChainText.text = chainText;
 				}
 				else {
-					// Display full error message to user
-					// Note: Backend error messages are not translated, but we wrap them in a translated prefix
+					// Display error message to user
+					// Note: Backend error messages are in English and not translated.
+					// We provide a translated prefix for consistency.
 					let errorMsg = qsTr("Failed to load parent chain") + ": " + (payload.message || qsTr("Unknown error"));
 					console.error(errorMsg);
 					root.parentChainErrorMessage = errorMsg;
@@ -704,9 +705,6 @@ ViewBase {
 	}
 	
 	function calculateParentChainHeight(lineCount) {
-		if (!parentChainText.visible) {
-			return 0;
-		}
 		let calculatedHeight = lineCount * root.parentChainLineHeight + root.parentChainPadding;
 		return Math.max(root.parentChainMinHeight, Math.min(root.parentChainMaxHeight, calculatedHeight));
 	}

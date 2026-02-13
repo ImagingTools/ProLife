@@ -583,7 +583,7 @@ sdl::prolife::Licenses::CParentChainListPayload CSoftwareControllerComp::OnParen
 
 	retVal.Version_1_0->items = chainItems;
 	retVal.Version_1_0->ok = true;
-	retVal.Version_1_0->message = QString("Parent chain retrieved successfully");
+	retVal.Version_1_0->message = QString("");
 
 	return retVal;
 }
