@@ -520,6 +520,16 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
+	// Build license tree if SoftwareController is available
+	if (m_softwareControllerCompPtr.IsValid()){
+		QString treeError;
+		auto treeNode = m_softwareControllerCompPtr->BuildLicenseTreeForLicense(id, treeError);
+		if (treeNode.has_value()){
+			representationPayload.licenseTree = treeNode.value();
+		}
+		// If tree building fails, we just don't populate the field (it's optional)
+	}
+
 	return true;
 }
 

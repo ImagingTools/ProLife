@@ -600,12 +600,6 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 	retVal.Version_1_0.Emplace();
 	retVal.Version_1_0->ok = false;
 
-	if (!m_softwareProductCollectionCompPtr.IsValid()){
-		errorMessage = QString("Unable to get license tree. Error: Software product collection is not set");
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
-	}
-
 	sdl::prolife::Licenses::LicenseTreeRequestArguments inputArguments = licenseTreeRequest.GetRequestedArguments();
 	if (!inputArguments.input.Version_1_0){
 		errorMessage = QString("Unable to get license tree. Error: Invalid input arguments");
@@ -623,32 +617,52 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 
 	QByteArray startLicenseId = *input.licenseId;
 
+	auto rootNode = BuildLicenseTreeForLicense(startLicenseId, errorMessage);
+	if (!rootNode.has_value()){
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	retVal.Version_1_0->rootNode = rootNode.value();
+	retVal.Version_1_0->ok = true;
+	retVal.Version_1_0->message = QString("");
+
+	return retVal;
+}
+
+
+std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> CSoftwareControllerComp::BuildLicenseTreeForLicense(
+			const QByteArray& licenseId,
+			QString& errorMessage) const
+{
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to build license tree. Error: Software product collection is not set");
+		return std::nullopt;
+	}
+
 	// First, find the root of the tree by traversing up the parent chain
-	QByteArray rootLicenseId = startLicenseId;
+	QByteArray rootLicenseId = licenseId;
 	QSet<QByteArray> visitedForRoot;
 	const int MAX_DEPTH = 100;
 	int depth = 0;
 
 	while (depth < MAX_DEPTH){
 		if (visitedForRoot.contains(rootLicenseId)){
-			errorMessage = QString("Unable to get license tree. Error: Circular reference detected in parent chain");
-			retVal.Version_1_0->message = errorMessage;
-			return retVal;
+			errorMessage = QString("Unable to build license tree. Error: Circular reference detected in parent chain");
+			return std::nullopt;
 		}
 		visitedForRoot.insert(rootLicenseId);
 
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (!m_softwareProductCollectionCompPtr->GetObjectData(rootLicenseId, dataPtr)){
-			errorMessage = QString("Unable to get license tree. Error: License not found");
-			retVal.Version_1_0->message = errorMessage;
-			return retVal;
+			errorMessage = QString("Unable to build license tree. Error: License not found");
+			return std::nullopt;
 		}
 
 		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
 		if (!softwarePtr){
-			errorMessage = QString("Unable to get license tree. Error: Invalid license data");
-			retVal.Version_1_0->message = errorMessage;
-			return retVal;
+			errorMessage = QString("Unable to build license tree. Error: Invalid license data");
+			return std::nullopt;
 		}
 
 		QByteArray parentId = softwarePtr->GetParentInstanceId();
@@ -661,20 +675,19 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 	}
 
 	if (depth >= MAX_DEPTH){
-		errorMessage = QString("Unable to get license tree. Error: Maximum depth exceeded while finding root");
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
+		errorMessage = QString("Unable to build license tree. Error: Maximum depth exceeded while finding root");
+		return std::nullopt;
 	}
 
 	// Now build the tree recursively from the root
-	auto buildNode = [this](const QByteArray& licenseId, auto& recursiveBuildNode, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
+	auto buildNode = [this](const QByteArray& nodeId, auto& recursiveBuildNode, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
 		const int MAX_TREE_DEPTH = 100;
 		if (currentDepth >= MAX_TREE_DEPTH){
 			return std::nullopt;
 		}
 
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (!m_softwareProductCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
+		if (!m_softwareProductCollectionCompPtr->GetObjectData(nodeId, dataPtr)){
 			return std::nullopt;
 		}
 
@@ -684,7 +697,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 		}
 
 		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
-		node.id = licenseId;
+		node.id = nodeId;
 		node.serialNumber = softwarePtr->GetSerialNumber();
 		node.project = prolifedata::GetSoftwareProject(softwarePtr);
 		node.productCount = softwarePtr->GetProductCount();
@@ -704,7 +717,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 		if (m_hardwareBindingCollectionCompPtr.IsValid()){
 			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
 			arrayFieldFilter.fieldId = "SoftwareIds";
-			arrayFieldFilter.filterValue = QVariantList({licenseId});
+			arrayFieldFilter.filterValue = QVariantList({nodeId});
 			arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
 
 			imtbase::CComplexCollectionFilter arrayComplexFilter;
@@ -723,7 +736,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
 		fieldFilter.fieldId = "ParentInstanceId";
-		fieldFilter.filterValue = licenseId;
+		fieldFilter.filterValue = nodeId;
 
 		imtbase::CComplexCollectionFilter complexFilter;
 		complexFilter.AddFieldFilter(fieldFilter);
@@ -746,18 +759,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 		return node;
 	};
 
-	auto rootNode = buildNode(rootLicenseId, buildNode, 0);
-	if (!rootNode.has_value()){
-		errorMessage = QString("Unable to get license tree. Error: Failed to build tree");
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
-	}
-
-	retVal.Version_1_0->rootNode = rootNode.value();
-	retVal.Version_1_0->ok = true;
-	retVal.Version_1_0->message = QString("");
-
-	return retVal;
+	return buildNode(rootLicenseId, buildNode, 0);
 }
 
 

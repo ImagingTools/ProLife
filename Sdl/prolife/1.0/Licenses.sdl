@@ -46,6 +46,18 @@ type SoftwareProductsListPayload {
 	notification: NotificationItem
 }
 
+type LicenseTreeNode {
+	id: ID!
+	serialNumber: String
+	project: String
+	productName: String
+	productCount: Integer
+	availableCount: Integer
+	boundCount: Integer
+	parentId: ID
+	children: [LicenseTreeNode]
+}
+
 type SoftwareProductData {
 	id: ID
 	productId: ID
@@ -60,6 +72,7 @@ type SoftwareProductData {
 	isMultiple: Bool
 	productCount: Integer
 	parentInstanceId: ID
+	licenseTree: LicenseTreeNode
 }
 
 input SoftwareProductDataInput {
@@ -126,34 +139,11 @@ type ParentChainListPayload {
 	message: String
 }
 
-input LicenseTreeInput {
-	licenseId: ID!
-}
-
-type LicenseTreeNode {
-	id: ID!
-	serialNumber: String
-	project: String
-	productName: String
-	productCount: Integer
-	availableCount: Integer
-	boundCount: Integer
-	parentId: ID
-	children: [LicenseTreeNode]
-}
-
-type LicenseTreePayload {
-	rootNode: LicenseTreeNode
-	ok: Boolean
-	message: String
-}
-
 type Query {
 	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
 	SoftwareProductItem (input: InputId): SoftwareProductData!
 	ChildLicensesList (input: ChildLicensesListInput): ChildLicensesListPayload!
 	ParentChainList (input: ParentChainListInput): ParentChainListPayload!
-	LicenseTree (input: LicenseTreeInput): LicenseTreePayload!
 }
 
 type Mutation {

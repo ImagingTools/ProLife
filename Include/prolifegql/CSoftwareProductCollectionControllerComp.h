@@ -12,6 +12,9 @@
 namespace prolifegql
 {
 
+// Forward declaration
+class CSoftwareControllerComp;
+
 
 class CSoftwareProductCollectionControllerComp: public  sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase
 {
@@ -25,6 +28,7 @@ public:
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Operation context controller for order info", true, "OrderOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
+		I_ASSIGN(m_softwareControllerCompPtr, "SoftwareController", "Software controller for tree building", false, "SoftwareController");
 	I_END_COMPONENT;
 
 protected:
@@ -84,6 +88,7 @@ private:
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
+	I_REF(prolifegql::CSoftwareControllerComp, m_softwareControllerCompPtr);
 };
 
 

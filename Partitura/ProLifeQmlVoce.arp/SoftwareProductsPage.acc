@@ -246,7 +246,6 @@
                                 <Value>ChildLicensesList</Value>
                                 <Value>RevokeLicense</Value>
                                 <Value>ParentChainList</Value>
-                                <Value>LicenseTree</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -411,6 +410,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SoftwareController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareControllerComp"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

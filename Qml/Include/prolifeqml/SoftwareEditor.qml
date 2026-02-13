@@ -21,8 +21,6 @@ ViewBase {
 	
 	property string alertMessage: "";
 	property string parentChainErrorMessage: "";
-	property string licenseTreeErrorMessage: "";
-	property var licenseTreeData: null
 	
 	// Constants for parent chain display
 	readonly property int parentChainMinHeight: 100
@@ -54,7 +52,7 @@ ViewBase {
 	onSoftwareProductDataChanged: {
 		checkPermissions();
 		checkInUse();
-		loadParentChain();
+		// License tree is now part of SoftwareProductData, no separate load needed
 	}
 	
 	Component {
@@ -623,7 +621,7 @@ ViewBase {
 				id: hierarchyGroup;
 				width: parent.width;
 				height: visible ? Math.max(400, licenseTreeCanvas.implicitHeight) : 0;
-				visible: root.softwareProductData && root.softwareProductData.m_id;
+				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
 				
 				Flickable {
 					anchors.fill: parent;
@@ -635,46 +633,7 @@ ViewBase {
 						id: licenseTreeCanvas;
 						width: implicitWidth;
 						height: implicitHeight;
-						treeData: root.licenseTreeData;
-					}
-				}
-			}
-			
-			// Show error message if tree fails to load
-			BaseText {
-				width: parent.width;
-				visible: root.licenseTreeErrorMessage !== "";
-				text: root.licenseTreeErrorMessage;
-				color: Style.errorTextColor;
-				wrapMode: Text.WordWrap;
-			}
-		}
-	}
-	
-	LicenseTreeInput {
-		id: licenseTreeInput;
-	}
-	
-	GqlSdlRequestSender {
-		id: licenseTreeRequest;
-		requestType: 0; // Query
-		gqlCommandId: ProlifeLicensesSdlCommandIds.s_licenseTree;
-		
-		sdlObjectComp: Component {
-			LicenseTreePayload {
-				onFinished: {
-					root.licenseTreeErrorMessage = ""; // Clear previous errors
-					
-					if (m_ok && m_rootNode){
-						root.licenseTreeData = m_rootNode;
-					}
-					else {
-						// Display error message to user
-						// Note: Backend error messages are in English and not translated.
-						// We provide a translated prefix for consistency.
-						let errorMsg = qsTr("Failed to load license tree") + ": " + (m_message || qsTr("Unknown error"));
-						console.error(errorMsg);
-						root.licenseTreeErrorMessage = errorMsg;
+						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 					}
 				}
 			}
@@ -734,14 +693,6 @@ ViewBase {
 					}
 				}
 			}
-		}
-	}
-	
-	function loadParentChain() {
-		// Load the full license tree visualization
-		if (root.softwareProductData && root.softwareProductData.m_id){
-			licenseTreeInput.m_licenseId = root.softwareProductData.m_id;
-			licenseTreeRequest.send(licenseTreeInput);
 		}
 	}
 	

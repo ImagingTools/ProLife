@@ -52,6 +52,12 @@ protected:
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
+public:
+	// Helper method to build license tree for a given license ID
+	std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTreeForLicense(
+				const QByteArray& licenseId,
+				QString& errorMessage) const;
+
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);
