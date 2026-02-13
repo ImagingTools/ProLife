@@ -17,7 +17,8 @@ Dialog {
 	property string parentLicenseId: ""
 
 	property string selectedChildLicenseId: ""
-	property int selectedChildCount: 1
+	property int selectedAvailableCount: 0
+	property int selectedBoundCount: 0
 	property int revokeCount: 1
 
 	property BaseModel tableModel: null
@@ -53,8 +54,8 @@ Dialog {
 				return;
 			}
 
-			if (revokeCount <= 0 || revokeCount > selectedChildCount){
-				console.error(qsTr("Invalid revoke count"))
+			if (revokeCount <= 0 || revokeCount > selectedAvailableCount){
+				console.error(qsTr("Invalid revoke count. You can only revoke available (not bound) licenses."))
 				
 				return
 			}
@@ -96,8 +97,9 @@ Dialog {
 						Component.onCompleted: {
 							addHeader("softwareId", qsTr("Software-ID"))
 							addHeader("accountName", qsTr("Account Name"))
-							addHeader("productCount", qsTr("Product Count"))
-							addHeader("isBound", qsTr("Is Bound"))
+							addHeader("productCount", qsTr("Total Count"))
+							addHeader("availableCount", qsTr("Available Count"))
+							addHeader("boundCount", qsTr("Bound Count"))
 						}
 					}
 
@@ -107,46 +109,15 @@ Dialog {
 							revokeLicenseDialog.setButtonEnabled(Enums.ok, selectedIndexes.length === 1)
 
 							if (selectedIndexes.length !== 1){
-								revokeLicenseDialog.selectedChildCount = 1
+								revokeLicenseDialog.selectedAvailableCount = 0
+								revokeLicenseDialog.selectedBoundCount = 0
 								revokeLicenseDialog.selectedChildLicenseId = ""
 								return
 							}
 
 							revokeLicenseDialog.selectedChildLicenseId = target.elements.get(selectedIndexes[0]).item.m_id
-							revokeLicenseDialog.selectedChildCount = target.elements.get(selectedIndexes[0]).item.m_productCount
-						}
-						function onHeadersChanged(){
-							target.setColumnContentById("isBound", isBoundColumnDelegateComp)
-						}
-					}
-					
-					Component {
-						id: isBoundColumnDelegateComp;
-						TableCellDelegateBase {
-							id: cellDelegate
-
-							Image {
-								id: image;
-								anchors.verticalCenter: parent.verticalCenter;
-								anchors.left: parent.left;
-								anchors.leftMargin: Style.marginM;
-								width: Style.iconSizeM;
-								height: width;
-								source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
-								sourceSize.width: width;
-								sourceSize.height: height;
-							}
-
-							onReused: {
-								if (!rowDelegate){
-									return
-								}
-
-								if (rowIndex >= 0){
-									let isBound = cellDelegate.getValue();
-									image.visible = isBound;
-								}
-							}
+							revokeLicenseDialog.selectedAvailableCount = target.elements.get(selectedIndexes[0]).item.m_availableCount
+							revokeLicenseDialog.selectedBoundCount = target.elements.get(selectedIndexes[0]).item.m_boundCount
 						}
 					}
 				}
@@ -156,11 +127,12 @@ Dialog {
 					width: parent.width
 					name: qsTr("Number of licenses to revoke")
 					from: 1
-					to: revokeLicenseDialog.selectedChildCount
+					to: revokeLicenseDialog.selectedAvailableCount > 0 ? revokeLicenseDialog.selectedAvailableCount : 1
 					startValue: 1
 					controlWidth: 150
-					description: qsTr("Max available: ") + revokeLicenseDialog.selectedChildCount
-					readOnly: revokeLicenseDialog.selectedChildLicenseId === ""
+					description: qsTr("Available to revoke: ") + revokeLicenseDialog.selectedAvailableCount + 
+					             (revokeLicenseDialog.selectedBoundCount > 0 ? qsTr(" (Bound: ") + revokeLicenseDialog.selectedBoundCount + ")" : "")
+					readOnly: revokeLicenseDialog.selectedChildLicenseId === "" || revokeLicenseDialog.selectedAvailableCount === 0
 					
 					onValueChanged: {
 						revokeLicenseDialog.revokeCount = value

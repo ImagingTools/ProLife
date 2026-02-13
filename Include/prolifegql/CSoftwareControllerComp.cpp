@@ -283,6 +283,8 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 			}
 		}
 
+		// Calculate bound and available counts
+		int boundCount = 0;
 		if (m_hardwareBindingCollectionCompPtr.IsValid()){
 			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
 			arrayFieldFilter.fieldId = "SoftwareIds";
@@ -296,8 +298,12 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 			arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
 
 			QByteArrayList hardwareBindingIds = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
-			item.isBound = !hardwareBindingIds.isEmpty();
+			boundCount = hardwareBindingIds.size();
 		}
+		
+		int totalCount = softwarePtr->GetProductCount();
+		item.boundCount = boundCount;
+		item.availableCount = totalCount - boundCount;
 		
 		// Check if bound to hardware
 		QByteArray serialNumber = softwarePtr->GetSerialNumber();
@@ -376,10 +382,30 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		return retVal;
 	}
 
-	// Check if license is bound to hardware
-	QByteArray serialNumber = childSoftwarePtr->GetSerialNumber();
-	if (!serialNumber.isEmpty()){
-		errorMessage = QString("Unable to revoke license. Error: License is bound to hardware and cannot be revoked");
+	// Calculate how many licenses are bound to hardware
+	int boundCount = 0;
+	if (m_hardwareBindingCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
+		arrayFieldFilter.fieldId = "SoftwareIds";
+		arrayFieldFilter.filterValue = QVariantList({childLicenseId});
+		arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
+
+		imtbase::CComplexCollectionFilter arrayComplexFilter;
+		arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
+
+		iprm::CParamsSet arrayFilterParam;
+		arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
+
+		QByteArrayList hardwareBindingIds = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
+		boundCount = hardwareBindingIds.size();
+	}
+
+	int currentChildCount = childSoftwarePtr->GetProductCount();
+	int availableCount = currentChildCount - boundCount;
+
+	// Check if we can revoke the requested count
+	if (revokeCount > availableCount){
+		errorMessage = QString("Unable to revoke license. Error: Revoke count (%1) exceeds available count (%2). %3 licenses are bound to hardware.").arg(revokeCount).arg(availableCount).arg(boundCount);
 		retVal.Version_1_0->message = errorMessage;
 		return retVal;
 	}
@@ -409,14 +435,6 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		return retVal;
 	}
 
-	// Check if we have enough licenses to revoke
-	int currentChildCount = childSoftwarePtr->GetProductCount();
-	if (revokeCount > currentChildCount){
-		errorMessage = QString("Unable to revoke license. Error: Revoke count (%1) exceeds available count (%2)").arg(revokeCount).arg(currentChildCount);
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
-	}
-
 	// Update parent license count
 	int currentParentCount = parentSoftwarePtr->GetProductCount();
 	parentSoftwarePtr->SetProductCount(currentParentCount + revokeCount);
@@ -428,8 +446,9 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	}
 
 	// Update or delete child license
-	if (revokeCount == currentChildCount){
-		// Remove child license entirely
+	// Only delete if revoking all available licenses AND no licenses are bound
+	if (revokeCount == availableCount && boundCount == 0){
+		// Remove child license entirely (no licenses left at all)
 		if (!m_softwareProductCollectionCompPtr->RemoveElements({childLicenseId})){
 			errorMessage = QString("Unable to revoke license. Error: Failed to remove child license");
 			retVal.Version_1_0->message = errorMessage;
@@ -444,7 +463,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		retVal.Version_1_0->message = QString("License revoked successfully. Child license removed.");
 	}
 	else {
-		// Update child license count
+		// Update child license count (either some available left, or some are bound)
 		childSoftwarePtr->SetProductCount(currentChildCount - revokeCount);
 		
 		if (!m_softwareProductCollectionCompPtr->SetObjectData(childLicenseId, *childSoftwarePtr)){
