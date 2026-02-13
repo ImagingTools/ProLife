@@ -77,6 +77,9 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	int productCount = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT).toInt();
 	representation["ProductCount"] = productCount;
 
+	QString parentInstanceId = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PARENT_INSTANCE_ID).toString();
+	representation["ParentInstanceId"] = QString(parentInstanceId);
+
 	return true;
 }
 
@@ -157,6 +160,10 @@ bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 
 	if (representation.contains("ProductCount")){
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT, representation.value("ProductCount"));
+	}
+
+	if (representation.contains("ParentInstanceId")){
+		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PARENT_INSTANCE_ID, representation.value("ParentInstanceId"));
 	}
 
 	return true;

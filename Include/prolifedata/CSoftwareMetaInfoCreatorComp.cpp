@@ -171,6 +171,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_SERIAL_NUMBER, softwareInfoPtr->GetSerialNumber());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_MULTI_PRODUCT, softwareInfoPtr->IsMultiProduct());
 	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_COUNT, softwareInfoPtr->GetProductCount());
+	metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PARENT_INSTANCE_ID, softwareInfoPtr->GetParentInstanceId());
 
 	return true;
 }
