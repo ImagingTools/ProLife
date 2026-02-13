@@ -19,6 +19,13 @@ ViewBase {
 	property var productLicensesModel: TreeItemModel{}
 	
 	property string alertMessage: "";
+	property string parentChainErrorMessage: "";
+	
+	// Constants for parent chain display
+	readonly property int parentChainMinHeight: 100
+	readonly property int parentChainMaxHeight: 300
+	readonly property int parentChainLineHeight: 20
+	readonly property int parentChainPadding: 40
 	
 	property SoftwareProductData softwareProductData: model ? model : null;
 	property bool isNew: false
@@ -622,8 +629,17 @@ ViewBase {
 					readOnly: true;
 					visible: root.softwareProductData && root.softwareProductData.m_parentInstanceId;
 					multiline: true;
-					height: visible ? Math.max(100, Math.min(300, lineCount * 20 + 40)) : 0;
+					height: visible ? Math.max(root.parentChainMinHeight, Math.min(root.parentChainMaxHeight, lineCount * root.parentChainLineHeight + root.parentChainPadding)) : 0;
 				}
+			}
+			
+			// Show error message if parent chain fails to load
+			BaseText {
+				width: parent.width;
+				visible: root.parentChainErrorMessage !== "";
+				text: root.parentChainErrorMessage;
+				color: Style.errorTextColor;
+				wrapMode: Text.WordWrap;
 			}
 		}
 	}
@@ -637,6 +653,8 @@ ViewBase {
 		id: parentChainRequest;
 		
 		onFinished: {
+			root.parentChainErrorMessage = ""; // Clear previous errors
+			
 			if (m_payload && m_payload.Version_1_0){
 				let payload = m_payload.Version_1_0;
 				
@@ -668,7 +686,9 @@ ViewBase {
 					parentChainText.text = chainText;
 				}
 				else {
-					console.log("Failed to load parent chain: " + (payload.message || "Unknown error"));
+					let errorMsg = qsTr("Failed to load parent chain: ") + (payload.message || qsTr("Unknown error"));
+					console.error(errorMsg);
+					root.parentChainErrorMessage = errorMsg;
 				}
 			}
 		}

@@ -522,8 +522,9 @@ sdl::prolife::Licenses::CParentChainListPayload CSoftwareControllerComp::OnParen
 	// Traverse up the parent chain
 	int level = 0;
 	QSet<QByteArray> visitedIds; // Prevent infinite loops in case of circular references
+	const int MAX_PARENT_CHAIN_DEPTH = 100; // Maximum depth to prevent infinite loops
 
-	while (!currentLicenseId.isEmpty() && level < 100) { // Max 100 levels to prevent infinite loops
+	while (!currentLicenseId.isEmpty() && level < MAX_PARENT_CHAIN_DEPTH) {
 		// Check for circular reference
 		if (visitedIds.contains(currentLicenseId)){
 			errorMessage = QString("Unable to get parent chain. Error: Circular reference detected");
