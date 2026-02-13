@@ -44,6 +44,7 @@ ViewBase {
 	onSoftwareProductDataChanged: {
 		checkPermissions();
 		checkInUse();
+		loadParentChain();
 	}
 	
 	Component {
@@ -678,10 +679,6 @@ ViewBase {
 			parentChainInput.m_licenseId = root.softwareProductData.m_id;
 			parentChainRequest.send(parentChainInput);
 		}
-	}
-	
-	onSoftwareProductDataChanged: {
-		loadParentChain();
 	}
 }//Container
 
