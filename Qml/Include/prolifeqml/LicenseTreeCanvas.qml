@@ -6,6 +6,12 @@ Item {
 	
 	property var treeData: null
 	property string currentLicenseId: ""  // ID of the license being edited
+	
+	// Trigger repaint when currentLicenseId changes
+	onCurrentLicenseIdChanged: {
+		canvas.requestPaint();
+	}
+	
 	property int nodeWidth: 240
 	property int nodeHeight: 120
 	property int horizontalSpacing: 60
@@ -147,12 +153,18 @@ Item {
 				ctx.closePath();
 				ctx.fill();
 				
-				// Draw transfer info (parent count → child count)
+				// Draw transfer info (original parent count → child count)
+				// Original parent count = current parent count + all children counts
+				let originalParentCount = layout.node.m_productCount;
+				for (let j = 0; j < layout.children.length; j++) {
+					originalParentCount += layout.children[j].node.m_productCount;
+				}
+				
 				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				let transferText = layout.node.m_productCount + " → " + child.node.m_productCount;
+				let transferText = originalParentCount + " → " + child.node.m_productCount;
 				let transferY = parentBottomY + root.verticalSpacing / 2;
 				
 				// Draw background for transfer text
