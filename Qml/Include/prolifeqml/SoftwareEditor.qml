@@ -599,7 +599,89 @@ ViewBase {
 					}
 				}
 			}
+			
+			GroupHeaderView {
+				width: parent.width;
+				visible: parentChainText.visible;
+				
+				title: qsTr("License Hierarchy");
+				groupView: hierarchyGroup;
+			}
+			
+			GroupElementView {
+				id: hierarchyGroup;
+				
+				width: parent.width;
+				visible: parentChainText.visible;
+				
+				TextInputElementView {
+					id: parentChainText;
+					
+					name: qsTr("Parent Chain");
+					readOnly: true;
+					visible: root.softwareProductData && root.softwareProductData.m_parentInstanceId;
+					multiline: true;
+					height: visible ? Math.max(100, Math.min(300, lineCount * 20 + 40)) : 0;
+				}
+			}
 		}
+	}
+	
+	ParentChainListInput {
+		id: parentChainInput;
+		property string m_licenseId: "";
+	}
+	
+	ParentChainListGqlRequest {
+		id: parentChainRequest;
+		
+		onFinished: {
+			if (m_payload && m_payload.Version_1_0){
+				let payload = m_payload.Version_1_0;
+				
+				if (payload.ok && payload.items){
+					let chainText = "";
+					let items = payload.items;
+					
+					// Build hierarchy string from root to current
+					// Items are ordered from current (level 0) to root (highest level)
+					// So we reverse them to show root → ... → current
+					for (let i = items.length - 1; i >= 0; i--){
+						let item = items[i];
+						let indent = "  ".repeat(items.length - 1 - i);
+						
+						if (i < items.length - 1){
+							chainText += "\n" + indent + "↓\n";
+						}
+						
+						chainText += indent;
+						if (item.productName){
+							chainText += item.productName + " - ";
+						}
+						chainText += item.serialNumber;
+						if (item.project){
+							chainText += " (" + item.project + ")";
+						}
+					}
+					
+					parentChainText.text = chainText;
+				}
+				else {
+					console.log("Failed to load parent chain: " + (payload.message || "Unknown error"));
+				}
+			}
+		}
+	}
+	
+	function loadParentChain() {
+		if (root.softwareProductData && root.softwareProductData.m_id && root.softwareProductData.m_parentInstanceId){
+			parentChainInput.m_licenseId = root.softwareProductData.m_id;
+			parentChainRequest.send(parentChainInput);
+		}
+	}
+	
+	onSoftwareProductDataChanged: {
+		loadParentChain();
 	}
 }//Container
 

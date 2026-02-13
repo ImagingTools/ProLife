@@ -42,6 +42,11 @@ protected:
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
+	virtual sdl::prolife::Licenses::CParentChainListPayload OnParentChainList(
+				const sdl::prolife::Licenses::CParentChainListGqlRequest& parentChainRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);

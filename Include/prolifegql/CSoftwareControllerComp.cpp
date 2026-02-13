@@ -486,6 +486,99 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 }
 
 
+sdl::prolife::Licenses::CParentChainListPayload CSoftwareControllerComp::OnParentChainList(
+			const sdl::prolife::Licenses::CParentChainListGqlRequest& parentChainRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::prolife::Licenses::CParentChainListPayload retVal;
+	retVal.Version_1_0.Emplace();
+	retVal.Version_1_0->ok = false;
+
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to get parent chain. Error: Software product collection is not set");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	sdl::prolife::Licenses::ParentChainListRequestArguments inputArguments = parentChainRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		errorMessage = QString("Unable to get parent chain. Error: Invalid input arguments");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	sdl::prolife::Licenses::CParentChainListInput::V1_0& input = *inputArguments.input.Version_1_0;
+
+	if (!input.licenseId){
+		errorMessage = QString("Unable to get parent chain. Error: License ID is missing");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	QByteArray currentLicenseId = *input.licenseId;
+	QList<sdl::prolife::Licenses::CParentChainItem::V1_0> chainItems;
+
+	// Traverse up the parent chain
+	int level = 0;
+	QSet<QByteArray> visitedIds; // Prevent infinite loops in case of circular references
+
+	while (!currentLicenseId.isEmpty() && level < 100) { // Max 100 levels to prevent infinite loops
+		// Check for circular reference
+		if (visitedIds.contains(currentLicenseId)){
+			errorMessage = QString("Unable to get parent chain. Error: Circular reference detected");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+		visitedIds.insert(currentLicenseId);
+
+		// Get software data
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!m_softwareProductCollectionCompPtr->GetObjectData(currentLicenseId, dataPtr)){
+			break; // License not found, end of chain
+		}
+
+		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
+		if (!softwarePtr){
+			break;
+		}
+
+		// Add item to chain
+		sdl::prolife::Licenses::CParentChainItem::V1_0 chainItem;
+		chainItem.id = currentLicenseId;
+		chainItem.serialNumber = softwarePtr->GetSerialNumber();
+		chainItem.project = prolifedata::GetSoftwareProject(softwarePtr);
+		chainItem.level = level;
+
+		// Get product name
+		QByteArray productId = prolifedata::GetSoftwareProductId(softwarePtr);
+		if (!productId.isEmpty()){
+			imtlic::IProductInfo* productPtr = prolifedata::GetCachedProductInfoPtr(productId);
+			if (productPtr){
+				chainItem.productName = productPtr->GetName();
+			}
+		}
+
+		chainItems.append(chainItem);
+
+		// Move to parent
+		QByteArray parentId = softwarePtr->GetParentInstanceId();
+		if (parentId.isEmpty()){
+			break; // No more parents, end of chain
+		}
+
+		currentLicenseId = parentId;
+		level++;
+	}
+
+	retVal.Version_1_0->items = chainItems;
+	retVal.Version_1_0->ok = true;
+	retVal.Version_1_0->message = QString("Parent chain retrieved successfully");
+
+	return retVal;
+}
+
+
 } // namespace prolifegql
 
 
