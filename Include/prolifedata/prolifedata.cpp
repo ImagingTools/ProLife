@@ -336,6 +336,8 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.serialNumber = softwarePtr->GetSerialNumber();
 		node.productCount = softwarePtr->GetProductCount();
 		node.parentId = softwarePtr->GetParentInstanceId();
+		node.accountId = softwarePtr->GetAccountId();
+		node.accountName = softwarePtr->GetAccountName();
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;

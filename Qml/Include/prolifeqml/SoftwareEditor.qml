@@ -632,6 +632,7 @@ ViewBase {
 					LicenseTreeCanvas {
 						id: licenseTreeCanvas;
 						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 					}
 				}
 			}

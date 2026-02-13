@@ -51,6 +51,8 @@ type LicenseTreeNode {
 	serialNumber: String
 	parentId: ID
 	productCount: Integer
+	accountId: ID
+	accountName: String
 	children: [LicenseTreeNode]
 }
 

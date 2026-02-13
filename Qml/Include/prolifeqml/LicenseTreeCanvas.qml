@@ -5,12 +5,22 @@ Item {
 	id: root
 	
 	property var treeData: null
-	property int nodeWidth: 200
-	property int nodeHeight: 80
-	property int horizontalSpacing: 40
-	property int verticalSpacing: 60
+	property string currentLicenseId: ""  // ID of the license being edited
+	property int nodeWidth: 240
+	property int nodeHeight: 120
+	property int horizontalSpacing: 60
+	property int verticalSpacing: 80
 	
 	readonly property int ellipsisWidthMargin: 20
+	readonly property int arrowSize: 8
+	
+	// Modern color scheme
+	readonly property color currentNodeColor: "#4A90E2"
+	readonly property color currentNodeBorderColor: "#2E5C8A"
+	readonly property color normalNodeColor: "#F5F7FA"
+	readonly property color normalBorderColor: "#D0D7DE"
+	readonly property color arrowColor: "#6C757D"
+	readonly property color transferTextColor: "#28A745"
 	
 	Canvas {
 		id: canvas
@@ -27,10 +37,7 @@ Item {
 			// Calculate tree layout
 			let layout = calculateLayout(root.treeData);
 			
-			console.log("layout", layout)
-			// Draw connections first (so they appear behind nodes)
-			ctx.strokeStyle = Style.borderColor;
-			ctx.lineWidth = 2;
+			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
 			// Draw nodes
@@ -114,18 +121,47 @@ Item {
 			let parentCenterX = layout.x + root.nodeWidth / 2;
 			let parentBottomY = layout.y + root.nodeHeight;
 			
+			ctx.strokeStyle = root.arrowColor;
+			ctx.fillStyle = root.arrowColor;
+			ctx.lineWidth = 2;
+			
 			for (let i = 0; i < layout.children.length; i++) {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
 				let childTopY = child.y;
 				
-				// Draw line from parent to child
+				// Draw line from parent to child with arrow
 				ctx.beginPath();
 				ctx.moveTo(parentCenterX, parentBottomY);
 				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
 				ctx.lineTo(childCenterX, parentBottomY + root.verticalSpacing / 2);
 				ctx.lineTo(childCenterX, childTopY);
 				ctx.stroke();
+				
+				// Draw arrow at child
+				let arrowY = childTopY;
+				ctx.beginPath();
+				ctx.moveTo(childCenterX, arrowY);
+				ctx.lineTo(childCenterX - root.arrowSize, arrowY - root.arrowSize);
+				ctx.lineTo(childCenterX + root.arrowSize, arrowY - root.arrowSize);
+				ctx.closePath();
+				ctx.fill();
+				
+				// Draw transfer info (parent count → child count)
+				ctx.fillStyle = root.transferTextColor;
+				ctx.font = "bold 11px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				let transferText = layout.node.m_productCount + " → " + child.node.m_productCount;
+				let transferY = parentBottomY + root.verticalSpacing / 2;
+				
+				// Draw background for transfer text
+				let textWidth = ctx.measureText(transferText).width;
+				ctx.fillStyle = Style.backgroundColor;
+				ctx.fillRect(childCenterX - textWidth / 2 - 4, transferY - 8, textWidth + 8, 16);
+				
+				ctx.fillStyle = root.transferTextColor;
+				ctx.fillText(transferText, childCenterX, transferY);
 				
 				// Recursively draw child connections
 				drawConnections(ctx, child);
@@ -139,34 +175,66 @@ Item {
 			let x = layout.x;
 			let y = layout.y;
 			
-			// Draw node rectangle
-			ctx.fillStyle = Style.backgroundColor;
-			ctx.strokeStyle = Style.borderColor;
-			ctx.lineWidth = 2;
+			// Determine if this is the current license
+			let isCurrent = (node.m_id === root.currentLicenseId);
+			
+			// Modern styling with rounded corners (simulated with shadow)
+			// Draw shadow first
+			if (isCurrent) {
+				ctx.fillStyle = "rgba(74, 144, 226, 0.2)";
+				ctx.fillRect(x + 4, y + 4, root.nodeWidth, root.nodeHeight);
+			}
+			
+			// Draw node rectangle with gradient-like effect
+			let bgColor = isCurrent ? root.currentNodeColor : root.normalNodeColor;
+			let borderColor = isCurrent ? root.currentNodeBorderColor : root.normalBorderColor;
+			
+			ctx.fillStyle = bgColor;
+			ctx.strokeStyle = borderColor;
+			ctx.lineWidth = isCurrent ? 3 : 2;
 			ctx.fillRect(x, y, root.nodeWidth, root.nodeHeight);
 			ctx.strokeRect(x, y, root.nodeWidth, root.nodeHeight);
 			
+			// Draw "CURRENT" badge if this is the current license
+			if (isCurrent) {
+				ctx.fillStyle = "#FFC107";
+				ctx.fillRect(x + root.nodeWidth - 70, y, 70, 24);
+				ctx.fillStyle = "#000";
+				ctx.font = "bold 10px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.fillText("CURRENT", x + root.nodeWidth - 35, y + 12);
+			}
+			
 			// Draw text
-			ctx.fillStyle = Style.textColor;
-			ctx.font = "12px " + Style.fontFamily;
-			ctx.textAlign = "center";
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
+			ctx.textAlign = "left";
 			ctx.textBaseline = "top";
 			
-			let textX = x + root.nodeWidth / 2;
-			let textY = y + 10;
-			let lineHeight = 18;
+			let textX = x + 10;
+			let textY = y + 15;
+			let lineHeight = 20;
 			
 			// Serial number (used as name)
 			if (node.m_serialNumber) {
-				ctx.font = "bold 13px " + Style.fontFamily;
-				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 10), textX, textY);
+				ctx.font = "bold 14px " + Style.fontFamily;
+				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 20), textX, textY);
 				textY += lineHeight + 5;
 			}
 			
+			// Account info
+			if (node.m_accountName) {
+				ctx.font = "11px " + Style.fontFamily;
+				ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+				ctx.fillText(truncateText(ctx, "Account: " + node.m_accountName, root.nodeWidth - 20), textX, textY);
+				textY += lineHeight;
+			}
+			
 			// Count info
-			ctx.font = "11px " + Style.fontFamily;
-			let countText = "Count: " + (node.m_productCount || 0);
-			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 10), textX, textY);
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
+			let countText = "Licenses: " + (node.m_productCount || 0);
+			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
 			
 			// Draw children
 			if (layout.children) {
@@ -192,7 +260,6 @@ Item {
 	}
 	
 	onTreeDataChanged: {
-		console.log("onTreeDataChanged", treeData)
 		if (treeData) {
 			// Recalculate layout with proper X coordinates
 			let layout = canvas.calculateLayout(treeData);
