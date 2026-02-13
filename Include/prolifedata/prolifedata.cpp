@@ -321,6 +321,11 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			return std::nullopt;
 		}
 
+		idoc::MetaInfoPtr metaInfoPtr = softwareProductCollection.GetDataMetaInfo(nodeId);
+		if (!metaInfoPtr.IsValid()){
+			return std::nullopt;
+		}
+
 		imtbase::IObjectCollection::DataPtr dataPtr;
 		if (!softwareProductCollection.GetObjectData(nodeId, dataPtr)){
 			return std::nullopt;
@@ -336,8 +341,8 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.serialNumber = softwarePtr->GetSerialNumber();
 		node.productCount = softwarePtr->GetProductCount();
 		node.parentId = softwarePtr->GetParentInstanceId();
-		node.accountId = softwarePtr->GetAccountId();
-		node.accountName = softwarePtr->GetAccountName();
+		node.accountId = softwarePtr->GetCustomerId();
+		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
