@@ -667,7 +667,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 	}
 
 	// Now build the tree recursively from the root
-	auto buildNode = [this](const QByteArray& licenseId, auto& buildNodeRef, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
+	auto buildNode = [this](const QByteArray& licenseId, auto& recursiveBuildNode, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
 		const int MAX_TREE_DEPTH = 100;
 		if (currentDepth >= MAX_TREE_DEPTH){
 			return std::nullopt;
@@ -735,7 +735,7 @@ sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTr
 
 		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
 		for (const QByteArray& childId : std::as_const(childIds)){
-			auto childNode = buildNodeRef(childId, buildNodeRef, currentDepth + 1);
+			auto childNode = recursiveBuildNode(childId, recursiveBuildNode, currentDepth + 1);
 			if (childNode.has_value()){
 				children.append(childNode.value());
 			}

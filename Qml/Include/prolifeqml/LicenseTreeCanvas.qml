@@ -10,6 +10,8 @@ Item {
 	property int horizontalSpacing: 40
 	property int verticalSpacing: 60
 	
+	readonly property int ellipsisWidthMargin: 20
+	
 	Canvas {
 		id: canvas
 		anchors.fill: parent
@@ -197,7 +199,7 @@ Item {
 				return text;
 			}
 			
-			while (width > maxWidth - 20 && text.length > 0) {
+			while (width > maxWidth - root.ellipsisWidthMargin && text.length > 0) {
 				text = text.substring(0, text.length - 1);
 				width = ctx.measureText(text + "...").width;
 			}

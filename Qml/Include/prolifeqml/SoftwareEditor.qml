@@ -679,7 +679,8 @@ ViewBase {
 		}
 	}
 	
-	// Keep old parent chain code for backward compatibility (can be removed if not needed)
+	// Keep old parent chain code for backward compatibility
+	// TODO: Can be removed after verifying tree visualization works correctly in production
 	ParentChainListInput {
 		id: parentChainInput;
 		property string m_licenseId: "";
