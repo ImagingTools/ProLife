@@ -611,7 +611,7 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
-				visible: root.softwareProductData && root.softwareProductData.m_id;
+				visible: root.softwareProductData !== null;
 				
 				title: qsTr("License Hierarchy");
 				groupView: hierarchyGroup;
@@ -620,85 +620,22 @@ ViewBase {
 			Item {
 				id: hierarchyGroup;
 				width: parent.width;
-				height: visible ? Math.max(400, licenseTreeCanvas.implicitHeight) : 0;
+				height: visible ? Math.max(400, licenseTreeCanvas.height) : 0;
 				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
 				
 				Flickable {
 					anchors.fill: parent;
-					contentWidth: licenseTreeCanvas.implicitWidth;
-					contentHeight: licenseTreeCanvas.implicitHeight;
+					contentWidth: licenseTreeCanvas.width;
+					contentHeight: licenseTreeCanvas.height;
 					clip: true;
-					
+
 					LicenseTreeCanvas {
 						id: licenseTreeCanvas;
-						width: implicitWidth;
-						height: implicitHeight;
 						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 					}
 				}
 			}
 		}
-	}
-	
-	// Keep old parent chain code for backward compatibility
-	// TODO: Can be removed after verifying tree visualization works correctly in production
-	ParentChainListInput {
-		id: parentChainInput;
-	}
-	
-	GqlSdlRequestSender {
-		id: parentChainRequest;
-		requestType: 0; // Query
-		gqlCommandId: ProlifeLicensesSdlCommandIds.s_parentChainList;
-		
-		sdlObjectComp: Component {
-			ParentChainListPayload {
-				onFinished: {
-					root.parentChainErrorMessage = ""; // Clear previous errors
-					
-					if (m_ok && m_items){
-						let chainText = "";
-						let items = m_items;
-						
-						// Build hierarchy string from root to current license
-						// Note: items[0] is the current license (level 0), items[n-1] is the root parent
-						// We reverse iteration to display root → ... → current
-						for (let i = items.length - 1; i >= 0; i--){
-							let item = items[i];
-							let indent = "  ".repeat(items.length - 1 - i);
-							
-							if (i < items.length - 1){
-								chainText += "\n" + indent + "↓\n";
-							}
-							
-							chainText += indent;
-							if (item.productName){
-								chainText += item.productName + " - ";
-							}
-							chainText += item.serialNumber;
-							if (item.project){
-								chainText += " (" + item.project + ")";
-							}
-						}
-						
-						parentChainText.text = chainText;
-					}
-					else {
-						// Display error message to user
-						// Note: Backend error messages are in English and not translated.
-						// We provide a translated prefix for consistency.
-						let errorMsg = qsTr("Failed to load parent chain") + ": " + (m_message || qsTr("Unknown error"));
-						console.error(errorMsg);
-						root.parentChainErrorMessage = errorMsg;
-					}
-				}
-			}
-		}
-	}
-	
-	function calculateParentChainHeight(lineCount) {
-		let calculatedHeight = lineCount * root.parentChainLineHeight + root.parentChainPadding;
-		return Math.max(root.parentChainMinHeight, Math.min(root.parentChainMaxHeight, calculatedHeight));
 	}
 }//Container
 

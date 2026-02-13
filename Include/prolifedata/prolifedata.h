@@ -13,7 +13,6 @@
 
 // Qt includes
 #include <QString>
-#include <optional>
 
 
 namespace prolifedata

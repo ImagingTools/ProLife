@@ -121,29 +121,10 @@ type RevokeLicensePayload {
 	message: String
 }
 
-input ParentChainListInput {
-	licenseId: ID!
-}
-
-type ParentChainItem {
-	id: ID!
-	serialNumber: String
-	project: String
-	productName: String
-	level: Integer
-}
-
-type ParentChainListPayload {
-	items: [ParentChainItem]
-	ok: Boolean
-	message: String
-}
-
 type Query {
 	SoftwareProductsList (input:SoftwareProductsListInput): SoftwareProductsListPayload!
 	SoftwareProductItem (input: InputId): SoftwareProductData!
 	ChildLicensesList (input: ChildLicensesListInput): ChildLicensesListPayload!
-	ParentChainList (input: ParentChainListInput): ParentChainListPayload!
 }
 
 type Mutation {

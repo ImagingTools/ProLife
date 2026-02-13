@@ -1,6 +1,9 @@
 #include <prolifedata/prolifedata.h>
 
 
+// Qt includes
+#include <QSet>
+
 // ACF includes
 #include <iprm/CParamsSet.h>
 
@@ -8,13 +11,9 @@
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/IProductInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
-#include <idata/IDataUtil.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
-
-// Qt includes
-#include <QSet>
 
 
 namespace prolifedata
@@ -271,10 +270,10 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 
 std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
-	const QByteArray& licenseId,
-	const imtbase::IObjectCollection& softwareProductCollection,
-	const imtbase::IObjectCollection* hardwareBindingCollection,
-	QString& errorMessage)
+			const QByteArray& licenseId,
+			const imtbase::IObjectCollection& softwareProductCollection,
+			const imtbase::IObjectCollection* hardwareBindingCollection,
+			QString& errorMessage)
 {
 	// First, find the root of the tree by traversing up the parent chain
 	QByteArray rootLicenseId = licenseId;
@@ -295,8 +294,8 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			return std::nullopt;
 		}
 
-		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
-		if (!softwarePtr){
+		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		if (softwarePtr == nullptr){
 			errorMessage = QString("Unable to build license tree. Error: Invalid license data");
 			return std::nullopt;
 		}
@@ -328,8 +327,8 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			return std::nullopt;
 		}
 
-		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
-		if (!softwarePtr){
+		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		if (softwarePtr == nullptr){
 			return std::nullopt;
 		}
 
@@ -339,15 +338,6 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.project = softwarePtr->GetProject();
 		node.productCount = softwarePtr->GetProductCount();
 		node.parentId = softwarePtr->GetParentInstanceId();
-
-		// Get product name
-		QByteArray productId = softwarePtr->GetProductId();
-		if (!productId.isEmpty()){
-			imtlic::IProductInfo* productPtr = imtlic::GetCachedProductInfoPtr(productId);
-			if (productPtr){
-				node.productName = productPtr->GetName();
-			}
-		}
 
 		// Calculate bound count
 		int boundCount = 0;
@@ -368,7 +358,7 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		}
 
 		node.boundCount = boundCount;
-		node.availableCount = node.productCount - boundCount;
+		node.availableCount = *node.productCount - boundCount;
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
@@ -391,7 +381,7 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			}
 		}
 
-		node.children = children;
+		node.children.Emplace().FromList(children);
 
 		return node;
 	};

@@ -31,32 +31,14 @@ protected:
 				const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-
 	virtual sdl::prolife::Licenses::CChildLicensesListPayload OnChildLicensesList(
 				const sdl::prolife::Licenses::CChildLicensesListGqlRequest& childLicensesRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-
 	virtual sdl::prolife::Licenses::CRevokeLicensePayload OnRevokeLicense(
 				const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-
-	virtual sdl::prolife::Licenses::CParentChainListPayload OnParentChainList(
-				const sdl::prolife::Licenses::CParentChainListGqlRequest& parentChainRequest,
-				const ::imtgql::CGqlRequest& gqlRequest,
-				QString& errorMessage) const override;
-
-	virtual sdl::prolife::Licenses::CLicenseTreePayload OnLicenseTree(
-				const sdl::prolife::Licenses::CLicenseTreeGqlRequest& licenseTreeRequest,
-				const ::imtgql::CGqlRequest& gqlRequest,
-				QString& errorMessage) const override;
-
-public:
-	// Helper method to build license tree for a given license ID
-	std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTreeForLicense(
-				const QByteArray& licenseId,
-				QString& errorMessage) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);

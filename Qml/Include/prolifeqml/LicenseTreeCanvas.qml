@@ -218,8 +218,8 @@ Item {
 				let maxX = calculateMaxX(layout);
 				let maxY = calculateMaxY(layout);
 				
-				root.implicitWidth = maxX + root.nodeWidth + 40;
-				root.implicitHeight = maxY + root.nodeHeight + 40;
+				root.width = maxX + root.nodeWidth + 40;
+				root.height = maxY + root.nodeHeight + 40;
 			}
 			
 			canvas.requestPaint();
