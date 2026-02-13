@@ -151,37 +151,19 @@ Item {
 			ctx.textBaseline = "top";
 			
 			let textX = x + root.nodeWidth / 2;
-			let textY = y + 5;
-			let lineHeight = 16;
+			let textY = y + 10;
+			let lineHeight = 18;
 			
-			// Product name
-			if (node.productName) {
-				ctx.fillText(truncateText(ctx, node.productName, root.nodeWidth - 10), textX, textY);
-				textY += lineHeight;
-			}
-			
-			// Serial number
+			// Serial number (used as name)
 			if (node.serialNumber) {
+				ctx.font = "bold 13px " + Style.fontFamily;
 				ctx.fillText(truncateText(ctx, node.serialNumber, root.nodeWidth - 10), textX, textY);
-				textY += lineHeight;
-			}
-			
-			// Project
-			if (node.project) {
-				ctx.font = "10px " + Style.fontFamily;
-				ctx.fillText(truncateText(ctx, "(" + node.project + ")", root.nodeWidth - 10), textX, textY);
-				textY += lineHeight;
+				textY += lineHeight + 5;
 			}
 			
 			// Count info
-			ctx.font = "10px " + Style.fontFamily;
-			let countText = "Total: " + (node.productCount || 0);
-			if (node.availableCount !== undefined) {
-				countText += " | Avail: " + node.availableCount;
-			}
-			if (node.boundCount !== undefined && node.boundCount > 0) {
-				countText += " | Bound: " + node.boundCount;
-			}
+			ctx.font = "11px " + Style.fontFamily;
+			let countText = "Count: " + (node.productCount || 0);
 			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 10), textX, textY);
 			
 			// Draw children

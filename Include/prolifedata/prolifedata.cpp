@@ -272,7 +272,6 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			const QByteArray& licenseId,
 			const imtbase::IObjectCollection& softwareProductCollection,
-			const imtbase::IObjectCollection* hardwareBindingCollection,
 			QString& errorMessage)
 {
 	// First, find the root of the tree by traversing up the parent chain
@@ -335,30 +334,8 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
 		node.id = nodeId;
 		node.serialNumber = softwarePtr->GetSerialNumber();
-		node.project = softwarePtr->GetProject();
 		node.productCount = softwarePtr->GetProductCount();
 		node.parentId = softwarePtr->GetParentInstanceId();
-
-		// Calculate bound count
-		int boundCount = 0;
-		if (hardwareBindingCollection){
-			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
-			arrayFieldFilter.fieldId = "SoftwareIds";
-			arrayFieldFilter.filterValue = QVariantList({nodeId});
-			arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
-
-			imtbase::CComplexCollectionFilter arrayComplexFilter;
-			arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
-
-			iprm::CParamsSet arrayFilterParam;
-			arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
-
-			QByteArrayList hardwareBindingIds = hardwareBindingCollection->GetElementIds(0, -1, &arrayFilterParam);
-			boundCount = hardwareBindingIds.size();
-		}
-
-		node.boundCount = boundCount;
-		node.availableCount = *node.productCount - boundCount;
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;

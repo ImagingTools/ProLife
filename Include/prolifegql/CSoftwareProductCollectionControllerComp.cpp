@@ -522,13 +522,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 	// Build license tree using shared utility function
 	QString treeError;
-	const imtbase::IObjectCollection* hardwareBindingPtr = m_bindingCollectionCompPtr.IsValid() ? 
-		m_bindingCollectionCompPtr.GetPtr() : nullptr;
-	
 	auto treeNode = prolifedata::BuildLicenseTree(
 		id,
 		*m_objectCollectionCompPtr,
-		hardwareBindingPtr,
 		treeError);
 	
 	if (treeNode.has_value()){

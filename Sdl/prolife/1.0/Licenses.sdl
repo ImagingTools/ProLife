@@ -49,12 +49,8 @@ type SoftwareProductsListPayload {
 type LicenseTreeNode {
 	id: ID!
 	serialNumber: String
-	project: String
-	productName: String
-	productCount: Integer
-	availableCount: Integer
-	boundCount: Integer
 	parentId: ID
+	productCount: Integer
 	children: [LicenseTreeNode]
 }
 

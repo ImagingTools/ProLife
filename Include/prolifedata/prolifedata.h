@@ -37,7 +37,6 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& softwareProductCollection,
-	const imtbase::IObjectCollection* hardwareBindingCollection,
 	QString& errorMessage);
 
 
