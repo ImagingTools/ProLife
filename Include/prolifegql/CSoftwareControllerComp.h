@@ -47,6 +47,11 @@ protected:
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
+	virtual sdl::prolife::Licenses::CLicenseTreePayload OnLicenseTree(
+				const sdl::prolife::Licenses::CLicenseTreeGqlRequest& licenseTreeRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);

@@ -20,6 +20,8 @@ ViewBase {
 	
 	property string alertMessage: "";
 	property string parentChainErrorMessage: "";
+	property string licenseTreeErrorMessage: "";
+	property var licenseTreeData: null
 	
 	// Constants for parent chain display
 	readonly property int parentChainMinHeight: 100
@@ -610,40 +612,74 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
-				visible: parentChainText.visible;
+				visible: root.softwareProductData && root.softwareProductData.m_id;
 				
 				title: qsTr("License Hierarchy");
 				groupView: hierarchyGroup;
 			}
 			
-			GroupElementView {
+			Item {
 				id: hierarchyGroup;
-				
 				width: parent.width;
-				visible: parentChainText.visible;
+				height: visible ? Math.max(400, licenseTreeCanvas.implicitHeight) : 0;
+				visible: root.softwareProductData && root.softwareProductData.m_id;
 				
-				TextInputElementView {
-					id: parentChainText;
+				Flickable {
+					anchors.fill: parent;
+					contentWidth: licenseTreeCanvas.implicitWidth;
+					contentHeight: licenseTreeCanvas.implicitHeight;
+					clip: true;
 					
-					name: qsTr("Parent Chain");
-					readOnly: true;
-					visible: root.softwareProductData && root.softwareProductData.m_parentInstanceId;
-					multiline: true;
-					height: root.calculateParentChainHeight(lineCount);
+					LicenseTreeCanvas {
+						id: licenseTreeCanvas;
+						width: implicitWidth;
+						height: implicitHeight;
+						treeData: root.licenseTreeData;
+					}
 				}
 			}
 			
-			// Show error message if parent chain fails to load
+			// Show error message if tree fails to load
 			BaseText {
 				width: parent.width;
-				visible: root.parentChainErrorMessage !== "";
-				text: root.parentChainErrorMessage;
+				visible: root.licenseTreeErrorMessage !== "";
+				text: root.licenseTreeErrorMessage;
 				color: Style.errorTextColor;
 				wrapMode: Text.WordWrap;
 			}
 		}
 	}
 	
+	LicenseTreeInput {
+		id: licenseTreeInput;
+		property string m_licenseId: "";
+	}
+	
+	LicenseTreeGqlRequest {
+		id: licenseTreeRequest;
+		
+		onFinished: {
+			root.licenseTreeErrorMessage = ""; // Clear previous errors
+			
+			if (m_payload && m_payload.Version_1_0){
+				let payload = m_payload.Version_1_0;
+				
+				if (payload.ok && payload.rootNode){
+					root.licenseTreeData = payload.rootNode;
+				}
+				else {
+					// Display error message to user
+					// Note: Backend error messages are in English and not translated.
+					// We provide a translated prefix for consistency.
+					let errorMsg = qsTr("Failed to load license tree") + ": " + (payload.message || qsTr("Unknown error"));
+					console.error(errorMsg);
+					root.licenseTreeErrorMessage = errorMsg;
+				}
+			}
+		}
+	}
+	
+	// Keep old parent chain code for backward compatibility (can be removed if not needed)
 	ParentChainListInput {
 		id: parentChainInput;
 		property string m_licenseId: "";
@@ -698,9 +734,10 @@ ViewBase {
 	}
 	
 	function loadParentChain() {
-		if (root.softwareProductData && root.softwareProductData.m_id && root.softwareProductData.m_parentInstanceId){
-			parentChainInput.m_licenseId = root.softwareProductData.m_id;
-			parentChainRequest.send(parentChainInput);
+		// Load the full license tree visualization
+		if (root.softwareProductData && root.softwareProductData.m_id){
+			licenseTreeInput.m_licenseId = root.softwareProductData.m_id;
+			licenseTreeRequest.send(licenseTreeInput);
 		}
 	}
 	

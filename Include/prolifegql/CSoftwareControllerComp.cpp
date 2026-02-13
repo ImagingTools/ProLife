@@ -1,5 +1,7 @@
 #include <prolifegql/CSoftwareControllerComp.h>
 
+// Standard includes
+#include <optional>
 
 // ACF includes
 #include <iprm/CIdParam.h>
@@ -582,6 +584,176 @@ sdl::prolife::Licenses::CParentChainListPayload CSoftwareControllerComp::OnParen
 	}
 
 	retVal.Version_1_0->items = chainItems;
+	retVal.Version_1_0->ok = true;
+	retVal.Version_1_0->message = QString("");
+
+	return retVal;
+}
+
+
+sdl::prolife::Licenses::CLicenseTreePayload CSoftwareControllerComp::OnLicenseTree(
+			const sdl::prolife::Licenses::CLicenseTreeGqlRequest& licenseTreeRequest,
+			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			QString& errorMessage) const
+{
+	sdl::prolife::Licenses::CLicenseTreePayload retVal;
+	retVal.Version_1_0.Emplace();
+	retVal.Version_1_0->ok = false;
+
+	if (!m_softwareProductCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to get license tree. Error: Software product collection is not set");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	sdl::prolife::Licenses::LicenseTreeRequestArguments inputArguments = licenseTreeRequest.GetRequestedArguments();
+	if (!inputArguments.input.Version_1_0){
+		errorMessage = QString("Unable to get license tree. Error: Invalid input arguments");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	sdl::prolife::Licenses::CLicenseTreeInput::V1_0& input = *inputArguments.input.Version_1_0;
+
+	if (!input.licenseId){
+		errorMessage = QString("Unable to get license tree. Error: License ID is missing");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	QByteArray startLicenseId = *input.licenseId;
+
+	// First, find the root of the tree by traversing up the parent chain
+	QByteArray rootLicenseId = startLicenseId;
+	QSet<QByteArray> visitedForRoot;
+	const int MAX_DEPTH = 100;
+	int depth = 0;
+
+	while (depth < MAX_DEPTH){
+		if (visitedForRoot.contains(rootLicenseId)){
+			errorMessage = QString("Unable to get license tree. Error: Circular reference detected in parent chain");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+		visitedForRoot.insert(rootLicenseId);
+
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!m_softwareProductCollectionCompPtr->GetObjectData(rootLicenseId, dataPtr)){
+			errorMessage = QString("Unable to get license tree. Error: License not found");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
+		if (!softwarePtr){
+			errorMessage = QString("Unable to get license tree. Error: Invalid license data");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		QByteArray parentId = softwarePtr->GetParentInstanceId();
+		if (parentId.isEmpty()){
+			break; // Found root
+		}
+
+		rootLicenseId = parentId;
+		depth++;
+	}
+
+	if (depth >= MAX_DEPTH){
+		errorMessage = QString("Unable to get license tree. Error: Maximum depth exceeded while finding root");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	// Now build the tree recursively from the root
+	auto buildNode = [this](const QByteArray& licenseId, auto& buildNodeRef, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
+		const int MAX_TREE_DEPTH = 100;
+		if (currentDepth >= MAX_TREE_DEPTH){
+			return std::nullopt;
+		}
+
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!m_softwareProductCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
+			return std::nullopt;
+		}
+
+		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
+		if (!softwarePtr){
+			return std::nullopt;
+		}
+
+		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
+		node.id = licenseId;
+		node.serialNumber = softwarePtr->GetSerialNumber();
+		node.project = prolifedata::GetSoftwareProject(softwarePtr);
+		node.productCount = softwarePtr->GetProductCount();
+		node.parentId = softwarePtr->GetParentInstanceId();
+
+		// Get product name
+		QByteArray productId = prolifedata::GetSoftwareProductId(softwarePtr);
+		if (!productId.isEmpty()){
+			imtlic::IProductInfo* productPtr = prolifedata::GetCachedProductInfoPtr(productId);
+			if (productPtr){
+				node.productName = productPtr->GetName();
+			}
+		}
+
+		// Calculate bound count
+		int boundCount = 0;
+		if (m_hardwareBindingCollectionCompPtr.IsValid()){
+			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
+			arrayFieldFilter.fieldId = "SoftwareIds";
+			arrayFieldFilter.filterValue = QVariantList({licenseId});
+			arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
+
+			imtbase::CComplexCollectionFilter arrayComplexFilter;
+			arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
+
+			iprm::CParamsSet arrayFilterParam;
+			arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
+
+			QByteArrayList hardwareBindingIds = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
+			boundCount = hardwareBindingIds.size();
+		}
+
+		node.boundCount = boundCount;
+		node.availableCount = node.productCount - boundCount;
+
+		// Find all children
+		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+		fieldFilter.fieldId = "ParentInstanceId";
+		fieldFilter.filterValue = licenseId;
+
+		imtbase::CComplexCollectionFilter complexFilter;
+		complexFilter.AddFieldFilter(fieldFilter);
+
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+		QByteArrayList childIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+
+		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
+		for (const QByteArray& childId : std::as_const(childIds)){
+			auto childNode = buildNodeRef(childId, buildNodeRef, currentDepth + 1);
+			if (childNode.has_value()){
+				children.append(childNode.value());
+			}
+		}
+
+		node.children = children;
+
+		return node;
+	};
+
+	auto rootNode = buildNode(rootLicenseId, buildNode, 0);
+	if (!rootNode.has_value()){
+		errorMessage = QString("Unable to get license tree. Error: Failed to build tree");
+		retVal.Version_1_0->message = errorMessage;
+		return retVal;
+	}
+
+	retVal.Version_1_0->rootNode = rootNode.value();
 	retVal.Version_1_0->ok = true;
 	retVal.Version_1_0->message = QString("");
 
