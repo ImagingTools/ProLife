@@ -27,6 +27,7 @@ Item {
 			// Calculate tree layout
 			let layout = calculateLayout(root.treeData);
 			
+			console.log("layout", layout)
 			// Draw connections first (so they appear behind nodes)
 			ctx.strokeStyle = Style.borderColor;
 			ctx.lineWidth = 2;
@@ -52,9 +53,10 @@ Item {
 			};
 			
 			// Calculate children layouts
-			if (node.children && node.children.length > 0) {
-				for (let i = 0; i < node.children.length; i++) {
-					let childLayout = calculateLayout(node.children[i], level + 1, i, node.children.length);
+			if (node.m_children && node.m_children.count > 0) {
+				for (let i = 0; i < node.m_children.count; i++) {
+					let childItem = node.m_children.get(i).item
+					let childLayout = calculateLayout(childItem, level + 1, i, node.m_children.count);
 					if (childLayout) {
 						nodeInfo.children.push(childLayout);
 					}
@@ -155,15 +157,15 @@ Item {
 			let lineHeight = 18;
 			
 			// Serial number (used as name)
-			if (node.serialNumber) {
+			if (node.m_serialNumber) {
 				ctx.font = "bold 13px " + Style.fontFamily;
-				ctx.fillText(truncateText(ctx, node.serialNumber, root.nodeWidth - 10), textX, textY);
+				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 10), textX, textY);
 				textY += lineHeight + 5;
 			}
 			
 			// Count info
 			ctx.font = "11px " + Style.fontFamily;
-			let countText = "Count: " + (node.productCount || 0);
+			let countText = "Count: " + (node.m_productCount || 0);
 			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 10), textX, textY);
 			
 			// Draw children
@@ -190,6 +192,7 @@ Item {
 	}
 	
 	onTreeDataChanged: {
+		console.log("onTreeDataChanged", treeData)
 		if (treeData) {
 			// Recalculate layout with proper X coordinates
 			let layout = canvas.calculateLayout(treeData);
