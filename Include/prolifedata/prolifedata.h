@@ -5,6 +5,16 @@
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/IOrderInfo.h>
 
+// ImtCore includes
+#include <imtbase/IObjectCollection.h>
+
+// Generated includes
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
+
+// Qt includes
+#include <QString>
+#include <optional>
+
 
 namespace prolifedata
 {
@@ -22,6 +32,14 @@ bool CheckDeviceMacAddressExists(const QByteArray& deviceUuid, const QByteArray&
 bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
 
 bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
+
+// Build complete license tree from a given license ID
+// Automatically finds root and builds full hierarchy
+std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
+	const QByteArray& licenseId,
+	const imtbase::IObjectCollection& softwareProductCollection,
+	const imtbase::IObjectCollection* hardwareBindingCollection,
+	QString& errorMessage);
 
 
 } // namespace prolifedata

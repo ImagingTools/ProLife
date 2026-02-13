@@ -520,15 +520,21 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
-	// Build license tree if SoftwareController is available
-	if (m_softwareControllerCompPtr.IsValid()){
-		QString treeError;
-		auto treeNode = m_softwareControllerCompPtr->BuildLicenseTreeForLicense(id, treeError);
-		if (treeNode.has_value()){
-			representationPayload.licenseTree = treeNode.value();
-		}
-		// If tree building fails, we just don't populate the field (it's optional)
+	// Build license tree using shared utility function
+	QString treeError;
+	const imtbase::IObjectCollection* hardwareBindingPtr = m_bindingCollectionCompPtr.IsValid() ? 
+		m_bindingCollectionCompPtr.GetPtr() : nullptr;
+	
+	auto treeNode = prolifedata::BuildLicenseTree(
+		id,
+		*m_objectCollectionCompPtr,
+		hardwareBindingPtr,
+		treeError);
+	
+	if (treeNode.has_value()){
+		representationPayload.licenseTree = treeNode.value();
 	}
+	// If tree building fails, we just don't populate the field (it's optional)
 
 	return true;
 }

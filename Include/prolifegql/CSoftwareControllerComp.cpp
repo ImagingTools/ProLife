@@ -640,126 +640,15 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> CSoftwareControlle
 		return std::nullopt;
 	}
 
-	// First, find the root of the tree by traversing up the parent chain
-	QByteArray rootLicenseId = licenseId;
-	QSet<QByteArray> visitedForRoot;
-	const int MAX_DEPTH = 100;
-	int depth = 0;
-
-	while (depth < MAX_DEPTH){
-		if (visitedForRoot.contains(rootLicenseId)){
-			errorMessage = QString("Unable to build license tree. Error: Circular reference detected in parent chain");
-			return std::nullopt;
-		}
-		visitedForRoot.insert(rootLicenseId);
-
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (!m_softwareProductCollectionCompPtr->GetObjectData(rootLicenseId, dataPtr)){
-			errorMessage = QString("Unable to build license tree. Error: License not found");
-			return std::nullopt;
-		}
-
-		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
-		if (!softwarePtr){
-			errorMessage = QString("Unable to build license tree. Error: Invalid license data");
-			return std::nullopt;
-		}
-
-		QByteArray parentId = softwarePtr->GetParentInstanceId();
-		if (parentId.isEmpty()){
-			break; // Found root
-		}
-
-		rootLicenseId = parentId;
-		depth++;
-	}
-
-	if (depth >= MAX_DEPTH){
-		errorMessage = QString("Unable to build license tree. Error: Maximum depth exceeded while finding root");
-		return std::nullopt;
-	}
-
-	// Now build the tree recursively from the root
-	auto buildNode = [this](const QByteArray& nodeId, auto& recursiveBuildNode, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
-		const int MAX_TREE_DEPTH = 100;
-		if (currentDepth >= MAX_TREE_DEPTH){
-			return std::nullopt;
-		}
-
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (!m_softwareProductCollectionCompPtr->GetObjectData(nodeId, dataPtr)){
-			return std::nullopt;
-		}
-
-		imtlic::IProductInstanceInfo* softwarePtr = idata::GetData<imtlic::IProductInstanceInfo>(dataPtr);
-		if (!softwarePtr){
-			return std::nullopt;
-		}
-
-		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
-		node.id = nodeId;
-		node.serialNumber = softwarePtr->GetSerialNumber();
-		node.project = prolifedata::GetSoftwareProject(softwarePtr);
-		node.productCount = softwarePtr->GetProductCount();
-		node.parentId = softwarePtr->GetParentInstanceId();
-
-		// Get product name
-		QByteArray productId = prolifedata::GetSoftwareProductId(softwarePtr);
-		if (!productId.isEmpty()){
-			imtlic::IProductInfo* productPtr = prolifedata::GetCachedProductInfoPtr(productId);
-			if (productPtr){
-				node.productName = productPtr->GetName();
-			}
-		}
-
-		// Calculate bound count
-		int boundCount = 0;
-		if (m_hardwareBindingCollectionCompPtr.IsValid()){
-			imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
-			arrayFieldFilter.fieldId = "SoftwareIds";
-			arrayFieldFilter.filterValue = QVariantList({nodeId});
-			arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
-
-			imtbase::CComplexCollectionFilter arrayComplexFilter;
-			arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
-
-			iprm::CParamsSet arrayFilterParam;
-			arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
-
-			QByteArrayList hardwareBindingIds = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
-			boundCount = hardwareBindingIds.size();
-		}
-
-		node.boundCount = boundCount;
-		node.availableCount = node.productCount - boundCount;
-
-		// Find all children
-		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-		fieldFilter.fieldId = "ParentInstanceId";
-		fieldFilter.filterValue = nodeId;
-
-		imtbase::CComplexCollectionFilter complexFilter;
-		complexFilter.AddFieldFilter(fieldFilter);
-
-		iprm::CParamsSet filterParam;
-		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
-
-		QByteArrayList childIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
-
-		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
-		for (const QByteArray& childId : std::as_const(childIds)){
-			auto childNode = recursiveBuildNode(childId, recursiveBuildNode, currentDepth + 1);
-			if (childNode.has_value()){
-				children.append(childNode.value());
-			}
-		}
-
-		node.children = children;
-
-		return node;
-	};
-
-	return buildNode(rootLicenseId, buildNode, 0);
+	// Use the shared utility function from prolifedata
+	const imtbase::IObjectCollection* hardwareBindingPtr = m_hardwareBindingCollectionCompPtr.IsValid() ? 
+		m_hardwareBindingCollectionCompPtr.GetPtr() : nullptr;
+	
+	return prolifedata::BuildLicenseTree(
+		licenseId,
+		*m_softwareProductCollectionCompPtr,
+		hardwareBindingPtr,
+		errorMessage);
 }
 
 
