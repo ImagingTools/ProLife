@@ -7,6 +7,7 @@ import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
+import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeLicensesSdl 1.0
 
@@ -652,28 +653,29 @@ ViewBase {
 	
 	LicenseTreeInput {
 		id: licenseTreeInput;
-		property string m_licenseId: "";
 	}
 	
-	LicenseTreeGqlRequest {
+	GqlSdlRequestSender {
 		id: licenseTreeRequest;
+		requestType: 0; // Query
+		gqlCommandId: ProlifeLicensesSdlCommandIds.s_licenseTree;
 		
-		onFinished: {
-			root.licenseTreeErrorMessage = ""; // Clear previous errors
-			
-			if (m_payload && m_payload.Version_1_0){
-				let payload = m_payload.Version_1_0;
-				
-				if (payload.ok && payload.rootNode){
-					root.licenseTreeData = payload.rootNode;
-				}
-				else {
-					// Display error message to user
-					// Note: Backend error messages are in English and not translated.
-					// We provide a translated prefix for consistency.
-					let errorMsg = qsTr("Failed to load license tree") + ": " + (payload.message || qsTr("Unknown error"));
-					console.error(errorMsg);
-					root.licenseTreeErrorMessage = errorMsg;
+		sdlObjectComp: Component {
+			LicenseTreePayload {
+				onFinished: {
+					root.licenseTreeErrorMessage = ""; // Clear previous errors
+					
+					if (m_ok && m_rootNode){
+						root.licenseTreeData = m_rootNode;
+					}
+					else {
+						// Display error message to user
+						// Note: Backend error messages are in English and not translated.
+						// We provide a translated prefix for consistency.
+						let errorMsg = qsTr("Failed to load license tree") + ": " + (m_message || qsTr("Unknown error"));
+						console.error(errorMsg);
+						root.licenseTreeErrorMessage = errorMsg;
+					}
 				}
 			}
 		}
@@ -683,52 +685,53 @@ ViewBase {
 	// TODO: Can be removed after verifying tree visualization works correctly in production
 	ParentChainListInput {
 		id: parentChainInput;
-		property string m_licenseId: "";
 	}
 	
-	ParentChainListGqlRequest {
+	GqlSdlRequestSender {
 		id: parentChainRequest;
+		requestType: 0; // Query
+		gqlCommandId: ProlifeLicensesSdlCommandIds.s_parentChainList;
 		
-		onFinished: {
-			root.parentChainErrorMessage = ""; // Clear previous errors
-			
-			if (m_payload && m_payload.Version_1_0){
-				let payload = m_payload.Version_1_0;
-				
-				if (payload.ok && payload.items){
-					let chainText = "";
-					let items = payload.items;
+		sdlObjectComp: Component {
+			ParentChainListPayload {
+				onFinished: {
+					root.parentChainErrorMessage = ""; // Clear previous errors
 					
-					// Build hierarchy string from root to current license
-					// Note: items[0] is the current license (level 0), items[n-1] is the root parent
-					// We reverse iteration to display root → ... → current
-					for (let i = items.length - 1; i >= 0; i--){
-						let item = items[i];
-						let indent = "  ".repeat(items.length - 1 - i);
+					if (m_ok && m_items){
+						let chainText = "";
+						let items = m_items;
 						
-						if (i < items.length - 1){
-							chainText += "\n" + indent + "↓\n";
+						// Build hierarchy string from root to current license
+						// Note: items[0] is the current license (level 0), items[n-1] is the root parent
+						// We reverse iteration to display root → ... → current
+						for (let i = items.length - 1; i >= 0; i--){
+							let item = items[i];
+							let indent = "  ".repeat(items.length - 1 - i);
+							
+							if (i < items.length - 1){
+								chainText += "\n" + indent + "↓\n";
+							}
+							
+							chainText += indent;
+							if (item.productName){
+								chainText += item.productName + " - ";
+							}
+							chainText += item.serialNumber;
+							if (item.project){
+								chainText += " (" + item.project + ")";
+							}
 						}
 						
-						chainText += indent;
-						if (item.productName){
-							chainText += item.productName + " - ";
-						}
-						chainText += item.serialNumber;
-						if (item.project){
-							chainText += " (" + item.project + ")";
-						}
+						parentChainText.text = chainText;
 					}
-					
-					parentChainText.text = chainText;
-				}
-				else {
-					// Display error message to user
-					// Note: Backend error messages are in English and not translated.
-					// We provide a translated prefix for consistency.
-					let errorMsg = qsTr("Failed to load parent chain") + ": " + (payload.message || qsTr("Unknown error"));
-					console.error(errorMsg);
-					root.parentChainErrorMessage = errorMsg;
+					else {
+						// Display error message to user
+						// Note: Backend error messages are in English and not translated.
+						// We provide a translated prefix for consistency.
+						let errorMsg = qsTr("Failed to load parent chain") + ": " + (m_message || qsTr("Unknown error"));
+						console.error(errorMsg);
+						root.parentChainErrorMessage = errorMsg;
+					}
 				}
 			}
 		}
