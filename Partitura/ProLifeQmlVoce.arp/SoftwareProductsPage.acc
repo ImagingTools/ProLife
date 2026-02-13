@@ -245,6 +245,7 @@
                                 <Value>SplitLicense</Value>
                                 <Value>ChildLicensesList</Value>
                                 <Value>RevokeLicense</Value>
+                                <Value>ParentChainList</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
