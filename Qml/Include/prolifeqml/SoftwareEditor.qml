@@ -629,7 +629,7 @@ ViewBase {
 					readOnly: true;
 					visible: root.softwareProductData && root.softwareProductData.m_parentInstanceId;
 					multiline: true;
-					height: visible ? Math.max(root.parentChainMinHeight, Math.min(root.parentChainMaxHeight, lineCount * root.parentChainLineHeight + root.parentChainPadding)) : 0;
+					height: root.calculateParentChainHeight(lineCount);
 				}
 			}
 			
@@ -662,9 +662,9 @@ ViewBase {
 					let chainText = "";
 					let items = payload.items;
 					
-					// Build hierarchy string from root to current
-					// Items are ordered from current (level 0) to root (highest level)
-					// So we reverse them to show root → ... → current
+					// Build hierarchy string from root to current license
+					// Note: items[0] is the current license (level 0), items[n-1] is the root parent
+					// We reverse iteration to display root → ... → current
 					for (let i = items.length - 1; i >= 0; i--){
 						let item = items[i];
 						let indent = "  ".repeat(items.length - 1 - i);
@@ -686,7 +686,9 @@ ViewBase {
 					parentChainText.text = chainText;
 				}
 				else {
-					let errorMsg = qsTr("Failed to load parent chain: ") + (payload.message || qsTr("Unknown error"));
+					// Display full error message to user
+					// Note: Backend error messages are not translated, but we wrap them in a translated prefix
+					let errorMsg = qsTr("Failed to load parent chain") + ": " + (payload.message || qsTr("Unknown error"));
 					console.error(errorMsg);
 					root.parentChainErrorMessage = errorMsg;
 				}
@@ -699,6 +701,14 @@ ViewBase {
 			parentChainInput.m_licenseId = root.softwareProductData.m_id;
 			parentChainRequest.send(parentChainInput);
 		}
+	}
+	
+	function calculateParentChainHeight(lineCount) {
+		if (!parentChainText.visible) {
+			return 0;
+		}
+		let calculatedHeight = lineCount * root.parentChainLineHeight + root.parentChainPadding;
+		return Math.max(root.parentChainMinHeight, Math.min(root.parentChainMaxHeight, calculatedHeight));
 	}
 }//Container
 

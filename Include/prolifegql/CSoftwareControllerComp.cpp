@@ -572,6 +572,15 @@ sdl::prolife::Licenses::CParentChainListPayload CSoftwareControllerComp::OnParen
 		level++;
 	}
 
+	// Check if we hit the maximum depth limit
+	if (level >= MAX_PARENT_CHAIN_DEPTH && !currentLicenseId.isEmpty()){
+		errorMessage = QString("Unable to get complete parent chain. Error: Maximum depth limit (%1) reached. Chain may be incomplete.").arg(MAX_PARENT_CHAIN_DEPTH);
+		retVal.Version_1_0->message = errorMessage;
+		retVal.Version_1_0->items = chainItems;
+		retVal.Version_1_0->ok = false;
+		return retVal;
+	}
+
 	retVal.Version_1_0->items = chainItems;
 	retVal.Version_1_0->ok = true;
 	retVal.Version_1_0->message = QString("Parent chain retrieved successfully");
