@@ -22,9 +22,6 @@ Item {
 	
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
-	readonly property color currentNodeBorderColor: "#2E5C8A"
-	readonly property color normalNodeColor: "#F5F7FA"
-	readonly property color normalBorderColor: "#D0D7DE"
 	readonly property color arrowColor: "#6C757D"
 	readonly property color transferTextColor: "#28A745"
 	
@@ -191,21 +188,24 @@ Item {
 			let isCurrent = (node.m_id === root.currentLicenseId);
 			
 			// Modern styling with rounded corners (simulated with shadow)
-			// Draw shadow first
+			// Draw shadow first for current node
 			if (isCurrent) {
 				ctx.fillStyle = "rgba(74, 144, 226, 0.2)";
-				ctx.fillRect(x + 4, y + 4, root.nodeWidth, root.nodeHeight);
+				drawRoundedRect(ctx, x + 4, y + 4, root.nodeWidth, root.nodeHeight, Style.radiusM);
+				ctx.fill();
 			}
 			
-			// Draw node rectangle with gradient-like effect
-			let bgColor = isCurrent ? root.currentNodeColor : root.normalNodeColor;
-			let borderColor = isCurrent ? root.currentNodeBorderColor : root.normalBorderColor;
+			// Draw node rectangle with rounded corners using Style properties
+			let bgColor = isCurrent ? root.currentNodeColor : Style.baseColor;
+			let borderColor = Style.borderColor;
 			
 			ctx.fillStyle = bgColor;
 			ctx.strokeStyle = borderColor;
-			ctx.lineWidth = isCurrent ? 3 : 2;
-			ctx.fillRect(x, y, root.nodeWidth, root.nodeHeight);
-			ctx.strokeRect(x, y, root.nodeWidth, root.nodeHeight);
+			ctx.lineWidth = 1;
+			
+			drawRoundedRect(ctx, x, y, root.nodeWidth, root.nodeHeight, Style.radiusM);
+			ctx.fill();
+			ctx.stroke();
 			
 			// Draw "CURRENT" badge if this is the current license
 			if (isCurrent) {
@@ -254,6 +254,20 @@ Item {
 					drawNodes(ctx, layout.children[i]);
 				}
 			}
+		}
+		
+		function drawRoundedRect(ctx, x, y, width, height, radius) {
+			ctx.beginPath();
+			ctx.moveTo(x + radius, y);
+			ctx.lineTo(x + width - radius, y);
+			ctx.arcTo(x + width, y, x + width, y + radius, radius);
+			ctx.lineTo(x + width, y + height - radius);
+			ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+			ctx.lineTo(x + radius, y + height);
+			ctx.arcTo(x, y + height, x, y + height - radius, radius);
+			ctx.lineTo(x, y + radius);
+			ctx.arcTo(x, y, x + radius, y, radius);
+			ctx.closePath();
 		}
 		
 		function truncateText(ctx, text, maxWidth) {
