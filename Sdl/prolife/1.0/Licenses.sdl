@@ -46,6 +46,16 @@ type SoftwareProductsListPayload {
 	notification: NotificationItem
 }
 
+type LicenseTreeNode {
+	id: ID!
+	serialNumber: String
+	parentId: ID
+	productCount: Integer
+	accountId: ID
+	accountName: String
+	children: [LicenseTreeNode]
+}
+
 type SoftwareProductData {
 	id: ID
 	productId: ID
@@ -60,6 +70,8 @@ type SoftwareProductData {
 	isMultiple: Bool
 	productCount: Integer
 	parentInstanceId: ID
+	licenseTree: LicenseTreeNode
+	customerId: ID
 }
 
 input SoftwareProductDataInput {

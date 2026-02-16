@@ -1,11 +1,16 @@
 #include <prolifedata/prolifedata.h>
 
 
+// Qt includes
+#include <QSet>
+
 // ACF includes
 #include <iprm/CParamsSet.h>
 
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>
+#include <imtlic/IProductInstanceInfo.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
@@ -261,6 +266,111 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 	}
 
 	return true;
+}
+
+
+std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
+			const QByteArray& licenseId,
+			const imtbase::IObjectCollection& softwareProductCollection,
+			QString& errorMessage)
+{
+	// First, find the root of the tree by traversing up the parent chain
+	QByteArray rootLicenseId = licenseId;
+	QSet<QByteArray> visitedForRoot;
+	const int MAX_DEPTH = 100;
+	int depth = 0;
+
+	while (depth < MAX_DEPTH){
+		if (visitedForRoot.contains(rootLicenseId)){
+			errorMessage = QString("Unable to build license tree. Error: Circular reference detected in parent chain");
+			return std::nullopt;
+		}
+		visitedForRoot.insert(rootLicenseId);
+
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!softwareProductCollection.GetObjectData(rootLicenseId, dataPtr)){
+			errorMessage = QString("Unable to build license tree. Error: License not found");
+			return std::nullopt;
+		}
+
+		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		if (softwarePtr == nullptr){
+			errorMessage = QString("Unable to build license tree. Error: Invalid license data");
+			return std::nullopt;
+		}
+
+		QByteArray parentId = softwarePtr->GetParentInstanceId();
+		if (parentId.isEmpty()){
+			break; // Found root
+		}
+
+		rootLicenseId = parentId;
+		depth++;
+	}
+
+	if (depth >= MAX_DEPTH){
+		errorMessage = QString("Unable to build license tree. Error: Maximum depth exceeded while finding root");
+		return std::nullopt;
+	}
+
+	// Now build the tree recursively from the root
+	std::function<std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0>(const QByteArray&, int)> buildNode;
+	buildNode = [&](const QByteArray& nodeId, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
+		const int MAX_TREE_DEPTH = 100;
+		if (currentDepth >= MAX_TREE_DEPTH){
+			return std::nullopt;
+		}
+
+		idoc::MetaInfoPtr metaInfoPtr = softwareProductCollection.GetDataMetaInfo(nodeId);
+		if (!metaInfoPtr.IsValid()){
+			return std::nullopt;
+		}
+
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!softwareProductCollection.GetObjectData(nodeId, dataPtr)){
+			return std::nullopt;
+		}
+
+		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		if (softwarePtr == nullptr){
+			return std::nullopt;
+		}
+
+		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
+		node.id = nodeId;
+		node.serialNumber = softwarePtr->GetSerialNumber();
+		node.productCount = softwarePtr->GetProductCount();
+		node.parentId = softwarePtr->GetParentInstanceId();
+		node.accountId = softwarePtr->GetCustomerId();
+		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
+
+		// Find all children
+		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+		fieldFilter.fieldId = "ParentInstanceId";
+		fieldFilter.filterValue = nodeId;
+
+		imtbase::CComplexCollectionFilter complexFilter;
+		complexFilter.AddFieldFilter(fieldFilter);
+
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+		QByteArrayList childIds = softwareProductCollection.GetElementIds(0, -1, &filterParam);
+
+		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
+		for (const QByteArray& childId : std::as_const(childIds)){
+			auto childNode = buildNode(childId, currentDepth + 1);
+			if (childNode.has_value()){
+				children.append(childNode.value());
+			}
+		}
+
+		node.children.Emplace().FromList(children);
+
+		return node;
+	};
+
+	return buildNode(rootLicenseId, 0);
 }
 
 

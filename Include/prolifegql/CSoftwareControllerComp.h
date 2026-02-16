@@ -31,12 +31,10 @@ protected:
 				const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-
 	virtual sdl::prolife::Licenses::CChildLicensesListPayload OnChildLicensesList(
 				const sdl::prolife::Licenses::CChildLicensesListGqlRequest& childLicensesRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-
 	virtual sdl::prolife::Licenses::CRevokeLicensePayload OnRevokeLicense(
 				const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,

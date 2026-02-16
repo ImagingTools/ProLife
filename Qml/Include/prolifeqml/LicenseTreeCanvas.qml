@@ -1,0 +1,334 @@
+import QtQuick 2.15
+import imtcontrols 1.0
+
+Item {
+	id: root
+	
+	property var treeData: null
+	property string currentLicenseId: ""  // ID of the license being edited
+	
+	// Trigger repaint when currentLicenseId changes
+	onCurrentLicenseIdChanged: {
+		canvas.requestPaint();
+	}
+	
+	property int nodeWidth: 240
+	property int nodeHeight: 120
+	property int horizontalSpacing: 60
+	property int verticalSpacing: 80
+	
+	readonly property int ellipsisWidthMargin: 20
+	readonly property int arrowSize: 8
+	
+	// Modern color scheme
+	readonly property color currentNodeColor: "#4A90E2"
+	readonly property color arrowColor: "#6C757D"
+	readonly property color transferTextColor: "#28A745"
+	
+	Canvas {
+		id: canvas
+		anchors.fill: parent
+		
+		onPaint: {
+			if (!root.treeData) {
+				return;
+			}
+			
+			let ctx = getContext("2d");
+			ctx.clearRect(0, 0, width, height);
+			
+			// Calculate tree layout
+			let layout = calculateLayout(root.treeData);
+			
+			// Draw connections and arrows first (so they appear behind nodes)
+			drawConnections(ctx, layout);
+			
+			// Draw nodes
+			drawNodes(ctx, layout);
+		}
+		
+		function calculateLayout(node, level, index, siblingCount) {
+			if (!node) return null;
+			
+			level = level || 0;
+			index = index || 0;
+			siblingCount = siblingCount || 1;
+			
+			let nodeInfo = {
+				node: node,
+				level: level,
+				x: 0,
+				y: level * (root.nodeHeight + root.verticalSpacing) + 20,
+				children: []
+			};
+			
+			// Calculate children layouts
+			if (node.m_children && node.m_children.count > 0) {
+				for (let i = 0; i < node.m_children.count; i++) {
+					let childItem = node.m_children.get(i).item
+					let childLayout = calculateLayout(childItem, level + 1, i, node.m_children.count);
+					if (childLayout) {
+						nodeInfo.children.push(childLayout);
+					}
+				}
+				
+				// Position node centered above its children
+				if (nodeInfo.children.length > 0) {
+					let leftmost = nodeInfo.children[0];
+					let rightmost = nodeInfo.children[nodeInfo.children.length - 1];
+					nodeInfo.x = (getNodeX(leftmost) + getNodeX(rightmost)) / 2;
+				}
+			} else {
+				// Leaf node - position based on index
+				nodeInfo.x = index * (root.nodeWidth + root.horizontalSpacing) + 20;
+			}
+			
+			return nodeInfo;
+		}
+		
+		function getNodeX(nodeInfo) {
+			if (!nodeInfo) return 0;
+			return nodeInfo.x;
+		}
+		
+		function assignXCoordinates(layout, startX) {
+			if (!layout) return startX;
+			
+			let currentX = startX;
+			
+			if (layout.children.length === 0) {
+				layout.x = currentX;
+				return currentX + root.nodeWidth + root.horizontalSpacing;
+			}
+			
+			// Position children first
+			for (let i = 0; i < layout.children.length; i++) {
+				currentX = assignXCoordinates(layout.children[i], currentX);
+			}
+			
+			// Position this node centered above children
+			if (layout.children.length > 0) {
+				let leftmost = layout.children[0];
+				let rightmost = layout.children[layout.children.length - 1];
+				layout.x = (leftmost.x + rightmost.x) / 2;
+			}
+			
+			return currentX;
+		}
+		
+		function drawConnections(ctx, layout) {
+			if (!layout || !layout.children || layout.children.length === 0) {
+				return;
+			}
+			
+			let parentCenterX = layout.x + root.nodeWidth / 2;
+			let parentBottomY = layout.y + root.nodeHeight;
+			
+			ctx.strokeStyle = root.arrowColor;
+			ctx.fillStyle = root.arrowColor;
+			ctx.lineWidth = 2;
+			
+			for (let i = 0; i < layout.children.length; i++) {
+				let child = layout.children[i];
+				let childCenterX = child.x + root.nodeWidth / 2;
+				let childTopY = child.y;
+				
+				// Draw line from parent to child with arrow
+				ctx.beginPath();
+				ctx.moveTo(parentCenterX, parentBottomY);
+				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
+				ctx.lineTo(childCenterX, parentBottomY + root.verticalSpacing / 2);
+				ctx.lineTo(childCenterX, childTopY);
+				ctx.stroke();
+				
+				// Draw arrow at child
+				let arrowY = childTopY;
+				ctx.beginPath();
+				ctx.moveTo(childCenterX, arrowY);
+				ctx.lineTo(childCenterX - root.arrowSize, arrowY - root.arrowSize);
+				ctx.lineTo(childCenterX + root.arrowSize, arrowY - root.arrowSize);
+				ctx.closePath();
+				ctx.fill();
+				
+				// Draw transfer info (original parent count → child count)
+				// Original parent count = current parent count + all children counts
+				let originalParentCount = layout.node.m_productCount;
+				for (let j = 0; j < layout.children.length; j++) {
+					originalParentCount += layout.children[j].node.m_productCount;
+				}
+				
+				ctx.fillStyle = root.transferTextColor;
+				ctx.font = "bold 11px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				let transferText = originalParentCount + " → " + child.node.m_productCount;
+				let transferY = parentBottomY + root.verticalSpacing / 2;
+				
+				// Draw background for transfer text
+				let textWidth = ctx.measureText(transferText).width;
+				ctx.fillStyle = Style.backgroundColor;
+				ctx.fillRect(childCenterX - textWidth / 2 - 4, transferY - 8, textWidth + 8, 16);
+				
+				ctx.fillStyle = root.transferTextColor;
+				ctx.fillText(transferText, childCenterX, transferY);
+				
+				// Recursively draw child connections
+				drawConnections(ctx, child);
+			}
+		}
+		
+		function drawNodes(ctx, layout) {
+			if (!layout) return;
+			
+			let node = layout.node;
+			let x = layout.x;
+			let y = layout.y;
+			
+			// Determine if this is the current license
+			let isCurrent = (node.m_id === root.currentLicenseId);
+			
+			// Modern styling with rounded corners (simulated with shadow)
+			// Draw shadow first for current node
+			if (isCurrent) {
+				ctx.fillStyle = "rgba(74, 144, 226, 0.2)";
+				drawRoundedRect(ctx, x + 4, y + 4, root.nodeWidth, root.nodeHeight, Style.radiusM);
+				ctx.fill();
+			}
+			
+			// Draw node rectangle with rounded corners using Style properties
+			let bgColor = isCurrent ? root.currentNodeColor : Style.baseColor;
+			let borderColor = Style.borderColor;
+			
+			ctx.fillStyle = bgColor;
+			ctx.strokeStyle = borderColor;
+			ctx.lineWidth = 1;
+			
+			drawRoundedRect(ctx, x, y, root.nodeWidth, root.nodeHeight, Style.radiusM);
+			ctx.fill();
+			ctx.stroke();
+			
+			// Draw "CURRENT" badge if this is the current license
+			if (isCurrent) {
+				ctx.fillStyle = "#FFC107";
+				ctx.fillRect(x + root.nodeWidth - 70, y, 70, 24);
+				ctx.fillStyle = "#000";
+				ctx.font = "bold 10px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.fillText("CURRENT", x + root.nodeWidth - 35, y + 12);
+			}
+			
+			// Draw text
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
+			ctx.textAlign = "left";
+			ctx.textBaseline = "top";
+			
+			let textX = x + 10;
+			let textY = y + 15;
+			let lineHeight = 20;
+			
+			// Serial number (used as name)
+			if (node.m_serialNumber) {
+				ctx.font = "bold 14px " + Style.fontFamily;
+				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 20), textX, textY);
+				textY += lineHeight + 5;
+			}
+			
+			// Account info
+			if (node.m_accountName) {
+				ctx.font = "11px " + Style.fontFamily;
+				ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+				ctx.fillText(truncateText(ctx, "Account: " + node.m_accountName, root.nodeWidth - 20), textX, textY);
+				textY += lineHeight;
+			}
+			
+			// Count info
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
+			let countText = "Licenses: " + (node.m_productCount || 0);
+			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
+			
+			// Draw children
+			if (layout.children) {
+				for (let i = 0; i < layout.children.length; i++) {
+					drawNodes(ctx, layout.children[i]);
+				}
+			}
+		}
+		
+		function drawRoundedRect(ctx, x, y, width, height, radius) {
+			ctx.beginPath();
+			ctx.moveTo(x + radius, y);
+			ctx.lineTo(x + width - radius, y);
+			ctx.arcTo(x + width, y, x + width, y + radius, radius);
+			ctx.lineTo(x + width, y + height - radius);
+			ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+			ctx.lineTo(x + radius, y + height);
+			ctx.arcTo(x, y + height, x, y + height - radius, radius);
+			ctx.lineTo(x, y + radius);
+			ctx.arcTo(x, y, x + radius, y, radius);
+			ctx.closePath();
+		}
+		
+		function truncateText(ctx, text, maxWidth) {
+			if (!text) return "";
+			let width = ctx.measureText(text).width;
+			if (width <= maxWidth) {
+				return text;
+			}
+			
+			while (width > maxWidth - root.ellipsisWidthMargin && text.length > 0) {
+				text = text.substring(0, text.length - 1);
+				width = ctx.measureText(text + "...").width;
+			}
+			return text + "...";
+		}
+	}
+	
+	onTreeDataChanged: {
+		if (treeData) {
+			// Recalculate layout with proper X coordinates
+			let layout = canvas.calculateLayout(treeData);
+			if (layout) {
+				canvas.assignXCoordinates(layout, 20);
+				
+				// Calculate required canvas size
+				let maxX = calculateMaxX(layout);
+				let maxY = calculateMaxY(layout);
+				
+				root.width = maxX + root.nodeWidth + 40;
+				root.height = maxY + root.nodeHeight + 40;
+			}
+			
+			canvas.requestPaint();
+		}
+	}
+	
+	function calculateMaxX(layout) {
+		if (!layout) return 0;
+		
+		let maxX = layout.x;
+		
+		if (layout.children) {
+			for (let i = 0; i < layout.children.length; i++) {
+				maxX = Math.max(maxX, calculateMaxX(layout.children[i]));
+			}
+		}
+		
+		return maxX;
+	}
+	
+	function calculateMaxY(layout) {
+		if (!layout) return 0;
+		
+		let maxY = layout.y;
+		
+		if (layout.children) {
+			for (let i = 0; i < layout.children.length; i++) {
+				maxY = Math.max(maxY, calculateMaxY(layout.children[i]));
+			}
+		}
+		
+		return maxY;
+	}
+}

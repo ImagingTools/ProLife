@@ -7,6 +7,7 @@ import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
 import imtlicgui 1.0
+import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeLicensesSdl 1.0
 
@@ -17,9 +18,7 @@ ViewBase {
 	property TreeItemModel productsModel: TreeItemModel{}
 	
 	property var productLicensesModel: TreeItemModel{}
-	
-	property string alertMessage: "";
-	
+
 	property SoftwareProductData softwareProductData: model ? model : null;
 	property bool isNew: false
 	Component.onCompleted: {
@@ -44,6 +43,7 @@ ViewBase {
 	onSoftwareProductDataChanged: {
 		checkPermissions();
 		checkInUse();
+		// License tree is now part of SoftwareProductData, no separate load needed
 	}
 	
 	Component {
@@ -596,6 +596,35 @@ ViewBase {
 					
 					onEditingFinished: {
 						root.doUpdateModel();
+					}
+				}
+			}
+			
+			GroupHeaderView {
+				width: parent.width;
+				visible: root.softwareProductData !== null;
+				
+				title: qsTr("License Hierarchy");
+				// groupView: hierarchyGroup;
+			}
+
+			Item {
+				id: hierarchyGroup;
+				width: parent.width;
+				height: contentHeight
+				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
+				
+				property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
+				Flickable {
+					anchors.fill: parent;
+					contentWidth: licenseTreeCanvas.width;
+					contentHeight: licenseTreeCanvas.height;
+					clip: true;
+
+					LicenseTreeCanvas {
+						id: licenseTreeCanvas;
+						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 					}
 				}
 			}

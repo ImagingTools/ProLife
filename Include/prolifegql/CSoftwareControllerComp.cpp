@@ -1,5 +1,7 @@
 #include <prolifegql/CSoftwareControllerComp.h>
 
+// Standard includes
+#include <optional>
 
 // ACF includes
 #include <iprm/CIdParam.h>
