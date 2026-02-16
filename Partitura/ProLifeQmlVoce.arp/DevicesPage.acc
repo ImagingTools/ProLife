@@ -1098,9 +1098,104 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="StandardDocumentCommandsController" PackageId="ImtGraphQlVoce" ComponentId="StandardDocumentCommandsController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensors</Value>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="CommandPermissions">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HistoryPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ViewSensorHistory</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="PermissionChecker">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Device"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>ChangeProjectForSensor</Value>
+                                            <Value>ChangeMacAddress</Value>
+                                            <Value>ChangeSerialNumberForSensor</Value>
+                                            <Value>ChangeDescriptionForSensor</Value>
+                                            <Value>ChangeDeviceType</Value>
+                                            <Value>ChangeHardwareConfiguration</Value>
+                                            <Value>ChangeProductionStatus</Value>
+                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>AddSensor</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
+                    <Interface InterfaceId="imtgql::IGqlRepresentationController" ComponentId="StandardDocumentCommandsController"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="StandardDocumentCommandsController"/>
+                    <Interface InterfaceId="imtrest::IRepresentationController" ComponentId="StandardDocumentCommandsController"/>
                     <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtserverapp::IGuiElementContainer" ComponentId="CommandsController"/>
                     <Interface InterfaceId="imtserverapp::IRepresentationController" ComponentId="CommandsController"/>
