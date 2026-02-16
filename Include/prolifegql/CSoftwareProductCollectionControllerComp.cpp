@@ -503,7 +503,9 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	
 	QByteArray orderId = softwareInfoPtr->GetOrderId();
 	representationPayload.orderUuid = (orderId);
-	
+
+	representationPayload.customerId = softwareInfoPtr->GetCustomerId();
+
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
 		QByteArray licenseId = licenseIds[0];
@@ -628,27 +630,33 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		orderUuid = *representation.orderUuid;
 		softwareInfoPtr->SetOrderId(orderUuid);
 	}
-	
+
 	QByteArray customerUuid;
-	imtbase::IObjectCollection::DataPtr orderDataPtr;
-	if (m_orderCollectionCompPtr->GetObjectData(orderUuid, orderDataPtr)){
-		prolifedata::IOrderInfo* productOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-		if (productOrderInfoPtr != nullptr){
-			customerUuid = productOrderInfoPtr->GetCustomerId();
-			
-			istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-			objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-			
-			objectLinkPtr->SetObjectUuid(objectId);
-			objectLinkPtr->SetFactoryId("SoftwareInfo");
-			
-			imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
-			if (productCollectionPtr != nullptr){
-				productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
+	if (representation.customerId){
+		customerUuid = *representation.customerId;
+	}
+
+	if (!orderUuid.isEmpty()){
+		imtbase::IObjectCollection::DataPtr orderDataPtr;
+		if (m_orderCollectionCompPtr->GetObjectData(orderUuid, orderDataPtr)){
+			prolifedata::IOrderInfo* productOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+			if (productOrderInfoPtr != nullptr){
+				customerUuid = productOrderInfoPtr->GetCustomerId();
+				
+				istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+				objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+				
+				objectLinkPtr->SetObjectUuid(objectId);
+				objectLinkPtr->SetFactoryId("SoftwareInfo");
+				
+				imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
+				if (productCollectionPtr != nullptr){
+					productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
+				}
 			}
 		}
 	}
-	
+
 	softwareInfoPtr->SetupProductInstance(productId, "", customerUuid);
 	
 	QByteArray licenseUuid;

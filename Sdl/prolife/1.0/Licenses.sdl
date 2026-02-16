@@ -71,6 +71,7 @@ type SoftwareProductData {
 	productCount: Integer
 	parentInstanceId: ID
 	licenseTree: LicenseTreeNode
+	customerId: ID
 }
 
 input SoftwareProductDataInput {

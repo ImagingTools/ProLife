@@ -18,16 +18,7 @@ ViewBase {
 	property TreeItemModel productsModel: TreeItemModel{}
 	
 	property var productLicensesModel: TreeItemModel{}
-	
-	property string alertMessage: "";
-	property string parentChainErrorMessage: "";
-	
-	// Constants for parent chain display
-	readonly property int parentChainMinHeight: 100
-	readonly property int parentChainMaxHeight: 300
-	readonly property int parentChainLineHeight: 20
-	readonly property int parentChainPadding: 40
-	
+
 	property SoftwareProductData softwareProductData: model ? model : null;
 	property bool isNew: false
 	Component.onCompleted: {
@@ -614,15 +605,16 @@ ViewBase {
 				visible: root.softwareProductData !== null;
 				
 				title: qsTr("License Hierarchy");
-				groupView: hierarchyGroup;
+				// groupView: hierarchyGroup;
 			}
-			
+
 			Item {
 				id: hierarchyGroup;
 				width: parent.width;
-				height: visible ? Math.max(400, licenseTreeCanvas.height) : 0;
+				height: contentHeight
 				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
 				
+				property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
 				Flickable {
 					anchors.fill: parent;
 					contentWidth: licenseTreeCanvas.width;
