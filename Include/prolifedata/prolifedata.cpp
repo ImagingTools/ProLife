@@ -368,6 +368,20 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		
 		node.operationType = operationType;
 		node.transferredCount = transferredCount;
+		
+		// Initialize empty revoke edges list
+		QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
+		
+		// If licenses were revoked (transferred > current), create a revoke edge back to parent
+		if (transferredCount > softwarePtr->GetProductCount() && !node.parentId.value_or(QByteArray()).isEmpty()) {
+			sdl::prolife::Licenses::CRevokeEdge::V1_0 revokeEdge;
+			revokeEdge.fromNodeId = nodeId;
+			revokeEdge.toNodeId = node.parentId.value();
+			revokeEdge.revokeCount = transferredCount - softwarePtr->GetProductCount();
+			revokeEdges.append(revokeEdge);
+		}
+		
+		node.revokeEdges.Emplace().FromList(revokeEdges);
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;

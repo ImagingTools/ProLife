@@ -45,6 +45,9 @@ Item {
 			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
+			// Draw revoke edges
+			drawRevokeEdges(ctx, layout);
+			
 			// Draw nodes
 			drawNodes(ctx, layout);
 		}
@@ -215,6 +218,99 @@ Item {
 				// Recursively draw child connections
 				drawConnections(ctx, child);
 			}
+		}
+		
+		function drawRevokeEdges(ctx, layout) {
+			if (!layout) return;
+			
+			// Create a map of node IDs to their layout info for quick lookup
+			let nodeMap = {};
+			
+			function collectNodes(nodeLayout) {
+				if (!nodeLayout) return;
+				nodeMap[nodeLayout.node.m_id] = nodeLayout;
+				if (nodeLayout.children) {
+					for (let i = 0; i < nodeLayout.children.length; i++) {
+						collectNodes(nodeLayout.children[i]);
+					}
+				}
+			}
+			
+			collectNodes(layout);
+			
+			// Draw revoke edges for all nodes
+			function drawNodeRevokeEdges(nodeLayout) {
+				if (!nodeLayout) return;
+				
+				// Check if this node has revoke edges
+				if (nodeLayout.node.m_revokeEdges && nodeLayout.node.m_revokeEdges.count > 0) {
+					for (let i = 0; i < nodeLayout.node.m_revokeEdges.count; i++) {
+						let revokeEdge = nodeLayout.node.m_revokeEdges.get(i).item;
+						let fromLayout = nodeMap[revokeEdge.m_fromNodeId];
+						let toLayout = nodeMap[revokeEdge.m_toNodeId];
+						
+						if (fromLayout && toLayout) {
+							// Calculate positions
+							let fromX = fromLayout.x + root.nodeWidth / 2;
+							let fromY = fromLayout.y + root.nodeHeight / 2;
+							let toX = toLayout.x + root.nodeWidth / 2;
+							let toY = toLayout.y + root.nodeHeight / 2;
+							
+							// Draw curved red line
+							ctx.strokeStyle = root.revokeArrowColor;
+							ctx.fillStyle = root.revokeArrowColor;
+							ctx.lineWidth = 3;
+							ctx.setLineDash([5, 5]);  // Dashed line
+							
+							// Draw bezier curve
+							ctx.beginPath();
+							ctx.moveTo(fromX, fromY);
+							let controlX = (fromX + toX) / 2 + root.horizontalSpacing;
+							let controlY = (fromY + toY) / 2;
+							ctx.quadraticCurveTo(controlX, controlY, toX, toY);
+							ctx.stroke();
+							ctx.setLineDash([]);  // Reset line dash
+							
+							// Draw arrow at destination
+							let angle = Math.atan2(toY - controlY, toX - controlX);
+							ctx.beginPath();
+							ctx.moveTo(toX, toY);
+							ctx.lineTo(toX - root.arrowSize * Math.cos(angle - Math.PI / 6), 
+							          toY - root.arrowSize * Math.sin(angle - Math.PI / 6));
+							ctx.lineTo(toX - root.arrowSize * Math.cos(angle + Math.PI / 6), 
+							          toY - root.arrowSize * Math.sin(angle + Math.PI / 6));
+							ctx.closePath();
+							ctx.fill();
+							
+							// Draw revoke count label
+							let labelX = controlX + 10;
+							let labelY = controlY;
+							ctx.fillStyle = root.revokeTextColor;
+							ctx.font = "bold 11px " + Style.fontFamily;
+							ctx.textAlign = "center";
+							ctx.textBaseline = "middle";
+							let revokeText = "REVOKED: " + revokeEdge.m_revokeCount;
+							
+							// Draw background
+							let textWidth = ctx.measureText(revokeText).width;
+							ctx.fillStyle = Style.backgroundColor;
+							ctx.fillRect(labelX - textWidth / 2 - 4, labelY - 8, textWidth + 8, 16);
+							
+							ctx.fillStyle = root.revokeTextColor;
+							ctx.fillText(revokeText, labelX, labelY);
+						}
+					}
+				}
+				
+				// Recursively process children
+				if (nodeLayout.children) {
+					for (let i = 0; i < nodeLayout.children.length; i++) {
+						drawNodeRevokeEdges(nodeLayout.children[i]);
+					}
+				}
+			}
+			
+			drawNodeRevokeEdges(layout);
 		}
 		
 		function drawNodes(ctx, layout) {

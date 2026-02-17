@@ -46,6 +46,12 @@ type SoftwareProductsListPayload {
 	notification: NotificationItem
 }
 
+type RevokeEdge {
+	fromNodeId: ID!
+	toNodeId: ID!
+	revokeCount: Integer!
+}
+
 type LicenseTreeNode {
 	id: ID!
 	serialNumber: String
@@ -56,6 +62,7 @@ type LicenseTreeNode {
 	children: [LicenseTreeNode]
 	operationType: String
 	transferredCount: Integer
+	revokeEdges: [RevokeEdge]
 }
 
 type SoftwareProductData {
