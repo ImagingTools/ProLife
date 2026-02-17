@@ -128,6 +128,31 @@ Item {
 			ctx.fillStyle = root.arrowColor;
 			ctx.lineWidth = 2;
 			
+			// Calculate original parent count (before any splits)
+			let originalParentCount = layout.node.m_productCount;
+			for (let j = 0; j < layout.children.length; j++) {
+				originalParentCount += layout.children[j].node.m_productCount;
+			}
+			
+			// If there are multiple children, show the total count on the parent's outgoing line
+			if (layout.children.length > 1) {
+				let midY = parentBottomY + root.verticalSpacing / 4;
+				
+				ctx.fillStyle = root.transferTextColor;
+				ctx.font = "bold 11px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				let totalText = originalParentCount.toString();
+				
+				// Draw background for total text
+				let totalTextWidth = ctx.measureText(totalText).width;
+				ctx.fillStyle = Style.backgroundColor;
+				ctx.fillRect(parentCenterX - totalTextWidth / 2 - 4, midY - 8, totalTextWidth + 8, 16);
+				
+				ctx.fillStyle = root.transferTextColor;
+				ctx.fillText(totalText, parentCenterX, midY);
+			}
+			
 			for (let i = 0; i < layout.children.length; i++) {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
@@ -150,18 +175,21 @@ Item {
 				ctx.closePath();
 				ctx.fill();
 				
-				// Draw transfer info (original parent count → child count)
-				// Original parent count = current parent count + all children counts
-				let originalParentCount = layout.node.m_productCount;
-				for (let j = 0; j < layout.children.length; j++) {
-					originalParentCount += layout.children[j].node.m_productCount;
-				}
-				
+				// Draw transfer info
 				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				let transferText = originalParentCount + " → " + child.node.m_productCount;
+				
+				// If parent has only 1 child, show full transfer (originalCount → childCount)
+				// If parent has multiple children, show only the individual transfer amount
+				let transferText;
+				if (layout.children.length === 1) {
+					transferText = originalParentCount + " → " + child.node.m_productCount;
+				} else {
+					transferText = child.node.m_productCount.toString();
+				}
+				
 				let transferY = parentBottomY + root.verticalSpacing / 2;
 				
 				// Draw background for transfer text

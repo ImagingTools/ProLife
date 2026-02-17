@@ -54,6 +54,8 @@ type LicenseTreeNode {
 	accountId: ID
 	accountName: String
 	children: [LicenseTreeNode]
+	operationType: String
+	transferredCount: Integer
 }
 
 type SoftwareProductData {
