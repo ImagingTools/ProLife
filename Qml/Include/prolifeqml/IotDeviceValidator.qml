@@ -15,7 +15,7 @@ DocumentValidator {
 
         // Check factory number
         let factoryNumber = documentModel.m_factoryNumber;
-        if (String(factoryNumber) === ""){
+        if (!factoryNumber || String(factoryNumber).trim() === ""){
             data.message = qsTr("Please enter a factory number")
             return false;
         }

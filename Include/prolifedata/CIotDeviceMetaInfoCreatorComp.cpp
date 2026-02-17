@@ -54,9 +54,34 @@ bool CIotDeviceMetaInfoCreatorComp::CreateMetaInfo(
 
 // public methods of embedded class MetaInfo
 
-QString CIotDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*metaInfoType*/) const
+QString CIotDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int metaInfoType) const
 {
-	return QString();
+	switch (metaInfoType){
+		case IIotDeviceInfo::MIT_FACTORY_NUMBER:
+			return QStringLiteral("Factory Number");
+		case IIotDeviceInfo::MIT_MODEM_NUMBER:
+			return QStringLiteral("Modem Number");
+		case IIotDeviceInfo::MIT_MANUFACTURER:
+			return QStringLiteral("Manufacturer");
+		case IIotDeviceInfo::MIT_BRAND_MODEL:
+			return QStringLiteral("Brand/Model");
+		case IIotDeviceInfo::MIT_INSTALLATION_LOCATION:
+			return QStringLiteral("Installation Location");
+		case IIotDeviceInfo::MIT_CONNECTION_TYPE:
+			return QStringLiteral("Connection Type");
+		case IIotDeviceInfo::MIT_RESOURCE_TYPE:
+			return QStringLiteral("Resource Type");
+		case IIotDeviceInfo::MIT_HOLE_DIAMETER:
+			return QStringLiteral("Hole Diameter");
+		case IIotDeviceInfo::MIT_DEVICE_CATEGORY:
+			return QStringLiteral("Device Category");
+		case IIotDeviceInfo::MIT_CALIBRATION_DATE:
+			return QStringLiteral("Calibration Date");
+		case IIotDeviceInfo::MIT_COMMISSION_DATE:
+			return QStringLiteral("Commission Date");
+		default:
+			return BaseClass::GetMetaInfoName(metaInfoType);
+	}
 }
 
 

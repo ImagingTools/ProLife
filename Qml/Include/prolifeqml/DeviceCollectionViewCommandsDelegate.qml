@@ -69,7 +69,7 @@ DocumentCollectionViewDelegate {
 		id: iotDeviceDataControllerComp;
 		
 		GqlRequestDocumentDataController {
-			id: iotRequestDocumentDataController
+			id: iotDeviceDataController
 
 			property IotDeviceData iotDeviceData: documentModel;
 
