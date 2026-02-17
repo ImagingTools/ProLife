@@ -144,6 +144,33 @@ Item {
 			// Calculate original parent count (before any splits)
 			let originalParentCount = calculateOriginalParentCount(layout);
 			
+			// First pass: Draw all lines and arrows
+			for (let i = 0; i < layout.children.length; i++) {
+				let child = layout.children[i];
+				let childCenterX = child.x + root.nodeWidth / 2;
+				let childTopY = child.y;
+				
+				// Draw line from parent to child
+				ctx.strokeStyle = root.arrowColor;
+				ctx.fillStyle = root.arrowColor;
+				ctx.beginPath();
+				ctx.moveTo(parentCenterX, parentBottomY);
+				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
+				ctx.lineTo(childCenterX, parentBottomY + root.verticalSpacing / 2);
+				ctx.lineTo(childCenterX, childTopY);
+				ctx.stroke();
+				
+				// Draw arrow at child
+				let arrowY = childTopY;
+				ctx.beginPath();
+				ctx.moveTo(childCenterX, arrowY);
+				ctx.lineTo(childCenterX - root.arrowSize, arrowY - root.arrowSize);
+				ctx.lineTo(childCenterX + root.arrowSize, arrowY - root.arrowSize);
+				ctx.closePath();
+				ctx.fill();
+			}
+			
+			// Second pass: Draw all labels on top of lines
 			// If there are multiple children, show the total count on the parent's outgoing line
 			if (layout.children.length > 1) {
 				let midY = parentBottomY + root.verticalSpacing / 4;
@@ -163,29 +190,10 @@ Item {
 				ctx.fillText(totalText, parentCenterX, midY);
 			}
 			
+			// Draw individual child transfer labels
 			for (let i = 0; i < layout.children.length; i++) {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
-				let childTopY = child.y;
-				
-				// Draw line from parent to child with arrow
-				ctx.strokeStyle = root.arrowColor;
-				ctx.fillStyle = root.arrowColor;
-				ctx.beginPath();
-				ctx.moveTo(parentCenterX, parentBottomY);
-				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
-				ctx.lineTo(childCenterX, parentBottomY + root.verticalSpacing / 2);
-				ctx.lineTo(childCenterX, childTopY);
-				ctx.stroke();
-				
-				// Draw arrow at child
-				let arrowY = childTopY;
-				ctx.beginPath();
-				ctx.moveTo(childCenterX, arrowY);
-				ctx.lineTo(childCenterX - root.arrowSize, arrowY - root.arrowSize);
-				ctx.lineTo(childCenterX + root.arrowSize, arrowY - root.arrowSize);
-				ctx.closePath();
-				ctx.fill();
 				
 				// Draw transfer info
 				ctx.fillStyle = root.transferTextColor;
@@ -211,9 +219,11 @@ Item {
 				
 				ctx.fillStyle = root.transferTextColor;
 				ctx.fillText(transferText, childCenterX, transferY);
-				
-				// Recursively draw child connections
-				drawConnections(ctx, child);
+			}
+			
+			// Third pass: Recursively draw child connections
+			for (let i = 0; i < layout.children.length; i++) {
+				drawConnections(ctx, layout.children[i]);
 			}
 		}
 		
