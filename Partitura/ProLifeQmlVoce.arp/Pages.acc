@@ -52,14 +52,11 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DevicesPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="DevicesPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="32"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/DeviceCollectionView.qml"/>
@@ -72,6 +69,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -189,6 +189,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
@@ -358,6 +361,9 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">

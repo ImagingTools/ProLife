@@ -45,6 +45,7 @@
                             <Values>
                                 <Value>Subscriptions</Value>
                                 <Value>LisaGQLEngine</Value>
+                                <Value>DocumentManager</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -83,6 +84,27 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DocumentManager" PackageId="" ComponentId="DocumentManager">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RequestManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/WebSocketServerFramework"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -269,6 +291,9 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DocumentManager"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
                     </AttributeInfo>
@@ -277,6 +302,7 @@
                             <Values>
                                 <Value>AuthorizableServerFramework</Value>
                                 <Value>LisaGQLEngine</Value>
+                                <Value>DocumentManager</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -547,6 +573,109 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="DocumentManager">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="CollectionDocumentManager" PackageId="ImtDocPck" ComponentId="CollectionDocumentManager">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="Collection" Type="Reference" ExportId="DeviceRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DocumentManagerEventHandler" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>CollectionDocumentManagerPublisher</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectFactories" Type="Factory[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DeviceInfo</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectTypeIdList" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>Device</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UndoManager" Type="Factory" ExportId="">
+                                    <Data IsEnabled="true" Value="SerializedUndoManager"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CollectionDocumentManagerController" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentManagerController">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CollectionDocumentManager" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="CollectionDocumentManager"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CollectionDocumentManagerPublisher" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentManagerPublisher">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RequestManager" Type="Reference" ExportId="RequestManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DeviceInfo" PackageId="ProLifeDataPck" ComponentId="DeviceInfo">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                    <Element Id="SerializedUndoManager" PackageId="BasePck" ComponentId="SerializedUndoManager">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces>
+                    <Interface InterfaceId="imtdoc::IDocumentManager" ComponentId="CollectionDocumentManager"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CollectionDocumentManagerController"/>
+                    <Interface InterfaceId="imtgql::IGqlSubscriberController" ComponentId="CollectionDocumentManagerPublisher"/>
+                </ExportedInterfaces>
+                <ExportedComponents>
+                    <Component ExportedId="CollectionDocumentManager" ComponentId="CollectionDocumentManager"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
         <EmbeddedRegistry Id="Migrations">
             <Data Description="" Keywords="">
                 <ElementsList>

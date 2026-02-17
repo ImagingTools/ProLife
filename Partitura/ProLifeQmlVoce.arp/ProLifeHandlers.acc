@@ -136,6 +136,9 @@
                     <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="BindingProductRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -181,9 +184,6 @@
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="UserActionCollection" Type="Reference" ExportId="UserActionCollection">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -212,129 +212,7 @@
             </Data>
         </Element>
     </ElementsList>
-    <EmbeddedRegistriesList>
-        <EmbeddedRegistry Id="KeyDataProviders">
-            <Data Description="" Keywords="">
-                <ElementsList>
-                    <Element Id="AesInitVector" PackageId="ImtLicenseVoce" ComponentId="AesInitVector">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="Encryption" PackageId="ImtCryptPck" ComponentId="Encryption">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap/>
-                        </Data>
-                    </Element>
-                    <Element Id="EncryptionBasePersistence" PackageId="ImtCryptPck" ComponentId="EncryptionBasePersistence">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="BasePersistence" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="XmlFileSerializer"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Encryption" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="Encryption"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EncryptionKeysProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="KeyDataProvider"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="FileExtensions" Type="String[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>lic</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="TypeDescriptions" Type="Text[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>License Files</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="KeyDataProvider" PackageId="ProLifeDataPck" ComponentId="KeyDataProvider">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="DeviceOperationContextController">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="GqlLicenseRequest" Type="Reference" ExportId="GqlLicenseRequest">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="LicensePersistence" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="EncryptionBasePersistence"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="SoftwareOperationContextController">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VectorKey" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="AesInitVector"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="XmlFileSerializer" PackageId="FilePck" ComponentId="CompactXmlFileSerializer">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="AutoCreatePath" Type="Boolean" ExportId="AutoCreatePath">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="FileExtensions" Type="String[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>xml</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                </ElementsList>
-                <EmbeddedRegistriesList/>
-                <ExportedInterfaces>
-                    <Interface InterfaceId="imtcrypt::IEncryptionKeysProvider" ComponentId="KeyDataProvider"/>
-                    <Interface InterfaceId="imtrest::IBinaryDataProvider" ComponentId="KeyDataProvider"/>
-                </ExportedInterfaces>
-                <ExportedComponents/>
-            </Data>
-        </EmbeddedRegistry>
-    </EmbeddedRegistriesList>
+    <EmbeddedRegistriesList/>
     <ExportedInterfaces>
         <Interface InterfaceId="imtgql::IGqlRequestProvider" ComponentId="ApplicationHandlers"/>
         <Interface InterfaceId="imtrest::IRequestServlet" ComponentId="ApplicationHandlers"/>
