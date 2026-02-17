@@ -19,7 +19,7 @@ DocCollectionViewDelegate {
 	id: container;
 
 	Component.onCompleted: {
-		registerDocumentType("Device", qsTr("Device"))
+		registerDocumentType("Device", qsTr("General Device"))
 		addDocumentView("Device", "DeviceEditor", deviceEditorComp, dataControllerComp)
 		
 		registerDocumentType("IotDevice", qsTr("IoT Device"))
