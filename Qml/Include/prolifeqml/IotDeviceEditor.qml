@@ -9,321 +9,320 @@ import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeSensorsSdl 1.0
 
-ViewBase {
-	id: iotDeviceEditorContainer;
-	
-	anchors.fill: parent;
-	
-	property int radius: 3;
-	property int spacing: Style.marginM;
-	
-	property IotDeviceData iotDeviceData: model ? model : null;
-	property bool isNew: false
-	
-	onIotDeviceDataChanged: {
-		if (!iotDeviceData){
-			return;
-		}
+DocumentEditorViewBase {
+id: iotDeviceEditorContainer;
 
-		checkPermissions();
-	}
+property IotDeviceData iotDeviceData: model ? model : null;
+property bool isNew: false
 
-	function checkPermissions(){
-		if (!iotDeviceData){
-			return;
-		}
+onIotDeviceDataChanged: {
+if (!iotDeviceData){
+return;
+}
 
-		let canAddSensor = PermissionsController.checkPermission("AddSensor");
-		if (isNew && canAddSensor){
-			nameInput.readOnly = false;
-			descriptionInput.readOnly = false;
-			factoryNumberInput.readOnly = false;
-			modemNumberInput.readOnly = false;
-			manufacturerInput.readOnly = false;
-			brandModelInput.readOnly = false;
-			installationLocationInput.readOnly = false;
-			connectionTypeInput.readOnly = false;
-			resourceTypeInput.readOnly = false;
-			holeDiameterInput.readOnly = false;
-			deviceCategoryInput.readOnly = false;
-			calibrationDateInput.readOnly = false;
-			commissionDateInput.readOnly = false;
-		}
-		else{
-			let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
-			descriptionInput.readOnly = !canChangeDescription;
-			nameInput.readOnly = !canChangeDescription;
-			
-			// For other fields, use generic sensor permission for now
-			let canChangeSensor = PermissionsController.checkPermission("AddSensor");
-			factoryNumberInput.readOnly = !canChangeSensor;
-			modemNumberInput.readOnly = !canChangeSensor;
-			manufacturerInput.readOnly = !canChangeSensor;
-			brandModelInput.readOnly = !canChangeSensor;
-			installationLocationInput.readOnly = !canChangeSensor;
-			connectionTypeInput.readOnly = !canChangeSensor;
-			resourceTypeInput.readOnly = !canChangeSensor;
-			holeDiameterInput.readOnly = !canChangeSensor;
-			deviceCategoryInput.readOnly = !canChangeSensor;
-			calibrationDateInput.readOnly = !canChangeSensor;
-			commissionDateInput.readOnly = !canChangeSensor;
-		}
-	}
-	
-	function doUpdateModel(){
-		if (!iotDeviceData){
-			return;
-		}
-		
-		iotDeviceData.m_name = nameInput.value;
-		iotDeviceData.m_description = descriptionInput.value;
-		iotDeviceData.m_factoryNumber = factoryNumberInput.value;
-		iotDeviceData.m_modemNumber = modemNumberInput.value;
-		iotDeviceData.m_manufacturer = manufacturerInput.value;
-		iotDeviceData.m_brandModel = brandModelInput.value;
-		iotDeviceData.m_installationLocation = installationLocationInput.value;
-		iotDeviceData.m_connectionType = connectionTypeInput.value;
-		iotDeviceData.m_resourceType = resourceTypeInput.value;
-		iotDeviceData.m_holeDiameter = holeDiameterInput.value;
-		iotDeviceData.m_deviceCategory = deviceCategoryInput.value;
-		iotDeviceData.m_calibrationDate = calibrationDateInput.value;
-		iotDeviceData.m_commissionDate = commissionDateInput.value;
-	}
-	
-	function doUpdateGui(){
-		if (!iotDeviceData){
-			return;
-		}
-		
-		nameInput.value = iotDeviceData.m_name ? iotDeviceData.m_name : "";
-		descriptionInput.value = iotDeviceData.m_description ? iotDeviceData.m_description : "";
-		factoryNumberInput.value = iotDeviceData.m_factoryNumber ? iotDeviceData.m_factoryNumber : "";
-		modemNumberInput.value = iotDeviceData.m_modemNumber ? iotDeviceData.m_modemNumber : "";
-		manufacturerInput.value = iotDeviceData.m_manufacturer ? iotDeviceData.m_manufacturer : "";
-		brandModelInput.value = iotDeviceData.m_brandModel ? iotDeviceData.m_brandModel : "";
-		installationLocationInput.value = iotDeviceData.m_installationLocation ? iotDeviceData.m_installationLocation : "";
-		connectionTypeInput.value = iotDeviceData.m_connectionType ? iotDeviceData.m_connectionType : "";
-		resourceTypeInput.value = iotDeviceData.m_resourceType ? iotDeviceData.m_resourceType : "";
-		holeDiameterInput.value = iotDeviceData.m_holeDiameter ? iotDeviceData.m_holeDiameter : "";
-		deviceCategoryInput.value = iotDeviceData.m_deviceCategory ? iotDeviceData.m_deviceCategory : "";
-		calibrationDateInput.value = iotDeviceData.m_calibrationDate ? iotDeviceData.m_calibrationDate : "";
-		commissionDateInput.value = iotDeviceData.m_commissionDate ? iotDeviceData.m_commissionDate : "";
-	}
-	
-	function updateGui(){
-		doUpdateGui();
-	}
-	
-	function updateModel(){
-		doUpdateModel();
-	}
-	
-	ScrollView {
-		id: scrollView;
-		
-		anchors.fill: parent;
-		anchors.margins: Style.marginM;
-		
-		Column {
-			id: column;
-			
-			anchors.left: parent.left;
-			anchors.right: parent.right;
-			
-			spacing: iotDeviceEditorContainer.spacing;
-			
-			GroupElementView {
-				id: basicInformationGroup;
-				
-				anchors.left: parent.left;
-				anchors.right: parent.right;
-				
-				title: qsTr("Basic Information");
-				radius: iotDeviceEditorContainer.radius;
-				
-				Column {
-					id: basicInfoColumn;
-					
-					anchors.left: parent.left;
-					anchors.right: parent.right;
-					anchors.leftMargin: Style.marginM;
-					anchors.rightMargin: Style.marginM;
-					
-					spacing: Style.marginS;
-					
-					TextInputView {
-						id: nameInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Name");
-						value: "";
-					}
-					
-					TextInputView {
-						id: descriptionInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Description");
-						value: "";
-					}
-					
-					TextInputView {
-						id: factoryNumberInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Factory Number");
-						value: "";
-					}
-					
-					TextInputView {
-						id: modemNumberInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Modem Number");
-						value: "";
-					}
-				}
-			}
-			
-			GroupElementView {
-				id: deviceDetailsGroup;
-				
-				anchors.left: parent.left;
-				anchors.right: parent.right;
-				
-				title: qsTr("Device Details");
-				radius: iotDeviceEditorContainer.radius;
-				
-				Column {
-					id: deviceDetailsColumn;
-					
-					anchors.left: parent.left;
-					anchors.right: parent.right;
-					anchors.leftMargin: Style.marginM;
-					anchors.rightMargin: Style.marginM;
-					
-					spacing: Style.marginS;
-					
-					TextInputView {
-						id: manufacturerInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Manufacturer");
-						value: "";
-					}
-					
-					TextInputView {
-						id: brandModelInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Brand/Model");
-						value: "";
-					}
-					
-					TextInputView {
-						id: installationLocationInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Installation Location");
-						value: "";
-					}
-					
-					TextInputView {
-						id: connectionTypeInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Connection Type");
-						value: "";
-					}
-					
-					TextInputView {
-						id: resourceTypeInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Resource Type");
-						value: "";
-					}
-					
-					TextInputView {
-						id: holeDiameterInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Hole Diameter");
-						value: "";
-					}
-					
-					TextInputView {
-						id: deviceCategoryInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Device Category (ОДПУ/ИПУ)");
-						value: "";
-					}
-				}
-			}
-			
-			GroupElementView {
-				id: datesGroup;
-				
-				anchors.left: parent.left;
-				anchors.right: parent.right;
-				
-				title: qsTr("Dates");
-				radius: iotDeviceEditorContainer.radius;
-				
-				Column {
-					id: datesColumn;
-					
-					anchors.left: parent.left;
-					anchors.right: parent.right;
-					anchors.leftMargin: Style.marginM;
-					anchors.rightMargin: Style.marginM;
-					
-					spacing: Style.marginS;
-					
-					TextInputView {
-						id: calibrationDateInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Calibration Date");
-						value: "";
-					}
-					
-					TextInputView {
-						id: commissionDateInput;
-						
-						anchors.left: parent.left;
-						anchors.right: parent.right;
-						
-						label: qsTr("Commission Date");
-						value: "";
-					}
-				}
-			}
-		}
-	}
+checkPermissions();
+}
+
+function checkPermissions(){
+if (!iotDeviceData){
+return;
+}
+
+let canAddSensor = PermissionsController.checkPermission("AddSensor");
+if (isNew && canAddSensor){
+nameInput.readOnly = false;
+descriptionInput.readOnly = false;
+factoryNumberInput.readOnly = false;
+modemNumberInput.readOnly = false;
+manufacturerInput.readOnly = false;
+brandModelInput.readOnly = false;
+installationLocationInput.readOnly = false;
+connectionTypeInput.readOnly = false;
+resourceTypeInput.readOnly = false;
+holeDiameterInput.readOnly = false;
+deviceCategoryInput.readOnly = false;
+calibrationDateInput.readOnly = false;
+commissionDateInput.readOnly = false;
+}
+else{
+let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
+descriptionInput.readOnly = !canChangeDescription;
+nameInput.readOnly = !canChangeDescription;
+
+// For other fields, use generic sensor permission for now
+let canChangeSensor = PermissionsController.checkPermission("AddSensor");
+factoryNumberInput.readOnly = !canChangeSensor;
+modemNumberInput.readOnly = !canChangeSensor;
+manufacturerInput.readOnly = !canChangeSensor;
+brandModelInput.readOnly = !canChangeSensor;
+installationLocationInput.readOnly = !canChangeSensor;
+connectionTypeInput.readOnly = !canChangeSensor;
+resourceTypeInput.readOnly = !canChangeSensor;
+holeDiameterInput.readOnly = !canChangeSensor;
+deviceCategoryInput.readOnly = !canChangeSensor;
+calibrationDateInput.readOnly = !canChangeSensor;
+commissionDateInput.readOnly = !canChangeSensor;
+}
+}
+
+function doUpdateModel(){
+if (!iotDeviceData){
+return;
+}
+
+iotDeviceData.m_name = nameInput.value;
+iotDeviceData.m_description = descriptionInput.value;
+iotDeviceData.m_factoryNumber = factoryNumberInput.value;
+iotDeviceData.m_modemNumber = modemNumberInput.value;
+iotDeviceData.m_manufacturer = manufacturerInput.value;
+iotDeviceData.m_brandModel = brandModelInput.value;
+iotDeviceData.m_installationLocation = installationLocationInput.value;
+iotDeviceData.m_connectionType = connectionTypeInput.value;
+iotDeviceData.m_resourceType = resourceTypeInput.value;
+iotDeviceData.m_holeDiameter = holeDiameterInput.value;
+iotDeviceData.m_deviceCategory = deviceCategoryInput.value;
+iotDeviceData.m_calibrationDate = calibrationDateInput.value;
+iotDeviceData.m_commissionDate = commissionDateInput.value;
+}
+
+function doUpdateGui(){
+if (!iotDeviceData){
+return;
+}
+
+nameInput.value = iotDeviceData.m_name ? iotDeviceData.m_name : "";
+descriptionInput.value = iotDeviceData.m_description ? iotDeviceData.m_description : "";
+factoryNumberInput.value = iotDeviceData.m_factoryNumber ? iotDeviceData.m_factoryNumber : "";
+modemNumberInput.value = iotDeviceData.m_modemNumber ? iotDeviceData.m_modemNumber : "";
+manufacturerInput.value = iotDeviceData.m_manufacturer ? iotDeviceData.m_manufacturer : "";
+brandModelInput.value = iotDeviceData.m_brandModel ? iotDeviceData.m_brandModel : "";
+installationLocationInput.value = iotDeviceData.m_installationLocation ? iotDeviceData.m_installationLocation : "";
+connectionTypeInput.value = iotDeviceData.m_connectionType ? iotDeviceData.m_connectionType : "";
+resourceTypeInput.value = iotDeviceData.m_resourceType ? iotDeviceData.m_resourceType : "";
+holeDiameterInput.value = iotDeviceData.m_holeDiameter ? iotDeviceData.m_holeDiameter : "";
+deviceCategoryInput.value = iotDeviceData.m_deviceCategory ? iotDeviceData.m_deviceCategory : "";
+calibrationDateInput.value = iotDeviceData.m_calibrationDate ? iotDeviceData.m_calibrationDate : "";
+commissionDateInput.value = iotDeviceData.m_commissionDate ? iotDeviceData.m_commissionDate : "";
+}
+
+function updateGui(){
+doUpdateGui();
+}
+
+function updateModel(){
+doUpdateModel();
+}
+
+Flickable {
+id: flickable;
+
+anchors.left: parent.left;
+anchors.leftMargin: Style.marginXL;
+
+anchors.top: parent.top;
+anchors.topMargin: Style.marginXL;
+
+anchors.bottom: parent.bottom;
+anchors.bottomMargin: Style.marginXL;
+
+anchors.right: parent.right;
+anchors.rightMargin: Style.marginXL;
+
+contentWidth: bodyColumn.width;
+contentHeight: bodyColumn.height + 2 * Style.marginXL;
+
+boundsBehavior: Flickable.StopAtBounds;
+
+clip: true;
+
+Column {
+id: bodyColumn;
+
+width: 700;
+
+spacing: Style.marginXL;
+
+GroupHeaderView {
+width: parent.width;
+
+title: qsTr("Basic Information");
+groupView: basicInformationGroup;
+}
+
+GroupElementView {
+id: basicInformationGroup;
+
+width: parent.width;
+
+TextInputElementView {
+id: nameInput;
+
+name: qsTr("Name");
+placeHolderText: qsTr("Enter name");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: descriptionInput;
+
+name: qsTr("Description");
+placeHolderText: qsTr("Enter description");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: factoryNumberInput;
+
+name: qsTr("Factory Number");
+placeHolderText: qsTr("Enter factory number");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: modemNumberInput;
+
+name: qsTr("Modem Number");
+placeHolderText: qsTr("Enter modem number");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+}
+
+GroupHeaderView {
+width: parent.width;
+
+title: qsTr("Device Details");
+groupView: deviceDetailsGroup;
+}
+
+GroupElementView {
+id: deviceDetailsGroup;
+
+width: parent.width;
+
+TextInputElementView {
+id: manufacturerInput;
+
+name: qsTr("Manufacturer");
+placeHolderText: qsTr("Enter manufacturer");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: brandModelInput;
+
+name: qsTr("Brand/Model");
+placeHolderText: qsTr("Enter brand/model");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: installationLocationInput;
+
+name: qsTr("Installation Location");
+placeHolderText: qsTr("Enter installation location");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: connectionTypeInput;
+
+name: qsTr("Connection Type");
+placeHolderText: qsTr("Enter connection type");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: resourceTypeInput;
+
+name: qsTr("Resource Type");
+placeHolderText: qsTr("Enter resource type (ГВС, ХВС, Тепло, газ, э/э)");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: holeDiameterInput;
+
+name: qsTr("Hole Diameter");
+placeHolderText: qsTr("Enter hole diameter");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: deviceCategoryInput;
+
+name: qsTr("Device Category (ОДПУ/ИПУ)");
+placeHolderText: qsTr("Enter device category");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+}
+
+GroupHeaderView {
+width: parent.width;
+
+title: qsTr("Dates");
+groupView: datesGroup;
+}
+
+GroupElementView {
+id: datesGroup;
+
+width: parent.width;
+
+TextInputElementView {
+id: calibrationDateInput;
+
+name: qsTr("Calibration Date");
+placeHolderText: qsTr("Enter calibration date");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+
+TextInputElementView {
+id: commissionDateInput;
+
+name: qsTr("Commission Date");
+placeHolderText: qsTr("Enter commission date");
+
+onEditingFinished: {
+iotDeviceEditorContainer.doUpdateModel();
+}
+}
+}
+}
+}
 }

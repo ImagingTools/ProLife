@@ -35,6 +35,11 @@ I_EXPORT_COMPONENT(
 			"Device Information Authority");
 
 I_EXPORT_COMPONENT(
+			IotDeviceInfo,
+			"IoT device information",
+			"IoT Device Information Authority");
+
+I_EXPORT_COMPONENT(
 			KeyDataProvider,
 			"Key data provider",
 			"License Key Provider Order Product");
@@ -43,6 +48,11 @@ I_EXPORT_COMPONENT(
 			DeviceMetaInfoCreator,
 			"Device meta info creator",
 			"Device Meta Info Creator");
+
+I_EXPORT_COMPONENT(
+			IotDeviceMetaInfoCreator,
+			"IoT device meta info creator",
+			"IoT Device Meta Info Creator");
 
 I_EXPORT_COMPONENT(
 			SoftwareMetaInfoCreator,
