@@ -12,7 +12,7 @@ namespace prolifegql
 {
 
 
-bool CCustomerMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
+bool CCustomerMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo, const QByteArray& /*typeId*/) const
 {
 	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_CUSTOMER_ID).toByteArray();
 	representation["CustomerId"] = QString(customerId);
@@ -33,7 +33,7 @@ bool CCustomerMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 }
 
 
-bool CCustomerMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
+bool CCustomerMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation, const QByteArray& /*typeId*/) const
 {
 	if (representation.contains("CustomerId")){
 		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_CUSTOMER_ID, representation.value("CustomerId"));

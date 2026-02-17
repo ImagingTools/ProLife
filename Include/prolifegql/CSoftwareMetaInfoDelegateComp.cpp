@@ -15,7 +15,7 @@ namespace prolifegql
 
 // protected methods
 
-bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
+bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo, const QByteArray& /*typeId*/) const
 {
 	QByteArray project = metaInfo.GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT).toByteArray();
 	representation["Project"] = QString(project);
@@ -84,7 +84,7 @@ bool CSoftwareMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 }
 
 
-bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
+bool CSoftwareMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation, const QByteArray& /*typeId*/) const
 {
 	if (representation.contains("Project")){
 		metaInfo.SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PROJECT, representation.value("Project"));

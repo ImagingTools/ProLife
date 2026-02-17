@@ -14,7 +14,7 @@ namespace prolifegql
 
 // protected methods
 
-bool CHardwareBindingMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
+bool CHardwareBindingMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo, const QByteArray& /*typeId*/) const
 {
 	QByteArray hardwareId = metaInfo.GetMetaInfo(prolifedata::IHardwareProductBinding::MIT_HARDWARE_ID).toByteArray();
 	representation["HardwareId"] = QString(hardwareId);
@@ -26,7 +26,7 @@ bool CHardwareBindingMetaInfoDelegateComp::FillRepresentation(QJsonObject& repre
 }
 
 
-bool CHardwareBindingMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
+bool CHardwareBindingMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation, const QByteArray& /*typeId*/) const
 {
 	if (representation.contains("HardwareId")){
 		metaInfo.SetMetaInfo(prolifedata::IHardwareProductBinding::MIT_HARDWARE_ID, representation.value("HardwareId"));

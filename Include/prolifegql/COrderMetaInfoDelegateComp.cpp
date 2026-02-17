@@ -15,7 +15,7 @@ namespace prolifegql
 // protected methods
 
 
-bool COrderMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
+bool COrderMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo, const QByteArray& /*typeId*/) const
 {
 	QByteArray customerId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toByteArray();
 	representation["CustomerId"] = QString(customerId);
@@ -36,7 +36,7 @@ bool COrderMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation,
 }
 
 
-bool COrderMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
+bool COrderMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation, const QByteArray& /*typeId*/) const
 {
 	if (representation.contains("CustomerId")){
 		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID, representation.value("CustomerId"));

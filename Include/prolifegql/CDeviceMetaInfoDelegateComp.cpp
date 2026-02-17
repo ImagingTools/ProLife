@@ -14,7 +14,7 @@ namespace prolifegql
 
 // protected methods
 
-bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo) const
+bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation, const idoc::IDocumentMetaInfo& metaInfo, const QByteArray& /*typeId*/) const
 {
 	QByteArray macAddress = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS).toByteArray();
 	representation["MacAddress"] = QString(macAddress);
@@ -71,7 +71,7 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 }
 
 
-bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation) const
+bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo, const QJsonObject& representation, const QByteArray& /*typeId*/) const
 {
 	if (representation.contains("MacAddress")){
 		metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS, representation.value("MacAddress"));
