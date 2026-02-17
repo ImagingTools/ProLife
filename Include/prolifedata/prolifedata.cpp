@@ -5,6 +5,7 @@
 #include <QSet>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonParseError>
 
 // ACF includes
 #include <iprm/CParamsSet.h>
@@ -20,6 +21,9 @@
 
 namespace prolifedata
 {
+
+// Constants for operation types
+const QString OPERATION_TYPE_SPLIT = "split";
 
 
 QString GetNameFromDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus status)
@@ -349,18 +353,21 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		// Parse operation metadata from OrderId field
 		// Expected format: {"type":"split","transferred":count}
 		QByteArray orderId = softwarePtr->GetOrderId();
-		QString operationType = "split";  // Default
+		QString operationType = OPERATION_TYPE_SPLIT;  // Default
 		int transferredCount = softwarePtr->GetProductCount();  // Default to current count
 		
-		if (!orderId.isEmpty() && orderId.startsWith('{')) {
-			// Try to parse as JSON
-			QJsonDocument doc = QJsonDocument::fromJson(orderId);
-			if (!doc.isNull() && doc.isObject()) {
+		// Try to parse JSON metadata
+		if (!orderId.isEmpty()) {
+			QJsonParseError parseError;
+			QJsonDocument doc = QJsonDocument::fromJson(orderId, &parseError);
+			
+			// Check if parsing succeeded and result is a valid JSON object
+			if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
 				QJsonObject obj = doc.object();
-				if (obj.contains("type")) {
+				if (obj.contains("type") && obj["type"].isString()) {
 					operationType = obj["type"].toString();
 				}
-				if (obj.contains("transferred")) {
+				if (obj.contains("transferred") && obj["transferred"].isDouble()) {
 					transferredCount = obj["transferred"].toInt();
 				}
 			}

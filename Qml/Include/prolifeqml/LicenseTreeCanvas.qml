@@ -121,6 +121,14 @@ Item {
 			return currentX;
 		}
 		
+		function calculateOriginalParentCount(layout) {
+			let total = layout.node.m_productCount;
+			for (let j = 0; j < layout.children.length; j++) {
+				total += layout.children[j].node.m_productCount;
+			}
+			return total;
+		}
+		
 		function drawConnections(ctx, layout) {
 			if (!layout || !layout.children || layout.children.length === 0) {
 				return;
@@ -134,10 +142,7 @@ Item {
 			ctx.lineWidth = 2;
 			
 			// Calculate original parent count (before any splits)
-			let originalParentCount = layout.node.m_productCount;
-			for (let j = 0; j < layout.children.length; j++) {
-				originalParentCount += layout.children[j].node.m_productCount;
-			}
+			let originalParentCount = calculateOriginalParentCount(layout);
 			
 			// If there are multiple children, show the total count on the parent's outgoing line
 			if (layout.children.length > 1) {
@@ -163,13 +168,9 @@ Item {
 				let childCenterX = child.x + root.nodeWidth / 2;
 				let childTopY = child.y;
 				
-				// Check if this is a revoke operation (if operationType is available)
-				let isRevoke = child.node.m_operationType === "revoke";
-				let lineColor = isRevoke ? root.revokeArrowColor : root.arrowColor;
-				
 				// Draw line from parent to child with arrow
-				ctx.strokeStyle = lineColor;
-				ctx.fillStyle = lineColor;
+				ctx.strokeStyle = root.arrowColor;
+				ctx.fillStyle = root.arrowColor;
 				ctx.beginPath();
 				ctx.moveTo(parentCenterX, parentBottomY);
 				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
@@ -187,19 +188,15 @@ Item {
 				ctx.fill();
 				
 				// Draw transfer info
-				let textColor = isRevoke ? root.revokeTextColor : root.transferTextColor;
-				ctx.fillStyle = textColor;
+				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
 				
 				// If parent has only 1 child, show full transfer (originalCount → childCount)
 				// If parent has multiple children, show only the individual transfer amount
-				// For revoke operations, show "REVOKED: amount"
 				let transferText;
-				if (isRevoke) {
-					transferText = "REVOKED: " + child.node.m_productCount;
-				} else if (layout.children.length === 1) {
+				if (layout.children.length === 1) {
 					transferText = originalParentCount + " → " + child.node.m_productCount;
 				} else {
 					transferText = child.node.m_productCount.toString();
@@ -212,7 +209,7 @@ Item {
 				ctx.fillStyle = Style.backgroundColor;
 				ctx.fillRect(childCenterX - textWidth / 2 - 4, transferY - 8, textWidth + 8, 16);
 				
-				ctx.fillStyle = textColor;
+				ctx.fillStyle = root.transferTextColor;
 				ctx.fillText(transferText, childCenterX, transferY);
 				
 				// Recursively draw child connections
