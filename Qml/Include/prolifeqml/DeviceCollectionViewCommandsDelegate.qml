@@ -21,6 +21,9 @@ DocCollectionViewDelegate {
 	Component.onCompleted: {
 		registerDocumentType("Device", qsTr("Device"))
 		addDocumentView("Device", "DeviceEditor", deviceEditorComp, dataControllerComp)
+		
+		registerDocumentType("IotDevice", qsTr("IoT Device"))
+		addDocumentView("IotDevice", "IotDeviceEditor", iotDeviceEditorComp, iotDeviceDataControllerComp)
 	}
 	
 	removeDialogTitle: qsTr("Removing the sensor");
@@ -101,30 +104,56 @@ DocCollectionViewDelegate {
 	}
 	
 	Component {
-		id: iotDeviceDataControllerComp;
-		
-		GqlRequestDocumentDataController {
-			id: iotDeviceDataController
-
-			property IotDeviceData iotDeviceData: documentModel;
-
-			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceItem;
-			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceUpdate;
-			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceAdd;
+		id: iotDeviceDataControllerComp
+		DocumentRepresentationController {
+			id: iotRoot
 			
-			typeId: "IotDevice";
-			documentName: iotDeviceData ? iotDeviceData.m_name : ""
+			representationModel: IotDeviceData {}
 			
-			documentModelComp: Component {
-				IotDeviceData {}
+			function updateRepresentationFromDocument(){
+				startUpdateRepresentation(documentId, representationModel)
+				
+				documentIdInput.m_id = documentId
+				documentIdInput.m_collectionId = container.collectionId
+				getIotDeviceRequest.send(documentIdInput)
 			}
-		}
-	}
-	
-	Component {
-		id: iotDeviceValidatorComp;
-		
-		IotDeviceValidator {
+			
+			function updateDocumentFromRepresentation(){
+				startUpdateDocument(documentId)
+				
+				updateIotDeviceInput.m_documentId = documentId
+				updateIotDeviceInput.m_iotDeviceData = representationModel
+				
+				updateIotDeviceRequest.send(updateIotDeviceInput)
+			}
+			
+			property DocumentId documentIdInput: DocumentId {}
+			property GqlSdlRequestSender getIotDeviceRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_getIotDeviceRepresentation
+				sdlObjectComp: Component {
+					IotDeviceData {
+						onFinished: {
+							iotRoot.representationModel.copyFrom(this)
+							iotRoot.representationUpdated(iotRoot.documentId, iotRoot.representationModel)
+						}
+					}
+				}
+			}
+			
+			property UpdateIotDeviceInput updateIotDeviceInput: UpdateIotDeviceInput {}
+			property GqlSdlRequestSender updateIotDeviceRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_updateIotDeviceFromRepresentation
+				requestType: 1
+				sdlObjectComp: Component {
+					DocumentOperationStatus {
+						onFinished: {
+							if (m_status === "Success"){
+								iotRoot.documentUpdated(iotRoot.documentId)
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	

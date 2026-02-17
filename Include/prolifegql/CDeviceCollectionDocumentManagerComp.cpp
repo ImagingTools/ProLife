@@ -10,6 +10,7 @@
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/CIotDeviceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
 
 
@@ -269,6 +270,181 @@ QByteArray CDeviceCollectionDocumentManagerComp::GetUserId(const ::imtgql::CGqlR
 	}
 
 	return QByteArray();
+}
+
+
+sdl::prolife::Sensors::CIotDeviceData CDeviceCollectionDocumentManagerComp::OnGetIotDeviceRepresentation(
+			const sdl::prolife::DeviceCollectionDocumentManager::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	auto arguments = getIotDeviceRepresentationRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		Q_ASSERT(false);
+		return sdl::prolife::Sensors::CIotDeviceData();
+	}
+
+	QByteArray userId = GetUserId(gqlRequest);
+
+	QByteArray objectId;
+	istd::IChangeableSharedPtr documentPtr;
+	if (arguments.input.Version_1_0->id){
+		objectId = *arguments.input.Version_1_0->id;
+
+		m_documentManagerCompPtr->GetDocumentData(userId, objectId, documentPtr);
+	}
+
+	if (!documentPtr.IsValid()){
+		return sdl::prolife::Sensors::CIotDeviceData();
+	}
+
+	const prolifedata::COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableIotDeviceInfo*>(documentPtr.GetPtr());
+	if (iotDeviceInfoPtr == nullptr){
+		return sdl::prolife::Sensors::CIotDeviceData();
+	}
+
+	sdl::prolife::Sensors::CIotDeviceData response;
+	response.Version_1_0.Emplace();
+
+	response.Version_1_0->id = (objectId);
+
+	QString description = iotDeviceInfoPtr->GetDescription();
+	response.Version_1_0->description = (description);
+
+	QByteArray factoryNumber = iotDeviceInfoPtr->GetFactoryNumber();
+	response.Version_1_0->factoryNumber = (factoryNumber);
+
+	QByteArray modemNumber = iotDeviceInfoPtr->GetModemNumber();
+	response.Version_1_0->modemNumber = (modemNumber);
+
+	QString manufacturer = iotDeviceInfoPtr->GetManufacturer();
+	response.Version_1_0->manufacturer = (manufacturer);
+
+	QString brandModel = iotDeviceInfoPtr->GetBrandModel();
+	response.Version_1_0->brandModel = (brandModel);
+
+	QString installationLocation = iotDeviceInfoPtr->GetInstallationLocation();
+	response.Version_1_0->installationLocation = (installationLocation);
+
+	QString connectionType = iotDeviceInfoPtr->GetConnectionType();
+	response.Version_1_0->connectionType = (connectionType);
+
+	QString resourceType = iotDeviceInfoPtr->GetResourceType();
+	response.Version_1_0->resourceType = (resourceType);
+
+	QString holeDiameter = iotDeviceInfoPtr->GetHoleDiameter();
+	response.Version_1_0->holeDiameter = (holeDiameter);
+
+	QString deviceCategory = iotDeviceInfoPtr->GetDeviceCategory();
+	response.Version_1_0->deviceCategory = (deviceCategory);
+
+	QString calibrationDate = iotDeviceInfoPtr->GetCalibrationDate();
+	response.Version_1_0->calibrationDate = (calibrationDate);
+
+	QString commissionDate = iotDeviceInfoPtr->GetCommissionDate();
+	response.Version_1_0->commissionDate = (commissionDate);
+
+	return response;
+}
+
+
+sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus CDeviceCollectionDocumentManagerComp::OnUpdateIotDeviceFromRepresentation(
+			const sdl::prolife::DeviceCollectionDocumentManager::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	auto arguments = updateIotDeviceFromRepresentationRequest.GetRequestedArguments();
+	if (!arguments.input.Version_1_0){
+		Q_ASSERT(false);
+		return sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus();
+	}
+
+	sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus response;
+	response.Version_1_0.Emplace();
+	response.Version_1_0->status = sdl::imtbase::CollectionDocumentManager::EDocumentOperationStatus::Failed;
+
+	QByteArray userId = GetUserId(gqlRequest);
+
+	QByteArray documentId;
+	if (arguments.input.Version_1_0->documentId){
+		documentId = *arguments.input.Version_1_0->documentId;
+	}
+
+	sdl::prolife::Sensors::CIotDeviceData::V1_0 iotDeviceData;
+	if (arguments.input.Version_1_0->iotDeviceData){
+		iotDeviceData = *arguments.input.Version_1_0->iotDeviceData;
+	}
+
+	istd::IChangeableSharedPtr documentPtr;
+	m_documentManagerCompPtr->GetDocumentData(userId, documentId, documentPtr);
+	if (!documentPtr.IsValid()){
+		response.Version_1_0->status = sdl::imtbase::CollectionDocumentManager::EDocumentOperationStatus::InvalidDocumentId;
+		return response;
+	}
+
+	prolifedata::COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableIotDeviceInfo*>(documentPtr.GetPtr());
+	if (iotDeviceInfoPtr == nullptr){
+		response.Version_1_0->status = sdl::imtbase::CollectionDocumentManager::EDocumentOperationStatus::InvalidDocumentId;
+		return response;
+	}
+
+	if (iotDeviceData.description){
+		iotDeviceInfoPtr->SetDescription(*iotDeviceData.description);
+	}
+
+	QString factoryNumber;
+	if (iotDeviceData.factoryNumber){
+		factoryNumber = *iotDeviceData.factoryNumber;
+	}
+	iotDeviceInfoPtr->SetFactoryNumber(factoryNumber.toUtf8());
+
+	QString modemNumber;
+	if (iotDeviceData.modemNumber){
+		modemNumber = *iotDeviceData.modemNumber;
+	}
+	iotDeviceInfoPtr->SetModemNumber(modemNumber.toUtf8());
+
+	if (iotDeviceData.manufacturer){
+		iotDeviceInfoPtr->SetManufacturer(*iotDeviceData.manufacturer);
+	}
+
+	if (iotDeviceData.brandModel){
+		iotDeviceInfoPtr->SetBrandModel(*iotDeviceData.brandModel);
+	}
+
+	if (iotDeviceData.installationLocation){
+		iotDeviceInfoPtr->SetInstallationLocation(*iotDeviceData.installationLocation);
+	}
+
+	if (iotDeviceData.connectionType){
+		iotDeviceInfoPtr->SetConnectionType(*iotDeviceData.connectionType);
+	}
+
+	if (iotDeviceData.resourceType){
+		iotDeviceInfoPtr->SetResourceType(*iotDeviceData.resourceType);
+	}
+
+	if (iotDeviceData.holeDiameter){
+		iotDeviceInfoPtr->SetHoleDiameter(*iotDeviceData.holeDiameter);
+	}
+
+	if (iotDeviceData.deviceCategory){
+		iotDeviceInfoPtr->SetDeviceCategory(*iotDeviceData.deviceCategory);
+	}
+
+	if (iotDeviceData.calibrationDate){
+		iotDeviceInfoPtr->SetCalibrationDate(*iotDeviceData.calibrationDate);
+	}
+
+	if (iotDeviceData.commissionDate){
+		iotDeviceInfoPtr->SetCommissionDate(*iotDeviceData.commissionDate);
+	}
+
+	m_documentManagerCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr);
+
+	response.Version_1_0->status = sdl::imtbase::CollectionDocumentManager::EDocumentOperationStatus::Success;
+
+	return response;
 }
 
 

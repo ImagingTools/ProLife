@@ -16,10 +16,17 @@ type UpdateDeviceInput {
 	deviceData: DeviceData!
 }
 
+type UpdateIotDeviceInput {
+	documentId: ID!
+	iotDeviceData: IotDeviceData!
+}
+
 type Query {
 	GetDeviceRepresentation(input: DocumentId): DeviceData!
+	GetIotDeviceRepresentation(input: DocumentId): IotDeviceData!
 }
 
 type Mutation {
 	UpdateDeviceFromRepresentation(input: UpdateDeviceInput): DocumentOperationStatus!
+	UpdateIotDeviceFromRepresentation(input: UpdateIotDeviceInput): DocumentOperationStatus!
 }
