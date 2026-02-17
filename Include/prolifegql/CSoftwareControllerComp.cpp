@@ -3,6 +3,10 @@
 // Standard includes
 #include <optional>
 
+// Qt includes
+#include <QJsonDocument>
+#include <QJsonObject>
+
 // ACF includes
 #include <iprm/CIdParam.h>
 
@@ -168,7 +172,13 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	newSoftwarePtr->SetupProductInstance(productId, "", accountId);
 	newSoftwarePtr->SetProductCount(licenseCount);
 	newSoftwarePtr->SetSerialNumber("");
-	newSoftwarePtr->SetOrderId("");
+	// Store operation metadata in OrderId field (using JSON format)
+	// Format: {"type":"split","transferred":count}
+	QJsonObject opMetadata;
+	opMetadata["type"] = "split";
+	opMetadata["transferred"] = licenseCount;
+	QJsonDocument metadataDoc(opMetadata);
+	newSoftwarePtr->SetOrderId(QString::fromUtf8(metadataDoc.toJson(QJsonDocument::Compact)).toUtf8());
 	newSoftwarePtr->SetParentInstanceId(licenseId);
 
 	// Add the new software instance to the collection

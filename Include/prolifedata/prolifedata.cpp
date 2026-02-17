@@ -3,6 +3,8 @@
 
 // Qt includes
 #include <QSet>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 // ACF includes
 #include <iprm/CParamsSet.h>
@@ -344,10 +346,28 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.accountId = softwarePtr->GetCustomerId();
 		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 		
-		// Set operation type and transferred count
-		// For now, default to "split" - full revoke tracking would require operation history
-		node.operationType = QString("split");
-		node.transferredCount = softwarePtr->GetProductCount();  // Current count as default
+		// Parse operation metadata from OrderId field
+		// Expected format: {"type":"split","transferred":count}
+		QByteArray orderId = softwarePtr->GetOrderId();
+		QString operationType = "split";  // Default
+		int transferredCount = softwarePtr->GetProductCount();  // Default to current count
+		
+		if (!orderId.isEmpty() && orderId.startsWith('{')) {
+			// Try to parse as JSON
+			QJsonDocument doc = QJsonDocument::fromJson(orderId);
+			if (!doc.isNull() && doc.isObject()) {
+				QJsonObject obj = doc.object();
+				if (obj.contains("type")) {
+					operationType = obj["type"].toString();
+				}
+				if (obj.contains("transferred")) {
+					transferredCount = obj["transferred"].toInt();
+				}
+			}
+		}
+		
+		node.operationType = operationType;
+		node.transferredCount = transferredCount;
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;

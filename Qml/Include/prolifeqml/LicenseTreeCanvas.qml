@@ -258,6 +258,21 @@ Item {
 				ctx.fillText("CURRENT", x + root.nodeWidth - 35, y + 12);
 			}
 			
+			// Draw "REVOKED" indicator if licenses were revoked (transferredCount > productCount)
+			let hasRevoke = node.m_transferredCount && node.m_productCount && 
+			                node.m_transferredCount > node.m_productCount;
+			if (hasRevoke && !isCurrent) {
+				ctx.fillStyle = root.revokeArrowColor;
+				let badgeX = x + root.nodeWidth - 75;
+				ctx.fillRect(badgeX, y, 75, 24);
+				ctx.fillStyle = "#FFF";
+				ctx.font = "bold 10px " + Style.fontFamily;
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				let revokedAmount = node.m_transferredCount - node.m_productCount;
+				ctx.fillText("- " + revokedAmount, badgeX + 37, y + 12);
+			}
+			
 			// Draw text
 			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
 			ctx.textAlign = "left";
@@ -286,6 +301,12 @@ Item {
 			ctx.font = "bold 12px " + Style.fontFamily;
 			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
 			let countText = "Licenses: " + (node.m_productCount || 0);
+			
+			// If licenses were revoked, show original count too
+			if (hasRevoke) {
+				countText += " (was " + node.m_transferredCount + ")";
+			}
+			
 			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
 			
 			// Draw children
