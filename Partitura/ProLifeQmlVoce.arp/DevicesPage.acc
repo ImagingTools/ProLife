@@ -398,6 +398,11 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="IotDeviceInfo" PackageId="ProLifeDataPck" ComponentId="IotDeviceInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="Encryption" PackageId="ImtCryptPck" ComponentId="Encryption">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
