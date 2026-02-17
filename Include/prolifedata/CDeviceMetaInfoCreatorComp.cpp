@@ -133,7 +133,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	}
 
 	const COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<const COrderedIdentifiableIotDeviceInfo*>(dataPtr);
-	if (deviceInfoPtr != nullptr){
+	if (iotDeviceInfoPtr != nullptr){
 		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_FACTORY_NUMBER, iotDeviceInfoPtr->GetFactoryNumber());
 		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_MODEM_NUMBER, iotDeviceInfoPtr->GetModemNumber());
 		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_MANUFACTURER, iotDeviceInfoPtr->GetManufacturer());
@@ -162,5 +162,6 @@ QString CDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*metaInfoType
 
 
 } // namespace imtauth
+
 
 
