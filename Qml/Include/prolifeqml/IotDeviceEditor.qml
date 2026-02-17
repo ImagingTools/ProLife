@@ -30,7 +30,6 @@ ViewBase {
 
 		let canAddSensor = PermissionsController.checkPermission("AddSensor");
 		if (isNew && canAddSensor){
-			nameInput.readOnly = false;
 			descriptionInput.readOnly = false;
 			factoryNumberInput.readOnly = false;
 			modemNumberInput.readOnly = false;
@@ -47,7 +46,6 @@ ViewBase {
 		else{
 			let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor");
 			descriptionInput.readOnly = !canChangeDescription;
-			nameInput.readOnly = !canChangeDescription;
 
 			// For other fields, use generic sensor permission for now
 			let canChangeSensor = PermissionsController.checkPermission("AddSensor");
@@ -70,7 +68,6 @@ ViewBase {
 			return;
 		}
 
-		nameInput.text= iotDeviceData.m_name ? iotDeviceData.m_name : "";
 		descriptionInput.text= iotDeviceData.m_description ? iotDeviceData.m_description : "";
 		factoryNumberInput.text= iotDeviceData.m_factoryNumber ? iotDeviceData.m_factoryNumber : "";
 		modemNumberInput.text= iotDeviceData.m_modemNumber ? iotDeviceData.m_modemNumber : "";
@@ -90,7 +87,6 @@ ViewBase {
 			return;
 		}
 
-		iotDeviceData.m_name = nameInput.text;
 		iotDeviceData.m_description = descriptionInput.text;
 		iotDeviceData.m_factoryNumber = factoryNumberInput.text;
 		iotDeviceData.m_modemNumber = modemNumberInput.text;
@@ -145,17 +141,6 @@ ViewBase {
 				id: basicInformationGroup;
 
 				width: parent.width;
-
-				TextInputElementView {
-					id: nameInput;
-
-					name: qsTr("Name");
-					placeHolderText: qsTr("Enter name");
-
-					onEditingFinished: {
-						iotDeviceEditorContainer.doUpdateModel();
-					}
-				}
 
 				TextInputElementView {
 					id: descriptionInput;

@@ -1,18 +1,18 @@
 #pragma once
 
 
-// ProLife includes
-#include <prolifedata/IDeviceInfo.h>
-#include <prolifedata/IOrderInfo.h>
+// Qt includes
+#include <QString>
 
 // ImtCore includes
 #include <imtbase/IObjectCollection.h>
 
+// ProLife includes
+#include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/IOrderInfo.h>
+
 // Generated includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
-
-// Qt includes
-#include <QString>
 
 
 namespace prolifedata
@@ -35,9 +35,9 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 // Build complete license tree from a given license ID
 // Automatically finds root and builds full hierarchy
 std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
-	const QByteArray& licenseId,
-	const imtbase::IObjectCollection& softwareProductCollection,
-	QString& errorMessage);
+			const QByteArray& licenseId,
+			const imtbase::IObjectCollection& softwareProductCollection,
+			QString& errorMessage);
 
 
 } // namespace prolifedata

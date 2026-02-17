@@ -223,7 +223,7 @@ Item {
 			// Create a map of node IDs to their layout info for quick lookup
 			let nodeMap = {};
 			
-			function collectNodes(nodeLayout) {
+			let collectNodes = function(nodeLayout) {
 				if (!nodeLayout) return;
 				nodeMap[nodeLayout.node.m_id] = nodeLayout;
 				if (nodeLayout.children) {
@@ -236,7 +236,7 @@ Item {
 			collectNodes(layout);
 			
 			// Draw revoke edges for all nodes
-			function drawNodeRevokeEdges(nodeLayout) {
+			let  drawNodeRevokeEdges = function(nodeLayout) {
 				if (!nodeLayout) return;
 				
 				// Check if this node has revoke edges

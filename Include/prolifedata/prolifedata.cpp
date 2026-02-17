@@ -12,11 +12,13 @@
 
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>
-#include <imtlic/IProductInstanceInfo.h>
+#include <imtlic/CProductInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
 
 // ProLife includes
+#include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 
 
 namespace prolifedata
@@ -337,7 +339,7 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 			return std::nullopt;
 		}
 
-		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+		const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwarePtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 		if (softwarePtr == nullptr){
 			return std::nullopt;
 		}

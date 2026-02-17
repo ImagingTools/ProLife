@@ -115,8 +115,13 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectTypeId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Device"/>
+                    <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Device</Value>
+                                <Value>IotDevice</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
                         <Data IsEnabled="false"/>
