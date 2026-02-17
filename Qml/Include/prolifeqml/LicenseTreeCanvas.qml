@@ -352,8 +352,7 @@ Item {
 			}
 			
 			// Draw "REVOKED" indicator if licenses were revoked (transferredCount > productCount)
-			let hasRevoke = node.m_transferredCount && node.m_productCount && 
-			                node.m_transferredCount > node.m_productCount;
+			let hasRevoke = (node.m_transferredCount || 0) > (node.m_productCount || 0);
 			if (hasRevoke && !isCurrent) {
 				ctx.fillStyle = root.revokeArrowColor;
 				let badgeX = x + root.nodeWidth - 75;
