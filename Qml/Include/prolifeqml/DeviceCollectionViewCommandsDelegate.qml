@@ -15,11 +15,11 @@ import imtbaseComplexCollectionFilterSdl 1.0
 DocumentCollectionViewDelegate {
 	id: container;
 	
-	documentTypeIds: ["Device"]
-	documentViewTypeIds: ["DeviceEditor"]
-	documentViewsComp: [deviceEditorComp]
-	documentDataControllersComp: [dataControllerComp];
-	documentValidatorsComp: [deviceValidatorComp];
+	documentTypeIds: ["Device", "IotDevice"]
+	documentViewTypeIds: ["DeviceEditor", "IotDeviceEditor"]
+	documentViewsComp: [deviceEditorComp, iotDeviceEditorComp]
+	documentDataControllersComp: [dataControllerComp, iotDeviceDataControllerComp];
+	documentValidatorsComp: [deviceValidatorComp, iotDeviceValidatorComp];
 	
 	removeDialogTitle: qsTr("Removing the sensor");
 	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
@@ -62,6 +62,54 @@ DocumentCollectionViewDelegate {
 		id: deviceValidatorComp;
 		
 		DeviceValidator {
+		}
+	}
+	
+	Component {
+		id: iotDeviceDataControllerComp;
+		
+		GqlRequestDocumentDataController {
+			id: iotRequestDocumentDataController
+
+			property IotDeviceData iotDeviceData: documentModel;
+
+			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceItem;
+			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceUpdate;
+			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_iotDeviceAdd;
+			
+			typeId: "IotDevice";
+			documentName: iotDeviceData ? iotDeviceData.m_name : ""
+			
+			documentModelComp: Component {
+				IotDeviceData {}
+			}
+		}
+	}
+	
+	Component {
+		id: iotDeviceValidatorComp;
+		
+		IotDeviceValidator {
+		}
+	}
+	
+	Component {
+		id: iotDeviceEditorComp;
+		
+		IotDeviceEditor {
+			id: iotDeviceEditor;
+			
+			commandsControllerComp:
+				Component { GqlBasedCommandsController {
+					typeId: "IotDevice";
+				}}
+
+			onIotDeviceDataChanged: {
+				if (iotDeviceData !== null && container.documentManager){
+					isNew = container.documentManager.documentIsNew(iotDeviceData.m_id)
+					checkPermissions()
+				}
+			}
 		}
 	}
 	
