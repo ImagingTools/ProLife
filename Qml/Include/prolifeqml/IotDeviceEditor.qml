@@ -9,10 +9,10 @@ import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeSensorsSdl 1.0
 
-DocumentEditorViewBase {
+ViewBase {
 	id: iotDeviceEditorContainer;
 
-	property IotDeviceData iotDeviceData: model ? model : null;
+	property IotDeviceData iotDeviceData: model;
 	property bool isNew: false
 
 	onIotDeviceDataChanged: {
@@ -65,52 +65,44 @@ DocumentEditorViewBase {
 		}
 	}
 
-	function doUpdateModel(){
-		if (!iotDeviceData){
-			return;
-		}
-
-		iotDeviceData.m_name = nameInput.value;
-		iotDeviceData.m_description = descriptionInput.value;
-		iotDeviceData.m_factoryNumber = factoryNumberInput.value;
-		iotDeviceData.m_modemNumber = modemNumberInput.value;
-		iotDeviceData.m_manufacturer = manufacturerInput.value;
-		iotDeviceData.m_brandModel = brandModelInput.value;
-		iotDeviceData.m_installationLocation = installationLocationInput.value;
-		iotDeviceData.m_connectionType = connectionTypeInput.value;
-		iotDeviceData.m_resourceType = resourceTypeInput.value;
-		iotDeviceData.m_holeDiameter = holeDiameterInput.value;
-		iotDeviceData.m_deviceCategory = deviceCategoryInput.value;
-		iotDeviceData.m_calibrationDate = calibrationDateInput.value;
-		iotDeviceData.m_commissionDate = commissionDateInput.value;
-	}
-
-	function doUpdateGui(){
-		if (!iotDeviceData){
-			return;
-		}
-
-		nameInput.value = iotDeviceData.m_name ? iotDeviceData.m_name : "";
-		descriptionInput.value = iotDeviceData.m_description ? iotDeviceData.m_description : "";
-		factoryNumberInput.value = iotDeviceData.m_factoryNumber ? iotDeviceData.m_factoryNumber : "";
-		modemNumberInput.value = iotDeviceData.m_modemNumber ? iotDeviceData.m_modemNumber : "";
-		manufacturerInput.value = iotDeviceData.m_manufacturer ? iotDeviceData.m_manufacturer : "";
-		brandModelInput.value = iotDeviceData.m_brandModel ? iotDeviceData.m_brandModel : "";
-		installationLocationInput.value = iotDeviceData.m_installationLocation ? iotDeviceData.m_installationLocation : "";
-		connectionTypeInput.value = iotDeviceData.m_connectionType ? iotDeviceData.m_connectionType : "";
-		resourceTypeInput.value = iotDeviceData.m_resourceType ? iotDeviceData.m_resourceType : "";
-		holeDiameterInput.value = iotDeviceData.m_holeDiameter ? iotDeviceData.m_holeDiameter : "";
-		deviceCategoryInput.value = iotDeviceData.m_deviceCategory ? iotDeviceData.m_deviceCategory : "";
-		calibrationDateInput.value = iotDeviceData.m_calibrationDate ? iotDeviceData.m_calibrationDate : "";
-		commissionDateInput.value = iotDeviceData.m_commissionDate ? iotDeviceData.m_commissionDate : "";
-	}
-
 	function updateGui(){
-		doUpdateGui();
+		if (!iotDeviceData){
+			return;
+		}
+
+		nameInput.text= iotDeviceData.m_name ? iotDeviceData.m_name : "";
+		descriptionInput.text= iotDeviceData.m_description ? iotDeviceData.m_description : "";
+		factoryNumberInput.text= iotDeviceData.m_factoryNumber ? iotDeviceData.m_factoryNumber : "";
+		modemNumberInput.text= iotDeviceData.m_modemNumber ? iotDeviceData.m_modemNumber : "";
+		manufacturerInput.text= iotDeviceData.m_manufacturer ? iotDeviceData.m_manufacturer : "";
+		brandModelInput.text= iotDeviceData.m_brandModel ? iotDeviceData.m_brandModel : "";
+		installationLocationInput.text= iotDeviceData.m_installationLocation ? iotDeviceData.m_installationLocation : "";
+		connectionTypeInput.text= iotDeviceData.m_connectionType ? iotDeviceData.m_connectionType : "";
+		resourceTypeInput.text= iotDeviceData.m_resourceType ? iotDeviceData.m_resourceType : "";
+		holeDiameterInput.text= iotDeviceData.m_holeDiameter ? iotDeviceData.m_holeDiameter : "";
+		deviceCategoryInput.text= iotDeviceData.m_deviceCategory ? iotDeviceData.m_deviceCategory : "";
+		calibrationDateInput.text= iotDeviceData.m_calibrationDate ? iotDeviceData.m_calibrationDate : "";
+		commissionDateInput.text= iotDeviceData.m_commissionDate ? iotDeviceData.m_commissionDate : "";
 	}
 
 	function updateModel(){
-		doUpdateModel();
+		if (!iotDeviceData){
+			return;
+		}
+
+		iotDeviceData.m_name = nameInput.text;
+		iotDeviceData.m_description = descriptionInput.text;
+		iotDeviceData.m_factoryNumber = factoryNumberInput.text;
+		iotDeviceData.m_modemNumber = modemNumberInput.text;
+		iotDeviceData.m_manufacturer = manufacturerInput.text;
+		iotDeviceData.m_brandModel = brandModelInput.text;
+		iotDeviceData.m_installationLocation = installationLocationInput.text;
+		iotDeviceData.m_connectionType = connectionTypeInput.text;
+		iotDeviceData.m_resourceType = resourceTypeInput.text;
+		iotDeviceData.m_holeDiameter = holeDiameterInput.text;
+		iotDeviceData.m_deviceCategory = deviceCategoryInput.text;
+		iotDeviceData.m_calibrationDate = calibrationDateInput.text;
+		iotDeviceData.m_commissionDate = commissionDateInput.text;
 	}
 
 	Flickable {

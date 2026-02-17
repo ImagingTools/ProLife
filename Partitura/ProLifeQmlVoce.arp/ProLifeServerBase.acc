@@ -596,6 +596,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>DeviceInfo</Value>
+                                            <Value>IotDeviceInfo</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -603,6 +604,7 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>Device</Value>
+                                            <Value>IotDevice</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -655,6 +657,11 @@
                         </Data>
                     </Element>
                     <Element Id="DeviceInfo" PackageId="ProLifeDataPck" ComponentId="DeviceInfo">
+                        <Data IsEnabled="true" Flags="2">
+                            <AttributeInfoMap/>
+                        </Data>
+                    </Element>
+                    <Element Id="IotDeviceInfo" PackageId="ProLifeDataPck" ComponentId="IotDeviceInfo">
                         <Data IsEnabled="true" Flags="2">
                             <AttributeInfoMap/>
                         </Data>

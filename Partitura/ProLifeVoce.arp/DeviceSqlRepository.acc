@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5436" Description="ACF"/>
-            <Version Id="1" Number="2254" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="395266" Description="Qt Framework"/>
+            <Version Id="0" Number="5715" Description="ACF"/>
+            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -58,6 +58,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>DeviceInfo</Value>
+                                <Value>IotDeviceInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -163,6 +164,11 @@
                         <Data IsEnabled="true" Value="DeviceDatabaseDelegate"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="IotDeviceInfo" PackageId="ProLifeDataPck" ComponentId="IotDeviceInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="JsonSerializer" PackageId="FilePck" ComponentId="JsonFileSerializer">
@@ -353,6 +359,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Device</Value>
+                                <Value>IotDevice</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -360,6 +367,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Device</Value>
+                                <Value>IoT Device</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
