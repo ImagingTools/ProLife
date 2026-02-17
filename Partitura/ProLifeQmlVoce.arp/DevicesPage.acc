@@ -187,6 +187,10 @@
                                 <Value>DevicesRemove</Value>
                                 <Value>DevicesMetaInfo</Value>
                                 <Value>GetObjectVisualStatus</Value>
+                                <Value>IotDevicesList</Value>
+                                <Value>IotDeviceAdd</Value>
+                                <Value>IotDeviceUpdate</Value>
+                                <Value>IotDeviceItem</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -215,6 +219,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Icons/Sensor</Value>
+                                <Value>Icons/Sensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -222,6 +227,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Device</Value>
+                                <Value>IotDevice</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
