@@ -23,7 +23,9 @@ Item {
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
+	readonly property color revokeArrowColor: "#DC3545"  // Red for revoke operations
 	readonly property color transferTextColor: "#28A745"
+	readonly property color revokeTextColor: "#DC3545"
 	
 	Canvas {
 		id: canvas
@@ -158,7 +160,13 @@ Item {
 				let childCenterX = child.x + root.nodeWidth / 2;
 				let childTopY = child.y;
 				
+				// Check if this is a revoke operation (if operationType is available)
+				let isRevoke = child.node.m_operationType === "revoke";
+				let lineColor = isRevoke ? root.revokeArrowColor : root.arrowColor;
+				
 				// Draw line from parent to child with arrow
+				ctx.strokeStyle = lineColor;
+				ctx.fillStyle = lineColor;
 				ctx.beginPath();
 				ctx.moveTo(parentCenterX, parentBottomY);
 				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
@@ -176,15 +184,19 @@ Item {
 				ctx.fill();
 				
 				// Draw transfer info
-				ctx.fillStyle = root.transferTextColor;
+				let textColor = isRevoke ? root.revokeTextColor : root.transferTextColor;
+				ctx.fillStyle = textColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
 				
 				// If parent has only 1 child, show full transfer (originalCount → childCount)
 				// If parent has multiple children, show only the individual transfer amount
+				// For revoke operations, show "REVOKED: amount"
 				let transferText;
-				if (layout.children.length === 1) {
+				if (isRevoke) {
+					transferText = "REVOKED: " + child.node.m_productCount;
+				} else if (layout.children.length === 1) {
 					transferText = originalParentCount + " → " + child.node.m_productCount;
 				} else {
 					transferText = child.node.m_productCount.toString();
@@ -197,7 +209,7 @@ Item {
 				ctx.fillStyle = Style.backgroundColor;
 				ctx.fillRect(childCenterX - textWidth / 2 - 4, transferY - 8, textWidth + 8, 16);
 				
-				ctx.fillStyle = root.transferTextColor;
+				ctx.fillStyle = textColor;
 				ctx.fillText(transferText, childCenterX, transferY);
 				
 				// Recursively draw child connections

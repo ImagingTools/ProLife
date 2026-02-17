@@ -343,6 +343,11 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.parentId = softwarePtr->GetParentInstanceId();
 		node.accountId = softwarePtr->GetCustomerId();
 		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
+		
+		// Set operation type and transferred count
+		// For now, default to "split" - full revoke tracking would require operation history
+		node.operationType = QString("split");
+		node.transferredCount = softwarePtr->GetProductCount();  // Current count as default
 
 		// Find all children
 		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
