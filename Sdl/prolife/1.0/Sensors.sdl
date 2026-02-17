@@ -15,6 +15,10 @@ input DevicesListInput {
 	viewParams: CollectionViewParams
 }
 
+input IotDevicesListInput {
+	viewParams: CollectionViewParams
+}
+
 type ProductionStatus {
 	id: ID!
 	name: String!
@@ -93,6 +97,53 @@ input DeviceBindingInput {
 	project: String
 }
 
+type IotDeviceItem {
+	typeId: ID!
+	id: ID!
+	name: String!
+	description: String
+	factoryNumber: String
+	modemNumber: String
+	manufacturer: String
+	brandModel: String
+	installationLocation: String
+	connectionType: String
+	resourceType: String
+	holeDiameter: String
+	deviceCategory: String
+	calibrationDate: String
+	commissionDate: String
+	added: String
+	timeStamp: String
+}
+
+type IotDevicesListPayload {
+	items: [IotDeviceItem]
+	notification: NotificationItem
+}
+
+type IotDeviceData {
+	id: ID
+	name: String
+	description: String
+	factoryNumber: String
+	modemNumber: String
+	manufacturer: String
+	brandModel: String
+	installationLocation: String
+	connectionType: String
+	resourceType: String
+	holeDiameter: String
+	deviceCategory: String
+	calibrationDate: String
+	commissionDate: String
+}
+
+input IotDeviceDataInput {
+	id: ID!
+	item: IotDeviceData!
+}
+
 input GetDeviceBindingInput {
 	id: ID!
 }
@@ -145,6 +196,8 @@ type Query {
 	DevicesList (input:DevicesListInput): DevicesListPayload!
 	DeviceItem (input: InputId): DeviceData!
 	GetDeviceBinding (input: GetDeviceBindingInput): DeviceBindingData!
+	IotDevicesList (input: IotDevicesListInput): IotDevicesListPayload!
+	IotDeviceItem (input: InputId): IotDeviceData!
 }
 
 type Mutation {
@@ -156,6 +209,8 @@ type Mutation {
 	CreateLicenseFile (input: CreateLicenseFileInput): CreateLicenseFilePayload!
 	DecryptLicenseFile (input: DecryptLicenseFileInput): DecryptLicenseFilePayload!
 	ResetTransferCounter (input: ResetTransferCounterInput): ResetTransferCounterPayload!
+	IotDeviceUpdate (input: IotDeviceDataInput): UpdatedNotificationPayload!
+	IotDeviceAdd (input: IotDeviceDataInput): AddedNotificationPayload!
 }
 
 collectionSchema {
@@ -170,6 +225,20 @@ collectionSchema {
 				get: DeviceItem
 				update: DeviceUpdate
 				insert: DeviceAdd
+			}
+		}
+	}
+	type IotDevice {
+		ref: IotDeviceItem
+		operations {
+			list: IotDevicesList
+		}
+		subtype IotDevice {
+			ref: IotDeviceData
+			operations {
+				get: IotDeviceItem
+				update: IotDeviceUpdate
+				insert: IotDeviceAdd
 			}
 		}
 	}

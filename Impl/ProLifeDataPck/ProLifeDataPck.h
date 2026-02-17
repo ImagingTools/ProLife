@@ -18,6 +18,8 @@
 #include <prolifedata/CCustomerMetaInfoCreatorComp.h>
 #include <prolifedata/CHardwareBindingMetaInfoCreatorComp.h>
 #include <prolifedata/CSoftwareTransferInfo.h>
+#include <prolifedata/CIotDeviceInfo.h>
+#include <prolifedata/CIotDeviceMetaInfoCreatorComp.h>
 
 
 namespace ProLifeDataPck
@@ -60,6 +62,14 @@ typedef icomp::TModelCompWrap<
 						prolifedata::ISoftwareTransfer,
 						iser::ISerializable,
 						istd::IChangeable>> SoftwareTransferInfo;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::COrderedIdentifiableIotDeviceInfo,
+						prolifedata::IIotDeviceInfo,
+						iser::ISerializable,
+						istd::IChangeable>> IotDeviceInfo;
+typedef prolifedata::CIotDeviceMetaInfoCreatorComp IotDeviceMetaInfoCreator;
+
 
 } // namespace ProLifeDataPck
 

@@ -18,4 +18,5 @@ GqlPiechartView 1.0 GqlPiechartView.qml
 GqlLinechartView 1.0 GqlLinechartView.qml
 GqlBarchartView 1.0 GqlBarchartView.qml
 StatisticsPage 1.0 StatisticsPage.qml
+IotDeviceEditor 1.0 IotDeviceEditor.qml
 

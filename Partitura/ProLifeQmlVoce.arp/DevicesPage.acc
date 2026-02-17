@@ -176,18 +176,11 @@
                     <AttributeInfo Id="CollectionName" Type="String" ExportId="">
                         <Data IsEnabled="true" Value="Hardware"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
+                    <AttributeInfo Id="CollectionObjectFactory" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>DevicesInfo</Value>
-                                <Value>DevicesList</Value>
-                                <Value>DeviceAdd</Value>
-                                <Value>DeviceUpdate</Value>
-                                <Value>DeviceItem</Value>
-                                <Value>DevicesObjectView</Value>
-                                <Value>DevicesRemove</Value>
-                                <Value>DevicesMetaInfo</Value>
-                                <Value>GetObjectVisualStatus</Value>
+                                <Value>DeviceInfo</Value>
+                                <Value>IotDeviceInfo</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -216,6 +209,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Icons/Sensor</Value>
+                                <Value>Icons/Sensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -223,6 +217,7 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Device</Value>
+                                <Value>IotDevice</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -500,6 +495,11 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="IotDeviceInfo" PackageId="ProLifeDataPck" ComponentId="IotDeviceInfo">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="OperationContextController" PackageId="ImtServerGqlPck" ComponentId="OperationContextController">
@@ -934,7 +934,64 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CommandsController" PackageId="ImtGraphQlVoce" ComponentId="CommandsController">
+                    <Element Id="CreateLicenseFile" PackageId="ImtCoreVoce" ComponentId="Command">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="CreateLicenseFile"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>CreateLicenseFile</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
+                                    <Data IsEnabled="true" Value="Icons/Key"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="true"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Name" Type="Text" ExportId="">
+                                    <Data IsEnabled="true" Value="Create License File"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="1"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="Demultiplexer" PackageId="ImtServerGqlPck" ComponentId="GraphQLDemultiplexer">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DeviceCommandsController</Value>
+                                            <Value>IotDeviceCommandsController</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DeviceCommandsController" PackageId="ImtGraphQlVoce" ComponentId="CommandsController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CenterAlignmentCommands" Type="Reference[]" ExportId="">
@@ -970,39 +1027,20 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CreateLicenseFile" PackageId="ImtCoreVoce" ComponentId="Command">
+                    <Element Id="IotDeviceCommandsController" PackageId="ImtGraphQlVoce" ComponentId="StandardDocumentCommandsController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="CreateLicenseFile"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
-                                    <Data IsEnabled="true">
-                                        <Values>
-                                            <Value>CreateLicenseFile</Value>
-                                        </Values>
-                                    </Data>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IconPath" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="Icons/Key"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="true"/>
-                                </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="Name" Type="Text" ExportId="">
-                                    <Data IsEnabled="true" Value="Create License File"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Priority" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="1"/>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="IotDevice"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -1129,11 +1167,11 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CommandsController"/>
-                    <Interface InterfaceId="imtserverapp::IGuiElementContainer" ComponentId="CommandsController"/>
-                    <Interface InterfaceId="imtserverapp::IRepresentationController" ComponentId="CommandsController"/>
-                    <Interface InterfaceId="istd::IChangeable" ComponentId="CommandsController"/>
-                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="CommandsController"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
+                    <Interface InterfaceId="imtserverapp::IGuiElementContainer" ComponentId="DeviceCommandsController"/>
+                    <Interface InterfaceId="imtserverapp::IRepresentationController" ComponentId="DeviceCommandsController"/>
+                    <Interface InterfaceId="istd::IChangeable" ComponentId="DeviceCommandsController"/>
+                    <Interface InterfaceId="istd::IPolymorphic" ComponentId="DeviceCommandsController"/>
                 </ExportedInterfaces>
                 <ExportedComponents/>
             </Data>

@@ -35,6 +35,14 @@ protected:
 				const sdl::prolife::DeviceCollectionDocumentManager::CUpdateDeviceFromRepresentationGqlRequest& updateDeviceFromRepresentationRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
+	virtual sdl::prolife::Sensors::CIotDeviceData OnGetIotDeviceRepresentation(
+				const sdl::prolife::DeviceCollectionDocumentManager::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+	virtual sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus OnUpdateIotDeviceFromRepresentation(
+				const sdl::prolife::DeviceCollectionDocumentManager::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 private:
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;

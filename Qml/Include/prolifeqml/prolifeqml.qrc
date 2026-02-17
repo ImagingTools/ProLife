@@ -46,5 +46,6 @@
 	<file alias="ProLife/GqlLinechartView.qml">GqlLinechartView.qml</file>
 	<file alias="ProLife/GqlBarchartView.qml">GqlBarchartView.qml</file>
 	<file alias="ProLife/StatisticsPage.qml">StatisticsPage.qml</file>
+	<file alias="ProLife/IotDeviceEditor.qml">IotDeviceEditor.qml</file>
     </qresource>
 </RCC>
