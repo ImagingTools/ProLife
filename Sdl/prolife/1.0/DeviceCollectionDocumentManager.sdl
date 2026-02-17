@@ -1,0 +1,25 @@
+schema {
+	namespace: prolife
+	version: 1.0
+	query: Query
+	mutation: Mutation
+}
+
+import {
+	"Sensors.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/CollectionDocumentManager.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/UndoManager.sdl"
+}
+
+type UpdateDeviceInput {
+	documentId: ID!
+	deviceData: DeviceData!
+}
+
+type Query {
+	GetDeviceRepresentation(input: DocumentId): DeviceData!
+}
+
+type Mutation {
+	UpdateDeviceFromRepresentation(input: UpdateDeviceInput): DocumentOperationStatus!
+}

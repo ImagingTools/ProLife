@@ -11,15 +11,19 @@ import imtguigql 1.0
 import imtlicgui 1.0
 import Qt.labs.platform 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
+import imtbaseCollectionDocumentManagerSdl 1.0
+import imtbaseUndoManagerSdl 1.0
+import prolifeDeviceCollectionDocumentManagerSdl 1.0
 
-DocumentCollectionViewDelegate {
+DocCollectionViewDelegate {
 	id: container;
-	
-	documentTypeIds: ["Device"]
-	documentViewTypeIds: ["DeviceEditor"]
-	documentViewsComp: [deviceEditorComp]
-	documentDataControllersComp: [dataControllerComp];
-	documentValidatorsComp: [deviceValidatorComp];
+
+	Component.onCompleted: {
+		registerDocumentType("Device", qsTr("Device"))
+		addDocumentView("Device", "DeviceEditor", deviceEditorComp, dataControllerComp)
+	}
+
+	// documentValidatorsComp: [deviceValidatorComp];
 	
 	removeDialogTitle: qsTr("Removing the sensor");
 	removeMessage: qsTr("Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.");
@@ -36,28 +40,61 @@ DocumentCollectionViewDelegate {
 			title: qsTr("Warning message");
 		}
 	}
-	
+
 	Component {
-		id: dataControllerComp;
-		
-		GqlRequestDocumentDataController {
-			id: requestDocumentDataController
-
-			property DeviceData deviceData: documentModel;
-
-			gqlGetCommandId: ProlifeSensorsSdlCommandIds.s_deviceItem;
-			gqlUpdateCommandId: ProlifeSensorsSdlCommandIds.s_deviceUpdate;
-			gqlAddCommandId: ProlifeSensorsSdlCommandIds.s_deviceAdd;
+		id: dataControllerComp
+		DocumentRepresentationController {
+			id: root
 			
-			typeId: "Device";
-			documentName: deviceData ? deviceData.m_macAddress : ""
+			representationModel: DeviceData {}
 			
-			documentModelComp: Component {
-				DeviceData {}
+			function updateRepresentationFromDocument(){
+				startUpdateRepresentation(documentId, representationModel)
+				
+				documentIdInput.m_id = documentId
+				documentIdInput.m_collectionId = container.collectionId
+				getDeviceRequest.send(documentIdInput)
+			}
+			
+			function updateDocumentFromRepresentation(){
+				startUpdateDocument(documentId)
+				
+				updateDeviceInput.m_documentId = documentId
+				updateDeviceInput.m_deviceData = representationModel
+				
+				updateDeviceRequest.send(updateDeviceInput)
+			}
+			
+			property DocumentId documentIdInput: DocumentId {}
+			property GqlSdlRequestSender getDeviceRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_getDeviceRepresentation
+				sdlObjectComp: Component {
+					DeviceData {
+						onFinished: {
+							root.representationModel.copyFrom(this)
+							root.representationUpdated(root.documentId, root.representationModel)
+						}
+					}
+				}
+			}
+			
+			property UpdateDeviceInput updateDeviceInput: UpdateDeviceInput {}
+			property GqlSdlRequestSender updateDeviceRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_updateDeviceFromRepresentation
+				requestType: 1
+				sdlObjectComp: Component {
+					DocumentOperationStatus {
+						onFinished: {
+							if (m_status === "Success"){
+								root.documentUpdated(root.documentId)
+							}
+						}
+					}
+				}
 			}
 		}
 	}
-	
+
 	Component {
 		id: deviceValidatorComp;
 		

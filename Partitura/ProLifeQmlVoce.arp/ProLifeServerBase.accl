@@ -10,6 +10,7 @@
     <PositionMap>
         <Element ComponentName="AdministrationRepositories" X="725" Y="750" Note=""/>
         <Element ComponentName="AuthorizableServerFramework" X="600" Y="125" Note=""/>
+        <Element ComponentName="DocumentManager" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
         <Element ComponentName="Language" X="525" Y="650" Note=""/>
         <Element ComponentName="LisaDatabaseConnector" X="375" Y="400" Note=""/>
@@ -27,19 +28,17 @@
         <Element ComponentName="UsersModelUpdateBridge" X="200" Y="675" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Repositories">
+        <EmbededRegistry Id="Migrations">
             <PositionMap>
-                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
-                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
-                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
-                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
-                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
-                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
-                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
-                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
-                <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
-                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
-                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
+                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
+                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
+                <Element ComponentName="MigrationController17_18" X="1050" Y="625" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -53,17 +52,29 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Migrations">
+        <EmbededRegistry Id="DocumentManager">
             <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
-                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
-                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
-                <Element ComponentName="MigrationController17_18" X="1050" Y="625" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
+                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
+                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Repositories">
+            <PositionMap>
+                <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
+                <Element ComponentName="BindingProductsRepository" X="175" Y="350" Note=""/>
+                <Element ComponentName="CachedAccountRepository" X="1000" Y="175" Note=""/>
+                <Element ComponentName="CachedDeviceRepository" X="600" Y="450" Note=""/>
+                <Element ComponentName="CachedOrderRepository" X="600" Y="175" Note=""/>
+                <Element ComponentName="CachedSoftwareRepository" X="200" Y="75" Note=""/>
+                <Element ComponentName="DeviceSqlRepository" X="575" Y="350" Note=""/>
+                <Element ComponentName="OrderSqlRepository" X="600" Y="75" Note=""/>
+                <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
+                <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
+                <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
