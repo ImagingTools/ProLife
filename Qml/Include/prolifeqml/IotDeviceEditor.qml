@@ -159,11 +159,6 @@ ViewBase {
 						
 						label: qsTr("Name");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_name = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -174,11 +169,6 @@ ViewBase {
 						
 						label: qsTr("Description");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_description = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -189,11 +179,6 @@ ViewBase {
 						
 						label: qsTr("Factory Number");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_factoryNumber = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -204,11 +189,6 @@ ViewBase {
 						
 						label: qsTr("Modem Number");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_modemNumber = value;
-							}
-						}
 					}
 				}
 			}
@@ -240,11 +220,6 @@ ViewBase {
 						
 						label: qsTr("Manufacturer");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_manufacturer = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -255,11 +230,6 @@ ViewBase {
 						
 						label: qsTr("Brand/Model");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_brandModel = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -270,11 +240,6 @@ ViewBase {
 						
 						label: qsTr("Installation Location");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_installationLocation = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -285,11 +250,6 @@ ViewBase {
 						
 						label: qsTr("Connection Type");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_connectionType = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -300,11 +260,6 @@ ViewBase {
 						
 						label: qsTr("Resource Type");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_resourceType = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -315,11 +270,6 @@ ViewBase {
 						
 						label: qsTr("Hole Diameter");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_holeDiameter = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -330,11 +280,6 @@ ViewBase {
 						
 						label: qsTr("Device Category (ОДПУ/ИПУ)");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_deviceCategory = value;
-							}
-						}
 					}
 				}
 			}
@@ -366,11 +311,6 @@ ViewBase {
 						
 						label: qsTr("Calibration Date");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_calibrationDate = value;
-							}
-						}
 					}
 					
 					TextInputView {
@@ -381,11 +321,6 @@ ViewBase {
 						
 						label: qsTr("Commission Date");
 						value: "";
-						onValueChanged: {
-							if (iotDeviceData){
-								iotDeviceData.m_commissionDate = value;
-							}
-						}
 					}
 				}
 			}
