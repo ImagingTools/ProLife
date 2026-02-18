@@ -322,8 +322,8 @@ static void CollectLicenseActionsRecursive(
 				sdl::prolife::Licenses::CSplitOutNode node;
 				node.Version_1_0.Emplace();
 
-				node.Version_1_0->id = actionId;
-				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.Version_1_0->id = licenseId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::SplitOut;
 				node.Version_1_0->newLicenseId = splitOut->GetNewLicenseId();
 				node.Version_1_0->initialCount = splitOut->GetInitialCount();
 				node.Version_1_0->movedCount = splitOut->GetMovedCount();
@@ -340,8 +340,8 @@ static void CollectLicenseActionsRecursive(
 			if (splitIn){
 				sdl::prolife::Licenses::CSplitInNode node;
 				node.Version_1_0.Emplace();
-				node.Version_1_0->id = actionId;
-				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.Version_1_0->id = licenseId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::SplitIn;
 				node.Version_1_0->sourceLicenseId = splitIn->GetSourceLicenseId();
 				node.Version_1_0->receivedCount = splitIn->GetReceivedCount();
 
@@ -357,8 +357,8 @@ static void CollectLicenseActionsRecursive(
 			if (revokeOut){
 				sdl::prolife::Licenses::CRevokeOutNode node;
 				node.Version_1_0.Emplace();
-				node.Version_1_0->id = actionId;
-				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.Version_1_0->id = licenseId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::RevokeOut;
 				node.Version_1_0->parentLicenseId = revokeOut->GetParentLicenseId();
 				node.Version_1_0->initialCount = revokeOut->GetInitialCount();
 				node.Version_1_0->revokedCount = revokeOut->GetRevokedCount();
@@ -375,8 +375,8 @@ static void CollectLicenseActionsRecursive(
 			if (revokeIn){
 				sdl::prolife::Licenses::CRevokeInNode node;
 				node.Version_1_0.Emplace();
-				node.Version_1_0->id = actionId;
-				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.Version_1_0->id = licenseId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::RevokeIn;
 				node.Version_1_0->childId = revokeIn->GetChildLicenseId();
 				node.Version_1_0->remainingCount = revokeIn->GetRemainingCount();
 

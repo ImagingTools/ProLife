@@ -19,7 +19,7 @@ ViewBase {
 	
 	property var productLicensesModel: TreeItemModel{}
 
-	property SoftwareProductData softwareProductData: model ? model : null;
+	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
@@ -612,7 +612,7 @@ ViewBase {
 				id: hierarchyGroup;
 				width: parent.width;
 				height: contentHeight
-				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
+				// visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
 				
 				property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
 				Flickable {
@@ -623,6 +623,8 @@ ViewBase {
 
 					LicenseTreeCanvas {
 						id: licenseTreeCanvas;
+						width: bodyColumn.width
+						height: 500
 						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 					}

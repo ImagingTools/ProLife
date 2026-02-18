@@ -47,8 +47,10 @@ type SoftwareProductsListPayload {
 }
 
 enum NodeType {
-	Split
-	Revoke
+	SplitIn
+	SplitOut
+	RevokeIn
+	RevokeOut
 }
 
 type RevokeInNode {
