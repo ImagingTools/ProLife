@@ -36,6 +36,8 @@
                             <Values>
                                 <Value>SplitInAction</Value>
                                 <Value>SplitOutAction</Value>
+                                <Value>RevokeInAction</Value>
+                                <Value>RevokeOutAction</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -44,6 +46,8 @@
                             <Values>
                                 <Value>SplitIn</Value>
                                 <Value>SplitOut</Value>
+                                <Value>RevokeIn</Value>
+                                <Value>RevokeOut</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -499,6 +503,16 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="RevokeInAction" PackageId="ProLifeDataPck" ComponentId="RevokeInAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="RevokeOutAction" PackageId="ProLifeDataPck" ComponentId="RevokeOutAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="RolesModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">

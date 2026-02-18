@@ -23,6 +23,8 @@
 #include <prolifedata/CIotDeviceMetaInfoCreatorComp.h>
 #include <prolifedata/CSplitInAction.h>
 #include <prolifedata/CSplitOutAction.h>
+#include <prolifedata/CRevokeInAction.h>
+#include <prolifedata/CRevokeOutAction.h>
 
 
 namespace ProLifeDataPck
@@ -82,6 +84,16 @@ typedef icomp::TModelCompWrap<
 						prolifedata::CSplitOutAction,
 						iser::ISerializable,
 						istd::IChangeable>> SplitOutAction;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CRevokeInAction,
+						iser::ISerializable,
+						istd::IChangeable>> RevokeInAction;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CRevokeOutAction,
+						iser::ISerializable,
+						istd::IChangeable>> RevokeOutAction;
 
 
 } // namespace ProLifeDataPck

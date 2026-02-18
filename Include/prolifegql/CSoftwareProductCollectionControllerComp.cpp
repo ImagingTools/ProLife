@@ -525,12 +525,11 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	// Build license tree from UserActions
 	if (m_userActionManagerCompPtr.IsValid()){
 		QString treeError;
-		imtbase::IObjectCollection& userActionCollection = m_userActionManagerCompPtr->GetActionCollection();
-		QVector<sdl::prolife::Licenses::CLicenseTreeNode> treeNodes = prolifedata::BuildLicenseTreeFromActions(
+		QVector<sdl::prolife::Licenses::LicenseTreeNode> treeNodes = prolifedata::BuildLicenseTreeFromActions(
 			id,
-			userActionCollection,
+			*m_userActionManagerCompPtr.GetPtr(),
 			treeError);
-		
+
 		if (!treeNodes.isEmpty()){
 			representationPayload.licenseTree.Emplace().FromList(treeNodes.toList());
 		}

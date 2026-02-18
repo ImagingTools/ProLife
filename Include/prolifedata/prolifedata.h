@@ -34,9 +34,9 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 // Build license tree timeline from UserActions
 // Returns flat array of action nodes for timeline visualization
-QVector<sdl::prolife::Licenses::CLicenseTreeNode> BuildLicenseTreeFromActions(
+QVector<sdl::prolife::Licenses::LicenseTreeNode> BuildLicenseTreeFromActions(
 			const QByteArray& licenseId,
-			const imtbase::IObjectCollection& userActionCollection,
+			const imtauth::IUserActionManager& userActionManager,
 			QString& errorMessage);
 
 
