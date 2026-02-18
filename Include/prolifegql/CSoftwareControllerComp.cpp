@@ -175,6 +175,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	newSoftwarePtr->SetProductCount(licenseCount);
 	newSoftwarePtr->SetSerialNumber("");
 
+	newSoftwarePtr->SetOrderId("");
 	newSoftwarePtr->SetParentInstanceId(licenseId);
 
 	// Add the new software instance to the collection
@@ -194,6 +195,45 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		errorMessage = QString("Unable to split license. Error: Failed to update software");
 		retVal.Version_1_0->message = errorMessage;
 		return retVal;
+	}
+
+	// Record the split operation as a user action
+	if (m_userActionManagerCompPtr.IsValid()){
+		QByteArray userId;
+		QString username;
+		const imtgql::IGqlContext* gqlContextPtr = splitLicenseRequest.GetRequestContext();
+		if (gqlContextPtr != nullptr){
+			const imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<const imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
+			if (userInfoPtr != nullptr){
+				userId = userInfoPtr->GetObjectUuid();
+				username = userInfoPtr->GetName();
+			}
+		}
+
+		imtauth::IUserRecentAction::UserInfo userInfo(userId, username);
+		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo(
+			QByteArrayLiteral("SplitLicense"),
+			QStringLiteral("Split License"),
+			QString("License split: %1 licenses transferred to new license").arg(licenseCount)
+		);
+		
+		// Store additional data as JSON
+		QJsonObject actionData;
+		actionData["parentLicenseId"] = QString::fromUtf8(licenseId);
+		actionData["newLicenseId"] = QString::fromUtf8(newLicenseId);
+		actionData["transferredCount"] = licenseCount;
+		actionData["accountId"] = QString::fromUtf8(accountId);
+		QJsonDocument actionDataDoc(actionData);
+		
+		imtauth::IUserRecentAction::TargetInfo targetInfo(
+			newLicenseId,
+			QByteArrayLiteral("License"),
+			QStringLiteral("License"),
+			QByteArrayLiteral("Licenses"),
+			QString::fromUtf8(actionDataDoc.toJson(QJsonDocument::Compact))
+		);
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, actionTypeInfo, targetInfo);
 	}
 
 	retVal.Version_1_0->ok = true;
@@ -518,6 +558,44 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 			return retVal;
 		}
 		retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+	}
+
+	// Record the revoke operation as a user action
+	if (m_userActionManagerCompPtr.IsValid()){
+		QByteArray userId;
+		QString username;
+		const imtgql::IGqlContext* gqlContextPtr = revokeLicenseRequest.GetRequestContext();
+		if (gqlContextPtr != nullptr){
+			const imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<const imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
+			if (userInfoPtr != nullptr){
+				userId = userInfoPtr->GetObjectUuid();
+				username = userInfoPtr->GetName();
+			}
+		}
+
+		imtauth::IUserRecentAction::UserInfo userInfo(userId, username);
+		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo(
+			QByteArrayLiteral("RevokeLicense"),
+			QStringLiteral("Revoke License"),
+			QString("License revoked: %1 licenses returned to parent").arg(revokeCount)
+		);
+		
+		// Store additional data as JSON
+		QJsonObject actionData;
+		actionData["childLicenseId"] = QString::fromUtf8(childLicenseId);
+		actionData["parentLicenseId"] = QString::fromUtf8(parentLicenseId);
+		actionData["revokedCount"] = revokeCount;
+		QJsonDocument actionDataDoc(actionData);
+		
+		imtauth::IUserRecentAction::TargetInfo targetInfo(
+			childLicenseId,
+			QByteArrayLiteral("License"),
+			QStringLiteral("License"),
+			QByteArrayLiteral("Licenses"),
+			QString::fromUtf8(actionDataDoc.toJson(QJsonDocument::Compact))
+		);
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, actionTypeInfo, targetInfo);
 	}
 
 	retVal.Version_1_0->ok = true;
