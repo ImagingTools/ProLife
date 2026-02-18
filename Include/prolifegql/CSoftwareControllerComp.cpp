@@ -21,6 +21,8 @@
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CSplitInAction.h>
 #include <prolifedata/CSplitOutAction.h>
+#include <prolifedata/CRevokeInAction.h>
+#include <prolifedata/CRevokeOutAction.h>
 
 
 namespace prolifegql
@@ -521,45 +523,43 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
 	}
 
-	// Record the revoke operation as a user action
+	retVal.Version_1_0->ok = true;
+
+	// Record the revoke operation as user actions (following the split pattern)
 	if (m_userActionManagerCompPtr.IsValid()){
-		QByteArray userId;
-		QString username;
+		imtauth::IUserRecentAction::UserInfo userInfo;
+
 		const imtgql::IGqlContext* gqlContextPtr = revokeLicenseRequest.GetRequestContext();
 		if (gqlContextPtr != nullptr){
-			const imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<const imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
+			userInfo.id = gqlContextPtr->GetUserId();
+
+			const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
 			if (userInfoPtr != nullptr){
-				userId = userInfoPtr->GetObjectUuid();
-				username = userInfoPtr->GetName();
+				userInfo.name = userInfoPtr->GetName();
 			}
 		}
 
-		imtauth::IUserRecentAction::UserInfo userInfo(userId, username);
-		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo(
-			QByteArrayLiteral("RevokeLicense"),
-			QStringLiteral("Revoke License"),
-			QString("License revoked: %1 licenses returned to parent").arg(revokeCount)
-		);
-		
-		// Store additional data as JSON
-		QJsonObject actionData;
-		actionData["childLicenseId"] = QString::fromUtf8(childLicenseId);
-		actionData["parentLicenseId"] = QString::fromUtf8(parentLicenseId);
-		actionData["revokedCount"] = revokeCount;
-		QJsonDocument actionDataDoc(actionData);
-		
-		imtauth::IUserRecentAction::TargetInfo targetInfo(
-			childLicenseId,
-			QByteArrayLiteral("License"),
-			QStringLiteral("License"),
-			QByteArrayLiteral("Licenses"),
-			QString::fromUtf8(actionDataDoc.toJson(QJsonDocument::Compact))
-		);
+		// RevokeOut action - from child license (licenses leaving)
+		QString childName = m_softwareProductCollectionCompPtr->GetElementInfo(childLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
 
-		m_userActionManagerCompPtr->CreateUserAction(userInfo, actionTypeInfo, targetInfo);
+		imtauth::IUserRecentAction::TargetInfo revokeOutTargetInfo(childLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", childName);
+		imtauth::IUserRecentAction::ActionTypeInfo revokeOutActionTypeInfo("RevokeOut", "Revoke from license", "Revoke licenses to parent license");
+
+		iser::ISerializableSharedPtr revokeOutSerializableSharedPtr(new prolifedata::CRevokeOutAction(parentLicenseId, currentChildCount, revokeCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, revokeOutActionTypeInfo, revokeOutTargetInfo, revokeOutSerializableSharedPtr);
+
+		// RevokeIn action - to parent license (licenses returning)
+		QString parentName = m_softwareProductCollectionCompPtr->GetElementInfo(parentLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo revokeInTargetInfo(parentLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", parentName);
+		imtauth::IUserRecentAction::ActionTypeInfo revokeInActionTypeInfo("RevokeIn", "Revoke into license", "Licenses returned from child");
+
+		int newParentCount = currentParentCount + revokeCount;
+		iser::ISerializableSharedPtr revokeInSerializableSharedPtr(new prolifedata::CRevokeInAction(childLicenseId, newParentCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, revokeInActionTypeInfo, revokeInTargetInfo, revokeInSerializableSharedPtr);
 	}
-
-	retVal.Version_1_0->ok = true;
 	
 	return retVal;
 }
