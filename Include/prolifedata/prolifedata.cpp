@@ -3,9 +3,6 @@
 
 // Qt includes
 #include <QSet>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonParseError>
 
 // ACF includes
 #include <iprm/CParamsSet.h>
@@ -352,44 +349,14 @@ std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
 		node.accountId = softwarePtr->GetCustomerId();
 		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 		
-		// Parse operation metadata from OrderId field
-		// Expected format: {"type":"split","transferred":count}
-		QByteArray orderId = softwarePtr->GetOrderId();
-		QString operationType = OPERATION_TYPE_SPLIT;  // Default
-		int transferredCount = softwarePtr->GetProductCount();  // Default to current count
-		
-		// Try to parse JSON metadata
-		if (!orderId.isEmpty()) {
-			QJsonParseError parseError;
-			QJsonDocument doc = QJsonDocument::fromJson(orderId, &parseError);
-			
-			// Check if parsing succeeded and result is a valid JSON object
-			if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
-				QJsonObject obj = doc.object();
-				if (obj.contains("type") && obj["type"].isString()) {
-					operationType = obj["type"].toString();
-				}
-				if (obj.contains("transferred") && obj["transferred"].isDouble()) {
-					transferredCount = obj["transferred"].toInt();
-				}
-			}
-		}
-		
-		node.operationType = operationType;
-		node.transferredCount = transferredCount;
+		// Set default values for operation tracking
+		// TODO: Retrieve actual values from UserActions table for accurate history
+		node.operationType = OPERATION_TYPE_SPLIT;
+		node.transferredCount = softwarePtr->GetProductCount();
 		
 		// Initialize empty revoke edges list
+		// TODO: Build revoke edges from UserActions table entries
 		QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
-		
-		// If licenses were revoked (transferred > current), create a revoke edge back to parent
-		if (transferredCount > softwarePtr->GetProductCount() && !node.parentId.value_or(QByteArray()).isEmpty()) {
-			sdl::prolife::Licenses::CRevokeEdge::V1_0 revokeEdge;
-			revokeEdge.fromNodeId = nodeId;
-			revokeEdge.toNodeId = node.parentId.value();
-			revokeEdge.revokeCount = transferredCount - softwarePtr->GetProductCount();
-			revokeEdges.append(revokeEdge);
-		}
-		
 		node.revokeEdges.Emplace().FromList(revokeEdges);
 
 		// Find all children
