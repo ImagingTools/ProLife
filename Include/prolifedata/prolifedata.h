@@ -32,11 +32,11 @@ bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArra
 
 bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
 
-// Build complete license tree from a given license ID
-// Automatically finds root and builds full hierarchy
-std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
+// Build license tree timeline from UserActions
+// Returns flat array of action nodes for timeline visualization
+QVector<sdl::prolife::Licenses::CLicenseTreeNode> BuildLicenseTreeFromActions(
 			const QByteArray& licenseId,
-			const imtbase::IObjectCollection& softwareProductCollection,
+			const imtbase::IObjectCollection& userActionCollection,
 			QString& errorMessage);
 
 

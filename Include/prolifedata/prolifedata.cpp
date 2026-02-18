@@ -11,11 +11,17 @@
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/CProductInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
+#include <imtauth/IUserRecentAction.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/CSplitOutAction.h>
+#include <prolifedata/CSplitInAction.h>
+#include <prolifedata/CRevokeOutAction.h>
+#include <prolifedata/CRevokeInAction.h>
+#include <prolifedata/CGroupFilter.h>
 
 
 namespace prolifedata
@@ -274,118 +280,101 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 }
 
 
-std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> BuildLicenseTree(
+QVector<sdl::prolife::Licenses::CLicenseTreeNode> BuildLicenseTreeFromActions(
 			const QByteArray& licenseId,
-			const imtbase::IObjectCollection& softwareProductCollection,
+			const imtbase::IObjectCollection& userActionCollection,
 			QString& errorMessage)
 {
-	// First, find the root of the tree by traversing up the parent chain
-	QByteArray rootLicenseId = licenseId;
-	QSet<QByteArray> visitedForRoot;
-	const int MAX_DEPTH = 100;
-	int depth = 0;
-
-	while (depth < MAX_DEPTH){
-		if (visitedForRoot.contains(rootLicenseId)){
-			errorMessage = QString("Unable to build license tree. Error: Circular reference detected in parent chain");
-			return std::nullopt;
-		}
-		visitedForRoot.insert(rootLicenseId);
-
+	QVector<sdl::prolife::Licenses::CLicenseTreeNode> result;
+	
+	// Query all user actions for this license (as target)
+	prolifedata::CGroupFilter filter;
+	filter.AddFilter("TargetId", "eq", licenseId);
+	
+	imtbase::CComplexFilter complexFilter;
+	complexFilter.SetFilterExpression(filter);
+	
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+	
+	imtbase::IObjectCollection::Ids actionIds = userActionCollection.GetElementIds(0, -1, &filterParam);
+	
+	// Process each action and create corresponding node
+	for (const QByteArray& actionId : std::as_const(actionIds)){
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (!softwareProductCollection.GetObjectData(rootLicenseId, dataPtr)){
-			errorMessage = QString("Unable to build license tree. Error: License not found");
-			return std::nullopt;
+		if (!userActionCollection.GetObjectData(actionId, dataPtr)){
+			continue; // Skip if can't get data
 		}
-
-		const imtlic::IProductInstanceInfo* softwarePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-		if (softwarePtr == nullptr){
-			errorMessage = QString("Unable to build license tree. Error: Invalid license data");
-			return std::nullopt;
-		}
-
-		QByteArray parentId = softwarePtr->GetParentInstanceId();
-		if (parentId.isEmpty()){
-			break; // Found root
-		}
-
-		rootLicenseId = parentId;
-		depth++;
-	}
-
-	if (depth >= MAX_DEPTH){
-		errorMessage = QString("Unable to build license tree. Error: Maximum depth exceeded while finding root");
-		return std::nullopt;
-	}
-
-	// Now build the tree recursively from the root
-	std::function<std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0>(const QByteArray&, int)> buildNode;
-	buildNode = [&](const QByteArray& nodeId, int currentDepth) -> std::optional<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> {
-		const int MAX_TREE_DEPTH = 100;
-		if (currentDepth >= MAX_TREE_DEPTH){
-			return std::nullopt;
-		}
-
-		idoc::MetaInfoPtr metaInfoPtr = softwareProductCollection.GetDataMetaInfo(nodeId);
-		if (!metaInfoPtr.IsValid()){
-			return std::nullopt;
-		}
-
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (!softwareProductCollection.GetObjectData(nodeId, dataPtr)){
-			return std::nullopt;
-		}
-
-		const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwarePtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-		if (softwarePtr == nullptr){
-			return std::nullopt;
-		}
-
-		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 node;
-		node.id = nodeId;
-		node.serialNumber = softwarePtr->GetSerialNumber();
-		node.productCount = softwarePtr->GetProductCount();
-		node.parentId = softwarePtr->GetParentInstanceId();
-		node.accountId = softwarePtr->GetCustomerId();
-		node.accountName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 		
-		// Set default values for operation tracking
-		// TODO: Retrieve actual values from UserActions table for accurate history
-		node.operationType = OPERATION_TYPE_SPLIT;
-		node.transferredCount = softwarePtr->GetProductCount();
+		const imtauth::IUserRecentAction* actionPtr = dynamic_cast<const imtauth::IUserRecentAction*>(dataPtr.GetPtr());
+		if (actionPtr == nullptr){
+			continue; // Skip if wrong type
+		}
 		
-		// Initialize empty revoke edges list
-		// TODO: Build revoke edges from UserActions table entries
-		QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
-		node.revokeEdges.Emplace().FromList(revokeEdges);
-
-		// Find all children
-		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-		fieldFilter.fieldId = "ParentInstanceId";
-		fieldFilter.filterValue = nodeId;
-
-		imtbase::CComplexCollectionFilter complexFilter;
-		complexFilter.AddFieldFilter(fieldFilter);
-
-		iprm::CParamsSet filterParam;
-		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
-
-		QByteArrayList childIds = softwareProductCollection.GetElementIds(0, -1, &filterParam);
-
-		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
-		for (const QByteArray& childId : std::as_const(childIds)){
-			auto childNode = buildNode(childId, currentDepth + 1);
-			if (childNode.has_value()){
-				children.append(childNode.value());
+		QString actionType = actionPtr->GetActionType();
+		iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
+		
+		if (actionType == "SplitOut"){
+			const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
+			if (splitOut){
+				sdl::prolife::Licenses::CSplitOutNode::V1_0 node;
+				node.id = actionId;
+				node.nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.newLicenseId = splitOut->GetNewLicenseId();
+				node.initialCount = splitOut->GetInitialCount();
+				node.movedCount = splitOut->GetMovedCount();
+				
+				sdl::prolife::Licenses::CLicenseTreeNode treeNode;
+				treeNode.SplitOutNode.Emplace(std::move(node));
+				result.append(std::move(treeNode));
 			}
 		}
-
-		node.children.Emplace().FromList(children);
-
-		return node;
-	};
-
-	return buildNode(rootLicenseId, 0);
+		else if (actionType == "SplitIn"){
+			const prolifedata::CSplitInAction* splitIn = dynamic_cast<const prolifedata::CSplitInAction*>(actionData.GetPtr());
+			if (splitIn){
+				sdl::prolife::Licenses::CSplitInNode::V1_0 node;
+				node.id = actionId;
+				node.nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.sourceLicenseId = splitIn->GetSourceLicenseId();
+				node.receivedCount = splitIn->GetReceivedCount();
+				
+				sdl::prolife::Licenses::CLicenseTreeNode treeNode;
+				treeNode.SplitInNode.Emplace(std::move(node));
+				result.append(std::move(treeNode));
+			}
+		}
+		else if (actionType == "RevokeOut"){
+			const prolifedata::CRevokeOutAction* revokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(actionData.GetPtr());
+			if (revokeOut){
+				sdl::prolife::Licenses::CRevokeOutNode::V1_0 node;
+				node.id = actionId;
+				node.nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.parentLicenseId = revokeOut->GetParentLicenseId();
+				node.initialCount = revokeOut->GetInitialCount();
+				node.revokedCount = revokeOut->GetRevokedCount();
+				
+				sdl::prolife::Licenses::CLicenseTreeNode treeNode;
+				treeNode.RevokeOutNode.Emplace(std::move(node));
+				result.append(std::move(treeNode));
+			}
+		}
+		else if (actionType == "RevokeIn"){
+			const prolifedata::CRevokeInAction* revokeIn = dynamic_cast<const prolifedata::CRevokeInAction*>(actionData.GetPtr());
+			if (revokeIn){
+				sdl::prolife::Licenses::CRevokeInNode::V1_0 node;
+				node.id = actionId;
+				node.nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.childId = revokeIn->GetChildLicenseId();
+				node.remainingCount = revokeIn->GetRemainingCount();
+				
+				sdl::prolife::Licenses::CLicenseTreeNode treeNode;
+				treeNode.RevokeInNode.Emplace(std::move(node));
+				result.append(std::move(treeNode));
+			}
+		}
+	}
+	
+	return result;
 }
 
 

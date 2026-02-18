@@ -522,17 +522,20 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
-	// Build license tree using shared utility function
-	QString treeError;
-	auto treeNode = prolifedata::BuildLicenseTree(
-		id,
-		*m_objectCollectionCompPtr,
-		treeError);
-	
-	if (treeNode.has_value()){
-		representationPayload.licenseTree = treeNode.value();
+	// Build license tree from UserActions
+	if (m_userActionManagerCompPtr.IsValid()){
+		QString treeError;
+		imtbase::IObjectCollection& userActionCollection = m_userActionManagerCompPtr->GetActionCollection();
+		QVector<sdl::prolife::Licenses::CLicenseTreeNode> treeNodes = prolifedata::BuildLicenseTreeFromActions(
+			id,
+			userActionCollection,
+			treeError);
+		
+		if (!treeNodes.isEmpty()){
+			representationPayload.licenseTree.Emplace().FromList(treeNodes.toList());
+		}
 	}
-	// If tree building fails, we just don't populate the field (it's optional)
+	// If tree building fails or UserActionManager unavailable, we just don't populate the field (it's optional)
 
 	return true;
 }
