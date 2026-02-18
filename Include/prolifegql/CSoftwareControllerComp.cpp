@@ -197,45 +197,6 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		return retVal;
 	}
 
-	// Record the split operation as a user action
-	if (m_userActionManagerCompPtr.IsValid()){
-		QByteArray userId;
-		QString username;
-		const imtgql::IGqlContext* gqlContextPtr = splitLicenseRequest.GetRequestContext();
-		if (gqlContextPtr != nullptr){
-			const imtauth::CIdentifiableUserInfo* userInfoPtr = dynamic_cast<const imtauth::CIdentifiableUserInfo*>(gqlContextPtr->GetUserInfo());
-			if (userInfoPtr != nullptr){
-				userId = userInfoPtr->GetObjectUuid();
-				username = userInfoPtr->GetName();
-			}
-		}
-
-		imtauth::IUserRecentAction::UserInfo userInfo(userId, username);
-		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo(
-			QByteArrayLiteral("SplitLicense"),
-			QStringLiteral("Split License"),
-			QString("License split: %1 licenses transferred to new license").arg(licenseCount)
-		);
-		
-		// Store additional data as JSON
-		QJsonObject actionData;
-		actionData["parentLicenseId"] = QString::fromUtf8(licenseId);
-		actionData["newLicenseId"] = QString::fromUtf8(newLicenseId);
-		actionData["transferredCount"] = licenseCount;
-		actionData["accountId"] = QString::fromUtf8(accountId);
-		QJsonDocument actionDataDoc(actionData);
-		
-		imtauth::IUserRecentAction::TargetInfo targetInfo(
-			newLicenseId,
-			QByteArrayLiteral("License"),
-			QStringLiteral("License"),
-			QByteArrayLiteral("Licenses"),
-			QString::fromUtf8(actionDataDoc.toJson(QJsonDocument::Compact))
-		);
-
-		m_userActionManagerCompPtr->CreateUserAction(userInfo, actionTypeInfo, targetInfo);
-	}
-
 	retVal.Version_1_0->ok = true;
 	retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
 
