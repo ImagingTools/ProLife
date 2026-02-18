@@ -101,7 +101,7 @@ bool CRevokeInAction::CopyFrom(const IChangeable& object, CompatibilityMode /*mo
 }
 
 
-istd::IChangeableUniquePtr CRevokeInAction::CloneMe(CompatibilityMode mode) const
+istd::IChangeableUniquePtr CRevokeInAction::CloneMe(CompatibilityMode mode) const 
 {
 	istd::IChangeableUniquePtr clonePtr(new CRevokeInAction());
 	if (clonePtr->CopyFrom(*this, mode)){

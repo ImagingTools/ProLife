@@ -52,18 +52,42 @@ type RevokeEdge {
 	revokeCount: Integer!
 }
 
-type LicenseTreeNode {
-	id: ID!
-	serialNumber: String
-	parentId: ID
-	productCount: Integer
-	accountId: ID
-	accountName: String
-	children: [LicenseTreeNode]
-	operationType: String
-	transferredCount: Integer
-	revokeEdges: [RevokeEdge]
+enum NodeType {
+	Split
+	Revoke
 }
+
+type RevokeInNode {
+	id: ID!
+	nodeType: NodeType!
+	childId: ID
+	remainingCount: Integer
+}
+
+type RevokeOutNode {
+	id: ID!
+	nodeType: NodeType!
+	parentLicenseId: ID
+	initialCount: Integer
+	revokedCount: Integer
+}
+
+type SplitInNode {
+	id: ID!
+	nodeType: NodeType!
+	sourceLicenseId: ID
+	receivedCount: Integer
+}
+
+type SplitOutNode {
+	id: ID!
+	nodeType: NodeType!
+	newLicenseId: ID
+	initialCount: Integer
+	movedCount: Integer
+}
+
+union LicenseTreeNode = RevokeInNode | RevokeOutNode | SplitInNode | SplitOutNode
 
 type SoftwareProductData {
 	id: ID
@@ -79,7 +103,7 @@ type SoftwareProductData {
 	isMultiple: Bool
 	productCount: Integer
 	parentInstanceId: ID
-	licenseTree: LicenseTreeNode
+	licenseTree: [LicenseTreeNode]
 	customerId: ID
 }
 
