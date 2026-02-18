@@ -1,7 +1,5 @@
 #include <prolifegql/CSoftwareControllerComp.h>
 
-// Standard includes
-#include <optional>
 
 // Qt includes
 #include <QJsonDocument>
@@ -9,6 +7,8 @@
 
 // ACF includes
 #include <iprm/CIdParam.h>
+#include <iprm/CTextParam.h>
+#include <iprm/TParamsPtr.h>
 
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
@@ -19,6 +19,8 @@
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/ICustomerInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/CSplitInAction.h>
+#include <prolifedata/CSplitOutAction.h>
 
 
 namespace prolifegql
@@ -27,7 +29,7 @@ namespace prolifegql
 
 sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense(
 			const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CSplitLicensePayload retVal;
@@ -172,13 +174,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	newSoftwarePtr->SetupProductInstance(productId, "", accountId);
 	newSoftwarePtr->SetProductCount(licenseCount);
 	newSoftwarePtr->SetSerialNumber("");
-	// Store operation metadata in OrderId field (using JSON format)
-	// Format: {"type":"split","transferred":count}
-	QJsonObject opMetadata;
-	opMetadata["type"] = "split";
-	opMetadata["transferred"] = licenseCount;
-	QJsonDocument metadataDoc(opMetadata);
-	newSoftwarePtr->SetOrderId(QString::fromUtf8(metadataDoc.toJson(QJsonDocument::Compact)).toUtf8());
+
 	newSoftwarePtr->SetParentInstanceId(licenseId);
 
 	// Add the new software instance to the collection
@@ -202,6 +198,38 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 
 	retVal.Version_1_0->ok = true;
 	retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
+
+	if (m_userActionManagerCompPtr.IsValid()){
+		imtauth::IUserRecentAction::UserInfo userInfo;
+
+		const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+		if (gqlContextPtr != nullptr){
+			userInfo.id = gqlContextPtr->GetUserId();
+
+			const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+			if (userInfoPtr != nullptr){
+				userInfo.name = userInfoPtr->GetName();
+			}
+		}
+
+		QString name = m_softwareProductCollectionCompPtr->GetElementInfo(licenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo splitOutTargetInfo(licenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", name);
+		imtauth::IUserRecentAction::ActionTypeInfo splitOutActionTypeInfo("SplitOut", "Split from license", "Split licenses to another license");
+
+		iser::ISerializableSharedPtr splitOutSerializableSharedPtr(new prolifedata::CSplitOutAction(newLicenseId, originalCount, licenseCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, splitOutActionTypeInfo, splitOutTargetInfo, splitOutSerializableSharedPtr);
+
+		name = m_softwareProductCollectionCompPtr->GetElementInfo(newLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo splitInTargetInfo(newLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", name);
+		imtauth::IUserRecentAction::ActionTypeInfo splitInActionTypeInfo("SplitIn", "Split into license", "New license from split");
+
+		iser::ISerializableSharedPtr splitInSerializableSharedPtr(new prolifedata::CSplitInAction(licenseId, remainingCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, splitInActionTypeInfo, splitInTargetInfo, splitInSerializableSharedPtr);
+	}
 
 	return retVal;
 }

@@ -3,6 +3,7 @@
 
 // ImtCore includes
 #include <imtlic/IProductInstanceInfo.h>
+#include <imtauth/IUserActionManager.h>
 
 // ProLife includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
@@ -22,6 +23,7 @@ public:
 		I_ASSIGN(m_hardwareBindingCollectionCompPtr, "HardwareBindingCollection", "Hardware binding collection", true, "HardwareBindingCollection");
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
+		I_ASSIGN(m_userActionManagerCompPtr, "UserActionManager", "User action manager", false, "SoftwareFactory");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 	I_END_COMPONENT
 
@@ -44,6 +46,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
+	I_REF(imtauth::IUserActionManager, m_userActionManagerCompPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 };

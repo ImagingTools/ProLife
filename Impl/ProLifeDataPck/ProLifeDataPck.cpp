@@ -79,6 +79,16 @@ I_EXPORT_COMPONENT(
 			"Software transfer info",
 			"Software Transfer Info");
 
+I_EXPORT_COMPONENT(
+			SplitInAction,
+			"Split In Action",
+			"Split In Action");
+
+I_EXPORT_COMPONENT(
+			SplitOutAction,
+			"Split Out Action",
+			"Split Out Action");
+
 
 } // namespace ProLifeDataPck
 
