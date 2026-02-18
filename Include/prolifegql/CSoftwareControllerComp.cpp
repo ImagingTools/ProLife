@@ -203,17 +203,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
 
 	if (m_userActionManagerCompPtr.IsValid()){
-		imtauth::IUserRecentAction::UserInfo userInfo;
-
-		const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
-		if (gqlContextPtr != nullptr){
-			userInfo.id = gqlContextPtr->GetUserId();
-
-			const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-			if (userInfoPtr != nullptr){
-				userInfo.name = userInfoPtr->GetName();
-			}
-		}
+		imtauth::IUserRecentAction::UserInfo userInfo = GetUserInfoFromContext(gqlRequest);
 
 		QString name = m_softwareProductCollectionCompPtr->GetElementInfo(licenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
 
@@ -365,7 +355,7 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 
 sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicense(
 			const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CRevokeLicensePayload retVal;
@@ -527,17 +517,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 
 	// Record the revoke operation as user actions (following the split pattern)
 	if (m_userActionManagerCompPtr.IsValid()){
-		imtauth::IUserRecentAction::UserInfo userInfo;
-
-		const imtgql::IGqlContext* gqlContextPtr = revokeLicenseRequest.GetRequestContext();
-		if (gqlContextPtr != nullptr){
-			userInfo.id = gqlContextPtr->GetUserId();
-
-			const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
-			if (userInfoPtr != nullptr){
-				userInfo.name = userInfoPtr->GetName();
-			}
-		}
+		imtauth::IUserRecentAction::UserInfo userInfo = GetUserInfoFromContext(gqlRequest);
 
 		// RevokeOut action - from child license (licenses leaving)
 		QString childName = m_softwareProductCollectionCompPtr->GetElementInfo(childLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
@@ -562,6 +542,25 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	}
 	
 	return retVal;
+}
+
+
+// Helper method to extract user info from GQL request context
+imtauth::IUserRecentAction::UserInfo CSoftwareControllerComp::GetUserInfoFromContext(const ::imtgql::CGqlRequest& gqlRequest) const
+{
+	imtauth::IUserRecentAction::UserInfo userInfo;
+
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr != nullptr){
+		userInfo.id = gqlContextPtr->GetUserId();
+
+		const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+		if (userInfoPtr != nullptr){
+			userInfo.name = userInfoPtr->GetName();
+		}
+	}
+
+	return userInfo;
 }
 
 
