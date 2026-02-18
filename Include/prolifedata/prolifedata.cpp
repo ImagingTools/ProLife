@@ -282,126 +282,126 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 // Helper function to recursively collect license actions
 static void CollectLicenseActionsRecursive(
-const QByteArray& licenseId,
-const imtauth::IUserActionManager& userActionManager,
-QVector<sdl::prolife::Licenses::LicenseTreeNode>& result,
-QSet<QByteArray>& visitedLicenses)
+	const QByteArray& licenseId,
+	const imtauth::IUserActionManager& userActionManager,
+	QVector<sdl::prolife::Licenses::LicenseTreeNode>& result,
+	QSet<QByteArray>& visitedLicenses)
 {
-// Prevent infinite loops
-if (visitedLicenses.contains(licenseId)){
-return;
-}
-visitedLicenses.insert(licenseId);
+	// Prevent infinite loops
+	if (visitedLicenses.contains(licenseId)){
+		return;
+	}
+	visitedLicenses.insert(licenseId);
 
-imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
-fieldFilter.fieldId = "targetId";
-fieldFilter.filterValue = licenseId;
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "targetId";
+	fieldFilter.filterValue = licenseId;
 
-imtbase::CComplexCollectionFilter complexFilter;
-complexFilter.AddFieldFilter(fieldFilter);
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.AddFieldFilter(fieldFilter);
 
-iprm::CParamsSet filterParam;
-filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
-imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
+	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
 
-// Process each action and create corresponding node
-for (const QByteArray& actionId : std::as_const(actionIds)){
-imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
-if (!actionPtr.IsValid()){
-continue;
-}
+	// Process each action and create corresponding node
+	for (const QByteArray& actionId : std::as_const(actionIds)){
+		imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
+		if (!actionPtr.IsValid()){
+			continue;
+		}
 
-imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo = actionPtr->GetActionTypeInfo();
-QByteArray actionType = actionTypeInfo.id;
+		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo = actionPtr->GetActionTypeInfo();
+		QByteArray actionType = actionTypeInfo.id;
 
-iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
-if (actionType == "SplitOut"){
-const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
-if (splitOut){
-sdl::prolife::Licenses::CSplitOutNode node;
-node.Version_1_0.Emplace();
+		iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
+		if (actionType == "SplitOut"){
+			const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
+			if (splitOut){
+				sdl::prolife::Licenses::CSplitOutNode node;
+				node.Version_1_0.Emplace();
 
-node.Version_1_0->id = actionId;
-node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
-node.Version_1_0->newLicenseId = splitOut->GetNewLicenseId();
-node.Version_1_0->initialCount = splitOut->GetInitialCount();
-node.Version_1_0->movedCount = splitOut->GetMovedCount();
+				node.Version_1_0->id = actionId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.Version_1_0->newLicenseId = splitOut->GetNewLicenseId();
+				node.Version_1_0->initialCount = splitOut->GetInitialCount();
+				node.Version_1_0->movedCount = splitOut->GetMovedCount();
 
-sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
-result.append(treeNode);
+				sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
+				result.append(treeNode);
 
-// Recursively collect actions for the new license
-CollectLicenseActionsRecursive(splitOut->GetNewLicenseId(), userActionManager, result, visitedLicenses);
-}
-}
-else if (actionType == "SplitIn"){
-const prolifedata::CSplitInAction* splitIn = dynamic_cast<const prolifedata::CSplitInAction*>(actionData.GetPtr());
-if (splitIn){
-sdl::prolife::Licenses::CSplitInNode node;
-node.Version_1_0.Emplace();
-node.Version_1_0->id = actionId;
-node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
-node.Version_1_0->sourceLicenseId = splitIn->GetSourceLicenseId();
-node.Version_1_0->receivedCount = splitIn->GetReceivedCount();
+				// Recursively collect actions for the new license
+				CollectLicenseActionsRecursive(splitOut->GetNewLicenseId(), userActionManager, result, visitedLicenses);
+			}
+		}
+		else if (actionType == "SplitIn"){
+			const prolifedata::CSplitInAction* splitIn = dynamic_cast<const prolifedata::CSplitInAction*>(actionData.GetPtr());
+			if (splitIn){
+				sdl::prolife::Licenses::CSplitInNode node;
+				node.Version_1_0.Emplace();
+				node.Version_1_0->id = actionId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Split;
+				node.Version_1_0->sourceLicenseId = splitIn->GetSourceLicenseId();
+				node.Version_1_0->receivedCount = splitIn->GetReceivedCount();
 
-sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
-result.append(treeNode);
+				sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
+				result.append(treeNode);
 
-// Recursively collect actions for the source license
-CollectLicenseActionsRecursive(splitIn->GetSourceLicenseId(), userActionManager, result, visitedLicenses);
-}
-}
-else if (actionType == "RevokeOut"){
-const prolifedata::CRevokeOutAction* revokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(actionData.GetPtr());
-if (revokeOut){
-sdl::prolife::Licenses::CRevokeOutNode node;
-node.Version_1_0.Emplace();
-node.Version_1_0->id = actionId;
-node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
-node.Version_1_0->parentLicenseId = revokeOut->GetParentLicenseId();
-node.Version_1_0->initialCount = revokeOut->GetInitialCount();
-node.Version_1_0->revokedCount = revokeOut->GetRevokedCount();
+				// Recursively collect actions for the source license
+				CollectLicenseActionsRecursive(splitIn->GetSourceLicenseId(), userActionManager, result, visitedLicenses);
+			}
+		}
+		else if (actionType == "RevokeOut"){
+			const prolifedata::CRevokeOutAction* revokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(actionData.GetPtr());
+			if (revokeOut){
+				sdl::prolife::Licenses::CRevokeOutNode node;
+				node.Version_1_0.Emplace();
+				node.Version_1_0->id = actionId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.Version_1_0->parentLicenseId = revokeOut->GetParentLicenseId();
+				node.Version_1_0->initialCount = revokeOut->GetInitialCount();
+				node.Version_1_0->revokedCount = revokeOut->GetRevokedCount();
 
-sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
-result.append(treeNode);
+				sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
+				result.append(treeNode);
 
-// Recursively collect actions for the parent license
-CollectLicenseActionsRecursive(revokeOut->GetParentLicenseId(), userActionManager, result, visitedLicenses);
-}
-}
-else if (actionType == "RevokeIn"){
-const prolifedata::CRevokeInAction* revokeIn = dynamic_cast<const prolifedata::CRevokeInAction*>(actionData.GetPtr());
-if (revokeIn){
-sdl::prolife::Licenses::CRevokeInNode node;
-node.Version_1_0.Emplace();
-node.Version_1_0->id = actionId;
-node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
-node.Version_1_0->childId = revokeIn->GetChildLicenseId();
-node.Version_1_0->remainingCount = revokeIn->GetRemainingCount();
+				// Recursively collect actions for the parent license
+				CollectLicenseActionsRecursive(revokeOut->GetParentLicenseId(), userActionManager, result, visitedLicenses);
+			}
+		}
+		else if (actionType == "RevokeIn"){
+			const prolifedata::CRevokeInAction* revokeIn = dynamic_cast<const prolifedata::CRevokeInAction*>(actionData.GetPtr());
+			if (revokeIn){
+				sdl::prolife::Licenses::CRevokeInNode node;
+				node.Version_1_0.Emplace();
+				node.Version_1_0->id = actionId;
+				node.Version_1_0->nodeType = sdl::prolife::Licenses::NodeType::Revoke;
+				node.Version_1_0->childId = revokeIn->GetChildLicenseId();
+				node.Version_1_0->remainingCount = revokeIn->GetRemainingCount();
 
-sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
-result.append(treeNode);
+				sdl::prolife::Licenses::LicenseTreeNode treeNode(node);
+				result.append(treeNode);
 
-// Recursively collect actions for the child license
-CollectLicenseActionsRecursive(revokeIn->GetChildLicenseId(), userActionManager, result, visitedLicenses);
-}
-}
-}
+				// Recursively collect actions for the child license
+				CollectLicenseActionsRecursive(revokeIn->GetChildLicenseId(), userActionManager, result, visitedLicenses);
+			}
+		}
+	}
 }
 
 QVector<sdl::prolife::Licenses::LicenseTreeNode> BuildLicenseTreeFromActions(
-const QByteArray& licenseId,
-const imtauth::IUserActionManager& userActionManager,
-QString& errorMessage)
+	const QByteArray& licenseId,
+	const imtauth::IUserActionManager& userActionManager,
+	QString& errorMessage)
 {
-QVector<sdl::prolife::Licenses::LicenseTreeNode> result;
-QSet<QByteArray> visitedLicenses;
+	QVector<sdl::prolife::Licenses::LicenseTreeNode> result;
+	QSet<QByteArray> visitedLicenses;
 
-// Recursively collect all related license actions
-CollectLicenseActionsRecursive(licenseId, userActionManager, result, visitedLicenses);
+	// Recursively collect all related license actions
+	CollectLicenseActionsRecursive(licenseId, userActionManager, result, visitedLicenses);
 
-return result;
+	return result;
 }
 
 
