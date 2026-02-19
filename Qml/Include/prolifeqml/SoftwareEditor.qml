@@ -21,6 +21,8 @@ ViewBase {
 
 	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
+	property bool licenseTreeExpanded: false  // Track license tree expansion state
+	
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
 			CachedProductCollection.updateModel();
@@ -610,8 +612,13 @@ ViewBase {
 						id: expandButton
 						width: Style.buttonWidthM
 						height: width
-						iconSource: "../../../" + Style.getIconPath("Icons/Expand", Icon.State.On, Icon.Mode.Normal)
+						iconSource: "../../../" + Style.getIconPath(
+							root.licenseTreeExpanded ? "Icons/Collapse" : "Icons/Expand", 
+							Icon.State.On, 
+							Icon.Mode.Normal
+						)
 						onClicked: {
+							root.licenseTreeExpanded = !root.licenseTreeExpanded;
 						}
 					}
 				}
@@ -646,7 +653,8 @@ ViewBase {
 						Flickable {
 							id: canvasFlickable
 							width: parent.width
-							height: Math.min(contentHeight, 400)
+							// When expanded, show full tree height (no limit); otherwise limit to 400px with scrolling
+							height: root.licenseTreeExpanded ? licenseTreeCanvas.treeHeight : Math.min(contentHeight, 400)
 							contentWidth: licenseTreeCanvas.treeWidth;
 							contentHeight: licenseTreeCanvas.treeHeight;
 							clip: true;
