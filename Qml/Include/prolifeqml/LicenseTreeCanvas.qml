@@ -222,27 +222,7 @@ Item {
 				ctx.fill();
 			}
 			
-			// Second pass: Draw all labels on top of lines
-			// If there are multiple children, show the initial count on the parent's outgoing line
-			if (layout.children.length > 1 && layout.children[0].node.m_initialCount !== undefined) {
-				let midY = parentBottomY + root.verticalSpacing / 4;
-				
-				ctx.fillStyle = root.transferTextColor;
-				ctx.font = "bold 11px " + Style.fontFamily;
-				ctx.textAlign = "center";
-				ctx.textBaseline = "middle";
-				let totalText = layout.children[0].node.m_initialCount.toString();
-				
-				// Draw background for total text
-				let totalTextWidth = ctx.measureText(totalText).width;
-				ctx.fillStyle = Style.backgroundColor;
-				ctx.fillRect(parentCenterX - totalTextWidth / 2 - 4, midY - 8, totalTextWidth + 8, 16);
-				
-				ctx.fillStyle = root.transferTextColor;
-				ctx.fillText(totalText, parentCenterX, midY);
-			}
-			
-			// Draw individual child transfer labels
+			// Second pass: Draw individual transfer labels on top of lines
 			for (let i = 0; i < layout.children.length; i++) {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
@@ -308,43 +288,43 @@ Item {
 						let toLayout = nodeMap[revokeEdge.m_toNodeId];
 						
 						if (fromLayout && toLayout) {
-							// Calculate edge positions (like split arrows - from edge to edge, not center to center)
+							// Calculate edge positions (edge-to-edge like split arrows)
 							let fromX = fromLayout.x + root.nodeWidth / 2;
 							let fromY = fromLayout.y;  // Top edge of child node (from)
 							let toX = toLayout.x + root.nodeWidth / 2;
 							let toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
 							
-							// Draw curved red dashed line with arrow
+							// Draw straight red dashed line with corner (matching split arrow style)
 							ctx.strokeStyle = root.revokeArrowColor;
 							ctx.fillStyle = root.revokeArrowColor;
 							ctx.lineWidth = 3;
 							ctx.setLineDash([5, 5]);  // Dashed line
 							
-							// Draw bezier curve
+							// Draw straight line with corner like split arrows
 							ctx.beginPath();
 							ctx.moveTo(fromX, fromY);
-							let controlX = (fromX + toX) / 2 + root.horizontalSpacing;
-							let controlY = (fromY + toY) / 2;
-							ctx.quadraticCurveTo(controlX, controlY, toX, toY);
+							let midY = (fromY + toY) / 2;
+							ctx.lineTo(fromX, midY);
+							ctx.lineTo(toX, midY);
+							ctx.lineTo(toX, toY);
 							ctx.stroke();
 							
-							// Draw dashed arrowhead at destination
-							let angle = Math.atan2(toY - controlY, toX - controlX);
+							// Draw filled arrow at parent (pointing down to parent's bottom edge)
+							ctx.setLineDash([]);  // Reset dash for solid arrow
+							let arrowY = toY;
 							ctx.beginPath();
-							ctx.moveTo(toX, toY);
-							ctx.lineTo(toX - root.arrowSize * Math.cos(angle - Math.PI / 6), 
-							          toY - root.arrowSize * Math.sin(angle - Math.PI / 6));
-							ctx.lineTo(toX - root.arrowSize * Math.cos(angle + Math.PI / 6), 
-							          toY - root.arrowSize * Math.sin(angle + Math.PI / 6));
+							ctx.moveTo(toX, arrowY);
+							ctx.lineTo(toX - root.arrowSize, arrowY - root.arrowSize);
+							ctx.lineTo(toX + root.arrowSize, arrowY - root.arrowSize);
 							ctx.closePath();
 							ctx.fill();
 							
 							ctx.setLineDash([]);  // Reset line dash
 							
-							// Draw revoke count label (red number only, no "REVOKED:" text)
-							// Position offset from curve to avoid overlapping with split labels
-							let labelX = controlX + 20;
-							let labelY = controlY - 15;
+							// Draw revoke count label (red number only)
+							// Position on horizontal segment to avoid overlapping
+							let labelX = (fromX + toX) / 2;
+							let labelY = midY - 10;
 							ctx.fillStyle = root.revokeTextColor;
 							ctx.font = "bold 12px " + Style.fontFamily;
 							ctx.textAlign = "center";
@@ -438,10 +418,12 @@ Item {
 				textY += lineHeight;
 			}
 			
-			// Count info
+			// Count info - display as "remaining/total" format
 			ctx.font = "bold 12px " + Style.fontFamily;
 			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
-			let countText = "Licenses: " + (node.m_productCount || 0);
+			let remaining = node.m_productCount || 0;
+			let total = node.m_initialCount || remaining;
+			let countText = "Licenses: " + remaining + "/" + total;
 			
 			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
 			
