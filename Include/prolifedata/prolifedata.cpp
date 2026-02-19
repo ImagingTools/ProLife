@@ -286,7 +286,7 @@ static void BuildTreeRecursive(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
-	sdl::prolife::Licenses::LicenseTreeNode& node,
+	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
 	QSet<QByteArray>& visitedLicenses)
 {
 	// Prevent infinite loops
@@ -296,34 +296,23 @@ static void BuildTreeRecursive(
 	visitedLicenses.insert(licenseId);
 
 	// Get license data from collection
-	imtbase::IDataObjectSharedPtr licensePtr = licenseCollection.GetObjectById(licenseId);
-	if (!licensePtr.IsValid()){
+	imtlic::IProductInstanceInfo* licensePtr = nullptr;
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (licenseCollection.GetObjectData(licenseId, dataPtr)){
+		licensePtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+	}
+
+	if (licensePtr == nullptr){
 		return;
 	}
 
 	// Populate node with license data
-	node.Version_1_0.Emplace();
-	node.Version_1_0->id = licenseId;
-	
-	QByteArray serialNumber;
-	if (licensePtr->GetPropertyValue("serialNumber", serialNumber)){
-		node.Version_1_0->serialNumber = QString::fromUtf8(serialNumber);
-	}
+	node.id = licenseId;
 
-	QByteArray parentId;
-	if (licensePtr->GetPropertyValue("parentInstanceId", parentId)){
-		node.Version_1_0->parentId = parentId;
-	}
-
-	qint32 productCount = 0;
-	if (licensePtr->GetPropertyValue("productCount", productCount)){
-		node.Version_1_0->productCount = productCount;
-	}
-
-	QByteArray accountId;
-	if (licensePtr->GetPropertyValue("customerId", accountId)){
-		node.Version_1_0->accountId = accountId;
-	}
+	node.serialNumber = licensePtr->GetSerialNumber();
+	node.parentId = licensePtr->GetParentInstanceId();
+	node.productCount = licensePtr->GetProductCount();
+	node.accountId = licensePtr->GetCustomerId();
 
 	// Find child licenses via SplitOut actions
 	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
@@ -339,7 +328,7 @@ static void BuildTreeRecursive(
 	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
 
 	// Process SplitOut actions to find children
-	QVector<sdl::prolife::Licenses::LicenseTreeNode> children;
+	QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
 	for (const QByteArray& actionId : std::as_const(actionIds)){
 		imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
 		if (!actionPtr.IsValid()){
@@ -355,15 +344,14 @@ static void BuildTreeRecursive(
 			const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
 			if (splitOut){
 				QByteArray childLicenseId = splitOut->GetNewLicenseId();
-				
+
 				// Recursively build child node
-				sdl::prolife::Licenses::LicenseTreeNode childNode;
+				sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
 				BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses);
-				
-				// Store operation info in child node
-				if (childNode.Version_1_0.IsPresent()){
-					childNode.Version_1_0->operationType = "split";
-					childNode.Version_1_0->transferredCount = splitOut->GetMovedCount();
+
+				if (node.id.HasValue()){
+					childNode.operationType = "split";
+					childNode.transferredCount = splitOut->GetMovedCount();
 					children.append(childNode);
 				}
 			}
@@ -372,17 +360,17 @@ static void BuildTreeRecursive(
 
 	// Add children to node
 	if (!children.isEmpty()){
-		node.Version_1_0->children = children;
+		node.children.Emplace().FromList(children);
 	}
 }
 
-sdl::prolife::Licenses::LicenseTreeNode BuildLicenseTreeFromActions(
+sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	QString& errorMessage)
 {
-	sdl::prolife::Licenses::LicenseTreeNode rootNode;
+	sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode;
 	QSet<QByteArray> visitedLicenses;
 
 	// Build hierarchical tree recursively

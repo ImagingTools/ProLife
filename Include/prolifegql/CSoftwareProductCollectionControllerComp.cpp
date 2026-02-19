@@ -525,14 +525,14 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	// Build hierarchical license tree from UserActions
 	if (m_userActionManagerCompPtr.IsValid()){
 		QString treeError;
-		sdl::prolife::Licenses::LicenseTreeNode rootNode = prolifedata::BuildLicenseTreeFromActions(
+		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode = prolifedata::BuildLicenseTreeFromActions(
 			id,
-			collection,
+			*m_objectCollectionCompPtr.GetPtr(),
 			*m_userActionManagerCompPtr.GetPtr(),
 			treeError);
 
-		if (rootNode.Version_1_0.IsPresent()){
-			representationPayload.licenseTree.Emplace(rootNode);
+		if (rootNode.id.HasValue()){
+			representationPayload.licenseTree = rootNode;
 		}
 	}
 	// If tree building fails or UserActionManager unavailable, we just don't populate the field (it's optional)
