@@ -599,34 +599,36 @@ ViewBase {
 					}
 				}
 			}
-			
-			GroupHeaderView {
-				width: parent.width;
-				visible: root.softwareProductData !== null;
-				
-				title: qsTr("License Hierarchy");
-				// groupView: hierarchyGroup;
-			}
 
-			Item {
-				id: hierarchyGroup;
-				width: parent.width;
-				height: contentHeight
-				// visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
-				
-				property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
-				Flickable {
-					anchors.fill: parent;
-					contentWidth: licenseTreeCanvas.width;
-					contentHeight: licenseTreeCanvas.height;
-					clip: true;
+			ElementView {
+				name: qsTr("License Hierarchy")
+				width: parent.width
+				bottomComp: canvasComp
 
-					LicenseTreeCanvas {
-						id: licenseTreeCanvas;
-						width: bodyColumn.width
-						height: 500
-						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
-						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+				Component {
+					id: canvasComp
+
+					Item {
+						id: hierarchyGroup;
+						width: parent.width;
+						height: contentHeight
+						// visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
+						
+						property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
+						Flickable {
+							anchors.fill: parent;
+							contentWidth: licenseTreeCanvas.width;
+							contentHeight: licenseTreeCanvas.height;
+							clip: true;
+		
+							LicenseTreeCanvas {
+								id: licenseTreeCanvas;
+								width: bodyColumn.width
+								height: 500
+								treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+								currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+							}
+						}
 					}
 				}
 			}

@@ -538,8 +538,12 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 						}
 					}
 				}
-				
-				rootNode.children.append(requestedLicenseNode);
+
+				if (!rootNode.children.HasValue()){
+					rootNode.children.Emplace();
+				}
+
+				rootNode.children->append(requestedLicenseNode);
 			}
 		}
 		else{
