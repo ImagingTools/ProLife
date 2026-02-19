@@ -530,7 +530,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			*m_objectCollectionCompPtr.GetPtr(),
 			*m_userActionManagerCompPtr.GetPtr(),
 			treeError,
-			false);
+			true);
 
 		if (rootNode.id.HasValue()){
 			representationPayload.licenseTree = rootNode;

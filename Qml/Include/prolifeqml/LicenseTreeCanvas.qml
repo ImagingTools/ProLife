@@ -75,9 +75,14 @@ Item {
 	
 	Canvas {
 		id: canvas
+		anchors.horizontalCenter: parent.horizontalCenter
 		width: root.treeWidth
 		height: root.treeHeight
 		x: root.contentOffsetX
+
+		onWidthChanged: {
+			console.log("onWidthChanged", width)
+		}
 		
 		onPaint: {
 			if (!root.treeData) {

@@ -609,17 +609,18 @@ ViewBase {
 					id: canvasComp
 
 					Item {
-						id: hierarchyGroup;
-						width: parent.width;
-						height: contentHeight
-						// visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
-						
-						property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
+						height: flickable.height
+
 						Flickable {
-							anchors.fill: parent;
+							id: flickable
+							width: parent.width
+							height: Math.min(contentHeight, 400)
 							contentWidth: licenseTreeCanvas.treeWidth;
 							contentHeight: licenseTreeCanvas.treeHeight;
 							clip: true;
+							onHeightChanged: {
+								console.log("canvasComp onHeightChanged", height)
+							}
 		
 							LicenseTreeCanvas {
 								id: licenseTreeCanvas;
