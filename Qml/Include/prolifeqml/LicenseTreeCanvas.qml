@@ -14,7 +14,7 @@ Item {
 	
 	property int nodeWidth: 180
 	property int nodeHeight: 90
-	property int horizontalSpacing: 50
+	property int horizontalSpacing: 30  // Reduced from 50 to bring nodes closer
 	property int verticalSpacing: 60
 	
 	readonly property int ellipsisWidthMargin: 20
@@ -290,7 +290,7 @@ Item {
 						if (fromLayout && toLayout) {
 							// Calculate edge positions (edge-to-edge like split arrows)
 							// Offset horizontally to avoid overlapping with split arrows
-							let horizontalOffset = 25;  // Offset to the right
+							let horizontalOffset = 40;  // Increased offset to prevent overlap
 							let fromX = fromLayout.x + root.nodeWidth / 2 + horizontalOffset;
 							let fromY = fromLayout.y;  // Top edge of child node (from)
 							let toX = toLayout.x + root.nodeWidth / 2 + horizontalOffset;
