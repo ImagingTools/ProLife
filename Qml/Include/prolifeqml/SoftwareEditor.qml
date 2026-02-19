@@ -609,19 +609,37 @@ ViewBase {
 					id: canvasComp
 
 					Item {
-						height: flickable.height
+						height: canvasFlickable.height
+
+						CustomScrollbar {
+							id: scrollbar;
+							z: parent.z + 1;
+							anchors.right: parent.right;
+							anchors.top: canvasFlickable.top;
+							anchors.bottom: canvasFlickable.bottom;
+							secondSize: 10;
+							targetItem: canvasFlickable;
+						}
+						
+						CustomScrollbar{
+							id: scrollHoriz;
+							z: parent.z + 1;
+							anchors.left: canvasFlickable.left;
+							anchors.right: canvasFlickable.right;
+							anchors.bottom: canvasFlickable.bottom;
+							secondSize: 10;
+							vertical: false;
+							targetItem: canvasFlickable;
+						}
 
 						Flickable {
-							id: flickable
+							id: canvasFlickable
 							width: parent.width
 							height: Math.min(contentHeight, 400)
 							contentWidth: licenseTreeCanvas.treeWidth;
 							contentHeight: licenseTreeCanvas.treeHeight;
 							clip: true;
-							onHeightChanged: {
-								console.log("canvasComp onHeightChanged", height)
-							}
-		
+
 							LicenseTreeCanvas {
 								id: licenseTreeCanvas;
 								width: bodyColumn.width
