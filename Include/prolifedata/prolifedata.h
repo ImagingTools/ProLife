@@ -34,11 +34,13 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 // Build hierarchical license tree from UserActions
 // Returns root node of the tree (or empty if error)
+// fullHierarchy: if true, builds complete tree from root; if false, shows only one level (parent+children of given license)
 sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 			const QByteArray& licenseId,
 			const imtbase::IObjectCollection& licenseCollection,
 			const imtauth::IUserActionManager& userActionManager,
-			QString& errorMessage);
+			QString& errorMessage,
+			bool fullHierarchy = true);
 
 
 } // namespace prolifedata

@@ -454,32 +454,49 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
-	QString& errorMessage)
+	QString& errorMessage,
+	bool fullHierarchy)
 {
 	sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode;
 	QSet<QByteArray> visitedLicenses;
 
-	// Find the root license by following parents via SplitIn actions
-	QByteArray rootLicenseId = licenseId;
-	QSet<QByteArray> visitedParents;  // Prevent infinite loops when finding root
-	
-	while (true){
-		if (visitedParents.contains(rootLicenseId)){
-			// Circular reference detected, stop here
-			break;
-		}
-		visitedParents.insert(rootLicenseId);
+	if (fullHierarchy){
+		// Full hierarchy mode: find the root and build complete tree
+		QByteArray rootLicenseId = licenseId;
+		QSet<QByteArray> visitedParents;  // Prevent infinite loops when finding root
 		
-		QByteArray parentId = FindParentLicenseId(rootLicenseId, userActionManager);
-		if (parentId.isEmpty()){
-			// No parent found, this is the root
-			break;
+		while (true){
+			if (visitedParents.contains(rootLicenseId)){
+				// Circular reference detected, stop here
+				break;
+			}
+			visitedParents.insert(rootLicenseId);
+			
+			QByteArray parentId = FindParentLicenseId(rootLicenseId, userActionManager);
+			if (parentId.isEmpty()){
+				// No parent found, this is the root
+				break;
+			}
+			rootLicenseId = parentId;
 		}
-		rootLicenseId = parentId;
-	}
 
-	// Build hierarchical tree recursively from the root
-	BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+		// Build hierarchical tree recursively from the root
+		BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+	}
+	else{
+		// Limited view mode: show only one level (parent + given license + children)
+		// Build the parent node if it exists
+		QByteArray parentId = FindParentLicenseId(licenseId, userActionManager);
+		
+		if (!parentId.isEmpty()){
+			// Has a parent - build parent node with this license as child
+			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+		}
+		else{
+			// No parent - this is root, just build this license and its children
+			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+		}
+	}
 
 	return rootNode;
 }
