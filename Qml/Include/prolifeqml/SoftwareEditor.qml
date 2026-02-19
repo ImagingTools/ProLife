@@ -617,8 +617,8 @@ ViewBase {
 						property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
 						Flickable {
 							anchors.fill: parent;
-							contentWidth: licenseTreeCanvas.width;
-							contentHeight: licenseTreeCanvas.height;
+							contentWidth: licenseTreeCanvas.treeWidth;
+							contentHeight: licenseTreeCanvas.treeHeight;
 							clip: true;
 		
 							LicenseTreeCanvas {

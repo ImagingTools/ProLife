@@ -24,9 +24,9 @@ Item {
 	readonly property int maxContentWidth: 2000
 	readonly property int maxContentHeight: 1500
 	
-	// Content dimensions (calculated based on tree)
-	property int contentWidth: 0
-	property int contentHeight: 0
+	// Actual tree dimensions (not capped)
+	property int treeWidth: 0
+	property int treeHeight: 0
 	property int contentOffsetX: 0  // Horizontal offset for centering
 	
 	// Modern color scheme
@@ -36,8 +36,8 @@ Item {
 	readonly property color transferTextColor: "#28A745"
 	readonly property color revokeTextColor: "#DC3545"
 	
-	// Calculate height based on content
-	height: Math.min(contentHeight, maxContentHeight)
+	// LicenseTreeCanvas height is based on canvas height (capped at max)
+	height: Math.min(treeHeight, maxContentHeight)
 	
 	// Trigger height recalculation when tree data changes
 	onTreeDataChanged: {
@@ -53,8 +53,8 @@ Item {
 	
 	function updateContentDimensions() {
 		if (!treeData) {
-			contentWidth = 0;
-			contentHeight = 0;
+			treeWidth = 0;
+			treeHeight = 0;
 			return;
 		}
 		
@@ -62,21 +62,21 @@ Item {
 		let layout = canvas.calculateLayout(treeData);
 		canvas.assignXCoordinates(layout, 20);
 		
-		// Get tree bounds
+		// Get tree bounds (actual tree size, not capped)
 		let bounds = canvas.getTreeBounds(layout);
-		contentWidth = Math.min(bounds.maxX + 20, maxContentWidth);
-		contentHeight = Math.min(bounds.maxY + 20, maxContentHeight);
+		treeWidth = bounds.maxX + 20;
+		treeHeight = bounds.maxY + 20;
 		
-		// Calculate horizontal offset to center content
-		contentOffsetX = Math.max(0, (root.width - bounds.maxX - 20) / 2);
+		// Calculate horizontal offset to center canvas within assigned width
+		contentOffsetX = Math.max(0, (root.width - treeWidth) / 2);
 		
 		canvas.requestPaint();
 	}
 	
 	Canvas {
 		id: canvas
-		width: root.contentWidth
-		height: root.contentHeight
+		width: root.treeWidth
+		height: root.treeHeight
 		x: root.contentOffsetX
 		
 		onPaint: {
