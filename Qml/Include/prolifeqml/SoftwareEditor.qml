@@ -624,7 +624,6 @@ ViewBase {
 							LicenseTreeCanvas {
 								id: licenseTreeCanvas;
 								width: bodyColumn.width
-								height: 500
 								treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 								currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 							}

@@ -20,6 +20,15 @@ Item {
 	readonly property int ellipsisWidthMargin: 20
 	readonly property int arrowSize: 8
 	
+	// Maximum dimensions before scrolling
+	readonly property int maxContentWidth: 2000
+	readonly property int maxContentHeight: 1500
+	
+	// Content dimensions (calculated based on tree)
+	property int contentWidth: 0
+	property int contentHeight: 0
+	property int contentOffsetX: 0  // Horizontal offset for centering
+	
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
@@ -27,9 +36,48 @@ Item {
 	readonly property color transferTextColor: "#28A745"
 	readonly property color revokeTextColor: "#DC3545"
 	
+	// Calculate height based on content
+	height: Math.min(contentHeight, maxContentHeight)
+	
+	// Trigger height recalculation when tree data changes
+	onTreeDataChanged: {
+		updateContentDimensions();
+	}
+	
+	// Recalculate centering when width changes
+	onWidthChanged: {
+		if (treeData) {
+			updateContentDimensions();
+		}
+	}
+	
+	function updateContentDimensions() {
+		if (!treeData) {
+			contentWidth = 0;
+			contentHeight = 0;
+			return;
+		}
+		
+		// Calculate tree layout to get dimensions
+		let layout = canvas.calculateLayout(treeData);
+		canvas.assignXCoordinates(layout, 20);
+		
+		// Get tree bounds
+		let bounds = canvas.getTreeBounds(layout);
+		contentWidth = Math.min(bounds.maxX + 20, maxContentWidth);
+		contentHeight = Math.min(bounds.maxY + 20, maxContentHeight);
+		
+		// Calculate horizontal offset to center content
+		contentOffsetX = Math.max(0, (root.width - bounds.maxX - 20) / 2);
+		
+		canvas.requestPaint();
+	}
+	
 	Canvas {
 		id: canvas
-		anchors.fill: parent
+		width: root.contentWidth
+		height: root.contentHeight
+		x: root.contentOffsetX
 		
 		onPaint: {
 			if (!root.treeData) {
@@ -105,6 +153,30 @@ Item {
 			}
 			
 			return currentX;
+		}
+		
+		function getTreeBounds(layout) {
+			if (!layout) {
+				return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+			}
+			
+			let bounds = {
+				minX: layout.x,
+				minY: layout.y,
+				maxX: layout.x + root.nodeWidth,
+				maxY: layout.y + root.nodeHeight
+			};
+			
+			// Check all children recursively
+			for (let i = 0; i < layout.children.length; i++) {
+				let childBounds = getTreeBounds(layout.children[i]);
+				bounds.minX = Math.min(bounds.minX, childBounds.minX);
+				bounds.minY = Math.min(bounds.minY, childBounds.minY);
+				bounds.maxX = Math.max(bounds.maxX, childBounds.maxX);
+				bounds.maxY = Math.max(bounds.maxY, childBounds.maxY);
+			}
+			
+			return bounds;
 		}
 		
 		function drawConnections(ctx, layout) {
