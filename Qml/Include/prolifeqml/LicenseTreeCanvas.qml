@@ -237,7 +237,7 @@ Item {
 							let toX = toLayout.x + root.nodeWidth / 2;
 							let toY = toLayout.y + root.nodeHeight / 2;
 							
-							// Draw curved red line
+							// Draw curved red dashed line with arrow
 							ctx.strokeStyle = root.revokeArrowColor;
 							ctx.fillStyle = root.revokeArrowColor;
 							ctx.lineWidth = 3;
@@ -250,9 +250,8 @@ Item {
 							let controlY = (fromY + toY) / 2;
 							ctx.quadraticCurveTo(controlX, controlY, toX, toY);
 							ctx.stroke();
-							ctx.setLineDash([]);  // Reset line dash
 							
-							// Draw arrow at destination
+							// Draw dashed arrowhead at destination
 							let angle = Math.atan2(toY - controlY, toX - controlX);
 							ctx.beginPath();
 							ctx.moveTo(toX, toY);
@@ -262,6 +261,8 @@ Item {
 							          toY - root.arrowSize * Math.sin(angle + Math.PI / 6));
 							ctx.closePath();
 							ctx.fill();
+							
+							ctx.setLineDash([]);  // Reset line dash
 							
 							// Draw revoke count label (red number only, no "REVOKED:" text)
 							// Position offset from curve to avoid overlapping with split labels
