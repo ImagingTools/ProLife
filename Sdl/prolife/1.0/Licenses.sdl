@@ -94,6 +94,7 @@ input SplitLicenseInput {
 	licenseId: ID!
 	licenseCount: Integer!
 	accountId: ID!
+	targetLicenseId: ID  # Optional: if provided, transfers licenses to existing child instead of creating new
 }
 
 type SplitLicensePayload {
