@@ -494,8 +494,53 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		QByteArray parentId = FindParentLicenseId(licenseId, userActionManager);
 		
 		if (!parentId.isEmpty()){
-			// Has a parent - build parent node with license and its children (depth=2: parent->license->children)
-			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 2);
+			// Has a parent - build parent node WITHOUT its other children (depth=0)
+			// Then manually add only the requested license as a child with depth=1
+			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 0);
+			
+			// Now build only the requested license with its children
+			sdl::prolife::Licenses::CLicenseTreeNode::V1_0 requestedLicenseNode;
+			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, requestedLicenseNode, visitedLicenses, false, 1);
+			
+			// Add requested license as the only child of parent
+			if (requestedLicenseNode.id.HasValue()){
+				// Find the split action from parent to this license to get metadata
+				imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+				fieldFilter.fieldId = "targetId";
+				fieldFilter.filterValue = parentId;
+				
+				imtbase::CComplexCollectionFilter complexFilter;
+				complexFilter.AddFieldFilter(fieldFilter);
+				
+				iprm::CParamsSet filterParam;
+				filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+				
+				imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
+				
+				// Find the SplitOut action that created this license
+				for (const QByteArray& actionId : std::as_const(actionIds)){
+					imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
+					if (!actionPtr.IsValid()){
+						continue;
+					}
+					
+					imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo = actionPtr->GetActionTypeInfo();
+					if (actionTypeInfo.id == "SplitOut"){
+						iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
+						const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
+						if (splitOut && splitOut->GetNewLicenseId() == licenseId){
+							// Found the split action - set metadata
+							requestedLicenseNode.operationType = "split";
+							requestedLicenseNode.transferredCount = splitOut->GetMovedCount();
+							requestedLicenseNode.initialCount = splitOut->GetInitialCount();
+							requestedLicenseNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
+							break;
+						}
+					}
+				}
+				
+				rootNode.children.append(requestedLicenseNode);
+			}
 		}
 		else{
 			// No parent - this is root, just build this license and its children (depth=1)
