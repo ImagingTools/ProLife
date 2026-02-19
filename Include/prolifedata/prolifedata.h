@@ -38,7 +38,6 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 			const QByteArray& licenseId,
 			const imtbase::IObjectCollection& licenseCollection,
-			const imtbase::IObjectCollection& customerCollection,
 			const imtauth::IUserActionManager& userActionManager,
 			QString& errorMessage,
 			bool fullHierarchy = true);
