@@ -176,22 +176,12 @@ Item {
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
 				
-				// Use pre-calculated values from server
-				// If parent has only 1 child, show full transfer (initialCount → currentCount)
-				// If parent has multiple children, show only the transferred amount
+				// Show only the transferred amount (how many licenses were transferred to this child)
 				let transferText;
-				if (layout.children.length === 1) {
-					if (child.node.m_initialCount !== undefined) {
-						transferText = child.node.m_initialCount + " → " + child.node.m_productCount;
-					} else {
-						transferText = child.node.m_productCount.toString();
-					}
+				if (child.node.m_transferredCount !== undefined) {
+					transferText = child.node.m_transferredCount.toString();
 				} else {
-					if (child.node.m_transferredCount !== undefined) {
-						transferText = child.node.m_transferredCount.toString();
-					} else {
-						transferText = child.node.m_productCount.toString();
-					}
+					transferText = child.node.m_productCount.toString();
 				}
 				
 				let transferY = parentBottomY + root.verticalSpacing / 2;
