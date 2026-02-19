@@ -175,7 +175,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		}
 
 		// Verify target belongs to the correct account
-		QByteArray targetAccountId = targetSoftwarePtr->GetAccountId();
+		QByteArray targetAccountId = targetSoftwarePtr->GetCustomerId();
 		if (targetAccountId != accountId){
 			errorMessage = QString("Unable to split license. Error: Target license belongs to different account");
 			retVal.Version_1_0->ok = false;
@@ -234,10 +234,18 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		QString parentSerialNumber = QString::fromUtf8(originalSoftwarePtr->GetSerialNumber());
 		int childIndex = 1;
 
-		// Count existing children to determine next index
-		QVector<QByteArray> existingChildIds;
-		m_softwareProductCollectionCompPtr->GetReferences(licenseId, "Children", existingChildIds);
-		childIndex = existingChildIds.size() + 1;
+		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+		fieldFilter.fieldId = "ParentInstanceId";
+		fieldFilter.filterValue = licenseId;
+	
+		imtbase::CComplexCollectionFilter complexFilter;
+		complexFilter.AddFieldFilter(fieldFilter);
+	
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+		int childCount = m_softwareProductCollectionCompPtr->GetElementsCount(&filterParam);
+		childIndex = childCount + 1;
 
 		QString newSerialNumber = parentSerialNumber.isEmpty() ? QString::number(childIndex) : QString("%1-%2").arg(parentSerialNumber).arg(childIndex);
 		newSoftwarePtr->SetSerialNumber(newSerialNumber.toUtf8());

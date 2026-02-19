@@ -90,24 +90,6 @@ Dialog {
 				GroupElementView {
 					width: parent.width
 
-					// Mode selection
-					RadioButtonsRowElementView {
-						id: modeSelector
-						width: parent.width
-						name: qsTr("Split mode")
-						labels: [qsTr("Create new license"), qsTr("Transfer to existing child")]
-						controlWidth: 400
-
-						onValueChanged: {
-							splitLicenseDialog.createNewMode = (value === 0)
-							updateButtonState()
-						}
-
-						Component.onCompleted: {
-							value = 0  // Default to "Create new" mode
-						}
-					}
-
 					SpinBoxElementView {
 						id: licenseCountSpinBox
 						width: parent.width
@@ -120,6 +102,16 @@ Dialog {
 						onValueChanged: {
 							splitLicenseDialog.spinBoxValue = value
 							updateButtonState()
+						}
+					}
+
+					SwitchElementView {
+						id: switchElementView
+						width: parent.width
+						name: qsTr("New License")
+						checked: true
+						onCheckedChanged: {
+							splitLicenseDialog.createNewMode = checked
 						}
 					}
 
