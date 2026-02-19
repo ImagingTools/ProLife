@@ -604,6 +604,17 @@ ViewBase {
 				name: qsTr("License Hierarchy")
 				width: parent.width
 				bottomComp: canvasComp
+				
+				controlComp: Component {
+					ToolButton {
+						id: expandButton
+						width: Style.buttonWidthM
+						height: width
+						iconSource: "../../../" + Style.getIconPath("Icons/Expand", Icon.State.On, Icon.Mode.Normal)
+						onClicked: {
+						}
+					}
+				}
 
 				Component {
 					id: canvasComp
