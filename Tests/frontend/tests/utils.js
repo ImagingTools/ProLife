@@ -93,15 +93,15 @@ const checkScreenshot = async (page, filename, maskParams) => {
 async function login(page, username, password) {
   await reloadPage(page);
 
-  await clickAt(page, 700, 386); // Click 'Login' input field
+  await clickAt(page, 690, 380); // Click 'Login' input field
   await page.keyboard.type(username);
 
-  await clickAt(page, 685, 455); // Click 'Password' input field
+  await clickAt(page, 690, 440); // Click 'Password' input field
   await page.keyboard.type(password);
 
   await delay(500);
 
-  await clickAt(page, 700, 600); // Click 'Login' button
+  await clickAt(page, 700, 610); // Click 'Login' button
 }
 
 async function waitForDomStability(page, options = {}) {
