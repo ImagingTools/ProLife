@@ -327,9 +327,15 @@ static void BuildTreeRecursive(
 
 	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
 
-	// Process actions to find children and revoke edges
+	// Process actions to find children, revoke edges, and calculate counts
 	QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
 	QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
+	
+	// Track counts from UserActions data
+	int initialCountFromAction = 0;
+	int remainingCountFromAction = 0;
+	bool hasInitialCount = false;
+	bool hasRemainingCount = false;
 	
 	for (const QByteArray& actionId : std::as_const(actionIds)){
 		imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
@@ -347,6 +353,16 @@ static void BuildTreeRecursive(
 			if (splitOut){
 				QByteArray childLicenseId = splitOut->GetNewLicenseId();
 
+				// Get initial and remaining counts from SplitOut action
+				if (!hasInitialCount){
+					initialCountFromAction = splitOut->GetInitialCount();
+					hasInitialCount = true;
+				}
+				if (!hasRemainingCount){
+					remainingCountFromAction = splitOut->GetInitialCount() - splitOut->GetMovedCount();
+					hasRemainingCount = true;
+				}
+
 				// Recursively build child node
 				sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
 				BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false);
@@ -354,6 +370,8 @@ static void BuildTreeRecursive(
 				if (childNode.id.HasValue()){
 					childNode.operationType = "split";
 					childNode.transferredCount = splitOut->GetMovedCount();
+					childNode.initialCount = splitOut->GetInitialCount();
+					childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
 					children.append(childNode);
 				}
 			}
@@ -371,6 +389,14 @@ static void BuildTreeRecursive(
 				revokeEdges.append(edge);
 			}
 		}
+	}
+	
+	// Set initial and remaining counts on this node if found from actions
+	if (hasInitialCount){
+		node.initialCount = initialCountFromAction;
+	}
+	if (hasRemainingCount){
+		node.remainingCount = remainingCountFromAction;
 	}
 
 	// Add children to node

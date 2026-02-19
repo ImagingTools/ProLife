@@ -107,14 +107,6 @@ Item {
 			return currentX;
 		}
 		
-		function calculateOriginalParentCount(layout) {
-			let total = layout.node.m_productCount;
-			for (let j = 0; j < layout.children.length; j++) {
-				total += layout.children[j].node.m_productCount;
-			}
-			return total;
-		}
-		
 		function drawConnections(ctx, layout) {
 			if (!layout || !layout.children || layout.children.length === 0) {
 				return;
@@ -126,9 +118,6 @@ Item {
 			ctx.strokeStyle = root.arrowColor;
 			ctx.fillStyle = root.arrowColor;
 			ctx.lineWidth = 2;
-			
-			// Calculate original parent count (before any splits)
-			let originalParentCount = calculateOriginalParentCount(layout);
 			
 			// First pass: Draw all lines and arrows
 			for (let i = 0; i < layout.children.length; i++) {
@@ -157,15 +146,15 @@ Item {
 			}
 			
 			// Second pass: Draw all labels on top of lines
-			// If there are multiple children, show the total count on the parent's outgoing line
-			if (layout.children.length > 1) {
+			// If there are multiple children, show the initial count on the parent's outgoing line
+			if (layout.children.length > 1 && layout.children[0].node.m_initialCount !== undefined) {
 				let midY = parentBottomY + root.verticalSpacing / 4;
 				
 				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				let totalText = originalParentCount.toString();
+				let totalText = layout.children[0].node.m_initialCount.toString();
 				
 				// Draw background for total text
 				let totalTextWidth = ctx.measureText(totalText).width;
@@ -181,19 +170,28 @@ Item {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
 				
-				// Draw transfer info
+				// Draw transfer info using pre-calculated values from server
 				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
 				
-				// If parent has only 1 child, show full transfer (originalCount → childCount)
-				// If parent has multiple children, show only the individual transfer amount
+				// Use pre-calculated values from server
+				// If parent has only 1 child, show full transfer (initialCount → currentCount)
+				// If parent has multiple children, show only the transferred amount
 				let transferText;
 				if (layout.children.length === 1) {
-					transferText = originalParentCount + " → " + child.node.m_productCount;
+					if (child.node.m_initialCount !== undefined) {
+						transferText = child.node.m_initialCount + " → " + child.node.m_productCount;
+					} else {
+						transferText = child.node.m_productCount.toString();
+					}
 				} else {
-					transferText = child.node.m_productCount.toString();
+					if (child.node.m_transferredCount !== undefined) {
+						transferText = child.node.m_transferredCount.toString();
+					} else {
+						transferText = child.node.m_productCount.toString();
+					}
 				}
 				
 				let transferY = parentBottomY + root.verticalSpacing / 2;

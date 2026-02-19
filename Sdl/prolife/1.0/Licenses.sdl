@@ -62,6 +62,8 @@ type LicenseTreeNode {
 	children: [LicenseTreeNode]
 	operationType: String
 	transferredCount: Integer
+	initialCount: Integer
+	remainingCount: Integer
 	revokeEdges: [RevokeEdge]
 }
 
