@@ -289,9 +289,11 @@ Item {
 						
 						if (fromLayout && toLayout) {
 							// Calculate edge positions (edge-to-edge like split arrows)
-							let fromX = fromLayout.x + root.nodeWidth / 2;
+							// Offset horizontally to avoid overlapping with split arrows
+							let horizontalOffset = 25;  // Offset to the right
+							let fromX = fromLayout.x + root.nodeWidth / 2 + horizontalOffset;
 							let fromY = fromLayout.y;  // Top edge of child node (from)
-							let toX = toLayout.x + root.nodeWidth / 2;
+							let toX = toLayout.x + root.nodeWidth / 2 + horizontalOffset;
 							let toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
 							
 							// Draw straight red dashed line with corner (matching split arrow style)
@@ -419,10 +421,11 @@ Item {
 			}
 			
 			// Count info - display as "remaining/total" format
+			// For child licenses, total should be the transferred amount (what was given via split)
 			ctx.font = "bold 12px " + Style.fontFamily;
 			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
 			let remaining = node.m_productCount || 0;
-			let total = node.m_initialCount || remaining;
+			let total = node.m_transferredCount || node.m_initialCount || remaining;
 			let countText = "Licenses: " + remaining + "/" + total;
 			
 			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);

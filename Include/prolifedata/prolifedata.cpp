@@ -286,6 +286,7 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 static void BuildTreeRecursive(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
+	const imtbase::IObjectCollection& customerCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
 	QSet<QByteArray>& visitedLicenses,
@@ -315,6 +316,18 @@ static void BuildTreeRecursive(
 	node.parentId = licensePtr->GetParentInstanceId();
 	node.productCount = licensePtr->GetProductCount();
 	node.accountId = licensePtr->GetCustomerId();
+	
+	// Get account name from customer collection
+	QByteArray customerId = licensePtr->GetCustomerId();
+	if (!customerId.isEmpty()){
+		imtbase::IObjectCollection::DataPtr customerDataPtr;
+		if (customerCollection.GetObjectData(customerId, customerDataPtr)){
+			imtbase::IDataInfo* customerInfoPtr = dynamic_cast<imtbase::IDataInfo*>(customerDataPtr.GetPtr());
+			if (customerInfoPtr){
+				node.accountName = customerInfoPtr->GetName();
+			}
+		}
+	}
 
 	// Find child licenses via SplitOut and RevokeOut actions
 	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
@@ -369,7 +382,7 @@ static void BuildTreeRecursive(
 				if (maxDepth != 0){
 					sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
 					int nextDepth = (maxDepth == -1) ? -1 : (maxDepth - 1);
-					BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
+					BuildTreeRecursive(childLicenseId, licenseCollection, customerCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
 
 					if (childNode.id.HasValue()){
 						childNode.operationType = "split";
@@ -458,6 +471,7 @@ static QByteArray FindParentLicenseId(
 sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
+	const imtbase::IObjectCollection& customerCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	QString& errorMessage,
 	bool fullHierarchy)
@@ -486,7 +500,7 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		}
 
 		// Build hierarchical tree recursively from the root (unlimited depth)
-		BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, -1);
+		BuildTreeRecursive(rootLicenseId, licenseCollection, customerCollection, userActionManager, rootNode, visitedLicenses, false, -1);
 	}
 	else{
 		// Limited view mode: show only one level (parent + given license + children)
@@ -496,11 +510,11 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		if (!parentId.isEmpty()){
 			// Has a parent - build parent node WITHOUT its other children (depth=0)
 			// Then manually add only the requested license as a child with depth=1
-			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 0);
+			BuildTreeRecursive(parentId, licenseCollection, customerCollection, userActionManager, rootNode, visitedLicenses, false, 0);
 			
 			// Now build only the requested license with its children
 			sdl::prolife::Licenses::CLicenseTreeNode::V1_0 requestedLicenseNode;
-			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, requestedLicenseNode, visitedLicenses, false, 1);
+			BuildTreeRecursive(licenseId, licenseCollection, customerCollection, userActionManager, requestedLicenseNode, visitedLicenses, false, 1);
 			
 			// Add requested license as the only child of parent
 			if (requestedLicenseNode.id.HasValue()){
@@ -548,7 +562,7 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		}
 		else{
 			// No parent - this is root, just build this license and its children (depth=1)
-			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 1);
+			BuildTreeRecursive(licenseId, licenseCollection, customerCollection, userActionManager, rootNode, visitedLicenses, false, 1);
 		}
 	}
 

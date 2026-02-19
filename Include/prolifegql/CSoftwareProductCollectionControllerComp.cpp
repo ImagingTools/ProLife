@@ -523,11 +523,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
 	// Build hierarchical license tree from UserActions
-	if (m_userActionManagerCompPtr.IsValid()){
+	if (m_userActionManagerCompPtr.IsValid() && m_customerCollectionCompPtr.IsValid()){
 		QString treeError;
 		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode = prolifedata::BuildLicenseTreeFromActions(
 			id,
 			*m_objectCollectionCompPtr.GetPtr(),
+			*m_customerCollectionCompPtr.GetPtr(),
 			*m_userActionManagerCompPtr.GetPtr(),
 			treeError,
 			true);

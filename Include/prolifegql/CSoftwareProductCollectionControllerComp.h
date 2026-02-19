@@ -23,6 +23,7 @@ public:
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
+		I_ASSIGN(m_customerCollectionCompPtr, "CustomerCollection", "Customer collection", true, "CustomerCollection");
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Operation context controller for order info", true, "OrderOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
@@ -83,6 +84,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_customerCollectionCompPtr);
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
