@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: LicenseRef-Commercial
+// Copyright (c) 2024-2026 ImagingTools
+// All rights reserved. See LICENSE file for details.
+
 const { chromium } = require('@playwright/test');
 const { waitForPageStability, delay, login} = require('./tests/utils');
 
