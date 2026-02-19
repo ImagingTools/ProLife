@@ -287,7 +287,8 @@ static void BuildTreeRecursive(
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
-	QSet<QByteArray>& visitedLicenses)
+	QSet<QByteArray>& visitedLicenses,
+	bool searchParents)
 {
 	// Prevent infinite loops
 	if (visitedLicenses.contains(licenseId)){
@@ -308,7 +309,6 @@ static void BuildTreeRecursive(
 
 	// Populate node with license data
 	node.id = licenseId;
-
 	node.serialNumber = licensePtr->GetSerialNumber();
 	node.parentId = licensePtr->GetParentInstanceId();
 	node.productCount = licensePtr->GetProductCount();
@@ -347,9 +347,9 @@ static void BuildTreeRecursive(
 
 				// Recursively build child node
 				sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
-				BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses);
+				BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false);
 
-				if (node.id.HasValue()){
+				if (childNode.id.HasValue()){
 					childNode.operationType = "split";
 					childNode.transferredCount = splitOut->GetMovedCount();
 					children.append(childNode);
@@ -364,6 +364,46 @@ static void BuildTreeRecursive(
 	}
 }
 
+// Helper function to find parent license ID via SplitIn action
+static QByteArray FindParentLicenseId(
+	const QByteArray& licenseId,
+	const imtauth::IUserActionManager& userActionManager)
+{
+	// Search for SplitIn action for this license
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "targetId";
+	fieldFilter.filterValue = licenseId;
+
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.AddFieldFilter(fieldFilter);
+
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
+
+	// Find the first SplitIn action
+	for (const QByteArray& actionId : std::as_const(actionIds)){
+		imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
+		if (!actionPtr.IsValid()){
+			continue;
+		}
+
+		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo = actionPtr->GetActionTypeInfo();
+		QByteArray actionType = actionTypeInfo.id;
+
+		if (actionType == "SplitIn"){
+			iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
+			const prolifedata::CSplitInAction* splitIn = dynamic_cast<const prolifedata::CSplitInAction*>(actionData.GetPtr());
+			if (splitIn){
+				return splitIn->GetSourceLicenseId();
+			}
+		}
+	}
+
+	return QByteArray();
+}
+
 sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
@@ -373,8 +413,27 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 	sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode;
 	QSet<QByteArray> visitedLicenses;
 
-	// Build hierarchical tree recursively
-	BuildTreeRecursive(licenseId, licenseCollection, userActionManager, rootNode, visitedLicenses);
+	// Find the root license by following parents via SplitIn actions
+	QByteArray rootLicenseId = licenseId;
+	QSet<QByteArray> visitedParents;  // Prevent infinite loops when finding root
+	
+	while (true){
+		if (visitedParents.contains(rootLicenseId)){
+			// Circular reference detected, stop here
+			break;
+		}
+		visitedParents.insert(rootLicenseId);
+		
+		QByteArray parentId = FindParentLicenseId(rootLicenseId, userActionManager);
+		if (parentId.isEmpty()){
+			// No parent found, this is the root
+			break;
+		}
+		rootLicenseId = parentId;
+	}
+
+	// Build hierarchical tree recursively from the root
+	BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
 
 	return rootNode;
 }

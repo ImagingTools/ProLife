@@ -12,10 +12,10 @@ Item {
 		canvas.requestPaint();
 	}
 	
-	property int nodeWidth: 240
-	property int nodeHeight: 120
-	property int horizontalSpacing: 60
-	property int verticalSpacing: 80
+	property int nodeWidth: 180
+	property int nodeHeight: 90
+	property int horizontalSpacing: 50
+	property int verticalSpacing: 60
 	
 	readonly property int ellipsisWidthMargin: 20
 	readonly property int arrowSize: 8
