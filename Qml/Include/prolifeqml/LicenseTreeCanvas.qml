@@ -42,6 +42,9 @@ Item {
 			// Calculate tree layout
 			let layout = calculateLayout(root.treeData);
 			
+			// Assign X coordinates to prevent overlapping
+			assignXCoordinates(layout, 20);
+			
 			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
@@ -52,17 +55,15 @@ Item {
 			drawNodes(ctx, layout);
 		}
 		
-		function calculateLayout(node, level, index, siblingCount) {
+		function calculateLayout(node, level) {
 			if (!node) return null;
 			
 			level = level || 0;
-			index = index || 0;
-			siblingCount = siblingCount || 1;
 			
 			let nodeInfo = {
 				node: node,
 				level: level,
-				x: 0,
+				x: 0,  // Will be assigned by assignXCoordinates
 				y: level * (root.nodeHeight + root.verticalSpacing) + 20,
 				children: []
 			};
@@ -71,29 +72,14 @@ Item {
 			if (node.m_children && node.m_children.count > 0) {
 				for (let i = 0; i < node.m_children.count; i++) {
 					let childItem = node.m_children.get(i).item
-					let childLayout = calculateLayout(childItem, level + 1, i, node.m_children.count);
+					let childLayout = calculateLayout(childItem, level + 1);
 					if (childLayout) {
 						nodeInfo.children.push(childLayout);
 					}
 				}
-				
-				// Position node centered above its children
-				if (nodeInfo.children.length > 0) {
-					let leftmost = nodeInfo.children[0];
-					let rightmost = nodeInfo.children[nodeInfo.children.length - 1];
-					nodeInfo.x = (getNodeX(leftmost) + getNodeX(rightmost)) / 2;
-				}
-			} else {
-				// Leaf node - position based on index
-				nodeInfo.x = index * (root.nodeWidth + root.horizontalSpacing) + 20;
 			}
 			
 			return nodeInfo;
-		}
-		
-		function getNodeX(nodeInfo) {
-			if (!nodeInfo) return 0;
-			return nodeInfo.x;
 		}
 		
 		function assignXCoordinates(layout, startX) {
