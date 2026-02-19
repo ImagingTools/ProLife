@@ -282,7 +282,7 @@ Item {
 							ctx.font = "bold 11px " + Style.fontFamily;
 							ctx.textAlign = "center";
 							ctx.textBaseline = "middle";
-							let revokeText = "REVOKED: " + revokeEdge.m_revokeCount;
+							let revokeText = "REVOKED: " + revokeEdge.m_revokedCount;
 							
 							// Draw background
 							let textWidth = ctx.measureText(revokeText).width;
