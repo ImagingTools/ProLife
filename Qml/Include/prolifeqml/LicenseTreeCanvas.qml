@@ -48,11 +48,11 @@ Item {
 			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
-			// Draw revoke edges
-			drawRevokeEdges(ctx, layout);
-			
 			// Draw nodes
 			drawNodes(ctx, layout);
+			
+			// Draw revoke edges after nodes so arrows are visible on top
+			drawRevokeEdges(ctx, layout);
 		}
 		
 		function calculateLayout(node, level) {
