@@ -494,8 +494,8 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		QByteArray parentId = FindParentLicenseId(licenseId, userActionManager);
 		
 		if (!parentId.isEmpty()){
-			// Has a parent - build parent node with this license as child (depth=1 to get license and its children only)
-			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 1);
+			// Has a parent - build parent node with license and its children (depth=2: parent->license->children)
+			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 2);
 		}
 		else{
 			// No parent - this is root, just build this license and its children (depth=1)
