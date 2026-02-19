@@ -21,7 +21,6 @@ ViewBase {
 
 	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
-	property bool licenseTreeExpanded: false  // Track license tree expansion state
 	
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
@@ -613,12 +612,14 @@ ViewBase {
 						width: Style.buttonWidthM
 						height: width
 						iconSource: "../../../" + Style.getIconPath(
-							root.licenseTreeExpanded ? "Icons/Collapse" : "Icons/Expand", 
+							"Icons/Expand", 
 							Icon.State.On, 
 							Icon.Mode.Normal
 						)
 						onClicked: {
-							root.licenseTreeExpanded = !root.licenseTreeExpanded;
+							licenseTreeDialog.treeData = root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+							licenseTreeDialog.currentLicenseId = root.softwareProductData ? root.softwareProductData.m_id : "";
+							licenseTreeDialog.open();
 						}
 					}
 				}
@@ -653,8 +654,8 @@ ViewBase {
 						Flickable {
 							id: canvasFlickable
 							width: parent.width
-							// When expanded, show full tree height (no limit); otherwise limit to 400px with scrolling
-							height: root.licenseTreeExpanded ? licenseTreeCanvas.treeHeight : Math.min(contentHeight, 400)
+							// Compact view with 400px height limit and scrolling
+							height: Math.min(contentHeight, 400)
 							contentWidth: licenseTreeCanvas.treeWidth;
 							contentHeight: licenseTreeCanvas.treeHeight;
 							clip: true;
@@ -670,6 +671,11 @@ ViewBase {
 				}
 			}
 		}
+	}
+
+	// License tree full-screen dialog
+	LicenseTreeDialog {
+		id: licenseTreeDialog
 	}
 }//Container
 

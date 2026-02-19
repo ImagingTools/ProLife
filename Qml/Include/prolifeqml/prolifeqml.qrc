@@ -25,6 +25,7 @@
         <file alias="ProLife/SplitLicenseDialog.qml">SplitLicenseDialog.qml</file>
         <file alias="ProLife/RevokeLicenseDialog.qml">RevokeLicenseDialog.qml</file>
         <file alias="ProLife/LicenseTreeCanvas.qml">LicenseTreeCanvas.qml</file>
+        <file alias="ProLife/LicenseTreeDialog.qml">LicenseTreeDialog.qml</file>
         <file alias="ProLife/HardwareProductBindingEditor.qml">HardwareProductBindingEditor.qml</file>
         <file alias="ProLife/HardwareProductBindingDialog.qml">HardwareProductBindingDialog.qml</file>
         <file alias="prolifeqml/CachedOrderCollection.qml">CachedOrderCollection.qml</file>
