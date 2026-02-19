@@ -281,7 +281,7 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 
 // Helper function to recursively build hierarchical license tree from UserActions
-// Focus on Split operations only for now (Revoke to be added later)
+// Processes both Split and Revoke operations from UserActions
 static void BuildTreeRecursive(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
@@ -314,7 +314,7 @@ static void BuildTreeRecursive(
 	node.productCount = licensePtr->GetProductCount();
 	node.accountId = licensePtr->GetCustomerId();
 
-	// Find child licenses via SplitOut actions
+	// Find child licenses via SplitOut and RevokeOut actions
 	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
 	fieldFilter.fieldId = "targetId";
 	fieldFilter.filterValue = licenseId;
@@ -327,8 +327,10 @@ static void BuildTreeRecursive(
 
 	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
 
-	// Process SplitOut actions to find children
+	// Process actions to find children and revoke edges
 	QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
+	QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
+	
 	for (const QByteArray& actionId : std::as_const(actionIds)){
 		imtauth::IUserActionInfoUniquePtr actionPtr = userActionManager.GetUserAction(actionId);
 		if (!actionPtr.IsValid()){
@@ -338,7 +340,7 @@ static void BuildTreeRecursive(
 		imtauth::IUserRecentAction::ActionTypeInfo actionTypeInfo = actionPtr->GetActionTypeInfo();
 		QByteArray actionType = actionTypeInfo.id;
 
-		// Only process Split operations for now
+		// Process Split operations
 		if (actionType == "SplitOut"){
 			iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
 			const prolifedata::CSplitOutAction* splitOut = dynamic_cast<const prolifedata::CSplitOutAction*>(actionData.GetPtr());
@@ -356,11 +358,29 @@ static void BuildTreeRecursive(
 				}
 			}
 		}
+		// Process Revoke operations
+		else if (actionType == "RevokeOut"){
+			iser::ISerializableSharedPtr actionData = actionPtr->GetActionData();
+			const prolifedata::CRevokeOutAction* revokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(actionData.GetPtr());
+			if (revokeOut){
+				// Create revoke edge from this node to parent
+				sdl::prolife::Licenses::CRevokeEdge::V1_0 edge;
+				edge.fromNodeId = licenseId;
+				edge.toNodeId = revokeOut->GetParentLicenseId();
+				edge.revokedCount = revokeOut->GetRevokedCount();
+				revokeEdges.append(edge);
+			}
+		}
 	}
 
 	// Add children to node
 	if (!children.isEmpty()){
 		node.children.Emplace().FromList(children);
+	}
+	
+	// Add revoke edges to node
+	if (!revokeEdges.isEmpty()){
+		node.revokeEdges.Emplace().FromList(revokeEdges);
 	}
 }
 

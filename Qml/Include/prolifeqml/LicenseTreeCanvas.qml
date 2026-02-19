@@ -48,8 +48,8 @@ Item {
 			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
-			// TODO: Draw revoke edges (to be implemented later)
-			// drawRevokeEdges(ctx, layout);
+			// Draw revoke edges
+			drawRevokeEdges(ctx, layout);
 			
 			// Draw nodes
 			drawNodes(ctx, layout);
