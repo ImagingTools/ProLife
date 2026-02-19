@@ -275,14 +275,15 @@ Item {
 							ctx.closePath();
 							ctx.fill();
 							
-							// Draw revoke count label
-							let labelX = controlX + 10;
-							let labelY = controlY;
+							// Draw revoke count label (red number only, no "REVOKED:" text)
+							// Position offset from curve to avoid overlapping with split labels
+							let labelX = controlX + 20;
+							let labelY = controlY - 15;
 							ctx.fillStyle = root.revokeTextColor;
-							ctx.font = "bold 11px " + Style.fontFamily;
+							ctx.font = "bold 12px " + Style.fontFamily;
 							ctx.textAlign = "center";
 							ctx.textBaseline = "middle";
-							let revokeText = "REVOKED: " + revokeEdge.m_revokedCount;
+							let revokeText = revokeEdge.m_revokedCount.toString();
 							
 							// Draw background
 							let textWidth = ctx.measureText(revokeText).width;
