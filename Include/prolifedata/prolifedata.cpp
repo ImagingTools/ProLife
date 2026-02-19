@@ -282,13 +282,15 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 
 // Helper function to recursively build hierarchical license tree from UserActions
 // Processes both Split and Revoke operations from UserActions
+// maxDepth: -1 for unlimited, 0 to not recurse to children, 1 for one level of children, etc.
 static void BuildTreeRecursive(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
 	QSet<QByteArray>& visitedLicenses,
-	bool searchParents)
+	bool searchParents,
+	int maxDepth = -1)
 {
 	// Prevent infinite loops
 	if (visitedLicenses.contains(licenseId)){
@@ -363,16 +365,19 @@ static void BuildTreeRecursive(
 					hasRemainingCount = true;
 				}
 
-				// Recursively build child node
-				sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
-				BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false);
+				// Recursively build child node (only if maxDepth allows)
+				if (maxDepth != 0){
+					sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
+					int nextDepth = (maxDepth == -1) ? -1 : (maxDepth - 1);
+					BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
 
-				if (childNode.id.HasValue()){
-					childNode.operationType = "split";
-					childNode.transferredCount = splitOut->GetMovedCount();
-					childNode.initialCount = splitOut->GetInitialCount();
-					childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
-					children.append(childNode);
+					if (childNode.id.HasValue()){
+						childNode.operationType = "split";
+						childNode.transferredCount = splitOut->GetMovedCount();
+						childNode.initialCount = splitOut->GetInitialCount();
+						childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
+						children.append(childNode);
+					}
 				}
 			}
 		}
@@ -480,8 +485,8 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 			rootLicenseId = parentId;
 		}
 
-		// Build hierarchical tree recursively from the root
-		BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+		// Build hierarchical tree recursively from the root (unlimited depth)
+		BuildTreeRecursive(rootLicenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, -1);
 	}
 	else{
 		// Limited view mode: show only one level (parent + given license + children)
@@ -489,12 +494,12 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 		QByteArray parentId = FindParentLicenseId(licenseId, userActionManager);
 		
 		if (!parentId.isEmpty()){
-			// Has a parent - build parent node with this license as child
-			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+			// Has a parent - build parent node with this license as child (depth=1 to get license and its children only)
+			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 1);
 		}
 		else{
-			// No parent - this is root, just build this license and its children
-			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false);
+			// No parent - this is root, just build this license and its children (depth=1)
+			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 1);
 		}
 	}
 
