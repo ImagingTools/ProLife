@@ -231,11 +231,11 @@ Item {
 						let toLayout = nodeMap[revokeEdge.m_toNodeId];
 						
 						if (fromLayout && toLayout) {
-							// Calculate positions
+							// Calculate edge positions (like split arrows - from edge to edge, not center to center)
 							let fromX = fromLayout.x + root.nodeWidth / 2;
-							let fromY = fromLayout.y + root.nodeHeight / 2;
+							let fromY = fromLayout.y;  // Top edge of child node (from)
 							let toX = toLayout.x + root.nodeWidth / 2;
-							let toY = toLayout.y + root.nodeHeight / 2;
+							let toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
 							
 							// Draw curved red dashed line with arrow
 							ctx.strokeStyle = root.revokeArrowColor;
