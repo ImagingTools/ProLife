@@ -372,16 +372,34 @@ static void BuildTreeRecursive(
 
 				// Recursively build child node (only if maxDepth allows)
 				if (maxDepth != 0){
-					sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
-					int nextDepth = (maxDepth == -1) ? -1 : (maxDepth - 1);
-					BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
+					// Check if we already have a node for this child (multiple splits to same child)
+					bool foundExisting = false;
+					for (auto& existingChild : children){
+						if (existingChild.id == childLicenseId){
+							// Accumulate the transferred count for multiple splits to same child
+							if (existingChild.transferredCount.HasValue()){
+								existingChild.transferredCount = existingChild.transferredCount.GetValue() + splitOut->GetMovedCount();
+							} else {
+								existingChild.transferredCount = splitOut->GetMovedCount();
+							}
+							foundExisting = true;
+							break;
+						}
+					}
+					
+					// Only create new child node if it doesn't exist yet
+					if (!foundExisting){
+						sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
+						int nextDepth = (maxDepth == -1) ? -1 : (maxDepth - 1);
+						BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
 
-					if (childNode.id.HasValue()){
-						childNode.operationType = "split";
-						childNode.transferredCount = splitOut->GetMovedCount();
-						childNode.initialCount = splitOut->GetInitialCount();
-						childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
-						children.append(childNode);
+						if (childNode.id.HasValue()){
+							childNode.operationType = "split";
+							childNode.transferredCount = splitOut->GetMovedCount();
+							childNode.initialCount = splitOut->GetInitialCount();
+							childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
+							children.append(childNode);
+						}
 					}
 				}
 			}
