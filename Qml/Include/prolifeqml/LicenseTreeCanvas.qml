@@ -281,13 +281,28 @@ Item {
 						let toLayout = nodeMap[revokeEdge.m_toNodeId];
 						
 						if (fromLayout && toLayout) {
-							// Calculate edge positions (edge-to-edge like split arrows)
-							// Offset horizontally to avoid overlapping with split arrows
-							// Use larger offset and position on right side of nodes
-							let horizontalOffset = 60;  // Further increased to prevent overlap
-							let fromX = fromLayout.x + root.nodeWidth / 2 + horizontalOffset;
+							// Calculate edge positions based on relative positions
+							// Connect from child's left/right edge to parent's left/right edge
+							// to avoid overlapping with split arrows in the center
+							
+							let fromX, toX;
+							
+							// Determine which edge to use based on relative horizontal positions
+							if (fromLayout.x < toLayout.x) {
+								// Child is to the left of parent - use right edges
+								fromX = fromLayout.x + root.nodeWidth;
+								toX = toLayout.x + root.nodeWidth;
+							} else if (fromLayout.x > toLayout.x) {
+								// Child is to the right of parent - use left edges
+								fromX = fromLayout.x;
+								toX = toLayout.x;
+							} else {
+								// Child is directly below parent - use right edges with small offset
+								fromX = fromLayout.x + root.nodeWidth + 10;
+								toX = toLayout.x + root.nodeWidth + 10;
+							}
+							
 							let fromY = fromLayout.y;  // Top edge of child node (from)
-							let toX = toLayout.x + root.nodeWidth / 2 + horizontalOffset;
 							let toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
 							
 							// Draw straight red dashed line with corner (matching split arrow style)
