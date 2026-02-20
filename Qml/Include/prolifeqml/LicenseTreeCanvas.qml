@@ -293,15 +293,15 @@ Item {
 							// Determine which side to use based on relative horizontal positions
 							if (fromLayout.x < toLayout.x) {
 								// Child is to the left of parent
-								// Connect from center of child's right side to center of parent's left side
-								fromX = fromLayout.x + root.nodeWidth;  // Right edge of child
+								// Connect from center of child's LEFT side to center of parent's LEFT side
+								fromX = fromLayout.x;  // Left edge of child
 								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
 								toX = toLayout.x;  // Left edge of parent
 								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
 							} else if (fromLayout.x > toLayout.x) {
 								// Child is to the right of parent
-								// Connect from center of child's left side to center of parent's right side
-								fromX = fromLayout.x;  // Left edge of child
+								// Connect from center of child's RIGHT side to center of parent's RIGHT side
+								fromX = fromLayout.x + root.nodeWidth;  // Right edge of child
 								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
 								toX = toLayout.x + root.nodeWidth;  // Right edge of parent
 								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
@@ -341,15 +341,15 @@ Item {
 							ctx.beginPath();
 							
 							if (fromLayout.x < toLayout.x) {
-								// Arrow pointing right (into parent's left side)
+								// Child left of parent - arrow pointing up on left side
 								ctx.moveTo(toX, toY);
 								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
-								ctx.lineTo(toX - root.arrowSize, toY + root.arrowSize);
-							} else if (fromLayout.x > toLayout.x) {
-								// Arrow pointing left (into parent's right side)
-								ctx.moveTo(toX, toY);
 								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
-								ctx.lineTo(toX + root.arrowSize, toY + root.arrowSize);
+							} else if (fromLayout.x > toLayout.x) {
+								// Child right of parent - arrow pointing up on right side
+								ctx.moveTo(toX, toY);
+								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
+								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
 							} else {
 								// Arrow pointing up (into parent's bottom)
 								ctx.moveTo(toX, toY);
