@@ -282,69 +282,108 @@ Item {
 						
 						if (fromLayout && toLayout) {
 							// Calculate edge positions based on relative positions
-							// Connect from child's left/right edge to parent's left/right edge
+							// Connect from center of child's side to center of parent's side
 							// to avoid overlapping with split arrows in the center
 							
 							var fromX;
 							var toX;
+							var fromY;
+							var toY;
 							
-							// Determine which edge to use based on relative horizontal positions
+							// Determine which side to use based on relative horizontal positions
 							if (fromLayout.x < toLayout.x) {
-								// Child is to the left of parent - use right edges
-								fromX = fromLayout.x + root.nodeWidth;
-								toX = toLayout.x + root.nodeWidth;
+								// Child is to the left of parent
+								// Connect from center of child's right side to center of parent's left side
+								fromX = fromLayout.x + root.nodeWidth;  // Right edge of child
+								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
+								toX = toLayout.x;  // Left edge of parent
+								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
 							} else if (fromLayout.x > toLayout.x) {
-								// Child is to the right of parent - use left edges
-								fromX = fromLayout.x;
-								toX = toLayout.x;
+								// Child is to the right of parent
+								// Connect from center of child's left side to center of parent's right side
+								fromX = fromLayout.x;  // Left edge of child
+								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
+								toX = toLayout.x + root.nodeWidth;  // Right edge of parent
+								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
 							} else {
-								// Child is directly below parent - use right edges with small offset
-								fromX = fromLayout.x + root.nodeWidth + 10;
-								toX = toLayout.x + root.nodeWidth + 10;
+								// Child is directly below parent (same X position)
+								// Connect from center of child's top to center of parent's bottom
+								fromX = fromLayout.x + root.nodeWidth / 2;  // Horizontal center of child
+								fromY = fromLayout.y;  // Top edge of child
+								toX = toLayout.x + root.nodeWidth / 2;  // Horizontal center of parent
+								toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent
 							}
 							
-							var fromY = fromLayout.y;  // Top edge of child node (from)
-							var toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
-							
-							// Draw straight red dashed line with corner (matching split arrow style)
+							// Draw straight red dashed line
 							ctx.strokeStyle = root.revokeArrowColor;
 							ctx.fillStyle = root.revokeArrowColor;
 							ctx.lineWidth = 3;
 							ctx.setLineDash([5, 5]);  // Dashed line
 							
-							// Draw straight line with corner like split arrows
+							// Draw line (horizontal for side connections, with corner for top-bottom)
 							ctx.beginPath();
 							ctx.moveTo(fromX, fromY);
-							let midY = (fromY + toY) / 2;
-							ctx.lineTo(fromX, midY);
-							ctx.lineTo(toX, midY);
-							ctx.lineTo(toX, toY);
+							
+							if (fromLayout.x !== toLayout.x) {
+								// Horizontal connection (side to side)
+								var midX = (fromX + toX) / 2;
+								ctx.lineTo(midX, fromY);
+								ctx.lineTo(midX, toY);
+								ctx.lineTo(toX, toY);
+							} else {
+								// Vertical connection (top to bottom)
+								ctx.lineTo(toX, toY);
+							}
 							ctx.stroke();
 							
-							// Draw filled arrow at parent (pointing down to parent's bottom edge)
+							// Draw filled arrow at parent pointing to it
 							ctx.setLineDash([]);  // Reset dash for solid arrow
-							let arrowY = toY;
 							ctx.beginPath();
-							ctx.moveTo(toX, arrowY);
-							ctx.lineTo(toX - root.arrowSize, arrowY - root.arrowSize);
-							ctx.lineTo(toX + root.arrowSize, arrowY - root.arrowSize);
+							
+							if (fromLayout.x < toLayout.x) {
+								// Arrow pointing right (into parent's left side)
+								ctx.moveTo(toX, toY);
+								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
+								ctx.lineTo(toX - root.arrowSize, toY + root.arrowSize);
+							} else if (fromLayout.x > toLayout.x) {
+								// Arrow pointing left (into parent's right side)
+								ctx.moveTo(toX, toY);
+								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
+								ctx.lineTo(toX + root.arrowSize, toY + root.arrowSize);
+							} else {
+								// Arrow pointing up (into parent's bottom)
+								ctx.moveTo(toX, toY);
+								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
+								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
+							}
 							ctx.closePath();
 							ctx.fill();
 							
 							ctx.setLineDash([]);  // Reset line dash
 							
 							// Draw revoke count label (red number only)
-							// Position on horizontal segment to avoid overlapping
-							let labelX = (fromX + toX) / 2;
-							let labelY = midY - 10;
+							// Position on the line to avoid overlapping
+							var labelX;
+							var labelY;
+							
+							if (fromLayout.x !== toLayout.x) {
+								// For horizontal connections, put label on horizontal segment
+								labelX = (fromX + toX) / 2;
+								labelY = (fromY + toY) / 2 - 10;
+							} else {
+								// For vertical connections, put label next to line
+								labelX = toX + 15;
+								labelY = (fromY + toY) / 2;
+							}
+							
 							ctx.fillStyle = root.revokeTextColor;
 							ctx.font = "bold 12px " + Style.fontFamily;
 							ctx.textAlign = "center";
 							ctx.textBaseline = "middle";
-							let revokeText = revokeEdge.m_revokedCount.toString();
+							var revokeText = revokeEdge.m_revokedCount.toString();
 							
 							// Draw background
-							let textWidth = ctx.measureText(revokeText).width;
+							var textWidth = ctx.measureText(revokeText).width;
 							ctx.fillStyle = Style.backgroundColor;
 							ctx.fillRect(labelX - textWidth / 2 - 4, labelY - 8, textWidth + 8, 16);
 							
