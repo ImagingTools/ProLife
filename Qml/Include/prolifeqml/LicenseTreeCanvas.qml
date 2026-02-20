@@ -72,24 +72,19 @@ Item {
 		canvas.requestPaint();
 	}
 	
-	// Legend in top-right corner
-	Rectangle {
+	// Legend in top-left corner (vertical layout, no border)
+	Item {
 		id: legend
-		width: 280  // Smaller fixed width
-		height: 30  // Smaller height
+		width: 80  // Width for vertical layout
+		height: 70  // Height for 3 items vertically
 		anchors.top: parent.top
-		anchors.right: parent.right
+		anchors.left: parent.left
 		anchors.topMargin: 10
-		anchors.rightMargin: 10
-		color: Style.baseColor
-		border.color: Style.borderColor
-		border.width: 1
-		radius: 4
+		anchors.leftMargin: 10
 		z: 10
 		
-		Row {
-			anchors.centerIn: parent
-			spacing: 20
+		Column {
+			spacing: 3
 			
 			Row {
 				spacing: 5
