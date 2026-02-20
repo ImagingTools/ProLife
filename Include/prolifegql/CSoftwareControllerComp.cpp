@@ -231,6 +231,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		newSoftwarePtr->SetProductCount(licenseCount);
 
 		// Generate hierarchical serial number: parent "A" -> child "A-1", "A-2", etc.
+		// Find next available index by checking existing serial numbers to avoid duplicates
 		QString parentSerialNumber = QString::fromUtf8(originalSoftwarePtr->GetSerialNumber());
 		int childIndex = 1;
 
@@ -244,8 +245,32 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		iprm::CParamsSet filterParam;
 		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
-		int childCount = m_softwareProductCollectionCompPtr->GetElementsCount(&filterParam);
-		childIndex = childCount + 1;
+		// Get all existing children to find maximum index used
+		QByteArrayList childIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		int maxIndex = 0;
+		
+		for (const QByteArray& childId : childIds){
+			imtbase::IObjectCollection::DataPtr existingChildDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(childId, existingChildDataPtr)){
+				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* existingChildPtr = 
+					dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(existingChildDataPtr.GetPtr());
+				if (existingChildPtr){
+					QString existingSerial = QString::fromUtf8(existingChildPtr->GetSerialNumber());
+					// Extract index from serial number (e.g., "A-3" -> 3)
+					QString expectedPrefix = parentSerialNumber.isEmpty() ? "" : parentSerialNumber + "-";
+					if (existingSerial.startsWith(expectedPrefix)){
+						QString indexPart = existingSerial.mid(expectedPrefix.length());
+						bool ok;
+						int index = indexPart.toInt(&ok);
+						if (ok && index > maxIndex){
+							maxIndex = index;
+						}
+					}
+				}
+			}
+		}
+		
+		childIndex = maxIndex + 1;
 
 		QString newSerialNumber = parentSerialNumber.isEmpty() ? QString::number(childIndex) : QString("%1-%2").arg(parentSerialNumber).arg(childIndex);
 		newSoftwarePtr->SetSerialNumber(newSerialNumber.toUtf8());
@@ -558,9 +583,24 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	}
 
 	// Update or delete child license
-	// Only delete if revoking all available licenses AND no licenses are bound
-	if (revokeCount == availableCount && boundCount == 0){
-		// Remove child license entirely (no licenses left at all)
+	// Check if child has its own children
+	bool hasGrandchildren = false;
+	imtbase::IComplexCollectionFilter::FieldFilter grandchildFilter;
+	grandchildFilter.fieldId = "ParentInstanceId";
+	grandchildFilter.filterValue = childLicenseId;
+	
+	imtbase::CComplexCollectionFilter grandchildComplexFilter;
+	grandchildComplexFilter.AddFieldFilter(grandchildFilter);
+	
+	iprm::CParamsSet grandchildFilterParam;
+	grandchildFilterParam.SetEditableParameter("ComplexFilter", &grandchildComplexFilter);
+	
+	int grandchildCount = m_softwareProductCollectionCompPtr->GetElementsCount(&grandchildFilterParam);
+	hasGrandchildren = (grandchildCount > 0);
+	
+	// Only delete if revoking all available licenses AND no licenses are bound AND no children exist
+	if (revokeCount == availableCount && boundCount == 0 && !hasGrandchildren){
+		// Remove child license entirely (no licenses left and no children)
 		if (!m_softwareProductCollectionCompPtr->RemoveElements({childLicenseId})){
 			errorMessage = QString("Unable to revoke license. Error: Failed to remove child license");
 			retVal.Version_1_0->message = errorMessage;
@@ -575,7 +615,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		retVal.Version_1_0->message = QString("License revoked successfully. Child license removed.");
 	}
 	else {
-		// Update child license count (either some available left, or some are bound)
+		// Update child license count (either some available left, or some are bound, or has children)
 		childSoftwarePtr->SetProductCount(currentChildCount - revokeCount);
 		
 		if (!m_softwareProductCollectionCompPtr->SetObjectData(childLicenseId, *childSoftwarePtr)){
@@ -589,7 +629,13 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 			}
 			return retVal;
 		}
-		retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+		
+		if (hasGrandchildren && currentChildCount - revokeCount == 0){
+			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent. Child license kept with 0 available (has sub-licenses).").arg(revokeCount);
+		}
+		else {
+			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+		}
 	}
 
 	retVal.Version_1_0->ok = true;
