@@ -31,7 +31,7 @@ Item {
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
 	readonly property color revokeArrowColor: "#DC3545"  // Red for revoke operations
-	readonly property color transferTextColor: "#28A745"
+	readonly property color transferTextColor: "#6C757D"  // Gray, same as total count
 	readonly property color revokeTextColor: "#DC3545"
 	
 	// License count colors for (A/B/C) format
@@ -72,67 +72,72 @@ Item {
 		canvas.requestPaint();
 	}
 	
-	// Legend at the top
+	// Legend in top-right corner
 	Rectangle {
 		id: legend
-		width: parent.width
-		height: 40
+		width: 280  // Smaller fixed width
+		height: 30  // Smaller height
+		anchors.top: parent.top
+		anchors.right: parent.right
+		anchors.topMargin: 10
+		anchors.rightMargin: 10
 		color: Style.baseColor
 		border.color: Style.borderColor
 		border.width: 1
+		radius: 4
 		z: 10
 		
 		Row {
 			anchors.centerIn: parent
-			spacing: 30
+			spacing: 20
 			
 			Row {
-				spacing: 8
+				spacing: 5
 				Text {
 					text: "●"
 					color: root.availableCountColor
-					font.pixelSize: 16
+					font.pixelSize: 12
 					anchors.verticalCenter: parent.verticalCenter
 				}
 				Text {
 					text: "Available"
 					color: Style.textColor
 					font.family: Style.fontFamily
-					font.pixelSize: 12
+					font.pixelSize: 10
 					anchors.verticalCenter: parent.verticalCenter
 				}
 			}
 			
 			Row {
-				spacing: 8
+				spacing: 5
 				Text {
 					text: "●"
 					color: root.boundCountColor
-					font.pixelSize: 16
+					font.pixelSize: 12
 					anchors.verticalCenter: parent.verticalCenter
 				}
 				Text {
 					text: "Bound"
 					color: Style.textColor
 					font.family: Style.fontFamily
-					font.pixelSize: 12
+					font.pixelSize: 10
 					anchors.verticalCenter: parent.verticalCenter
 				}
 			}
 			
 			Row {
-				spacing: 8
+				spacing: 5
 				Text {
 					text: "●"
 					color: root.totalCountColor
-					font.pixelSize: 16
+					font.pixelSize: 12
 					anchors.verticalCenter: parent.verticalCenter
 				}
 				Text {
 					text: "Total"
 					color: Style.textColor
 					font.family: Style.fontFamily
-					font.pixelSize: 12
+					font.pixelSize: 10
 					anchors.verticalCenter: parent.verticalCenter
 				}
 			}
@@ -144,7 +149,7 @@ Item {
 		width: root.treeWidth
 		height: root.treeHeight
 		x: root.contentOffsetX
-		y: legend.height + 10  // Position below legend with margin
+		y: 0  // Legend is floating, doesn't affect canvas position
 
 		onPaint: {
 			if (!root.treeData) {
