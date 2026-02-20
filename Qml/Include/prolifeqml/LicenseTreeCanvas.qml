@@ -19,11 +19,7 @@ Item {
 	
 	readonly property int ellipsisWidthMargin: 20
 	readonly property int arrowSize: 8
-	
-	// Maximum dimensions before scrolling
-	readonly property int maxContentWidth: 2000
-	readonly property int maxContentHeight: 1500
-	
+
 	// Actual tree dimensions (not capped)
 	property int treeWidth: 0
 	property int treeHeight: 0
@@ -35,9 +31,7 @@ Item {
 	readonly property color revokeArrowColor: "#DC3545"  // Red for revoke operations
 	readonly property color transferTextColor: "#28A745"
 	readonly property color revokeTextColor: "#DC3545"
-	
-	height: Math.min(treeHeight, maxContentHeight)
-	
+
 	onTreeDataChanged: {
 		updateContentDimensions();
 	}
@@ -98,7 +92,7 @@ Item {
 			drawNodes(ctx, layout);
 			
 			// Draw revoke edges after nodes so arrows are visible on top
-			drawRevokeEdges(ctx, layout);
+			// drawRevokeEdges(ctx, layout);
 		}
 		
 		function calculateLayout(node, level) {
@@ -539,24 +533,24 @@ Item {
 		}
 	}
 	
-	onTreeDataChanged: {
-		if (treeData) {
-			// Recalculate layout with proper X coordinates
-			let layout = canvas.calculateLayout(treeData);
-			if (layout) {
-				canvas.assignXCoordinates(layout, 20);
+	// onTreeDataChanged: {
+	// 	if (treeData) {
+	// 		// Recalculate layout with proper X coordinates
+	// 		let layout = canvas.calculateLayout(treeData);
+	// 		if (layout) {
+	// 			canvas.assignXCoordinates(layout, 20);
 				
-				// Calculate required canvas size
-				let maxX = calculateMaxX(layout);
-				let maxY = calculateMaxY(layout);
+	// 			// Calculate required canvas size
+	// 			let maxX = calculateMaxX(layout);
+	// 			let maxY = calculateMaxY(layout);
 				
-				root.width = maxX + root.nodeWidth + 40;
-				root.height = maxY + root.nodeHeight + 40;
-			}
+	// 			root.width = maxX + root.nodeWidth + 40;
+	// 			root.height = maxY + root.nodeHeight + 40;
+	// 		}
 			
-			canvas.requestPaint();
-		}
-	}
+	// 		canvas.requestPaint();
+	// 	}
+	// }
 	
 	function calculateMaxX(layout) {
 		if (!layout) return 0;

@@ -652,15 +652,15 @@ ViewBase {
 						Flickable {
 							id: canvasFlickable
 							width: parent.width
-							// Compact view with 400px height limit and scrolling
-							height: Math.min(contentHeight, 400)
-							contentWidth: licenseTreeCanvas.treeWidth;
-							contentHeight: licenseTreeCanvas.treeHeight;
+							height: Math.min(licenseTreeCanvas.height, 300)
+							contentWidth: licenseTreeCanvas.width;
+							contentHeight: licenseTreeCanvas.height;
 							clip: true;
 
 							LicenseTreeCanvas {
 								id: licenseTreeCanvas;
-								width: bodyColumn.width
+								width: treeWidth
+								height: treeHeight
 								treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 								currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 							}
@@ -722,11 +722,16 @@ ViewBase {
 					}
 				}
 				bottomComp: Component {
-					LicenseTreeCanvas {
-						width: fullLicenseTreeCanvas.width
-						height: fullLicenseTreeCanvas.height //- Style.sizeHintBXS
-						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
-						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+					Item {
+						height: licenseTreeCanvas.height
+						LicenseTreeCanvas {
+							id: licenseTreeCanvas
+							anchors.centerIn: parent
+							width: treeWidth
+							height: treeHeight
+							treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+							currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+						}
 					}
 				}
 			}
