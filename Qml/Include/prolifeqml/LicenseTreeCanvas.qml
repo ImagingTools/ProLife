@@ -36,21 +36,19 @@ Item {
 	readonly property color transferTextColor: "#28A745"
 	readonly property color revokeTextColor: "#DC3545"
 	
-	// LicenseTreeCanvas height is based on canvas height (capped at max)
 	height: Math.min(treeHeight, maxContentHeight)
 	
-	// Trigger height recalculation when tree data changes
 	onTreeDataChanged: {
 		updateContentDimensions();
 	}
-	
+
 	// Recalculate centering when width changes
 	onWidthChanged: {
 		if (treeData) {
 			updateContentDimensions();
 		}
 	}
-	
+
 	function updateContentDimensions() {
 		if (!treeData) {
 			treeWidth = 0;
@@ -75,15 +73,10 @@ Item {
 	
 	Canvas {
 		id: canvas
-		anchors.horizontalCenter: parent.horizontalCenter
 		width: root.treeWidth
 		height: root.treeHeight
 		x: root.contentOffsetX
 
-		onWidthChanged: {
-			console.log("onWidthChanged", width)
-		}
-		
 		onPaint: {
 			if (!root.treeData) {
 				return;

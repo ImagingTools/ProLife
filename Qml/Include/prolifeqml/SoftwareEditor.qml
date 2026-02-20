@@ -671,51 +671,63 @@ ViewBase {
 		}
 	}
 
+	property Rectangle background: null
 	property bool expanded: false
+	onExpandedChanged: {
+		if (expanded){
+			background = backgroundComp.createObject(root)
+		}
+		else{
+			background.destroy()
+		}
+	}
 
-	Rectangle {
-		id: background
-		z: parent.z + 10
-		anchors.fill: parent
-		color: "gray"
-		visible: root.expanded
-		opacity: 0.4
-
-		ControlArea {
-			id: backgroundControlArea
+	Component {
+		id: backgroundComp
+		Rectangle {
+			z: parent.z + 10
 			anchors.fill: parent
-			onClicked: {
-				root.expanded = false
-			}
-		}
-
-		ControlArea {
-			anchors.fill: fullLicenseTreeCanvas
-		}
-
-		ElementView {
-			id: fullLicenseTreeCanvas
-			anchors.horizontalCenter: parent.horizontalCenter
-			anchors.top: parent.top
-			anchors.topMargin: Style.sizeHintBXS
-			width: parent.width - 2*Style.sizeHintBXS
-			controlComp: Component {
-				ToolButton {
-					id: collapseButton
-					width: Style.buttonWidthM
-					height: width
-					iconSource: "../../../" + Style.getIconPath("Icons/Collapse", Icon.State.On, Icon.Mode.Normal)
-					onClicked: {
-						root.expanded = !root.expanded
-					}
+			color: "gray"
+			visible: root.expanded
+			opacity: 0.4
+	
+			ControlArea {
+				id: backgroundControlArea
+				anchors.fill: parent
+				onClicked: {
+					root.expanded = false
 				}
 			}
-			bottomComp: Component {
-				LicenseTreeCanvas {
-					width: fullLicenseTreeCanvas.width
-					height: fullLicenseTreeCanvas.height //- Style.sizeHintBXS
-					treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
-					currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+	
+			ControlArea {
+				anchors.fill: fullLicenseTreeCanvas
+			}
+	
+			ElementView {
+				id: fullLicenseTreeCanvas
+				anchors.horizontalCenter: parent.horizontalCenter
+				anchors.top: parent.top
+				anchors.topMargin: Style.sizeHintBXS
+				width: parent.width - 2*Style.sizeHintBXS
+
+				controlComp: Component {
+					ToolButton {
+						id: collapseButton
+						width: Style.buttonWidthM
+						height: width
+						iconSource: "../../../" + Style.getIconPath("Icons/Collapse", Icon.State.On, Icon.Mode.Normal)
+						onClicked: {
+							root.expanded = !root.expanded
+						}
+					}
+				}
+				bottomComp: Component {
+					LicenseTreeCanvas {
+						width: fullLicenseTreeCanvas.width
+						height: fullLicenseTreeCanvas.height //- Style.sizeHintBXS
+						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+					}
 				}
 			}
 		}
