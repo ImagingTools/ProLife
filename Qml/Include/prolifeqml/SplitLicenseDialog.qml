@@ -17,17 +17,22 @@ Dialog {
 
 	property string licenseId: ""
 	property int maxAvailableCount: 0
-	property int currentCount: 1
 	property string errorMessage: ""
-	property var childLicenses: []
+
+	property BaseModel itemsModel: null
 
 	Component.onCompleted: {
 		splitLicenseDialog.fillButtons()
-		loadChildLicenses()
 	}
 
 	onLocalizationChanged: {
 		splitLicenseDialog.fillButtons()
+	}
+
+	onLicenseIdChanged: {
+		if (licenseId !== ""){
+			loadChildLicenses()
+		}
 	}
 
 	function fillButtons(){
@@ -42,7 +47,7 @@ Dialog {
 	property string selectedTargetLicenseId: ""
 
 	function loadChildLicenses() {
-		childLicensesInput.m_licenseId = splitLicenseDialog.licenseId
+		childLicensesInput.m_parentLicenseId = splitLicenseDialog.licenseId
 		childLicensesRequest.send(childLicensesInput)
 	}
 
@@ -72,20 +77,18 @@ Dialog {
 			width: splitLicenseDialog.width
 			height: splitLicenseDialog.height - 100
 
+			property BaseModel itemsModel: splitLicenseDialog.itemsModel
+			onItemsModelChanged: {
+				if (itemsModel){
+					targetLicenseComboBox.model = itemsModel
+				}
+			}
+
 			Column {
+				id: column
 				anchors.fill: parent
 				anchors.margins: Style.marginL
 				spacing: Style.marginL
-
-				// Error message display
-				BaseText {
-					id: errorText
-					width: parent.width
-					visible: splitLicenseDialog.errorMessage !== ""
-					text: splitLicenseDialog.errorMessage
-					color: Style.errorTextColor
-					wrapMode: Text.WordWrap
-				}
 
 				GroupElementView {
 					width: parent.width
@@ -101,7 +104,7 @@ Dialog {
 						description: qsTr("Max available count: ") + splitLicenseDialog.maxAvailableCount
 						onValueChanged: {
 							splitLicenseDialog.spinBoxValue = value
-							updateButtonState()
+							column.updateButtonState()
 						}
 					}
 
@@ -128,7 +131,7 @@ Dialog {
 							if (currentIndex >= 0 && model){
 								splitLicenseDialog.selectedAccountId = model.getData("id", currentIndex)
 							}
-							updateButtonState()
+							column.updateButtonState()
 						}
 
 						bottomComp: currentIndex >= 0 ? undefined : accountErrorComp
@@ -146,18 +149,17 @@ Dialog {
 						id: targetLicenseComboBox
 						width: parent.width
 						name: qsTr("Target child license")
-						nameId: "serialNumber"
-						model: childLicensesListModel
+						nameId: "softwareId"
 						controlWidth: 250
 						visible: !splitLicenseDialog.createNewMode
 
 						onCurrentIndexChanged: {
 							if (currentIndex >= 0 && model){
-								splitLicenseDialog.selectedTargetLicenseId = model.get(currentIndex).id
+								splitLicenseDialog.selectedTargetLicenseId = model.get(currentIndex).item.m_id
 								// Auto-select the account of the target license
-								splitLicenseDialog.selectedAccountId = model.get(currentIndex).accountId
+								splitLicenseDialog.selectedAccountId = model.get(currentIndex).item.m_accountId
 							}
-							updateButtonState()
+							column.updateButtonState()
 						}
 
 						bottomComp: currentIndex >= 0 ? undefined : targetErrorComp
@@ -215,25 +217,12 @@ Dialog {
 		sdlObjectComp: Component {
 			ChildLicensesListPayload {
 				onFinished: {
-					if (m_ok && m_licenses) {
-						childLicensesListModel.clear()
-						for (var i = 0; i < m_licenses.length; i++) {
-							var license = m_licenses[i]
-							childLicensesListModel.append({
-								id: license.m_id,
-								serialNumber: license.m_serialNumber,
-								accountId: license.m_accountId,
-								accountName: license.m_accountName
-							})
-						}
+					if (m_ok && m_items) {
+						splitLicenseDialog.itemsModel = m_items
 					}
 				}
 			}
 		}
-	}
-
-	ListModel {
-		id: childLicensesListModel
 	}
 
 	Loading {
