@@ -337,140 +337,7 @@ Item {
 			}
 			
 			collectNodes(layout);
-			
-			// Draw revoke edges for all nodes
-			let  drawNodeRevokeEdges = function(nodeLayout) {
-				if (!nodeLayout) return;
-				
-				// Check if this node has revoke edges
-				if (nodeLayout.node.m_revokeEdges && nodeLayout.node.m_revokeEdges.count > 0) {
-					for (let i = 0; i < nodeLayout.node.m_revokeEdges.count; i++) {
-						let revokeEdge = nodeLayout.node.m_revokeEdges.get(i).item;
-						let fromLayout = nodeMap[revokeEdge.m_fromNodeId];
-						let toLayout = nodeMap[revokeEdge.m_toNodeId];
-						
-						if (fromLayout && toLayout) {
-							// Calculate edge positions based on relative positions
-							// Connect from center of child's side to center of parent's side
-							// to avoid overlapping with split arrows in the center
-							
-							var fromX;
-							var toX;
-							var fromY;
-							var toY;
-							
-							// Determine which side to use based on relative horizontal positions
-							if (fromLayout.x < toLayout.x) {
-								// Child is to the left of parent
-								// Connect from center of child's LEFT side to center of parent's LEFT side
-								fromX = fromLayout.x;  // Left edge of child
-								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
-								toX = toLayout.x;  // Left edge of parent
-								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
-							} else if (fromLayout.x > toLayout.x) {
-								// Child is to the right of parent
-								// Connect from center of child's RIGHT side to center of parent's RIGHT side
-								fromX = fromLayout.x + root.nodeWidth;  // Right edge of child
-								fromY = fromLayout.y + root.nodeHeight / 2;  // Vertical center of child
-								toX = toLayout.x + root.nodeWidth;  // Right edge of parent
-								toY = toLayout.y + root.nodeHeight / 2;  // Vertical center of parent
-							} else {
-								// Child is directly below parent (same X position)
-								// Connect from center of child's top to center of parent's bottom
-								fromX = fromLayout.x + root.nodeWidth / 2;  // Horizontal center of child
-								fromY = fromLayout.y;  // Top edge of child
-								toX = toLayout.x + root.nodeWidth / 2;  // Horizontal center of parent
-								toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent
-							}
-							
-							// Draw straight red dashed line
-							ctx.strokeStyle = root.revokeArrowColor;
-							ctx.fillStyle = root.revokeArrowColor;
-							ctx.lineWidth = 3;
-							ctx.setLineDash([5, 5]);  // Dashed line
-							
-							// Draw line (horizontal for side connections, with corner for top-bottom)
-							ctx.beginPath();
-							ctx.moveTo(fromX, fromY);
-							
-							if (fromLayout.x !== toLayout.x) {
-								// Horizontal connection (side to side)
-								var midX = (fromX + toX) / 2;
-								ctx.lineTo(midX, fromY);
-								ctx.lineTo(midX, toY);
-								ctx.lineTo(toX, toY);
-							} else {
-								// Vertical connection (top to bottom)
-								ctx.lineTo(toX, toY);
-							}
-							ctx.stroke();
-							
-							// Draw filled arrow at parent pointing to it
-							ctx.setLineDash([]);  // Reset dash for solid arrow
-							ctx.beginPath();
-							
-							if (fromLayout.x < toLayout.x) {
-								// Child left of parent - arrow pointing up on left side
-								ctx.moveTo(toX, toY);
-								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
-								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
-							} else if (fromLayout.x > toLayout.x) {
-								// Child right of parent - arrow pointing up on right side
-								ctx.moveTo(toX, toY);
-								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
-								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
-							} else {
-								// Arrow pointing up (into parent's bottom)
-								ctx.moveTo(toX, toY);
-								ctx.lineTo(toX - root.arrowSize, toY - root.arrowSize);
-								ctx.lineTo(toX + root.arrowSize, toY - root.arrowSize);
-							}
-							ctx.closePath();
-							ctx.fill();
-							
-							ctx.setLineDash([]);  // Reset line dash
-							
-							// Draw revoke count label (red number only)
-							// Position on the line to avoid overlapping
-							var labelX;
-							var labelY;
-							
-							if (fromLayout.x !== toLayout.x) {
-								// For horizontal connections, put label on horizontal segment
-								labelX = (fromX + toX) / 2;
-								labelY = (fromY + toY) / 2 - 10;
-							} else {
-								// For vertical connections, put label next to line
-								labelX = toX + 15;
-								labelY = (fromY + toY) / 2;
-							}
-							
-							ctx.fillStyle = root.revokeTextColor;
-							ctx.font = "bold 12px " + Style.fontFamily;
-							ctx.textAlign = "center";
-							ctx.textBaseline = "middle";
-							var revokeText = revokeEdge.m_revokedCount.toString();
-							
-							// Draw background
-							var textWidth = ctx.measureText(revokeText).width;
-							ctx.fillStyle = Style.backgroundColor;
-							ctx.fillRect(labelX - textWidth / 2 - 4, labelY - 8, textWidth + 8, 16);
-							
-							ctx.fillStyle = root.revokeTextColor;
-							ctx.fillText(revokeText, labelX, labelY);
-						}
-					}
-				}
-				
-				// Recursively process children
-				if (nodeLayout.children) {
-					for (let i = 0; i < nodeLayout.children.length; i++) {
-						drawNodeRevokeEdges(nodeLayout.children[i]);
-					}
-				}
-			}
-			
-			drawNodeRevokeEdges(layout);
+
 		}
 		
 		function drawNodes(ctx, layout) {
@@ -565,8 +432,7 @@ Item {
 			// A = available (free), B = bound, C = total
 			let totalCount = node.m_transferredCount || node.m_initialCount || node.m_productCount || 0;
 			let boundCount = node.m_boundCount || 0;
-			let remainingCount = node.m_productCount || 0;
-			let availableCount = remainingCount - boundCount;
+			let availableCount = totalCount - boundCount;
 			
 			// Draw label
 			ctx.font = "11px " + Style.fontFamily;
