@@ -668,14 +668,15 @@ ViewBase {
 						Flickable {
 							id: canvasFlickable
 							width: parent.width
-							height: Math.min(licenseTreeCanvas.implicitHeight, 300)
+							height: Math.min(licenseTreeCanvas.height, 300)
 							contentWidth: licenseTreeCanvas.width;
-							contentHeight: licenseTreeCanvas.implicitHeight;
+							contentHeight: licenseTreeCanvas.height;
 							clip: true;
 
 							LicenseTreeCanvas {
 								id: licenseTreeCanvas;
 								width: bodyColumn.width
+								height: treeHeight
 								treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
 								currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
 							}

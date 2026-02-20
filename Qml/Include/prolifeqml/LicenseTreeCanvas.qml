@@ -657,25 +657,6 @@ Item {
 		}
 	}
 	
-	// onTreeDataChanged: {
-	// 	if (treeData) {
-	// 		// Recalculate layout with proper X coordinates
-	// 		let layout = canvas.calculateLayout(treeData);
-	// 		if (layout) {
-	// 			canvas.assignXCoordinates(layout, 20);
-				
-	// 			// Calculate required canvas size
-	// 			let maxX = calculateMaxX(layout);
-	// 			let maxY = calculateMaxY(layout);
-				
-	// 			root.width = maxX + root.nodeWidth + 40;
-	// 			root.height = maxY + root.nodeHeight + 40;
-	// 		}
-			
-	// 		canvas.requestPaint();
-	// 	}
-	// }
-	
 	function calculateMaxX(layout) {
 		if (!layout) return 0;
 		
