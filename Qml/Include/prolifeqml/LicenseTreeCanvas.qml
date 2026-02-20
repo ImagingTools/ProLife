@@ -429,10 +429,11 @@ Item {
 			}
 			
 			// Count info - display as (A/B/C) format with colors
-			// A = available (free), B = bound, C = total
+			// A = available (not bound, not split out), B = bound, C = total allocated
 			let totalCount = node.m_transferredCount || node.m_initialCount || node.m_productCount || 0;
 			let boundCount = node.m_boundCount || 0;
-			let availableCount = totalCount - boundCount;
+			let productCount = node.m_productCount || 0;  // Remaining after splits/revokes
+			let availableCount = productCount - boundCount;  // Free licenses at this node
 			
 			// Draw label
 			ctx.font = "11px " + Style.fontFamily;
