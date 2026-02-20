@@ -290,7 +290,8 @@ Item {
 						if (fromLayout && toLayout) {
 							// Calculate edge positions (edge-to-edge like split arrows)
 							// Offset horizontally to avoid overlapping with split arrows
-							let horizontalOffset = 40;  // Increased offset to prevent overlap
+							// Use larger offset and position on right side of nodes
+							let horizontalOffset = 60;  // Further increased to prevent overlap
 							let fromX = fromLayout.x + root.nodeWidth / 2 + horizontalOffset;
 							let fromY = fromLayout.y;  // Top edge of child node (from)
 							let toX = toLayout.x + root.nodeWidth / 2 + horizontalOffset;
@@ -405,11 +406,34 @@ Item {
 			let textY = y + 15;
 			let lineHeight = 20;
 			
-			// Serial number (used as name)
+			// Serial number (used as name) - wrap if too long
 			if (node.m_serialNumber) {
 				ctx.font = "bold 14px " + Style.fontFamily;
-				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 20), textX, textY);
-				textY += lineHeight + 5;
+				let serialText = node.m_serialNumber;
+				let maxWidth = root.nodeWidth - 20;
+				
+				// If serial number is too long, try to wrap it intelligently
+				if (ctx.measureText(serialText).width > maxWidth) {
+					// Try to split on dash or hyphen for hierarchical serial numbers
+					let parts = serialText.split(/[-_]/);
+					if (parts.length > 1 && parts[0].length > 0) {
+						// Draw first part on first line
+						ctx.fillText(truncateText(ctx, parts[0] + "-", maxWidth), textX, textY);
+						textY += lineHeight;
+						// Draw remaining parts on second line
+						let remaining = parts.slice(1).join("-");
+						ctx.fillText(truncateText(ctx, remaining, maxWidth), textX, textY);
+						textY += lineHeight;
+					} else {
+						// No good split point, just truncate
+						ctx.fillText(truncateText(ctx, serialText, maxWidth), textX, textY);
+						textY += lineHeight + 5;
+					}
+				} else {
+					// Fits on one line
+					ctx.fillText(serialText, textX, textY);
+					textY += lineHeight + 5;
+				}
 			}
 			
 			// Account info
