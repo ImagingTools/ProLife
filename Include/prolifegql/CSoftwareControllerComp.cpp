@@ -127,7 +127,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 
 	// Check if there are enough licenses to split
 	int originalCount = originalSoftwarePtr->GetProductCount();
-	if (licenseCount >= originalCount){
+	if (licenseCount > originalCount){
 		errorMessage = QString("Unable to split license. Error: License count to split (%1) must be less than available count (%2)").arg(licenseCount).arg(originalCount);
 		retVal.Version_1_0->ok = false;
 		retVal.Version_1_0->message = errorMessage;

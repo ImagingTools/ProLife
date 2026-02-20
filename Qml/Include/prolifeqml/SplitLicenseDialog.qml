@@ -54,7 +54,7 @@ Dialog {
 	onFinished: {
 		if (buttonId === Enums.ok){
 			// Validate inputs
-			if (spinBoxValue <= 0 || spinBoxValue >= splitLicenseDialog.maxAvailableCount){
+			if (spinBoxValue <= 0 || spinBoxValue > splitLicenseDialog.maxAvailableCount){
 				return;
 			}
 
@@ -175,7 +175,7 @@ Dialog {
 				}
 
 				function updateButtonState() {
-					var isValid = licenseCountSpinBox.value > 0 && licenseCountSpinBox.value < splitLicenseDialog.maxAvailableCount;
+					var isValid = licenseCountSpinBox.value > 0 && licenseCountSpinBox.value <= splitLicenseDialog.maxAvailableCount;
 					if (splitLicenseDialog.createNewMode) {
 						isValid = isValid && accountComboBox.currentIndex >= 0;
 					} else {
