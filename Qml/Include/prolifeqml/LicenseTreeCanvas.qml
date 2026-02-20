@@ -285,7 +285,8 @@ Item {
 							// Connect from child's left/right edge to parent's left/right edge
 							// to avoid overlapping with split arrows in the center
 							
-							let fromX, toX;
+							var fromX;
+							var toX;
 							
 							// Determine which edge to use based on relative horizontal positions
 							if (fromLayout.x < toLayout.x) {
@@ -302,8 +303,8 @@ Item {
 								toX = toLayout.x + root.nodeWidth + 10;
 							}
 							
-							let fromY = fromLayout.y;  // Top edge of child node (from)
-							let toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
+							var fromY = fromLayout.y;  // Top edge of child node (from)
+							var toY = toLayout.y + root.nodeHeight;  // Bottom edge of parent node (to)
 							
 							// Draw straight red dashed line with corner (matching split arrow style)
 							ctx.strokeStyle = root.revokeArrowColor;
