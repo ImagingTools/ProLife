@@ -374,16 +374,54 @@ static void BuildTreeRecursive(
 				if (maxDepth != 0){
 					// Check if we already have a node for this child (multiple splits to same child)
 					bool foundExisting = false;
-					for (auto& existingChild : children){
-						if (existingChild.id == childLicenseId){
+					int childIndex = -1;
+					for (int i = 0; i < children.size(); ++i){
+						if (children[i].id == childLicenseId){
 							// Accumulate the transferred count for multiple splits to same child
-							if (existingChild.transferredCount.HasValue()){
-								existingChild.transferredCount = existingChild.transferredCount.GetValue() + splitOut->GetMovedCount();
+							if (children[i].transferredCount.HasValue()){
+								children[i].transferredCount = children[i].transferredCount.GetValue() + splitOut->GetMovedCount();
 							} else {
-								existingChild.transferredCount = splitOut->GetMovedCount();
+								children[i].transferredCount = splitOut->GetMovedCount();
 							}
 							foundExisting = true;
+							childIndex = i;
 							break;
+						}
+					}
+					
+					// If we found an existing child and accumulated a transfer, also check for revokes
+					if (foundExisting && childIndex >= 0){
+						// Look for RevokeOut actions from this child back to the current parent
+						imtbase::IComplexCollectionFilter::FieldFilter childRevokeFilter;
+						childRevokeFilter.fieldId = "targetId";
+						childRevokeFilter.filterValue = childLicenseId;
+						
+						imtbase::CComplexCollectionFilter childRevokeComplexFilter;
+						childRevokeComplexFilter.AddFieldFilter(childRevokeFilter);
+						
+						iprm::CParamsSet childRevokeParams;
+						childRevokeParams.SetEditableParameter("ComplexFilter", &childRevokeComplexFilter);
+						
+						imtbase::IObjectCollection::Ids childActionIds = userActionManager.GetUserActionIds(0, -1, &childRevokeParams);
+						
+						int totalRevoked = 0;
+						for (const QByteArray& childActionId : std::as_const(childActionIds)){
+							imtauth::IUserActionInfoUniquePtr childActionPtr = userActionManager.GetUserAction(childActionId);
+							if (childActionPtr.IsValid()){
+								imtauth::IUserRecentAction::ActionTypeInfo childActionTypeInfo = childActionPtr->GetActionTypeInfo();
+								if (childActionTypeInfo.id == "RevokeOut"){
+									iser::ISerializableSharedPtr childActionData = childActionPtr->GetActionData();
+									const prolifedata::CRevokeOutAction* childRevokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(childActionData.GetPtr());
+									if (childRevokeOut && childRevokeOut->GetParentLicenseId() == licenseId){
+										totalRevoked += childRevokeOut->GetRevokedCount();
+									}
+								}
+							}
+						}
+						
+						// Subtract total revoked from transferred count
+						if (totalRevoked > 0 && children[childIndex].transferredCount.HasValue()){
+							children[childIndex].transferredCount = children[childIndex].transferredCount.GetValue() - totalRevoked;
 						}
 					}
 					
@@ -398,6 +436,38 @@ static void BuildTreeRecursive(
 							childNode.transferredCount = splitOut->GetMovedCount();
 							childNode.initialCount = splitOut->GetInitialCount();
 							childNode.remainingCount = splitOut->GetInitialCount() - splitOut->GetMovedCount();
+							
+							// Subtract any revoked amounts from the transferred count
+							// Look for RevokeOut actions from this child back to the current parent
+							imtbase::IComplexCollectionFilter::FieldFilter childRevokeFilter;
+							childRevokeFilter.fieldId = "targetId";
+							childRevokeFilter.filterValue = childLicenseId;
+							
+							imtbase::CComplexCollectionFilter childRevokeComplexFilter;
+							childRevokeComplexFilter.AddFieldFilter(childRevokeFilter);
+							
+							iprm::CParamsSet childRevokeParams;
+							childRevokeParams.SetEditableParameter("ComplexFilter", &childRevokeComplexFilter);
+							
+							imtbase::IObjectCollection::Ids childActionIds = userActionManager.GetUserActionIds(0, -1, &childRevokeParams);
+							
+							for (const QByteArray& childActionId : std::as_const(childActionIds)){
+								imtauth::IUserActionInfoUniquePtr childActionPtr = userActionManager.GetUserAction(childActionId);
+								if (childActionPtr.IsValid()){
+									imtauth::IUserRecentAction::ActionTypeInfo childActionTypeInfo = childActionPtr->GetActionTypeInfo();
+									if (childActionTypeInfo.id == "RevokeOut"){
+										iser::ISerializableSharedPtr childActionData = childActionPtr->GetActionData();
+										const prolifedata::CRevokeOutAction* childRevokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(childActionData.GetPtr());
+										if (childRevokeOut && childRevokeOut->GetParentLicenseId() == licenseId){
+											// This child revoked licenses back to current node - subtract from transferred count
+											if (childNode.transferredCount.HasValue()){
+												childNode.transferredCount = childNode.transferredCount.GetValue() - childRevokeOut->GetRevokedCount();
+											}
+										}
+									}
+								}
+							}
+							
 							children.append(childNode);
 						}
 					}
