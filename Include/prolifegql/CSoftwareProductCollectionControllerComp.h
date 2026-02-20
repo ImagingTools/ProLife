@@ -74,6 +74,7 @@ private:
 				QString& errorMessage) const;
 	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
+	void PopulateBoundCountInTree(sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node) const;
 
 private:
 	imtbase::CTimeFilterParam m_licenseCreationTimeParam;

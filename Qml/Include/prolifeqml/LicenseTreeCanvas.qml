@@ -26,10 +26,7 @@ Item {
 	property int contentOffsetX: 0  // Horizontal offset for centering
 	
 	readonly property int legendHeight: 50  // Height of legend + margin
-	
-	// Override the implicit height to include legend
-	implicitHeight: treeHeight + legendHeight
-	
+
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
