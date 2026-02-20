@@ -88,6 +88,11 @@ ViewBase {
 			expirationEditor.readOnly = !canChangeExpiration;
 			unlimitedSwitch.readOnly = !canChangeExpiration;
 			
+			// IsMultiple and ProductCount are read-only if license has children or has a parent
+			let hasHierarchy = softwareProductData.m_hasChildren || softwareProductData.m_hasParent;
+			multipleElementView.readOnly = hasHierarchy;
+			productCountElementView.readOnly = hasHierarchy;
+			
 			let ok =
 				canChangeProject ||
 				canChangeOrder ||
@@ -129,7 +134,18 @@ ViewBase {
 		serialNumberInput.readOnly = readOnly;
 		expirationEditor.readOnly = readOnly;
 		unlimitedSwitch.readOnly = readOnly;
-		// internalUseSwitchElementView.readOnly = readOnly
+		
+		// IsMultiple and ProductCount are also affected by hierarchy
+		if (readOnly){
+			multipleElementView.readOnly = true;
+			productCountElementView.readOnly = true;
+		}
+		else {
+			// When not globally read-only, check if hierarchy restrictions apply
+			let hasHierarchy = softwareProductData && (softwareProductData.m_hasChildren || softwareProductData.m_hasParent);
+			multipleElementView.readOnly = hasHierarchy;
+			productCountElementView.readOnly = hasHierarchy;
+		}
 	}
 	
 	function updateGui(){

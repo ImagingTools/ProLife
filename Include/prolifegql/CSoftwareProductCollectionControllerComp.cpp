@@ -522,6 +522,29 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
+	// Check if this license has a parent
+	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
+	representationPayload.hasParent = !parentInstanceId.isEmpty();
+
+	// Check if this license has children
+	if (m_objectCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
+		childFilter.fieldId = "ParentInstanceId";
+		childFilter.filterValue = id;
+
+		imtbase::CComplexCollectionFilter childComplexFilter;
+		childComplexFilter.AddFieldFilter(childFilter);
+
+		iprm::CParamsSet childFilterParam;
+		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
+
+		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		representationPayload.hasChildren = (childCount > 0);
+	}
+	else {
+		representationPayload.hasChildren = false;
+	}
+
 	// Build hierarchical license tree from UserActions
 	if (m_userActionManagerCompPtr.IsValid()){
 		QString treeError;
@@ -687,19 +710,46 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		softwareInfoPtr->SetInternalUse(*representation.internalUse);
 	}
 
-	if (representation.isMultiple){
-		softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
+	// Check if license has children or parent - if so, isMultiple and productCount cannot be changed
+	bool hasChildren = false;
+	bool hasParent = false;
+
+	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
+	hasParent = !parentInstanceId.isEmpty();
+
+	if (m_objectCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
+		childFilter.fieldId = "ParentInstanceId";
+		childFilter.filterValue = objectId;
+
+		imtbase::CComplexCollectionFilter childComplexFilter;
+		childComplexFilter.AddFieldFilter(childFilter);
+
+		iprm::CParamsSet childFilterParam;
+		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
+
+		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		hasChildren = (childCount > 0);
 	}
 
-	int productCount = 1;
+	bool canModifyProductSettings = !hasChildren && !hasParent;
 
-	if (representation.productCount){
-		if (*representation.productCount > 0){
-			productCount = *representation.productCount;
+	if (canModifyProductSettings){
+		if (representation.isMultiple){
+			softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
 		}
-	}
 
-	softwareInfoPtr->SetProductCount(productCount);
+		int productCount = 1;
+
+		if (representation.productCount){
+			if (*representation.productCount > 0){
+				productCount = *representation.productCount;
+			}
+		}
+
+		softwareInfoPtr->SetProductCount(productCount);
+	}
+	// If hasChildren or hasParent is true, we silently ignore changes to isMultiple and productCount
 
 	if (representation.parentInstanceId){
 		softwareInfoPtr->SetParentInstanceId(*representation.parentInstanceId);
