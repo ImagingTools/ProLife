@@ -65,6 +65,7 @@ type LicenseTreeNode {
 	initialCount: Integer
 	remainingCount: Integer
 	revokeEdges: [RevokeEdge]
+	boundCount: Integer  # Number of licenses bound to hardware
 }
 
 type SoftwareProductData {

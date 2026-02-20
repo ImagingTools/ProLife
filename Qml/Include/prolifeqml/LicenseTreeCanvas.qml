@@ -25,12 +25,22 @@ Item {
 	property int treeHeight: 0
 	property int contentOffsetX: 0  // Horizontal offset for centering
 	
+	readonly property int legendHeight: 50  // Height of legend + margin
+	
+	// Override the implicit height to include legend
+	implicitHeight: treeHeight + legendHeight
+	
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
 	readonly property color revokeArrowColor: "#DC3545"  // Red for revoke operations
 	readonly property color transferTextColor: "#28A745"
 	readonly property color revokeTextColor: "#DC3545"
+	
+	// License count colors for (A/B/C) format
+	readonly property color availableCountColor: "#28A745"  // Green for available
+	readonly property color boundCountColor: "#FFC107"      // Amber for bound
+	readonly property color totalCountColor: "#6C757D"      // Gray for total
 
 	onTreeDataChanged: {
 		updateContentDimensions();
@@ -65,11 +75,79 @@ Item {
 		canvas.requestPaint();
 	}
 	
+	// Legend at the top
+	Rectangle {
+		id: legend
+		width: parent.width
+		height: 40
+		color: Style.baseColor
+		border.color: Style.borderColor
+		border.width: 1
+		z: 10
+		
+		Row {
+			anchors.centerIn: parent
+			spacing: 30
+			
+			Row {
+				spacing: 8
+				Text {
+					text: "●"
+					color: root.availableCountColor
+					font.pixelSize: 16
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Available"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+			
+			Row {
+				spacing: 8
+				Text {
+					text: "●"
+					color: root.boundCountColor
+					font.pixelSize: 16
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Bound"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+			
+			Row {
+				spacing: 8
+				Text {
+					text: "●"
+					color: root.totalCountColor
+					font.pixelSize: 16
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Total"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+		}
+	}
+	
 	Canvas {
 		id: canvas
 		width: root.treeWidth
 		height: root.treeHeight
 		x: root.contentOffsetX
+		y: legend.height + 10  // Position below legend with margin
 
 		onPaint: {
 			if (!root.treeData) {
@@ -486,15 +564,59 @@ Item {
 				textY += lineHeight;
 			}
 			
-			// Count info - display as "remaining/total" format
-			// For child licenses, total should be the transferred amount (what was given via split)
-			ctx.font = "bold 12px " + Style.fontFamily;
-			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
-			let remaining = node.m_productCount || 0;
-			let total = node.m_transferredCount || node.m_initialCount || remaining;
-			let countText = "Licenses: " + remaining + "/" + total;
+			// Count info - display as (A/B/C) format with colors
+			// A = available (free), B = bound, C = total
+			let totalCount = node.m_transferredCount || node.m_initialCount || node.m_productCount || 0;
+			let boundCount = node.m_boundCount || 0;
+			let remainingCount = node.m_productCount || 0;
+			let availableCount = remainingCount - boundCount;
 			
-			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
+			// Draw label
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("Licenses: (", textX, textY);
+			
+			// Calculate positions for colored numbers
+			let labelWidth = ctx.measureText("Licenses: (").width;
+			let currentX = textX + labelWidth;
+			
+			// Draw available count in green
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.availableCountColor;
+			let availableText = availableCount.toString();
+			ctx.fillText(availableText, currentX, textY);
+			currentX += ctx.measureText(availableText).width;
+			
+			// Draw separator
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("/", currentX, textY);
+			currentX += ctx.measureText("/").width;
+			
+			// Draw bound count in amber
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.boundCountColor;
+			let boundText = boundCount.toString();
+			ctx.fillText(boundText, currentX, textY);
+			currentX += ctx.measureText(boundText).width;
+			
+			// Draw separator
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("/", currentX, textY);
+			currentX += ctx.measureText("/").width;
+			
+			// Draw total count in gray
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.totalCountColor;
+			let totalText = totalCount.toString();
+			ctx.fillText(totalText, currentX, textY);
+			currentX += ctx.measureText(totalText).width;
+			
+			// Draw closing parenthesis
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText(")", currentX, textY);
 			
 			// Draw children
 			if (layout.children) {

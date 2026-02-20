@@ -59,7 +59,7 @@ Dialog {
 				anchors.fill: parent
 				anchors.margins: Style.marginL
 				contentWidth: licenseTreeCanvas.treeWidth
-				contentHeight: licenseTreeCanvas.treeHeight
+				contentHeight: licenseTreeCanvas.implicitHeight
 				clip: true
 
 				LicenseTreeCanvas {

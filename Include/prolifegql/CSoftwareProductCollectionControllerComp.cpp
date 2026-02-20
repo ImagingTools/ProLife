@@ -457,6 +457,45 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 	return retVal;
 }
 
+// Helper function to recursively populate boundCount for all nodes in the license tree
+void PopulateBoundCountInTree(
+	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
+	const imtbase::IObjectCollectionCompPtr& hardwareBindingCollectionCompPtr)
+{
+	if (!node.id.HasValue()){
+		return;
+	}
+
+	// Calculate bound count for this node
+	int boundCount = 0;
+	if (hardwareBindingCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
+		arrayFieldFilter.fieldId = "SoftwareIds";
+		arrayFieldFilter.filterValue = QVariantList({node.id.GetValue()});
+		arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
+
+		imtbase::CComplexCollectionFilter arrayComplexFilter;
+		arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
+
+		iprm::CParamsSet arrayFilterParam;
+		arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
+
+		QByteArrayList hardwareBindingIds = hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
+		boundCount = hardwareBindingIds.size();
+	}
+
+	node.boundCount = boundCount;
+
+	// Recursively process children
+	if (node.children.HasValue()){
+		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> childList = node.children.GetValue().ToList();
+		for (int i = 0; i < childList.size(); ++i){
+			PopulateBoundCountInTree(childList[i], hardwareBindingCollectionCompPtr);
+		}
+		node.children.Emplace().FromList(childList);
+	}
+}
+
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
@@ -556,6 +595,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 			true);
 
 		if (rootNode.id.HasValue()){
+			// Populate boundCount for all nodes in the tree
+			PopulateBoundCountInTree(rootNode, m_hardwareBindingCollectionCompPtr);
 			representationPayload.licenseTree = rootNode;
 		}
 	}
