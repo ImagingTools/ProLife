@@ -249,26 +249,80 @@ Dialog {
 							m_filterValueType: "String"
 							m_filterOperations: ["Not", "Equal"]
 						}
-						
-						FieldFilter {
-							id: emptyHardwareFilter
-							m_fieldId: "HardwareId"
-							m_filterValue: ""
-							m_filterValueType: "String"
-							m_filterOperations: ["Equal"]
+
+						GroupFilter {
+							id: notIsMultiSoftwareFilter
+							m_logicalOperation: "And"
+
+							FieldFilter {
+								id: isMultipleFilter
+								m_fieldId: "IsMultiProduct"
+								m_filterValue: "false"
+								m_filterValueType: "Bool"
+								m_filterOperations: ["Equal"]
+							}
+
+							ArrayFieldFilter {
+								id: emptyHardwareFilter
+								m_fieldId: "HardwareId"
+								m_filterValueType: "String"
+								m_filterOperations: ["ArrayIsEmpty"]
+							}
 						}
-						
+
+						GroupFilter {
+							id: isMultiSoftwareFilter
+							m_logicalOperation: "And"
+
+							FieldFilter {
+								id: isMultipleFilter2
+								m_fieldId: "IsMultiProduct"
+								m_filterValue: "true"
+								m_filterValueType: "Bool"
+								m_filterOperations: ["Equal"]
+							}
+
+							FieldFilter {
+								id: productCountFilter
+								m_fieldId: "ProductCount"
+								m_filterValue: "0"
+								m_filterValueType: "Integer"
+								m_filterOperations: ["Greater"]
+							}
+						}
+
+						GroupFilter {
+							id: softwareFilter
+							m_logicalOperation: "Or"
+						}
+
 						function updateData(){
 							dataController.collectionId = "SoftwareProducts"
 							
 							softwareProductCollection.collectionFilter.removeFilterByFieldId(productFilter.m_fieldId);
-							softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyHardwareFilter.m_fieldId);
+							// softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyHardwareFilter.m_fieldId);
 							softwareProductCollection.collectionFilter.removeFilterByFieldId(excludeFilter.m_fieldId);
 							softwareProductCollection.collectionFilter.removeFilterByFieldId(licenseFilter.m_fieldId);
 							softwareProductCollection.collectionFilter.removeFilterByFieldId(emptyLicenseIdFilter.m_fieldId);
+							softwareProductCollection.collectionFilter.removeGroupFilter(softwareFilter);
 							
 							softwareProductCollection.collectionFilter.addFieldFilter(productFilter);
-							// softwareProductCollection.collectionFilter.addFieldFilter(emptyHardwareFilter); // ???
+
+							// Not multi software filter
+							notIsMultiSoftwareFilter.emplaceFieldFilters()
+							notIsMultiSoftwareFilter.m_fieldFilters.addElement(isMultipleFilter)
+							notIsMultiSoftwareFilter.m_fieldFilters.addElement(emptyHardwareFilter)
+
+							// Multi software filter
+							isMultiSoftwareFilter.emplaceFieldFilters()
+							isMultiSoftwareFilter.m_fieldFilters.addElement(isMultipleFilter2)
+							isMultiSoftwareFilter.m_fieldFilters.addElement(productCountFilter)
+
+							softwareFilter.emplaceGroupFilters()
+							softwareFilter.m_groupFilters.addElement(notIsMultiSoftwareFilter)
+							softwareFilter.m_groupFilters.addElement(isMultiSoftwareFilter)
+
+							softwareProductCollection.collectionFilter.addGroupFilter(softwareFilter)
 							
 							if (productEditor.usedLicensesModel){
 								for(var i = 0; i < productEditor.usedLicensesModel.getItemsCount(); i++){
