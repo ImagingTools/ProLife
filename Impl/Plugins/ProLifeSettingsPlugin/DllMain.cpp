@@ -14,12 +14,12 @@ IMT_REGISTER_PLUGIN(
 			imtservice::IConnectionCollectionPlugin,
 			imtservice::TConnectionCollectionPluginComponentImpl<CProLifeSettingsPlugin>,
 			ServiceSettings,
-			ProLifeSettings);
+			ProLifeServerSettings);
 
 
 		IMT_REGISTER_PLUGIN(
 			imtservice::IObjectCollectionPlugin,
 			imtservice::TObjectCollectionPluginComponentImpl<CProLifeSettingsPlugin>,
 			ServiceLog,
-			ProLifeSettings);
+			ProLifeServerLog);
 
