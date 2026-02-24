@@ -2,7 +2,11 @@ UPDATE "SoftwareInstances"
 SET "DataMetaInfo" = jsonb_set(
     "DataMetaInfo",
     '{HardwareId}',
-    to_jsonb(ARRAY["DataMetaInfo"->>'HardwareId']),
+    CASE
+        WHEN "DataMetaInfo"->>'HardwareId' = ''
+            THEN '[]'::jsonb
+        ELSE to_jsonb(ARRAY["DataMetaInfo"->>'HardwareId'])
+    END,
     false
 )
 WHERE
