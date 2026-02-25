@@ -27,10 +27,6 @@
 namespace prolifedata
 {
 
-// Constants for operation types
-const QString OPERATION_TYPE_SPLIT = "split";
-
-
 QString GetNameFromDeviceProductionStatus(prolifedata::IDeviceInfo::DeviceProductionStatus status)
 {
 	switch (status){
