@@ -71,33 +71,18 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 
 		return true;
 	}
-	else if (typeId == QByteArrayLiteral("IotDevice")){
-		QByteArray factoryNumber = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_FACTORY_NUMBER).toByteArray();
-		representation["FactoryNumber"] = QString(factoryNumber);
-
-		QByteArray modelNumber = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEM_NUMBER).toByteArray();
-		representation["ModelNumber"] = QString(modelNumber);
+	else if (typeId == QByteArrayLiteral("SerialNumber")){
+		QByteArray factoryNumber = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_SERIAL_NUMBER).toByteArray();
+		representation["SerialNumber"] = QString(factoryNumber);
 
 		QByteArray manufacturer = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MANUFACTURER).toByteArray();
 		representation["Manufacturer"] = QString(manufacturer);
 
-		QByteArray brandModel = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_BRAND_MODEL).toByteArray();
-		representation["BrandModel"] = QString(brandModel);
+		QByteArray modelId = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEL_ID).toByteArray();
+		representation["ModelId"] = QString(modelId);
 
-		QByteArray installationLocation = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_INSTALLATION_LOCATION).toByteArray();
-		representation["InstallationLocation"] = QString(installationLocation);
-
-		QByteArray connectionType = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_CONNECTION_TYPE).toByteArray();
-		representation["ConnectionType"] = QString(connectionType);
-
-		QByteArray resourceType = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_RESOURCE_TYPE).toByteArray();
-		representation["ResourceType"] = QString(resourceType);
-
-		QByteArray calibrationDate = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_CALIBRATION_DATE).toByteArray();
-		representation["CalibrationDate"] = QString(calibrationDate);
-
-		QByteArray comissionDate = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_COMMISSION_DATE).toByteArray();
-		representation["ComissionDate"] = QString(comissionDate);
+		QString modelName = metaInfo.GetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEL_NAME).toString();
+		representation["ModelName"] = QString(modelName);
 
 		return true;
 	}
@@ -180,40 +165,20 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 		return true;
 	}
 	else if (typeId == QByteArrayLiteral("IotDevice")){
-		if (representation.contains("FactoryNumber")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_FACTORY_NUMBER, representation.value("FactoryNumber"));
-		}
-
-		if (representation.contains("ModelNumber")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEM_NUMBER, representation.value("ModelNumber"));
+		if (representation.contains("SerialNumber")){
+			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_SERIAL_NUMBER, representation.value("SerialNumber"));
 		}
 
 		if (representation.contains("Manufacturer")){
 			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MANUFACTURER, representation.value("Manufacturer"));
 		}
 
-		if (representation.contains("BrandModel")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_BRAND_MODEL, representation.value("BrandModel"));
+		if (representation.contains("ModelId")){
+			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEL_ID, representation.value("ModelId"));
 		}
 
-		if (representation.contains("InstallationLocation")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_INSTALLATION_LOCATION, representation.value("InstallationLocation"));
-		}
-
-		if (representation.contains("ConnectionType")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_CONNECTION_TYPE, representation.value("ConnectionType"));
-		}
-
-		if (representation.contains("ResourceType")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_RESOURCE_TYPE, representation.value("ResourceType"));
-		}
-
-		if (representation.contains("CalibrationDate")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_CALIBRATION_DATE, representation.value("CalibrationDate"));
-		}
-
-		if (representation.contains("ComissionDate")){
-			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_COMMISSION_DATE, representation.value("ComissionDate"));
+		if (representation.contains("ModelName")){
+			metaInfo.SetMetaInfo(prolifedata::IIotDeviceInfo::MIT_MODEL_NAME, representation.value("ModelName"));
 		}
 
 		return true;

@@ -123,20 +123,10 @@ type IotDevicesListPayload {
 }
 
 type IotDeviceData {
-	id: ID
-	name: String
-	description: String
-	factoryNumber: String
-	modemNumber: String
-	manufacturer: String
-	brandModel: String
-	installationLocation: String
-	connectionType: String
-	resourceType: String
-	holeDiameter: String
-	deviceCategory: String
-	calibrationDate: String
-	commissionDate: String
+	serialNumber: ID
+	manufacturer: ID
+	modelId: ID
+	modelName: String
 }
 
 input IotDeviceDataInput {

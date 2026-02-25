@@ -167,13 +167,6 @@ DocCollectionViewDelegate {
 				Component { GqlBasedCommandsController {
 					typeId: "IotDevice";
 				}}
-
-			onIotDeviceDataChanged: {
-				if (iotDeviceData !== null && container.documentManager){
-					isNew = container.documentManager.documentIsNew(iotDeviceData.m_id)
-					checkPermissions()
-				}
-			}
 		}
 	}
 	

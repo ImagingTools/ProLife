@@ -19,30 +19,12 @@ public:
 	CIotDeviceInfo();
 
 	// reimplemented (IIotDeviceInfo)
-	virtual QByteArray GetFactoryNumber() const override;
-	virtual void SetFactoryNumber(const QByteArray& factoryNumber) override;
-	virtual QByteArray GetModemNumber() const override;
-	virtual void SetModemNumber(const QByteArray& modemNumber) override;
-	virtual QString GetManufacturer() const override;
-	virtual void SetManufacturer(const QString& manufacturer) override;
-	virtual QString GetBrandModel() const override;
-	virtual void SetBrandModel(const QString& brandModel) override;
-	virtual QString GetInstallationLocation() const override;
-	virtual void SetInstallationLocation(const QString& installationLocation) override;
-	virtual QString GetConnectionType() const override;
-	virtual void SetConnectionType(const QString& connectionType) override;
-	virtual QString GetResourceType() const override;
-	virtual void SetResourceType(const QString& resourceType) override;
-	virtual QString GetHoleDiameter() const override;
-	virtual void SetHoleDiameter(const QString& holeDiameter) override;
-	virtual QString GetDeviceCategory() const override;
-	virtual void SetDeviceCategory(const QString& deviceCategory) override;
-	virtual QString GetCalibrationDate() const override;
-	virtual void SetCalibrationDate(const QString& calibrationDate) override;
-	virtual QString GetCommissionDate() const override;
-	virtual void SetCommissionDate(const QString& commissionDate) override;
-	virtual QString GetDescription() const override;
-	virtual void SetDescription(const QString& description) override;
+	virtual QByteArray GetSerialNumber() const override;
+	virtual void SetSerialNumber(const QByteArray& serialNumber) override;
+	virtual QByteArray GetManufacturer() const override;
+	virtual void SetManufacturer(const QByteArray& manufacturer) override;
+	virtual QByteArray GetModelId() const override;
+	virtual void SetModelId(const QByteArray& modelId) override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -57,18 +39,9 @@ public:
 	virtual bool ResetData(CompatibilityMode mode = CM_WITHOUT_REFS) override;
 
 private:
-	QByteArray m_factoryNumber;
-	QByteArray m_modemNumber;
-	QString m_manufacturer;
-	QString m_brandModel;
-	QString m_installationLocation;
-	QString m_connectionType;
-	QString m_resourceType;
-	QString m_holeDiameter;
-	QString m_deviceCategory;
-	QString m_calibrationDate;
-	QString m_commissionDate;
-	QString m_description;
+	QByteArray m_serialNumber;
+	QByteArray m_manufacturer;
+	QByteArray m_modelId;
 };
 
 

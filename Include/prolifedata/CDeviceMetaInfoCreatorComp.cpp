@@ -134,17 +134,9 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 
 	const COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<const COrderedIdentifiableIotDeviceInfo*>(dataPtr);
 	if (iotDeviceInfoPtr != nullptr){
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_FACTORY_NUMBER, iotDeviceInfoPtr->GetFactoryNumber());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_MODEM_NUMBER, iotDeviceInfoPtr->GetModemNumber());
+		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_SERIAL_NUMBER, iotDeviceInfoPtr->GetSerialNumber());
 		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_MANUFACTURER, iotDeviceInfoPtr->GetManufacturer());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_BRAND_MODEL, iotDeviceInfoPtr->GetBrandModel());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_INSTALLATION_LOCATION, iotDeviceInfoPtr->GetInstallationLocation());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_CONNECTION_TYPE, iotDeviceInfoPtr->GetConnectionType());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_RESOURCE_TYPE, iotDeviceInfoPtr->GetResourceType());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_HOLE_DIAMETER, iotDeviceInfoPtr->GetHoleDiameter());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_DEVICE_CATEGORY, iotDeviceInfoPtr->GetDeviceCategory());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_CALIBRATION_DATE, iotDeviceInfoPtr->GetCalibrationDate());
-		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_COMMISSION_DATE, iotDeviceInfoPtr->GetCommissionDate());
+		metaInfoPtr->SetMetaInfo(IIotDeviceInfo::MIT_MODEL_ID, iotDeviceInfoPtr->GetModelId());
 
 		return true;
 	}
