@@ -1,3 +1,4 @@
+#include "imtlic/IProductInstanceInfo.h"
 #include <prolifegql/CCustomerCollectionControllerComp.h>
 
 
@@ -37,6 +38,37 @@ void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
 			}
 		}
 	}
+}
+
+
+bool CCustomerCollectionControllerComp::OnBeforeRemoveElements(
+			const QByteArrayList& elementIds,
+			const imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	if (m_softwareCollectionCompPtr.IsValid()){
+		if (!elementIds.isEmpty()){
+			for (const QByteArray& elementId : elementIds){
+				istd::TDelPtr<const iprm::IParamsSet> customerIdFilterParamPtr = CreateComplexFilter("CustomerId", elementId);
+				if (customerIdFilterParamPtr.IsValid()){
+					imtbase::ICollectionInfo::Ids softwareIds = m_softwareCollectionCompPtr->GetElementIds(0, -1, customerIdFilterParamPtr.GetPtr());
+					for (const QByteArray& softwareId : softwareIds){
+						imtbase::IObjectCollection::DataPtr dataPtr;
+						if (m_softwareCollectionCompPtr->GetObjectData(softwareId, dataPtr)){
+							imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+							if (productInstanceInfoPtr != nullptr){
+								QByteArray productId = productInstanceInfoPtr->GetProductId();
+								productInstanceInfoPtr->SetupProductInstance(productId, "", "");
+								m_softwareCollectionCompPtr->SetObjectData(softwareId, *productInstanceInfoPtr);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true;
 }
 
 

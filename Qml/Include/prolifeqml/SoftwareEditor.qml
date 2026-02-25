@@ -19,8 +19,9 @@ ViewBase {
 	
 	property var productLicensesModel: TreeItemModel{}
 
-	property SoftwareProductData softwareProductData: model ? model : null;
+	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
+	
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
 			CachedProductCollection.updateModel();
@@ -87,6 +88,11 @@ ViewBase {
 			expirationEditor.readOnly = !canChangeExpiration;
 			unlimitedSwitch.readOnly = !canChangeExpiration;
 			
+			// IsMultiple and ProductCount are read-only if license has children or has a parent
+			let hasHierarchy = softwareProductData.m_hasChildren || softwareProductData.m_hasParent;
+			multipleElementView.readOnly = hasHierarchy;
+			productCountElementView.readOnly = hasHierarchy;
+			
 			let ok =
 				canChangeProject ||
 				canChangeOrder ||
@@ -128,7 +134,18 @@ ViewBase {
 		serialNumberInput.readOnly = readOnly;
 		expirationEditor.readOnly = readOnly;
 		unlimitedSwitch.readOnly = readOnly;
-		// internalUseSwitchElementView.readOnly = readOnly
+		
+		// IsMultiple and ProductCount are also affected by hierarchy
+		if (readOnly){
+			multipleElementView.readOnly = true;
+			productCountElementView.readOnly = true;
+		}
+		else {
+			// When not globally read-only, check if hierarchy restrictions apply
+			let hasHierarchy = softwareProductData && (softwareProductData.m_hasChildren || softwareProductData.m_hasParent);
+			multipleElementView.readOnly = hasHierarchy;
+			productCountElementView.readOnly = hasHierarchy;
+		}
 	}
 	
 	function updateGui(){
@@ -599,32 +616,138 @@ ViewBase {
 					}
 				}
 			}
-			
-			GroupHeaderView {
-				width: parent.width;
-				visible: root.softwareProductData !== null;
+
+			ElementView {
+				name: qsTr("License Hierarchy")
+				width: parent.width
+				bottomComp: canvasComp
 				
-				title: qsTr("License Hierarchy");
-				// groupView: hierarchyGroup;
+				controlComp: Component {
+					ToolButton {
+						id: expandButton
+						width: Style.buttonWidthM
+						height: width
+						iconSource: "../../../" + Style.getIconPath(
+							"Icons/Expand", 
+							Icon.State.On, 
+							Icon.Mode.Normal
+						)
+						onClicked: {
+							root.expanded = !root.expanded
+						}
+					}
+				}
+
+				Component {
+					id: canvasComp
+
+					Item {
+						height: canvasFlickable.height
+
+						CustomScrollbar {
+							id: scrollbar;
+							z: parent.z + 1;
+							anchors.right: parent.right;
+							anchors.top: canvasFlickable.top;
+							anchors.bottom: canvasFlickable.bottom;
+							secondSize: 10;
+							targetItem: canvasFlickable;
+						}
+						
+						CustomScrollbar{
+							id: scrollHoriz;
+							z: parent.z + 1;
+							anchors.left: canvasFlickable.left;
+							anchors.right: canvasFlickable.right;
+							anchors.bottom: canvasFlickable.bottom;
+							secondSize: 10;
+							vertical: false;
+							targetItem: canvasFlickable;
+						}
+
+						Flickable {
+							id: canvasFlickable
+							width: parent.width
+							height: Math.min(licenseTreeCanvas.height, 300)
+							contentWidth: licenseTreeCanvas.width;
+							contentHeight: licenseTreeCanvas.height;
+							clip: true;
+
+							LicenseTreeCanvas {
+								id: licenseTreeCanvas;
+								width: treeWidth
+								height: treeHeight
+								treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+								currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+							}
+						}
+					}
+				}
 			}
+		}
+	}
 
-			Item {
-				id: hierarchyGroup;
-				width: parent.width;
-				height: contentHeight
-				visible: root.softwareProductData && root.softwareProductData.m_licenseTree;
-				
-				property int contentHeight: visible ? Math.max(400, licenseTreeCanvas.height) : 0
-				Flickable {
-					anchors.fill: parent;
-					contentWidth: licenseTreeCanvas.width;
-					contentHeight: licenseTreeCanvas.height;
-					clip: true;
+	property Rectangle background: null
+	property bool expanded: false
+	onExpandedChanged: {
+		if (expanded){
+			background = backgroundComp.createObject(root)
+		}
+		else{
+			background.destroy()
+		}
+	}
 
-					LicenseTreeCanvas {
-						id: licenseTreeCanvas;
-						treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
-						currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+	Component {
+		id: backgroundComp
+		Rectangle {
+			z: parent.z + 10
+			anchors.fill: parent
+			color: "gray"
+			visible: root.expanded
+			opacity: 0.4
+	
+			ControlArea {
+				id: backgroundControlArea
+				anchors.fill: parent
+				onClicked: {
+					root.expanded = false
+				}
+			}
+	
+			ControlArea {
+				anchors.fill: fullLicenseTreeCanvas
+			}
+	
+			ElementView {
+				id: fullLicenseTreeCanvas
+				anchors.horizontalCenter: parent.horizontalCenter
+				anchors.top: parent.top
+				anchors.topMargin: Style.sizeHintBXS
+				width: parent.width - 2*Style.sizeHintBXS
+
+				controlComp: Component {
+					ToolButton {
+						id: collapseButton
+						width: Style.buttonWidthM
+						height: width
+						iconSource: "../../../" + Style.getIconPath("Icons/Collapse", Icon.State.On, Icon.Mode.Normal)
+						onClicked: {
+							root.expanded = !root.expanded
+						}
+					}
+				}
+				bottomComp: Component {
+					Item {
+						height: licenseTreeCanvas.height
+						LicenseTreeCanvas {
+							id: licenseTreeCanvas
+							anchors.centerIn: parent
+							width: treeWidth
+							height: treeHeight
+							treeData: root.softwareProductData ? root.softwareProductData.m_licenseTree : null;
+							currentLicenseId: root.softwareProductData ? root.softwareProductData.m_id : "";
+						}
 					}
 				}
 			}

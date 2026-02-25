@@ -13,6 +13,9 @@ namespace prolifedata
 class IIotDeviceInfo: virtual public iser::IObject
 {
 public:
+	// Metering device
+	// SerialNumber/Manufacturer/Model
+
 	enum MetaInfoTypes
 	{
 		MIT_FACTORY_NUMBER = idoc::IDocumentMetaInfo::MIT_USER + 100,

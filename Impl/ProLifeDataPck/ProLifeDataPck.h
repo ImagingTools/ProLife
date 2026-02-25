@@ -20,6 +20,10 @@
 #include <prolifedata/CSoftwareTransferInfo.h>
 #include <prolifedata/CIotDeviceInfo.h>
 #include <prolifedata/CIotDeviceMetaInfoCreatorComp.h>
+#include <prolifedata/CSplitInAction.h>
+#include <prolifedata/CSplitOutAction.h>
+#include <prolifedata/CRevokeInAction.h>
+#include <prolifedata/CRevokeOutAction.h>
 
 
 namespace ProLifeDataPck
@@ -69,6 +73,26 @@ typedef icomp::TModelCompWrap<
 						iser::ISerializable,
 						istd::IChangeable>> IotDeviceInfo;
 typedef prolifedata::CIotDeviceMetaInfoCreatorComp IotDeviceMetaInfoCreator;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CSplitInAction,
+						iser::ISerializable,
+						istd::IChangeable>> SplitInAction;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CSplitOutAction,
+						iser::ISerializable,
+						istd::IChangeable>> SplitOutAction;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CRevokeInAction,
+						iser::ISerializable,
+						istd::IChangeable>> RevokeInAction;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CRevokeOutAction,
+						iser::ISerializable,
+						istd::IChangeable>> RevokeOutAction;
 
 
 } // namespace ProLifeDataPck

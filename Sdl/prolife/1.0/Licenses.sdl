@@ -46,6 +46,12 @@ type SoftwareProductsListPayload {
 	notification: NotificationItem
 }
 
+type RevokeEdge {
+	fromNodeId: ID!
+	toNodeId: ID!
+	revokedCount: Integer
+}
+
 type LicenseTreeNode {
 	id: ID!
 	serialNumber: String
@@ -54,6 +60,12 @@ type LicenseTreeNode {
 	accountId: ID
 	accountName: String
 	children: [LicenseTreeNode]
+	operationType: String
+	transferredCount: Integer
+	initialCount: Integer
+	remainingCount: Integer
+	revokeEdges: [RevokeEdge]
+	boundCount: Integer  # Number of licenses bound to hardware
 }
 
 type SoftwareProductData {
@@ -72,6 +84,8 @@ type SoftwareProductData {
 	parentInstanceId: ID
 	licenseTree: LicenseTreeNode
 	customerId: ID
+	hasChildren: Bool
+	hasParent: Bool
 }
 
 input SoftwareProductDataInput {
@@ -83,6 +97,7 @@ input SplitLicenseInput {
 	licenseId: ID!
 	licenseCount: Integer!
 	accountId: ID!
+	targetLicenseId: ID  # Optional: if provided, transfers licenses to existing child instead of creating new
 }
 
 type SplitLicensePayload {

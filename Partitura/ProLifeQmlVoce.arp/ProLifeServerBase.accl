@@ -9,7 +9,7 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="AdministrationRepositories" X="725" Y="750" Note=""/>
-        <Element ComponentName="AuthorizableServerFramework" X="600" Y="125" Note=""/>
+        <Element ComponentName="AuthorizableServerFramework" X="600" Y="175" Note=""/>
         <Element ComponentName="DocumentManager" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
         <Element ComponentName="Language" X="525" Y="650" Note=""/>
@@ -17,13 +17,17 @@
         <Element ComponentName="LisaGQLEngine" X="775" Y="500" Note=""/>
         <Element ComponentName="LisaRepositories" X="1025" Y="675" Note=""/>
         <Element ComponentName="Migrations" X="1050" Y="125" Note=""/>
-        <Element ComponentName="ProLifeHandlers" X="600" Y="300" Note=""/>
+        <Element ComponentName="ProLifeHandlers" X="625" Y="400" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="500" Y="500" Note=""/>
         <Element ComponentName="ProLifeServerSettings" X="175" Y="150" Note=""/>
         <Element ComponentName="PumaDatabaseConnector" X="150" Y="325" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="500" Note=""/>
+        <Element ComponentName="RevokeInAction" X="700" Y="50" Note=""/>
+        <Element ComponentName="RevokeOutAction" X="925" Y="50" Note=""/>
         <Element ComponentName="RolesModelUpdateBridge" X="200" Y="750" Note=""/>
         <Element ComponentName="SmtpClient" X="125" Y="575" Note=""/>
+        <Element ComponentName="SplitInAction" X="275" Y="50" Note=""/>
+        <Element ComponentName="SplitOutAction" X="475" Y="50" Note=""/>
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
         <Element ComponentName="UsersModelUpdateBridge" X="200" Y="675" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
@@ -41,6 +45,17 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DocumentManager">
+            <PositionMap>
+                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
+                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
+                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -65,17 +80,6 @@
                 <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
                 <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
                 <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DocumentManager">
-            <PositionMap>
-                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
-                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
-                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
-                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

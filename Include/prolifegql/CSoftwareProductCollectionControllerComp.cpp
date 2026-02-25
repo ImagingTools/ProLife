@@ -458,6 +458,43 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 }
 
 
+void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node) const
+{
+	if (!node.id.HasValue()){
+		return;
+	}
+
+	// Calculate bound count for this node
+	int boundCount = 0;
+	if (m_bindingCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter arrayFieldFilter;
+		arrayFieldFilter.fieldId = "SoftwareIds";
+		arrayFieldFilter.filterValue = QVariantList({node.id.GetValue()});
+		arrayFieldFilter.filterOperation = imtbase::IComplexCollectionFilter::FieldOperation::FO_ARRAY_HAS_ANY;
+
+		imtbase::CComplexCollectionFilter arrayComplexFilter;
+		arrayComplexFilter.AddFieldFilter(arrayFieldFilter);
+
+		iprm::CParamsSet arrayFilterParam;
+		arrayFilterParam.SetEditableParameter("ComplexFilter", &arrayComplexFilter);
+
+		QByteArrayList hardwareBindingIds = m_bindingCollectionCompPtr->GetElementIds(0, -1, &arrayFilterParam);
+		boundCount = hardwareBindingIds.size();
+	}
+
+	node.boundCount = boundCount;
+
+	if (node.children.HasValue()){
+		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> childList = node.children.GetValue().ToList();
+		for (int i = 0; i < childList.size(); ++i){
+			PopulateBoundCountInTree(childList[i]);
+		}
+
+		node.children.Emplace().FromList(childList);
+	}
+}
+
+
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
 	const sdl::prolife::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
@@ -522,17 +559,46 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.productCount = softwareInfoPtr->GetProductCount();
 	representationPayload.parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 
-	// Build license tree using shared utility function
-	QString treeError;
-	auto treeNode = prolifedata::BuildLicenseTree(
-		id,
-		*m_objectCollectionCompPtr,
-		treeError);
-	
-	if (treeNode.has_value()){
-		representationPayload.licenseTree = treeNode.value();
+	// Check if this license has a parent
+	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
+	representationPayload.hasParent = !parentInstanceId.isEmpty();
+
+	// Check if this license has children
+	if (m_objectCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
+		childFilter.fieldId = "ParentInstanceId";
+		childFilter.filterValue = id;
+
+		imtbase::CComplexCollectionFilter childComplexFilter;
+		childComplexFilter.AddFieldFilter(childFilter);
+
+		iprm::CParamsSet childFilterParam;
+		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
+
+		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		representationPayload.hasChildren = (childCount > 0);
 	}
-	// If tree building fails, we just don't populate the field (it's optional)
+	else {
+		representationPayload.hasChildren = false;
+	}
+
+	// Build hierarchical license tree from UserActions
+	if (m_userActionManagerCompPtr.IsValid()){
+		QString treeError;
+		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode = prolifedata::BuildLicenseTreeFromActions(
+			id,
+			*m_objectCollectionCompPtr.GetPtr(),
+			*m_userActionManagerCompPtr.GetPtr(),
+			treeError,
+			true);
+
+		if (rootNode.id.HasValue()){
+			// Populate boundCount for all nodes in the tree
+			PopulateBoundCountInTree(rootNode);
+			representationPayload.licenseTree = rootNode;
+		}
+	}
+	// If tree building fails or UserActionManager unavailable, we just don't populate the field (it's optional)
 
 	return true;
 }
@@ -683,19 +749,46 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		softwareInfoPtr->SetInternalUse(*representation.internalUse);
 	}
 
-	if (representation.isMultiple){
-		softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
+	// Check if license has children or parent - if so, isMultiple and productCount cannot be changed
+	bool hasChildren = false;
+	bool hasParent = false;
+
+	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
+	hasParent = !parentInstanceId.isEmpty();
+
+	if (m_objectCollectionCompPtr.IsValid()){
+		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
+		childFilter.fieldId = "ParentInstanceId";
+		childFilter.filterValue = objectId;
+
+		imtbase::CComplexCollectionFilter childComplexFilter;
+		childComplexFilter.AddFieldFilter(childFilter);
+
+		iprm::CParamsSet childFilterParam;
+		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
+
+		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		hasChildren = (childCount > 0);
 	}
 
-	int productCount = 1;
+	bool canModifyProductSettings = !hasChildren && !hasParent;
 
-	if (representation.productCount){
-		if (*representation.productCount > 0){
-			productCount = *representation.productCount;
+	if (canModifyProductSettings){
+		if (representation.isMultiple){
+			softwareInfoPtr->SetMultiProduct(*representation.isMultiple);
 		}
-	}
 
-	softwareInfoPtr->SetProductCount(productCount);
+		int productCount = 1;
+
+		if (representation.productCount){
+			if (*representation.productCount > 0){
+				productCount = *representation.productCount;
+			}
+		}
+
+		softwareInfoPtr->SetProductCount(productCount);
+	}
+	// If hasChildren or hasParent is true, we silently ignore changes to isMultiple and productCount
 
 	if (representation.parentInstanceId){
 		softwareInfoPtr->SetParentInstanceId(*representation.parentInstanceId);

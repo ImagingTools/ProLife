@@ -17,8 +17,9 @@ Dialog {
 
 	property string licenseId: ""
 	property int maxAvailableCount: 0
-	property int currentCount: 1
 	property string errorMessage: ""
+
+	property BaseModel itemsModel: null
 
 	Component.onCompleted: {
 		splitLicenseDialog.fillButtons()
@@ -26,6 +27,12 @@ Dialog {
 
 	onLocalizationChanged: {
 		splitLicenseDialog.fillButtons()
+	}
+
+	onLicenseIdChanged: {
+		if (licenseId !== ""){
+			loadChildLicenses()
+		}
 	}
 
 	function fillButtons(){
@@ -36,11 +43,18 @@ Dialog {
 
 	property real spinBoxValue: 1
 	property string selectedAccountId: ""
+	property bool createNewMode: true
+	property string selectedTargetLicenseId: ""
+
+	function loadChildLicenses() {
+		childLicensesInput.m_parentLicenseId = splitLicenseDialog.licenseId
+		childLicensesRequest.send(childLicensesInput)
+	}
 
 	onFinished: {
 		if (buttonId === Enums.ok){
 			// Validate inputs
-			if (spinBoxValue <= 0 || spinBoxValue >= splitLicenseDialog.maxAvailableCount){
+			if (spinBoxValue <= 0 || spinBoxValue > splitLicenseDialog.maxAvailableCount){
 				return;
 			}
 
@@ -48,6 +62,11 @@ Dialog {
 			splitLicenseInput.m_licenseId = splitLicenseDialog.licenseId
 			splitLicenseInput.m_licenseCount = spinBoxValue
 			splitLicenseInput.m_accountId = selectedAccountId
+
+			// Set targetLicenseId only if in transfer mode
+			if (!createNewMode && selectedTargetLicenseId !== "") {
+				splitLicenseInput.m_targetLicenseId = selectedTargetLicenseId
+			}
 
 			splitLicenseRequest.send(splitLicenseInput);
 		}
@@ -58,20 +77,18 @@ Dialog {
 			width: splitLicenseDialog.width
 			height: splitLicenseDialog.height - 100
 
+			property BaseModel itemsModel: splitLicenseDialog.itemsModel
+			onItemsModelChanged: {
+				if (itemsModel){
+					targetLicenseComboBox.model = itemsModel
+				}
+			}
+
 			Column {
+				id: column
 				anchors.fill: parent
 				anchors.margins: Style.marginL
 				spacing: Style.marginL
-
-				// Error message display
-				BaseText {
-					id: errorText
-					width: parent.width
-					visible: splitLicenseDialog.errorMessage !== ""
-					text: splitLicenseDialog.errorMessage
-					color: Style.errorTextColor
-					wrapMode: Text.WordWrap
-				}
 
 				GroupElementView {
 					width: parent.width
@@ -87,7 +104,17 @@ Dialog {
 						description: qsTr("Max available count: ") + splitLicenseDialog.maxAvailableCount
 						onValueChanged: {
 							splitLicenseDialog.spinBoxValue = value
-							splitLicenseDialog.setButtonEnabled(Enums.ok, value > 0 && value < splitLicenseDialog.maxAvailableCount && accountComboBox.currentIndex >= 0);
+							column.updateButtonState()
+						}
+					}
+
+					SwitchElementView {
+						id: switchElementView
+						width: parent.width
+						name: qsTr("New License")
+						checked: true
+						onCheckedChanged: {
+							splitLicenseDialog.createNewMode = checked
 						}
 					}
 
@@ -98,13 +125,13 @@ Dialog {
 						nameId: "name"
 						model: CachedAccountCollection.collectionModel
 						controlWidth: 250
+						visible: splitLicenseDialog.createNewMode
 
 						onCurrentIndexChanged: {
 							if (currentIndex >= 0 && model){
 								splitLicenseDialog.selectedAccountId = model.getData("id", currentIndex)
 							}
-
-							splitLicenseDialog.setButtonEnabled(Enums.ok, licenseCountSpinBox.value > 0 && licenseCountSpinBox.value < splitLicenseDialog.maxAvailableCount && currentIndex >= 0);
+							column.updateButtonState()
 						}
 
 						bottomComp: currentIndex >= 0 ? undefined : accountErrorComp
@@ -117,6 +144,44 @@ Dialog {
 							}
 						}
 					}
+
+					ComboBoxElementView {
+						id: targetLicenseComboBox
+						width: parent.width
+						name: qsTr("Target child license")
+						nameId: "softwareId"
+						controlWidth: 250
+						visible: !splitLicenseDialog.createNewMode
+
+						onCurrentIndexChanged: {
+							if (currentIndex >= 0 && model){
+								splitLicenseDialog.selectedTargetLicenseId = model.get(currentIndex).item.m_id
+								// Auto-select the account of the target license
+								splitLicenseDialog.selectedAccountId = model.get(currentIndex).item.m_accountId
+							}
+							column.updateButtonState()
+						}
+
+						bottomComp: currentIndex >= 0 ? undefined : targetErrorComp
+
+						Component {
+							id: targetErrorComp
+							BaseText {
+								color: Style.errorTextColor;
+								text: qsTr("Please select a target license");
+							}
+						}
+					}
+				}
+
+				function updateButtonState() {
+					var isValid = licenseCountSpinBox.value > 0 && licenseCountSpinBox.value <= splitLicenseDialog.maxAvailableCount;
+					if (splitLicenseDialog.createNewMode) {
+						isValid = isValid && accountComboBox.currentIndex >= 0;
+					} else {
+						isValid = isValid && targetLicenseComboBox.currentIndex >= 0;
+					}
+					splitLicenseDialog.setButtonEnabled(Enums.ok, isValid);
 				}
 			}
 		}
@@ -139,10 +204,31 @@ Dialog {
 		}
 	}
 
+	// Child licenses request
+	ChildLicensesListInput {
+		id: childLicensesInput
+	}
+
+	GqlSdlRequestSender {
+		id: childLicensesRequest
+		requestType: 1
+		gqlCommandId: ProlifeLicensesSdlCommandIds.s_childLicensesList
+
+		sdlObjectComp: Component {
+			ChildLicensesListPayload {
+				onFinished: {
+					if (m_ok && m_items) {
+						splitLicenseDialog.itemsModel = m_items
+					}
+				}
+			}
+		}
+	}
+
 	Loading {
 		id: loading
 		anchors.fill: splitLicenseDialog
-		visible: splitLicenseRequest.state === "Loading"
+		visible: splitLicenseRequest.state === "Loading" || childLicensesRequest.state === "Loading"
 		background.color: Style.backgroundColor2;
 	}
 }

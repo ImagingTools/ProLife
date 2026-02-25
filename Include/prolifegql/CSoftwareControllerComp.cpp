@@ -1,10 +1,14 @@
 #include <prolifegql/CSoftwareControllerComp.h>
 
-// Standard includes
-#include <optional>
+
+// Qt includes
+#include <QJsonDocument>
+#include <QJsonObject>
 
 // ACF includes
 #include <iprm/CIdParam.h>
+#include <iprm/CTextParam.h>
+#include <iprm/TParamsPtr.h>
 
 // ImtCore includes
 #include <imtbase/CObjectLink.h>
@@ -15,6 +19,10 @@
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/ICustomerInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
+#include <prolifedata/CSplitInAction.h>
+#include <prolifedata/CSplitOutAction.h>
+#include <prolifedata/CRevokeInAction.h>
+#include <prolifedata/CRevokeOutAction.h>
 
 
 namespace prolifegql
@@ -23,7 +31,7 @@ namespace prolifegql
 
 sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense(
 			const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CSplitLicensePayload retVal;
@@ -82,6 +90,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	QByteArray licenseId = *input.licenseId;
 	int licenseCount = *input.licenseCount;
 	QByteArray accountId = *input.accountId;
+	QByteArray targetLicenseId = input.targetLicenseId ? *input.targetLicenseId : QByteArray();
 
 	// Validate license count
 	if (licenseCount <= 0){
@@ -118,7 +127,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 
 	// Check if there are enough licenses to split
 	int originalCount = originalSoftwarePtr->GetProductCount();
-	if (licenseCount >= originalCount){
+	if (licenseCount > originalCount){
 		errorMessage = QString("Unable to split license. Error: License count to split (%1) must be less than available count (%2)").arg(licenseCount).arg(originalCount);
 		retVal.Version_1_0->ok = false;
 		retVal.Version_1_0->message = errorMessage;
@@ -134,49 +143,148 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		return retVal;
 	}
 
-	// Create a new software instance for the split license
-	istd::TUniqueInterfacePtr<imtlic::IProductInstanceInfo> newSoftwareInstancePtr = m_softwareInfoFactCompPtr.CreateInstance();
-	if (!newSoftwareInstancePtr.IsValid()){
-		errorMessage = QString("Unable to split license. Error: Failed to create new software instance");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
+	QByteArray newLicenseId;
+	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* targetSoftwarePtr = nullptr;
+	bool isTransferMode = !targetLicenseId.isEmpty();
+
+	if (isTransferMode){
+		// Transfer mode: add licenses to existing child license
+		imtbase::IObjectCollection::DataPtr targetDataPtr;
+		if (!m_softwareProductCollectionCompPtr->GetObjectData(targetLicenseId, targetDataPtr)){
+			errorMessage = QString("Unable to split license. Error: Target license not found with ID '%1'").arg(QString::fromUtf8(targetLicenseId));
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		targetSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(targetDataPtr.GetPtr());
+		if (targetSoftwarePtr == nullptr){
+			errorMessage = QString("Unable to split license. Error: Invalid target license");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		// Verify target is a child of the source license
+		QByteArray targetParentId = targetSoftwarePtr->GetParentInstanceId();
+		if (targetParentId != licenseId){
+			errorMessage = QString("Unable to split license. Error: Target license is not a child of source license");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		// Verify target belongs to the correct account
+		QByteArray targetAccountId = targetSoftwarePtr->GetCustomerId();
+		if (targetAccountId != accountId){
+			errorMessage = QString("Unable to split license. Error: Target license belongs to different account");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		// Add licenses to target
+		int targetCurrentCount = targetSoftwarePtr->GetProductCount();
+		targetSoftwarePtr->SetProductCount(targetCurrentCount + licenseCount);
+
+		if (!m_softwareProductCollectionCompPtr->SetObjectData(targetLicenseId, *targetSoftwarePtr)){
+			errorMessage = QString("Unable to split license. Error: Failed to update target license");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
+
+		newLicenseId = targetLicenseId;
 	}
+	else {
+		// Create mode: create new child license
+		istd::TUniqueInterfacePtr<imtlic::IProductInstanceInfo> newSoftwareInstancePtr = m_softwareInfoFactCompPtr.CreateInstance();
+		if (!newSoftwareInstancePtr.IsValid()){
+			errorMessage = QString("Unable to split license. Error: Failed to create new software instance");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
 
-	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* newSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(newSoftwareInstancePtr.GetPtr());
-	if (newSoftwarePtr == nullptr){
-		errorMessage = QString("Unable to split license. Error: Failed to cast new software instance");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
-	}
+		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* newSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(newSoftwareInstancePtr.GetPtr());
+		if (newSoftwarePtr == nullptr){
+			errorMessage = QString("Unable to split license. Error: Failed to cast new software instance");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
 
-	QByteArray productId = originalSoftwarePtr->GetProductId();
+		QByteArray productId = originalSoftwarePtr->GetProductId();
 
-	// Copy properties from original license
-	if (!newSoftwarePtr->CopyFrom(*originalSoftwarePtr)){
-		errorMessage = QString("Unable to split license. Error: Failed to copy software");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
-	}
+		// Copy properties from original license
+		if (!newSoftwarePtr->CopyFrom(*originalSoftwarePtr)){
+			errorMessage = QString("Unable to split license. Error: Failed to copy software");
+			retVal.Version_1_0->ok = false;
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
 
-	// Generate new UUID for the split license
-	QByteArray newLicenseId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
-	newSoftwarePtr->SetObjectUuid(newLicenseId);
+		// Generate new UUID for the split license
+		newLicenseId = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+		newSoftwarePtr->SetObjectUuid(newLicenseId);
 
-	newSoftwarePtr->SetupProductInstance(productId, "", accountId);
-	newSoftwarePtr->SetProductCount(licenseCount);
-	newSoftwarePtr->SetSerialNumber("");
-	newSoftwarePtr->SetOrderId("");
-	newSoftwarePtr->SetParentInstanceId(licenseId);
+		newSoftwarePtr->SetupProductInstance(productId, "", accountId);
+		newSoftwarePtr->SetProductCount(licenseCount);
 
-	// Add the new software instance to the collection
-	QByteArray result = m_softwareProductCollectionCompPtr->InsertNewObject("SoftwareProduct", "", "", newSoftwareInstancePtr.GetPtr(), newLicenseId);
-	if (result.isEmpty()){
-		errorMessage = QString("Unable to split license. Error: Failed to add new license to collection");
-		retVal.Version_1_0->message = errorMessage;
-		return retVal;
+		// Generate hierarchical serial number: parent "A" -> child "A-1", "A-2", etc.
+		// Find next available index by checking existing serial numbers to avoid duplicates
+		QString parentSerialNumber = QString::fromUtf8(originalSoftwarePtr->GetSerialNumber());
+		int childIndex = 1;
+
+		imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+		fieldFilter.fieldId = "ParentInstanceId";
+		fieldFilter.filterValue = licenseId;
+	
+		imtbase::CComplexCollectionFilter complexFilter;
+		complexFilter.AddFieldFilter(fieldFilter);
+	
+		iprm::CParamsSet filterParam;
+		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+		// Get all existing children to find maximum index used
+		QByteArrayList childIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		int maxIndex = 0;
+		
+		for (const QByteArray& childId : childIds){
+			imtbase::IObjectCollection::DataPtr existingChildDataPtr;
+			if (m_softwareProductCollectionCompPtr->GetObjectData(childId, existingChildDataPtr)){
+				prolifedata::COrderedIdentifiableSoftwareInstanceInfo* existingChildPtr = 
+					dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(existingChildDataPtr.GetPtr());
+				if (existingChildPtr){
+					QString existingSerial = QString::fromUtf8(existingChildPtr->GetSerialNumber());
+					// Extract index from serial number (e.g., "A-3" -> 3)
+					QString expectedPrefix = parentSerialNumber.isEmpty() ? "" : parentSerialNumber + "-";
+					if (existingSerial.startsWith(expectedPrefix)){
+						QString indexPart = existingSerial.mid(expectedPrefix.length());
+						bool ok;
+						int index = indexPart.toInt(&ok);
+						if (ok && index > maxIndex){
+							maxIndex = index;
+						}
+					}
+				}
+			}
+		}
+		
+		childIndex = maxIndex + 1;
+
+		QString newSerialNumber = parentSerialNumber.isEmpty() ? QString::number(childIndex) : QString("%1-%2").arg(parentSerialNumber).arg(childIndex);
+		newSoftwarePtr->SetSerialNumber(newSerialNumber.toUtf8());
+
+		newSoftwarePtr->SetOrderId("");
+		newSoftwarePtr->SetParentInstanceId(licenseId);
+
+		// Add the new software instance to the collection
+		QByteArray result = m_softwareProductCollectionCompPtr->InsertNewObject("SoftwareProduct", "", "", newSoftwareInstancePtr.GetPtr(), newLicenseId);
+		if (result.isEmpty()){
+			errorMessage = QString("Unable to split license. Error: Failed to add new license to collection");
+			retVal.Version_1_0->message = errorMessage;
+			return retVal;
+		}
 	}
 
 	// Update the original license count
@@ -191,7 +299,34 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	}
 
 	retVal.Version_1_0->ok = true;
-	retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
+	if (isTransferMode){
+		retVal.Version_1_0->message = QString("Licenses transferred successfully to existing license ID: %1").arg(QString::fromUtf8(newLicenseId));
+	}
+	else {
+		retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
+	}
+
+	if (m_userActionManagerCompPtr.IsValid()){
+		imtauth::IUserRecentAction::UserInfo userInfo = GetUserInfoFromContext(gqlRequest);
+
+		QString name = m_softwareProductCollectionCompPtr->GetElementInfo(licenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo splitOutTargetInfo(licenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", name);
+		imtauth::IUserRecentAction::ActionTypeInfo splitOutActionTypeInfo("SplitOut", "Split from license", "Split licenses to another license");
+
+		iser::ISerializableSharedPtr splitOutSerializableSharedPtr(new prolifedata::CSplitOutAction(newLicenseId, originalCount, licenseCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, splitOutActionTypeInfo, splitOutTargetInfo, splitOutSerializableSharedPtr);
+
+		name = m_softwareProductCollectionCompPtr->GetElementInfo(newLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo splitInTargetInfo(newLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", name);
+		imtauth::IUserRecentAction::ActionTypeInfo splitInActionTypeInfo("SplitIn", "Split into license", "New license from split");
+
+		iser::ISerializableSharedPtr splitInSerializableSharedPtr(new prolifedata::CSplitInAction(licenseId, remainingCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, splitInActionTypeInfo, splitInTargetInfo, splitInSerializableSharedPtr);
+	}
 
 	return retVal;
 }
@@ -324,7 +459,7 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 
 sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicense(
 			const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::prolife::Licenses::CRevokeLicensePayload retVal;
@@ -448,9 +583,24 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	}
 
 	// Update or delete child license
-	// Only delete if revoking all available licenses AND no licenses are bound
-	if (revokeCount == availableCount && boundCount == 0){
-		// Remove child license entirely (no licenses left at all)
+	// Check if child has its own children
+	bool hasGrandchildren = false;
+	imtbase::IComplexCollectionFilter::FieldFilter grandchildFilter;
+	grandchildFilter.fieldId = "ParentInstanceId";
+	grandchildFilter.filterValue = childLicenseId;
+	
+	imtbase::CComplexCollectionFilter grandchildComplexFilter;
+	grandchildComplexFilter.AddFieldFilter(grandchildFilter);
+	
+	iprm::CParamsSet grandchildFilterParam;
+	grandchildFilterParam.SetEditableParameter("ComplexFilter", &grandchildComplexFilter);
+	
+	int grandchildCount = m_softwareProductCollectionCompPtr->GetElementsCount(&grandchildFilterParam);
+	hasGrandchildren = (grandchildCount > 0);
+	
+	// Only delete if revoking all available licenses AND no licenses are bound AND no children exist
+	if (revokeCount == availableCount && boundCount == 0 && !hasGrandchildren){
+		// Remove child license entirely (no licenses left and no children)
 		if (!m_softwareProductCollectionCompPtr->RemoveElements({childLicenseId})){
 			errorMessage = QString("Unable to revoke license. Error: Failed to remove child license");
 			retVal.Version_1_0->message = errorMessage;
@@ -465,7 +615,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		retVal.Version_1_0->message = QString("License revoked successfully. Child license removed.");
 	}
 	else {
-		// Update child license count (either some available left, or some are bound)
+		// Update child license count (either some available left, or some are bound, or has children)
 		childSoftwarePtr->SetProductCount(currentChildCount - revokeCount);
 		
 		if (!m_softwareProductCollectionCompPtr->SetObjectData(childLicenseId, *childSoftwarePtr)){
@@ -479,12 +629,63 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 			}
 			return retVal;
 		}
-		retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+		
+		if (hasGrandchildren && currentChildCount - revokeCount == 0){
+			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent. Child license kept with 0 available (has sub-licenses).").arg(revokeCount);
+		}
+		else {
+			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+		}
 	}
 
 	retVal.Version_1_0->ok = true;
+
+	// Record the revoke operation as user actions (following the split pattern)
+	if (m_userActionManagerCompPtr.IsValid()){
+		imtauth::IUserRecentAction::UserInfo userInfo = GetUserInfoFromContext(gqlRequest);
+
+		// RevokeOut action - from child license (licenses leaving)
+		QString childName = m_softwareProductCollectionCompPtr->GetElementInfo(childLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo revokeOutTargetInfo(childLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", childName);
+		imtauth::IUserRecentAction::ActionTypeInfo revokeOutActionTypeInfo("RevokeOut", "Revoke from license", "Revoke licenses to parent license");
+
+		iser::ISerializableSharedPtr revokeOutSerializableSharedPtr(new prolifedata::CRevokeOutAction(parentLicenseId, currentChildCount, revokeCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, revokeOutActionTypeInfo, revokeOutTargetInfo, revokeOutSerializableSharedPtr);
+
+		// RevokeIn action - to parent license (licenses returning)
+		QString parentName = m_softwareProductCollectionCompPtr->GetElementInfo(parentLicenseId, imtbase::ICollectionInfo::ElementInfoType::EIT_NAME).toString();
+
+		imtauth::IUserRecentAction::TargetInfo revokeInTargetInfo(parentLicenseId, "SoftwareProduct", "Software Product", "SoftwareProducts", parentName);
+		imtauth::IUserRecentAction::ActionTypeInfo revokeInActionTypeInfo("RevokeIn", "Revoke into license", "Licenses returned from child");
+
+		int newParentCount = currentParentCount + revokeCount;
+		iser::ISerializableSharedPtr revokeInSerializableSharedPtr(new prolifedata::CRevokeInAction(childLicenseId, newParentCount));
+
+		m_userActionManagerCompPtr->CreateUserAction(userInfo, revokeInActionTypeInfo, revokeInTargetInfo, revokeInSerializableSharedPtr);
+	}
 	
 	return retVal;
+}
+
+
+// Helper method to extract user info from GQL request context
+imtauth::IUserRecentAction::UserInfo CSoftwareControllerComp::GetUserInfoFromContext(const ::imtgql::CGqlRequest& gqlRequest) const
+{
+	imtauth::IUserRecentAction::UserInfo userInfo;
+
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	if (gqlContextPtr != nullptr){
+		userInfo.id = gqlContextPtr->GetUserId();
+
+		const imtauth::IUserInfo* userInfoPtr = gqlContextPtr->GetUserInfo();
+		if (userInfoPtr != nullptr){
+			userInfo.name = userInfoPtr->GetName();
+		}
+	}
+
+	return userInfo;
 }
 
 

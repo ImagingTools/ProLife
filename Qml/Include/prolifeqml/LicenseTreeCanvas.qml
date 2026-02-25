@@ -12,23 +12,140 @@ Item {
 		canvas.requestPaint();
 	}
 	
-	property int nodeWidth: 240
-	property int nodeHeight: 120
-	property int horizontalSpacing: 60
-	property int verticalSpacing: 80
+	property int nodeWidth: 180
+	property int nodeHeight: 90
+	property int horizontalSpacing: 30  // Reduced from 50 to bring nodes closer
+	property int verticalSpacing: 60
 	
 	readonly property int ellipsisWidthMargin: 20
 	readonly property int arrowSize: 8
+
+	// Actual tree dimensions (not capped)
+	property int treeWidth: 0
+	property int treeHeight: 0
+	property int contentOffsetX: 0  // Horizontal offset for centering
 	
+	readonly property int legendHeight: 50  // Height of legend + margin
+
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
-	readonly property color transferTextColor: "#28A745"
+	readonly property color revokeArrowColor: "#DC3545"  // Red for revoke operations
+	readonly property color transferTextColor: "#6C757D"  // Gray, same as total count
+	readonly property color revokeTextColor: "#DC3545"
+	
+	// License count colors for (A/B/C) format
+	readonly property color availableCountColor: "#28A745"  // Green for available
+	readonly property color boundCountColor: "#FFC107"      // Amber for bound
+	readonly property color totalCountColor: "#6C757D"      // Gray for total
+
+	onTreeDataChanged: {
+		updateContentDimensions();
+	}
+
+	// Recalculate centering when width changes
+	onWidthChanged: {
+		if (treeData) {
+			updateContentDimensions();
+		}
+	}
+
+	function updateContentDimensions() {
+		if (!treeData) {
+			treeWidth = 0;
+			treeHeight = 0;
+			return;
+		}
+		
+		// Calculate tree layout to get dimensions
+		let layout = canvas.calculateLayout(treeData);
+		canvas.assignXCoordinates(layout, 20);
+		
+		// Get tree bounds (actual tree size, not capped)
+		let bounds = canvas.getTreeBounds(layout);
+		treeWidth = bounds.maxX + 20;
+		treeHeight = bounds.maxY + 20;
+		
+		// Calculate horizontal offset to center canvas within assigned width
+		contentOffsetX = Math.max(0, (root.width - treeWidth) / 2);
+		
+		canvas.requestPaint();
+	}
+	
+	// Legend in top-left corner (vertical layout, no border)
+	Item {
+		id: legend
+		width: 80  // Width for vertical layout
+		height: 70  // Height for 3 items vertically
+		anchors.top: parent.top
+		anchors.left: parent.left
+		anchors.topMargin: 10
+		anchors.leftMargin: 10
+		z: 10
+		
+		Column {
+			spacing: 3
+			
+			Row {
+				spacing: 5
+				Text {
+					text: "●"
+					color: root.availableCountColor
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Available"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 10
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+			
+			Row {
+				spacing: 5
+				Text {
+					text: "●"
+					color: root.boundCountColor
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Bound"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 10
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+			
+			Row {
+				spacing: 5
+				Text {
+					text: "●"
+					color: root.totalCountColor
+					font.pixelSize: 12
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				Text {
+					text: "Total"
+					color: Style.textColor
+					font.family: Style.fontFamily
+					font.pixelSize: 10
+					anchors.verticalCenter: parent.verticalCenter
+				}
+			}
+		}
+	}
 	
 	Canvas {
 		id: canvas
-		anchors.fill: parent
-		
+		width: root.treeWidth
+		height: root.treeHeight
+		x: root.contentOffsetX
+		y: 0  // Legend is floating, doesn't affect canvas position
+
 		onPaint: {
 			if (!root.treeData) {
 				return;
@@ -40,24 +157,28 @@ Item {
 			// Calculate tree layout
 			let layout = calculateLayout(root.treeData);
 			
+			// Assign X coordinates to prevent overlapping
+			assignXCoordinates(layout, 20);
+			
 			// Draw connections and arrows first (so they appear behind nodes)
 			drawConnections(ctx, layout);
 			
 			// Draw nodes
 			drawNodes(ctx, layout);
+			
+			// Draw revoke edges after nodes so arrows are visible on top
+			// drawRevokeEdges(ctx, layout);
 		}
 		
-		function calculateLayout(node, level, index, siblingCount) {
+		function calculateLayout(node, level) {
 			if (!node) return null;
 			
 			level = level || 0;
-			index = index || 0;
-			siblingCount = siblingCount || 1;
 			
 			let nodeInfo = {
 				node: node,
 				level: level,
-				x: 0,
+				x: 0,  // Will be assigned by assignXCoordinates
 				y: level * (root.nodeHeight + root.verticalSpacing) + 20,
 				children: []
 			};
@@ -66,29 +187,14 @@ Item {
 			if (node.m_children && node.m_children.count > 0) {
 				for (let i = 0; i < node.m_children.count; i++) {
 					let childItem = node.m_children.get(i).item
-					let childLayout = calculateLayout(childItem, level + 1, i, node.m_children.count);
+					let childLayout = calculateLayout(childItem, level + 1);
 					if (childLayout) {
 						nodeInfo.children.push(childLayout);
 					}
 				}
-				
-				// Position node centered above its children
-				if (nodeInfo.children.length > 0) {
-					let leftmost = nodeInfo.children[0];
-					let rightmost = nodeInfo.children[nodeInfo.children.length - 1];
-					nodeInfo.x = (getNodeX(leftmost) + getNodeX(rightmost)) / 2;
-				}
-			} else {
-				// Leaf node - position based on index
-				nodeInfo.x = index * (root.nodeWidth + root.horizontalSpacing) + 20;
 			}
 			
 			return nodeInfo;
-		}
-		
-		function getNodeX(nodeInfo) {
-			if (!nodeInfo) return 0;
-			return nodeInfo.x;
 		}
 		
 		function assignXCoordinates(layout, startX) {
@@ -116,6 +222,30 @@ Item {
 			return currentX;
 		}
 		
+		function getTreeBounds(layout) {
+			if (!layout) {
+				return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+			}
+			
+			let bounds = {
+				minX: layout.x,
+				minY: layout.y,
+				maxX: layout.x + root.nodeWidth,
+				maxY: layout.y + root.nodeHeight
+			};
+			
+			// Check all children recursively
+			for (let i = 0; i < layout.children.length; i++) {
+				let childBounds = getTreeBounds(layout.children[i]);
+				bounds.minX = Math.min(bounds.minX, childBounds.minX);
+				bounds.minY = Math.min(bounds.minY, childBounds.minY);
+				bounds.maxX = Math.max(bounds.maxX, childBounds.maxX);
+				bounds.maxY = Math.max(bounds.maxY, childBounds.maxY);
+			}
+			
+			return bounds;
+		}
+		
 		function drawConnections(ctx, layout) {
 			if (!layout || !layout.children || layout.children.length === 0) {
 				return;
@@ -128,12 +258,15 @@ Item {
 			ctx.fillStyle = root.arrowColor;
 			ctx.lineWidth = 2;
 			
+			// First pass: Draw all lines and arrows
 			for (let i = 0; i < layout.children.length; i++) {
 				let child = layout.children[i];
 				let childCenterX = child.x + root.nodeWidth / 2;
 				let childTopY = child.y;
 				
-				// Draw line from parent to child with arrow
+				// Draw line from parent to child
+				ctx.strokeStyle = root.arrowColor;
+				ctx.fillStyle = root.arrowColor;
 				ctx.beginPath();
 				ctx.moveTo(parentCenterX, parentBottomY);
 				ctx.lineTo(parentCenterX, parentBottomY + root.verticalSpacing / 2);
@@ -149,19 +282,27 @@ Item {
 				ctx.lineTo(childCenterX + root.arrowSize, arrowY - root.arrowSize);
 				ctx.closePath();
 				ctx.fill();
+			}
+			
+			// Second pass: Draw individual transfer labels on top of lines
+			for (let i = 0; i < layout.children.length; i++) {
+				let child = layout.children[i];
+				let childCenterX = child.x + root.nodeWidth / 2;
 				
-				// Draw transfer info (original parent count → child count)
-				// Original parent count = current parent count + all children counts
-				let originalParentCount = layout.node.m_productCount;
-				for (let j = 0; j < layout.children.length; j++) {
-					originalParentCount += layout.children[j].node.m_productCount;
-				}
-				
+				// Draw transfer info using pre-calculated values from server
 				ctx.fillStyle = root.transferTextColor;
 				ctx.font = "bold 11px " + Style.fontFamily;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				let transferText = originalParentCount + " → " + child.node.m_productCount;
+				
+				// Show only the transferred amount (how many licenses were transferred to this child)
+				let transferText;
+				if (child.node.m_transferredCount !== undefined) {
+					transferText = child.node.m_transferredCount.toString();
+				} else {
+					transferText = child.node.m_productCount.toString();
+				}
+				
 				let transferY = parentBottomY + root.verticalSpacing / 2;
 				
 				// Draw background for transfer text
@@ -171,10 +312,32 @@ Item {
 				
 				ctx.fillStyle = root.transferTextColor;
 				ctx.fillText(transferText, childCenterX, transferY);
-				
-				// Recursively draw child connections
-				drawConnections(ctx, child);
 			}
+			
+			// Third pass: Recursively draw child connections
+			for (let i = 0; i < layout.children.length; i++) {
+				drawConnections(ctx, layout.children[i]);
+			}
+		}
+		
+		function drawRevokeEdges(ctx, layout) {
+			if (!layout) return;
+			
+			// Create a map of node IDs to their layout info for quick lookup
+			let nodeMap = {};
+			
+			let collectNodes = function(nodeLayout) {
+				if (!nodeLayout) return;
+				nodeMap[nodeLayout.node.m_id] = nodeLayout;
+				if (nodeLayout.children) {
+					for (let i = 0; i < nodeLayout.children.length; i++) {
+						collectNodes(nodeLayout.children[i]);
+					}
+				}
+			}
+			
+			collectNodes(layout);
+
 		}
 		
 		function drawNodes(ctx, layout) {
@@ -227,11 +390,34 @@ Item {
 			let textY = y + 15;
 			let lineHeight = 20;
 			
-			// Serial number (used as name)
+			// Serial number (used as name) - wrap if too long
 			if (node.m_serialNumber) {
 				ctx.font = "bold 14px " + Style.fontFamily;
-				ctx.fillText(truncateText(ctx, node.m_serialNumber, root.nodeWidth - 20), textX, textY);
-				textY += lineHeight + 5;
+				let serialText = node.m_serialNumber;
+				let maxWidth = root.nodeWidth - 20;
+				
+				// If serial number is too long, try to wrap it intelligently
+				if (ctx.measureText(serialText).width > maxWidth) {
+					// Try to split on dash or hyphen for hierarchical serial numbers
+					let parts = serialText.split(/[-_]/);
+					if (parts.length > 1 && parts[0].length > 0) {
+						// Draw first part on first line
+						ctx.fillText(truncateText(ctx, parts[0] + "-", maxWidth), textX, textY);
+						textY += lineHeight;
+						// Draw remaining parts on second line
+						let remaining = parts.slice(1).join("-");
+						ctx.fillText(truncateText(ctx, remaining, maxWidth), textX, textY);
+						textY += lineHeight;
+					} else {
+						// No good split point, just truncate
+						ctx.fillText(truncateText(ctx, serialText, maxWidth), textX, textY);
+						textY += lineHeight + 5;
+					}
+				} else {
+					// Fits on one line
+					ctx.fillText(serialText, textX, textY);
+					textY += lineHeight + 5;
+				}
 			}
 			
 			// Account info
@@ -242,11 +428,59 @@ Item {
 				textY += lineHeight;
 			}
 			
-			// Count info
+			// Count info - display as (A/B/C) format with colors
+			// A = available (not bound, not split out), B = bound, C = total allocated
+			let totalCount = node.m_transferredCount || node.m_initialCount || node.m_productCount || 0;
+			let boundCount = node.m_boundCount || 0;
+			let productCount = node.m_productCount || 0;  // Remaining after splits/revokes
+			let availableCount = productCount - boundCount;  // Free licenses at this node
+			
+			// Draw label
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("Licenses: (", textX, textY);
+			
+			// Calculate positions for colored numbers
+			let labelWidth = ctx.measureText("Licenses: (").width;
+			let currentX = textX + labelWidth;
+			
+			// Draw available count in green
 			ctx.font = "bold 12px " + Style.fontFamily;
-			ctx.fillStyle = isCurrent ? "#FFFFFF" : Style.textColor;
-			let countText = "Licenses: " + (node.m_productCount || 0);
-			ctx.fillText(truncateText(ctx, countText, root.nodeWidth - 20), textX, textY);
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.availableCountColor;
+			let availableText = availableCount.toString();
+			ctx.fillText(availableText, currentX, textY);
+			currentX += ctx.measureText(availableText).width;
+			
+			// Draw separator
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("/", currentX, textY);
+			currentX += ctx.measureText("/").width;
+			
+			// Draw bound count in amber
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.boundCountColor;
+			let boundText = boundCount.toString();
+			ctx.fillText(boundText, currentX, textY);
+			currentX += ctx.measureText(boundText).width;
+			
+			// Draw separator
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText("/", currentX, textY);
+			currentX += ctx.measureText("/").width;
+			
+			// Draw total count in gray
+			ctx.font = "bold 12px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "#FFFFFF" : root.totalCountColor;
+			let totalText = totalCount.toString();
+			ctx.fillText(totalText, currentX, textY);
+			currentX += ctx.measureText(totalText).width;
+			
+			// Draw closing parenthesis
+			ctx.font = "11px " + Style.fontFamily;
+			ctx.fillStyle = isCurrent ? "rgba(255, 255, 255, 0.8)" : "#6C757D";
+			ctx.fillText(")", currentX, textY);
 			
 			// Draw children
 			if (layout.children) {
@@ -282,25 +516,6 @@ Item {
 				width = ctx.measureText(text + "...").width;
 			}
 			return text + "...";
-		}
-	}
-	
-	onTreeDataChanged: {
-		if (treeData) {
-			// Recalculate layout with proper X coordinates
-			let layout = canvas.calculateLayout(treeData);
-			if (layout) {
-				canvas.assignXCoordinates(layout, 20);
-				
-				// Calculate required canvas size
-				let maxX = calculateMaxX(layout);
-				let maxY = calculateMaxY(layout);
-				
-				root.width = maxX + root.nodeWidth + 40;
-				root.height = maxY + root.nodeHeight + 40;
-			}
-			
-			canvas.requestPaint();
 		}
 	}
 	

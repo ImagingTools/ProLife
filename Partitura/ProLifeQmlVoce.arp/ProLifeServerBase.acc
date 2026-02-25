@@ -31,6 +31,26 @@
         <Element Id="AuthorizableServerFramework" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="ActionDataFactories" Type="Factory[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>SplitInAction</Value>
+                                <Value>SplitOutAction</Value>
+                                <Value>RevokeInAction</Value>
+                                <Value>RevokeOutAction</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ActionTypeIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>SplitIn</Value>
+                                <Value>SplitOut</Value>
+                                <Value>RevokeIn</Value>
+                                <Value>RevokeOut</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -485,6 +505,16 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="RevokeInAction" PackageId="ProLifeDataPck" ComponentId="RevokeInAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="RevokeOutAction" PackageId="ProLifeDataPck" ComponentId="RevokeOutAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="RolesModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -526,6 +556,16 @@
                         <Data IsEnabled="true" Value="ProLifeServerSettings/SmtpUsernameParam"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SplitInAction" PackageId="ProLifeDataPck" ComponentId="SplitInAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="SplitOutAction" PackageId="ProLifeDataPck" ComponentId="SplitOutAction">
+            <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="Subscriptions" PackageId="" ComponentId="Subscriptions">

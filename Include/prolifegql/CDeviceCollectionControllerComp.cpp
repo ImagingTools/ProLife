@@ -110,7 +110,7 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 				if (m_softwareProductCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
 					imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 					if (productInstanceInfoPtr != nullptr){
-						QByteArray softwareId = productInstanceInfoPtr->GetSerialNumber();
+						QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
 						const imtbase::ICollectionInfo& licenseList = productInstanceInfoPtr->GetLicenseInstances();
 						imtbase::ICollectionInfo::Ids elementsIds = licenseList.GetElementIds();
 
@@ -120,11 +120,11 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 								imtlic::ILicenseDefinition* licenseDefinitionPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 								if (licenseDefinitionPtr != nullptr){
 									QString licenseName = licenseDefinitionPtr->GetLicenseName();
-									if (softwareId.isEmpty()){
+									if (serialNumber.isEmpty()){
 										parameterData += licenseName + "\n";
 									}
 									else{
-										parameterData += licenseName + " (" + softwareId + ")\n";
+										parameterData += licenseName + " (" + serialNumber + ")\n";
 									}
 								}
 							}

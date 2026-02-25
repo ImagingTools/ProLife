@@ -83,14 +83,19 @@ bool CHardwareProductBinding::Unbind(const QByteArray& softwareId)
 
 bool CHardwareProductBinding::TransferAllLicenses(IHardwareProductBinding& productBinding)
 {
+	istd::CChangeGroup changeGroup(this);
+
 	for (const QByteArray& softwareId : std::as_const(m_softwareIds)){
 		if (!productBinding.Bind(softwareId)){
+			changeGroup.Reset();
 			return false;
 		}
 	}
 
-	for (const QByteArray& softwareId : std::as_const(m_softwareIds)){
+	QByteArrayList softwareIds = m_softwareIds;
+	for (const QByteArray& softwareId : std::as_const(softwareIds)){
 		if (!Unbind(softwareId)){
+			changeGroup.Reset();
 			return false;
 		}
 	}

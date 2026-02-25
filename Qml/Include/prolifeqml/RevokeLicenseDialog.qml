@@ -106,18 +106,19 @@ Dialog {
 					Connections {
 						target: tableElementView.table
 						function onSelectionChanged(selectedIndexes){
-							revokeLicenseDialog.setButtonEnabled(Enums.ok, selectedIndexes.length === 1)
-
 							if (selectedIndexes.length !== 1){
 								revokeLicenseDialog.selectedAvailableCount = 0
 								revokeLicenseDialog.selectedBoundCount = 0
 								revokeLicenseDialog.selectedChildLicenseId = ""
+								revokeLicenseDialog.setButtonEnabled(Enums.ok, false)
 								return
 							}
 
 							revokeLicenseDialog.selectedChildLicenseId = target.elements.get(selectedIndexes[0]).item.m_id
 							revokeLicenseDialog.selectedAvailableCount = target.elements.get(selectedIndexes[0]).item.m_availableCount
 							revokeLicenseDialog.selectedBoundCount = target.elements.get(selectedIndexes[0]).item.m_boundCount
+
+							revokeLicenseDialog.setButtonEnabled(Enums.ok, revokeLicenseDialog.selectedAvailableCount > 0)
 						}
 					}
 				}
