@@ -20,7 +20,6 @@
 #include <prolifedata/CSoftwareTransferInfo.h>
 #include <prolifedata/CIotDeviceInfo.h>
 #include <prolifedata/CIotDeviceMetaInfoCreatorComp.h>
-#include <prolifedata/CIotDeviceMetaInfoCreatorComp.h>
 #include <prolifedata/CSplitInAction.h>
 #include <prolifedata/CSplitOutAction.h>
 #include <prolifedata/CRevokeInAction.h>
