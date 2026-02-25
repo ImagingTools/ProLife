@@ -95,7 +95,6 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
-				
 				QByteArray id = productInfoPtr->GetProductId();
 				metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_ID, id);
 				

@@ -21,6 +21,7 @@ public:
 	I_BEGIN_COMPONENT(CCustomerCollectionControllerComp);
 		I_ASSIGN(m_accountInfoFactCompPtr, "AccountFactory", "Factory used for creation of the new account instance", true, "AccountFactory");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
+		I_ASSIGN(m_softwareCollectionCompPtr, "SoftwareCollection", "Software collection", false, "SoftwareCollection");
 	I_END_COMPONENT;
 
 protected:
@@ -28,6 +29,10 @@ protected:
 				const QByteArray& objectId,
 				const QString& description,
 				const imtgql::CGqlRequest& gqlRequest) const override;
+	virtual bool OnBeforeRemoveElements(
+				const QByteArrayList& elementIds,
+				const imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
 
 	// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
@@ -64,6 +69,7 @@ private:
 private:
 	I_FACT(imtauth::ICompanyInfo, m_accountInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
+	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
 };
 
 
