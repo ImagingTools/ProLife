@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, clickOnPage, selectComboBox, delay} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, clickOnPage, selectComboBox, delay, wheelScroll} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -71,14 +71,18 @@ test('New order test', async ({ page }) => {
   await clickAt(page, 1045, 340); // New license check box click
   await checkScreenshot(page, 'orders_new_editor_12.png')
 
-  await clickAt(page, 700, 535); // License type combobox click
+  await clickAt(page, 700, 610); // License type combobox click
   await checkScreenshot(page, 'orders_new_editor_13.png')
 
-  await clickAt(page, 700, 565); // Select first elem
+  await clickAt(page, 700, 640); // Select first elem
   await checkScreenshot(page, 'orders_new_editor_14.png')
 
-  await clickAt(page, 765, 690); // Expiration check box click
+  await wheelScroll(page, 500)
+
+  await clickAt(page, 765, 600); // Expiration check box click
   await checkScreenshot(page, 'orders_new_editor_15.png', {path: ["ExpirationControl"]})
+
+  await wheelScroll(page, -500)
 
   await clickAt(page, 1020, 85); // Hardware category click
   await checkScreenshot(page, 'orders_new_editor_16.png')
@@ -194,14 +198,14 @@ test('Edit order test (add new software product)', async ({ page }) => {
   await clickAt(page, 700, 250); // Product CB click
   await clickAt(page, 700, 290); // First item click from CB
   await clickAt(page, 1045, 335); // New License switch click
-  await clickAt(page, 700, 530); // Licenses CB click
-  await clickAt(page, 700, 565); // First item click from CB
-  await clickAt(page, 700, 610); // Software-ID text input click
+  await clickAt(page, 700, 610); // Licenses CB click
+  await clickAt(page, 700, 640); // First item click from CB
+  await clickAt(page, 700, 690); // Software-ID text input click
   await page.keyboard.type('9989897'); // Software-ID already exists in order
   await delay(500);
   await checkScreenshot(page, 'orders_edit_s_3.png')
 
-  await clickAt(page, 700, 610); // Software-ID text input click
+  await clickAt(page, 700, 690); // Software-ID text input click
   await page.keyboard.press('Control+A');
   await page.keyboard.press('Delete');
   await page.keyboard.type('9989810'); // Valid Software-ID
