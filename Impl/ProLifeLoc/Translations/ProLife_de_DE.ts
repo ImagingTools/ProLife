@@ -21,7 +21,7 @@
     <message>
         <location line="+37"/>
         <source>Account name cannot be empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Account name cannot be empty</translation>
     </message>
 </context>
 <context>
@@ -72,7 +72,7 @@
     <message>
         <location line="+3"/>
         <source>Please enter the account name</source>
-        <translation type="unfinished"></translation>
+        <translation>Please enter the account name</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -160,7 +160,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/AccountFilterComboBox.qml" line="+42"/>
         <source>All customers</source>
-        <translation type="unfinished">Alle Kunden</translation>
+        <translation>Alle Kunden</translation>
     </message>
 </context>
 <context>
@@ -177,7 +177,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+43"/>
         <location line="+506"/>
         <source>ProLife</source>
-        <translation></translation>
+        <translation>ProLife</translation>
     </message>
     <message>
         <location line="-398"/>
@@ -185,7 +185,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+92"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-140"/>
         <source>Icons/Sensor</source>
-        <translation></translation>
+        <translation>Icons/Sensor</translation>
     </message>
     <message>
         <location line="+220"/>
@@ -201,7 +201,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+132"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <source>Feature-ID</source>
-        <translation></translation>
+        <translation>Feature-ID</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -209,7 +209,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Feature Name</source>
-        <translation></translation>
+        <translation>Feature Name</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -217,7 +217,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+26"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+26"/>
         <source>Icons/Product</source>
-        <translation></translation>
+        <translation>Icons/Product</translation>
     </message>
     <message>
         <location line="-6"/>
@@ -225,7 +225,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+12"/>
         <source>Icons/FeaturePackage</source>
-        <translation></translation>
+        <translation>Icons/FeaturePackage</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -233,7 +233,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Features</source>
-        <translation></translation>
+        <translation>Features</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -265,7 +265,7 @@
         <location line="+6"/>
         <location line="+6"/>
         <source>DocumentInfo</source>
-        <translation></translation>
+        <translation>DocumentInfo</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="+41"/>
@@ -279,27 +279,27 @@
     <message>
         <location line="+6"/>
         <source>Customer Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Customer Name</translation>
     </message>
     <message>
         <location line="+55"/>
         <source>City</source>
-        <translation type="unfinished">Stadt</translation>
+        <translation>Stadt</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Country</source>
-        <translation type="unfinished">Land</translation>
+        <translation>Land</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Street</source>
-        <translation type="unfinished">Straße</translation>
+        <translation>Straße</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>PostalCode</source>
-        <translation type="unfinished"></translation>
+        <translation>PostalCode</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="+14"/>
@@ -323,7 +323,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-114"/>
         <location line="+132"/>
         <source>Hardware-ID</source>
-        <translation></translation>
+        <translation>Hardware-ID</translation>
     </message>
     <message>
         <location line="-130"/>
@@ -359,7 +359,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+52"/>
         <source>Hardware</source>
-        <translation></translation>
+        <translation>Hardware</translation>
     </message>
     <message>
         <location line="-6"/>
@@ -367,7 +367,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-12"/>
         <source>Software</source>
-        <translation></translation>
+        <translation>Software</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+96"/>
@@ -376,7 +376,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+38"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+50"/>
         <source>Software-ID</source>
-        <translation></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="+360"/>
@@ -384,7 +384,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-142"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+44"/>
         <source>Lisa</source>
-        <translation></translation>
+        <translation>Lisa</translation>
     </message>
     <message>
         <location line="-182"/>
@@ -460,7 +460,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+118"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <source>qrc:/qml/imtgui/Settings/SettingsTextInput.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/imtgui/Settings/SettingsTextInput.qml</translation>
     </message>
     <message>
         <location line="-320"/>
@@ -653,7 +653,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+66"/>
         <location line="+36"/>
         <source>Icons/Add</source>
-        <translation></translation>
+        <translation>Icons/Add</translation>
     </message>
     <message>
         <location line="-38"/>
@@ -665,7 +665,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-40"/>
         <location line="+36"/>
         <source>Icons/Delete</source>
-        <translation></translation>
+        <translation>Icons/Delete</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CDeviceChangeGeneratorComp.cpp" line="+149"/>
@@ -788,7 +788,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-116"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-76"/>
         <source>Icons/Deployment</source>
-        <translation></translation>
+        <translation>Icons/Deployment</translation>
     </message>
     <message>
         <location line="-62"/>
@@ -878,7 +878,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-130"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-142"/>
         <source>http://localhost:7778</source>
-        <translation></translation>
+        <translation>http://localhost:7778</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -890,7 +890,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-116"/>
         <location line="+144"/>
         <source>Icons/Key</source>
-        <translation></translation>
+        <translation>Icons/Key</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/COrderChangeGeneratorComp.cpp" line="-19"/>
@@ -965,7 +965,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-446"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-284"/>
         <source>Test</source>
-        <translation></translation>
+        <translation>Test</translation>
     </message>
     <message>
         <location line="+76"/>
@@ -1057,14 +1057,14 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-194"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-102"/>
         <source>http://localhost:7776</source>
-        <translation></translation>
+        <translation>http://localhost:7776</translation>
     </message>
     <message>
         <location line="-324"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-350"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-172"/>
         <source>ImagingTools</source>
-        <translation></translation>
+        <translation>ImagingTools</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1084,7 +1084,7 @@
         <location line="+24"/>
         <location line="+88"/>
         <source>Revision</source>
-        <translation type="unfinished"></translation>
+        <translation>Revision</translation>
     </message>
     <message>
         <location line="-150"/>
@@ -1092,7 +1092,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-166"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-166"/>
         <source>New Customer</source>
-        <translation type="unfinished"></translation>
+        <translation>New Customer</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -1104,7 +1104,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+40"/>
         <location line="+8"/>
         <source>Transfer Licenses</source>
-        <translation type="unfinished"></translation>
+        <translation>Transfer Licenses</translation>
     </message>
     <message>
         <location line="-8"/>
@@ -1112,7 +1112,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Decrypt License File</source>
-        <translation type="unfinished"></translation>
+        <translation>Decrypt License File</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1120,7 +1120,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <source>New Hardware</source>
-        <translation type="unfinished"></translation>
+        <translation>New Hardware</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1128,7 +1128,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Reset Transfer Counter</source>
-        <translation type="unfinished"></translation>
+        <translation>Reset Transfer Counter</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -1136,7 +1136,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+30"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+20"/>
         <source>New Order</source>
-        <translation type="unfinished"></translation>
+        <translation>New Order</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1144,7 +1144,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+12"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+18"/>
         <source>Icons/Customer</source>
-        <translation type="unfinished"></translation>
+        <translation>Icons/Customer</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -1152,7 +1152,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+16"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <source>qrc:/qml/ProLife/WorkspacePage.qml</source>
-        <translation type="unfinished"></translation>
+        <translation>qrc:/qml/ProLife/WorkspacePage.qml</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1168,7 +1168,7 @@
         <location line="+242"/>
         <location line="+124"/>
         <source>Database Access Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Database Access Settings</translation>
     </message>
     <message>
         <location line="-302"/>
@@ -1176,7 +1176,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-66"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+24"/>
         <source>Puma Web Socket URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Puma Web Socket URL</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -1184,7 +1184,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-8"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-10"/>
         <source>Lisa Web Socket URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisa Web Socket URL</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -1192,7 +1192,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+36"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+22"/>
         <source>Is Multiple</source>
-        <translation type="unfinished"></translation>
+        <translation>Is Multiple</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1200,7 +1200,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Product Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Product Count</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -1208,7 +1208,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+16"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+20"/>
         <source>New Software</source>
-        <translation type="unfinished"></translation>
+        <translation>New Software</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1216,7 +1216,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <source>Revoke</source>
-        <translation type="unfinished"></translation>
+        <translation>Revoke</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1224,7 +1224,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Split</source>
-        <translation type="unfinished"></translation>
+        <translation>Split</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1232,7 +1232,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+14"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <source>User Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>User Actions</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1240,7 +1240,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>Software/Hardware</source>
-        <translation type="unfinished"></translation>
+        <translation>Software/Hardware</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1248,7 +1248,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-4"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <source>Dashboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Dashboard</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1256,7 +1256,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Analytics</source>
-        <translation type="unfinished"></translation>
+        <translation>Analytics</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -1264,7 +1264,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+44"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-400"/>
         <source>New license</source>
-        <translation type="unfinished"></translation>
+        <translation>New license</translation>
     </message>
     <message>
         <location line="+160"/>
@@ -1272,7 +1272,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-344"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+150"/>
         <source>New feature</source>
-        <translation type="unfinished"></translation>
+        <translation>New feature</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -1280,7 +1280,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+36"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+50"/>
         <source>New product</source>
-        <translation type="unfinished"></translation>
+        <translation>New product</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1288,7 +1288,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+18"/>
         <source>Server Connection Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Server Connection Interface</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1296,7 +1296,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Puma Connection Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Puma Connection Interface</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1304,7 +1304,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Server Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Server Settings</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1312,7 +1312,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+268"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-230"/>
         <source>LDAP</source>
-        <translation type="unfinished"></translation>
+        <translation>LDAP</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1324,7 +1324,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-10"/>
         <location line="+458"/>
         <source>Server Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Server Connection</translation>
     </message>
     <message>
         <location line="-50"/>
@@ -1332,7 +1332,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-456"/>
         <source>Enable  LDAP</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable  LDAP</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1344,7 +1344,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+428"/>
         <location line="+56"/>
         <source>Feature</source>
-        <translation></translation>
+        <translation>Feature</translation>
     </message>
     <message>
         <location line="-54"/>
@@ -1372,7 +1372,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>HardwareBinding</source>
-        <translation type="unfinished"></translation>
+        <translation>HardwareBinding</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1388,7 +1388,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>IoT Device</source>
-        <translation type="unfinished"></translation>
+        <translation>IoT Device</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1404,7 +1404,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+30"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <source>Support Email</source>
-        <translation type="unfinished"></translation>
+        <translation>Support Email</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1412,7 +1412,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Support</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1420,7 +1420,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <source>Puma Database Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Puma Database Settings</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1428,7 +1428,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Lisa Database Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisa Database Settings</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1436,7 +1436,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>ProLife Database Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ProLife Database Settings</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1444,7 +1444,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-10"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-16"/>
         <source>Lisa Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisa Connection</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1452,7 +1452,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Puma Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Puma Connection</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -1468,7 +1468,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>SoftwareTransferInfo</source>
-        <translation type="unfinished"></translation>
+        <translation>SoftwareTransferInfo</translation>
     </message>
     <message>
         <location line="-152"/>
@@ -1476,7 +1476,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-128"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-304"/>
         <source>Insert subfeature</source>
-        <translation></translation>
+        <translation>Insert subfeature</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -1484,7 +1484,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+24"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>qrc:/qml/imtlicgui/LicenseCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/imtlicgui/LicenseCollectionView.qml</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -1492,7 +1492,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-12"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-6"/>
         <source>qrc:/qml/imtlicgui/ProductCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/imtlicgui/ProductCollectionView.qml</translation>
     </message>
     <message>
         <location line="-6"/>
@@ -1500,7 +1500,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+12"/>
         <source>qrc:/qml/imtlicgui/FeatureCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/imtlicgui/FeatureCollectionView.qml</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -1528,7 +1528,7 @@
         <location line="+128"/>
         <location line="+96"/>
         <source>Backup</source>
-        <translation></translation>
+        <translation>Backup</translation>
     </message>
     <message>
         <location line="-376"/>
@@ -1536,7 +1536,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-58"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-104"/>
         <source>Web Socket URL</source>
-        <translation></translation>
+        <translation>Web Socket URL</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1544,7 +1544,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <source>Server URL</source>
-        <translation></translation>
+        <translation>Server URL</translation>
     </message>
     <message>
         <location line="-4"/>
@@ -1594,7 +1594,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-86"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-124"/>
         <source>qrc:/qml/ProLife/OrderCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/ProLife/OrderCollectionView.qml</translation>
     </message>
     <message>
         <location line="-18"/>
@@ -1602,7 +1602,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+12"/>
         <source>qrc:/qml/ProLife/AccountCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/ProLife/AccountCollectionView.qml</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1610,7 +1610,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+12"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-6"/>
         <source>qrc:/qml/ProLife/SoftwareProductCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/ProLife/SoftwareProductCollectionView.qml</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1618,7 +1618,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-18"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+12"/>
         <source>qrc:/qml/ProLife/DeviceCollectionView.qml</source>
-        <translation></translation>
+        <translation>qrc:/qml/ProLife/DeviceCollectionView.qml</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -1626,7 +1626,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+50"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <source>Lisa URL</source>
-        <translation></translation>
+        <translation>Lisa URL</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1634,7 +1634,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-6"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Puma URL</source>
-        <translation></translation>
+        <translation>Puma URL</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1733,22 +1733,22 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+48"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-390"/>
         <source>Puma</source>
-        <translation></translation>
+        <translation>Puma</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-28"/>
         <source>ProLife Server</source>
-        <translation></translation>
+        <translation>ProLife Server</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-200"/>
         <source>User Version</source>
-        <translation></translation>
+        <translation>User Version</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-486"/>
         <source>ProLifeServerConfigurator</source>
-        <translation></translation>
+        <translation>ProLifeServerConfigurator</translation>
     </message>
 </context>
 <context>
@@ -1756,7 +1756,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/CustomerFilterDelegate.qml" line="+9"/>
         <source>Customers</source>
-        <translation type="unfinished">Kunden</translation>
+        <translation>Kunden</translation>
     </message>
 </context>
 <context>
@@ -1764,82 +1764,82 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+59"/>
         <source>Sensor Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Sensor Status</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>None</source>
-        <translation type="unfinished">Keine Information</translation>
+        <translation>Keine Information</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Accepted</source>
-        <translation type="unfinished">Angenommen</translation>
+        <translation>Angenommen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>In Progress</source>
-        <translation type="unfinished">In Bearbeitung</translation>
+        <translation>In Bearbeitung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Canceled</source>
-        <translation type="unfinished">Abgebrochen</translation>
+        <translation>Abgebrochen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>On Hold</source>
-        <translation type="unfinished">Angehalten</translation>
+        <translation>Angehalten</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Finished</source>
-        <translation type="unfinished">Erledigt</translation>
+        <translation>Erledigt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Defect</source>
-        <translation type="unfinished"></translation>
+        <translation>Defect</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>In Repair</source>
-        <translation type="unfinished"></translation>
+        <translation>In Repair</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Decommissioned</source>
-        <translation type="unfinished"></translation>
+        <translation>Decommissioned</translation>
     </message>
     <message>
         <location line="+76"/>
         <source>Usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Usage</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>For Production</source>
-        <translation type="unfinished"></translation>
+        <translation>For Production</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>For Internal Purposes</source>
-        <translation type="unfinished"></translation>
+        <translation>For Internal Purposes</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>License Creation Date</source>
-        <translation type="unfinished"></translation>
+        <translation>License Creation Date</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Products</source>
-        <translation type="unfinished">Produkte</translation>
+        <translation>Produkte</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>Licenses</source>
-        <translation type="unfinished">Lizenzen</translation>
+        <translation>Lizenzen</translation>
     </message>
 </context>
 <context>
@@ -1847,12 +1847,12 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+22"/>
         <source>General Device</source>
-        <translation type="unfinished"></translation>
+        <translation>General Device</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>IoT Device</source>
-        <translation type="unfinished"></translation>
+        <translation>IoT Device</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1867,42 +1867,42 @@
     <message>
         <location line="+11"/>
         <source>Warning message</source>
-        <translation type="unfinished">Warnung</translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <location line="+136"/>
         <source>Encrypted</source>
-        <translation type="unfinished"></translation>
+        <translation>Encrypted</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Unencrypted</source>
-        <translation type="unfinished"></translation>
+        <translation>Unencrypted</translation>
     </message>
     <message>
         <location line="+69"/>
         <source>Unable to handle command. Document manager is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Unable to handle command. Document manager is invalid</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Unable to handle command. Document model is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Unable to handle command. Document model is invalid</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Please save the document first</source>
-        <translation type="unfinished">Bitte das Dokument zuerst abspeichern</translation>
+        <translation>Bitte das Dokument zuerst abspeichern</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>The production status should be &apos;Finished&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>The production status should be &apos;Finished&apos;</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Please enter a valid MAC-Address</source>
-        <translation type="unfinished">Gültige MAC-Adresse eingeben</translation>
+        <translation>Gültige MAC-Adresse eingeben</translation>
     </message>
     <message>
         <location line="+52"/>
@@ -1943,17 +1943,17 @@
     <message>
         <location line="+31"/>
         <source>Select license file</source>
-        <translation type="unfinished"></translation>
+        <translation>Select license file</translation>
     </message>
     <message>
         <location line="+44"/>
         <source>Decryption key</source>
-        <translation type="unfinished"></translation>
+        <translation>Decryption key</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the decryption key</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter the decryption key</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -1963,67 +1963,67 @@
     <message>
         <location line="+9"/>
         <source>License transfer error</source>
-        <translation type="unfinished"></translation>
+        <translation>License transfer error</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Sending a request</source>
-        <translation type="unfinished"></translation>
+        <translation>Sending a request</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>The transfer counter has been successfully reset</source>
-        <translation type="unfinished"></translation>
+        <translation>The transfer counter has been successfully reset</translation>
     </message>
     <message>
         <location line="+58"/>
         <source>The licenses were successfully transferred</source>
-        <translation type="unfinished"></translation>
+        <translation>The licenses were successfully transferred</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>The license transfer limit has been exceeded.</source>
-        <translation type="unfinished"></translation>
+        <translation>The license transfer limit has been exceeded.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Send a transfer request to the administrator&apos;s address: &apos;%1&apos; ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Send a transfer request to the administrator&apos;s address: &apos;%1&apos; ?</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>It is not possible to request a transfer because the support email is not specified.</source>
-        <translation type="unfinished"></translation>
+        <translation>It is not possible to request a transfer because the support email is not specified.</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>The license transfer request was successfully sent to the administrator&apos;s email address</source>
-        <translation type="unfinished"></translation>
+        <translation>The license transfer request was successfully sent to the administrator&apos;s email address</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Error when sending the request, please try again later</source>
-        <translation type="unfinished"></translation>
+        <translation>Error when sending the request, please try again later</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Select device for license transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Select device for license transfer</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>Products</source>
-        <translation type="unfinished">Produkte</translation>
+        <translation>Produkte</translation>
     </message>
     <message>
         <location line="+68"/>
         <source>Transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Transfer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Close</source>
-        <translation type="unfinished">Schließen</translation>
+        <translation>Schließen</translation>
     </message>
 </context>
 <context>
@@ -2041,7 +2041,7 @@
     <message>
         <location line="+9"/>
         <source>Please select a device type</source>
-        <translation type="unfinished">Bitte Gerätetyp aufwählen</translation>
+        <translation>Bitte Gerätetyp aufwählen</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -2051,12 +2051,12 @@
     <message>
         <location line="+5"/>
         <source>Please select a configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Please select a configuration</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Article</source>
-        <translation type="unfinished">Artikel</translation>
+        <translation>Artikel</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -2101,27 +2101,27 @@
     <message>
         <location line="+14"/>
         <source>Internal Use</source>
-        <translation type="unfinished"></translation>
+        <translation>Internal Use</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Activate if the sensor is for internal use</source>
-        <translation type="unfinished"></translation>
+        <translation>Activate if the sensor is for internal use</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>License Information</source>
-        <translation type="unfinished">Lizenz Information</translation>
+        <translation>Lizenz Information</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Software-ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Software Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Software Name</translation>
     </message>
     <message>
         <location line="-86"/>
@@ -2179,17 +2179,17 @@
     <message>
         <location line="+1"/>
         <source>Defect</source>
-        <translation type="unfinished"></translation>
+        <translation>Defect</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>In Repair</source>
-        <translation type="unfinished"></translation>
+        <translation>In Repair</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Decommissioned</source>
-        <translation type="unfinished"></translation>
+        <translation>Decommissioned</translation>
     </message>
 </context>
 <context>
@@ -2197,7 +2197,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/DeviceValidator.qml" line="+18"/>
         <source>Document model is invalid</source>
-        <translation></translation>
+        <translation>Document model is invalid</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -2225,52 +2225,52 @@
     <message>
         <location line="-1"/>
         <source>Save</source>
-        <translation type="unfinished">Speichern</translation>
+        <translation>Speichern</translation>
     </message>
     <message>
         <location line="+81"/>
         <source>Product</source>
-        <translation type="unfinished">Produkt</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Bitte ein Produkt auswählen</translation>
+        <translation>Bitte ein Produkt auswählen</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Used Licenses</source>
-        <translation type="unfinished"></translation>
+        <translation>Used Licenses</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Unbind</source>
-        <translation type="unfinished"></translation>
+        <translation>Unbind</translation>
     </message>
     <message>
         <location line="+92"/>
         <source>Bind New Licenses</source>
-        <translation type="unfinished"></translation>
+        <translation>Bind New Licenses</translation>
     </message>
     <message>
         <location line="+106"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Article</source>
-        <translation type="unfinished">Artikel</translation>
+        <translation>Artikel</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Software-ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Is Multiple</source>
-        <translation type="unfinished"></translation>
+        <translation>Is Multiple</translation>
     </message>
     <message>
         <location line="+59"/>
@@ -2293,22 +2293,22 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+18"/>
         <source>Available Licenses</source>
-        <translation type="unfinished"></translation>
+        <translation>Available Licenses</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Bind</source>
-        <translation type="unfinished">Zuordnen</translation>
+        <translation>Zuordnen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Selected licenses with the same License-ID: </source>
-        <translation type="unfinished"></translation>
+        <translation>Selected licenses with the same License-ID: </translation>
     </message>
     <message>
         <location line="+48"/>
@@ -2323,22 +2323,22 @@
     <message>
         <location line="+2"/>
         <source>Is Multiple</source>
-        <translation type="unfinished"></translation>
+        <translation>Is Multiple</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Total</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Products</source>
-        <translation type="unfinished">Produkte</translation>
+        <translation>Produkte</translation>
     </message>
     <message>
         <location line="-47"/>
         <source>Software-ID</source>
-        <translation></translation>
+        <translation>Software-ID</translation>
     </message>
 </context>
 <context>
@@ -2384,12 +2384,12 @@
     <message>
         <location line="+26"/>
         <source>Number: </source>
-        <translation type="unfinished"></translation>
+        <translation>Number: </translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Hardware-ID</source>
-        <translation></translation>
+        <translation>Hardware-ID</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -2414,7 +2414,7 @@
     <message>
         <location line="+49"/>
         <source>MAC Address already exists</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC Address already exists</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2430,7 +2430,7 @@
     <message>
         <location line="+26"/>
         <source>Serial Number already exists</source>
-        <translation type="unfinished">Seriennummer existiert bereits</translation>
+        <translation>Seriennummer existiert bereits</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2455,22 +2455,22 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceEditor.qml" line="+61"/>
         <source>Basic Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Basic Information</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Seriennummer</translation>
+        <translation>Seriennummer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter serial number</source>
-        <translation type="unfinished">Seriennummer eingeben</translation>
+        <translation>Seriennummer eingeben</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Model</translation>
     </message>
 </context>
 <context>
@@ -2478,12 +2478,12 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceValidator.qml" line="+12"/>
         <source>Document model is invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>Document model is invalid</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Please enter a factory number</source>
-        <translation type="unfinished"></translation>
+        <translation>Please enter a factory number</translation>
     </message>
 </context>
 <context>
@@ -2509,17 +2509,17 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFilterDelegate.qml" line="+8"/>
         <source>License Status</source>
-        <translation type="unfinished"></translation>
+        <translation>License Status</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Sensors without a license</source>
-        <translation type="unfinished">Sensoren ohne Lizenz</translation>
+        <translation>Sensoren ohne Lizenz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sensors with license</source>
-        <translation type="unfinished">Sensoren mit einer Lizenz</translation>
+        <translation>Sensoren mit einer Lizenz</translation>
     </message>
 </context>
 <context>
@@ -2527,12 +2527,12 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/LicenseTreeDialog.qml" line="+11"/>
         <source>License Hierarchy - Full View</source>
-        <translation type="unfinished"></translation>
+        <translation>License Hierarchy - Full View</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Close</source>
-        <translation type="unfinished">Schließen</translation>
+        <translation>Schließen</translation>
     </message>
 </context>
 <context>
@@ -2540,7 +2540,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/LicenseValidator.qml" line="+12"/>
         <source>Document model is invalid</source>
-        <translation></translation>
+        <translation>Document model is invalid</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -2578,7 +2578,7 @@
     <message>
         <location line="+49"/>
         <source>Customers</source>
-        <translation type="unfinished">Kunden</translation>
+        <translation>Kunden</translation>
     </message>
 </context>
 <context>
@@ -2631,7 +2631,7 @@
     <message>
         <location line="+5"/>
         <source>Please select a customer</source>
-        <translation type="unfinished"></translation>
+        <translation>Please select a customer</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2674,12 +2674,12 @@
     <message>
         <location line="+7"/>
         <source>Multi: </source>
-        <translation type="unfinished"></translation>
+        <translation>Multi: </translation>
     </message>
     <message>
         <location line="+0"/>
         <source>instances</source>
-        <translation type="unfinished"></translation>
+        <translation>instances</translation>
     </message>
 </context>
 <context>
@@ -2710,7 +2710,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/OrderValidator.qml" line="+25"/>
         <source>Document model is invalid</source>
-        <translation></translation>
+        <translation>Document model is invalid</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2728,7 +2728,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/ProLifeMain.qml" line="+58"/>
         <source>Lost connection to Lisa server</source>
-        <translation type="unfinished"></translation>
+        <translation>Lost connection to Lisa server</translation>
     </message>
 </context>
 <context>
@@ -2746,17 +2746,17 @@
     <message>
         <location line="+15"/>
         <source>Currently selected: </source>
-        <translation type="unfinished"></translation>
+        <translation>Currently selected: </translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Software</source>
-        <translation></translation>
+        <translation>Software</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Hardware</source>
-        <translation></translation>
+        <translation>Hardware</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -2774,7 +2774,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditorDialog.qml" line="+21"/>
         <source>OK</source>
-        <translation></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2784,7 +2784,7 @@
     <message>
         <location line="+1"/>
         <source>Product Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Product Editor</translation>
     </message>
 </context>
 <context>
@@ -2792,72 +2792,72 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+13"/>
         <source>Revoke License</source>
-        <translation type="unfinished"></translation>
+        <translation>Revoke License</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Revoke</source>
-        <translation type="unfinished"></translation>
+        <translation>Revoke</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Please select a license to revoke</source>
-        <translation type="unfinished"></translation>
+        <translation>Please select a license to revoke</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Invalid revoke count. You can only revoke available (not bound) licenses.</source>
-        <translation type="unfinished"></translation>
+        <translation>Invalid revoke count. You can only revoke available (not bound) licenses.</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Child Licenses</source>
-        <translation type="unfinished"></translation>
+        <translation>Child Licenses</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Software-ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Account Name</source>
-        <translation type="unfinished">Accountname</translation>
+        <translation>Accountname</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Total Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Total Count</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Available Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Available Count</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bound Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Bound Count</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Number of licenses to revoke</source>
-        <translation type="unfinished"></translation>
+        <translation>Number of licenses to revoke</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Available to revoke: </source>
-        <translation type="unfinished"></translation>
+        <translation>Available to revoke: </translation>
     </message>
     <message>
         <location line="+1"/>
         <source> (Bound: </source>
-        <translation type="unfinished"></translation>
+        <translation> (Bound: </translation>
     </message>
 </context>
 <context>
@@ -2870,7 +2870,7 @@
     <message>
         <location line="+253"/>
         <source>Software Information</source>
-        <translation></translation>
+        <translation>Software Information</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2900,7 +2900,7 @@
     <message>
         <location line="+77"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Bitte ein Produkt auswählen</translation>
+        <translation>Bitte ein Produkt auswählen</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -2910,12 +2910,12 @@
     <message>
         <location line="+8"/>
         <source>Please select a license</source>
-        <translation type="unfinished">Bitte eine Lizenz auswählen</translation>
+        <translation>Bitte eine Lizenz auswählen</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Article</source>
-        <translation type="unfinished">Artikel</translation>
+        <translation>Artikel</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -2925,32 +2925,32 @@
     <message>
         <location line="+1"/>
         <source>Software-ID</source>
-        <translation></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Please enter the software-ID</source>
-        <translation type="unfinished">Software-ID eingeben</translation>
+        <translation>Software-ID eingeben</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Internal Use</source>
-        <translation type="unfinished"></translation>
+        <translation>Internal Use</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Activate if the license is for internal use</source>
-        <translation type="unfinished"></translation>
+        <translation>Activate if the license is for internal use</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Is Multiple</source>
-        <translation type="unfinished"></translation>
+        <translation>Is Multiple</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Product Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Product Count</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2960,7 +2960,7 @@
     <message>
         <location line="+12"/>
         <source>Unlimited</source>
-        <translation></translation>
+        <translation>Unlimited</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2980,7 +2980,7 @@
     <message>
         <location line="+22"/>
         <source>License Hierarchy</source>
-        <translation type="unfinished"></translation>
+        <translation>License Hierarchy</translation>
     </message>
     <message>
         <location line="-188"/>
@@ -2993,7 +2993,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+127"/>
         <source>Software-ID</source>
-        <translation></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -3003,7 +3003,7 @@
     <message>
         <location line="+3"/>
         <source>Unlimited</source>
-        <translation></translation>
+        <translation>Unlimited</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -3026,37 +3026,37 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+248"/>
         <source>License Creation Date</source>
-        <translation type="unfinished"></translation>
+        <translation>License Creation Date</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Usage</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>For Production</source>
-        <translation type="unfinished"></translation>
+        <translation>For Production</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>For Internal Purposes</source>
-        <translation type="unfinished"></translation>
+        <translation>For Internal Purposes</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Products</source>
-        <translation type="unfinished">Produkte</translation>
+        <translation>Produkte</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Licenses</source>
-        <translation type="unfinished">Lizenzen</translation>
+        <translation>Lizenzen</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>License Status</source>
-        <translation type="unfinished"></translation>
+        <translation>License Status</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3076,7 +3076,7 @@
     <message>
         <location line="+38"/>
         <source>Customers</source>
-        <translation type="unfinished">Kunden</translation>
+        <translation>Kunden</translation>
     </message>
 </context>
 <context>
@@ -3114,22 +3114,22 @@
     <message>
         <location line="+29"/>
         <source>Is Multiple</source>
-        <translation type="unfinished"></translation>
+        <translation>Is Multiple</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>Number</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Count of items in this product instance</source>
-        <translation type="unfinished"></translation>
+        <translation>Count of items in this product instance</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Max: </source>
-        <translation type="unfinished"></translation>
+        <translation>Max: </translation>
     </message>
     <message>
         <location line="+23"/>
@@ -3144,13 +3144,13 @@
     <message>
         <location line="+42"/>
         <source>Serial Number already exists</source>
-        <translation type="unfinished">Seriennummer existiert bereits</translation>
+        <translation>Seriennummer existiert bereits</translation>
     </message>
     <message>
         <location line="-138"/>
         <location line="+110"/>
         <source>Software-ID</source>
-        <translation></translation>
+        <translation>Software-ID</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3204,52 +3204,52 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+14"/>
         <source>Split License</source>
-        <translation type="unfinished"></translation>
+        <translation>Split License</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Save</source>
-        <translation type="unfinished">Speichern</translation>
+        <translation>Speichern</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location line="+58"/>
         <source>License count to split</source>
-        <translation type="unfinished"></translation>
+        <translation>License count to split</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Max available count: </source>
-        <translation type="unfinished"></translation>
+        <translation>Max available count: </translation>
     </message>
     <message>
         <location line="+10"/>
         <source>New License</source>
-        <translation type="unfinished">Neue Lizenz</translation>
+        <translation>Neue Lizenz</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Target account</source>
-        <translation type="unfinished"></translation>
+        <translation>Target account</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Please select an account</source>
-        <translation type="unfinished"></translation>
+        <translation>Please select an account</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Target child license</source>
-        <translation type="unfinished"></translation>
+        <translation>Target child license</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Please select a target license</source>
-        <translation type="unfinished"></translation>
+        <translation>Please select a target license</translation>
     </message>
 </context>
 <context>
@@ -3257,37 +3257,37 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+86"/>
         <source>Creation Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Creation Date</translation>
     </message>
     <message>
         <location line="+65"/>
         <source>Hardware Instances by Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardware Instances by Period</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Software Instances by Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Software Instances by Period</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Hardware Instances by Customer</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardware Instances by Customer</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Software Instances by Customer</source>
-        <translation type="unfinished"></translation>
+        <translation>Software Instances by Customer</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Hardware Configuration</source>
-        <translation type="unfinished">Hardwarekonfiguration</translation>
+        <translation>Hardwarekonfiguration</translation>
     </message>
     <message>
         <location line="+46"/>
         <source>Order Creation By Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Order Creation By Period</translation>
     </message>
 </context>
 <context>
@@ -3295,62 +3295,62 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+177"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Date</translation>
     </message>
     <message>
         <location line="+175"/>
         <source>Running: </source>
-        <translation type="unfinished"></translation>
+        <translation>Running: </translation>
     </message>
     <message>
         <location line="+20"/>
         <source>In Stock: </source>
-        <translation type="unfinished"></translation>
+        <translation>In Stock: </translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Internal: </source>
-        <translation type="unfinished"></translation>
+        <translation>Internal: </translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Create New</source>
-        <translation type="unfinished"></translation>
+        <translation>Create New</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>View All</source>
-        <translation type="unfinished"></translation>
+        <translation>View All</translation>
     </message>
     <message>
         <location line="+82"/>
         <source>Active Software Instances by Product</source>
-        <translation type="unfinished"></translation>
+        <translation>Active Software Instances by Product</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Active Hardware Instances by Product</source>
-        <translation type="unfinished"></translation>
+        <translation>Active Hardware Instances by Product</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Hardware Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardware Status</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Active Software Instances by Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Active Software Instances by Period</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Active Hardware Instances by Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Active Hardware Instances by Period</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>License Creation Activity</source>
-        <translation type="unfinished"></translation>
+        <translation>License Creation Activity</translation>
     </message>
 </context>
 <context>
@@ -3358,12 +3358,12 @@
     <message>
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="+83"/>
         <source>Added group &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Added group &apos;%1&apos;</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Removed group &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Removed group &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -3381,12 +3381,12 @@
     <message>
         <location line="-32"/>
         <source>Licenses were transferred from the sensor &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Licenses were transferred from the sensor &apos;%1&apos;</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Licenses have been transferred to the sensor &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Licenses have been transferred to the sensor &apos;%1&apos;</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -3407,7 +3407,7 @@
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+65"/>
         <source>The license has been transferred to the hardware &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>The license has been transferred to the hardware &apos;%1&apos;</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -3456,7 +3456,7 @@
     <message>
         <location filename="../../../Include/prolifegql/CSoftwareProductCollectionControllerComp.cpp" line="+105"/>
         <source>It is not possible to delete this software because a license file has been created for it. Contact your system administrator.</source>
-        <translation type="unfinished"></translation>
+        <translation>It is not possible to delete this software because a license file has been created for it. Contact your system administrator.</translation>
     </message>
 </context>
 </TS>
