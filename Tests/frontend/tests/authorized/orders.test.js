@@ -1,5 +1,5 @@
 const { test } = require('@playwright/test');
-const { reloadPage, clickAt, checkScreenshot, clickOnPage, selectComboBox} = require('../utils');
+const { reloadPage, clickAt, checkScreenshot, clickOnPage, selectComboBox, delay} = require('../utils');
 
 test.beforeEach(async ({ page }) => {
   await reloadPage(page);
@@ -198,6 +198,7 @@ test('Edit order test (add new software product)', async ({ page }) => {
   await clickAt(page, 700, 565); // First item click from CB
   await clickAt(page, 700, 610); // Software-ID text input click
   await page.keyboard.type('9989897'); // Software-ID already exists in order
+  await delay(500);
   await checkScreenshot(page, 'orders_edit_s_3.png')
 
   await clickAt(page, 700, 610); // Software-ID text input click
