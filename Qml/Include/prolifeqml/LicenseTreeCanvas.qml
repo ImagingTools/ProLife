@@ -24,9 +24,9 @@ Item {
 	property int treeWidth: 0
 	property int treeHeight: 0
 	property int contentOffsetX: 0  // Horizontal offset for centering
+	property int layoutStartY: 20
+	property bool singleColumnTree: false
 	
-	readonly property int legendHeight: 50  // Height of legend + margin
-
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
@@ -50,13 +50,32 @@ Item {
 		}
 	}
 
+	function isSingleColumnTree(node) {
+		if (!node) {
+			return true;
+		}
+
+		if (node.m_children && node.m_children.count > 1) {
+			return false;
+		}
+
+		if (node.m_children && node.m_children.count === 1) {
+			return isSingleColumnTree(node.m_children.get(0).item);
+		}
+
+		return true;
+	}
+
 	function updateContentDimensions() {
 		if (!treeData) {
 			treeWidth = 0;
 			treeHeight = 0;
 			return;
 		}
-		
+
+		singleColumnTree = isSingleColumnTree(treeData);
+		layoutStartY = singleColumnTree ? (legend.height + legend.anchors.topMargin + 10) : 20;
+
 		// Calculate tree layout to get dimensions
 		let layout = canvas.calculateLayout(treeData);
 		canvas.assignXCoordinates(layout, 20);
@@ -179,7 +198,7 @@ Item {
 				node: node,
 				level: level,
 				x: 0,  // Will be assigned by assignXCoordinates
-				y: level * (root.nodeHeight + root.verticalSpacing) + 20,
+				y: level * (root.nodeHeight + root.verticalSpacing) + root.layoutStartY,
 				children: []
 			};
 			
