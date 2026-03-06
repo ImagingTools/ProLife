@@ -87,12 +87,12 @@
     <message>
         <location line="+21"/>
         <source>Email</source>
-        <translation>E-mail</translation>
+        <translation>Электронная почта</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the email</source>
-        <translation>Введите e-mail</translation>
+        <translation>Введите электронную почту</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -910,7 +910,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+30"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <source>Support Email</source>
-        <translation>E-mail поддержки</translation>
+        <translation>Электронная почта поддержки</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1101,7 +1101,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Email</source>
-        <translation>E-mail</translation>
+        <translation>Электронная почта</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="+2"/>
@@ -1993,12 +1993,12 @@
     <message>
         <location line="+7"/>
         <source>It is not possible to request a transfer because the support email is not specified.</source>
-        <translation>Невозможно запросить перенос, так как не указан e-mail поддержки.</translation>
+        <translation>Невозможно запросить перенос, так как не указана электронная почта поддержки.</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>The license transfer request was successfully sent to the administrator&apos;s email address</source>
-        <translation>Запрос на перенос лицензии успешно отправлен на e-mail администратора</translation>
+        <translation>Запрос на перенос лицензии успешно отправлен на электронную почту администратора</translation>
     </message>
     <message>
         <location line="+3"/>
