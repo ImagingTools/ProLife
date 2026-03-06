@@ -628,7 +628,6 @@ ViewBase {
 				name: qsTr("License Hierarchy")
 				width: parent.width
 				visible: root.showLicenseHierarchy
-				height: visible ? implicitHeight : 0
 				bottomComp: canvasComp
 				
 				controlComp: Component {
