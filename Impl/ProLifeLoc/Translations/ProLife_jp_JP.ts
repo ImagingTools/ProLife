@@ -61,13 +61,13 @@
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+21"/>
         <source>Email</source>
-        <translation type="unfinished">Email</translation>
+        <translation>メール</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the email</source>
-        <translation type="unfinished">Enter the email</translation>
+        <translation>メールを入力</translation>
     </message>
     <message>
         <location line="-96"/>
@@ -461,7 +461,7 @@
         <location line="+6"/>
         <location line="+4"/>
         <source>DocumentInfo</source>
-        <translation>DocumentInfo</translation>
+        <translation>ドキュメント情報</translation>
     </message>
     <message>
         <location line="-138"/>
@@ -506,7 +506,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+110"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <source>Packages</source>
-        <translation type="unfinished">Packages</translation>
+        <translation>パッケージ</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -538,7 +538,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-6"/>
         <source>Installations</source>
-        <translation type="unfinished">Installations</translation>
+        <translation>インストール</translation>
     </message>
     <message>
         <location line="-192"/>
@@ -557,7 +557,7 @@
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="+59"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Email</source>
-        <translation type="unfinished">Email</translation>
+        <translation>メール</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -575,7 +575,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+38"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+48"/>
         <source>Decrypt License File</source>
-        <translation type="unfinished">Decrypt License File</translation>
+        <translation>ライセンスファイルを復号</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -584,7 +584,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-8"/>
         <source>New Hardware</source>
-        <translation type="unfinished">New Hardware</translation>
+        <translation>新規ハードウェア</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -593,7 +593,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Reset Transfer Counter</source>
-        <translation type="unfinished">Reset Transfer Counter</translation>
+        <translation>転送カウンターをリセット</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -602,7 +602,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+20"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+26"/>
         <source>New Order</source>
-        <translation type="unfinished">New Order</translation>
+        <translation>新規注文</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -725,7 +725,7 @@
         <location line="+242"/>
         <location line="+132"/>
         <source>Database Access Settings</source>
-        <translation type="unfinished">Database Access Settings</translation>
+        <translation>データベースアクセス設定</translation>
     </message>
     <message>
         <location line="-306"/>
@@ -734,7 +734,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-14"/>
         <source>Web Socket URL</source>
-        <translation type="unfinished">Web Socket URL</translation>
+        <translation>WebSocket URL</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -743,7 +743,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Puma Web Socket URL</source>
-        <translation type="unfinished">Puma Web Socket URL</translation>
+        <translation>Puma WebSocket URL</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -752,7 +752,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Server URL</source>
-        <translation type="unfinished">Server URL</translation>
+        <translation>サーバーURL</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -761,7 +761,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-6"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-14"/>
         <source>Lisa Web Socket URL</source>
-        <translation type="unfinished">Lisa Web Socket URL</translation>
+        <translation>Lisa WebSocket URL</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -771,7 +771,7 @@
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+96"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+34"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -779,7 +779,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Is Multiple</source>
-        <translation type="unfinished">Is Multiple</translation>
+        <translation>複数</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -787,7 +787,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Product Count</source>
-        <translation type="unfinished">Product Count</translation>
+        <translation>製品数</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -796,7 +796,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+20"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <source>New Software</source>
-        <translation type="unfinished">New Software</translation>
+        <translation>新規ソフトウェア</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -804,7 +804,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+4"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <source>Revoke</source>
-        <translation type="unfinished">Revoke</translation>
+        <translation>取り消す</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -812,7 +812,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Split</source>
-        <translation type="unfinished">Split</translation>
+        <translation>分割</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -821,7 +821,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <source>User Actions</source>
-        <translation type="unfinished">User Actions</translation>
+        <translation>ユーザー操作</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -830,7 +830,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Software/Hardware</source>
-        <translation type="unfinished">Software/Hardware</translation>
+        <translation>ソフトウェア/ハードウェア</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -839,7 +839,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Dashboard</source>
-        <translation type="unfinished">Dashboard</translation>
+        <translation>ダッシュボード</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -848,7 +848,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-8"/>
         <source>Analytics</source>
-        <translation type="unfinished">Analytics</translation>
+        <translation>分析</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -857,7 +857,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-400"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-388"/>
         <source>New license</source>
-        <translation type="unfinished">New license</translation>
+        <translation>新規ライセンス</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -920,7 +920,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+212"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-280"/>
         <source>HardwareBinding</source>
-        <translation type="unfinished">HardwareBinding</translation>
+        <translation>ハードウェアバインド</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -929,7 +929,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Device</source>
-        <translation type="unfinished">Device</translation>
+        <translation>デバイス</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -937,7 +937,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+2"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>IoT Device</source>
-        <translation type="unfinished">IoT Device</translation>
+        <translation>IoTデバイス</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -955,7 +955,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <source>Support Email</source>
-        <translation type="unfinished">Support Email</translation>
+        <translation>サポートメール</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -964,7 +964,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Support</source>
-        <translation type="unfinished">Support</translation>
+        <translation>サポート</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -973,7 +973,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <source>Puma Database Settings</source>
-        <translation type="unfinished">Puma Database Settings</translation>
+        <translation>Puma データベース設定</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -982,7 +982,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Lisa Database Settings</source>
-        <translation type="unfinished">Lisa Database Settings</translation>
+        <translation>Lisa データベース設定</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -991,7 +991,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>ProLife Database Settings</source>
-        <translation type="unfinished">ProLife Database Settings</translation>
+        <translation>ProLife データベース設定</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1000,7 +1000,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-16"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-16"/>
         <source>Lisa Connection</source>
-        <translation type="unfinished">Lisa Connection</translation>
+        <translation>Lisa 接続</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1009,7 +1009,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Puma Connection</source>
-        <translation type="unfinished">Puma Connection</translation>
+        <translation>Puma 接続</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -1018,7 +1018,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+28"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <source>Software Product</source>
-        <translation type="unfinished">Software Product</translation>
+        <translation>ソフトウェア製品</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1027,7 +1027,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>SoftwareTransferInfo</source>
-        <translation type="unfinished">SoftwareTransferInfo</translation>
+        <translation>ソフトウェア転送情報</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1291,7 +1291,7 @@
         <location line="+26"/>
         <location line="+82"/>
         <source>Revision</source>
-        <translation type="unfinished">Revision</translation>
+        <translation>リビジョン</translation>
     </message>
     <message>
         <location line="-158"/>
@@ -1310,7 +1310,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>New Customer</source>
-        <translation type="unfinished">New Customer</translation>
+        <translation>新規顧客</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1435,7 +1435,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-116"/>
         <location line="+8"/>
         <source>Transfer Licenses</source>
-        <translation type="unfinished">Transfer Licenses</translation>
+        <translation>ライセンスを転送</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1581,7 +1581,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-196"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-300"/>
         <source>Lisa Settings</source>
-        <translation type="unfinished">Lisa Settings</translation>
+        <translation>Lisa 設定</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1599,7 +1599,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1608,7 +1608,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Feature-ID</source>
-        <translation type="unfinished">Feature-ID</translation>
+        <translation>機能ID</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1617,7 +1617,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+20"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <source>Insert subfeature</source>
-        <translation type="unfinished">Insert subfeature</translation>
+        <translation>サブ機能を追加</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1654,7 +1654,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-40"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-46"/>
         <source>New feature</source>
-        <translation type="unfinished">New feature</translation>
+        <translation>新規機能</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1672,7 +1672,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>Features</source>
-        <translation type="unfinished">Features</translation>
+        <translation>機能</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1717,7 +1717,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+18"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Product Name</source>
-        <translation type="unfinished">Product Name</translation>
+        <translation>製品名</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1744,7 +1744,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+22"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+26"/>
         <source>Server Connection Interface</source>
-        <translation type="unfinished">Server Connection Interface</translation>
+        <translation>サーバー接続インターフェース</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1753,7 +1753,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <source>Puma Connection Interface</source>
-        <translation type="unfinished">Puma Connection Interface</translation>
+        <translation>Puma 接続インターフェース</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1762,7 +1762,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+6"/>
         <source>Server Settings</source>
-        <translation type="unfinished">Server Settings</translation>
+        <translation>サーバー設定</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1785,7 +1785,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-34"/>
         <location line="+38"/>
         <source>Server Connection</source>
-        <translation type="unfinished">Server Connection</translation>
+        <translation>サーバー接続</translation>
     </message>
     <message>
         <location line="-50"/>
@@ -1794,7 +1794,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-456"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>Enable  LDAP</source>
-        <translation type="unfinished">Enable  LDAP</translation>
+        <translation>LDAP を有効化</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1808,7 +1808,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-78"/>
         <location line="+6"/>
         <source>Feature</source>
-        <translation type="unfinished">Feature</translation>
+        <translation>機能</translation>
     </message>
     <message>
         <location line="-54"/>
@@ -1831,7 +1831,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-44"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Account</source>
-        <translation type="unfinished">Account</translation>
+        <translation>アカウント</translation>
     </message>
     <message>
         <location line="-134"/>
@@ -1849,7 +1849,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>Mode</source>
-        <translation type="unfinished">Mode</translation>
+        <translation>モード</translation>
     </message>
     <message>
         <location line="-98"/>
@@ -1929,7 +1929,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-90"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-174"/>
         <source>Test</source>
-        <translation type="unfinished">Test</translation>
+        <translation>テスト</translation>
     </message>
     <message>
         <location line="-162"/>
@@ -1939,7 +1939,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+214"/>
         <location line="+94"/>
         <source>License Files</source>
-        <translation type="unfinished">License Files</translation>
+        <translation>ライセンスファイル</translation>
     </message>
     <message>
         <location line="+286"/>
@@ -1957,7 +1957,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+204"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+224"/>
         <source>Lisa URL</source>
-        <translation type="unfinished">Lisa URL</translation>
+        <translation>Lisa のURL</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1966,7 +1966,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-20"/>
         <source>Puma URL</source>
-        <translation type="unfinished">Puma URL</translation>
+        <translation>Puma のURL</translation>
     </message>
     <message>
         <location line="-104"/>
@@ -2034,12 +2034,12 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-176"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-174"/>
         <source>New product</source>
-        <translation type="unfinished">New product</translation>
+        <translation>新規製品</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServer/CProLifeServer.cpp" line="-410"/>
         <source>User Version</source>
-        <translation type="unfinished">User Version</translation>
+        <translation>ユーザーバージョン</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-192"/>
@@ -2050,12 +2050,12 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-242"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-296"/>
         <source>ProLife Server</source>
-        <translation type="unfinished">ProLife Server</translation>
+        <translation>ProLife サーバー</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="+6"/>
         <source>Customer Name</source>
-        <translation type="unfinished">Customer Name</translation>
+        <translation>顧客名</translation>
     </message>
     <message>
         <location line="+55"/>
@@ -2075,7 +2075,7 @@
     <message>
         <location line="+6"/>
         <source>PostalCode</source>
-        <translation type="unfinished">PostalCode</translation>
+        <translation>郵便番号</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+45"/>
@@ -2906,7 +2906,7 @@
     <message>
         <location line="+1"/>
         <source>Test</source>
-        <translation type="unfinished">Test</translation>
+        <translation>テスト</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -3118,7 +3118,7 @@
         <location filename="../../../Bin/web/src/DeviceCollectionView.qml" line="+59"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+59"/>
         <source>Sensor Status</source>
-        <translation type="unfinished">Sensor Status</translation>
+        <translation>センサー状態</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -3160,43 +3160,43 @@
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>Defect</source>
-        <translation type="unfinished">Defect</translation>
+        <translation>不良</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>In Repair</source>
-        <translation type="unfinished">In Repair</translation>
+        <translation>修理中</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>Decommissioned</source>
-        <translation type="unfinished">Decommissioned</translation>
+        <translation>廃止</translation>
     </message>
     <message>
         <location line="+76"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+76"/>
         <source>Usage</source>
-        <translation type="unfinished">Usage</translation>
+        <translation>使用状況</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+6"/>
         <source>For Production</source>
-        <translation type="unfinished">For Production</translation>
+        <translation>生産用</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>For Internal Purposes</source>
-        <translation type="unfinished">For Internal Purposes</translation>
+        <translation>内部用途</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+17"/>
         <source>License Creation Date</source>
-        <translation type="unfinished">License Creation Date</translation>
+        <translation>ライセンス作成日</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -3217,13 +3217,13 @@
         <location filename="../../../Bin/web/src/DeviceCollectionViewCommandsDelegate.qml" line="+22"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+22"/>
         <source>General Device</source>
-        <translation type="unfinished">General Device</translation>
+        <translation>一般デバイス</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+3"/>
         <source>IoT Device</source>
-        <translation type="unfinished">IoT Device</translation>
+        <translation>IoTデバイス</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -3247,25 +3247,25 @@
         <location line="+136"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+136"/>
         <source>Encrypted</source>
-        <translation type="unfinished">Encrypted</translation>
+        <translation>暗号化済み</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Unencrypted</source>
-        <translation type="unfinished">Unencrypted</translation>
+        <translation>未暗号化</translation>
     </message>
     <message>
         <location line="+69"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+69"/>
         <source>Unable to handle command. Document manager is invalid</source>
-        <translation type="unfinished">Unable to handle command. Document manager is invalid</translation>
+        <translation>コマンドを処理できません。ドキュメントマネージャーが無効です</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+6"/>
         <source>Unable to handle command. Document model is invalid</source>
-        <translation type="unfinished">Unable to handle command. Document model is invalid</translation>
+        <translation>コマンドを処理できません。ドキュメントモデルが無効です</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -3277,7 +3277,7 @@
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+6"/>
         <source>The production status should be &apos;Finished&apos;</source>
-        <translation type="unfinished">The production status should be &apos;Finished&apos;</translation>
+        <translation>生産ステータスは 'Finished' である必要があります</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -3333,19 +3333,19 @@
         <location line="+31"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+31"/>
         <source>Select license file</source>
-        <translation type="unfinished">Select license file</translation>
+        <translation>ライセンスファイルを選択</translation>
     </message>
     <message>
         <location line="+44"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+44"/>
         <source>Decryption key</source>
-        <translation type="unfinished">Decryption key</translation>
+        <translation>復号キー</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Enter the decryption key</source>
-        <translation type="unfinished">Enter the decryption key</translation>
+        <translation>復号キーを入力</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -3357,61 +3357,61 @@
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+9"/>
         <source>License transfer error</source>
-        <translation type="unfinished">License transfer error</translation>
+        <translation>ライセンス転送エラー</translation>
     </message>
     <message>
         <location line="+24"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+24"/>
         <source>Sending a request</source>
-        <translation type="unfinished">Sending a request</translation>
+        <translation>リクエストを送信中</translation>
     </message>
     <message>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+20"/>
         <source>The transfer counter has been successfully reset</source>
-        <translation type="unfinished">The transfer counter has been successfully reset</translation>
+        <translation>転送カウンターが正常にリセットされました</translation>
     </message>
     <message>
         <location line="+58"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+58"/>
         <source>The licenses were successfully transferred</source>
-        <translation type="unfinished">The licenses were successfully transferred</translation>
+        <translation>ライセンスは正常に転送されました</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+4"/>
         <source>The license transfer limit has been exceeded.</source>
-        <translation type="unfinished">The license transfer limit has been exceeded.</translation>
+        <translation>ライセンス転送の上限を超えました。</translation>
     </message>
     <message>
         <location line="+2"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+2"/>
         <source>Send a transfer request to the administrator&apos;s address: &apos;%1&apos; ?</source>
-        <translation type="unfinished">Send a transfer request to the administrator&apos;s address: &apos;%1&apos; ?</translation>
+        <translation>管理者のアドレス '%1' に転送リクエストを送信しますか？</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+7"/>
         <source>It is not possible to request a transfer because the support email is not specified.</source>
-        <translation type="unfinished">It is not possible to request a transfer because the support email is not specified.</translation>
+        <translation>サポートメールが指定されていないため、転送を要求できません。</translation>
     </message>
     <message>
         <location line="+18"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+18"/>
         <source>The license transfer request was successfully sent to the administrator&apos;s email address</source>
-        <translation type="unfinished">The license transfer request was successfully sent to the administrator&apos;s email address</translation>
+        <translation>ライセンス転送リクエストは管理者のメールアドレスへ送信されました</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+3"/>
         <source>Error when sending the request, please try again later</source>
-        <translation type="unfinished">Error when sending the request, please try again later</translation>
+        <translation>要求の送信中にエラーが発生しました。後でもう一度お試しください</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+12"/>
         <source>Select device for license transfer</source>
-        <translation type="unfinished">Select device for license transfer</translation>
+        <translation>ライセンス転送用デバイスを選択</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -3423,7 +3423,7 @@
         <location line="+68"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+68"/>
         <source>Transfer</source>
-        <translation type="unfinished">Transfer</translation>
+        <translation>転送</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3540,13 +3540,13 @@
         <location line="+14"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+14"/>
         <source>Internal Use</source>
-        <translation type="unfinished">Internal Use</translation>
+        <translation>内部使用</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+1"/>
         <source>Activate if the sensor is for internal use</source>
-        <translation type="unfinished">Activate if the sensor is for internal use</translation>
+        <translation>センサーが内部使用の場合に有効化</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -3558,13 +3558,13 @@
         <location line="+31"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+31"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+4"/>
         <source>Software Name</source>
-        <translation type="unfinished">Software Name</translation>
+        <translation>ソフトウェア名</translation>
     </message>
     <message>
         <location line="-86"/>
@@ -3615,19 +3615,19 @@
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>Defect</source>
-        <translation type="unfinished">Defect</translation>
+        <translation>不良</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>In Repair</source>
-        <translation type="unfinished">In Repair</translation>
+        <translation>修理中</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>Decommissioned</source>
-        <translation type="unfinished">Decommissioned</translation>
+        <translation>廃止</translation>
     </message>
 </context>
 <context>
@@ -3636,7 +3636,7 @@
         <location filename="../../../Bin/web/src/DeviceValidator.qml" line="+18"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceValidator.qml" line="+18"/>
         <source>Document model is invalid</source>
-        <translation type="unfinished">Document model is invalid</translation>
+        <translation>ドキュメントモデルが無効です</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -3690,7 +3690,7 @@
     <message>
         <location line="+4"/>
         <source>Revision</source>
-        <translation type="unfinished">Revision</translation>
+        <translation>リビジョン</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -3769,7 +3769,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentHistoryView.qml" line="+123"/>
         <source>Revision</source>
-        <translation type="unfinished">Revision</translation>
+        <translation>リビジョン</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -3958,12 +3958,12 @@
     <message>
         <location line="+10"/>
         <source>Transfer Licenses</source>
-        <translation type="unfinished">Transfer Licenses</translation>
+        <translation>ライセンスを転送</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Reset Transfer Counter</source>
-        <translation type="unfinished">Reset Transfer Counter</translation>
+        <translation>転送カウンターをリセット</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -4351,7 +4351,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/FeatureCollectionView.qml" line="+77"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
 </context>
 <context>
@@ -4360,7 +4360,7 @@
         <location filename="../../../Bin/web/src/imtlicgui/FeatureEditor.qml" line="+166"/>
         <location line="+376"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
     <message>
         <location line="-368"/>
@@ -4371,7 +4371,7 @@
         <location line="+16"/>
         <location line="+356"/>
         <source>Feature-ID</source>
-        <translation type="unfinished">Feature-ID</translation>
+        <translation>機能ID</translation>
     </message>
     <message>
         <location line="-348"/>
@@ -4435,7 +4435,7 @@
     <message>
         <location line="+53"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
 </context>
 <context>
@@ -4545,7 +4545,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+30"/>
         <source>Creation Date</source>
-        <translation type="unfinished">Creation Date</translation>
+        <translation>作成日</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -4798,19 +4798,19 @@ Do you want to replace it?</translation>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+7"/>
         <source>Used Licenses</source>
-        <translation type="unfinished">Used Licenses</translation>
+        <translation>使用済みライセンス</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+7"/>
         <source>Unbind</source>
-        <translation type="unfinished">Unbind</translation>
+        <translation>バインド解除</translation>
     </message>
     <message>
         <location line="+92"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+92"/>
         <source>Bind New Licenses</source>
-        <translation type="unfinished">Bind New Licenses</translation>
+        <translation>新しいライセンスをバインド</translation>
     </message>
     <message>
         <location line="+106"/>
@@ -4828,13 +4828,13 @@ Do you want to replace it?</translation>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+4"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+4"/>
         <source>Is Multiple</source>
-        <translation type="unfinished">Is Multiple</translation>
+        <translation>複数</translation>
     </message>
     <message>
         <location line="+59"/>
@@ -4861,7 +4861,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/HardwareProductBindingEditor.qml" line="+18"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+18"/>
         <source>Available Licenses</source>
-        <translation type="unfinished">Available Licenses</translation>
+        <translation>利用可能なライセンス</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -4879,7 +4879,7 @@ Do you want to replace it?</translation>
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+21"/>
         <source>Selected licenses with the same License-ID: </source>
-        <translation type="unfinished">Selected licenses with the same License-ID: </translation>
+        <translation>同じライセンスIDの選択済みライセンス: </translation>
     </message>
     <message>
         <location line="+48"/>
@@ -4897,19 +4897,19 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+1"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+1"/>
         <source>Is Multiple</source>
-        <translation type="unfinished">Is Multiple</translation>
+        <translation>複数</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+1"/>
         <source>Total</source>
-        <translation type="unfinished">Total</translation>
+        <translation>合計</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -4948,13 +4948,13 @@ Do you want to replace it?</translation>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+20"/>
         <source>Key</source>
-        <translation type="unfinished">Key</translation>
+        <translation>キー</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+5"/>
         <source>Value</source>
-        <translation type="unfinished">Value</translation>
+        <translation>値</translation>
     </message>
 </context>
 <context>
@@ -4969,7 +4969,7 @@ Do you want to replace it?</translation>
         <location line="+26"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+26"/>
         <source>Number: </source>
-        <translation type="unfinished">Number: </translation>
+        <translation>番号: </translation>
     </message>
     <message>
         <location line="+30"/>
@@ -5013,7 +5013,7 @@ Do you want to replace it?</translation>
         <location line="+49"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+49"/>
         <source>MAC Address already exists</source>
-        <translation type="unfinished">MAC Address already exists</translation>
+        <translation>MAC アドレスは既に存在します</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -5107,7 +5107,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/IotDeviceEditor.qml" line="+61"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceEditor.qml" line="+61"/>
         <source>Basic Information</source>
-        <translation type="unfinished">Basic Information</translation>
+        <translation>基本情報</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -5125,7 +5125,7 @@ Do you want to replace it?</translation>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceEditor.qml" line="+9"/>
         <source>Model</source>
-        <translation type="unfinished">Model</translation>
+        <translation>モデル</translation>
     </message>
 </context>
 <context>
@@ -5134,13 +5134,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/IotDeviceValidator.qml" line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceValidator.qml" line="+12"/>
         <source>Document model is invalid</source>
-        <translation type="unfinished">Document model is invalid</translation>
+        <translation>ドキュメントモデルが無効です</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceValidator.qml" line="+7"/>
         <source>Please enter a factory number</source>
-        <translation type="unfinished">Please enter a factory number</translation>
+        <translation>工場番号を入力してください</translation>
     </message>
 </context>
 <context>
@@ -5185,7 +5185,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+44"/>
         <source>Features</source>
-        <translation type="unfinished">Features</translation>
+        <translation>機能</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -5195,7 +5195,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+67"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
 </context>
 <context>
@@ -5225,7 +5225,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/LicenseFilterDelegate.qml" line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFilterDelegate.qml" line="+8"/>
         <source>License Status</source>
-        <translation type="unfinished">License Status</translation>
+        <translation>ライセンス状態</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -5246,7 +5246,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/LicenseTreeDialog.qml" line="+11"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseTreeDialog.qml" line="+11"/>
         <source>License Hierarchy - Full View</source>
-        <translation type="unfinished">License Hierarchy - Full View</translation>
+        <translation>ライセンス階層 - 全体表示</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -5261,7 +5261,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/LicenseValidator.qml" line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseValidator.qml" line="+12"/>
         <source>Document model is invalid</source>
-        <translation type="unfinished">Document model is invalid</translation>
+        <translation>ドキュメントモデルが無効です</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -5622,13 +5622,13 @@ Do you want to replace it?</translation>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderProductDelegate.qml" line="+7"/>
         <source>Multi: </source>
-        <translation type="unfinished">Multi: </translation>
+        <translation>複数: </translation>
     </message>
     <message>
         <location line="+0"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderProductDelegate.qml" line="+0"/>
         <source>instances</source>
-        <translation type="unfinished">instances</translation>
+        <translation>インスタンス</translation>
     </message>
 </context>
 <context>
@@ -5664,7 +5664,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/OrderValidator.qml" line="+25"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderValidator.qml" line="+25"/>
         <source>Document model is invalid</source>
-        <translation type="unfinished">Document model is invalid</translation>
+        <translation>ドキュメントモデルが無効です</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -5801,12 +5801,12 @@ Do you want to replace it?</translation>
     <message>
         <location line="+41"/>
         <source>Enter the email</source>
-        <translation type="unfinished">Enter the email</translation>
+        <translation>メールを入力</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Email</source>
-        <translation type="unfinished">Email</translation>
+        <translation>メール</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6028,7 +6028,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/ProLifeMain.qml" line="+58"/>
         <location filename="../../../Qml/Include/prolifeqml/ProLifeMain.qml" line="+58"/>
         <source>Lost connection to Lisa server</source>
-        <translation type="unfinished">Lost connection to Lisa server</translation>
+        <translation>Lisa サーバーへの接続が失われました</translation>
     </message>
 </context>
 <context>
@@ -6135,7 +6135,7 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditorDialog.qml" line="+1"/>
         <source>Product Editor</source>
-        <translation type="unfinished">Product Editor</translation>
+        <translation>製品エディタ</translation>
     </message>
 </context>
 <context>
@@ -6143,12 +6143,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/ProductView.qml" line="+50"/>
         <source>Feature Name</source>
-        <translation type="unfinished">Feature Name</translation>
+        <translation>機能名</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Feature-ID</source>
-        <translation type="unfinished">Feature-ID</translation>
+        <translation>機能ID</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -6158,7 +6158,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+147"/>
         <source>Product Name</source>
-        <translation type="unfinished">Product Name</translation>
+        <translation>製品名</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -6202,7 +6202,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+3"/>
         <source>Enter the email</source>
-        <translation type="unfinished">Enter the email</translation>
+        <translation>メールを入力</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -6307,13 +6307,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/RevokeLicenseDialog.qml" line="+13"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+13"/>
         <source>Revoke License</source>
-        <translation type="unfinished">Revoke License</translation>
+        <translation>ライセンスを取り消す</translation>
     </message>
     <message>
         <location line="+27"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+27"/>
         <source>Revoke</source>
-        <translation type="unfinished">Revoke</translation>
+        <translation>取り消す</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6325,25 +6325,25 @@ Do you want to replace it?</translation>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+12"/>
         <source>Please select a license to revoke</source>
-        <translation type="unfinished">Please select a license to revoke</translation>
+        <translation>取り消すライセンスを選択してください</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+5"/>
         <source>Invalid revoke count. You can only revoke available (not bound) licenses.</source>
-        <translation type="unfinished">Invalid revoke count. You can only revoke available (not bound) licenses.</translation>
+        <translation>無効な取り消し数です。取り消せるのは利用可能（バインドされていない）ライセンスのみです。</translation>
     </message>
     <message>
         <location line="+35"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+35"/>
         <source>Child Licenses</source>
-        <translation type="unfinished">Child Licenses</translation>
+        <translation>子ライセンス</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+5"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6355,37 +6355,37 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source>Total Count</source>
-        <translation type="unfinished">Total Count</translation>
+        <translation>合計数</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source>Available Count</source>
-        <translation type="unfinished">Available Count</translation>
+        <translation>利用可能数</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source>Bound Count</source>
-        <translation type="unfinished">Bound Count</translation>
+        <translation>バインド数</translation>
     </message>
     <message>
         <location line="+27"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+27"/>
         <source>Number of licenses to revoke</source>
-        <translation type="unfinished">Number of licenses to revoke</translation>
+        <translation>取り消すライセンス数</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+5"/>
         <source>Available to revoke: </source>
-        <translation type="unfinished">Available to revoke: </translation>
+        <translation>取り消し可能: </translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source> (Bound: </source>
-        <translation type="unfinished"> (Bound: </translation>
+        <translation> (バインド済み: </translation>
     </message>
 </context>
 <context>
@@ -6685,7 +6685,7 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+1"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6697,25 +6697,25 @@ Do you want to replace it?</translation>
         <location line="+13"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+13"/>
         <source>Internal Use</source>
-        <translation type="unfinished">Internal Use</translation>
+        <translation>内部使用</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+1"/>
         <source>Activate if the license is for internal use</source>
-        <translation type="unfinished">Activate if the license is for internal use</translation>
+        <translation>ライセンスが内部使用の場合に有効化</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+9"/>
         <source>Is Multiple</source>
-        <translation type="unfinished">Is Multiple</translation>
+        <translation>複数</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+9"/>
         <source>Product Count</source>
-        <translation type="unfinished">Product Count</translation>
+        <translation>製品数</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -6751,7 +6751,7 @@ Do you want to replace it?</translation>
         <location line="+22"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+22"/>
         <source>License Hierarchy</source>
-        <translation type="unfinished">License Hierarchy</translation>
+        <translation>ライセンス階層</translation>
     </message>
     <message>
         <location line="-188"/>
@@ -6766,7 +6766,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SoftwareProductCard.qml" line="+127"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+127"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -6790,13 +6790,13 @@ Do you want to replace it?</translation>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+12"/>
         <source>Key</source>
-        <translation type="unfinished">Key</translation>
+        <translation>キー</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+5"/>
         <source>Value</source>
-        <translation type="unfinished">Value</translation>
+        <translation>値</translation>
     </message>
 </context>
 <context>
@@ -6805,25 +6805,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SoftwareProductCollectionView.qml" line="+248"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+248"/>
         <source>License Creation Date</source>
-        <translation type="unfinished">License Creation Date</translation>
+        <translation>ライセンス作成日</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+12"/>
         <source>Usage</source>
-        <translation type="unfinished">Usage</translation>
+        <translation>使用状況</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+6"/>
         <source>For Production</source>
-        <translation type="unfinished">For Production</translation>
+        <translation>生産用</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+1"/>
         <source>For Internal Purposes</source>
-        <translation type="unfinished">For Internal Purposes</translation>
+        <translation>内部用途</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -6841,7 +6841,7 @@ Do you want to replace it?</translation>
         <location line="+24"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+24"/>
         <source>License Status</source>
-        <translation type="unfinished">License Status</translation>
+        <translation>ライセンス状態</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -6928,7 +6928,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="-254"/>
         <location line="+110"/>
         <source>Software-ID</source>
-        <translation type="unfinished">Software-ID</translation>
+        <translation>ソフトウェアID</translation>
     </message>
     <message>
         <location line="-104"/>
@@ -6942,25 +6942,25 @@ Do you want to replace it?</translation>
         <location line="-134"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="-134"/>
         <source>Is Multiple</source>
-        <translation type="unfinished">Is Multiple</translation>
+        <translation>複数</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+17"/>
         <source>Number</source>
-        <translation type="unfinished">Number</translation>
+        <translation>番号</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+1"/>
         <source>Count of items in this product instance</source>
-        <translation type="unfinished">Count of items in this product instance</translation>
+        <translation>この製品インスタンス内の項目数</translation>
     </message>
     <message>
         <location line="+0"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+0"/>
         <source>Max: </source>
-        <translation type="unfinished">Max: </translation>
+        <translation>最大: </translation>
     </message>
     <message>
         <location line="+23"/>
@@ -7020,7 +7020,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SplitLicenseDialog.qml" line="+14"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+14"/>
         <source>Split License</source>
-        <translation type="unfinished">Split License</translation>
+        <translation>ライセンスを分割</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -7038,13 +7038,13 @@ Do you want to replace it?</translation>
         <location line="+58"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+58"/>
         <source>License count to split</source>
-        <translation type="unfinished">License count to split</translation>
+        <translation>分割するライセンス数</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+5"/>
         <source>Max available count: </source>
-        <translation type="unfinished">Max available count: </translation>
+        <translation>最大利用可能数: </translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7056,25 +7056,25 @@ Do you want to replace it?</translation>
         <location line="+10"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+10"/>
         <source>Target account</source>
-        <translation type="unfinished">Target account</translation>
+        <translation>対象アカウント</translation>
     </message>
     <message>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+19"/>
         <source>Please select an account</source>
-        <translation type="unfinished">Please select an account</translation>
+        <translation>アカウントを選択してください</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+8"/>
         <source>Target child license</source>
-        <translation type="unfinished">Target child license</translation>
+        <translation>対象の子ライセンス</translation>
     </message>
     <message>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+20"/>
         <source>Please select a target license</source>
-        <translation type="unfinished">Please select a target license</translation>
+        <translation>対象ライセンスを選択してください</translation>
     </message>
 </context>
 <context>
@@ -7083,31 +7083,31 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/StatisticsPage.qml" line="+86"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+86"/>
         <source>Creation Date</source>
-        <translation type="unfinished">Creation Date</translation>
+        <translation>作成日</translation>
     </message>
     <message>
         <location line="+65"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+65"/>
         <source>Hardware Instances by Period</source>
-        <translation type="unfinished">Hardware Instances by Period</translation>
+        <translation>期間別ハードウェアインスタンス</translation>
     </message>
     <message>
         <location line="+27"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+27"/>
         <source>Software Instances by Period</source>
-        <translation type="unfinished">Software Instances by Period</translation>
+        <translation>期間別ソフトウェアインスタンス</translation>
     </message>
     <message>
         <location line="+47"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+47"/>
         <source>Hardware Instances by Customer</source>
-        <translation type="unfinished">Hardware Instances by Customer</translation>
+        <translation>顧客別ハードウェアインスタンス</translation>
     </message>
     <message>
         <location line="+31"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+31"/>
         <source>Software Instances by Customer</source>
-        <translation type="unfinished">Software Instances by Customer</translation>
+        <translation>顧客別ソフトウェアインスタンス</translation>
     </message>
     <message>
         <location line="+33"/>
@@ -7119,7 +7119,7 @@ Do you want to replace it?</translation>
         <location line="+46"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+46"/>
         <source>Order Creation By Period</source>
-        <translation type="unfinished">Order Creation By Period</translation>
+        <translation>期間別注文作成</translation>
     </message>
 </context>
 <context>
@@ -7186,7 +7186,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Panels/TimeFilterDelegate.qml" line="+9"/>
         <source>Date</source>
-        <translation type="unfinished">Date</translation>
+        <translation>日付</translation>
     </message>
     <message>
         <location line="+105"/>
@@ -7442,7 +7442,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+3"/>
         <source>Enter the email</source>
-        <translation type="unfinished">Enter the email</translation>
+        <translation>メールを入力</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -7610,73 +7610,73 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/WorkspacePage.qml" line="+177"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+177"/>
         <source>Date</source>
-        <translation type="unfinished">Date</translation>
+        <translation>日付</translation>
     </message>
     <message>
         <location line="+175"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+175"/>
         <source>Running: </source>
-        <translation type="unfinished">Running: </translation>
+        <translation>稼働中: </translation>
     </message>
     <message>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+20"/>
         <source>In Stock: </source>
-        <translation type="unfinished">In Stock: </translation>
+        <translation>在庫: </translation>
     </message>
     <message>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+19"/>
         <source>Internal: </source>
-        <translation type="unfinished">Internal: </translation>
+        <translation>内部: </translation>
     </message>
     <message>
         <location line="+18"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+18"/>
         <source>Create New</source>
-        <translation type="unfinished">Create New</translation>
+        <translation>新規作成</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+17"/>
         <source>View All</source>
-        <translation type="unfinished">View All</translation>
+        <translation>すべて表示</translation>
     </message>
     <message>
         <location line="+82"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+82"/>
         <source>Active Software Instances by Product</source>
-        <translation type="unfinished">Active Software Instances by Product</translation>
+        <translation>製品別アクティブソフトウェアインスタンス</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+16"/>
         <source>Active Hardware Instances by Product</source>
-        <translation type="unfinished">Active Hardware Instances by Product</translation>
+        <translation>製品別アクティブハードウェアインスタンス</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+16"/>
         <source>Hardware Status</source>
-        <translation type="unfinished">Hardware Status</translation>
+        <translation>ハードウェア状態</translation>
     </message>
     <message>
         <location line="+45"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+45"/>
         <source>Active Software Instances by Period</source>
-        <translation type="unfinished">Active Software Instances by Period</translation>
+        <translation>期間別アクティブソフトウェアインスタンス</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+16"/>
         <source>Active Hardware Instances by Period</source>
-        <translation type="unfinished">Active Hardware Instances by Period</translation>
+        <translation>期間別アクティブハードウェアインスタンス</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/WorkspacePage.qml" line="+16"/>
         <source>License Creation Activity</source>
-        <translation type="unfinished">License Creation Activity</translation>
+        <translation>ライセンス作成アクティビティ</translation>
     </message>
 </context>
 <context>
@@ -7684,12 +7684,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="+16"/>
         <source>Added group &apos;%1&apos;</source>
-        <translation type="unfinished">Added group &apos;%1&apos;</translation>
+        <translation>グループ '%1' を追加しました</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Removed group &apos;%1&apos;</source>
-        <translation type="unfinished">Removed group &apos;%1&apos;</translation>
+        <translation>グループ '%1' を削除しました</translation>
     </message>
 </context>
 <context>
@@ -7697,12 +7697,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/CDeviceChangeGeneratorComp.cpp" line="+74"/>
         <source>Licenses were transferred from the sensor &apos;%1&apos;</source>
-        <translation type="unfinished">Licenses were transferred from the sensor &apos;%1&apos;</translation>
+        <translation>ライセンスがセンサー '%1' から転送されました</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Licenses have been transferred to the sensor &apos;%1&apos;</source>
-        <translation type="unfinished">Licenses have been transferred to the sensor &apos;%1&apos;</translation>
+        <translation>ライセンスがセンサー '%1' に転送されました</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7733,7 +7733,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+20"/>
         <source>The license has been transferred to the hardware &apos;%1&apos;</source>
-        <translation type="unfinished">The license has been transferred to the hardware &apos;%1&apos;</translation>
+        <translation>ライセンスがハードウェア '%1' に転送されました</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -7782,7 +7782,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/CSoftwareProductCollectionControllerComp.cpp" line="+105"/>
         <source>It is not possible to delete this software because a license file has been created for it. Contact your system administrator.</source>
-        <translation type="unfinished">It is not possible to delete this software because a license file has been created for it. Contact your system administrator.</translation>
+        <translation>このソフトウェアにはライセンスファイルが作成されているため削除できません。システム管理者に連絡してください。</translation>
     </message>
 </context>
 </TS>
