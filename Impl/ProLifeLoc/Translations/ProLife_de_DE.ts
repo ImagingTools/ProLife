@@ -21,7 +21,7 @@
     <message>
         <location line="+37"/>
         <source>Account name cannot be empty</source>
-        <translation type="unfinished">Account name cannot be empty</translation>
+        <translation>Accountname darf nicht leer sein</translation>
     </message>
 </context>
 <context>
@@ -72,7 +72,7 @@
     <message>
         <location line="+3"/>
         <source>Please enter the account name</source>
-        <translation type="unfinished">Please enter the account name</translation>
+        <translation>Bitte geben Sie den Accountnamen ein</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -323,7 +323,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-114"/>
         <location line="+132"/>
         <source>Hardware-ID</source>
-        <translation type="unfinished">Hardware-ID</translation>
+        <translation>Hardware-ID</translation>
     </message>
     <message>
         <location line="-130"/>
@@ -359,7 +359,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+28"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+52"/>
         <source>Hardware</source>
-        <translation type="unfinished">Hardware</translation>
+        <translation>Hardware</translation>
     </message>
     <message>
         <location line="-6"/>
@@ -367,7 +367,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="+18"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-12"/>
         <source>Software</source>
-        <translation type="unfinished">Software</translation>
+        <translation>Software</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+96"/>
@@ -444,7 +444,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeServerConfigurator/CProLifeServerConfigurator.cpp" line="-146"/>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-48"/>
         <source>Accounts</source>
-        <translation type="unfinished">Accounts</translation>
+        <translation>Accounts</translation>
     </message>
     <message>
         <location line="-6"/>
