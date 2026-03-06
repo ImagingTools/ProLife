@@ -27,8 +27,6 @@ Item {
 	property int layoutStartY: 20
 	property bool singleColumnTree: false
 	
-	readonly property int legendHeight: 50  // Height of legend + margin
-
 	// Modern color scheme
 	readonly property color currentNodeColor: "#4A90E2"
 	readonly property color arrowColor: "#6C757D"
