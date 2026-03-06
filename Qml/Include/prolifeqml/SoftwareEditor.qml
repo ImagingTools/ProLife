@@ -21,6 +21,13 @@ ViewBase {
 
 	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
+	property bool showLicenseHierarchy: softwareProductData && (softwareProductData.m_hasChildren || softwareProductData.m_hasParent)
+
+	onShowLicenseHierarchyChanged: {
+		if (!showLicenseHierarchy && expanded){
+			expanded = false
+		}
+	}
 	
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
@@ -620,6 +627,8 @@ ViewBase {
 			ElementView {
 				name: qsTr("License Hierarchy")
 				width: parent.width
+				visible: root.showLicenseHierarchy
+				height: visible ? implicitHeight : 0
 				bottomComp: canvasComp
 				
 				controlComp: Component {
@@ -691,10 +700,17 @@ ViewBase {
 	property bool expanded: false
 	onExpandedChanged: {
 		if (expanded){
+			if (!showLicenseHierarchy){
+				expanded = false
+				return
+			}
+
 			background = backgroundComp.createObject(root)
 		}
 		else{
-			background.destroy()
+			if (background){
+				background.destroy()
+			}
 		}
 	}
 
