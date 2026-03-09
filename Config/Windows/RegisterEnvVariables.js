@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: LicenseRef-Commercial
+// Copyright (C) 2024-2026 ImagingTools. All rights reserved.
+
 var variableExt = "envVariable"
 var variableExp = new RegExp(".*\." + variableExt + "$");
 var scriptExp = new RegExp(".*\.autoregister\.js$");

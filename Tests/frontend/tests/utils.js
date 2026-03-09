@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: LicenseRef-Commercial
+// Copyright (C) 2024-2026 ImagingTools. All rights reserved.
+
 const {expect } = require('@playwright/test');
 const delay = (time = 5000) => new Promise(resolve => setTimeout(resolve, time));
 

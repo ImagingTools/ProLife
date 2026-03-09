@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: LicenseRef-Commercial
+// Copyright (C) 2024-2026 ImagingTools. All rights reserved.
+
 import QtQuick 2.15
 import imtcontrols 1.0
 

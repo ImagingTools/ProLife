@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: LicenseRef-Commercial
+// Copyright (C) 2024-2026 ImagingTools. All rights reserved.
+
 const { test } = require('@playwright/test');
 const { reloadPage, clickAt, checkScreenshot, login} = require('../utils');
 

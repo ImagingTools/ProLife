@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: LicenseRef-Commercial -->
+<!-- Copyright (C) 2024-2026 ImagingTools. All rights reserved. -->
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>

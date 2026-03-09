@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<!-- SPDX-License-Identifier: LicenseRef-Commercial -->
+<!-- Copyright (C) 2024-2026 ImagingTools. All rights reserved. -->
 <TS language="en_US" version="2.0">
 	<context>
 		<name>Lisa</name>
