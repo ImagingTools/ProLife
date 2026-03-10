@@ -22,8 +22,8 @@ DocCollectionViewDelegate {
 		registerDocumentType("Device", qsTr("General Device"))
 		addDocumentView("Device", "DeviceEditor", deviceEditorComp, dataControllerComp)
 		
-		registerDocumentType("IotDevice", qsTr("IoT Device"))
-		addDocumentView("IotDevice", "IotDeviceEditor", iotDeviceEditorComp, iotDeviceDataControllerComp)
+		// registerDocumentType("IotDevice", qsTr("IoT Device"))
+		// addDocumentView("IotDevice", "IotDeviceEditor", iotDeviceEditorComp, iotDeviceDataControllerComp)
 	}
 	
 	removeDialogTitle: qsTr("Removing the sensor");
