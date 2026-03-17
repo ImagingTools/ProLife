@@ -75372,6 +75372,654 @@
                 {
                   "name": "Groups",
                   "item": []
+                },
+                {
+                  "name": "PersonalAccessTokens",
+                  "item": [
+                    {
+                      "name": "CreateToken",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const jsonData = pm.response.json().data;\r",
+                              "\r",
+                              "pm.test(\"CreateToken returned token\", () => {\r",
+                              "    pm.expect(jsonData.CreateToken.success).to.eql(true);\r",
+                              "    pm.expect(jsonData.CreateToken.id).to.not.be.empty;\r",
+                              "    pm.expect(jsonData.CreateToken.token).to.match(/^imt_pat_/);\r",
+                              "});\r",
+                              "\r",
+                              "pm.environment.set(\"pat_token_id\", jsonData.CreateToken.id);\r",
+                              "pm.environment.set(\"pat_raw_token\", jsonData.CreateToken.token);\r",
+                              "pm.environment.set(\"pat_token_name\", \"Postman PAT\");\r",
+                              "pm.environment.set(\"pat_token_description\", \"Token created by Postman tests\");\r",
+                              "pm.environment.set(\"pat_token_expires_at\", \"2099-12-31T23:59:59Z\");\r",
+                              "pm.environment.set(\"pat_token_scopes\", \"read:api,write:data\");"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "mutation CreateToken {CreateToken(input: {userId: \"{{user_id}}\", name: \"Postman PAT\", description: \"Token created by Postman tests\", scopes: [\"read:api\",\"write:data\"], expiresAt: \"2099-12-31T23:59:59Z\"}) {id token success message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "GetToken",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const token = pm.response.json().data.GetToken;\r",
+                              "const scopes = pm.environment.get(\"pat_token_scopes\").split(',');\r",
+                              "\r",
+                              "pm.test(\"Token matches created data\", () => {\r",
+                              "    pm.expect(token.id).to.eql(pm.environment.get(\"pat_token_id\"));\r",
+                              "    pm.expect(token.userId).to.eql(pm.environment.get(\"user_id\"));\r",
+                              "    pm.expect(token.name).to.eql(pm.environment.get(\"pat_token_name\"));\r",
+                              "    pm.expect(token.description).to.eql(pm.environment.get(\"pat_token_description\"));\r",
+                              "    pm.expect(token.tokenHash).to.not.be.empty;\r",
+                              "    pm.expect(token.createdAt).to.not.be.empty;\r",
+                              "    pm.expect(token.scopes).to.include.members(scopes);\r",
+                              "    pm.expect(token.expiresAt).to.eql(pm.environment.get(\"pat_token_expires_at\"));\r",
+                              "    pm.expect(token.revoked).to.eql(false);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetToken {GetToken(input: {id: \"{{pat_token_id}}\"}) {id userId name description tokenHash scopes createdAt lastUsedAt expiresAt revoked}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "GetTokenList",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.GetTokenList;\r",
+                              "const tokens = payload.tokens || [];\r",
+                              "const tokenId = pm.environment.get(\"pat_token_id\");\r",
+                              "const found = tokens.find(item => item.id === tokenId);\r",
+                              "\r",
+                              "pm.test(\"Token list includes created token\", () => {\r",
+                              "    pm.expect(found, 'Created token not found in list').to.exist;\r",
+                              "    pm.expect(found.userId).to.eql(pm.environment.get(\"user_id\"));\r",
+                              "    pm.expect(found.name).to.eql(pm.environment.get(\"pat_token_name\"));\r",
+                              "    pm.expect(found.revoked).to.eql(false);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetTokenList {GetTokenList(input: {userId: \"{{user_id}}\"}) {tokens {id userId name description scopes createdAt lastUsedAt expiresAt revoked}}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "ValidateToken",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.ValidateToken;\r",
+                              "const scopes = pm.environment.get(\"pat_token_scopes\").split(',');\r",
+                              "\r",
+                              "pm.test(\"Token is valid\", () => {\r",
+                              "    pm.expect(payload.valid).to.eql(true);\r",
+                              "    pm.expect(payload.userId).to.eql(pm.environment.get(\"user_id\"));\r",
+                              "    pm.expect(payload.scopes).to.include.members(scopes);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query ValidateToken {ValidateToken(input: {token: \"{{pat_raw_token}}\"}) {valid userId scopes message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "RevokeToken",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.RevokeToken;\r",
+                              "\r",
+                              "pm.test(\"RevokeToken succeeded\", () => {\r",
+                              "    pm.expect(payload.success).to.eql(true);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "mutation RevokeToken {RevokeToken(input: {id: \"{{pat_token_id}}\"}) {success message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "GetToken (Revoked)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const token = pm.response.json().data.GetToken;\r",
+                              "\r",
+                              "pm.test(\"Token is revoked\", () => {\r",
+                              "    pm.expect(token.id).to.eql(pm.environment.get(\"pat_token_id\"));\r",
+                              "    pm.expect(token.revoked).to.eql(true);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetToken {GetToken(input: {id: \"{{pat_token_id}}\"}) {id userId name description tokenHash scopes createdAt lastUsedAt expiresAt revoked}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "ValidateToken (Revoked)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.ValidateToken;\r",
+                              "\r",
+                              "pm.test(\"Token is rejected after revoke\", () => {\r",
+                              "    pm.expect(payload.valid).to.eql(false);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query ValidateToken {ValidateToken(input: {token: \"{{pat_raw_token}}\"}) {valid userId scopes message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "DeleteToken",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.DeleteToken;\r",
+                              "\r",
+                              "pm.test(\"DeleteToken succeeded\", () => {\r",
+                              "    pm.expect(payload.success).to.eql(true);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "mutation DeleteToken {DeleteToken(input: {id: \"{{pat_token_id}}\"}) {success message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "GetTokenList (After delete)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const payload = pm.response.json().data.GetTokenList;\r",
+                              "const tokens = payload.tokens || [];\r",
+                              "const tokenId = pm.environment.get(\"pat_token_id\");\r",
+                              "const found = tokens.find(item => item.id === tokenId);\r",
+                              "\r",
+                              "pm.test(\"Token is removed from list\", () => {\r",
+                              "    pm.expect(found, 'Deleted token still present').to.not.exist;\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{access_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetTokenList {GetTokenList(input: {userId: \"{{user_id}}\"}) {tokens {id userId name description scopes createdAt lastUsedAt expiresAt revoked}}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
                 }
               ]
             }
