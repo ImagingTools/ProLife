@@ -75400,7 +75400,7 @@
                               "pm.environment.set(\"pat_token_name\", \"Postman PAT\");\r",
                               "pm.environment.set(\"pat_token_description\", \"Token created by Postman tests\");\r",
                               "pm.environment.set(\"pat_token_expires_at\", \"2099-12-31T23:59:59Z\");\r",
-                              "pm.environment.set(\"pat_token_scopes\", \"read:api,write:data\");"
+                              "pm.environment.set(\"pat_token_scopes\", \"ViewSensors,CreateLicenseFile\");"
                             ],
                             "type": "text/javascript",
                             "packages": {},
@@ -75434,7 +75434,7 @@
                         "body": {
                           "mode": "graphql",
                           "graphql": {
-                            "query": "mutation CreateToken {CreateToken(input: {userId: \"{{user_id}}\", name: \"Postman PAT\", description: \"Token created by Postman tests\", scopes: [\"read:api\",\"write:data\"], expiresAt: \"2099-12-31T23:59:59Z\"}) {id token success message}}",
+                            "query": "mutation CreateToken {CreateToken(input: {userId: \"{{user_id}}\", name: \"Postman PAT\", description: \"Token created by Postman tests\", scopes: [\"ViewSensors\",\"CreateLicenseFile\"], expiresAt: \"2099-12-31T23:59:59Z\"}) {id token success message}}",
                             "variables": ""
                           }
                         },
