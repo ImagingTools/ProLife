@@ -13,12 +13,12 @@ call reset_db.bat
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 C:\installers\LisaServerInstall.exe /VERYSILENT /NORESTART
-C:\installers\PumaServerInstall.exe /VERYSILENT /NORESTART
+C:\installers\PumaServerPgInstall.exe /VERYSILENT /NORESTART
 C:\installers\ProLifeServerInstall.exe /VERYSILENT /NORESTART
 
 rem === Запуск приложений ===
 start "" /B "C:\Program Files\ImagingTools\LisaServer\LisaServer.exe"
-start "" /B "C:\Program Files\ImagingTools\PumaServer\PumaServer.exe"
+start "" /B "C:\Program Files\ImagingTools\PumaServer\PumaServerPg.exe"
 start "" /B "C:\Program Files\ImagingTools\ProLifeServer\ProLifeServer.exe"
 
 timeout /t 10 >nul

@@ -63,7 +63,7 @@ echo "Qt libraries available:"
 ls -l /app/qtlibs || true
 
 echo "Checking PumaServer dependencies:"
-ldd /app/PumaServer || true
+ldd /app/PumaServerPg || true
 
 start_server() {
     local server_name=$1
@@ -90,7 +90,7 @@ start_server() {
     exit 1
 }
 
-start_server "PumaServer" 7788 "/app/PumaServer start"
+start_server "PumaServerPg" 7788 "/app/PumaServerPg start"
 start_server "LisaServer" 7776 "/app/LisaServer start"
 start_server "ProLifeServer" 7778 "/app/ProLifeServer start"
 
