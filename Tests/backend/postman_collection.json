@@ -75454,6 +75454,76 @@
                       "response": []
                     },
                     {
+                      "name": "GetProfile (PAT token)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const profile = pm.response.json().data.GetProfile;\r",
+                              "\r",
+                              "pm.test(\"PAT token returns profile\", () => {\r",
+                              "    pm.expect(profile).to.exist;\r",
+                              "    pm.expect(profile.id).to.eql(pm.environment.get(\"user_id\"));\r",
+                              "    pm.expect(profile.username).to.eql(\"su\");\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{pat_raw_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetProfile {GetProfile(input: {id: \"{{user_id}}\", productId: \"ProLife\"}) {}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
                       "name": "GetToken",
                       "event": [
                         {
@@ -75862,6 +75932,76 @@
                           "mode": "graphql",
                           "graphql": {
                             "query": "query ValidateToken {ValidateToken(input: {token: \"{{pat_raw_token}}\"}) {valid userId scopes message}}",
+                            "variables": ""
+                          }
+                        },
+                        "url": {
+                          "raw": "http://localhost:7778/ProLife/graphql",
+                          "protocol": "http",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "7778",
+                          "path": [
+                            "ProLife",
+                            "graphql"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "GetProfile (PAT revoked)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "pm.test('Query is successful', function () {\r",
+                              "    pm.response.to.be.ok;\r",
+                              "});\r",
+                              "\r",
+                              "const response = pm.response.json();\r",
+                              "const profile = response.data && response.data.GetProfile;\r",
+                              "const rejected = (response.errors && response.errors.length > 0) || !response.data || !profile;\r",
+                              "\r",
+                              "pm.test(\"PAT token no longer provides profile\", () => {\r",
+                              "    pm.expect(rejected).to.eql(true);\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                            {
+                              "key": "value",
+                              "value": "{{pat_raw_token}}",
+                              "type": "string"
+                            },
+                            {
+                              "key": "key",
+                              "value": "x-authentication-token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "in",
+                              "value": "header",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "graphql",
+                          "graphql": {
+                            "query": "query GetProfile {GetProfile(input: {id: \"{{user_id}}\", productId: \"ProLife\"}) {}}",
                             "variables": ""
                           }
                         },
