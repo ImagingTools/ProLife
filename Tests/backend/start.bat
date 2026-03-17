@@ -18,7 +18,7 @@ C:\installers\ProLifeServerInstall.exe /VERYSILENT /NORESTART
 
 rem === Запуск приложений ===
 start "" /B "C:\Program Files\ImagingTools\LisaServer\LisaServer.exe"
-start "" /B "C:\Program Files\ImagingTools\PumaServer\PumaServerPg.exe"
+start "" /B "C:\Program Files\ImagingTools\PumaServerPg\PumaServerPg.exe"
 start "" /B "C:\Program Files\ImagingTools\ProLifeServer\ProLifeServer.exe"
 
 timeout /t 10 >nul
