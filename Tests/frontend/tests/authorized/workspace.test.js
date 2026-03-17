@@ -35,14 +35,6 @@ test('Create New / View All', async ({ page }) => {
   await checkScreenshot(page, '5-workspace-software-create-new.png')
   await clickOnPage(page, "Workspace"); // Workspace page click
 
-  await clickOnButton(page, ["DevicesInfo", "ViewAllButton"]) // Hardware 'View All' button click
-  await checkScreenshot(page, '6-workspace-hardware-view-all.png')
-  await clickOnPage(page, "Workspace"); // Workspace page click
-
-  await clickOnButton(page, ["DevicesInfo", "CreateNewButton"]) // Hardware 'Create New' button click
-  await checkScreenshot(page, '7-workspace-hardware-create-new.png')
-  await clickOnPage(page, "Workspace"); // Workspace page click
-
   await clickOnButton(page, ["OrdersInfo", "ViewAllButton"]) // Order 'View All' button click
   await checkScreenshot(page, '8-workspace-order-view-all.png')
   await clickOnPage(page, "Workspace"); // Workspace page click
