@@ -4,7 +4,7 @@ include($(PROLIFEDIR)/Config/QMake/ProLife.pri)
 
 CONFIG += console
 
-copyToDestDir($$PWD/../../../Build/Migrations, $$PWD/../../../Bin/$$COMPILER_DIR/Migrations)
+RESOURCES += $$PWD/../ProLifeMigrations.qrc
 
 # Set OS-specific build options:
 win32-msvc*{

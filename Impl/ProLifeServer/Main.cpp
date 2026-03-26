@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtlicguiTheme);
 	Q_INIT_RESOURCE(ProLifeLoc);
 	Q_INIT_RESOURCE(imtauthdb);
+	Q_INIT_RESOURCE(ProLifeMigrations);
 
 	return ProductFeatureRun<CProLifeServer, DefaultImtCoreQmlInitializer, prolife::FillProduct>(argc, argv);
 }

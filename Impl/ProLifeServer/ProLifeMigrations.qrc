@@ -1,0 +1,21 @@
+<RCC>
+<qresource prefix="/Migrations">
+    <file>Resources/Migrations/migration_0.sql</file>
+    <file>Resources/Migrations/migration_1.sql</file>
+    <file>Resources/Migrations/migration_2.sql</file>
+    <file>Resources/Migrations/migration_3.sql</file>
+    <file>Resources/Migrations/migration_4.sql</file>
+    <file>Resources/Migrations/migration_5.sql</file>
+    <file>Resources/Migrations/migration_6.sql</file>
+    <file>Resources/Migrations/migration_7.sql</file>
+    <file>Resources/Migrations/migration_8.sql</file>
+    <file>Resources/Migrations/migration_9.sql</file>
+    <file>Resources/Migrations/migration_10.sql</file>
+    <file>Resources/Migrations/migration_11.sql</file>
+    <file>Resources/Migrations/migration_12.sql</file>
+    <file>Resources/Migrations/migration_13.sql</file>
+    <file>Resources/Migrations/migration_15.sql</file>
+    <file>Resources/Migrations/migration_17.sql</file>
+    <file>Resources/Migrations/migration_18.sql</file>
+</qresource>
+</RCC>
