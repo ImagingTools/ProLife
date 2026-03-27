@@ -9,7 +9,6 @@
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/CDeviceInfo.h>
-#include <prolifedata/CKeyDataProviderComp.h>
 #include <prolifedata/CDeviceInfoComp.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CDeviceMetaInfoCreatorComp.h>
@@ -53,7 +52,6 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> OrderedIdentifiableSoftwareInstanceInfo;
-typedef prolifedata::CKeyDataProviderComp KeyDataProvider;
 typedef icomp::TModelCompWrap<prolifedata::CDeviceInfoComp> DeviceInfo;
 typedef prolifedata::CDeviceMetaInfoCreatorComp DeviceMetaInfoCreator;
 typedef prolifedata::CSoftwareMetaInfoCreatorComp SoftwareMetaInfoCreator;
