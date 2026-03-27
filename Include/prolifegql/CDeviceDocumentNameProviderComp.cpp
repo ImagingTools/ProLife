@@ -43,11 +43,11 @@ QString CDeviceDocumentNameProviderComp::GetDefaultDocumentName(
 	}
 
 	if (name.isEmpty()){
-		name = deviceType;
+		name = QString::fromUtf8(deviceType);
 	}
 
 	if (!macAddress.isEmpty()){
-		name += " (" + macAddress + ")";
+		name += " (" + QString::fromUtf8(macAddress) + ")";
 	}
 
 	return name;
