@@ -9,7 +9,7 @@
 #include <imtdoc/IDocumentValidator.h>
 
 
-namespace prolifegql
+namespace prolifedata
 {
 
 
@@ -31,6 +31,6 @@ private:
 };
 
 
-} // namespace prolifegql
+} // namespace prolifedata
 
 

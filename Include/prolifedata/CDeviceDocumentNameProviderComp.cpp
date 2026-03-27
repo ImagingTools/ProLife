@@ -1,4 +1,4 @@
-#include <prolifegql/CDeviceDocumentNameProviderComp.h>
+#include <prolifedata/CDeviceDocumentNameProviderComp.h>
 
 
 // Qt includes
@@ -9,7 +9,7 @@
 #include <prolifedata/CDeviceInfo.h>
 
 
-namespace prolifegql
+namespace prolifedata
 {
 
 
@@ -54,6 +54,6 @@ QString CDeviceDocumentNameProviderComp::GetDefaultDocumentName(
 }
 
 
-} // namespace prolifegql
+} // namespace prolifedata
 
 

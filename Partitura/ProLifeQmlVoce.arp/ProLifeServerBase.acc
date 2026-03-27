@@ -706,7 +706,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="DeviceDocumentNameProvider" PackageId="ProLifeGqlPck" ComponentId="DeviceDocumentNameProvider">
+                    <Element Id="DeviceDocumentNameProvider" PackageId="ProLifeDataPck" ComponentId="DeviceDocumentNameProvider">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -721,7 +721,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="DeviceDocumentValidator" PackageId="ProLifeGqlPck" ComponentId="DeviceDocumentValidator">
+                    <Element Id="DeviceDocumentValidator" PackageId="ProLifeDataPck" ComponentId="DeviceDocumentValidator">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">

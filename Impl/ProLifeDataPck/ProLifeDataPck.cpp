@@ -94,6 +94,16 @@ I_EXPORT_COMPONENT(
 			"Revoke Out Action",
 			"Revoke Out Action");
 
+I_EXPORT_COMPONENT(
+			DeviceDocumentValidator,
+			"Device document data validator",
+			"Device Document Validator");
+
+I_EXPORT_COMPONENT(
+			DeviceDocumentNameProvider,
+			"Device document name provider",
+			"Device Document Name Provider");
+
 
 } // namespace ProLifeDataPck
 

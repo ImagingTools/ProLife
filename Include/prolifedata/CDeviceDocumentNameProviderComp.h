@@ -9,7 +9,7 @@
 #include <imtdoc/IDocumentNameProvider.h>
 
 
-namespace prolifegql
+namespace prolifedata
 {
 
 
@@ -33,6 +33,6 @@ private:
 };
 
 
-} // namespace prolifegql
+} // namespace prolifedata
 
 

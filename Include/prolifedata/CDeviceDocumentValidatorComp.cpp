@@ -1,4 +1,4 @@
-#include <prolifegql/CDeviceDocumentValidatorComp.h>
+#include <prolifedata/CDeviceDocumentValidatorComp.h>
 
 
 // Qt includes
@@ -9,7 +9,7 @@
 #include <prolifedata/CDeviceInfo.h>
 
 
-namespace prolifegql
+namespace prolifedata
 {
 
 
@@ -60,6 +60,6 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(const istd::IChangeable&
 }
 
 
-} // namespace prolifegql
+} // namespace prolifedata
 
 

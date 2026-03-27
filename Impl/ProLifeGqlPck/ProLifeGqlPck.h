@@ -27,8 +27,6 @@
 #include <prolifegql/CWorkspaceControllerComp.h>
 #include <prolifegql/CSoftwareControllerComp.h>
 #include <prolifegql/CDeviceCollectionDocumentManagerComp.h>
-#include <prolifegql/CDeviceDocumentValidatorComp.h>
-#include <prolifegql/CDeviceDocumentNameProviderComp.h>
 
 
 /**
@@ -65,8 +63,6 @@ typedef prolifegql::CGroupFilterParamJoinerComp GroupFilterParamJoiner;
 typedef prolifegql::CWorkspaceControllerComp WorkspaceController;
 typedef prolifegql::CSoftwareControllerComp SoftwareController;
 typedef prolifegql::CDeviceCollectionDocumentManagerComp DeviceCollectionDocumentManager;
-typedef prolifegql::CDeviceDocumentValidatorComp DeviceDocumentValidator;
-typedef prolifegql::CDeviceDocumentNameProviderComp DeviceDocumentNameProvider;
 
 
 } // namespace ImtLicenseGqlPck
