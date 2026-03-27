@@ -114,6 +114,16 @@ I_EXPORT_COMPONENT(
 		"Device collection document manager",
 		"Device Collection Document Manager");
 
+I_EXPORT_COMPONENT(
+		DeviceDocumentValidator,
+		"Device document data validator",
+		"Device Document Validator");
+
+I_EXPORT_COMPONENT(
+		DeviceDocumentNameProvider,
+		"Device document name provider",
+		"Device Document Name Provider");
+
 
 } // namespace ProLifeGqlPck
 
