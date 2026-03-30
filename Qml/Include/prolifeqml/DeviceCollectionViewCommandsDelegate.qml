@@ -25,8 +25,8 @@ DocCollectionViewDelegate {
 		registerDocumentType("Device", qsTr("General Device"))
 		addDocumentView("Device", "DeviceEditor", deviceEditorComp, dataControllerComp)
 		
-		registerDocumentType("IotDevice", qsTr("IoT Device"))
-		addDocumentView("IotDevice", "IotDeviceEditor", iotDeviceEditorComp, iotDeviceDataControllerComp)
+		// registerDocumentType("IotDevice", qsTr("IoT Device"))
+		// addDocumentView("IotDevice", "IotDeviceEditor", iotDeviceEditorComp, iotDeviceDataControllerComp)
 	}
 	
 	removeDialogTitle: qsTr("Removing the sensor");
@@ -257,7 +257,8 @@ DocCollectionViewDelegate {
 							return;
 						}
 
-						let documentId =  deviceEditor.deviceData.m_id
+						let objectId = deviceEditor.deviceData.m_id
+						let documentId =  documentManager.getDocumentIdByView(deviceEditor)
 						let isDirty = documentManager.documentIsDirty(documentId);
 						let isNew = documentManager.documentIsNew(documentId);
 
@@ -272,7 +273,7 @@ DocCollectionViewDelegate {
 								return;
 							}
 							
-							container.onCreateLicenseFile(documentId)
+							container.onCreateLicenseFile(objectId)
 						}
 						else if (commandId == container.transferLicensesCommand){
 							if (!documentModel.m_softwareBindingInfos){
@@ -286,7 +287,7 @@ DocCollectionViewDelegate {
 							}
 							
 							let deviceType = documentModel.m_deviceType;
-							container.onTransferLicenses(documentId, deviceType)
+							container.onTransferLicenses(objectId, deviceType)
 						}
 						else if (commandId == container.bindCommand){
 							let macAddress = documentModel.m_macAddress;
@@ -295,7 +296,7 @@ DocCollectionViewDelegate {
 								return;
 							}
 
-							container.onBind(documentId, macAddress)
+							container.onBind(objectId, macAddress)
 						}
 					}
 				}

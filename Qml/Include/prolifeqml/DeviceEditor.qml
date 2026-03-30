@@ -45,8 +45,19 @@ ViewBase {
 			CachedOrderCollection.updateModel();
 		}
 	}
-	
+
+	Connections {
+		target: deviceEditorContainer.deviceData
+		function onFinished(){
+			deviceEditorContainer.deviceDataWasChanged()
+		}
+	}
+
 	onDeviceDataChanged: {
+		deviceEditorContainer.deviceDataWasChanged()
+	}
+
+	function deviceDataWasChanged(){
 		if (!deviceData){
 			return;
 		}
@@ -54,7 +65,8 @@ ViewBase {
 		checkPermissions();
 		
 		let licenseGroupVisible = false
-		if (deviceData.m_softwareBindingInfos){
+
+		if (deviceData.hasSoftwareBindingInfos()){
 			licenseInformationTable.table.elements = deviceData.m_softwareBindingInfos
 			licenseGroupVisible = deviceData.m_softwareBindingInfos.count > 0
 		}

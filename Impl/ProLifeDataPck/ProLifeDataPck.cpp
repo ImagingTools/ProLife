@@ -43,11 +43,6 @@ I_EXPORT_COMPONENT(
 			"IoT Device Information Authority");
 
 I_EXPORT_COMPONENT(
-			KeyDataProvider,
-			"Key data provider",
-			"License Key Provider Order Product");
-
-I_EXPORT_COMPONENT(
 			DeviceMetaInfoCreator,
 			"Device meta info creator",
 			"Device Meta Info Creator");
@@ -101,6 +96,16 @@ I_EXPORT_COMPONENT(
 			RevokeOutAction,
 			"Revoke Out Action",
 			"Revoke Out Action");
+
+I_EXPORT_COMPONENT(
+			DeviceDocumentValidator,
+			"Device document data validator",
+			"Device Document Validator");
+
+I_EXPORT_COMPONENT(
+			DeviceDocumentNameProvider,
+			"Device document name provider",
+			"Device Document Name Provider");
 
 
 } // namespace ProLifeDataPck

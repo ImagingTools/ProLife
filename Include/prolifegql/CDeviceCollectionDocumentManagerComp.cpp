@@ -38,12 +38,12 @@ sdl::prolife::Sensors::CDeviceData CDeviceCollectionDocumentManagerComp::OnGetDe
 
 	QByteArray userId = GetUserId(gqlRequest);
 
-	QByteArray objectId;
+	QByteArray documentId;
 	istd::IChangeableSharedPtr documentPtr;
 	if (arguments.input.Version_1_0->id){
-		objectId = *arguments.input.Version_1_0->id;
+		documentId = *arguments.input.Version_1_0->id;
 
-		m_documentManagerCompPtr->GetDocumentData(userId, objectId, documentPtr);
+		m_documentManagerCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	}
 
 	if (!documentPtr.IsValid()){
@@ -54,6 +54,8 @@ sdl::prolife::Sensors::CDeviceData CDeviceCollectionDocumentManagerComp::OnGetDe
 	if (deviceInfoPtr == nullptr){
 		return sdl::prolife::Sensors::CDeviceData();
 	}
+
+	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
 
 	sdl::prolife::Sensors::CDeviceData response;
 	response.Version_1_0.Emplace();
@@ -387,4 +389,5 @@ sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus CDeviceCollect
 
 
 } // namespace prolifegql
+
 

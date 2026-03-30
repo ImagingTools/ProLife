@@ -6,6 +6,7 @@
 
 // ImtCore includes
 #include <imtdoc/IDocumentManager.h>
+#include <imtdoc/IDocumentManagerEventHandler.h>
 #include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentManager.h>
 
 // ControlsGallery includes
@@ -16,7 +17,8 @@ namespace prolifegql
 {
 
 
-class CDeviceCollectionDocumentManagerComp: public sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase
+class CDeviceCollectionDocumentManagerComp: 
+			public sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase
 {
 public:
 	typedef sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase BaseClass;

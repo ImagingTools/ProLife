@@ -12,7 +12,6 @@
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/CDeviceInfo.h>
-#include <prolifedata/CKeyDataProviderComp.h>
 #include <prolifedata/CDeviceInfoComp.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CDeviceMetaInfoCreatorComp.h>
@@ -27,6 +26,8 @@
 #include <prolifedata/CSplitOutAction.h>
 #include <prolifedata/CRevokeInAction.h>
 #include <prolifedata/CRevokeOutAction.h>
+#include <prolifedata/CDeviceDocumentValidatorComp.h>
+#include <prolifedata/CDeviceDocumentNameProviderComp.h>
 
 
 namespace ProLifeDataPck
@@ -56,7 +57,6 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> OrderedIdentifiableSoftwareInstanceInfo;
-typedef prolifedata::CKeyDataProviderComp KeyDataProvider;
 typedef icomp::TModelCompWrap<prolifedata::CDeviceInfoComp> DeviceInfo;
 typedef prolifedata::CDeviceMetaInfoCreatorComp DeviceMetaInfoCreator;
 typedef prolifedata::CSoftwareMetaInfoCreatorComp SoftwareMetaInfoCreator;
@@ -96,6 +96,8 @@ typedef icomp::TModelCompWrap<
 						prolifedata::CRevokeOutAction,
 						iser::ISerializable,
 						istd::IChangeable>> RevokeOutAction;
+typedef prolifedata::CDeviceDocumentValidatorComp DeviceDocumentValidator;
+typedef prolifedata::CDeviceDocumentNameProviderComp DeviceDocumentNameProvider;
 
 
 } // namespace ProLifeDataPck
