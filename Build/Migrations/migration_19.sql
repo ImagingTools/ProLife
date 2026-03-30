@@ -5,13 +5,13 @@ BEGIN
         RAISE EXCEPTION 'DocumentId cannot be NULL';
     END IF;
 
-    -- Если Document NULL — создаём
+    -- If Document is NULL, create it
     IF NEW."Document" IS NULL THEN
         NEW."Document" := jsonb_build_object(
             'Uuid', NEW."DocumentId"::text
         );
     ELSE
-        -- Обновляем только если реально отличается
+        -- Update only if it actually differs
         IF NEW."Document"->>'Uuid' IS DISTINCT FROM NEW."DocumentId"::text THEN
             NEW."Document" := jsonb_set(
                 NEW."Document",
