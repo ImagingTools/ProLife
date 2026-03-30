@@ -15,7 +15,7 @@ namespace prolifedata
 
 // reimplemented (imtdoc::IDocumentValidator)
 
-bool CDeviceDocumentValidatorComp::ValidateDocumentData(const istd::IChangeable& document, QString& errorMessage) const
+bool CDeviceDocumentValidatorComp::ValidateDocumentData(const QByteArray& objectId, const istd::IChangeable& document, QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr =
 		dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&document);
@@ -23,8 +23,6 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(const istd::IChangeable&
 		errorMessage = QString("Unable to validate document. Error: Object is invalid");
 		return false;
 	}
-
-	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 	if (!macAddress.isEmpty()){

@@ -24,7 +24,7 @@ public:
 	I_END_COMPONENT;
 
 	// reimplemented (imtdoc::IDocumentValidator)
-	virtual bool ValidateDocumentData(const istd::IChangeable& document, QString& errorMessage) const override;
+	virtual bool ValidateDocumentData(const QByteArray& objectId, const istd::IChangeable& document, QString& errorMessage) const override;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);

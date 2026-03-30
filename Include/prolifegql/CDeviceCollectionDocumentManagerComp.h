@@ -3,6 +3,7 @@
 
 // ImtCore includes
 #include <imtdoc/IDocumentManager.h>
+#include <imtdoc/IDocumentManagerEventHandler.h>
 #include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentManager.h>
 
 // ControlsGallery includes
@@ -13,12 +14,14 @@ namespace prolifegql
 {
 
 
-class CDeviceCollectionDocumentManagerComp: public sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase
+class CDeviceCollectionDocumentManagerComp: 
+			public sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase
 {
 public:
 	typedef sdl::prolife::DeviceCollectionDocumentManager::CGraphQlHandlerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionDocumentManagerComp)
+		I_REGISTER_INTERFACE(imtdoc::IDocumentManagerEventHandler);
 		I_ASSIGN(m_documentManagerCompPtr, "CollectionDocumentManager", "Collection document manager", false, "CollectionDocumentManager");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");

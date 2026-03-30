@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5715" Description="ACF"/>
-            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6379" Description="ACF"/>
+            <Version Id="1" Number="2306" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -629,8 +629,12 @@
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DocumentNameProvider" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="DeviceDocumentNameProvider"/>
+                                <AttributeInfo Id="DocumentNameProviders" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>DeviceDocumentNameProvider</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DocumentValidators" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
@@ -776,7 +780,7 @@
                                             <Value>DatabaseConverterComp</Value>
                                             <Value>MigrationController15</Value>
                                             <Value>MigrationController16</Value>
-                                            <Value>MigrationController17_18</Value>
+                                            <Value>MigrationController17_19</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -918,7 +922,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="MigrationController17_18" PackageId="ImtDatabasePck" ComponentId="MigrationController">
+                    <Element Id="MigrationController17_19" PackageId="ImtDatabasePck" ComponentId="MigrationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -934,7 +938,7 @@
                                     <Data IsEnabled="true" Value="MigrationFilePath"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="To" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="18"/>
+                                    <Data IsEnabled="true" Value="19"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
