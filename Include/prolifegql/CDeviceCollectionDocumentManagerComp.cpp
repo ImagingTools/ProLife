@@ -387,3 +387,4 @@ sdl::imtbase::CollectionDocumentManager::CDocumentOperationStatus CDeviceCollect
 
 } // namespace prolifegql
 
+
