@@ -117,6 +117,11 @@ prolifedata::IIqcRunInfo* CIqcIngestControllerComp::FindExistingRun(
 		return nullptr;
 	}
 
+	// NOTE: This iterates over the collection loaded in memory. The database migration
+	// (migration_20.sql) creates a unique index on (Document->>'SystemId', Document->>'ExternalRunId')
+	// which enforces uniqueness at the DB level. For high-volume scenarios, callers should
+	// pre-filter the collection using CIqcRunDatabaseDelegateComp::CreateAdditionalFiltersQuery
+	// with a SystemId/ExternalRunId filter parameter to avoid loading the full collection.
 	imtbase::IObjectCollectionIterator* iterPtr = m_iqcRunCollectionCompPtr->CreateIterator();
 	if (iterPtr == nullptr){
 		return nullptr;
