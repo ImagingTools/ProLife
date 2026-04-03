@@ -19,4 +19,8 @@ GqlLinechartView 1.0 GqlLinechartView.qml
 GqlBarchartView 1.0 GqlBarchartView.qml
 StatisticsPage 1.0 StatisticsPage.qml
 IotDeviceEditor 1.0 IotDeviceEditor.qml
+ProcurementPage 1.0 ProcurementPage.qml
+ProcurementEditor 1.0 ProcurementEditor.qml
+IqcRunEditor 1.0 IqcRunEditor.qml
+IqcTemplateEditor 1.0 IqcTemplateEditor.qml
 

@@ -27,6 +27,10 @@
 #include <prolifegql/CWorkspaceControllerComp.h>
 #include <prolifegql/CSoftwareControllerComp.h>
 #include <prolifegql/CDeviceCollectionDocumentManagerComp.h>
+#include <prolifegql/CProcurementCollectionControllerComp.h>
+#include <prolifegql/CIqcCollectionControllerComp.h>
+#include <prolifegql/CIqcTemplateCollectionControllerComp.h>
+#include <prolifegql/CIqcIngestControllerComp.h>
 
 
 /**
@@ -63,6 +67,10 @@ typedef prolifegql::CGroupFilterParamJoinerComp GroupFilterParamJoiner;
 typedef prolifegql::CWorkspaceControllerComp WorkspaceController;
 typedef prolifegql::CSoftwareControllerComp SoftwareController;
 typedef prolifegql::CDeviceCollectionDocumentManagerComp DeviceCollectionDocumentManager;
+typedef prolifegql::CProcurementCollectionControllerComp ProcurementCollectionController;
+typedef prolifegql::CIqcCollectionControllerComp IqcCollectionController;
+typedef prolifegql::CIqcTemplateCollectionControllerComp IqcTemplateCollectionController;
+typedef prolifegql::CIqcIngestControllerComp IqcIngestController;
 
 
 } // namespace ImtLicenseGqlPck

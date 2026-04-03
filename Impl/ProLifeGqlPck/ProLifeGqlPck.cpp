@@ -114,6 +114,26 @@ I_EXPORT_COMPONENT(
 		"Device collection document manager",
 		"Device Collection Document Manager");
 
+I_EXPORT_COMPONENT(
+		ProcurementCollectionController,
+		"Collection controller for procurement order documents",
+		"Collection Controller Procurement Document");
+
+I_EXPORT_COMPONENT(
+		IqcCollectionController,
+		"Collection controller for IQC run documents",
+		"Collection Controller IQC Run Document");
+
+I_EXPORT_COMPONENT(
+		IqcTemplateCollectionController,
+		"Collection controller for IQC template documents",
+		"Collection Controller IQC Template Document");
+
+I_EXPORT_COMPONENT(
+		IqcIngestController,
+		"Controller for push-based automated IQC result ingestion",
+		"IQC Ingest Controller");
+
 
 } // namespace ProLifeGqlPck
 

@@ -1,0 +1,118 @@
+schema {
+	query: Query
+	mutation: Mutation
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+# --- Procurement Orders ---
+
+input ProcurementListInput {
+	viewParams: CollectionViewParams
+}
+
+type ProcurementItem {
+	typeId: ID!
+	id: ID!
+	name: String
+	procurementOrderNumber: String
+	supplierId: ID
+	supplierName: String
+	status: String
+	linkedOrderUuid: ID
+	expectedDeliveryDate: String
+	description: String
+	added: String
+	timeStamp: String
+}
+
+type ProcurementListPayload {
+	items: [ProcurementItem]
+	notification: NotificationItem
+}
+
+type ProcurementLine {
+	id: ID!
+	procurementOrderUuid: ID
+	componentId: String
+	componentName: String
+	manufacturerPartNumber: String
+	manufacturer: String
+	requestedQuantity: Integer
+	unit: String
+	criticality: String
+}
+
+type DeliveryItem {
+	id: ID!
+	procurementOrderUuid: ID
+	deliveryNoteNumber: String
+	deliveryDate: String
+	receivedBy: String
+	carrier: String
+	trackingNumber: String
+	annotation: String
+	deliveryStatus: String
+}
+
+type BatchItem {
+	id: ID!
+	deliveryUuid: ID
+	procurementLineUuid: ID
+	batchNumber: String
+	manufacturerBatchNumber: String
+	quantityReceived: Integer
+	manufactureDate: String
+	expiryDate: String
+	storageLocation: String
+}
+
+type ProcurementData {
+	id: ID
+	name: String
+	procurementOrderNumber: String
+	supplierId: ID
+	supplierName: String
+	procurementStatus: String
+	description: String
+	linkedOrderUuid: ID
+	expectedDeliveryDate: String
+	lines: [ProcurementLine]
+	deliveries: [DeliveryItem]
+}
+
+input ProcurementDataInput {
+	id: ID!
+	item: ProcurementData!
+}
+
+type Query {
+	ProcurementList (input: ProcurementListInput): ProcurementListPayload!
+	ProcurementItem (input: InputId): ProcurementData!
+}
+
+type Mutation {
+	ProcurementUpdate (input: ProcurementDataInput): UpdatedNotificationPayload!
+	ProcurementAdd (input: ProcurementDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+	type Procurement {
+		ref: ProcurementItem
+		operations {
+			list: ProcurementList
+		}
+		subtype Procurement {
+			ref: ProcurementData
+			operations {
+				get: ProcurementItem
+				update: ProcurementUpdate
+				insert: ProcurementAdd
+			}
+		}
+	}
+}

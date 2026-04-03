@@ -909,6 +909,110 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	productInfo.AddFeature("df22ac46-7253-4b13-a1b8-d4391943adde", *workspaceManagementFeatureInfo.GetPtr());
 
+	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> procurementManagementFeatureInfo;
+	procurementManagementFeatureInfo.SetPtr(new imtlic::CIdentifiableFeatureInfo);
+	procurementManagementFeatureInfo->SetObjectUuid("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+	procurementManagementFeatureInfo->SetFeatureId("ProcurementManagement");
+	procurementManagementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Procurement Management"));
+	procurementManagementFeatureInfo->SetOptional(false);
+	procurementManagementFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewProcurementFeatureInfo;
+	viewProcurementFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewProcurementFeatureInfo->SetFeatureId("ViewProcurement");
+	viewProcurementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Procurement"));
+	viewProcurementFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View procurement page"));
+	viewProcurementFeatureInfo->SetOptional(false);
+	viewProcurementFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(viewProcurementFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> editProcurementFeatureInfo;
+	editProcurementFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	editProcurementFeatureInfo->SetFeatureId("EditProcurement");
+	editProcurementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Edit Procurement"));
+	editProcurementFeatureInfo->SetOptional(false);
+	editProcurementFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> addProcurementFeatureInfo;
+	addProcurementFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	addProcurementFeatureInfo->SetFeatureId("AddProcurement");
+	addProcurementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Add Procurement"));
+	addProcurementFeatureInfo->SetOptional(false);
+	addProcurementFeatureInfo->SetIsPermission(true);
+
+	editProcurementFeatureInfo->InsertSubFeature(addProcurementFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> changeProcurementFeatureInfo;
+	changeProcurementFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	changeProcurementFeatureInfo->SetFeatureId("ChangeProcurement");
+	changeProcurementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Change Procurement"));
+	changeProcurementFeatureInfo->SetOptional(false);
+	changeProcurementFeatureInfo->SetIsPermission(true);
+
+	editProcurementFeatureInfo->InsertSubFeature(changeProcurementFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> removeProcurementFeatureInfo;
+	removeProcurementFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	removeProcurementFeatureInfo->SetFeatureId("RemoveProcurement");
+	removeProcurementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Remove Procurement"));
+	removeProcurementFeatureInfo->SetOptional(false);
+	removeProcurementFeatureInfo->SetIsPermission(true);
+
+	editProcurementFeatureInfo->InsertSubFeature(removeProcurementFeatureInfo.PopPtr());
+
+	procurementManagementFeatureInfo->InsertSubFeature(editProcurementFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> addDeliveryFeatureInfo;
+	addDeliveryFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	addDeliveryFeatureInfo->SetFeatureId("AddProcurementDelivery");
+	addDeliveryFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Add Procurement Delivery"));
+	addDeliveryFeatureInfo->SetOptional(false);
+	addDeliveryFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(addDeliveryFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewIqcFeatureInfo;
+	viewIqcFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewIqcFeatureInfo->SetFeatureId("ViewIncomingQualityControl");
+	viewIqcFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Incoming Quality Control"));
+	viewIqcFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "View IQC runs and results"));
+	viewIqcFeatureInfo->SetOptional(false);
+	viewIqcFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(viewIqcFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> editIqcFeatureInfo;
+	editIqcFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	editIqcFeatureInfo->SetFeatureId("EditIncomingQualityControl");
+	editIqcFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Edit Incoming Quality Control"));
+	editIqcFeatureInfo->SetOptional(false);
+	editIqcFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(editIqcFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> manageIqcTemplatesFeatureInfo;
+	manageIqcTemplatesFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	manageIqcTemplatesFeatureInfo->SetFeatureId("ManageIqcTemplates");
+	manageIqcTemplatesFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Manage IQC Templates"));
+	manageIqcTemplatesFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Create and manage IQC checklist templates per supplier and component (admin only)"));
+	manageIqcTemplatesFeatureInfo->SetOptional(false);
+	manageIqcTemplatesFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(manageIqcTemplatesFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> ingestIqcResultsFeatureInfo;
+	ingestIqcResultsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	ingestIqcResultsFeatureInfo->SetFeatureId("IngestIqcResults");
+	ingestIqcResultsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Ingest IQC Results"));
+	ingestIqcResultsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Push automated inspection results from external systems into ProLife"));
+	ingestIqcResultsFeatureInfo->SetOptional(false);
+	ingestIqcResultsFeatureInfo->SetIsPermission(true);
+
+	procurementManagementFeatureInfo->InsertSubFeature(ingestIqcResultsFeatureInfo.PopPtr());
+
+	productInfo.AddFeature("a1b2c3d4-e5f6-7890-abcd-ef1234567890", *procurementManagementFeatureInfo.GetPtr());
+
 }
 
 
