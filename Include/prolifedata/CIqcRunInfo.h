@@ -6,7 +6,6 @@
 
 // ProLife includes
 #include <prolifedata/IIqcRunInfo.h>
-#include <prolifedata/IIqcResultItemInfo.h>
 
 
 namespace prolifedata
@@ -47,7 +46,6 @@ public:
 	virtual void SetAnnotations(const QString& annotations) override;
 	virtual QString GetDefectCodes() const override;
 	virtual void SetDefectCodes(const QString& defectCodes) override;
-	virtual imtbase::IObjectCollection* GetResultItems() override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -75,8 +73,6 @@ private:
 	QString m_completedAt;
 	QString m_annotations;
 	QString m_defectCodes;
-
-	imtbase::CObjectCollection m_resultItemCollection;
 };
 
 

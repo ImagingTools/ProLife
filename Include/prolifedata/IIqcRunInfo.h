@@ -4,9 +4,6 @@
 // ACF includes
 #include <iser/IObject.h>
 
-// ImtCore includes
-#include <imtbase/IObjectCollection.h>
-
 
 namespace prolifedata
 {
@@ -184,11 +181,6 @@ public:
 		Set comma-separated defect codes / issue tags.
 	*/
 	virtual void SetDefectCodes(const QString& defectCodes) = 0;
-
-	/**
-		Get the IQC result items for this run.
-	*/
-	virtual imtbase::IObjectCollection* GetResultItems() = 0;
 };
 
 

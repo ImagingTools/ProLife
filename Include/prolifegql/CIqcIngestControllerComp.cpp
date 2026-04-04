@@ -3,7 +3,6 @@
 
 // ImtCore includes
 #include <imtbase/IObjectCollectionIterator.h>
-#include <imtbase/CObjectCollection.h>
 
 
 namespace prolifegql

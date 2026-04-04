@@ -8,9 +8,6 @@
 #include <istd/CChangeGroup.h>
 #include <istd/CChangeNotifier.h>
 
-// ImtCore includes
-#include <imtbase/CObjectCollection.h>
-
 
 namespace prolifedata
 {
@@ -243,12 +240,6 @@ void CIqcRunInfo::SetDefectCodes(const QString& defectCodes)
 }
 
 
-imtbase::IObjectCollection* CIqcRunInfo::GetResultItems()
-{
-	return &m_resultItemCollection;
-}
-
-
 // reimplemented (iser::IObject)
 
 QByteArray CIqcRunInfo::GetFactoryId() const
@@ -330,11 +321,6 @@ bool CIqcRunInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_defectCodes);
 	retVal = retVal && archive.EndTag(defectCodesTag);
 
-	iser::CArchiveTag resultItemsTag("ResultItems", "Result items", iser::CArchiveTag::TT_GROUP);
-	retVal = retVal && archive.BeginTag(resultItemsTag);
-	retVal = retVal && m_resultItemCollection.Serialize(archive);
-	retVal = retVal && archive.EndTag(resultItemsTag);
-
 	return retVal;
 }
 
@@ -368,7 +354,6 @@ bool CIqcRunInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		m_completedAt = sourcePtr->m_completedAt;
 		m_annotations = sourcePtr->m_annotations;
 		m_defectCodes = sourcePtr->m_defectCodes;
-		m_resultItemCollection.CopyFrom(sourcePtr->m_resultItemCollection);
 
 		return true;
 	}
@@ -405,7 +390,6 @@ bool CIqcRunInfo::ResetData(CompatibilityMode /*mode*/)
 	m_completedAt.clear();
 	m_annotations.clear();
 	m_defectCodes.clear();
-	m_resultItemCollection.ResetData();
 
 	return true;
 }
