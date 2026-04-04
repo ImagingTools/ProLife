@@ -1,6 +1,11 @@
 #include <prolifegql/CIqcIngestControllerComp.h>
 
 
+// Qt includes
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 // ImtCore includes
 #include <imtbase/IObjectCollectionIterator.h>
 
@@ -26,8 +31,39 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CIqcIngestControllerCom
 		return result;
 	}
 
+	// Build the result items JSON from the ingest input
+	QString resultItemsJson;
+	{
+		QJsonArray itemsArray;
+		const auto& resultItems = ingestRequest.Get_resultItems();
+		if (resultItems){
+			for (const auto& item : *resultItems){
+				QJsonObject obj;
+				obj["name"] = item.Get_name();
+				obj["valueType"] = item.Get_valueType();
+				obj["valueText"] = item.Get_valueText();
+				obj["passResult"] = item.Get_passResult();
+				obj["unit"] = item.Get_unit();
+				obj["evidenceRefs"] = item.Get_evidenceRefs();
+				if (!item.Get_id().isEmpty()){
+					obj["id"] = item.Get_id();
+				}
+				if (!item.Get_templateItemUuid().isEmpty()){
+					obj["templateItemUuid"] = item.Get_templateItemUuid();
+				}
+				itemsArray.append(obj);
+			}
+		}
+		resultItemsJson = QString::fromUtf8(
+			QJsonDocument(itemsArray).toJson(QJsonDocument::Compact));
+	}
+
 	// Try to find an existing run with the same (systemId, externalRunId) key (idempotent upsert)
 	prolifedata::IIqcRunInfo* existingRunPtr = FindExistingRun(systemId, externalRunId);
+
+	// Affected run ID; populated when an existing run is found and updated.
+	// For newly created runs the ID is only known after the document manager saves.
+	QByteArray affectedRunId;
 
 	if (existingRunPtr != nullptr){
 		// Update the existing run with new result data
@@ -55,7 +91,16 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CIqcIngestControllerCom
 			existingRunPtr->SetDefectCodes(ingestRequest.Get_defectCodes());
 		}
 
+		if (!resultItemsJson.isEmpty()){
+			existingRunPtr->SetResultItemsJson(resultItemsJson);
+		}
+
 		existingRunPtr->SetRunStatus(prolifedata::IIqcRunInfo::RS_COMPLETED);
+
+		const iser::IObject* objPtr = dynamic_cast<const iser::IObject*>(existingRunPtr);
+		if (objPtr != nullptr){
+			affectedRunId = objPtr->GetObjectId();
+		}
 	}
 	else{
 		// Create a new IQC run for this automated inspection result
@@ -74,6 +119,7 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CIqcIngestControllerCom
 		newIqcRunPtr->SetRunStatus(prolifedata::IIqcRunInfo::RS_COMPLETED);
 		newIqcRunPtr->SetAnnotations(ingestRequest.Get_annotations());
 		newIqcRunPtr->SetDefectCodes(ingestRequest.Get_defectCodes());
+		newIqcRunPtr->SetResultItemsJson(resultItemsJson);
 
 		QString runModeStr = ingestRequest.Get_runMode();
 		if (!runModeStr.isEmpty()){
@@ -104,6 +150,13 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CIqcIngestControllerCom
 		}
 	}
 
+	// Populate the response payload so clients know which run was affected
+	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0& response =
+		result.Version_1_0.emplace();
+	if (!affectedRunId.isEmpty()){
+		response.Set_id(affectedRunId);
+	}
+
 	return result;
 }
 
@@ -119,9 +172,11 @@ prolifedata::IIqcRunInfo* CIqcIngestControllerComp::FindExistingRun(
 	// NOTE: This iterates over the collection loaded in memory. The database migration
 	// (migration_20.sql) creates a unique index on (Document->>'SystemId', Document->>'ExternalRunId')
 	// which enforces uniqueness at the DB level. For high-volume scenarios, callers should
-	// avoid assuming CIqcRunDatabaseDelegateComp::CreateAdditionalFiltersQuery can pre-filter
-	// by SystemId/ExternalRunId, since this method currently performs an in-memory scan.
-	imtbase::IObjectCollectionIterator* iterPtr = m_iqcRunCollectionCompPtr->CreateIterator();
+	// pre-filter the collection using the SystemId/ExternalRunId filter params supported by
+	// CIqcRunDatabaseDelegateComp::CreateAdditionalFiltersQuery.
+	std::unique_ptr<imtbase::IObjectCollectionIterator> iterPtr(
+		m_iqcRunCollectionCompPtr->CreateIterator());
+
 	if (iterPtr == nullptr){
 		return nullptr;
 	}

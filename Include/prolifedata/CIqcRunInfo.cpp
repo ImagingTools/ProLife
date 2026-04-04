@@ -240,6 +240,22 @@ void CIqcRunInfo::SetDefectCodes(const QString& defectCodes)
 }
 
 
+QString CIqcRunInfo::GetResultItemsJson() const
+{
+	return m_resultItemsJson;
+}
+
+
+void CIqcRunInfo::SetResultItemsJson(const QString& resultItemsJson)
+{
+	if (m_resultItemsJson != resultItemsJson){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_resultItemsJson = resultItemsJson;
+	}
+}
+
+
 // reimplemented (iser::IObject)
 
 QByteArray CIqcRunInfo::GetFactoryId() const
@@ -321,6 +337,11 @@ bool CIqcRunInfo::Serialize(iser::IArchive& archive)
 	retVal = retVal && archive.Process(m_defectCodes);
 	retVal = retVal && archive.EndTag(defectCodesTag);
 
+	iser::CArchiveTag resultItemsTag("ResultItems", "Result items JSON", iser::CArchiveTag::TT_LEAF);
+	retVal = retVal && archive.BeginTag(resultItemsTag);
+	retVal = retVal && archive.Process(m_resultItemsJson);
+	retVal = retVal && archive.EndTag(resultItemsTag);
+
 	return retVal;
 }
 
@@ -354,6 +375,7 @@ bool CIqcRunInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		m_completedAt = sourcePtr->m_completedAt;
 		m_annotations = sourcePtr->m_annotations;
 		m_defectCodes = sourcePtr->m_defectCodes;
+		m_resultItemsJson = sourcePtr->m_resultItemsJson;
 
 		return true;
 	}
@@ -390,6 +412,7 @@ bool CIqcRunInfo::ResetData(CompatibilityMode /*mode*/)
 	m_completedAt.clear();
 	m_annotations.clear();
 	m_defectCodes.clear();
+	m_resultItemsJson.clear();
 
 	return true;
 }

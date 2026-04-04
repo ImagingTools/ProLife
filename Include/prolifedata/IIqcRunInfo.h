@@ -181,6 +181,17 @@ public:
 		Set comma-separated defect codes / issue tags.
 	*/
 	virtual void SetDefectCodes(const QString& defectCodes) = 0;
+
+	/**
+		Get result items as a JSON array string.
+		Each element is a JSON object with the IqcResultItem fields.
+	*/
+	virtual QString GetResultItemsJson() const = 0;
+
+	/**
+		Set result items from a JSON array string.
+	*/
+	virtual void SetResultItemsJson(const QString& resultItemsJson) = 0;
 };
 
 

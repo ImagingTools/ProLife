@@ -114,6 +114,11 @@ I_EXPORT_COMPONENT(
 			"IQC run information",
 			"IQC Run Information");
 
+I_EXPORT_COMPONENT(
+			IqcTemplateInfo,
+			"IQC template information",
+			"IQC Template Information");
+
 
 } // namespace ProLifeDataPck
 

@@ -11,6 +11,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CProcurementOrderInfo.h>
 #include <prolifedata/CIqcRunInfo.h>
+#include <prolifedata/CIqcTemplateInfo.h>
 #include <prolifedata/CDeviceInfoComp.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CDeviceMetaInfoCreatorComp.h>
@@ -113,6 +114,14 @@ typedef icomp::TModelCompWrap<
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> IqcRunInfo;
+typedef icomp::TModelCompWrap<
+			icomp::TMakeComponentWrap <
+						prolifedata::CIdentifiableIqcTemplateInfo,
+						prolifedata::IIqcTemplateInfo,
+						imtbase::IIdentifiable,
+						iser::IObject,
+						iser::ISerializable,
+						istd::IChangeable>> IqcTemplateInfo;
 
 
 } // namespace ProLifeDataPck

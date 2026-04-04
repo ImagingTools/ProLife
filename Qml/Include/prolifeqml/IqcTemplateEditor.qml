@@ -62,8 +62,8 @@ ViewBase {
 	function setComboValue(combo, value) {
 		combo.currentIndex = -1
 		if (combo.model) {
-			for (let i = 0; i < combo.model.getItemsCount(); i++) {
-				if (combo.model.getData("id", i) === value) {
+			for (let i = 0; i < combo.model.count; i++) {
+				if (combo.model.get(i).id === value) {
 					combo.currentIndex = i
 					return
 				}
@@ -83,7 +83,7 @@ ViewBase {
 		templateData.m_passRuleDescription = passRuleInput.text
 
 		if (completionRuleCB.currentIndex >= 0 && completionRuleCB.model) {
-			templateData.m_completionRule = completionRuleCB.model.getData("id", completionRuleCB.currentIndex)
+			templateData.m_completionRule = completionRuleCB.model.get(completionRuleCB.currentIndex).id
 		}
 	}
 
@@ -127,7 +127,8 @@ ViewBase {
 					typeId: "IqcTemplate"
 					onCurrentItemChanged: {
 						if (currentItem) {
-							// Load template data
+							isNew = false
+							dataProvider.loadItem(currentItem.id)
 						}
 					}
 				}
@@ -140,6 +141,9 @@ ViewBase {
 						text: qsTr("New Template")
 						onClicked: {
 							isNew = true
+							dataProvider.createNew()
+							updateGui()
+							checkPermissions()
 						}
 					}
 				}

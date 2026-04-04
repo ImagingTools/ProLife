@@ -4,9 +4,6 @@
 // ACF includes
 #include <iser/IObject.h>
 
-// ImtCore includes
-#include <imtbase/IObjectCollection.h>
-
 
 namespace prolifedata
 {
@@ -97,9 +94,15 @@ public:
 	virtual void SetPassRuleDescription(const QString& passRuleDescription) = 0;
 
 	/**
-		Get checklist items for this template.
+		Get checklist items as a JSON array string.
+		Each element is a JSON object with the IqcChecklistItem fields.
 	*/
-	virtual imtbase::IObjectCollection* GetChecklistItems() = 0;
+	virtual QString GetChecklistItemsJson() const = 0;
+
+	/**
+		Set checklist items from a JSON array string.
+	*/
+	virtual void SetChecklistItemsJson(const QString& checklistItemsJson) = 0;
 };
 
 

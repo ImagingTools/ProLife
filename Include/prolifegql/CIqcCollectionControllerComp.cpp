@@ -1,6 +1,11 @@
 #include <prolifegql/CIqcCollectionControllerComp.h>
 
 
+// Qt includes
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 // ProLife includes
 #include <prolifedata/CIqcRunInfo.h>
 
@@ -88,6 +93,29 @@ bool CIqcCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.Set_completedAt(iqcRunInfoPtr->GetCompletedAt());
 	representationPayload.Set_annotations(iqcRunInfoPtr->GetAnnotations());
 	representationPayload.Set_defectCodes(iqcRunInfoPtr->GetDefectCodes());
+
+	// Deserialize result items from the stored JSON array
+	const QString resultItemsJson = iqcRunInfoPtr->GetResultItemsJson();
+	if (!resultItemsJson.isEmpty()){
+		QJsonArray jsonArray = QJsonDocument::fromJson(resultItemsJson.toUtf8()).array();
+		QList<sdl::prolife::IQC::CIqcResultItem::V1_0> resultItems;
+		resultItems.reserve(jsonArray.size());
+		for (const QJsonValue& jsonVal : jsonArray){
+			QJsonObject obj = jsonVal.toObject();
+			sdl::prolife::IQC::CIqcResultItem::V1_0 item;
+			item.Set_id(obj.value("id").toString());
+			item.Set_iqcRunUuid(obj.value("iqcRunUuid").toString());
+			item.Set_templateItemUuid(obj.value("templateItemUuid").toString());
+			item.Set_name(obj.value("name").toString());
+			item.Set_valueType(obj.value("valueType").toString());
+			item.Set_valueText(obj.value("valueText").toString());
+			item.Set_passResult(obj.value("passResult").toInt(-1));
+			item.Set_unit(obj.value("unit").toString());
+			item.Set_evidenceRefs(obj.value("evidenceRefs").toString());
+			resultItems.append(item);
+		}
+		representationPayload.Set_resultItems(resultItems);
+	}
 
 	return true;
 }
@@ -181,6 +209,27 @@ bool CIqcCollectionControllerComp::FillObjectFromRepresentation(
 		if (prolifedata::IIqcRunInfo::ParseDispositionEnum(dispositionStr.toUtf8(), disp)){
 			iqcRunInfoPtr->SetDisposition(disp);
 		}
+	}
+
+	// Serialize result items from the representation into the JSON string field
+	const auto& resultItemsOpt = representation.Get_resultItems();
+	if (resultItemsOpt){
+		QJsonArray jsonArray;
+		for (const auto& item : *resultItemsOpt){
+			QJsonObject obj;
+			obj["id"] = item.Get_id();
+			obj["iqcRunUuid"] = item.Get_iqcRunUuid();
+			obj["templateItemUuid"] = item.Get_templateItemUuid();
+			obj["name"] = item.Get_name();
+			obj["valueType"] = item.Get_valueType();
+			obj["valueText"] = item.Get_valueText();
+			obj["passResult"] = item.Get_passResult();
+			obj["unit"] = item.Get_unit();
+			obj["evidenceRefs"] = item.Get_evidenceRefs();
+			jsonArray.append(obj);
+		}
+		iqcRunInfoPtr->SetResultItemsJson(
+			QString::fromUtf8(QJsonDocument(jsonArray).toJson(QJsonDocument::Compact)));
 	}
 
 	return true;

@@ -46,6 +46,8 @@ public:
 	virtual void SetAnnotations(const QString& annotations) override;
 	virtual QString GetDefectCodes() const override;
 	virtual void SetDefectCodes(const QString& defectCodes) override;
+	virtual QString GetResultItemsJson() const override;
+	virtual void SetResultItemsJson(const QString& resultItemsJson) override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -73,6 +75,7 @@ private:
 	QString m_completedAt;
 	QString m_annotations;
 	QString m_defectCodes;
+	QString m_resultItemsJson;
 };
 
 

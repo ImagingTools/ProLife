@@ -49,6 +49,11 @@ I_EXPORT_COMPONENT(
 			"IQC run database delegate",
 			"IQC Run Database Delegate");
 
+I_EXPORT_COMPONENT(
+			IqcTemplateDatabaseDelegate,
+			"IQC template database delegate",
+			"IQC Template Database Delegate");
+
 
 } // namespace ProLifeLicenseDbPck
 

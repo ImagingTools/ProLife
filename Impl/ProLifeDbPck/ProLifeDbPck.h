@@ -13,6 +13,7 @@
 #include <prolifedb/CSoftwareProductDatabaseDelegateComp.h>
 #include <prolifedb/CProcurementOrderDatabaseDelegateComp.h>
 #include <prolifedb/CIqcRunDatabaseDelegateComp.h>
+#include <prolifedb/CIqcTemplateDatabaseDelegateComp.h>
 
 
 /**
@@ -29,6 +30,7 @@ typedef prolifedb::CDatabaseConverterComp DatabaseConverterComp;
 typedef prolifedb::CSoftwareProductDatabaseDelegateComp SoftwareProductDatabaseDelegate;
 typedef prolifedb::CProcurementOrderDatabaseDelegateComp ProcurementOrderDatabaseDelegate;
 typedef prolifedb::CIqcRunDatabaseDelegateComp IqcRunDatabaseDelegate;
+typedef prolifedb::CIqcTemplateDatabaseDelegateComp IqcTemplateDatabaseDelegate;
 
 
 } // namespace ProLifeDbPck

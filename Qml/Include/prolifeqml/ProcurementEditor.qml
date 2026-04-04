@@ -73,12 +73,13 @@ ViewBase {
 		supplierNameInput.text = procurementData.m_supplierName || ""
 		descriptionInput.text = procurementData.m_description || ""
 		expectedDeliveryDateInput.text = procurementData.m_expectedDeliveryDate || ""
+		linkedOrderInput.text = procurementData.m_linkedOrderUuid || ""
 
 		statusCB.currentIndex = -1
 		let statusVal = procurementData.m_procurementStatus
 		if (statusCB.model) {
-			for (let i = 0; i < statusCB.model.getItemsCount(); i++) {
-				if (statusCB.model.getData("id", i) === statusVal) {
+			for (let i = 0; i < statusCB.model.count; i++) {
+				if (statusCB.model.get(i).id === statusVal) {
 					statusCB.currentIndex = i
 					break
 				}
@@ -95,9 +96,10 @@ ViewBase {
 		procurementData.m_supplierName = supplierNameInput.text
 		procurementData.m_description = descriptionInput.text
 		procurementData.m_expectedDeliveryDate = expectedDeliveryDateInput.text
+		procurementData.m_linkedOrderUuid = linkedOrderInput.text
 
 		if (statusCB.currentIndex >= 0 && statusCB.model) {
-			procurementData.m_procurementStatus = statusCB.model.getData("id", statusCB.currentIndex)
+			procurementData.m_procurementStatus = statusCB.model.get(statusCB.currentIndex).id
 		}
 	}
 

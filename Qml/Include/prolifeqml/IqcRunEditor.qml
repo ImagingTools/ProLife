@@ -63,8 +63,8 @@ ViewBase {
 	function setComboValue(combo, value) {
 		combo.currentIndex = -1
 		if (combo.model) {
-			for (let i = 0; i < combo.model.getItemsCount(); i++) {
-				if (combo.model.getData("id", i) === value) {
+			for (let i = 0; i < combo.model.count; i++) {
+				if (combo.model.get(i).id === value) {
 					combo.currentIndex = i
 					return
 				}
@@ -80,13 +80,13 @@ ViewBase {
 		iqcRunData.m_defectCodes = defectCodesInput.text
 
 		if (runModeCB.currentIndex >= 0 && runModeCB.model) {
-			iqcRunData.m_runMode = runModeCB.model.getData("id", runModeCB.currentIndex)
+			iqcRunData.m_runMode = runModeCB.model.get(runModeCB.currentIndex).id
 		}
 		if (runResultCB.currentIndex >= 0 && runResultCB.model) {
-			iqcRunData.m_runResult = runResultCB.model.getData("id", runResultCB.currentIndex)
+			iqcRunData.m_runResult = runResultCB.model.get(runResultCB.currentIndex).id
 		}
 		if (dispositionCB.currentIndex >= 0 && dispositionCB.model) {
-			iqcRunData.m_disposition = dispositionCB.model.getData("id", dispositionCB.currentIndex)
+			iqcRunData.m_disposition = dispositionCB.model.get(dispositionCB.currentIndex).id
 		}
 	}
 
