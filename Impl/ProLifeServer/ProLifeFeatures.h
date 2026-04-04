@@ -911,7 +911,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> procurementManagementFeatureInfo;
 	procurementManagementFeatureInfo.SetPtr(new imtlic::CIdentifiableFeatureInfo);
-	procurementManagementFeatureInfo->SetObjectUuid("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+	procurementManagementFeatureInfo->SetObjectUuid("9f4b2f6e-6b2d-4d7d-9c91-8d5c5f0a7e31");
 	procurementManagementFeatureInfo->SetFeatureId("ProcurementManagement");
 	procurementManagementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Procurement Management"));
 	procurementManagementFeatureInfo->SetOptional(false);
