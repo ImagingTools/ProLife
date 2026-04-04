@@ -55,10 +55,14 @@ CREATE INDEX "IqcRunsExternalRunIdIndex"
     ON public."IqcRuns" (("Document"->>'ExternalRunId'));
 
 -- Unique index to support idempotent upsert by (SystemId, ExternalRunId)
+-- Only enforce uniqueness when both identifiers are populated; manual/hybrid runs
+-- may serialize unset values as empty strings rather than omitting the keys.
 CREATE UNIQUE INDEX "IqcRunsSystemExternalRunUniqueIndex"
     ON public."IqcRuns" (("Document"->>'SystemId'), ("Document"->>'ExternalRunId'))
     WHERE ("Document"->>'SystemId') IS NOT NULL
-      AND ("Document"->>'ExternalRunId') IS NOT NULL;
+      AND ("Document"->>'SystemId') <> ''
+      AND ("Document"->>'ExternalRunId') IS NOT NULL
+      AND ("Document"->>'ExternalRunId') <> '';
 
 -- IQC Templates: stores IQC checklist template definitions as JSONB documents
 
