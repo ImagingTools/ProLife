@@ -138,22 +138,25 @@ ViewBase {
 				id: runInfoGroup
 				width: content.width
 
-				LabelElementView {
+				TextInputElementView {
 					id: batchUuidLabel
 					width: parent.width
 					labelText: qsTr("Batch UUID")
+					readOnly: true
 				}
 
-				LabelElementView {
+				TextInputElementView {
 					id: systemIdLabel
 					width: parent.width
 					labelText: qsTr("System ID")
+					readOnly: true
 				}
 
-				LabelElementView {
+				TextInputElementView {
 					id: externalRunIdLabel
 					width: parent.width
 					labelText: qsTr("External Run ID")
+					readOnly: true
 				}
 
 				ComboBoxElementView {
@@ -203,16 +206,18 @@ ViewBase {
 					valueRole: "id"
 				}
 
-				LabelElementView {
+				TextInputElementView {
 					id: startedAtLabel
 					width: parent.width
 					labelText: qsTr("Started At")
+					readOnly: true
 				}
 
-				LabelElementView {
+				TextInputElementView {
 					id: completedAtLabel
 					width: parent.width
 					labelText: qsTr("Completed At")
+					readOnly: true
 				}
 
 				TextInputElementView {
