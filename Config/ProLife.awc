@@ -20,15 +20,10 @@
     <RegistryFiles>
         <FilePath>../Impl/Plugins/ProLifeSettingsPlugin/ProLifeSettingsPlugin.acc</FilePath>
         <FilePath>../Impl/ProLifeClient/ProLifeClient.acc</FilePath>
-        <FilePath>../Impl/ProLifeClient/VC/FileSubstitCopyApp.acc</FilePath>
         <FilePath>../Impl/ProLifeClientServer/ProLifeClientServer.acc</FilePath>
-        <FilePath>../Impl/ProLifeClientServer/VC/FileSubstitCopyApp.acc</FilePath>
         <FilePath>../Impl/ProLifeConverter/ProLifeConverter.acc</FilePath>
-        <FilePath>../Impl/ProLifeConverter/VC/FileSubstitCopyApp.acc</FilePath>
         <FilePath>../Impl/ProLifeLoc/ProLifeLoc.acc</FilePath>
         <FilePath>../Impl/ProLifeServer/ProLifeServer.acc</FilePath>
-        <FilePath>../Impl/ProLifeServer/VC/FileSubstitCopyApp.acc</FilePath>
         <FilePath>../Impl/ProLifeServerConfigurator/ProLifeServerConfigurator.acc</FilePath>
-        <FilePath>../Impl/ProLifeServerConfigurator/VC/FileSubstitCopyApp.acc</FilePath>
     </RegistryFiles>
 </Acf>
