@@ -49,7 +49,6 @@ protected:
 private:
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
 	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
-	QByteArray GetUserId(const ::imtgql::CGqlRequest& gqlRequest) const;
 
 private:
 	I_REF(imtdoc::IDocumentManager, m_documentManagerCompPtr);
