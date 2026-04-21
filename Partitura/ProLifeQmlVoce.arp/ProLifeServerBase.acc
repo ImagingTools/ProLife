@@ -299,6 +299,9 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="AttachmentStorage" Type="Reference" ExportId="">
+                        <Data IsEnabled="false" Value="AuthorizableServerFramework/AttachmentStorage"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
                     </AttributeInfo>
@@ -1359,6 +1362,7 @@
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
         <Interface InterfaceId="imtlic::IProductInfo" ComponentId="AuthorizableServerFramework"/>
+        <Interface InterfaceId="imtrest::IResponseDispatcher" ComponentId="AuthorizableServerFramework/WebSocketServerFramework"/>
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>

@@ -261,20 +261,6 @@ bool CDeviceCollectionDocumentManagerComp::GetSoftwareInfo(const QByteArray& sof
 }
 
 
-QByteArray CDeviceCollectionDocumentManagerComp::GetUserId(const ::imtgql::CGqlRequest& gqlRequest) const
-{
-	const imtgql::IGqlContext* contextPtr = gqlRequest.GetRequestContext();
-	if (contextPtr != nullptr){
-		const imtauth::IUserInfo* userInfoPtr = contextPtr->GetUserInfo();
-		if (userInfoPtr != nullptr){
-			return userInfoPtr->GetId();
-		}
-	}
-
-	return QByteArray();
-}
-
-
 sdl::prolife::Sensors::CIotDeviceData CDeviceCollectionDocumentManagerComp::OnGetIotDeviceRepresentation(
 			const sdl::prolife::DeviceCollectionDocumentManager::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,

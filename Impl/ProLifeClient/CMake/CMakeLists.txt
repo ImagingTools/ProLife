@@ -33,9 +33,9 @@ include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
 target_link_libraries(${PROJECT_NAME} ImtCoreLoc ProLifeLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl imt2dsdl)
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml imtstyle imtcol imtcolorsdl imtserverapp)
+target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl imt2dsdl imtdesksdl imtchatsdl)
+target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml imtdeskguiqml imtchatguiqml)
+target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml imtstyle imtcol imtcolorsdl imtserverapp imtservergql)
 target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle prolifesdl)
 target_link_libraries(${PROJECT_NAME} iqtgui)
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
@@ -43,6 +43,7 @@ target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickControls2)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
+	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml")
 	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
 	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
 
@@ -53,6 +54,7 @@ endif()
 set(QML_IMPORT_DIRS ${QML_IMPORT_PATH})
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
 list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Qml")
+list(APPEND QML_IMPORT_DIRS "${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml")
 
 # Prevent adding duplicate values at each run of CMake.
 list(REMOVE_DUPLICATES QML_IMPORT_DIRS)

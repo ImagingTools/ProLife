@@ -32,16 +32,6 @@
         <Element ComponentName="UsersModelUpdateBridge" X="200" Y="675" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="DocumentManager">
             <PositionMap>
                 <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
@@ -68,6 +58,16 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
