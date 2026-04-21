@@ -33,6 +33,9 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeskPageVisible" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="FeatureContainer" Type="Reference" ExportId="FeatureContainer">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
