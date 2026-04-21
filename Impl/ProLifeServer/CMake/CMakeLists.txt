@@ -33,7 +33,6 @@ target_link_libraries(${PROJECT_NAME} imtmail imtgui imtauth imtauthgui imtlicdb
 target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtauthdb imtcom imtservice imtlog imtservergql imtcol)
 target_link_libraries(${PROJECT_NAME} imtstylecontrolsqml imtcontrolsqml imtguiqml imtcolguiqml imtdocguiqml imtguigqlqml imtauthguiqml imtlicguiqml)
 target_link_libraries(${PROJECT_NAME} imtserverapp imtbase imtbasesdl imtapp imtrest imtcrypt)
-target_link_libraries(${PROJECT_NAME} imtchat imtdesk imtchatdb imtdeskdb imtchatsdl imtdesksdl imtdeskgql imtchatgql)
 target_link_libraries(${PROJECT_NAME} iauth iservice)
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)

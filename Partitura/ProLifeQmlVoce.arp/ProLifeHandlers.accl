@@ -9,7 +9,6 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationHandlers" X="600" Y="75" Note=""/>
-        <Element ComponentName="AttachmentBinaryDataProvider" X="950" Y="350" Note=""/>
         <Element ComponentName="Demultiplexer" X="150" Y="75" Note=""/>
         <Element ComponentName="Pages" X="600" Y="325" Note=""/>
         <Element ComponentName="RestoringDatabaseController" X="225" Y="325" Note=""/>
