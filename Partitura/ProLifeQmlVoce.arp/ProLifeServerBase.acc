@@ -2,7 +2,7 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6379" Description="ACF"/>
+            <Version Id="0" Number="6390" Description="ACF"/>
             <Version Id="1" Number="2306" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
@@ -300,7 +300,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="AttachmentStorage" Type="Reference" ExportId="">
-                        <Data IsEnabled="false" Value="AuthorizableServerFramework/AttachmentStorage"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/AttachmentStorage"/>
                     </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
