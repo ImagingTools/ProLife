@@ -96,6 +96,17 @@
                     <AttributeInfo Id="ThreadsLimit" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="100"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TicketContextTypeProviders" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ContextTypeProviders/DevicesEntityTypeProvider</Value>
+                                <Value>ContextTypeProviders/SoftwareProductsEntityTypeProvider</Value>
+                                <Value>ContextTypeProviders/CustomersEntityTypeProvider</Value>
+                                <Value>ContextTypeProviders/OrdersEntityTypeProvider</Value>
+                                <Value>ContextTypeProviders/TicketsEntityTypeProvider</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
@@ -106,6 +117,11 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ContextTypeProviders" PackageId="" ComponentId="ContextTypeProviders">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
         <Element Id="DocumentManager" PackageId="" ComponentId="DocumentManager">
@@ -616,6 +632,81 @@
         </Element>
     </ElementsList>
     <EmbeddedRegistriesList>
+        <EmbeddedRegistry Id="ContextTypeProviders">
+            <Data Description="" Keywords="">
+                <ElementsList>
+                    <Element Id="CustomersEntityTypeProvider" PackageId="ImtDeskPck" ComponentId="EntityTypeProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="EntityTypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Accounts"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EntityTypeName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Customers"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="DevicesEntityTypeProvider" PackageId="ImtDeskPck" ComponentId="EntityTypeProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="EntityTypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Devices"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EntityTypeName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Hardware"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="OrdersEntityTypeProvider" PackageId="ImtDeskPck" ComponentId="EntityTypeProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="EntityTypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Orders"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EntityTypeName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Orders"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="SoftwareProductsEntityTypeProvider" PackageId="ImtDeskPck" ComponentId="EntityTypeProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="EntityTypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="SoftwareProducts"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EntityTypeName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Software"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="TicketsEntityTypeProvider" PackageId="ImtDeskPck" ComponentId="EntityTypeProvider">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="EntityTypeId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Tickets"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="EntityTypeName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="Tickets"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                </ElementsList>
+                <EmbeddedRegistriesList/>
+                <ExportedInterfaces/>
+                <ExportedComponents>
+                    <Component ExportedId="CustomersEntityTypeProvider" ComponentId="CustomersEntityTypeProvider"/>
+                    <Component ExportedId="DevicesEntityTypeProvider" ComponentId="DevicesEntityTypeProvider"/>
+                    <Component ExportedId="OrdersEntityTypeProvider" ComponentId="OrdersEntityTypeProvider"/>
+                    <Component ExportedId="SoftwareProductsEntityTypeProvider" ComponentId="SoftwareProductsEntityTypeProvider"/>
+                    <Component ExportedId="TicketsEntityTypeProvider" ComponentId="TicketsEntityTypeProvider"/>
+                </ExportedComponents>
+            </Data>
+        </EmbeddedRegistry>
         <EmbeddedRegistry Id="DocumentManager">
             <Data Description="" Keywords="">
                 <ElementsList>
