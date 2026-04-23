@@ -10,6 +10,7 @@
     <PositionMap>
         <Element ComponentName="AdministrationRepositories" X="725" Y="750" Note=""/>
         <Element ComponentName="AuthorizableServerFramework" X="600" Y="175" Note=""/>
+        <Element ComponentName="ContextTypeProviders" X="600" Y="300" Note=""/>
         <Element ComponentName="DocumentManager" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
         <Element ComponentName="Language" X="525" Y="650" Note=""/>
@@ -42,6 +43,19 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
+        <EmbededRegistry Id="DocumentManager">
+            <PositionMap>
+                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
+                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
+                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
+                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
+                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Migrations">
             <PositionMap>
                 <Element ComponentName="CompositeMigrationController" X="565" Y="92" Note=""/>
@@ -53,19 +67,6 @@
                 <Element ComponentName="MigrationController17_19" X="1050" Y="625" Note=""/>
                 <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
                 <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DocumentManager">
-            <PositionMap>
-                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
-                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
-                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
-                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
-                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
-                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -82,6 +83,16 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ContextTypeProviders">
+            <PositionMap>
+                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
+                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
+                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
+                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
+                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
