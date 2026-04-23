@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5715" Description="ACF"/>
-            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6390" Description="ACF"/>
+            <Version Id="1" Number="2306" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -30,15 +30,10 @@
         <Element ComponentName="XmlFileSerializer" X="650" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DeviceCommands">
+        <EmbededRegistry Id="Permissions">
             <PositionMap>
-                <Element ComponentName="Bind" X="1025" Y="400" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="400" Note=""/>
-                <Element ComponentName="Demultiplexer" X="975" Y="75" Note=""/>
-                <Element ComponentName="DeviceCommandsController" X="600" Y="175" Note=""/>
-                <Element ComponentName="IotDeviceCommandsController" X="225" Y="75" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="225" Y="400" Note=""/>
-                <Element ComponentName="TransferLicenses" X="600" Y="600" Note=""/>
+                <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
+                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -55,10 +50,16 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Permissions">
+        <EmbededRegistry Id="DeviceCommands">
             <PositionMap>
-                <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
-                <Element ComponentName="PermissionsJoiner" X="600" Y="125" Note=""/>
+                <Element ComponentName="Bind" X="1025" Y="400" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="400" Note=""/>
+                <Element ComponentName="Demultiplexer" X="975" Y="75" Note=""/>
+                <Element ComponentName="DeviceCommandsController" X="600" Y="175" Note=""/>
+                <Element ComponentName="IotDeviceCommandsController" X="225" Y="75" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="225" Y="400" Note=""/>
+                <Element ComponentName="Support" X="875" Y="600" Note=""/>
+                <Element ComponentName="TransferLicenses" X="600" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

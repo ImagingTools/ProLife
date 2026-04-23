@@ -9,6 +9,7 @@ import imtcontrols 1.0
 import prolifeSensorsSdl 1.0
 import imtguigql 1.0
 import imtlicgui 1.0
+import imtdeskgui 1.0
 import Qt.labs.platform 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 import imtbaseCollectionDocumentManagerSdl 1.0
@@ -216,6 +217,11 @@ DocCollectionViewDelegate {
 	}
 	
 	Component {
+		id: entityContextTicketsDialogComp
+		EntityContextTicketsDialog {}
+	}
+
+	Component {
 		id: deviceEditorComp;
 		
 		DeviceEditor {
@@ -236,6 +242,15 @@ DocCollectionViewDelegate {
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
 					view: deviceEditor;
 					onCommandActivated: {
+						if (commandId === "Support"){
+							ModalDialogManager.openDialog(entityContextTicketsDialogComp, {
+																entityType: "Devices",
+																entityId: deviceEditor.deviceData.m_id,
+																entityDisplayName: deviceEditor.deviceData.m_macAddress
+															})
+							return
+						}
+
 						if (commandId !== container.createLicenseFileCommand &&
 							commandId !== container.transferLicensesCommand &&
 							commandId !== container.bindCommand){
