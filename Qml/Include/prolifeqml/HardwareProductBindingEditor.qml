@@ -117,7 +117,7 @@ Dialog {
 							softwareProductCollection.dataController.headersReceived(this)
 						}
 					}
-					
+
 					SoftwareProductCollectionView {
 						id: softwareProductCollection;
 						anchors.fill: parent
