@@ -1,0 +1,187 @@
+schema {
+	query: Query
+	mutation: Mutation
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+# --- IQC Templates ---
+
+input IqcTemplateListInput {
+	viewParams: CollectionViewParams
+}
+
+type IqcTemplateItem {
+	typeId: ID!
+	id: ID!
+	name: String
+	supplierId: ID
+	componentId: String
+	version: Integer
+	active: Bool
+	completionRule: String
+	added: String
+	timeStamp: String
+}
+
+type IqcTemplateListPayload {
+	items: [IqcTemplateItem]
+	notification: NotificationItem
+}
+
+type IqcChecklistItem {
+	id: ID!
+	templateUuid: ID
+	title: String
+	description: String
+	severity: String
+	required: Bool
+	expectedValueType: String
+	minValue: String
+	maxValue: String
+	unit: String
+}
+
+type IqcTemplateData {
+	id: ID
+	name: String
+	supplierId: ID
+	componentId: String
+	version: Integer
+	active: Bool
+	completionRule: String
+	passRuleDescription: String
+	checklistItems: [IqcChecklistItem]
+}
+
+input IqcTemplateDataInput {
+	id: ID!
+	item: IqcTemplateData!
+}
+
+# --- IQC Runs ---
+
+input IqcRunListInput {
+	viewParams: CollectionViewParams
+	batchUuid: ID
+}
+
+type IqcRunItem {
+	typeId: ID!
+	id: ID!
+	batchUuid: ID
+	templateUuid: ID
+	runMode: String
+	runStatus: String
+	runResult: String
+	disposition: String
+	systemId: String
+	externalRunId: String
+	startedAt: String
+	completedAt: String
+	added: String
+	timeStamp: String
+}
+
+type IqcRunListPayload {
+	items: [IqcRunItem]
+	notification: NotificationItem
+}
+
+type IqcResultItem {
+	id: ID!
+	iqcRunUuid: ID
+	templateItemUuid: ID
+	name: String
+	valueType: String
+	valueText: String
+	passResult: Integer
+	unit: String
+	evidenceRefs: String
+}
+
+type IqcRunData {
+	id: ID
+	batchUuid: ID
+	templateUuid: ID
+	runMode: String
+	runStatus: String
+	runResult: String
+	disposition: String
+	operatorUserId: ID
+	systemId: String
+	externalRunId: String
+	startedAt: String
+	completedAt: String
+	annotations: String
+	defectCodes: String
+	resultItems: [IqcResultItem]
+}
+
+input IqcRunDataInput {
+	id: ID!
+	item: IqcRunData!
+}
+
+# Push-based automated ingestion input (idempotent upsert keyed by systemId + externalRunId)
+input IqcRunIngestInput {
+	systemId: String!
+	externalRunId: String!
+	batchUuid: ID!
+	runMode: String
+	runResult: String
+	disposition: String
+	annotations: String
+	defectCodes: String
+	resultItems: [IqcResultItem]
+}
+
+type Query {
+	IqcTemplateList (input: IqcTemplateListInput): IqcTemplateListPayload!
+	IqcTemplateItem (input: InputId): IqcTemplateData!
+	IqcRunList (input: IqcRunListInput): IqcRunListPayload!
+	IqcRunItem (input: InputId): IqcRunData!
+}
+
+type Mutation {
+	IqcTemplateUpdate (input: IqcTemplateDataInput): UpdatedNotificationPayload!
+	IqcTemplateAdd (input: IqcTemplateDataInput): AddedNotificationPayload!
+	IqcRunUpdate (input: IqcRunDataInput): UpdatedNotificationPayload!
+	IqcRunAdd (input: IqcRunDataInput): AddedNotificationPayload!
+	IqcRunIngest (input: IqcRunIngestInput): UpdatedNotificationPayload!
+}
+
+collectionSchema {
+	type IqcTemplate {
+		ref: IqcTemplateItem
+		operations {
+			list: IqcTemplateList
+		}
+		subtype IqcTemplate {
+			ref: IqcTemplateData
+			operations {
+				get: IqcTemplateItem
+				update: IqcTemplateUpdate
+				insert: IqcTemplateAdd
+			}
+		}
+	}
+	type IqcRun {
+		ref: IqcRunItem
+		operations {
+			list: IqcRunList
+		}
+		subtype IqcRun {
+			ref: IqcRunData
+			operations {
+				get: IqcRunItem
+				update: IqcRunUpdate
+				insert: IqcRunAdd
+			}
+		}
+	}
+}

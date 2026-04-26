@@ -104,6 +104,21 @@ I_EXPORT_COMPONENT(
 			"Device document name provider",
 			"Device Document Name Provider");
 
+I_EXPORT_COMPONENT(
+			ProcurementOrderInfo,
+			"Procurement order information",
+			"Procurement Order Information");
+
+I_EXPORT_COMPONENT(
+			IqcRunInfo,
+			"IQC run information",
+			"IQC Run Information");
+
+I_EXPORT_COMPONENT(
+			IqcTemplateInfo,
+			"IQC template information",
+			"IQC Template Information");
+
 
 } // namespace ProLifeDataPck
 
