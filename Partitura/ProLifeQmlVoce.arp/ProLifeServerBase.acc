@@ -103,7 +103,6 @@
                                 <Value>ContextTypeProviders/SoftwareProductsEntityTypeProvider</Value>
                                 <Value>ContextTypeProviders/CustomersEntityTypeProvider</Value>
                                 <Value>ContextTypeProviders/OrdersEntityTypeProvider</Value>
-                                <Value>ContextTypeProviders/TicketsEntityTypeProvider</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

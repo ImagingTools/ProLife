@@ -22,13 +22,13 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtlicProductsSdl);
 	Q_INIT_RESOURCE(imtlicLicensesSdl);
 
-	// Q_INIT_RESOURCE(imtdeskguiqml);
-	// Q_INIT_RESOURCE(imtdeskImtDeskSdl);
-	// Q_INIT_RESOURCE(imtdeskTicketCollectionDocumentManagerSdl);
+	Q_INIT_RESOURCE(imtdeskguiqml);
+	Q_INIT_RESOURCE(imtdeskImtDeskSdl);
+	Q_INIT_RESOURCE(imtdeskTicketCollectionDocumentManagerSdl);
 
-	// Q_INIT_RESOURCE(imtchatguiqml);
-	// Q_INIT_RESOURCE(imtchatImtChatSdl);
-	// Q_INIT_RESOURCE(imtchatConversationCollectionDocumentManagerSdl);
+	Q_INIT_RESOURCE(imtchatguiqml);
+	Q_INIT_RESOURCE(imtchatImtChatSdl);
+	Q_INIT_RESOURCE(imtchatConversationCollectionDocumentManagerSdl);
 
 	return Run<CProLifeClient, DefaultImtCoreQmlInitializer>(argc, argv);
 }
