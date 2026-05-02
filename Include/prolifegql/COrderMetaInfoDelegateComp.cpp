@@ -31,6 +31,12 @@ bool COrderMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation,
 	
 	int status = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_STATUS).toInt();
 	representation["Status"] = status;
+
+	QByteArray endCustomerId = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_END_CUSTOMER_ID).toByteArray();
+	representation["EndCustomerId"] = QString(endCustomerId);
+
+	QString endCustomerName = metaInfo.GetMetaInfo(prolifedata::IOrderInfo::MIT_END_CUSTOMER_NAME).toString();
+	representation["EndCustomerName"] = endCustomerName;
 	
 	return true;
 }
@@ -56,6 +62,14 @@ bool COrderMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo,
 	
 	if (representation.contains("Status")){
 		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_ORDER_STATUS, representation.value("Status"));
+	}
+
+	if (representation.contains("EndCustomerId")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_END_CUSTOMER_ID, representation.value("EndCustomerId"));
+	}
+
+	if (representation.contains("EndCustomerName")){
+		metaInfo.SetMetaInfo(prolifedata::IOrderInfo::MIT_END_CUSTOMER_NAME, representation.value("EndCustomerName"));
 	}
 	
 	return true;

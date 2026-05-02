@@ -10,6 +10,7 @@
 
 // ProLife includes
 #include <prolifedata/IOrdered.h>
+#include <prolifedata/IOrderCustomerRole.h>
 
 
 namespace prolifedata
@@ -25,7 +26,9 @@ public:
 		MIT_CUSTOMER_ID,
 		MIT_CUSTOMER_NAME,
 		MIT_ORDER_STATUS,
-		MIT_PURCHASE_ORDER_ID
+		MIT_PURCHASE_ORDER_ID,
+		MIT_END_CUSTOMER_ID,
+		MIT_END_CUSTOMER_NAME
 	};
 
 	enum OrderStatus
@@ -74,6 +77,16 @@ public:
 		Get ordered products.
 	*/
 	virtual imtbase::IObjectCollection* GetProducts() = 0;
+
+	/**
+		Get the customer roles collection (non-const).
+	*/
+	virtual imtbase::IObjectCollection* GetCustomerRoles() = 0;
+
+	/**
+		Get the customer roles collection (const).
+	*/
+	virtual const imtbase::IObjectCollection* GetCustomerRoles() const = 0;
 };
 
 

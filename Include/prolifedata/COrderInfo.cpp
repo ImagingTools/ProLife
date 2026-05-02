@@ -1,6 +1,9 @@
 #include <prolifedata/COrderInfo.h>
 
 
+// Qt includes
+#include <QUuid>
+
 // ACF includes
 #include <iser/CArchiveTag.h>
 #include <iser/CPrimitiveTypesSerializer.h>
@@ -17,6 +20,7 @@
 
 // ProLife include
 #include <prolife/Version.h>
+#include <prolifedata/COrderCustomerRole.h>
 
 
 namespace prolifedata
@@ -47,6 +51,9 @@ COrderInfo::COrderInfo():
 
 	typedef istd::TSingleFactory<istd::IChangeable, imtbase::CObjectLink> FactoryHardwareInfoImpl;
 	m_productInstanceCollection.RegisterFactory<FactoryHardwareInfoImpl>("HardwareInfo");
+
+	typedef istd::TSingleFactory<istd::IChangeable, COrderCustomerRole> FactoryCustomerRoleImpl;
+	m_customerRoles.RegisterFactory<FactoryCustomerRoleImpl>(COrderCustomerRole::GetTypeId());
 }
 
 
@@ -93,15 +100,54 @@ void COrderInfo::SetPurchaseOrderId(const QByteArray& purchaseOrderId)
 
 QByteArray COrderInfo::GetCustomerId() const
 {
+	// Proxy: return the customerId of the RT_ORDERING_PARTY role
+	imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_customerRoles.GetObjectData(roleId, dataPtr)){
+			const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(dataPtr.GetPtr());
+			if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
+				return rolePtr->GetCustomerId();
+			}
+		}
+	}
+
 	return m_customerId;
 }
 
 
 void COrderInfo::SetCustomerId(const QByteArray& customerId)
 {
+	// Proxy: set the customerId of the RT_ORDERING_PARTY role
+	imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (m_customerRoles.GetObjectData(roleId, dataPtr)){
+			COrderCustomerRole* rolePtr = dynamic_cast<COrderCustomerRole*>(dataPtr.GetPtr());
+			if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
+				rolePtr->SetCustomerId(customerId);
+				if (m_customerId != customerId){
+					istd::CChangeNotifier changeNotifier(this);
+					m_customerId = customerId;
+				}
+				return;
+			}
+		}
+	}
+
+	// No ordering party role exists yet — create one
+	COrderCustomerRole* newRole = new COrderCustomerRole();
+	newRole->SetCustomerId(customerId);
+	newRole->SetRoleType(IOrderCustomerRole::RT_ORDERING_PARTY);
+
+	istd::TDelPtr<COrderCustomerRole> newRolePtr(newRole);
+	m_customerRoles.InsertNewObject(
+		COrderCustomerRole::GetTypeId(), "", "",
+		newRolePtr.GetPtr(),
+		QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8());
+
 	if (m_customerId != customerId){
 		istd::CChangeNotifier changeNotifier(this);
-
 		m_customerId = customerId;
 	}
 }
@@ -142,6 +188,18 @@ void COrderInfo::SetOrderStatus(OrderStatus status)
 imtbase::CObjectCollection* COrderInfo::GetProducts()
 {
 	return  &m_productInstanceCollection;
+}
+
+
+imtbase::CObjectCollection* COrderInfo::GetCustomerRoles()
+{
+	return &m_customerRoles;
+}
+
+
+const imtbase::CObjectCollection* COrderInfo::GetCustomerRoles() const
+{
+	return &m_customerRoles;
 }
 
 
@@ -196,6 +254,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 		retVal = retVal && archive.EndTag(purchaseOrderIdTag);
 	}
 
+	// Legacy field: always write for backward compatibility, always read
 	iser::CArchiveTag orderCustomerTag("OrderCustomer", "Order Customer", iser::CArchiveTag::TT_LEAF);
 	retVal = retVal && archive.BeginTag(orderCustomerTag);
 	retVal = retVal && archive.Process(m_customerId);
@@ -211,6 +270,71 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 		retVal = retVal && archive.BeginTag(productsTag);
 		retVal = retVal && m_productInstanceCollection.Serialize(archive);
 		retVal = retVal && archive.EndTag(productsTag);
+	}
+
+	// CustomerRoles: new section (prolifeVersion >= 6000)
+	iser::CArchiveTag customerRolesTag("CustomerRoles", "Customer roles for the order", iser::CArchiveTag::TT_GROUP);
+	if (prolifeVersion >= 6000){
+		if (archive.IsStoring()){
+			// Ensure at least one RT_ORDERING_PARTY role exists when storing
+			bool hasOrderingParty = false;
+			imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
+			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_customerRoles.GetObjectData(roleId, dataPtr)){
+					const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(dataPtr.GetPtr());
+					if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
+						hasOrderingParty = true;
+						break;
+					}
+				}
+			}
+
+			if (!hasOrderingParty && !m_customerId.isEmpty()){
+				COrderCustomerRole* newRole = new COrderCustomerRole();
+				newRole->SetCustomerId(m_customerId);
+				newRole->SetRoleType(IOrderCustomerRole::RT_ORDERING_PARTY);
+
+				istd::TDelPtr<COrderCustomerRole> newRolePtr(newRole);
+				m_customerRoles.InsertNewObject(
+					COrderCustomerRole::GetTypeId(), "", "",
+					newRolePtr.GetPtr(),
+					QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8());
+			}
+		}
+
+		retVal = retVal && archive.BeginTag(customerRolesTag);
+		retVal = retVal && m_customerRoles.Serialize(archive);
+		retVal = retVal && archive.EndTag(customerRolesTag);
+
+		if (!archive.IsStoring()){
+			// Sync m_customerId from the RT_ORDERING_PARTY role after loading
+			imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
+			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+				imtbase::IObjectCollection::DataPtr dataPtr;
+				if (m_customerRoles.GetObjectData(roleId, dataPtr)){
+					const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(dataPtr.GetPtr());
+					if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
+						m_customerId = rolePtr->GetCustomerId();
+						break;
+					}
+				}
+			}
+		}
+	}
+	else if (!archive.IsStoring()){
+		// Old format: create a single RT_ORDERING_PARTY role from the legacy m_customerId
+		if (!m_customerId.isEmpty()){
+			COrderCustomerRole* newRole = new COrderCustomerRole();
+			newRole->SetCustomerId(m_customerId);
+			newRole->SetRoleType(IOrderCustomerRole::RT_ORDERING_PARTY);
+
+			istd::TDelPtr<COrderCustomerRole> newRolePtr(newRole);
+			m_customerRoles.InsertNewObject(
+				COrderCustomerRole::GetTypeId(), "", "",
+				newRolePtr.GetPtr(),
+				QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8());
+		}
 	}
 
 	return retVal;
@@ -239,6 +363,7 @@ bool COrderInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/)
 		m_description = sourcePtr->m_description;
 		m_status = sourcePtr->m_status;
 		m_productInstanceCollection.CopyFrom(sourcePtr->m_productInstanceCollection);
+		m_customerRoles.CopyFrom(sourcePtr->m_customerRoles);
 
 		bool retVal = true;
 
@@ -268,6 +393,7 @@ bool COrderInfo::ResetData(CompatibilityMode /*mode*/)
 	m_purchaseId.clear();
 	m_customerId.clear();
 	m_productInstanceCollection.ResetData();
+	m_customerRoles.ResetData();
 	m_status = OS_CREATED;
 
 	return true;

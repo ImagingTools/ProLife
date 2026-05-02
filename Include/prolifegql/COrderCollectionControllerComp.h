@@ -26,6 +26,7 @@ public:
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
+		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection for customer name resolution", false, "AccountCollection");
 	I_END_COMPONENT;
 
 protected:
@@ -88,6 +89,7 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_softwareInstanceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseDefinitionCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
 	I_FACT(prolifedata::IOrderInfo, m_orderInfoFactCompPtr);

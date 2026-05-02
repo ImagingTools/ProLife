@@ -7,6 +7,8 @@
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/ICustomerInfo.h>
+#include <prolifedata/IOrderCustomerRole.h>
+#include <prolifedata/COrderCustomerRole.h>
 
 
 namespace prolifedata
@@ -48,6 +50,31 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 				
 				QString customerName = customerInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_NAME, customerName);
+			}
+		}
+
+		// Populate end-customer meta info from the customer roles collection
+		const imtbase::IObjectCollection* rolesCollectionPtr = orderInfoPtr->GetCustomerRoles();
+		if (rolesCollectionPtr != nullptr){
+			imtbase::ICollectionInfo::Ids roleIds = rolesCollectionPtr->GetElementIds();
+			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+				imtbase::IObjectCollection::DataPtr roleDataPtr;
+				if (rolesCollectionPtr->GetObjectData(roleId, roleDataPtr)){
+					const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(roleDataPtr.GetPtr());
+					if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_END_CUSTOMER){
+						QByteArray endCustomerId = rolePtr->GetCustomerId();
+						metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_END_CUSTOMER_ID, endCustomerId);
+
+						imtbase::IObjectCollection::DataPtr endCustomerDataPtr;
+						if (m_accountCollectionCompPtr->GetObjectData(endCustomerId, endCustomerDataPtr)){
+							const ICustomerInfo* endCustomerInfoPtr = dynamic_cast<const ICustomerInfo*>(endCustomerDataPtr.GetPtr());
+							if (endCustomerInfoPtr != nullptr){
+								metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_END_CUSTOMER_NAME, endCustomerInfoPtr->GetName());
+							}
+						}
+						break;
+					}
+				}
 			}
 		}
 	}
