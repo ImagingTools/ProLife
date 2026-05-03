@@ -2,7 +2,7 @@
 
 
 // Qt includes
-#include <QUuid>
+#include <QtCore/QUuid>
 
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>

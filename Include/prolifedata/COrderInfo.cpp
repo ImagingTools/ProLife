@@ -2,7 +2,7 @@
 
 
 // Qt includes
-#include <QUuid>
+#include <QtCore/QUuid>
 
 // ACF includes
 #include <iser/CArchiveTag.h>

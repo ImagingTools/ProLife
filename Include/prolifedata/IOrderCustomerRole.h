@@ -14,17 +14,21 @@ class IOrderCustomerRole: virtual public istd::IChangeable
 public:
 	enum RoleType
 	{
-		RT_ORDERING_PARTY,      // Auftraggeber / Besteller (mandatory)
-		RT_END_CUSTOMER,        // Endkunde / Empfänger
-		RT_INVOICE_RECIPIENT,   // Rechnungsempfänger
-		RT_DELIVERY_RECIPIENT,  // Lieferempfänger
-		RT_RESELLER,            // Vermittler / Wiederverkäufer
-		RT_REFERRER             // Zuweiser / Empfehlender
+		RT_ORDERING_PARTY,      // Ordering party / buyer (mandatory)
+		RT_END_CUSTOMER,        // End customer / recipient
+		RT_INVOICE_RECIPIENT,   // Invoice recipient
+		RT_DELIVERY_RECIPIENT,  // Delivery recipient
+		RT_RESELLER,            // Reseller / intermediary
+		RT_REFERRER             // Referrer / recommender
 	};
 
-	I_DECLARE_ENUM(RoleType, RT_ORDERING_PARTY, RT_END_CUSTOMER,
-				   RT_INVOICE_RECIPIENT, RT_DELIVERY_RECIPIENT,
-				   RT_RESELLER, RT_REFERRER);
+	I_DECLARE_ENUM(RoleType,
+				   RT_ORDERING_PARTY,
+				   RT_END_CUSTOMER,
+				   RT_INVOICE_RECIPIENT,
+				   RT_DELIVERY_RECIPIENT,
+				   RT_RESELLER,
+				   RT_REFERRER);
 
 	/**
 		Get the customer ID for this role.
