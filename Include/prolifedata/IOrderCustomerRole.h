@@ -3,14 +3,13 @@
 
 // ACF includes
 #include <iser/IObject.h>
-#include <istd/IChangeable.h>
 
 
 namespace prolifedata
 {
 
 
-class IOrderCustomerRole: virtual public iser::IObject, virtual public istd::IChangeable
+class IOrderCustomerRole: virtual public iser::IObject
 {
 public:
 	enum RoleType
