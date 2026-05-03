@@ -14,19 +14,10 @@ input OrdersListInput {
 	viewParams: CollectionViewParams
 }
 
-enum OrderCustomerRoleType {
-	ORDERING_PARTY
-	END_CUSTOMER
-	INVOICE_RECIPIENT
-	DELIVERY_RECIPIENT
-	RESELLER
-	REFERRER
-}
-
 type OrderCustomerRole {
 	customerId: ID!
 	customerName: String
-	roleType: OrderCustomerRoleType!
+	roleType: ID
 }
 
 type OrderItem {
