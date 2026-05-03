@@ -69,6 +69,9 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 					IOrderInfo::MetaInfoTypes nameKey;
 
 					switch (rolePtr->GetRoleType()){
+					case IOrderCustomerRole::RT_ORDERING_PARTY:
+						// Already handled via GetCustomerId() / MIT_CUSTOMER_ID above
+						continue;
 					case IOrderCustomerRole::RT_END_CUSTOMER:
 						idKey = IOrderInfo::MIT_END_CUSTOMER_ID;
 						nameKey = IOrderInfo::MIT_END_CUSTOMER_NAME;
