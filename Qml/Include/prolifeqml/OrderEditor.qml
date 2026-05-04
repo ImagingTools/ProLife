@@ -136,10 +136,9 @@ ViewBase {
 			for (let r = 0; r < orderData.m_customerRoles.count; r++){
 				let roleObj = orderData.m_customerRoles.get(r);
 				if (roleObj && roleObj.roleType !== "OrderingParty"){
-					additionalRolesModel.append({
-						"roleType": roleObj.roleType || "EndCustomer",
-						"customerId": roleObj.customerId || ""
-					});
+					let idx = additionalRolesModel.insertNewItem();
+					additionalRolesModel.setData("roleType", roleObj.roleType || "EndCustomer", idx);
+					additionalRolesModel.setData("customerId", roleObj.customerId || "", idx);
 				}
 			}
 		}
@@ -186,12 +185,12 @@ ViewBase {
 			}
 
 			// Additional roles
-			for (let i = 0; i < additionalRolesModel.count; i++){
-				let role = additionalRolesModel.get(i);
-				if (role.customerId !== ""){
+			for (let i = 0; i < additionalRolesModel.getItemsCount(); i++){
+				let roleCustomerId = additionalRolesModel.getData("customerId", i);
+				if (roleCustomerId !== ""){
 					customerRoles.insert(customerRoles.count, {
-						"roleType": role.roleType,
-						"customerId": role.customerId
+						"roleType": additionalRolesModel.getData("roleType", i),
+						"customerId": roleCustomerId
 					});
 				}
 			}
@@ -202,18 +201,35 @@ ViewBase {
 		id: orderStatus;
 	}
 
-	ListModel {
+	TreeItemModel {
 		id: additionalRolesModel;
 	}
 
 	// Role-type labels for the dropdown
-	ListModel {
+	TreeItemModel {
 		id: roleTypesModel;
-		ListElement { roleId: "EndCustomer"; roleName: qsTr("End Customer") }
-		ListElement { roleId: "InvoiceRecipient"; roleName: qsTr("Invoice Recipient") }
-		ListElement { roleId: "DeliveryRecipient"; roleName: qsTr("Delivery Recipient") }
-		ListElement { roleId: "Reseller"; roleName: qsTr("Reseller") }
-		ListElement { roleId: "Referrer"; roleName: qsTr("Referrer") }
+
+		Component.onCompleted: {
+			let index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "EndCustomer", index);
+			roleTypesModel.setData("name", qsTr("End Customer"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "InvoiceRecipient", index);
+			roleTypesModel.setData("name", qsTr("Invoice Recipient"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "DeliveryRecipient", index);
+			roleTypesModel.setData("name", qsTr("Delivery Recipient"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "Reseller", index);
+			roleTypesModel.setData("name", qsTr("Reseller"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "Referrer", index);
+			roleTypesModel.setData("name", qsTr("Referrer"), index);
+		}
 	}
 	
 	Rectangle {
@@ -460,10 +476,9 @@ ViewBase {
 						tooltipText: qsTr("Add Role");
 
 						onClicked: {
-							additionalRolesModel.append({
-								"roleType": "EndCustomer",
-								"customerId": ""
-							});
+							let idx = additionalRolesModel.insertNewItem();
+							additionalRolesModel.setData("roleType", "EndCustomer", idx);
+							additionalRolesModel.setData("customerId", "", idx);
 							orderEditorContainer.doUpdateModel();
 						}
 					}
@@ -488,14 +503,15 @@ ViewBase {
 								id: roleTypeCB;
 								width: 160;
 
-								textRole: "roleName";
+								textRole: "name";
 								model: roleTypesModel;
 
 								enabled: !additionalRolesView.readOnly;
 
 								Component.onCompleted: {
-									for (let i = 0; i < roleTypesModel.count; i++){
-										if (roleTypesModel.get(i).roleId === model.roleType){
+									let storedRoleType = additionalRolesModel.getData("roleType", index);
+									for (let i = 0; i < roleTypesModel.getItemsCount(); i++){
+										if (roleTypesModel.getData("id", i) === storedRoleType){
 											currentIndex = i;
 											break;
 										}
@@ -504,8 +520,8 @@ ViewBase {
 
 								onCurrentIndexChanged: {
 									if (currentIndex >= 0){
-										let selectedRoleId = roleTypesModel.get(currentIndex).roleId;
-										additionalRolesModel.setProperty(index, "roleType", selectedRoleId);
+										let selectedRoleId = roleTypesModel.getData("id", currentIndex);
+										additionalRolesModel.setData("roleType", selectedRoleId, index);
 										orderEditorContainer.doUpdateModel();
 									}
 								}
@@ -521,7 +537,7 @@ ViewBase {
 								enabled: !additionalRolesView.readOnly;
 
 								Component.onCompleted: {
-									let storedId = model.customerId;
+									let storedId = additionalRolesModel.getData("customerId", index);
 									for (let i = 0; i < orderEditorContainer.accountsModel.getItemsCount(); i++){
 										if (orderEditorContainer.accountsModel.getData("id", i) === storedId){
 											currentIndex = i;
@@ -533,7 +549,7 @@ ViewBase {
 								onCurrentIndexChanged: {
 									if (currentIndex >= 0 && orderEditorContainer.accountsModel){
 										let selectedId = orderEditorContainer.accountsModel.getData("id", currentIndex);
-										additionalRolesModel.setProperty(index, "customerId", selectedId);
+										additionalRolesModel.setData("customerId", selectedId, index);
 										orderEditorContainer.doUpdateModel();
 									}
 								}
@@ -552,7 +568,7 @@ ViewBase {
 								visible: !additionalRolesView.readOnly;
 
 								onClicked: {
-									additionalRolesModel.remove(index);
+									additionalRolesModel.removeItem(index);
 									orderEditorContainer.doUpdateModel();
 								}
 							}
