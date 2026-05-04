@@ -274,7 +274,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 
 	// CustomerRoles: new section (prolifeVersion >= 6000)
 	iser::CArchiveTag customerRolesTag("CustomerRoles", "Customer roles for the order", iser::CArchiveTag::TT_GROUP);
-	if (prolifeVersion >= 6000){
+	if (prolifeVersion > 12698){
 		if (archive.IsStoring()){
 			// Ensure at least one RT_ORDERING_PARTY role exists when storing
 			bool hasOrderingParty = false;
