@@ -1,11 +1,15 @@
 #include <prolifegql/COrderCollectionControllerComp.h>
 
 
+// Qt includes
+#include <QtCore/QUuid>
+
 // ImtCore includes
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
+#include <imtauth/CCompanyInfo.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -14,6 +18,8 @@
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
 #include <prolifedata/CGroupFilter.h>
+#include <prolifedata/COrderCustomerRole.h>
+#include <prolifedata/IOrderCustomerRole.h>
 
 
 namespace prolifegql
@@ -462,6 +468,41 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
+	// Populate customerRoles
+	{
+		const imtbase::IObjectCollection* rolesCollectionPtr = orderInfoPtr->GetCustomerRoles();
+		if (rolesCollectionPtr != nullptr){
+			imtsdl::TElementList<sdl::prolife::Orders::COrderCustomerRole::V1_0> customerRoles;
+
+			imtbase::ICollectionInfo::Ids roleIds = rolesCollectionPtr->GetElementIds();
+			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+				imtbase::IObjectCollection::DataPtr roleDataPtr;
+				if (rolesCollectionPtr->GetObjectData(roleId, roleDataPtr)){
+					const prolifedata::COrderCustomerRole* rolePtr = dynamic_cast<const prolifedata::COrderCustomerRole*>(roleDataPtr.GetPtr());
+					if (rolePtr != nullptr){
+						sdl::prolife::Orders::COrderCustomerRole::V1_0 roleRepresentation;
+						roleRepresentation.customerId = rolePtr->GetCustomerId();
+						roleRepresentation.roleType = prolifedata::GetIdFromCustomerRoleType(rolePtr->GetRoleType());
+
+						if (m_accountCollectionCompPtr.IsValid()){
+							imtbase::IObjectCollection::DataPtr accountDataPtr;
+							if (m_accountCollectionCompPtr->GetObjectData(rolePtr->GetCustomerId(), accountDataPtr)){
+								const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(accountDataPtr.GetPtr());
+								if (companyInfoPtr != nullptr){
+									roleRepresentation.customerName = companyInfoPtr->GetName();
+								}
+							}
+						}
+
+						customerRoles.append(roleRepresentation);
+					}
+				}
+			}
+
+			representationPayload.customerRoles = customerRoles;
+		}
+	}
+
 	imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0> products;
 
 	imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
@@ -819,6 +860,53 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 	if (orderDataRepresentation.customerId){
 		customerId = *orderDataRepresentation.customerId;
 		orderInfoPtr->SetCustomerId(customerId);
+	}
+
+	// Parse customerRoles from the representation (if provided)
+	if (orderDataRepresentation.customerRoles){
+		imtbase::IObjectCollection* rolesCollectionPtr = orderInfoPtr->GetCustomerRoles();
+		if (rolesCollectionPtr != nullptr){
+			// Clear existing roles first (they may have been set by SetCustomerId)
+			rolesCollectionPtr->ResetData();
+
+			for (const istd::TSharedNullable<sdl::prolife::Orders::COrderCustomerRole::V1_0>& roleRepresentation : *orderDataRepresentation.customerRoles){
+				if (!roleRepresentation){
+					continue;
+				}
+
+				QByteArray roleCustomerId;
+				if (roleRepresentation->customerId){
+					roleCustomerId = *roleRepresentation->customerId;
+				}
+
+				if (roleCustomerId.isEmpty()){
+					continue;
+				}
+
+				QByteArray roleTypeId;
+				if (roleRepresentation->roleType){
+					roleTypeId = *roleRepresentation->roleType;
+				}
+
+				prolifedata::IOrderCustomerRole::RoleType roleType = prolifedata::GetCustomerRoleTypeFromId(roleTypeId);
+
+				prolifedata::COrderCustomerRole* newRole = new prolifedata::COrderCustomerRole();
+				newRole->SetCustomerId(roleCustomerId);
+				newRole->SetRoleType(roleType);
+
+				istd::TDelPtr<prolifedata::COrderCustomerRole> newRolePtr(newRole);
+				rolesCollectionPtr->InsertNewObject(
+					prolifedata::COrderCustomerRole::GetTypeId(), "", "",
+					newRolePtr.GetPtr(),
+					QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8());
+
+				// Sync customerId with the ordering party role
+				if (roleType == prolifedata::IOrderCustomerRole::RT_ORDERING_PARTY){
+					customerId = roleCustomerId;
+					orderInfoPtr->SetCustomerId(customerId);
+				}
+			}
+		}
 	}
 
 	if (customerId.isEmpty()){

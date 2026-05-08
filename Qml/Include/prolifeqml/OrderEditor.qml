@@ -41,6 +41,7 @@ ViewBase {
 		
 		customerCB.changeable = !readOnly;
 		orderStatusCB.changeable = !readOnly;
+		additionalRolesView.readOnly = readOnly;
 	}
 	
 	function checkPermissions(){
@@ -58,6 +59,8 @@ ViewBase {
 			orderStatusCB.changeable = true;
 			addProduct.visible = true;
 			productsView.readOnly = false;
+			addRoleButton.visible = true;
+			additionalRolesView.readOnly = false;
 		}
 		else{
 			let canChangeDeliveryId = PermissionsController.checkPermission("ChangeDeliveryId");
@@ -71,6 +74,8 @@ ViewBase {
 			
 			let canChangeCustomer = PermissionsController.checkPermission("ChangeCustomer");
 			customerCB.changeable = canChangeCustomer;
+			additionalRolesView.readOnly = !canChangeCustomer;
+			addRoleButton.visible = canChangeCustomer;
 			
 			let canChangeOrderStatus = PermissionsController.checkPermission("ChangeOrderStatus");
 			orderStatusCB.changeable = canChangeOrderStatus;
@@ -124,6 +129,19 @@ ViewBase {
 		
 		productsView.model = 0;
 		productsView.model = orderData.m_orderProducts;
+
+		// Restore additional customer roles (non-ordering-party roles)
+		additionalRolesModel.clear();
+		if (orderData.m_customerRoles){
+			for (let r = 0; r < orderData.m_customerRoles.count; r++){
+				let roleItem = orderData.m_customerRoles.get(r).item;
+				if (roleItem && roleItem.m_roleType !== "OrderingParty"){
+					let idx = additionalRolesModel.insertNewItem();
+					additionalRolesModel.setData("roleType", roleItem.m_roleType || "EndCustomer", idx);
+					additionalRolesModel.setData("customerId", roleItem.m_customerId || "", idx);
+				}
+			}
+		}
 	}
 	
 	function updateModel(){
@@ -149,10 +167,69 @@ ViewBase {
 		if (!orderData.hasOrderProducts()){
 			orderData.emplaceOrderProducts()
 		}
+
+		// Build the customer roles list: first the ordering party, then additional roles
+		if (!orderData.hasCustomerRoles()){
+			orderData.emplaceCustomerRoles();
+		}
+		let customerRoles = orderData.m_customerRoles;
+		if (customerRoles){
+			customerRoles.clear();
+
+			// Ordering party role (mandatory)
+			if (selectedAccountId !== ""){
+				customerRoles.insert(0, {
+					"roleType": "OrderingParty",
+					"customerId": selectedAccountId
+				});
+			}
+
+			// Additional roles
+			for (let i = 0; i < additionalRolesModel.getItemsCount(); i++){
+				let roleCustomerId = additionalRolesModel.getData("customerId", i);
+				if (roleCustomerId !== ""){
+					customerRoles.insert(customerRoles.count, {
+						"roleType": additionalRolesModel.getData("roleType", i),
+						"customerId": roleCustomerId
+					});
+				}
+			}
+		}
 	}
 	
 	OrderStatus {
 		id: orderStatus;
+	}
+
+	TreeItemModel {
+		id: additionalRolesModel;
+	}
+
+	// Role-type labels for the dropdown
+	TreeItemModel {
+		id: roleTypesModel;
+
+		Component.onCompleted: {
+			let index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "EndCustomer", index);
+			roleTypesModel.setData("name", qsTr("End Customer"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "InvoiceRecipient", index);
+			roleTypesModel.setData("name", qsTr("Invoice Recipient"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "DeliveryRecipient", index);
+			roleTypesModel.setData("name", qsTr("Delivery Recipient"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "Reseller", index);
+			roleTypesModel.setData("name", qsTr("Reseller"), index);
+
+			index = roleTypesModel.insertNewItem();
+			roleTypesModel.setData("id", "Referrer", index);
+			roleTypesModel.setData("name", qsTr("Referrer"), index);
+		}
 	}
 	
 	Rectangle {
@@ -369,6 +446,138 @@ ViewBase {
 					
 					KeyNavigation.tab: instanceIdInput;
 					KeyNavigation.backtab: customerCB;
+				}
+
+			}
+
+			// Additional customer roles section
+			Item {
+				id: additionalRolesHeader;
+				width: content.width;
+				height: addRoleButton.height + Style.marginM;
+				visible: true;
+
+				Text {
+					anchors.verticalCenter: parent.verticalCenter;
+					anchors.left: parent.left;
+					anchors.leftMargin: Style.marginL;
+					text: qsTr("Additional Roles");
+					color: Style.textColor;
+					font.family: Style.fontFamilyBold;
+					font.pixelSize: Style.fontSizeL;
+				}
+
+				ToolButton {
+					id: addRoleButton;
+					anchors.verticalCenter: parent.verticalCenter;
+					anchors.right: parent.right;
+					anchors.rightMargin: Style.marginL;
+
+					width: 22;
+					height: width;
+
+					iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
+					tooltipText: qsTr("Add Role");
+
+					onClicked: {
+						let idx = additionalRolesModel.insertNewItem();
+						additionalRolesModel.setData("roleType", "EndCustomer", idx);
+						additionalRolesModel.setData("customerId", "", idx);
+						orderEditorContainer.doUpdateModel();
+					}
+				}
+			}
+
+			// List of additional roles
+			Column {
+				id: additionalRolesView;
+				width: content.width;
+				spacing: Style.marginM;
+
+				property bool readOnly: false;
+
+				Repeater {
+					model: additionalRolesModel;
+
+					delegate: Row {
+						width: additionalRolesView.width - 2 * Style.marginL;
+						x: Style.marginL;
+						spacing: Style.marginM;
+
+						ComboBox {
+							id: roleTypeCB;
+							width: 160;
+
+							textRole: "name";
+							model: roleTypesModel;
+
+							enabled: !additionalRolesView.readOnly;
+
+							Component.onCompleted: {
+								let storedRoleType = additionalRolesModel.getData("roleType", index);
+								for (let i = 0; i < roleTypesModel.getItemsCount(); i++){
+									if (roleTypesModel.getData("id", i) === storedRoleType){
+										currentIndex = i;
+										break;
+									}
+								}
+							}
+
+							onCurrentIndexChanged: {
+								if (currentIndex >= 0){
+									let selectedRoleId = roleTypesModel.getData("id", currentIndex);
+									additionalRolesModel.setData("roleType", selectedRoleId, index);
+									orderEditorContainer.doUpdateModel();
+								}
+							}
+						}
+
+						ComboBox {
+							id: additionalCustomerCB;
+							width: parent.width - roleTypeCB.width - removeRoleButton.width - 2 * Style.marginM;
+
+							textRole: "name";
+							model: orderEditorContainer.accountsModel;
+
+							enabled: !additionalRolesView.readOnly;
+
+							Component.onCompleted: {
+								let storedId = additionalRolesModel.getData("customerId", index);
+								for (let i = 0; i < orderEditorContainer.accountsModel.getItemsCount(); i++){
+									if (orderEditorContainer.accountsModel.getData("id", i) === storedId){
+										currentIndex = i;
+										break;
+									}
+								}
+							}
+
+							onCurrentIndexChanged: {
+								if (currentIndex >= 0 && orderEditorContainer.accountsModel){
+									let selectedId = orderEditorContainer.accountsModel.getData("id", currentIndex);
+									additionalRolesModel.setData("customerId", selectedId, index);
+									orderEditorContainer.doUpdateModel();
+								}
+							}
+						}
+
+						ToolButton {
+							id: removeRoleButton;
+							anchors.verticalCenter: parent.verticalCenter;
+
+							width: 22;
+							height: width;
+
+							iconSource: "../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal);
+							tooltipText: qsTr("Remove Role");
+
+							visible: !additionalRolesView.readOnly;
+
+							onClicked: {
+								additionalRolesModel.removeItem(index);
+								orderEditorContainer.doUpdateModel();
+							}
+						}
+					}
 				}
 			}
 			

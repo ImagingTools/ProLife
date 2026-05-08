@@ -28,13 +28,13 @@ ApplicationMain {
 			CachedAccountCollection.clearModel();
 		}
 	}
-	
+
 	WebSocketConnectionChecker {
 		id: pumaConnectionChecker;
 		gqlCommandId: "PumaWsConnection";
 		subscriptionManager: window.subscriptionManager;
 	}
-	
+
 	WebSocketConnectionChecker {
 		id: lisaConnectionChecker;
 		gqlCommandId: "LisaWsConnection";
@@ -59,6 +59,10 @@ ApplicationMain {
 				}
 			}
 		}
+	}
+
+	TenantMembershipSubscriptionClient {
+		id: membershipSubscriptionClient
 	}
 }
 

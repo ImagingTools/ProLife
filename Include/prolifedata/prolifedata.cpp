@@ -276,6 +276,49 @@ bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteAr
 }
 
 
+QByteArray GetIdFromCustomerRoleType(prolifedata::IOrderCustomerRole::RoleType roleType)
+{
+	switch (roleType){
+	case prolifedata::IOrderCustomerRole::RT_ORDERING_PARTY:
+		return QByteArray("OrderingParty");
+	case prolifedata::IOrderCustomerRole::RT_END_CUSTOMER:
+		return QByteArray("EndCustomer");
+	case prolifedata::IOrderCustomerRole::RT_INVOICE_RECIPIENT:
+		return QByteArray("InvoiceRecipient");
+	case prolifedata::IOrderCustomerRole::RT_DELIVERY_RECIPIENT:
+		return QByteArray("DeliveryRecipient");
+	case prolifedata::IOrderCustomerRole::RT_RESELLER:
+		return QByteArray("Reseller");
+	case prolifedata::IOrderCustomerRole::RT_REFERRER:
+		return QByteArray("Referrer");
+	default:
+		return QByteArray("OrderingParty");
+	}
+}
+
+
+prolifedata::IOrderCustomerRole::RoleType GetCustomerRoleTypeFromId(const QByteArray& roleTypeId)
+{
+	if (roleTypeId == "EndCustomer"){
+		return prolifedata::IOrderCustomerRole::RT_END_CUSTOMER;
+	}
+	else if (roleTypeId == "InvoiceRecipient"){
+		return prolifedata::IOrderCustomerRole::RT_INVOICE_RECIPIENT;
+	}
+	else if (roleTypeId == "DeliveryRecipient"){
+		return prolifedata::IOrderCustomerRole::RT_DELIVERY_RECIPIENT;
+	}
+	else if (roleTypeId == "Reseller"){
+		return prolifedata::IOrderCustomerRole::RT_RESELLER;
+	}
+	else if (roleTypeId == "Referrer"){
+		return prolifedata::IOrderCustomerRole::RT_REFERRER;
+	}
+
+	return prolifedata::IOrderCustomerRole::RT_ORDERING_PARTY;
+}
+
+
 // Helper function to recursively build hierarchical license tree from UserActions
 // Processes both Split and Revoke operations from UserActions
 // maxDepth: -1 for unlimited, 0 to not recurse to children, 1 for one level of children, etc.

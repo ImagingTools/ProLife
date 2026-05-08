@@ -7,6 +7,8 @@
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/ICustomerInfo.h>
+#include <prolifedata/IOrderCustomerRole.h>
+#include <prolifedata/COrderCustomerRole.h>
 
 
 namespace prolifedata
@@ -48,6 +50,63 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 				
 				QString customerName = customerInfoPtr->GetName();
 				metaInfoPtr->SetMetaInfo(IOrderInfo::MIT_CUSTOMER_NAME, customerName);
+			}
+		}
+
+		// Populate meta info for all customer roles from the roles collection
+		const imtbase::IObjectCollection* rolesCollectionPtr = orderInfoPtr->GetCustomerRoles();
+		if (rolesCollectionPtr != nullptr){
+			imtbase::ICollectionInfo::Ids roleIds = rolesCollectionPtr->GetElementIds();
+			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+				imtbase::IObjectCollection::DataPtr roleDataPtr;
+				if (rolesCollectionPtr->GetObjectData(roleId, roleDataPtr)){
+					const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(roleDataPtr.GetPtr());
+					if (rolePtr == nullptr){
+						continue;
+					}
+
+					IOrderInfo::MetaInfoTypes idKey;
+					IOrderInfo::MetaInfoTypes nameKey;
+
+					switch (rolePtr->GetRoleType()){
+					case IOrderCustomerRole::RT_ORDERING_PARTY:
+						// Already handled via GetCustomerId() / MIT_CUSTOMER_ID above
+						continue;
+					case IOrderCustomerRole::RT_END_CUSTOMER:
+						idKey = IOrderInfo::MIT_END_CUSTOMER_ID;
+						nameKey = IOrderInfo::MIT_END_CUSTOMER_NAME;
+						break;
+					case IOrderCustomerRole::RT_INVOICE_RECIPIENT:
+						idKey = IOrderInfo::MIT_INVOICE_RECIPIENT_ID;
+						nameKey = IOrderInfo::MIT_INVOICE_RECIPIENT_NAME;
+						break;
+					case IOrderCustomerRole::RT_DELIVERY_RECIPIENT:
+						idKey = IOrderInfo::MIT_DELIVERY_RECIPIENT_ID;
+						nameKey = IOrderInfo::MIT_DELIVERY_RECIPIENT_NAME;
+						break;
+					case IOrderCustomerRole::RT_RESELLER:
+						idKey = IOrderInfo::MIT_RESELLER_ID;
+						nameKey = IOrderInfo::MIT_RESELLER_NAME;
+						break;
+					case IOrderCustomerRole::RT_REFERRER:
+						idKey = IOrderInfo::MIT_REFERRER_ID;
+						nameKey = IOrderInfo::MIT_REFERRER_NAME;
+						break;
+					default:
+						continue;
+					}
+
+					QByteArray roleCustomerId = rolePtr->GetCustomerId();
+					metaInfoPtr->SetMetaInfo(idKey, roleCustomerId);
+
+					imtbase::IObjectCollection::DataPtr roleAccountDataPtr;
+					if (m_accountCollectionCompPtr->GetObjectData(roleCustomerId, roleAccountDataPtr)){
+						const ICustomerInfo* roleCustomerInfoPtr = dynamic_cast<const ICustomerInfo*>(roleAccountDataPtr.GetPtr());
+						if (roleCustomerInfoPtr != nullptr){
+							metaInfoPtr->SetMetaInfo(nameKey, roleCustomerInfoPtr->GetName());
+						}
+					}
+				}
 			}
 		}
 	}

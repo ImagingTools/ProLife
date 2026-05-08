@@ -10,6 +10,7 @@
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/IOrderInfo.h>
+#include <prolifedata/IOrderCustomerRole.h>
 
 // Generated includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
@@ -31,6 +32,9 @@ bool CheckDeviceMacAddressExists(const QByteArray& deviceUuid, const QByteArray&
 bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
 
 bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
+
+QByteArray GetIdFromCustomerRoleType(prolifedata::IOrderCustomerRole::RoleType roleType);
+prolifedata::IOrderCustomerRole::RoleType GetCustomerRoleTypeFromId(const QByteArray& roleTypeId);
 
 // Build hierarchical license tree from UserActions
 // Returns root node of the tree (or empty if error)

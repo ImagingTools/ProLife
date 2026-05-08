@@ -37,6 +37,8 @@ public:
 	virtual OrderStatus GetOrderStatus() const override;
 	virtual void SetOrderStatus(OrderStatus status) override;
 	imtbase::CObjectCollection* GetProducts() override;
+	imtbase::CObjectCollection* GetCustomerRoles() override;
+	const imtbase::CObjectCollection* GetCustomerRoles() const override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -59,6 +61,7 @@ private:
 	ProductIds m_orderedProducts;
 
 	imtbase::CObjectCollection m_productInstanceCollection;
+	imtbase::CObjectCollection m_customerRoles;
 };
 
 

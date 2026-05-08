@@ -12,6 +12,8 @@
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/IDeviceInfo.h>
+#include <prolifedata/COrderCustomerRole.h>
+#include <prolifedata/prolifedata.h>
 
 
 namespace prolifegql
@@ -69,6 +71,75 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8());
 	}
 
+	// Track customer role changes
+	const imtbase::IObjectCollection* oldRolesPtr = oldOrderInfoPtr->GetCustomerRoles();
+	const imtbase::IObjectCollection* newRolesPtr = newOrderInfoPtr->GetCustomerRoles();
+
+	if (oldRolesPtr != nullptr && newRolesPtr != nullptr){
+		imtbase::ICollectionInfo::Ids oldRoleIds = oldRolesPtr->GetElementIds();
+		imtbase::ICollectionInfo::Ids newRoleIds = newRolesPtr->GetElementIds();
+
+		// Detect removed roles (present in old, absent in new by roleType+customerId pair)
+		for (const imtbase::ICollectionInfo::Id& oldRoleId : oldRoleIds){
+			imtbase::IObjectCollection::DataPtr oldRoleData;
+			if (oldRolesPtr->GetObjectData(oldRoleId, oldRoleData)){
+				const prolifedata::COrderCustomerRole* oldRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(oldRoleData.GetPtr());
+				if (oldRole == nullptr){
+					continue;
+				}
+
+				bool found = false;
+				for (const imtbase::ICollectionInfo::Id& newRoleId : newRoleIds){
+					imtbase::IObjectCollection::DataPtr newRoleData;
+					if (newRolesPtr->GetObjectData(newRoleId, newRoleData)){
+						const prolifedata::COrderCustomerRole* newRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(newRoleData.GetPtr());
+						if (newRole != nullptr &&
+							newRole->GetRoleType() == oldRole->GetRoleType() &&
+							newRole->GetCustomerId() == oldRole->GetCustomerId()){
+							found = true;
+							break;
+						}
+					}
+				}
+
+				if (!found){
+					QByteArray roleTypeId = prolifedata::GetIdFromCustomerRoleType(oldRole->GetRoleType());
+					InsertOperationDescription(documentChangeCollection, "RemoveCustomerRole", roleTypeId, QT_TRANSLATE_NOOP("Attribute", "Customer Role"), oldRole->GetCustomerId(), "");
+				}
+			}
+		}
+
+		// Detect added roles (present in new, absent in old by roleType+customerId pair)
+		for (const imtbase::ICollectionInfo::Id& newRoleId : newRoleIds){
+			imtbase::IObjectCollection::DataPtr newRoleData;
+			if (newRolesPtr->GetObjectData(newRoleId, newRoleData)){
+				const prolifedata::COrderCustomerRole* newRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(newRoleData.GetPtr());
+				if (newRole == nullptr){
+					continue;
+				}
+
+				bool found = false;
+				for (const imtbase::ICollectionInfo::Id& oldRoleId : oldRoleIds){
+					imtbase::IObjectCollection::DataPtr oldRoleData;
+					if (oldRolesPtr->GetObjectData(oldRoleId, oldRoleData)){
+						const prolifedata::COrderCustomerRole* oldRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(oldRoleData.GetPtr());
+						if (oldRole != nullptr &&
+							oldRole->GetRoleType() == newRole->GetRoleType() &&
+							oldRole->GetCustomerId() == newRole->GetCustomerId()){
+							found = true;
+							break;
+						}
+					}
+				}
+
+				if (!found){
+					QByteArray roleTypeId = prolifedata::GetIdFromCustomerRoleType(newRole->GetRoleType());
+					InsertOperationDescription(documentChangeCollection, "AddCustomerRole", roleTypeId, QT_TRANSLATE_NOOP("Attribute", "Customer Role"), "", newRole->GetCustomerId());
+				}
+			}
+		}
+	}
+
 	QByteArrayList addedProducts;
 	QByteArrayList removedProducts;
 	QByteArrayList updatedProducts;
@@ -123,6 +194,28 @@ QString COrderChangeGeneratorComp::CreateCustomOperationDescription(
 			"prolifegql::COrderChangeGeneratorComp");
 
 		change = change.arg(GetProductName(oldValue));
+
+		retVal += change + "\n";
+	}
+	else if (type == "AddCustomerRole"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Added customer role '%1' for customer '%2'")).toUtf8(),
+			languageId,
+			"prolifegql::COrderChangeGeneratorComp");
+
+		change = change.arg(QString::fromUtf8(keyName.toUtf8()), GetAccountName(newValue));
+
+		retVal += change + "\n";
+	}
+	else if (type == "RemoveCustomerRole"){
+		QString change = iqt::GetTranslation(
+			m_translationManagerCompPtr.GetPtr(),
+			QString(QT_TR_NOOP("Removed customer role '%1' for customer '%2'")).toUtf8(),
+			languageId,
+			"prolifegql::COrderChangeGeneratorComp");
+
+		change = change.arg(QString::fromUtf8(keyName.toUtf8()), GetAccountName(oldValue));
 
 		retVal += change + "\n";
 	}
