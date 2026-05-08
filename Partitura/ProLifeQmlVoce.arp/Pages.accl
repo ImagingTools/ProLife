@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5715" Description="ACF"/>
-            <Version Id="1" Number="2274" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6390" Description="ACF"/>
+            <Version Id="1" Number="2306" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -15,6 +15,7 @@
         <Element ComponentName="PageData" X="925" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="925" Y="200" Note=""/>
         <Element ComponentName="SoftwareProductsPage" X="200" Y="300" Note=""/>
+        <Element ComponentName="TenantsPage" X="200" Y="600" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PageData">

@@ -384,9 +384,6 @@
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaRepositories/ProductRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="RoleCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AdministrationRepositories/CachedRoleCollection"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ServerConnectionInterface" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/ServerConnectionInterface"/>
                     </AttributeInfo>
@@ -866,6 +863,9 @@
                     <Element Id="CompositeMigrationController" PackageId="ImtDatabasePck" ComponentId="CompositeMigrationController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="MigrationControllers" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -876,6 +876,9 @@
                                             <Value>MigrationController17_19</Value>
                                         </Values>
                                     </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
