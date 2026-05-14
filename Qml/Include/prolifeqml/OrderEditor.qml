@@ -508,10 +508,10 @@ ViewBase {
 							id: roleTypeCB;
 							width: 160;
 
-							textRole: "name";
+							nameId: "name";
 							model: roleTypesModel;
 
-							enabled: !additionalRolesView.readOnly;
+							changeable: !additionalRolesView.readOnly;
 
 							Component.onCompleted: {
 								let storedRoleType = additionalRolesModel.getData("roleType", index);
@@ -536,10 +536,10 @@ ViewBase {
 							id: additionalCustomerCB;
 							width: parent.width - roleTypeCB.width - removeRoleButton.width - 2 * Style.marginM;
 
-							textRole: "name";
+							nameId: "name";
 							model: orderEditorContainer.accountsModel;
 
-							enabled: !additionalRolesView.readOnly;
+							changeable: !additionalRolesView.readOnly;
 
 							Component.onCompleted: {
 								let storedId = additionalRolesModel.getData("customerId", index);
@@ -586,7 +586,7 @@ ViewBase {
 				
 				OrderedProduct {}
 			}
-			
+		
 			Component {
 				id: productEditorDialog;
 				
@@ -601,7 +601,6 @@ ViewBase {
 						productsDialog.bodyItem.orderUuid = orderEditorContainer.orderData.m_id;
 						productsDialog.activeProductIndex = productsView.activeProductIndex;
 						productsDialog.bodyItem.orderId = orderEditorContainer.orderData.m_orderId;
-						
 						productsDialog.bodyItem.orderProductsModel = orderEditorContainer.orderData.m_orderProducts;
 						if (productsView.activeProductIndex >= 0){
 							let productModel = orderEditorContainer.orderData.m_orderProducts.get(productsView.activeProductIndex).item;
@@ -611,7 +610,6 @@ ViewBase {
 							let productItem = productFactory.createObject(orderEditorContainer);
 							productItem.m_id = UuidGenerator.generateUUID();
 							productItem.m_categoryId = "Software";
-							
 							productsDialog.bodyItem.productItem = productItem;
 						}
 						
@@ -649,7 +647,7 @@ ViewBase {
 							
 							productsView.model = 0;
 							productsView.model = actualOrderProducts;
-							
+
 							orderEditorContainer.model.modelChanged([]);
 						}
 					}
@@ -719,7 +717,7 @@ ViewBase {
 					font.pixelSize: Style.fontSizeXXL;
 				}
 			}
-			
+
 			ListView {
 				id: productsView;
 				
