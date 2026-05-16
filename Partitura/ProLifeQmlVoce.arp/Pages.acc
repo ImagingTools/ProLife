@@ -333,12 +333,12 @@
                         <Data IsEnabled="true" Value="Organizations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Tenants"/>
+                        <Data IsEnabled="true" Value="Organizations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewTenants</Value>
+                                <Value>ViewOrganizations</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

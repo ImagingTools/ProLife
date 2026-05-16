@@ -588,45 +588,65 @@
             <Data Uuid="" FeatureId="OrganizationManagement" FeatureName="Organization Management" FeatureDescription="" Optional="false" IsPermission="true">
                 <Dependencies/>
                 <SubFeatures>
-                    <Object FeatureId="ViewTenantHistory" FeatureName="View Organization History" FeatureDescription="" Optional="false" IsPermission="true">
+                    <Object FeatureId="ViewOrganizationHistory" FeatureName="View Organization History" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies/>
                         <SubFeatures/>
                     </Object>
-                    <Object FeatureId="EditTenant" FeatureName="Edit Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                    <Object FeatureId="EditOrganization" FeatureName="Edit Organization" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies/>
                         <SubFeatures>
-                            <Object FeatureId="ChangeTenant" FeatureName="Change Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                            <Object FeatureId="ChangeOrganization" FeatureName="Change Organization" FeatureDescription="" Optional="false" IsPermission="true">
                                 <Dependencies/>
                                 <SubFeatures>
-                                    <Object FeatureId="ChangeTenantName" FeatureName="Change Organization Name" FeatureDescription="" Optional="false" IsPermission="true">
+                                    <Object FeatureId="ChangeOrganizationName" FeatureName="Change Organization Name" FeatureDescription="" Optional="false" IsPermission="true">
                                         <Dependencies/>
                                         <SubFeatures/>
                                     </Object>
-                                    <Object FeatureId="ChangeTenantDescription" FeatureName="Change Organization Description" FeatureDescription="" Optional="false" IsPermission="true">
+                                    <Object FeatureId="ChangeOrganizationDescription" FeatureName="Change Organization Description" FeatureDescription="" Optional="false" IsPermission="true">
                                         <Dependencies/>
                                         <SubFeatures/>
                                     </Object>
                                 </SubFeatures>
                             </Object>
-                            <Object FeatureId="RemoveTenant" FeatureName="Remove Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                            <Object FeatureId="RemoveOrganization" FeatureName="Remove Organization" FeatureDescription="" Optional="false" IsPermission="true">
                                 <Dependencies/>
                                 <SubFeatures/>
                             </Object>
-                            <Object FeatureId="AddTenant" FeatureName="Add Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                            <Object FeatureId="AddOrganization" FeatureName="Add Organization" FeatureDescription="" Optional="false" IsPermission="true">
                                 <Dependencies/>
                                 <SubFeatures/>
                             </Object>
                         </SubFeatures>
                     </Object>
-                    <Object FeatureId="ViewTenants" FeatureName="View Organizations" FeatureDescription="" Optional="false" IsPermission="true">
+                    <Object FeatureId="InviteMember" FeatureName="Invite Member" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="RemoveMember" FeatureName="Remove Member" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ChangeMemberRole" FeatureName="Change Member Role" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ViewMembers" FeatureName="View Members" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies>
-                            <Dependency>EditTenant</Dependency>
+                            <Dependency>InviteMember</Dependency>
+                            <Dependency>RemoveMember</Dependency>
+                            <Dependency>ChangeMemberRole</Dependency>
                         </Dependencies>
                         <SubFeatures/>
                     </Object>
-                    <Object FeatureId="ViewAllTenants" FeatureName="View All Organizations" FeatureDescription="" Optional="false" IsPermission="true">
+                    <Object FeatureId="ViewOrganizations" FeatureName="View Organizations" FeatureDescription="" Optional="false" IsPermission="true">
                         <Dependencies>
-                            <Dependency>ViewTenants</Dependency>
+                            <Dependency>EditOrganization</Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ViewAllOrganizations" FeatureName="View All Organizations" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency>ViewOrganizations</Dependency>
                         </Dependencies>
                         <SubFeatures/>
                     </Object>
