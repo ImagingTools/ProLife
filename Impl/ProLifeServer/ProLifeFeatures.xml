@@ -581,5 +581,57 @@
                 </SubFeatures>
             </Data>
         </Object>
+        <Object ID="a1b2c3d4-e5f6-7890-abcd-ef1234567890" Description="" TypeId="Feature" Name="">
+            <CollectionItemMeta>
+                <MetaInfoMap/>
+            </CollectionItemMeta>
+            <Data Uuid="" FeatureId="OrganizationManagement" FeatureName="Organization Management" FeatureDescription="" Optional="false" IsPermission="true">
+                <Dependencies/>
+                <SubFeatures>
+                    <Object FeatureId="ViewTenantHistory" FeatureName="View Organization History" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="EditTenant" FeatureName="Edit Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies/>
+                        <SubFeatures>
+                            <Object FeatureId="ChangeTenant" FeatureName="Change Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                                <Dependencies/>
+                                <SubFeatures>
+                                    <Object FeatureId="ChangeTenantName" FeatureName="Change Organization Name" FeatureDescription="" Optional="false" IsPermission="true">
+                                        <Dependencies/>
+                                        <SubFeatures/>
+                                    </Object>
+                                    <Object FeatureId="ChangeTenantDescription" FeatureName="Change Organization Description" FeatureDescription="" Optional="false" IsPermission="true">
+                                        <Dependencies/>
+                                        <SubFeatures/>
+                                    </Object>
+                                </SubFeatures>
+                            </Object>
+                            <Object FeatureId="RemoveTenant" FeatureName="Remove Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                                <Dependencies/>
+                                <SubFeatures/>
+                            </Object>
+                            <Object FeatureId="AddTenant" FeatureName="Add Organization" FeatureDescription="" Optional="false" IsPermission="true">
+                                <Dependencies/>
+                                <SubFeatures/>
+                            </Object>
+                        </SubFeatures>
+                    </Object>
+                    <Object FeatureId="ViewTenants" FeatureName="View Organizations" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency>EditTenant</Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                    <Object FeatureId="ViewAllTenants" FeatureName="View All Organizations" FeatureDescription="" Optional="false" IsPermission="true">
+                        <Dependencies>
+                            <Dependency>ViewTenants</Dependency>
+                        </Dependencies>
+                        <SubFeatures/>
+                    </Object>
+                </SubFeatures>
+            </Data>
+        </Object>
     </ObjectsList>
 </Acf>

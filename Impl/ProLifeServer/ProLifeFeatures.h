@@ -909,6 +909,99 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	productInfo.AddFeature("df22ac46-7253-4b13-a1b8-d4391943adde", *workspaceManagementFeatureInfo.GetPtr());
 
+	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> organizationManagementFeatureInfo;
+	organizationManagementFeatureInfo.SetPtr(new imtlic::CIdentifiableFeatureInfo);
+	organizationManagementFeatureInfo->SetObjectUuid("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+	organizationManagementFeatureInfo->SetFeatureId("OrganizationManagement");
+	organizationManagementFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Organization Management"));
+	organizationManagementFeatureInfo->SetOptional(false);
+	organizationManagementFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewTenantHistoryFeatureInfo;
+	viewTenantHistoryFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewTenantHistoryFeatureInfo->SetFeatureId("ViewTenantHistory");
+	viewTenantHistoryFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Organization History"));
+	viewTenantHistoryFeatureInfo->SetOptional(false);
+	viewTenantHistoryFeatureInfo->SetIsPermission(true);
+
+	organizationManagementFeatureInfo->InsertSubFeature(viewTenantHistoryFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> editTenantFeatureInfo;
+	editTenantFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	editTenantFeatureInfo->SetFeatureId("EditTenant");
+	editTenantFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Edit Organization"));
+	editTenantFeatureInfo->SetOptional(false);
+	editTenantFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> changeTenantFeatureInfo;
+	changeTenantFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	changeTenantFeatureInfo->SetFeatureId("ChangeTenant");
+	changeTenantFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Change Organization"));
+	changeTenantFeatureInfo->SetOptional(false);
+	changeTenantFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> changeTenantNameFeatureInfo;
+	changeTenantNameFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	changeTenantNameFeatureInfo->SetFeatureId("ChangeTenantName");
+	changeTenantNameFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Change Organization Name"));
+	changeTenantNameFeatureInfo->SetOptional(false);
+	changeTenantNameFeatureInfo->SetIsPermission(true);
+
+	changeTenantFeatureInfo->InsertSubFeature(changeTenantNameFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> changeTenantDescriptionFeatureInfo;
+	changeTenantDescriptionFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	changeTenantDescriptionFeatureInfo->SetFeatureId("ChangeTenantDescription");
+	changeTenantDescriptionFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Change Organization Description"));
+	changeTenantDescriptionFeatureInfo->SetOptional(false);
+	changeTenantDescriptionFeatureInfo->SetIsPermission(true);
+
+	changeTenantFeatureInfo->InsertSubFeature(changeTenantDescriptionFeatureInfo.PopPtr());
+
+	editTenantFeatureInfo->InsertSubFeature(changeTenantFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> removeTenantFeatureInfo;
+	removeTenantFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	removeTenantFeatureInfo->SetFeatureId("RemoveTenant");
+	removeTenantFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Remove Organization"));
+	removeTenantFeatureInfo->SetOptional(false);
+	removeTenantFeatureInfo->SetIsPermission(true);
+
+	editTenantFeatureInfo->InsertSubFeature(removeTenantFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> addTenantFeatureInfo;
+	addTenantFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	addTenantFeatureInfo->SetFeatureId("AddTenant");
+	addTenantFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Add Organization"));
+	addTenantFeatureInfo->SetOptional(false);
+	addTenantFeatureInfo->SetIsPermission(true);
+
+	editTenantFeatureInfo->InsertSubFeature(addTenantFeatureInfo.PopPtr());
+
+	organizationManagementFeatureInfo->InsertSubFeature(editTenantFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewTenantsFeatureInfo;
+	viewTenantsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewTenantsFeatureInfo->SetFeatureId("ViewTenants");
+	viewTenantsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View Organizations"));
+	viewTenantsFeatureInfo->SetOptional(false);
+	viewTenantsFeatureInfo->SetIsPermission(true);
+	viewTenantsFeatureInfo->SetDependencies(QByteArray("EditTenant;ChangeTenant;RemoveTenant;AddTenant").split(';'));
+
+	organizationManagementFeatureInfo->InsertSubFeature(viewTenantsFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> viewAllTenantsFeatureInfo;
+	viewAllTenantsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	viewAllTenantsFeatureInfo->SetFeatureId("ViewAllTenants");
+	viewAllTenantsFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "View All Organizations"));
+	viewAllTenantsFeatureInfo->SetOptional(false);
+	viewAllTenantsFeatureInfo->SetIsPermission(true);
+	viewAllTenantsFeatureInfo->SetDependencies(QByteArray("ViewTenants").split(';'));
+
+	organizationManagementFeatureInfo->InsertSubFeature(viewAllTenantsFeatureInfo.PopPtr());
+
+	productInfo.AddFeature("a1b2c3d4-e5f6-7890-abcd-ef1234567890", *organizationManagementFeatureInfo.GetPtr());
+
 }
 
 
