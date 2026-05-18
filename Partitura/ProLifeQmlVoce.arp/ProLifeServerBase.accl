@@ -11,7 +11,7 @@
         <Element ComponentName="AdministrationRepositories" X="725" Y="750" Note=""/>
         <Element ComponentName="AuthorizableServerFramework" X="600" Y="175" Note=""/>
         <Element ComponentName="ContextTypeProviders" X="600" Y="300" Note=""/>
-        <Element ComponentName="DocumentManager" X="125" Y="450" Note=""/>
+        <Element ComponentName="DocumentService" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
         <Element ComponentName="Language" X="525" Y="650" Note=""/>
         <Element ComponentName="LisaDatabaseConnector" X="375" Y="400" Note=""/>
@@ -43,11 +43,11 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="DocumentManager">
+        <EmbededRegistry Id="DocumentService">
             <PositionMap>
-                <Element ComponentName="CollectionDocumentManager" X="575" Y="325" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerController" X="575" Y="225" Note=""/>
-                <Element ComponentName="CollectionDocumentManagerPublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="CollectionDocumentService" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentServiceController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentServicePublisher" X="800" Y="550" Note=""/>
                 <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
                 <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
                 <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>

@@ -110,7 +110,7 @@ I_EXPORT_COMPONENT(
 		"Software Controller");
 
 I_EXPORT_COMPONENT(
-		DeviceCollectionDocumentManager,
+		DeviceCollectionDocumentService,
 		"Device collection document manager",
 		"Device Collection Document Manager");
 

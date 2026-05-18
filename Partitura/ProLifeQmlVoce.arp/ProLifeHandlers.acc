@@ -211,7 +211,7 @@
                     <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="BindingProductRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
+                    <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
