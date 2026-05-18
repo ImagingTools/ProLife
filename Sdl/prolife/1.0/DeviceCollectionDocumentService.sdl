@@ -7,7 +7,7 @@ schema {
 
 import {
 	"Sensors.sdl"
-	"../../../../ImtCore/Sdl/imtbase/1.0/CollectionDocumentManager.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/CollectionDocumentService.sdl"
 	"../../../../ImtCore/Sdl/imtbase/1.0/UndoManager.sdl"
 }
 

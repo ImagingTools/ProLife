@@ -15,7 +15,7 @@
         <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
         <Element ComponentName="DeviceChangeGenerator" X="425" Y="700" Note=""/>
         <Element ComponentName="DeviceCollectionController" X="350" Y="200" Note=""/>
-        <Element ComponentName="DeviceCollectionDocumentManager" X="175" Y="775" Note=""/>
+        <Element ComponentName="DeviceCollectionDocumentService" X="175" Y="775" Note=""/>
         <Element ComponentName="DeviceCommands" X="1000" Y="75" Note=""/>
         <Element ComponentName="DeviceController" X="950" Y="400" Note=""/>
         <Element ComponentName="DeviceInfo" X="200" Y="600" Note=""/>

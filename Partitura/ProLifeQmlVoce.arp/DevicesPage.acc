@@ -121,7 +121,7 @@
                                 <Value>CollectionCommands</Value>
                                 <Value>DeviceCommands</Value>
                                 <Value>DeviceController</Value>
-                                <Value>DeviceCollectionDocumentManager</Value>
+                                <Value>DeviceCollectionDocumentService</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -291,13 +291,13 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="DeviceCollectionDocumentManager" PackageId="ProLifeGqlPck" ComponentId="DeviceCollectionDocumentManager">
+        <Element Id="DeviceCollectionDocumentService" PackageId="ProLifeGqlPck" ComponentId="DeviceCollectionDocumentService">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="CollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
+                    <AttributeInfo Id="CollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">

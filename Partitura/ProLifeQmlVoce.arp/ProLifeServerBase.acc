@@ -65,7 +65,7 @@
                             <Values>
                                 <Value>Subscriptions</Value>
                                 <Value>LisaGQLEngine</Value>
-                                <Value>DocumentManager</Value>
+                                <Value>DocumentService</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -123,7 +123,7 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
-        <Element Id="DocumentManager" PackageId="" ComponentId="DocumentManager">
+        <Element Id="DocumentService" PackageId="" ComponentId="DocumentService">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
@@ -329,8 +329,8 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DocumentManager"/>
+                    <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DocumentService"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/DeviceSqlRepository"/>
@@ -340,7 +340,7 @@
                             <Values>
                                 <Value>AuthorizableServerFramework</Value>
                                 <Value>LisaGQLEngine</Value>
-                                <Value>DocumentManager</Value>
+                                <Value>DocumentService</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -703,19 +703,19 @@
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
-        <EmbeddedRegistry Id="DocumentManager">
+        <EmbeddedRegistry Id="DocumentService">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="CollectionDocumentManager" PackageId="ImtDocPck" ComponentId="CollectionDocumentManager">
+                    <Element Id="CollectionDocumentService" PackageId="ImtDocPck" ComponentId="CollectionDocumentService">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="Collection" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DocumentManagerEventHandler" Type="Reference[]" ExportId="">
+                                <AttributeInfo Id="DocumentServiceEventHandler" Type="Reference[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>CollectionDocumentManagerPublisher</Value>
+                                            <Value>CollectionDocumentServicePublisher</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -761,11 +761,11 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CollectionDocumentManagerController" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentManagerController">
+                    <Element Id="CollectionDocumentServiceController" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentServiceController">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
-                                <AttributeInfo Id="CollectionDocumentManager" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="CollectionDocumentManager"/>
+                                <AttributeInfo Id="CollectionDocumentService" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="CollectionDocumentService"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Devices"/>
@@ -782,7 +782,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="CollectionDocumentManagerPublisher" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentManagerPublisher">
+                    <Element Id="CollectionDocumentServicePublisher" PackageId="ImtServerGqlPck" ComponentId="CollectionDocumentServicePublisher">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
@@ -848,12 +848,12 @@
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtdoc::IDocumentManager" ComponentId="CollectionDocumentManager"/>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CollectionDocumentManagerController"/>
-                    <Interface InterfaceId="imtgql::IGqlSubscriberController" ComponentId="CollectionDocumentManagerPublisher"/>
+                    <Interface InterfaceId="imtdoc::IDocumentService" ComponentId="CollectionDocumentService"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="CollectionDocumentServiceController"/>
+                    <Interface InterfaceId="imtgql::IGqlSubscriberController" ComponentId="CollectionDocumentServicePublisher"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="CollectionDocumentManager" ComponentId="CollectionDocumentManager"/>
+                    <Component ExportedId="CollectionDocumentService" ComponentId="CollectionDocumentService"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>

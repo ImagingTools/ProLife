@@ -194,7 +194,7 @@
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
+                    <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
@@ -412,7 +412,7 @@
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DeviceCollectionDocumentManager" Type="Reference" ExportId="DeviceCollectionDocumentManager">
+                                <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">

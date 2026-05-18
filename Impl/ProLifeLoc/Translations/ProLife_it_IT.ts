@@ -3783,9 +3783,9 @@
     </message>
 </context>
 <context>
-    <name>DocumentManager</name>
+    <name>DocumentService</name>
     <message>
-        <location filename="../../../Bin/web/src/imtdocgui/DocumentManager.qml" line="+9"/>
+        <location filename="../../../Bin/web/src/imtdocgui/DocumentService.qml" line="+9"/>
         <source>&lt;no name&gt;</source>
         <translation type="unfinished">&lt;no name&gt;</translation>
     </message>
@@ -3802,9 +3802,9 @@
     </message>
 </context>
 <context>
-    <name>DocumentManagerBase</name>
+    <name>DocumentServiceBase</name>
     <message>
-        <location filename="../../../Bin/web/src/imtdocgui/DocumentManagerBase.qml" line="+100"/>
+        <location filename="../../../Bin/web/src/imtdocgui/DocumentServiceBase.qml" line="+100"/>
         <source>&lt;no name&gt;</source>
         <translation type="unfinished">&lt;no name&gt;</translation>
     </message>
@@ -4652,9 +4652,9 @@ Do you want to replace it?</translation>
     </message>
 </context>
 <context>
-    <name>GqlBasedCollectionDocumentManager</name>
+    <name>GqlBasedCollectionDocumentService</name>
     <message>
-        <location filename="../../../Bin/web/src/imtguigql/GqlBasedCollectionDocumentManager.qml" line="+252"/>
+        <location filename="../../../Bin/web/src/imtguigql/GqlBasedCollectionDocumentService.qml" line="+252"/>
         <location line="+33"/>
         <location line="+34"/>
         <location line="+37"/>

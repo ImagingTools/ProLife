@@ -12,9 +12,9 @@ import imtlicgui 1.0
 import imtdeskgui 1.0
 import Qt.labs.platform 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
-import imtbaseCollectionDocumentManagerSdl 1.0
+import imtbaseCollectionDocumentServiceSdl 1.0
 import imtbaseUndoManagerSdl 1.0
-import prolifeDeviceCollectionDocumentManagerSdl 1.0
+import prolifeDeviceCollectionDocumentServiceSdl 1.0
 
 DocCollectionViewDelegate {
 	id: container;
@@ -69,7 +69,7 @@ DocCollectionViewDelegate {
 			
 			property DocumentId documentIdInput: DocumentId {}
 			property GqlSdlRequestSender getDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_getDeviceRepresentation
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getDeviceRepresentation
 				sdlObjectComp: Component {
 					DeviceData {
 						onFinished: {
@@ -82,7 +82,7 @@ DocCollectionViewDelegate {
 			
 			property UpdateDeviceInput updateDeviceInput: UpdateDeviceInput {}
 			property GqlSdlRequestSender updateDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_updateDeviceFromRepresentation
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateDeviceFromRepresentation
 				requestType: 1
 				sdlObjectComp: Component {
 					DocumentOperationStatus {
@@ -130,7 +130,7 @@ DocCollectionViewDelegate {
 			
 			property DocumentId documentIdInput: DocumentId {}
 			property GqlSdlRequestSender getIotDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_getIotDeviceRepresentation
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getIotDeviceRepresentation
 				sdlObjectComp: Component {
 					IotDeviceData {
 						onFinished: {
@@ -143,7 +143,7 @@ DocCollectionViewDelegate {
 			
 			property UpdateIotDeviceInput updateIotDeviceInput: UpdateIotDeviceInput {}
 			property GqlSdlRequestSender updateIotDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentManagerSdlCommandIds.s_updateIotDeviceFromRepresentation
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateIotDeviceFromRepresentation
 				requestType: 1
 				sdlObjectComp: Component {
 					DocumentOperationStatus {

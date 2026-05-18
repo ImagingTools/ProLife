@@ -10,7 +10,7 @@ add_custom_target(${PROJECT_NAME}-SDL-related-files SOURCES
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/Accounts.sdl
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/Orders.sdl
 			${CMAKE_CURRENT_LIST_DIR}/../1.0/Workspace.sdl
-			${CMAKE_CURRENT_LIST_DIR}/../1.0/DeviceCollectionDocumentManager.sdl
+			${CMAKE_CURRENT_LIST_DIR}/../1.0/DeviceCollectionDocumentService.sdl
 			)
 
 ImtCoreCustomConfigureSdlCppQml(CXX QML
@@ -34,5 +34,5 @@ ImtCoreCustomConfigureSdlCppQml(CXX QML
 			VERSION		"1.0")
 
 ImtCoreCustomConfigureSdlCppQml(CXX QML
-			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/DeviceCollectionDocumentManager.sdl"
+			SCHEMA_PATH	"${CMAKE_CURRENT_LIST_DIR}/../1.0/DeviceCollectionDocumentService.sdl"
 			VERSION		"1.0")
