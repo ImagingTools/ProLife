@@ -66,7 +66,7 @@ ProLife integrates various open-source and proprietary third-party components to
 - **License:** BSD-2-Clause
 - **Purpose:** HTTP and reverse proxy server
 - **Website:** https://nginx.org
-- **Location:** `Impl/ProLifeServer/Install/nginx/`
+- **Location:** `Install/ProLifeServer/nginx/`
 - **Usage:**
   - Web server for ProLife Server
   - Reverse proxy for backend services
