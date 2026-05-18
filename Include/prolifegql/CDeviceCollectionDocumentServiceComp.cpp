@@ -40,7 +40,7 @@ sdl::prolife::Sensors::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDe
 	if (arguments.input.Version_1_0->id){
 		documentId = *arguments.input.Version_1_0->id;
 
-		m_documentManagerCompPtr->GetDocumentData(userId, documentId, documentPtr);
+		m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	}
 
 	if (!documentPtr.IsValid()){
@@ -129,7 +129,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 	}
 
 	istd::IChangeableSharedPtr documentPtr;
-	m_documentManagerCompPtr->GetDocumentData(userId, documentId, documentPtr);
+	m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	if (!documentPtr.IsValid()){
 		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
@@ -195,7 +195,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 		deviceInfoPtr->SetInternalUse(*deviceData.internalUse);
 	}
 
-	m_documentManagerCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr);
+	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr);
 
 	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Success;
 
@@ -279,7 +279,7 @@ sdl::prolife::Sensors::CIotDeviceData CDeviceCollectionDocumentServiceComp::OnGe
 	if (arguments.input.Version_1_0->id){
 		objectId = *arguments.input.Version_1_0->id;
 
-		m_documentManagerCompPtr->GetDocumentData(userId, objectId, documentPtr);
+		m_documentServiceCompPtr->GetDocumentData(userId, objectId, documentPtr);
 	}
 
 	if (!documentPtr.IsValid()){
@@ -335,7 +335,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 	}
 
 	istd::IChangeableSharedPtr documentPtr;
-	m_documentManagerCompPtr->GetDocumentData(userId, documentId, documentPtr);
+	m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	if (!documentPtr.IsValid()){
 		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
@@ -363,7 +363,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 		iotDeviceInfoPtr->SetManufacturer(*iotDeviceData.manufacturer);
 	}
 
-	m_documentManagerCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr);
+	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr);
 
 	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Success;
 

@@ -111,8 +111,8 @@ I_EXPORT_COMPONENT(
 
 I_EXPORT_COMPONENT(
 		DeviceCollectionDocumentService,
-		"Device collection document manager",
-		"Device Collection Document Manager");
+		"Device collection document service",
+		"Device Collection Document Service");
 
 
 } // namespace ProLifeGqlPck

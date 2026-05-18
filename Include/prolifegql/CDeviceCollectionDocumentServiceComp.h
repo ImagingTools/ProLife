@@ -21,7 +21,7 @@ public:
 	typedef sdl::prolife::DeviceCollectionDocumentService::CGraphQlHandlerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionDocumentServiceComp)
-		I_ASSIGN(m_documentManagerCompPtr, "CollectionDocumentService", "Collection document manager", false, "CollectionDocumentService");
+		I_ASSIGN(m_documentServiceCompPtr, "CollectionDocumentService", "Collection document manager", false, "CollectionDocumentService");
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Hardware product binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
@@ -51,7 +51,7 @@ private:
 	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
 
 private:
-	I_REF(imtdoc::IDocumentService, m_documentManagerCompPtr);
+	I_REF(imtdoc::IDocumentService, m_documentServiceCompPtr);
 	I_REF(imtbase::IObjectCollection, m_bindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
