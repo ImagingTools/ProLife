@@ -71,7 +71,7 @@ RemoteCollectionView {
 		paths: ["<order-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			let documentManager = MainDocumentManager.getDocumentManager(container.collectionId)
+			let documentManager = MainDocumentService.getDocumentManager(container.collectionId)
 			if (documentManager){
 				let docManagerView = documentManager.getActiveView()
 				if (docManagerView){

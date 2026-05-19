@@ -335,13 +335,6 @@
                     <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Tenants"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>ViewTenants</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
