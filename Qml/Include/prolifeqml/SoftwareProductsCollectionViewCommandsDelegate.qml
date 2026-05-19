@@ -87,7 +87,7 @@ DocumentCollectionViewDelegate {
 			let elementsModel = container.collectionView.table.elements;
 			let orderUuid = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, indexes[0]);
 			if (orderUuid !== ""){
-				MainDocumentManager.openDocument("Orders", orderUuid, "Order")
+				MainDocumentService.openDocument("Orders", orderUuid, "Order")
 			}
 		}
 		else if (commandId === "Split"){
