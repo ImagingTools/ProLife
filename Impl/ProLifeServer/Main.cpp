@@ -21,8 +21,6 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtchatdb);
 	Q_INIT_RESOURCE(imtdeskdb);
 
-	QString test = QCoreApplication::applicationDirPath();
-
 	return ProductFeatureRun<CProLifeServer, DefaultImtCoreQmlInitializer, prolife::FillProduct>(argc, argv);
 }
 
