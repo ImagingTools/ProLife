@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6388" Description="ACF"/>
-            <Version Id="1" Number="2392" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="395266" Description="Qt Framework"/>
+            <Version Id="0" Number="6397" Description="ACF"/>
+            <Version Id="1" Number="2394" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
@@ -13,13 +13,11 @@
         <Element ComponentName="ContextTypeProviders" X="600" Y="300" Note=""/>
         <Element ComponentName="DocumentService" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
-        <Element ComponentName="Language" X="525" Y="650" Note=""/>
-        <Element ComponentName="LisaDatabaseConnector" X="375" Y="400" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="775" Y="500" Note=""/>
+        <Element ComponentName="LisaGQLEngine" X="775" Y="550" Note=""/>
         <Element ComponentName="LisaRepositories" X="1025" Y="675" Note=""/>
         <Element ComponentName="Migrations" X="1050" Y="125" Note=""/>
-        <Element ComponentName="ProLifeHandlers" X="625" Y="400" Note=""/>
-        <Element ComponentName="ProLifeLocalization" X="500" Y="500" Note=""/>
+        <Element ComponentName="ProLifeHandlers" X="675" Y="400" Note=""/>
+        <Element ComponentName="ProLifeLocalization" X="475" Y="525" Note=""/>
         <Element ComponentName="ProLifeServerSettings" X="175" Y="150" Note=""/>
         <Element ComponentName="PumaDatabaseConnector" X="150" Y="325" Note=""/>
         <Element ComponentName="Repositories" X="1025" Y="500" Note=""/>
@@ -30,22 +28,9 @@
         <Element ComponentName="SplitInAction" X="275" Y="50" Note=""/>
         <Element ComponentName="SplitOutAction" X="475" Y="50" Note=""/>
         <Element ComponentName="Subscriptions" X="1025" Y="300" Note=""/>
-        <Element ComponentName="UsersModelUpdateBridge" X="200" Y="675" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
+        <Element ComponentName="UsersModelUpdateBridge" X="300" Y="650" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DocumentService">
-            <PositionMap>
-                <Element ComponentName="CollectionDocumentService" X="575" Y="325" Note=""/>
-                <Element ComponentName="CollectionDocumentServiceController" X="575" Y="225" Note=""/>
-                <Element ComponentName="CollectionDocumentServicePublisher" X="800" Y="550" Note=""/>
-                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
-                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
-                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
-                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
-                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Migrations">
             <PositionMap>
                 <Element ComponentName="CompositeMigrationController" X="575" Y="100" Note=""/>
@@ -70,16 +55,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="ContextTypeProviders">
-            <PositionMap>
-                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
-                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
-                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
-                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
-                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -93,6 +68,29 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DocumentService">
+            <PositionMap>
+                <Element ComponentName="CollectionDocumentService" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentServiceController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentServicePublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
+                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
+                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
+                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
+                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ContextTypeProviders">
+            <PositionMap>
+                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
+                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
+                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
+                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
+                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
