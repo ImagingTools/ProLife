@@ -2,13 +2,14 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="6397" Description="ACF"/>
+            <Version Id="1" Number="2394" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ImtCoreLocalization" X="525" Y="400" Note=""/>
+        <Element ComponentName="Language" X="525" Y="125" Note=""/>
         <Element ComponentName="ProLifeLocalization" X="525" Y="250" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

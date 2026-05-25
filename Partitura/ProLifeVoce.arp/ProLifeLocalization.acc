@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5229" Description="ACF"/>
-            <Version Id="1" Number="2213" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="393732" Description="Qt Framework"/>
+            <Version Id="0" Number="6397" Description="ACF"/>
+            <Version Id="1" Number="2394" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description>ACF-Solutions strings localization</Description>
@@ -13,17 +13,23 @@
         <Element Id="ImtCoreLocalization" PackageId="ImtCoreVoce" ComponentId="ImtCoreLocalization">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="IgnoreLocale" Type="Boolean" ExportId="IgnoreLocale">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="IgnoreLocale" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="InstallTranslator">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="LanguageIds">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>en_US</Value>
+                                <Value>de_DE</Value>
+                                <Value>ru_RU</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageSelection" Type="Reference" ExportId="LanguageSelection">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="LanguageSelection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Language"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -31,27 +37,38 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="Language" PackageId="BasePck" ComponentId="SelectionParam">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Constraints" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeLocalization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DefaultIndex" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="ProLifeLocalization" PackageId="QtPck" ComponentId="TranslationManager">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="IgnoreLocale" Type="Boolean" ExportId="IgnoreLocale">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="IgnoreLocale" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="InstallTranslator">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="InstallTranslator" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="LanguageIds">
+                    <AttributeInfo Id="LanguageIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>en_US</Value>
                                 <Value>de_DE</Value>
                                 <Value>ru_RU</Value>
-                                <Value>pl_PL</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="LanguageSelection" Type="Reference" ExportId="LanguageSelection">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="LanguageSelection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Language"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
