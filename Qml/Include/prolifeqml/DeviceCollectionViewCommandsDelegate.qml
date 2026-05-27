@@ -808,32 +808,28 @@ DocCollectionViewDelegate {
 						}
 					}
 					
-					DeviceCollectionView {
-						id: deviceCollectionView;
-						commandsControllerComp: null
-						visibleMetaInfo: false
-						table.isMultiSelect: false
-						commandsDelegateComp: null
-						canResetFilters: false
-						
-						Component.onCompleted: {
-							collectionFilter.addFieldFilter(excludeFilter)
-							collectionFilter.addFieldFilter(productionStatusFilter)
-						}
-						
-						onSelectionChanged: {
-							if (selectedIds.length > 0){
-								dialog.toDeviceId = selectedIds[0]
-							}
-
-							dialog.setButtonEnabled(Enums.ok, selectedIds.length > 0)
-						}
-						
-						function registerFilters(){
-							registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
-							registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
+					Loader {
+						id: deviceCollectionViewLoader
+						anchors.fill: parent
+						source: "qrc:/qml/ProLife/DeviceCollectionView.qml"
+						onLoaded: {
+							item.commandsControllerComp = null
+							item.visibleMetaInfo = false
+							item.table.isMultiSelect = false
+							item.commandsDelegateComp = null
+							item.canResetFilters = false
+							item.collectionFilter.addFieldFilter(excludeFilter)
+							item.collectionFilter.addFieldFilter(productionStatusFilter)
+							item.selectionChanged.connect(function(){
+								if (item.selectedIds.length > 0){
+									dialog.toDeviceId = item.selectedIds[0]
+								}
+								dialog.setButtonEnabled(Enums.ok, item.selectedIds.length > 0)
+							})
+							item.registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
+							item.registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
 							if (PermissionsController.checkPermission("ViewAccounts")){
-								registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+								item.registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 							}
 						}
 					}
