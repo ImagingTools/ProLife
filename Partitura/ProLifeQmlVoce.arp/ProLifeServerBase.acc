@@ -1405,6 +1405,7 @@
         <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>
         <Component ExportedId="GroupsModelUpdateBridge" ComponentId="GroupsModelUpdateBridge"/>
         <Component ExportedId="HttpServerFramework" ComponentId="AuthorizableServerFramework/HttpServerFramework"/>
+        <Component ExportedId="LisaDatabaseConnector" ComponentId="LisaGQLEngine/LisaDatabaseConnector"/>
         <Component ExportedId="LisaLoginStatusSubscriberController" ComponentId="LisaGQLEngine/LisaLoginStatusSubscriberController"/>
         <Component ExportedId="ProLifeLocalization" ComponentId="ProLifeLocalization/ProLifeLocalization"/>
         <Component ExportedId="PumaDatabaseConnector" ComponentId="PumaDatabaseConnector"/>
