@@ -60,9 +60,5 @@ ApplicationMain {
 			}
 		}
 	}
-
-	TenantMembershipSubscriptionClient {
-		id: membershipSubscriptionClient
-	}
 }
 
