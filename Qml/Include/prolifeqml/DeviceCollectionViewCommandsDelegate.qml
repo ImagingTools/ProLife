@@ -811,13 +811,16 @@ DocCollectionViewDelegate {
 					Loader {
 						id: deviceCollectionViewLoader
 						anchors.fill: parent
-						source: "qrc:/qml/ProLife/DeviceCollectionView.qml"
+						Component.onCompleted: {
+							deviceCollectionViewLoader.setSource("qrc:/qml/ProLife/DeviceCollectionView.qml", {
+								"commandsControllerComp": null,
+								"visibleMetaInfo": false,
+								"commandsDelegateComp": null,
+								"canResetFilters": false
+							})
+						}
 						onLoaded: {
-							item.commandsControllerComp = null
-							item.visibleMetaInfo = false
 							item.table.isMultiSelect = false
-							item.commandsDelegateComp = null
-							item.canResetFilters = false
 							item.collectionFilter.addFieldFilter(excludeFilter)
 							item.collectionFilter.addFieldFilter(productionStatusFilter)
 							item.selectionChanged.connect(function(){
