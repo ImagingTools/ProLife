@@ -21,6 +21,7 @@ Item {
 	property TreeItemModel softwaresModel: TreeItemModel {}
 	
 	property bool blockUpdatingModel: false;
+	property bool pendingProductUpdate: false;
 	
 	property string orderId;
 	property string orderUuid;
@@ -50,8 +51,10 @@ Item {
 			SoftwareProductItemTypeMetaInfo.s_expiration
 		];
 		onCollectionModelChanged: {
-			contentLoader.item.softwaresModel = collectionModel;
-			contentLoader.item.doUpdateGui();
+			if (contentLoader.item) {
+				contentLoader.item.softwaresModel = collectionModel;
+				contentLoader.item.doUpdateGui();
+			}
 		}
 		
 		onStateChanged: {
@@ -74,8 +77,10 @@ Item {
 		]
 		
 		onCollectionModelChanged: {
-			contentLoader.item.devicesModel = collectionModel;
-			contentLoader.item.doUpdateGui();
+			if (contentLoader.item) {
+				contentLoader.item.devicesModel = collectionModel;
+				contentLoader.item.doUpdateGui();
+			}
 		}
 		
 		onStateChanged: {
@@ -188,6 +193,11 @@ Item {
 			productItem.m_productUuid = productCB.model.getData(OrderedProductTypeMetaInfo.s_id, productCB.currentIndex);
 			productItem.m_categoryId = productCB.model.getData(OrderedProductTypeMetaInfo.s_categoryId, productCB.currentIndex);
 			productItem.m_productName = productCB.model.getData(OrderedProductTypeMetaInfo.s_productName, productCB.currentIndex);
+			
+			if (!contentLoader.item) {
+				productEditor.pendingProductUpdate = true;
+				return;
+			}
 			
 			contentLoader.item.productLicensesModel = 0;
 			
@@ -401,11 +411,18 @@ Item {
 			Loader {
 				id: contentLoader
 				width: contentColumn.width
-				visible: productCB.currentIndex >= 0
+				visible: contentLoader.item !== null && productCB.currentIndex >= 0
+				height: item ? item.height : 0
 				onLoaded: {
-					contentLoader.height = item.height
+					if (productEditor.pendingProductUpdate) {
+						productEditor.pendingProductUpdate = false;
+						productEditor.updateProductModel();
+					}
+					if (productEditor.index >= 0 && contentLoader.item && contentLoader.item.updateGui) {
+						contentLoader.item.updateGui();
+					}
 				}
-				
+			
 				Connections {
 					target: contentLoader.item
 					function onHeightChanged(){
@@ -493,6 +510,10 @@ Item {
 		}
 		
 		productEditor.blockUpdatingModel = false;
+		
+		if (contentLoader.item) {
+			contentLoader.item.updateGui();
+		}
 	}
 	
 	Loading {
