@@ -114,6 +114,11 @@ I_EXPORT_COMPONENT(
 		"Device collection document service",
 		"Device Collection Document Service");
 
+I_EXPORT_COMPONENT(
+		OnlineLicenseController,
+		"Online license controller",
+		"Online License Controller Activation");
+
 
 } // namespace ProLifeGqlPck
 

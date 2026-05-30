@@ -48,5 +48,8 @@
 	<file alias="ProLife/GqlBarchartView.qml">GqlBarchartView.qml</file>
 	<file alias="ProLife/StatisticsPage.qml">StatisticsPage.qml</file>
 	<file alias="ProLife/IotDeviceEditor.qml">IotDeviceEditor.qml</file>
+	<file alias="ProLife/OnlineLicenseController.qml">OnlineLicenseController.qml</file>
+	<file alias="ProLife/OnlineLicenseActivationDialog.qml">OnlineLicenseActivationDialog.qml</file>
+	<file alias="ProLife/ActivationKeyManagement.qml">ActivationKeyManagement.qml</file>
     </qresource>
 </RCC>
