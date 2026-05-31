@@ -57,7 +57,6 @@ sdl::V1_0::prolife::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDevic
 	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
 
 	sdl::V1_0::prolife::CDeviceData response;
-	response.Emplace();
 
 	response.id = (objectId);
 
@@ -115,7 +114,6 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 	}
 
 	sdl::V1_0::imtbase::CDocumentOperationStatus response;
-	response.Emplace();
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Failed;
 
 	QByteArray userId = GetUserId(gqlRequest);
@@ -294,7 +292,6 @@ sdl::V1_0::prolife::CIotDeviceData CDeviceCollectionDocumentServiceComp::OnGetIo
 	}
 
 	sdl::V1_0::prolife::CIotDeviceData response;
-	response.Emplace();
 
 	QByteArray serialNumber = iotDeviceInfoPtr->GetSerialNumber();
 	response.serialNumber = (serialNumber);
@@ -321,7 +318,6 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 	}
 
 	sdl::V1_0::imtbase::CDocumentOperationStatus response;
-	response.Emplace();
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Failed;
 
 	QByteArray userId = GetUserId(gqlRequest);

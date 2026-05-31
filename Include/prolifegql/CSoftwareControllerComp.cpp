@@ -36,7 +36,6 @@ sdl::V1_0::prolife::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CSplitLicensePayload retVal;
-	retVal.Emplace();
 	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
@@ -339,7 +338,6 @@ sdl::V1_0::prolife::CChildLicensesListPayload CSoftwareControllerComp::OnChildLi
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CChildLicensesListPayload retVal;
-	retVal.Emplace();
 	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
@@ -464,7 +462,6 @@ sdl::V1_0::prolife::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicen
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CRevokeLicensePayload retVal;
-	retVal.Emplace();
 	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){

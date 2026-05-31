@@ -896,7 +896,6 @@ sdl::V1_0::prolife::CRequestTransferLicensesPayload CDeviceControllerComp::OnReq
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CRequestTransferLicensesPayload response;
-	response;
 	response.result = false;
 
 	if (!m_smtpMessageCreatorCompPtr.IsValid()){
@@ -915,7 +914,7 @@ sdl::V1_0::prolife::CRequestTransferLicensesPayload CDeviceControllerComp::OnReq
 	}
 
 	sdl::V1_0::prolife::RequestTransferLicensesRequestArguments arguments = requestTransferLicensesRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input || !arguments.input.HasValue()){
 		Q_ASSERT(false);
 		errorMessage = QString("Unable to request transfer license. Error: Request invalid");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -1067,7 +1066,7 @@ sdl::V1_0::prolife::CResetTransferCounterPayload CDeviceControllerComp::OnResetT
 	}
 
 	sdl::V1_0::prolife::ResetTransferCounterRequestArguments arguments = resetTransferCounterRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input || !arguments.input.HasValue()){
 		Q_ASSERT(false);
 		errorMessage = QString("Unable to reset transfer counter. Error: Request invalid");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");

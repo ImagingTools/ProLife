@@ -109,12 +109,10 @@ sdl::V1_0::prolife::CLineChartData CWorkspaceControllerComp::OnGetLicenseCreatio
 	}
 
 	const sdl::V1_0::prolife::GetLicenseCreationInfoRequestArguments arguments = getLicenseCreationInfoRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input.HasValue()){
 		errorMessage = QString("Unable to get license creation info. Error: GraphQL request version unsupported");
 		return response;
 	}
-
-	response.Emplace();
 
 	response.axes.Emplace();
 	response.labels.Emplace();
@@ -122,7 +120,7 @@ sdl::V1_0::prolife::CLineChartData CWorkspaceControllerComp::OnGetLicenseCreatio
 	response.axes->yLabel = "Created Licenses";
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
+	PrepareFilters(selectionParams, *arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 	QMap<QDate, int> licenseCountByDateMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_softwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -133,7 +131,7 @@ sdl::V1_0::prolife::CLineChartData CWorkspaceControllerComp::OnGetLicenseCreatio
 		}
 	}
 
-	if (!BuildLineChart(licenseCountByDateMap, getLicenseCreationInfoRequest.GetRequestedArguments().input, "Created Licenses", *response)){
+	if (!BuildLineChart(licenseCountByDateMap, *getLicenseCreationInfoRequest.GetRequestedArguments().input, "Created Licenses", response)){
 		errorMessage = QString("Unable to build line chart data. Internal error");
 		return response;
 	}
@@ -150,7 +148,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUsedBar
 	return BuildProductUsageBarChart(
 				*m_softwareCollectionCompPtr.GetPtr(),
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
-				getSoftwareUsedBarChartRequest.GetRequestedArguments().input,
+				*getSoftwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -164,7 +162,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUsedPie
 	return BuildProductUsagePieChart(
 				*m_softwareCollectionCompPtr.GetPtr(),
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
-				getSoftwareUsedPieChartRequest.GetRequestedArguments().input,
+				*getSoftwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -178,7 +176,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetHardwareUsedBar
 	return BuildProductUsageBarChart(
 				*m_hardwareCollectionCompPtr.GetPtr(),
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
-				getHardwareUsedBarChartRequest.GetRequestedArguments().input,
+				*getHardwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -192,7 +190,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareUsedPie
 	return BuildProductUsagePieChart(
 				*m_hardwareCollectionCompPtr.GetPtr(),
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
-				getHardwareUsedPieChartRequest.GetRequestedArguments().input,
+				*getHardwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -211,15 +209,13 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareStatusI
 	}
 
 	auto arguments = getHardwareStatusInfoRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input.HasValue()){
 		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
 		return response;
 	}
 
-	response.Emplace();
-
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
+	PrepareFilters(selectionParams, *arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 	imtbase::ICollectionInfo::Ids elementIds = m_hardwareCollectionCompPtr->GetElementIds(0, -1, &selectionParams);
 	QMap<int, int> hardwareStatutesMap;
@@ -268,7 +264,7 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 	}
 
 	auto arguments = getTotalSummaryInfoRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input.HasValue()){
 		errorMessage = QString("Unable to get hardware status. Error: GraphQL version unsupported");
 		return response;
 	}
@@ -284,7 +280,6 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		}
 	}
 
-	response.Emplace();
 	response.summaryInfos.Emplace();
 
 	bool viewLicenses = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"ViewLicenses"});
@@ -292,23 +287,23 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		sdl::V1_0::prolife::CCollectionSummaryInfo softwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(paramsSet, *arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		int totalCount = m_softwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		softwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(internalUseParamsSet, *arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.internalUseCount = m_softwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(inUseParamsSet, *arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.inUseCount = m_softwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(notInUseParamsSet, *arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
 
 		softwareCollectionInfo.notInUseCount = m_softwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 		
@@ -324,23 +319,23 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		sdl::V1_0::prolife::CCollectionSummaryInfo hardwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(paramsSet, *arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(internalUseParamsSet, *arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(inUseParamsSet, *arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(notInUseParamsSet, *arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -356,7 +351,7 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		sdl::V1_0::prolife::CCollectionSummaryInfo orderCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
+		PrepareFilters(paramsSet, *arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 		orderCollectionInfo.total = m_orderCollectionCompPtr->GetElementsCount(&paramsSet);
 		orderCollectionInfo.collectionId = QByteArrayLiteral("Orders");
@@ -382,7 +377,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareCustome
 
 	return BuildProductByCustomerPieChart(
 				*m_hardwareCollectionCompPtr.GetPtr(),
-				getHardwareCustomerPieChartRequest.GetRequestedArguments().input,
+				*getHardwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -400,7 +395,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetSoftwareCustome
 
 	return BuildProductByCustomerPieChart(
 				*m_softwareCollectionCompPtr.GetPtr(),
-				getSoftwareCustomerPieChartRequest.GetRequestedArguments().input,
+				*getSoftwareCustomerPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
 				errorMessage);
 }
@@ -419,13 +414,13 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareConfigu
 	}
 
 	auto arguments = getHardwareConfigurationPieChartRequest.GetRequestedArguments();
-	if (!arguments.input->HasValue()){
+	if (!arguments.input.HasValue()){
 		errorMessage = QString("Unable to get hardware configuration pie chart. Error: GraphQL version unsupported");
 		return response;
 	}
 
 	iprm::CParamsSet selectionParams;
-	PrepareFilters(selectionParams, arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
+	PrepareFilters(selectionParams, *arguments.input, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
 	QMap<QPair<QByteArray, QString>, int> map;
 	imtbase::IObjectCollectionIterator* iteratorPtr = m_hardwareCollectionCompPtr->CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
@@ -440,9 +435,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareConfigu
 		}
 	}
 
-	response.Emplace();
-
-	if (!BuildPieChart(map, *response)){
+	if (!BuildPieChart(map, response)){
 		errorMessage = "Unable to build pie chart data. Internal error";
 	}
 
@@ -466,7 +459,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCreatio
 	return GetItemsCreationBarChart(
 				gqlRequest,
 				*m_softwareCollectionCompPtr,
-				getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
+				*getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				errorMessage);
 }
@@ -487,7 +480,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetHardwareCreatio
 	return GetItemsCreationBarChart(
 				gqlRequest,
 				*m_hardwareCollectionCompPtr,
-				getHardwareCreationBarChartRequest.GetRequestedArguments().input,
+				*getHardwareCreationBarChartRequest.GetRequestedArguments().input,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				errorMessage);
 }
@@ -507,7 +500,7 @@ sdl::V1_0::prolife::CLineChartData CWorkspaceControllerComp::OnGetOrderCreationL
 
 	iprm::CParamsSet selectionParams;
 	const auto& input = request.GetRequestedArguments().input;
-	PrepareFilters(selectionParams, input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
+	PrepareFilters(selectionParams, *input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 	QMap<QDate, int> map;
 
@@ -526,9 +519,7 @@ sdl::V1_0::prolife::CLineChartData CWorkspaceControllerComp::OnGetOrderCreationL
 		map[date] += 1;
 	}
 
-	response.Emplace();
-
-	if (!BuildLineChart(map, input, "Created Orders", *response)){
+	if (!BuildLineChart(map, *input, "Created Orders", response)){
 		errorMessage = "Unable to build line chart data. Internal error";
 	}
 
@@ -547,11 +538,6 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarC
 {
 	sdl::V1_0::prolife::CBarChartData response;
 
-	if (!chartInput.HasValue()){
-		Q_ASSERT(false);
-		return response;
-	}
-
 	iprm::CParamsSet selectionParams;
 	PrepareFilters(selectionParams, chartInput, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
@@ -567,8 +553,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarC
 		}
 	}
 
-	response.Emplace();
-	if (!BuildBarChart(resultMap, chartInput, "Created Instances", *response)){
+	if (!BuildBarChart(resultMap, chartInput, "Created Instances", response)){
 		errorMessage = QString("Unable to build bar chart data. Internal error");
 		return response;
 	}
@@ -866,10 +851,6 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBar
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CBarChartData response;
-	if (!input.HasValue()){
-		errorMessage = "GraphQL version unsupported";
-		return response;
-	}
 
 	iprm::CParamsSet selectionParams;
 	PrepareFilters(selectionParams, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
@@ -887,8 +868,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBar
 		}
 	}
 
-	response.Emplace();
-	if (!BuildBarChart(usageMap, input, "Created Licenses", *response)){
+	if (!BuildBarChart(usageMap, input, "Created Licenses", response)){
 		errorMessage = "Unable to build bar chart data. Internal error";
 	}
 
@@ -921,8 +901,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::BuildProductUsagePie
 		}
 	}
 
-	response.Emplace();
-	if (!BuildPieChart(map, *response)){
+	if (!BuildPieChart(map, response)){
 		errorMessage = "Unable to build pie chart data. Internal error";
 	}
 
@@ -943,12 +922,6 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::BuildProductByCustom
 		return response;
 	}
 
-	if (!input.HasValue()){
-		errorMessage = QString("Unable to build pie chart by customer. Error: GraphQL version unsupported");
-		return response;
-	}
-
-	response.Emplace();
 	response.segments.Emplace();
 
 	QByteArrayList elementIds = m_accountCollectionCompPtr->GetElementIds();
@@ -1042,10 +1015,6 @@ void CWorkspaceControllerComp::PrepareFilters(
 			std::optional<bool> inUse,
 			const TimeFilterType& timeFilterType) const
 {
-	if (!input.HasValue()){
-		return;
-	}
-
 	imtbase::CComplexCollectionFilter* complexFilterPtr = dynamic_cast<imtbase::CComplexCollectionFilter*>(paramsSet.GetEditableParameter("ComplexFilter"));
 	if (complexFilterPtr == nullptr){
 		complexFilterPtr = new imtbase::CComplexCollectionFilter();
@@ -1101,10 +1070,6 @@ void CWorkspaceControllerComp::ExtractTimeUnitFromInput(
 			imtbase::ITimeFilterParam::TimeUnit& unit,
 			imtbase::ITimeFilterParam::InterpretationMode& timeMode) const
 {
-	if (!input.HasValue()){
-		return;
-	}
-
 	sdl::V1_0::imtbase::CTimeFilter timeFilter;
 	if (!input.timeFilter.HasValue()){
 		return;

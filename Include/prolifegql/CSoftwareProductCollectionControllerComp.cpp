@@ -36,17 +36,10 @@ sdl::V1_0::imtbase::CVisualStatus CSoftwareProductCollectionControllerComp::OnGe
 		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 	
-	sdl::V1_0::imtbase::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	sdl::V1_0::imtbase::CVisualStatus response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 	if (!errorMessage.isEmpty()){
 		return sdl::V1_0::imtbase::CVisualStatus();
 	}
-	
-	if (!retVal){
-		I_CRITICAL();
-		
-		return retVal;
-	}
-	sdl::V1_0::imtbase::CVisualStatus& response = *retVal;
 	
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(*response.objectId, dataPtr)){
@@ -75,7 +68,7 @@ sdl::V1_0::imtbase::CVisualStatus CSoftwareProductCollectionControllerComp::OnGe
 		}
 	}
 	
-	return retVal;
+	return response;
 }
 
 
@@ -986,7 +979,7 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	
 	QByteArray objectId;
 	if (requestArguments.input->id){
-		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.id;
+		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input->id;
 	}
 	
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&object);

@@ -40,11 +40,6 @@ sdl::V1_0::imtbase::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVi
 		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 
-	if (!retVal.HasValue()){
-		Q_ASSERT(false);
-		return sdl::V1_0::imtbase::CVisualStatus();
-	}
-
 	QByteArray objectId;
 	if (retVal.objectId){
 		objectId = *retVal.objectId;
@@ -85,7 +80,6 @@ sdl::V1_0::imtbase::CGetElementMetaInfoPayload CDeviceCollectionControllerComp::
 			QString& errorMessage) const
 {
 	sdl::V1_0::imtbase::CGetElementMetaInfoPayload response;
-	response.Emplace();
 
 	sdl::V1_0::imtbase::GetElementMetaInfoRequestArguments arguments = getElementMetaInfoRequest.GetRequestedArguments();
 	if (!arguments.input){
