@@ -1,4 +1,6 @@
 #include <prolifegql/CDeviceCollectionDocumentServiceComp.h>
+#include <prolifesdl/SDL/1.0/CPP/DeviceCollectionDocumentService.h>
+#include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentService.h>
 
 
 // ACF includes
@@ -20,124 +22,124 @@ namespace prolifegql
 
 // protected methods
 
-// reimplemented (sdl::prolife::DeviceCollectionDocumentService::CGraphQlHandlerCompBase)
+// reimplemented (sdl::V1_0::prolife::CDeviceCollectionDocumentServiceGqlHandlerCompBase)
 
-sdl::prolife::Sensors::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDeviceRepresentation(
-			const sdl::prolife::DeviceCollectionDocumentService::CGetDeviceRepresentationGqlRequest& getDeviceRepresentationRequest,
+sdl::V1_0::prolife::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDeviceRepresentation(
+			const sdl::V1_0::prolife::CGetDeviceRepresentationGqlRequest& getDeviceRepresentationRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	auto arguments = getDeviceRepresentationRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	if (!arguments.input){
 		Q_ASSERT(false);
-		return sdl::prolife::Sensors::CDeviceData();
+		return sdl::V1_0::prolife::CDeviceData();
 	}
 
 	QByteArray userId = GetUserId(gqlRequest);
 
 	QByteArray documentId;
 	istd::IChangeableSharedPtr documentPtr;
-	if (arguments.input.Version_1_0->id){
-		documentId = *arguments.input.Version_1_0->id;
+	if (arguments.input->id){
+		documentId = *arguments.input->id;
 
 		m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	}
 
 	if (!documentPtr.IsValid()){
-		return sdl::prolife::Sensors::CDeviceData();
+		return sdl::V1_0::prolife::CDeviceData();
 	}
 
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(documentPtr.GetPtr());
 	if (deviceInfoPtr == nullptr){
-		return sdl::prolife::Sensors::CDeviceData();
+		return sdl::V1_0::prolife::CDeviceData();
 	}
 
 	QByteArray objectId = deviceInfoPtr->GetObjectUuid();
 
-	sdl::prolife::Sensors::CDeviceData response;
-	response.Version_1_0.Emplace();
+	sdl::V1_0::prolife::CDeviceData response;
+	response.Emplace();
 
-	response.Version_1_0->id = (objectId);
+	response.id = (objectId);
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
-	response.Version_1_0->macAddress = (macAddress);
+	response.macAddress = (macAddress);
 
 	QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
-	response.Version_1_0->serialNumber = (serialNumber);
+	response.serialNumber = (serialNumber);
 
 	QByteArray orderId = deviceInfoPtr->GetOrderId();
-	response.Version_1_0->orderId = (orderId);
+	response.orderId = (orderId);
 
 	QString description = deviceInfoPtr->GetDescription();
-	response.Version_1_0->description = (description);
+	response.description = (description);
 
 	prolifedata::IDeviceInfo::DeviceProductionStatus status = deviceInfoPtr->GetDeviceProductionStatus();
 	QByteArray statusId = prolifedata::GetIdFromDeviceProductionStatus(status);
-	response.Version_1_0->productionStatus = (statusId);
+	response.productionStatus = (statusId);
 
 	QByteArray project = deviceInfoPtr->GetProject();
-	response.Version_1_0->project = (project);
+	response.project = (project);
 
 	QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
-	response.Version_1_0->licenseName = (configurationType);
+	response.licenseName = (configurationType);
 
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
-	response.Version_1_0->deviceType = (productUuid);
+	response.deviceType = (productUuid);
 
-	imtsdl::TElementList<sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0> softwareBindingInfoList;
+	imtsdl::TElementList<sdl::V1_0::prolife::CSoftwareBindingInfo> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(objectId);
 	for (const QByteArray& softwareId : std::as_const(softwareIds)){
-		sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0 softwareBindingInfo;
+		sdl::V1_0::prolife::CSoftwareBindingInfo softwareBindingInfo;
 		if (GetSoftwareInfo(softwareId, softwareBindingInfo)){
 			softwareBindingInfoList << softwareBindingInfo;
 		}
 	}
 
-	response.Version_1_0->softwareBindingInfos = softwareBindingInfoList;
-	response.Version_1_0->internalUse = deviceInfoPtr->IsInternalUse();
+	response.softwareBindingInfos = softwareBindingInfoList;
+	response.internalUse = deviceInfoPtr->IsInternalUse();
 
 	return response;
 }
 
 
-sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollectionDocumentServiceComp::OnUpdateDeviceFromRepresentation(
-			const sdl::prolife::DeviceCollectionDocumentService::CUpdateDeviceFromRepresentationGqlRequest& updateDeviceFromRepresentationRequest,
+sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceComp::OnUpdateDeviceFromRepresentation(
+			const sdl::V1_0::prolife::CUpdateDeviceFromRepresentationGqlRequest& updateDeviceFromRepresentationRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	auto arguments = updateDeviceFromRepresentationRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	if (!arguments.input){
 		Q_ASSERT(false);
-		return sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus();
+		return sdl::V1_0::imtbase::CDocumentOperationStatus();
 	}
 
-	sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus response;
-	response.Version_1_0.Emplace();
-	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Failed;
+	sdl::V1_0::imtbase::CDocumentOperationStatus response;
+	response.Emplace();
+	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Failed;
 
 	QByteArray userId = GetUserId(gqlRequest);
 
 	QByteArray documentId;
-	if (arguments.input.Version_1_0->documentId){
-		documentId = *arguments.input.Version_1_0->documentId;
+	if (arguments.input->documentId){
+		documentId = *arguments.input->documentId;
 	}
 
-	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData;
-	if (arguments.input.Version_1_0->deviceData){
-		deviceData = *arguments.input.Version_1_0->deviceData;
+	sdl::V1_0::prolife::CDeviceData deviceData;
+	if (arguments.input->deviceData){
+		deviceData = *arguments.input->deviceData;
 	}
 
 	istd::IChangeableSharedPtr documentPtr;
 	m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	if (!documentPtr.IsValid()){
-		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
+		response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
 	}
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(documentPtr.GetPtr());
 	if (deviceInfoPtr == nullptr){
-		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
+		response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
 	}
 
@@ -197,7 +199,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 
 	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr);
 
-	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Success;
+	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
 	return response;
 }
@@ -225,7 +227,7 @@ QByteArrayList CDeviceCollectionDocumentServiceComp::GetBindedSoftware(const QBy
 }
 
 
-bool CDeviceCollectionDocumentServiceComp::GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const
+bool CDeviceCollectionDocumentServiceComp::GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const
 {
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
 		return false;
@@ -261,89 +263,89 @@ bool CDeviceCollectionDocumentServiceComp::GetSoftwareInfo(const QByteArray& sof
 }
 
 
-sdl::prolife::Sensors::CIotDeviceData CDeviceCollectionDocumentServiceComp::OnGetIotDeviceRepresentation(
-			const sdl::prolife::DeviceCollectionDocumentService::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
+sdl::V1_0::prolife::CIotDeviceData CDeviceCollectionDocumentServiceComp::OnGetIotDeviceRepresentation(
+			const sdl::V1_0::prolife::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	auto arguments = getIotDeviceRepresentationRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	if (!arguments.input){
 		Q_ASSERT(false);
-		return sdl::prolife::Sensors::CIotDeviceData();
+		return sdl::V1_0::prolife::CIotDeviceData();
 	}
 
 	QByteArray userId = GetUserId(gqlRequest);
 
 	QByteArray objectId;
 	istd::IChangeableSharedPtr documentPtr;
-	if (arguments.input.Version_1_0->id){
-		objectId = *arguments.input.Version_1_0->id;
+	if (arguments.input->id){
+		objectId = *arguments.input->id;
 
 		m_documentServiceCompPtr->GetDocumentData(userId, objectId, documentPtr);
 	}
 
 	if (!documentPtr.IsValid()){
-		return sdl::prolife::Sensors::CIotDeviceData();
+		return sdl::V1_0::prolife::CIotDeviceData();
 	}
 
 	const prolifedata::COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableIotDeviceInfo*>(documentPtr.GetPtr());
 	if (iotDeviceInfoPtr == nullptr){
-		return sdl::prolife::Sensors::CIotDeviceData();
+		return sdl::V1_0::prolife::CIotDeviceData();
 	}
 
-	sdl::prolife::Sensors::CIotDeviceData response;
-	response.Version_1_0.Emplace();
+	sdl::V1_0::prolife::CIotDeviceData response;
+	response.Emplace();
 
 	QByteArray serialNumber = iotDeviceInfoPtr->GetSerialNumber();
-	response.Version_1_0->serialNumber = (serialNumber);
+	response.serialNumber = (serialNumber);
 
 	QByteArray modelId = iotDeviceInfoPtr->GetModelId();
-	response.Version_1_0->modelId = (modelId);
+	response.modelId = (modelId);
 
 	QByteArray manufacturer = iotDeviceInfoPtr->GetManufacturer();
-	response.Version_1_0->manufacturer = (manufacturer);
+	response.manufacturer = (manufacturer);
 
 	return response;
 }
 
 
-sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollectionDocumentServiceComp::OnUpdateIotDeviceFromRepresentation(
-			const sdl::prolife::DeviceCollectionDocumentService::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
+sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceComp::OnUpdateIotDeviceFromRepresentation(
+			const sdl::V1_0::prolife::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	auto arguments = updateIotDeviceFromRepresentationRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	if (!arguments.input){
 		Q_ASSERT(false);
-		return sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus();
+		return sdl::V1_0::imtbase::CDocumentOperationStatus();
 	}
 
-	sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus response;
-	response.Version_1_0.Emplace();
-	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Failed;
+	sdl::V1_0::imtbase::CDocumentOperationStatus response;
+	response.Emplace();
+	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Failed;
 
 	QByteArray userId = GetUserId(gqlRequest);
 
 	QByteArray documentId;
-	if (arguments.input.Version_1_0->documentId){
-		documentId = *arguments.input.Version_1_0->documentId;
+	if (arguments.input->documentId){
+		documentId = *arguments.input->documentId;
 	}
 
-	sdl::prolife::Sensors::CIotDeviceData::V1_0 iotDeviceData;
-	if (arguments.input.Version_1_0->iotDeviceData){
-		iotDeviceData = *arguments.input.Version_1_0->iotDeviceData;
+	sdl::V1_0::prolife::CIotDeviceData iotDeviceData;
+	if (arguments.input->iotDeviceData){
+		iotDeviceData = *arguments.input->iotDeviceData;
 	}
 
 	istd::IChangeableSharedPtr documentPtr;
 	m_documentServiceCompPtr->GetDocumentData(userId, documentId, documentPtr);
 	if (!documentPtr.IsValid()){
-		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
+		response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
 	}
 
 	prolifedata::COrderedIdentifiableIotDeviceInfo* iotDeviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableIotDeviceInfo*>(documentPtr.GetPtr());
 	if (iotDeviceInfoPtr == nullptr){
-		response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::InvalidDocumentId;
+		response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::InvalidDocumentId;
 		return response;
 	}
 
@@ -365,7 +367,7 @@ sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus CDeviceCollect
 
 	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr);
 
-	response.Version_1_0->status = sdl::imtbase::CollectionDocumentService::EDocumentOperationStatus::Success;
+	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
 	return response;
 }

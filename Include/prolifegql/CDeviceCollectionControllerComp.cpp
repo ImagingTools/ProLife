@@ -1,4 +1,5 @@
 #include <prolifegql/CDeviceCollectionControllerComp.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
 
 
 // ImtCore includes
@@ -24,29 +25,29 @@ namespace prolifegql
 
 // protected methods
 
-sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVisualStatus(
-			const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+sdl::V1_0::imtbase::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVisualStatus(
+			const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
-		return sdl::imtbase::ImtCollection::CVisualStatus();
+		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 
-	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	sdl::V1_0::imtbase::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 	if (!errorMessage.isEmpty()){
-		return sdl::imtbase::ImtCollection::CVisualStatus();
+		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 
-	if (!retVal.Version_1_0.has_value()){
+	if (!retVal.HasValue()){
 		Q_ASSERT(false);
-		return sdl::imtbase::ImtCollection::CVisualStatus();
+		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 
 	QByteArray objectId;
-	if (retVal.Version_1_0->objectId){
-		objectId = *retVal.Version_1_0->objectId;
+	if (retVal.objectId){
+		objectId = *retVal.objectId;
 	}
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
@@ -69,7 +70,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 					name += " (" + macAddress + ")";
 				}
 
-				retVal.Version_1_0->text = name;
+				retVal.text = name;
 			}
 		}
 	}
@@ -78,23 +79,23 @@ sdl::imtbase::ImtCollection::CVisualStatus CDeviceCollectionControllerComp::OnGe
 }
 
 
-sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControllerComp::OnGetElementMetaInfo(
-			const sdl::imtbase::ImtCollection::CGetElementMetaInfoGqlRequest& getElementMetaInfoRequest,
+sdl::V1_0::imtbase::CGetElementMetaInfoPayload CDeviceCollectionControllerComp::OnGetElementMetaInfo(
+			const sdl::V1_0::imtbase::CGetElementMetaInfoGqlRequest& getElementMetaInfoRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload response;
-	response.Version_1_0.Emplace();
+	sdl::V1_0::imtbase::CGetElementMetaInfoPayload response;
+	response.Emplace();
 
-	sdl::imtbase::ImtCollection::GetElementMetaInfoRequestArguments arguments = getElementMetaInfoRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	sdl::V1_0::imtbase::GetElementMetaInfoRequestArguments arguments = getElementMetaInfoRequest.GetRequestedArguments();
+	if (!arguments.input){
 		Q_ASSERT(false);
 		return response;
 	}
 
 	QByteArray objectId;
-	if (arguments.input.Version_1_0->elementId){
-		objectId = *arguments.input.Version_1_0->elementId;
+	if (arguments.input->elementId){
+		objectId = *arguments.input->elementId;
 	}
 
 	int softwareCount = 0;
@@ -135,8 +136,8 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 		}
 	}
 
-	sdl::imtbase::ImtCollection::CElementMetaInfo::V1_0 elementMetaInfo;
-	sdl::imtbase::ImtBaseTypes::CParameter::V1_0 parameter;
+	sdl::V1_0::imtbase::CElementMetaInfo elementMetaInfo;
+	sdl::V1_0::imtbase::CParameter parameter;
 	parameter.id = QByteArrayLiteral("Licenses");
 	parameter.typeId = "";
 	parameter.name = QStringLiteral("Licenses") + " (" + QString::number(softwareCount) + ")";
@@ -147,11 +148,11 @@ sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload CDeviceCollectionControl
 	
 	parameter.data = parameterData;
 	
-	imtsdl::TElementList<sdl::imtbase::ImtBaseTypes::CParameter::V1_0> infoParams;
+	imtsdl::TElementList<sdl::V1_0::imtbase::CParameter> infoParams;
 	infoParams << parameter;
 
 	elementMetaInfo.infoParams = infoParams;
-	response.Version_1_0->elementMetaInfo = elementMetaInfo;
+	response.elementMetaInfo = elementMetaInfo;
 
 	return response;
 }
@@ -211,12 +212,12 @@ bool CDeviceCollectionControllerComp::OnBeforeRemoveElements(
 }
 
 
-// reimplemented (sdl::prolife::Sensors::CDeviceCollectionControllerCompBase)
+// reimplemented (sdl::V1_0::prolife::CDeviceCollectionControllerCompBase)
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 			const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
-			sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
+			const sdl::V1_0::prolife::CDevicesListGqlRequest& devicesListRequest,
+			sdl::V1_0::prolife::CDeviceItem& representationObject,
 			QString& errorMessage) const
 {
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
@@ -242,7 +243,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Sensors::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
+	sdl::V1_0::prolife::DevicesListRequestInfo requestInfo = devicesListRequest.GetRequestInfo();
 	if (requestInfo.items.isIdRequested){
 		representationObject.id = objectId;
 	}
@@ -268,12 +269,12 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 	QString scheme = "applink";
 	if (requestInfo.items.isPurchaseIdLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Orders/Order");
 		if (!(*objectLink.id).isEmpty()){
@@ -285,12 +286,12 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Account");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Accounts/Account");
 		if (!(*objectLink.id).isEmpty()){
@@ -338,12 +339,12 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isDeliveryIdLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Orders/Order");
 		if (!(*objectLink.id).isEmpty()){
@@ -389,7 +390,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
-			const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
+			const sdl::V1_0::prolife::CDeviceData& deviceDataRepresentation,
 			QByteArray& newObjectId,
 			QString& errorMessage) const
 {
@@ -452,8 +453,8 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 
 bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-			sdl::prolife::Sensors::CDeviceData::V1_0& representationPayload,
+			const sdl::V1_0::prolife::CDeviceItemGqlRequest& deviceItemRequest,
+			sdl::V1_0::prolife::CDeviceData& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&data);
@@ -464,16 +465,16 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Sensors::DeviceItemRequestArguments arguments = deviceItemRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	sdl::V1_0::prolife::DeviceItemRequestArguments arguments = deviceItemRequest.GetRequestedArguments();
+	if (!arguments.input){
 		I_CRITICAL();
 
 		return false;
 	}
 
 	QByteArray id;
-	if (arguments.input.Version_1_0->id){
-		id = *arguments.input.Version_1_0->id;
+	if (arguments.input->id){
+		id = *arguments.input->id;
 	}
 
 	representationPayload.id = (id);
@@ -503,11 +504,11 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	representationPayload.deviceType = (productUuid);
 
-	imtsdl::TElementList<sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0> softwareBindingInfoList;
+	imtsdl::TElementList<sdl::V1_0::prolife::CSoftwareBindingInfo> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(id);
 	for (const QByteArray& softwareId : softwareIds){
-		sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0 softwareBindingInfo;
+		sdl::V1_0::prolife::CSoftwareBindingInfo softwareBindingInfo;
 		if (GetSoftwareInfo(softwareId, softwareBindingInfo)){
 			softwareBindingInfoList << softwareBindingInfo;
 		}
@@ -522,7 +523,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 			const imtgql::CGqlRequest& /*rawGqlRequest*/,
-			const sdl::prolife::Sensors::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+			const sdl::V1_0::prolife::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
 {
@@ -531,24 +532,24 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 		return false;
 	}
 
-	sdl::prolife::Sensors::DeviceUpdateRequestArguments inputArguments = deviceUpdateRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::DeviceUpdateRequestArguments inputArguments = deviceUpdateRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		I_CRITICAL();
 
 		return false;
 	}
 
-	if (!inputArguments.input.Version_1_0->item){
+	if (!inputArguments.input->item){
 		I_CRITICAL();
 
 		return false;
 	}
 
-	sdl::prolife::Sensors::CDeviceData::V1_0 deviceData = *inputArguments.input.Version_1_0->item;
+	sdl::V1_0::prolife::CDeviceData deviceData = *inputArguments.input->item;
 
 	QByteArray objectId;
-	if (inputArguments.input.Version_1_0->id){
-		objectId = *inputArguments.input.Version_1_0->id;
+	if (inputArguments.input->id){
+		objectId = *inputArguments.input->id;
 	}
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
@@ -604,11 +605,10 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 void CDeviceCollectionControllerComp::SetAdditionalFilters(
 			const imtgql::CGqlRequest& gqlRequest,
-			const imtgql::CGqlParamObject& /*viewParamsGql*/,
-			iprm::CParamsSet* filterParams) const
+			imtbase::CComplexCollectionFilter& complexFilter) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){
-		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, complexFilter)){
 			SendWarningMessage(0, QString("Unable to join group filter param"), "CDeviceCollectionControllerComp");
 		}
 	}
@@ -629,7 +629,7 @@ void CDeviceCollectionControllerComp::OnComponentCreated()
 // private methods
 
 bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
-			const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
+			const sdl::V1_0::prolife::CDeviceData& representation,
 			istd::IChangeable& object,
 			QByteArray& objectId,
 			QString& errorMessage) const
@@ -891,7 +891,7 @@ QByteArrayList CDeviceCollectionControllerComp::GetBindedSoftware(const QByteArr
 }
 
 
-bool CDeviceCollectionControllerComp::GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const
+bool CDeviceCollectionControllerComp::GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const
 {
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
 		return false;

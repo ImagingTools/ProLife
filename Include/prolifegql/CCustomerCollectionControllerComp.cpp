@@ -1,5 +1,6 @@
 #include "imtlic/IProductInstanceInfo.h"
 #include <prolifegql/CCustomerCollectionControllerComp.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts.h>
 
 
 // ACF includes
@@ -72,12 +73,12 @@ bool CCustomerCollectionControllerComp::OnBeforeRemoveElements(
 }
 
 
-// reimplemented (sdl::prolife::Accounts::CAccountCollectionControllerCompBase)
+// reimplemented (sdl::V1_0::prolife::CAccountCollectionControllerCompBase)
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-			const sdl::prolife::Accounts::CAccountsListGqlRequest& accountsListRequest,
-			sdl::prolife::Accounts::CAccountItem::V1_0& representationObject,
+			const sdl::V1_0::prolife::CAccountsListGqlRequest& accountsListRequest,
+			sdl::V1_0::prolife::CAccountItem& representationObject,
 			QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
@@ -87,7 +88,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Accounts::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
+	sdl::V1_0::prolife::AccountsListRequestInfo requestInfo = accountsListRequest.GetRequestInfo();
 
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 
@@ -150,7 +151,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRepresentation(
-			const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
+			const sdl::V1_0::prolife::CAccountData& accountDataRepresentation,
 			QByteArray& newObjectId,
 			QString& errorMessage) const
 {
@@ -191,8 +192,8 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 
 bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			const istd::IChangeable& data,
-			const sdl::prolife::Accounts::CAccountItemGqlRequest& accountItemRequest,
-			sdl::prolife::Accounts::CAccountData::V1_0& representationPayload,
+			const sdl::V1_0::prolife::CAccountItemGqlRequest& accountItemRequest,
+			sdl::V1_0::prolife::CAccountData& representationPayload,
 			QString& errorMessage) const
 {
 	const prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&data);
@@ -203,16 +204,16 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 
-	sdl::prolife::Accounts::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	sdl::V1_0::prolife::AccountItemRequestArguments arguments = accountItemRequest.GetRequestedArguments();
+	if (!arguments.input){
 		I_CRITICAL();
 
 		return false;
 	}
 
 	QByteArray id;
-	if (arguments.input.Version_1_0->id){
-		id = *arguments.input.Version_1_0->id;
+	if (arguments.input->id){
+		id = *arguments.input->id;
 	}
 
 	representationPayload.id = (id);
@@ -263,12 +264,11 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 
 void CCustomerCollectionControllerComp::SetAdditionalFilters(
-	const imtgql::CGqlRequest& gqlRequest,
-	const imtgql::CGqlParamObject& /*viewParamsGql*/,
-	iprm::CParamsSet* filterParams) const
+			const imtgql::CGqlRequest& gqlRequest,
+			imtbase::CComplexCollectionFilter& complexFilter) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){
-		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, complexFilter)){
 			SendWarningMessage(0, QString("Unable to join group filter param"), "COrderCollectionControllerComp");
 		}
 	}
@@ -277,24 +277,24 @@ void CCustomerCollectionControllerComp::SetAdditionalFilters(
 
 bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 			const imtgql::CGqlRequest& /*rawGqlRequest*/,
-			const sdl::prolife::Accounts::CAccountUpdateGqlRequest& accountUpdateRequest,
+			const sdl::V1_0::prolife::CAccountUpdateGqlRequest& accountUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
 {
-	sdl::prolife::Accounts::AccountUpdateRequestArguments requestArguments = accountUpdateRequest.GetRequestedArguments();
-	if (!requestArguments.input.Version_1_0){
+	sdl::V1_0::prolife::AccountUpdateRequestArguments requestArguments = accountUpdateRequest.GetRequestedArguments();
+	if (!requestArguments.input){
 		I_CRITICAL();
 
 		return false;
 	}
 	
-	if (!requestArguments.input.Version_1_0->item.has_value()){
+	if (!requestArguments.input->item.has_value()){
 		I_CRITICAL();
 		
 		return false;
 	}
 
-	const sdl::prolife::Accounts::CAccountData::V1_0& accountData = *requestArguments.input.Version_1_0->item;
+	const sdl::V1_0::prolife::CAccountData& accountData = *requestArguments.input->item;
 	QByteArray objectId = *accountData.id;
 
 	prolifedata::CCustomerInfo *customerInfoPtr =
@@ -321,7 +321,7 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 // private methods
 
 bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
-			const sdl::prolife::Accounts::CAccountData::V1_0& accountDataRepresentation,
+			const sdl::V1_0::prolife::CAccountData& accountDataRepresentation,
 			istd::IChangeable& object,
 			QByteArray& objectId,
 			QString& errorMessage) const

@@ -1,4 +1,5 @@
 #include <prolifegql/CDeviceControllerComp.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
 
 
 // Qt includes
@@ -32,25 +33,25 @@ namespace prolifegql
 
 // protected methods
 
-sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
-			const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
+sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
+			const sdl::V1_0::prolife::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& /*errorMessage*/) const
 {
-	sdl::prolife::Sensors::CDeviceBindingData retVal;
+	sdl::V1_0::prolife::CDeviceBindingData retVal;
 	
 	auto inputArguments = getDeviceBindingRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	if (!inputArguments.input){
 		I_CRITICAL();
 		
 		return retVal;
 	}
 	
-	sdl::prolife::Sensors::CDeviceBindingData::V1_0& response = retVal.Version_1_0.emplace();
+	sdl::V1_0::prolife::CDeviceBindingData& response = retVal;
 	
 	QByteArray deviceId;
-	if (inputArguments.input.Version_1_0->id){
-		deviceId = *inputArguments.input.Version_1_0->id;
+	if (inputArguments.input->id){
+		deviceId = *inputArguments.input->id;
 	}
 	
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
@@ -100,35 +101,35 @@ sdl::prolife::Sensors::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBind
 }
 
 
-sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
-			const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
+sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
+			const sdl::V1_0::prolife::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload retVal;
+	sdl::V1_0::imtbase::CUpdatedNotificationPayload retVal;
 
-	sdl::prolife::Sensors::UpdateDeviceBindingRequestArguments inputArguments = updateDeviceBindingRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::UpdateDeviceBindingRequestArguments inputArguments = updateDeviceBindingRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		I_CRITICAL();
 
 		return retVal;
 	}
 
-	sdl::imtbase::ImtCollection::CUpdatedNotificationPayload::V1_0& response = retVal.Version_1_0.emplace();
+	sdl::V1_0::imtbase::CUpdatedNotificationPayload& response = retVal;
 
 	QByteArray deviceId;
-	if (inputArguments.input.Version_1_0->deviceId){
-		deviceId = *inputArguments.input.Version_1_0->deviceId;
+	if (inputArguments.input->deviceId){
+		deviceId = *inputArguments.input->deviceId;
 	}
 
-	sdl::prolife::Sensors::CDeviceBindingData::V1_0 deviceBindingData;
-	if (inputArguments.input.Version_1_0->item){
-		deviceBindingData = *inputArguments.input.Version_1_0->item;
+	sdl::V1_0::prolife::CDeviceBindingData deviceBindingData;
+	if (inputArguments.input->item){
+		deviceBindingData = *inputArguments.input->item;
 	}
 
 	QString project;
-	if (inputArguments.input.Version_1_0->project){
-		project = *inputArguments.input.Version_1_0->project;
+	if (inputArguments.input->project){
+		project = *inputArguments.input->project;
 	}
 
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
@@ -284,42 +285,42 @@ sdl::imtbase::ImtCollection::CUpdatedNotificationPayload CDeviceControllerComp::
 }
 
 
-sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
-			const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest,
+sdl::V1_0::prolife::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
+			const sdl::V1_0::prolife::CTransferLicensesGqlRequest& transferLicensesRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
 	if (!m_softwareTransferCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareTransferCollection' was not set", "CDeviceControllerComp");
-		return sdl::prolife::Sensors::CTransferLicensesPayload();
+		return sdl::V1_0::prolife::CTransferLicensesPayload();
 	}
 
 	if (!m_supportEmailParamCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SupportEmailParam' was not set", "CDeviceControllerComp");
-		return sdl::prolife::Sensors::CTransferLicensesPayload();
+		return sdl::V1_0::prolife::CTransferLicensesPayload();
 	}
 
-	sdl::prolife::Sensors::CTransferLicensesPayload retVal;
-	retVal.Version_1_0.emplace();
-	retVal.Version_1_0->ok = false;
-	retVal.Version_1_0->limit = false;
-	retVal.Version_1_0->supportEmail = m_supportEmailParamCompPtr->GetText();
+	sdl::V1_0::prolife::CTransferLicensesPayload retVal;
+	retVal;
+	retVal.ok = false;
+	retVal.limit = false;
+	retVal.supportEmail = m_supportEmailParamCompPtr->GetText();
 
-	sdl::prolife::Sensors::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::TransferLicensesRequestArguments inputArguments = transferLicensesRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		I_CRITICAL();
 		
 		return retVal;
 	}
 	
 	QByteArray fromDeviceId;
-	if (inputArguments.input.Version_1_0->fromDeviceId){
-		fromDeviceId = *inputArguments.input.Version_1_0->fromDeviceId;
+	if (inputArguments.input->fromDeviceId){
+		fromDeviceId = *inputArguments.input->fromDeviceId;
 	}
 
 	QByteArray toDeviceId;
-	if (inputArguments.input.Version_1_0->toDeviceId){
-		toDeviceId = *inputArguments.input.Version_1_0->toDeviceId;
+	if (inputArguments.input->toDeviceId){
+		toDeviceId = *inputArguments.input->toDeviceId;
 	}
 
 	// Get FROM device binding data
@@ -396,7 +397,7 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 				int softwareCount = softwareTransferInfoPtr->GetTransferCount();
 				int maxTransferCount = m_maxTransferCountAttrPtr.IsValid() ? *m_maxTransferCountAttrPtr : 3;
 				if (softwareCount >= maxTransferCount){
-					retVal.Version_1_0->limit = true;
+					retVal.limit = true;
 					return retVal;
 				}
 			}
@@ -507,35 +508,35 @@ sdl::prolife::Sensors::CTransferLicensesPayload CDeviceControllerComp::OnTransfe
 		}
 	}
 
-	retVal.Version_1_0->ok = true;
+	retVal.ok = true;
 
 	return retVal;
 }
 
 
-sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLicenseFile(
-			const sdl::prolife::Sensors::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
+sdl::V1_0::prolife::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLicenseFile(
+			const sdl::V1_0::prolife::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CCreateLicenseFilePayload retVal;
-	sdl::prolife::Sensors::CreateLicenseFileRequestArguments arguments = createLicenseFileRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	sdl::V1_0::prolife::CCreateLicenseFilePayload retVal;
+	sdl::V1_0::prolife::CreateLicenseFileRequestArguments arguments = createLicenseFileRequest.GetRequestedArguments();
+	if (!arguments.input){
 		I_CRITICAL();
 
 		return retVal;
 	}
 
-	retVal.Version_1_0.emplace();
+	retVal;
 
 	QByteArray deviceId;
-	if (arguments.input.Version_1_0->deviceId){
-		deviceId = *arguments.input.Version_1_0->deviceId;
+	if (arguments.input->deviceId){
+		deviceId = *arguments.input->deviceId;
 	}
 
 	bool encrypt = true;
-	if (arguments.input.Version_1_0->encrypt){
-		encrypt = *arguments.input.Version_1_0->encrypt;
+	if (arguments.input->encrypt){
+		encrypt = *arguments.input->encrypt;
 	}
 
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
@@ -779,8 +780,8 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 
 	QString name = macAddress.split(':').join('_') + "_" + "License.lic";
 
-	retVal.Version_1_0->data = returnedData;
-	retVal.Version_1_0->name = name;
+	retVal.data = returnedData;
+	retVal.name = name;
 
 	file.close();
 
@@ -822,13 +823,13 @@ sdl::prolife::Sensors::CCreateLicenseFilePayload CDeviceControllerComp::OnCreate
 }
 
 
-sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecryptLicenseFile(
-			const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+sdl::V1_0::prolife::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecryptLicenseFile(
+			const sdl::V1_0::prolife::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CDecryptLicenseFilePayload retVal;
-	sdl::prolife::Sensors::CDecryptLicenseFilePayload::V1_0& response = retVal.Version_1_0.emplace();
+	sdl::V1_0::prolife::CDecryptLicenseFilePayload retVal;
+	sdl::V1_0::prolife::CDecryptLicenseFilePayload& response = retVal;
 
 	if (!m_encryptionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'Encryption' was not set", "CDeviceControllerComp");
@@ -853,22 +854,22 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 		return retVal;
 	}
 
-	sdl::prolife::Sensors::DecryptLicenseFileRequestArguments arguments = decryptLicenseFileRequest.GetRequestedArguments();
+	sdl::V1_0::prolife::DecryptLicenseFileRequestArguments arguments = decryptLicenseFileRequest.GetRequestedArguments();
 
-	if (!arguments.input.Version_1_0){
+	if (!arguments.input){
 		I_CRITICAL();
 		
 		return retVal;
 	}
 
 	QByteArray encryptedData;
-	if (arguments.input.Version_1_0->fileData){
-		encryptedData = *arguments.input.Version_1_0->fileData;
+	if (arguments.input->fileData){
+		encryptedData = *arguments.input->fileData;
 	}
 
 	QByteArray encryptionKey;
-	if (arguments.input.Version_1_0->key){
-		encryptionKey = *arguments.input.Version_1_0->key;
+	if (arguments.input->key){
+		encryptionKey = *arguments.input->key;
 	}
 
 	m_productInstanceId = encryptionKey.toLower();
@@ -889,14 +890,14 @@ sdl::prolife::Sensors::CDecryptLicenseFilePayload CDeviceControllerComp::OnDecry
 }
 
 
-sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::OnRequestTransferLicenses(
-			const sdl::prolife::Sensors::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
+sdl::V1_0::prolife::CRequestTransferLicensesPayload CDeviceControllerComp::OnRequestTransferLicenses(
+			const sdl::V1_0::prolife::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CRequestTransferLicensesPayload response;
-	response.Version_1_0.emplace();
-	response.Version_1_0->result = false;
+	sdl::V1_0::prolife::CRequestTransferLicensesPayload response;
+	response;
+	response.result = false;
 
 	if (!m_smtpMessageCreatorCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SmtpMessageCreator' was not set", "CDeviceControllerComp");
@@ -913,8 +914,8 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 		return response;
 	}
 
-	sdl::prolife::Sensors::RequestTransferLicensesRequestArguments arguments = requestTransferLicensesRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0.has_value()){
+	sdl::V1_0::prolife::RequestTransferLicensesRequestArguments arguments = requestTransferLicensesRequest.GetRequestedArguments();
+	if (!arguments.input->HasValue()){
 		Q_ASSERT(false);
 		errorMessage = QString("Unable to request transfer license. Error: Request invalid");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -922,13 +923,13 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 	}
 
 	QByteArray fromDeviceId;
-	if (arguments.input.Version_1_0->fromDeviceId){
-		fromDeviceId = *arguments.input.Version_1_0->fromDeviceId;
+	if (arguments.input->fromDeviceId){
+		fromDeviceId = *arguments.input->fromDeviceId;
 	}
 
 	QByteArray toDeviceId;
-	if (arguments.input.Version_1_0->toDeviceId){
-		toDeviceId = *arguments.input.Version_1_0->toDeviceId;
+	if (arguments.input->toDeviceId){
+		toDeviceId = *arguments.input->toDeviceId;
 	}
 
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
@@ -1031,20 +1032,20 @@ sdl::prolife::Sensors::CRequestTransferLicensesPayload CDeviceControllerComp::On
 		}
 	}
 
-	response.Version_1_0->result = true;
+	response.result = true;
 
 	return response;
 }
 
 
-sdl::prolife::Sensors::CResetTransferCounterPayload CDeviceControllerComp::OnResetTransferCounter(
-			const sdl::prolife::Sensors::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
+sdl::V1_0::prolife::CResetTransferCounterPayload CDeviceControllerComp::OnResetTransferCounter(
+			const sdl::V1_0::prolife::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Sensors::CResetTransferCounterPayload response;
-	response.Version_1_0.emplace();
-	response.Version_1_0->result = false;
+	sdl::V1_0::prolife::CResetTransferCounterPayload response;
+	response;
+	response.result = false;
 
 	if (!m_softwareTransferCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'SoftwareTransferCollection' was not set", "CDeviceControllerComp");
@@ -1065,8 +1066,8 @@ sdl::prolife::Sensors::CResetTransferCounterPayload CDeviceControllerComp::OnRes
 		return response;
 	}
 
-	sdl::prolife::Sensors::ResetTransferCounterRequestArguments arguments = resetTransferCounterRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0.has_value()){
+	sdl::V1_0::prolife::ResetTransferCounterRequestArguments arguments = resetTransferCounterRequest.GetRequestedArguments();
+	if (!arguments.input->HasValue()){
 		Q_ASSERT(false);
 		errorMessage = QString("Unable to reset transfer counter. Error: Request invalid");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -1074,8 +1075,8 @@ sdl::prolife::Sensors::CResetTransferCounterPayload CDeviceControllerComp::OnRes
 	}
 
 	QByteArray hardwareId;
-	if (arguments.input.Version_1_0->hardwareId){
-		hardwareId = *arguments.input.Version_1_0->hardwareId;
+	if (arguments.input->hardwareId){
+		hardwareId = *arguments.input->hardwareId;
 	}
 
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(hardwareId);
@@ -1102,7 +1103,7 @@ sdl::prolife::Sensors::CResetTransferCounterPayload CDeviceControllerComp::OnRes
 		}
 	}
 
-	response.Version_1_0->result = true;
+	response.result = true;
 
 	return response;
 }

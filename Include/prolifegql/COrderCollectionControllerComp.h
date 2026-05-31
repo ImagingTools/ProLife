@@ -4,17 +4,17 @@
 // ProLife includes
 #include <prolifedata/IGroupFilterParamJoiner.h>
 #include <prolifedata/IOrderInfo.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Orders_fwd.h>
 
 
 namespace prolifegql
 {
 
 
-class COrderCollectionControllerComp: public sdl::prolife::Orders::COrderCollectionControllerCompBase
+class COrderCollectionControllerComp: public sdl::V1_0::prolife::COrderCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Orders::COrderCollectionControllerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::COrderCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(COrderCollectionControllerComp);
 		I_ASSIGN(m_orderInfoFactCompPtr, "OrderFactory", "Factory for order instance", true, "OrderFactory");
@@ -30,7 +30,7 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	bool CheckProducts(const QByteArray& orderUuid, const imtsdl::TElementList<sdl::prolife::Orders::COrderedProduct::V1_0>& productsModel, QString& errorMessage) const;
+	bool CheckProducts(const QByteArray& orderUuid, const imtsdl::TElementList<sdl::V1_0::prolife::COrderedProduct>& productsModel, QString& errorMessage) const;
 	QString GetProductName(const QByteArray& productUuid) const;
 	void GenerateDifferences(
 				prolifedata::IOrderInfo& currentOrder,
@@ -48,40 +48,40 @@ protected:
 				const QString& description,
 				const imtgql::CGqlRequest& gqlRequest) const override;
 
-	// reimplemented (sdl::prolife::Orders::COrderCollectionControllerCompBase)
+	// reimplemented (sdl::V1_0::prolife::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Orders::COrdersListGqlRequest& ordersListRequest,
-				sdl::prolife::Orders::COrderItem::V1_0& representationObject,
+				const sdl::V1_0::prolife::COrdersListGqlRequest& ordersListRequest,
+				sdl::V1_0::prolife::COrderItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
-				const sdl::prolife::Orders::COrderData::V1_0& orderDataRepresentation,
+				const sdl::V1_0::prolife::COrderData& orderDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Orders::COrderItemGqlRequest& orderItemRequest,
-				sdl::prolife::Orders::COrderData::V1_0& representationPayload,
+				const sdl::V1_0::prolife::COrderItemGqlRequest& orderItemRequest,
+				sdl::V1_0::prolife::COrderData& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Orders::COrderUpdateGqlRequest& orderUpdateRequest,
+				const sdl::V1_0::prolife::COrderUpdateGqlRequest& orderUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest, imtbase::CComplexCollectionFilter& complexFilter) const override;
 
 private:
 	bool FillObjectFromRepresentation(
-				const sdl::prolife::Orders::COrderData::V1_0& representation,
+				const sdl::V1_0::prolife::COrderData& representation,
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
 
 	bool UpdateOrderForHardware(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool UpdateOrderForSoftware(const QByteArray& softwareId, const QByteArray& orderId) const;
-	bool CheckNewProducts(QList<sdl::prolife::Orders::COrderedProduct::V1_0> orderProducts, const QByteArray& orderId) const;
-	bool CreateNewHardware(const sdl::prolife::Orders::COrderedProduct::V1_0& product, const QByteArray& orderId) const;
-	bool CreateNewSoftware(const sdl::prolife::Orders::COrderedProduct::V1_0& product, const QByteArray& orderId) const;
+	bool CheckNewProducts(QList<sdl::V1_0::prolife::COrderedProduct> orderProducts, const QByteArray& orderId) const;
+	bool CreateNewHardware(const sdl::V1_0::prolife::COrderedProduct& product, const QByteArray& orderId) const;
+	bool CreateNewSoftware(const sdl::V1_0::prolife::COrderedProduct& product, const QByteArray& orderId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
