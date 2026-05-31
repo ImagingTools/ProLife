@@ -68,7 +68,7 @@ protected:
 				const sdl::V1_0::prolife::COrderUpdateGqlRequest& orderUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
-	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest, imtbase::CComplexCollectionFilter& complexFilter) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
 	bool FillObjectFromRepresentation(

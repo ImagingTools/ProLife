@@ -66,7 +66,7 @@ protected:
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 
-	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest, imtbase::CComplexCollectionFilter& complexFilter) const override;
+	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 	// reimplemented (icomp::CComponentBase)
 	virtual void OnComponentCreated() override;

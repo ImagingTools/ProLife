@@ -605,10 +605,11 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 void CDeviceCollectionControllerComp::SetAdditionalFilters(
 			const imtgql::CGqlRequest& gqlRequest,
-			imtbase::CComplexCollectionFilter& complexFilter) const
+			const imtgql::CGqlParamObject& /*viewParamsGql*/,
+			iprm::CParamsSet* filterParams) const
 {
 	if (m_groupFilterParamJoinerCompPtr.IsValid()){
-		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, complexFilter)){
+		if (!m_groupFilterParamJoinerCompPtr->JoinGroupFilterParam(gqlRequest, *filterParams)){
 			SendWarningMessage(0, QString("Unable to join group filter param"), "CDeviceCollectionControllerComp");
 		}
 	}
