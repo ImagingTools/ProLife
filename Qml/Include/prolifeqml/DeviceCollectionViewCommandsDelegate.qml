@@ -10,7 +10,7 @@ import prolifeSensorsSdl 1.0
 import imtguigql 1.0
 import imtlicgui 1.0
 import imtdeskgui 1.0
-import Qt.labs.platform 1.0
+import Qt.labs.platform 1.0 as QLP
 import imtbaseComplexCollectionFilterSdl 1.0
 import imtbaseCollectionDocumentServiceSdl 1.0
 import imtbaseUndoManagerSdl 1.0
@@ -463,7 +463,7 @@ DocCollectionViewDelegate {
 		}
 	}
 	
-	FileDialog {
+	QLP.FileDialog {
 		id: licenseFileDialog;
 		title: qsTr("Select license file")
 		fileMode: FileDialog.OpenFile
@@ -493,17 +493,15 @@ DocCollectionViewDelegate {
 				}.bind(this)
 			}
 			else {
-				fileIO.source = filePath
-				let fileData = fileIO.read()
+				licenseFileDialog.fileIO.source = filePath
+				let fileData = licenseFileDialog.fileIO.read()
 				let encodedData = Qt.btoa(fileData);
 				
 				ModalDialogManager.openDialog(enterKeyDialog, {"encodedContent": encodedData});
 			}
 		}
 		
-		FileIO {
-			id: fileIO
-		}
+		property FileIO fileIO : FileIO {}
 	}
 	
 	Component {
@@ -537,18 +535,16 @@ DocCollectionViewDelegate {
 			DecryptLicenseFilePayload {
 				onFinished: {
 					if (Qt.platform.os === "web"){
-						decryptFileIO.source = m_fileName;
+						decryptLicenseFileRequest.decryptFileIO.source = m_fileName;
 					}
 					
 					let encodedStr = Qt.atob(m_decryptedData);
-					decryptFileIO.write(encodedStr);
+					decryptLicenseFileRequest.decryptFileIO.write(encodedStr);
 				}
 			}
 		}
 		
-		FileIO {
-			id: decryptFileIO;
-		}
+		property FileIO decryptFileIO : FileIO {}
 	}
 	
 	Component {
@@ -636,11 +632,11 @@ DocCollectionViewDelegate {
 					}
 					
 					if (Qt.platform.os === "web"){
-						createLicenseFileIO.source = m_name;
+						createLicenseFileRequest.createLicenseFileIO.source = m_name;
 					}
 					
 					let encodedStr = Qt.atob(m_data);
-					createLicenseFileIO.write(encodedStr);
+					createLicenseFileRequest.createLicenseFileIO.write(encodedStr);
 					
 					if (container.collectionView.commandsController){
 						let selectedIds = container.collectionView.getSelectedIds()
@@ -650,9 +646,7 @@ DocCollectionViewDelegate {
 			}
 		}
 		
-		FileIO {
-			id: createLicenseFileIO;
-		}
+		property FileIO createLicenseFileIO : FileIO {}
 	}
 	
 	TransferLicensesInput {
@@ -811,14 +805,14 @@ DocCollectionViewDelegate {
 					Loader {
 						id: deviceCollectionViewLoader
 						anchors.fill: parent
-						Component.onCompleted: {
-							deviceCollectionViewLoader.setSource("qrc:/qml/ProLife/DeviceCollectionView.qml", {
-								"commandsControllerComp": null,
-								"visibleMetaInfo": false,
-								"commandsDelegateComp": null,
-								"canResetFilters": false
-							})
-						}
+						Component.onCompleted: {
+							deviceCollectionViewLoader.setSource("qrc:/qml/ProLife/DeviceCollectionView.qml", {
+								"commandsControllerComp": null,
+								"visibleMetaInfo": false,
+								"commandsDelegateComp": null,
+								"canResetFilters": false
+							})
+						}
 						onLoaded: {
 							item.table.isMultiSelect = false
 							item.collectionFilter.addFieldFilter(excludeFilter)

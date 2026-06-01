@@ -253,42 +253,42 @@ Dialog {
 						GroupFilter {
 							id: notIsMultiSoftwareFilter
 							m_logicalOperation: "And"
+						}
+						
+						FieldFilter {
+							id: isMultipleFilter
+							m_fieldId: "IsMultiProduct"
+							m_filterValue: "false"
+							m_filterValueType: "Bool"
+							m_filterOperations: ["Equal"]
+						}
 
-							FieldFilter {
-								id: isMultipleFilter
-								m_fieldId: "IsMultiProduct"
-								m_filterValue: "false"
-								m_filterValueType: "Bool"
-								m_filterOperations: ["Equal"]
-							}
-
-							ArrayFieldFilter {
-								id: emptyHardwareFilter
-								m_fieldId: "HardwareId"
-								m_filterValueType: "String"
-								m_filterOperations: ["ArrayIsEmpty"]
-							}
+						ArrayFieldFilter {
+							id: emptyHardwareFilter
+							m_fieldId: "HardwareId"
+							m_filterValueType: "String"
+							m_filterOperations: ["ArrayIsEmpty"]
 						}
 
 						GroupFilter {
 							id: isMultiSoftwareFilter
 							m_logicalOperation: "And"
+						}
 
-							FieldFilter {
-								id: isMultipleFilter2
-								m_fieldId: "IsMultiProduct"
-								m_filterValue: "true"
-								m_filterValueType: "Bool"
-								m_filterOperations: ["Equal"]
-							}
+						FieldFilter {
+							id: isMultipleFilter2
+							m_fieldId: "IsMultiProduct"
+							m_filterValue: "true"
+							m_filterValueType: "Bool"
+							m_filterOperations: ["Equal"]
+						}
 
-							FieldFilter {
-								id: productCountFilter
-								m_fieldId: "ProductCount"
-								m_filterValue: "0"
-								m_filterValueType: "Integer"
-								m_filterOperations: ["Greater"]
-							}
+						FieldFilter {
+							id: productCountFilter
+							m_fieldId: "ProductCount"
+							m_filterValue: "0"
+							m_filterValueType: "Integer"
+							m_filterOperations: ["Greater"]
 						}
 
 						GroupFilter {
