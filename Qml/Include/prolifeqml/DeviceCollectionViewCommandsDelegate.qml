@@ -466,7 +466,7 @@ DocCollectionViewDelegate {
 	QLP.FileDialog {
 		id: licenseFileDialog;
 		title: qsTr("Select license file")
-		fileMode: FileDialog.OpenFile
+		fileMode: QLP.FileDialog.OpenFile
 		nameFilters: ["License files (*.lic)"]
 		
 		onAccepted: {
