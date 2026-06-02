@@ -7,17 +7,17 @@
 
 // ProLife includes
 #include <prolifedata/IGroupFilterParamJoiner.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses_fwd.h>
 
 
 namespace prolifegql
 {
 
 
-class CSoftwareProductCollectionControllerComp: public  sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase
+class CSoftwareProductCollectionControllerComp: public  sdl::V1_0::prolife::CSoftwareProductCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CSoftwareProductCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareProductCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -30,9 +30,9 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (sdl::imtbase::ImtCollection::CGraphQlHandlerCompBase)
-	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(
-				const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+	// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
+	virtual sdl::V1_0::imtbase::CVisualStatus OnGetObjectVisualStatus(
+				const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
@@ -41,24 +41,24 @@ protected:
 				const imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
-	// reimplemented (sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase)
+	// reimplemented (sdl::V1_0::prolife::CSoftwareProductCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
-				sdl::prolife::Licenses::CSoftwareProductItem::V1_0& representationObject,
+				const sdl::V1_0::prolife::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+				sdl::V1_0::prolife::CSoftwareProductItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
-				const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
+				const sdl::V1_0::prolife::CSoftwareProductData& softwareProductDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-				sdl::prolife::Licenses::CSoftwareProductData::V1_0& representationPayload,
+				const sdl::V1_0::prolife::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+				sdl::V1_0::prolife::CSoftwareProductData& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Licenses::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
+				const sdl::V1_0::prolife::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
@@ -68,13 +68,13 @@ protected:
 
 private:
 	bool FillObjectFromRepresentation(
-				const sdl::prolife::Licenses::CSoftwareProductData::V1_0& representation,
+				const sdl::V1_0::prolife::CSoftwareProductData& representation,
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
 	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
-	void PopulateBoundCountInTree(sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node) const;
+	void PopulateBoundCountInTree(sdl::V1_0::prolife::CLicenseTreeNode& node) const;
 
 private:
 	imtbase::CTimeFilterParam m_licenseCreationTimeParam;

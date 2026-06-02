@@ -1,4 +1,5 @@
 #include <prolifegql/CSoftwareControllerComp.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
 
 
 // Qt includes
@@ -29,61 +30,60 @@ namespace prolifegql
 {
 
 
-sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense(
-			const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
+sdl::V1_0::prolife::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense(
+			const sdl::V1_0::prolife::CSplitLicenseGqlRequest& splitLicenseRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Licenses::CSplitLicensePayload retVal;
-	retVal.Version_1_0.Emplace();
-	retVal.Version_1_0->ok = false;
+	sdl::V1_0::prolife::CSplitLicensePayload retVal;
+	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("Unable to split license. Error: Software product collection is not set");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	if (!m_accountCollectionCompPtr.IsValid()){
 		errorMessage = QString("Unable to split license. Error: Account collection is not set");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	if (!m_softwareInfoFactCompPtr.IsValid()){
 		errorMessage = QString("Unable to split license. Error: Software factory is not set");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::SplitLicenseRequestArguments inputArguments = splitLicenseRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::SplitLicenseRequestArguments inputArguments = splitLicenseRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		errorMessage = QString("Unable to split license. Error: Invalid input arguments");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::CSplitLicenseInput::V1_0& input = *inputArguments.input.Version_1_0;
+	sdl::V1_0::prolife::CSplitLicenseInput& input = *inputArguments.input;
 
 	// Validate input
 	if (!input.licenseId){
 		errorMessage = QString("Unable to split license. Error: License ID is missing");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	if (!input.licenseCount){
 		errorMessage = QString("Unable to split license. Error: License count is missing");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	if (!input.accountId){
 		errorMessage = QString("Unable to split license. Error: Account ID is missing");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -95,8 +95,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	// Validate license count
 	if (licenseCount <= 0){
 		errorMessage = QString("Unable to split license. Error: License count must be greater than 0");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -104,24 +104,24 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (!m_softwareProductCollectionCompPtr->GetObjectData(licenseId, dataPtr)){
 		errorMessage = QString("Unable to split license. Error: License not found with ID '%1'").arg(QString::fromUtf8(licenseId));
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* originalSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 	if (originalSoftwarePtr == nullptr){
 		errorMessage = QString("Unable to split license. Error: Invalid software instance");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	// Check if license supports multiple products (can be split)
 	if (!originalSoftwarePtr->IsMultiProduct()){
 		errorMessage = QString("Unable to split license. Error: License does not support multiple products");
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -129,8 +129,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	int originalCount = originalSoftwarePtr->GetProductCount();
 	if (licenseCount > originalCount){
 		errorMessage = QString("Unable to split license. Error: License count to split (%1) must be less than available count (%2)").arg(licenseCount).arg(originalCount);
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -138,8 +138,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	imtbase::IObjectCollection::DataPtr accountDataPtr;
 	if (!m_accountCollectionCompPtr->GetObjectData(accountId, accountDataPtr)){
 		errorMessage = QString("Unable to split license. Error: Account not found with ID '%1'").arg(QString::fromUtf8(accountId));
-		retVal.Version_1_0->ok = false;
-		retVal.Version_1_0->message = errorMessage;
+		retVal.ok = false;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -152,16 +152,16 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		imtbase::IObjectCollection::DataPtr targetDataPtr;
 		if (!m_softwareProductCollectionCompPtr->GetObjectData(targetLicenseId, targetDataPtr)){
 			errorMessage = QString("Unable to split license. Error: Target license not found with ID '%1'").arg(QString::fromUtf8(targetLicenseId));
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
 		targetSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(targetDataPtr.GetPtr());
 		if (targetSoftwarePtr == nullptr){
 			errorMessage = QString("Unable to split license. Error: Invalid target license");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -169,8 +169,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		QByteArray targetParentId = targetSoftwarePtr->GetParentInstanceId();
 		if (targetParentId != licenseId){
 			errorMessage = QString("Unable to split license. Error: Target license is not a child of source license");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -178,8 +178,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		QByteArray targetAccountId = targetSoftwarePtr->GetCustomerId();
 		if (targetAccountId != accountId){
 			errorMessage = QString("Unable to split license. Error: Target license belongs to different account");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -189,7 +189,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 
 		if (!m_softwareProductCollectionCompPtr->SetObjectData(targetLicenseId, *targetSoftwarePtr)){
 			errorMessage = QString("Unable to split license. Error: Failed to update target license");
-			retVal.Version_1_0->message = errorMessage;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -200,16 +200,16 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		istd::TUniqueInterfacePtr<imtlic::IProductInstanceInfo> newSoftwareInstancePtr = m_softwareInfoFactCompPtr.CreateInstance();
 		if (!newSoftwareInstancePtr.IsValid()){
 			errorMessage = QString("Unable to split license. Error: Failed to create new software instance");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
 		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* newSoftwarePtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(newSoftwareInstancePtr.GetPtr());
 		if (newSoftwarePtr == nullptr){
 			errorMessage = QString("Unable to split license. Error: Failed to cast new software instance");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -218,8 +218,8 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		// Copy properties from original license
 		if (!newSoftwarePtr->CopyFrom(*originalSoftwarePtr)){
 			errorMessage = QString("Unable to split license. Error: Failed to copy software");
-			retVal.Version_1_0->ok = false;
-			retVal.Version_1_0->message = errorMessage;
+			retVal.ok = false;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 
@@ -282,7 +282,7 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 		QByteArray result = m_softwareProductCollectionCompPtr->InsertNewObject("SoftwareProduct", "", "", newSoftwareInstancePtr.GetPtr(), newLicenseId);
 		if (result.isEmpty()){
 			errorMessage = QString("Unable to split license. Error: Failed to add new license to collection");
-			retVal.Version_1_0->message = errorMessage;
+			retVal.message = errorMessage;
 			return retVal;
 		}
 	}
@@ -294,16 +294,16 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 	// Update original software
 	if (!m_softwareProductCollectionCompPtr->SetObjectData(licenseId, *originalSoftwarePtr)){
 		errorMessage = QString("Unable to split license. Error: Failed to update software");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	retVal.Version_1_0->ok = true;
+	retVal.ok = true;
 	if (isTransferMode){
-		retVal.Version_1_0->message = QString("Licenses transferred successfully to existing license ID: %1").arg(QString::fromUtf8(newLicenseId));
+		retVal.message = QString("Licenses transferred successfully to existing license ID: %1").arg(QString::fromUtf8(newLicenseId));
 	}
 	else {
-		retVal.Version_1_0->message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
+		retVal.message = QString("License split successfully. New license ID: %1").arg(QString::fromUtf8(newLicenseId));
 	}
 
 	if (m_userActionManagerCompPtr.IsValid()){
@@ -332,33 +332,32 @@ sdl::prolife::Licenses::CSplitLicensePayload CSoftwareControllerComp::OnSplitLic
 }
 
 
-sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChildLicensesList(
-			const sdl::prolife::Licenses::CChildLicensesListGqlRequest& childLicensesRequest,
+sdl::V1_0::prolife::CChildLicensesListPayload CSoftwareControllerComp::OnChildLicensesList(
+			const sdl::V1_0::prolife::CChildLicensesListGqlRequest& childLicensesRequest,
 			const ::imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& errorMessage) const
 {
-	sdl::prolife::Licenses::CChildLicensesListPayload retVal;
-	retVal.Version_1_0.Emplace();
-	retVal.Version_1_0->ok = false;
+	sdl::V1_0::prolife::CChildLicensesListPayload retVal;
+	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("Unable to get child licenses. Error: Software product collection is not set");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::ChildLicensesListRequestArguments inputArguments = childLicensesRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::ChildLicensesListRequestArguments inputArguments = childLicensesRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		errorMessage = QString("Unable to get child licenses. Error: Invalid input arguments");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::CChildLicensesListInput::V1_0& input = *inputArguments.input.Version_1_0;
+	sdl::V1_0::prolife::CChildLicensesListInput& input = *inputArguments.input;
 
 	if (!input.parentLicenseId){
 		errorMessage = QString("Unable to get child licenses. Error: Parent license ID is missing");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -377,7 +376,7 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 	// Get all objects from collection and filter by ParentInstanceId
 	QByteArrayList allIds = m_softwareProductCollectionCompPtr->GetElementIds(0, -1, &filterParam);
 
-	QList<sdl::prolife::Licenses::CChildLicenseItem::V1_0> childItems;
+	QList<sdl::V1_0::prolife::CChildLicenseItem> childItems;
 
 	for (const QByteArray& id : std::as_const(allIds)){
 		imtbase::IObjectCollection::DataPtr dataPtr;
@@ -398,7 +397,7 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 			continue;
 		}
 
-		sdl::prolife::Licenses::CChildLicenseItem::V1_0 item;
+		sdl::V1_0::prolife::CChildLicenseItem item;
 
 		item.id = id;
 		item.productCount = softwarePtr->GetProductCount();
@@ -449,47 +448,46 @@ sdl::prolife::Licenses::CChildLicensesListPayload CSoftwareControllerComp::OnChi
 		childItems.append(item);
 	}
 
-	retVal.Version_1_0->items.Emplace().FromList(childItems);
-	retVal.Version_1_0->ok = true;
-	retVal.Version_1_0->message = QString("Found %1 child license(s)").arg(childItems.size());
+	retVal.items.Emplace().FromList(childItems);
+	retVal.ok = true;
+	retVal.message = QString("Found %1 child license(s)").arg(childItems.size());
 
 	return retVal;
 }
 
 
-sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicense(
-			const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
+sdl::V1_0::prolife::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicense(
+			const sdl::V1_0::prolife::CRevokeLicenseGqlRequest& revokeLicenseRequest,
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	sdl::prolife::Licenses::CRevokeLicensePayload retVal;
-	retVal.Version_1_0.Emplace();
-	retVal.Version_1_0->ok = false;
+	sdl::V1_0::prolife::CRevokeLicensePayload retVal;
+	retVal.ok = false;
 
 	if (!m_softwareProductCollectionCompPtr.IsValid()){
 		errorMessage = QString("Unable to revoke license. Error: Software product collection is not set");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::RevokeLicenseRequestArguments inputArguments = revokeLicenseRequest.GetRequestedArguments();
-	if (!inputArguments.input.Version_1_0){
+	sdl::V1_0::prolife::RevokeLicenseRequestArguments inputArguments = revokeLicenseRequest.GetRequestedArguments();
+	if (!inputArguments.input){
 		errorMessage = QString("Unable to revoke license. Error: Invalid input arguments");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
-	sdl::prolife::Licenses::CRevokeLicenseInput::V1_0& input = *inputArguments.input.Version_1_0;
+	sdl::V1_0::prolife::CRevokeLicenseInput& input = *inputArguments.input;
 
 	if (!input.childLicenseId){
 		errorMessage = QString("Unable to revoke license. Error: Child license ID is missing");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
 	if (!input.revokeCount){
 		errorMessage = QString("Unable to revoke license. Error: Revoke count is missing");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -498,7 +496,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 
 	if (revokeCount <= 0){
 		errorMessage = QString("Unable to revoke license. Error: Revoke count must be greater than 0");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -506,7 +504,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	imtbase::IObjectCollection::DataPtr childDataPtr;
 	if (!m_softwareProductCollectionCompPtr->GetObjectData(childLicenseId, childDataPtr)){
 		errorMessage = QString("Unable to revoke license. Error: Child license not found with ID '%1'").arg(QString::fromUtf8(childLicenseId));
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -515,7 +513,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	
 	if (childSoftwarePtr == nullptr){
 		errorMessage = QString("Unable to revoke license. Error: Invalid child software instance");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -543,7 +541,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	// Check if we can revoke the requested count
 	if (revokeCount > availableCount){
 		errorMessage = QString("Unable to revoke license. Error: Revoke count (%1) exceeds available count (%2). %3 licenses are bound to hardware.").arg(revokeCount).arg(availableCount).arg(boundCount);
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -551,7 +549,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	QByteArray parentLicenseId = childSoftwarePtr->GetParentInstanceId();
 	if (parentLicenseId.isEmpty()){
 		errorMessage = QString("Unable to revoke license. Error: Child license has no parent");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -559,7 +557,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	imtbase::IObjectCollection::DataPtr parentDataPtr;
 	if (!m_softwareProductCollectionCompPtr->GetObjectData(parentLicenseId, parentDataPtr)){
 		errorMessage = QString("Unable to revoke license. Error: Parent license not found with ID '%1'").arg(QString::fromUtf8(parentLicenseId));
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -568,7 +566,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	
 	if (parentSoftwarePtr == nullptr){
 		errorMessage = QString("Unable to revoke license. Error: Invalid parent software instance");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -578,7 +576,7 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 	
 	if (!m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr)){
 		errorMessage = QString("Unable to revoke license. Error: Failed to update parent license");
-		retVal.Version_1_0->message = errorMessage;
+		retVal.message = errorMessage;
 		return retVal;
 	}
 
@@ -603,16 +601,16 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		// Remove child license entirely (no licenses left and no children)
 		if (!m_softwareProductCollectionCompPtr->RemoveElements({childLicenseId})){
 			errorMessage = QString("Unable to revoke license. Error: Failed to remove child license");
-			retVal.Version_1_0->message = errorMessage;
+			retVal.message = errorMessage;
 			// Try to rollback parent update
 			parentSoftwarePtr->SetProductCount(currentParentCount);
 			if (!m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr)){
 				errorMessage += QString(". CRITICAL: Rollback failed - parent license count may be inconsistent");
-				retVal.Version_1_0->message = errorMessage;
+				retVal.message = errorMessage;
 			}
 			return retVal;
 		}
-		retVal.Version_1_0->message = QString("License revoked successfully. Child license removed.");
+		retVal.message = QString("License revoked successfully. Child license removed.");
 	}
 	else {
 		// Update child license count (either some available left, or some are bound, or has children)
@@ -620,25 +618,25 @@ sdl::prolife::Licenses::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeL
 		
 		if (!m_softwareProductCollectionCompPtr->SetObjectData(childLicenseId, *childSoftwarePtr)){
 			errorMessage = QString("Unable to revoke license. Error: Failed to update child license");
-			retVal.Version_1_0->message = errorMessage;
+			retVal.message = errorMessage;
 			// Try to rollback parent update
 			parentSoftwarePtr->SetProductCount(currentParentCount);
 			if (!m_softwareProductCollectionCompPtr->SetObjectData(parentLicenseId, *parentSoftwarePtr)){
 				errorMessage += QString(". CRITICAL: Rollback failed - parent license count may be inconsistent");
-				retVal.Version_1_0->message = errorMessage;
+				retVal.message = errorMessage;
 			}
 			return retVal;
 		}
 		
 		if (hasGrandchildren && currentChildCount - revokeCount == 0){
-			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent. Child license kept with 0 available (has sub-licenses).").arg(revokeCount);
+			retVal.message = QString("License revoked successfully. %1 license(s) returned to parent. Child license kept with 0 available (has sub-licenses).").arg(revokeCount);
 		}
 		else {
-			retVal.Version_1_0->message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
+			retVal.message = QString("License revoked successfully. %1 license(s) returned to parent.").arg(revokeCount);
 		}
 	}
 
-	retVal.Version_1_0->ok = true;
+	retVal.ok = true;
 
 	// Record the revoke operation as user actions (following the split pattern)
 	if (m_userActionManagerCompPtr.IsValid()){

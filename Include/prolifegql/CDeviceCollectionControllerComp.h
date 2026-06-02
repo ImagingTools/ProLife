@@ -7,17 +7,17 @@
 // ProLife includes
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/IGroupFilterParamJoiner.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors_fwd.h>
 
 
 namespace prolifegql
 {
 
 
-class CDeviceCollectionControllerComp: public sdl::prolife::Sensors::CDeviceCollectionControllerCompBase
+class CDeviceCollectionControllerComp: public sdl::V1_0::prolife::CDeviceCollectionControllerCompBase
 {
 public:
-	typedef sdl::prolife::Sensors::CDeviceCollectionControllerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CDeviceCollectionControllerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionControllerComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
@@ -30,13 +30,13 @@ public:
 	I_END_COMPONENT;
 
 protected:
-	// reimplemented (sdl::imtbase::ImtCollection::CGraphQlHandlerCompBase)
-	virtual sdl::imtbase::ImtCollection::CVisualStatus OnGetObjectVisualStatus(
-				const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+	// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
+	virtual sdl::V1_0::imtbase::CVisualStatus OnGetObjectVisualStatus(
+				const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::imtbase::ImtCollection::CGetElementMetaInfoPayload OnGetElementMetaInfo(
-				const sdl::imtbase::ImtCollection::CGetElementMetaInfoGqlRequest& getElementMetaInfoRequest,
+	virtual sdl::V1_0::imtbase::CGetElementMetaInfoPayload OnGetElementMetaInfo(
+				const sdl::V1_0::imtbase::CGetElementMetaInfoGqlRequest& getElementMetaInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
@@ -45,24 +45,24 @@ protected:
 				const imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
-	// reimplemented (sdl::prolife::Sensors::CDeviceCollectionControllerCompBase)
+	// reimplemented (sdl::V1_0::prolife::CDeviceCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const ::imtbase::IObjectCollectionIterator& objectCollectionIterator,
-				const sdl::prolife::Sensors::CDevicesListGqlRequest& devicesListRequest,
-				sdl::prolife::Sensors::CDeviceItem::V1_0& representationObject,
+				const sdl::V1_0::prolife::CDevicesListGqlRequest& devicesListRequest,
+				sdl::V1_0::prolife::CDeviceItem& representationObject,
 				QString& errorMessage) const override;
 	virtual istd::IChangeableUniquePtr CreateObjectFromRepresentation(
-				const sdl::prolife::Sensors::CDeviceData::V1_0& deviceDataRepresentation,
+				const sdl::V1_0::prolife::CDeviceData& deviceDataRepresentation,
 				QByteArray& newObjectId,
 				QString& errorMessage) const override;
 	virtual bool CreateRepresentationFromObject(
 				const istd::IChangeable& data,
-				const sdl::prolife::Sensors::CDeviceItemGqlRequest& deviceItemRequest,
-				sdl::prolife::Sensors::CDeviceData::V1_0& representationPayload,
+				const sdl::V1_0::prolife::CDeviceItemGqlRequest& deviceItemRequest,
+				sdl::V1_0::prolife::CDeviceData& representationPayload,
 				QString& errorMessage) const override;
 	virtual bool UpdateObjectFromRepresentationRequest(
 				const ::imtgql::CGqlRequest& rawGqlRequest,
-				const sdl::prolife::Sensors::CDeviceUpdateGqlRequest& deviceUpdateRequest,
+				const sdl::V1_0::prolife::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 
@@ -73,14 +73,14 @@ protected:
 
 private:
 	bool FillObjectFromRepresentation(
-				const sdl::prolife::Sensors::CDeviceData::V1_0& representation,
+				const sdl::V1_0::prolife::CDeviceData& representation,
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
 	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
-	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
+	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const;
 
 private:
 	imtbase::CTimeFilterParam m_licenseCreationTimeParam;

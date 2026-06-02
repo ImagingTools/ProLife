@@ -6,17 +6,17 @@
 #include <imtauth/IUserActionManager.h>
 
 // ProLife includes
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses_fwd.h>
 
 
 namespace prolifegql
 {
 
 
-class CSoftwareControllerComp: public sdl::prolife::Licenses::CGraphQlHandlerCompBase
+class CSoftwareControllerComp: public sdl::V1_0::prolife::CLicensesGqlHandlerCompBase
 {
 public:
-	typedef sdl::prolife::Licenses::CGraphQlHandlerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CLicensesGqlHandlerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CSoftwareControllerComp)
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
@@ -28,17 +28,17 @@ public:
 	I_END_COMPONENT
 
 protected:
-	// reimplemented (sdl::prolife::Licenses::CGraphQlHandlerCompBase)
-	virtual sdl::prolife::Licenses::CSplitLicensePayload OnSplitLicense(
-				const sdl::prolife::Licenses::CSplitLicenseGqlRequest& splitLicenseRequest,
+	// reimplemented (sdl::V1_0::prolife::CLicensesGqlHandlerCompBase)
+	virtual sdl::V1_0::prolife::CSplitLicensePayload OnSplitLicense(
+				const sdl::V1_0::prolife::CSplitLicenseGqlRequest& splitLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Licenses::CChildLicensesListPayload OnChildLicensesList(
-				const sdl::prolife::Licenses::CChildLicensesListGqlRequest& childLicensesRequest,
+	virtual sdl::V1_0::prolife::CChildLicensesListPayload OnChildLicensesList(
+				const sdl::V1_0::prolife::CChildLicensesListGqlRequest& childLicensesRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Licenses::CRevokeLicensePayload OnRevokeLicense(
-				const sdl::prolife::Licenses::CRevokeLicenseGqlRequest& revokeLicenseRequest,
+	virtual sdl::V1_0::prolife::CRevokeLicensePayload OnRevokeLicense(
+				const sdl::V1_0::prolife::CRevokeLicenseGqlRequest& revokeLicenseRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
