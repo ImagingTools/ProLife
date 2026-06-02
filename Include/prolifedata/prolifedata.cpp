@@ -23,6 +23,9 @@
 #include <prolifedata/CRevokeInAction.h>
 #include <prolifedata/CGroupFilter.h>
 
+// Generated includes
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
+
 
 namespace prolifedata
 {
@@ -326,7 +329,7 @@ static void BuildTreeRecursive(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
-	sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node,
+	sdl::V1_0::prolife::CLicenseTreeNode& node,
 	QSet<QByteArray>& visitedLicenses,
 	bool searchParents,
 	int maxDepth = -1)
@@ -374,8 +377,8 @@ static void BuildTreeRecursive(
 	imtbase::IObjectCollection::Ids actionIds = userActionManager.GetUserActionIds(0, -1, &filterParam);
 
 	// Process actions to find children, revoke edges, and calculate counts
-	QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> children;
-	QList<sdl::prolife::Licenses::CRevokeEdge::V1_0> revokeEdges;
+	QList<sdl::V1_0::prolife::CLicenseTreeNode> children;
+	QList<sdl::V1_0::prolife::CRevokeEdge> revokeEdges;
 	
 	// Track counts from UserActions data
 	int initialCountFromAction = 0;
@@ -466,7 +469,7 @@ static void BuildTreeRecursive(
 					
 					// Only create new child node if it doesn't exist yet
 					if (!foundExisting){
-						sdl::prolife::Licenses::CLicenseTreeNode::V1_0 childNode;
+						sdl::V1_0::prolife::CLicenseTreeNode childNode;
 						int nextDepth = (maxDepth == -1) ? -1 : (maxDepth - 1);
 						BuildTreeRecursive(childLicenseId, licenseCollection, userActionManager, childNode, visitedLicenses, false, nextDepth);
 
@@ -519,7 +522,7 @@ static void BuildTreeRecursive(
 			const prolifedata::CRevokeOutAction* revokeOut = dynamic_cast<const prolifedata::CRevokeOutAction*>(actionData.GetPtr());
 			if (revokeOut){
 				// Create revoke edge from this node to parent
-				sdl::prolife::Licenses::CRevokeEdge::V1_0 edge;
+				sdl::V1_0::prolife::CRevokeEdge edge;
 				edge.fromNodeId = licenseId;
 				edge.toNodeId = revokeOut->GetParentLicenseId();
 				edge.revokedCount = revokeOut->GetRevokedCount();
@@ -587,14 +590,14 @@ static QByteArray FindParentLicenseId(
 	return QByteArray();
 }
 
-sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
+sdl::V1_0::prolife::CLicenseTreeNode BuildLicenseTreeFromActions(
 	const QByteArray& licenseId,
 	const imtbase::IObjectCollection& licenseCollection,
 	const imtauth::IUserActionManager& userActionManager,
 	QString& errorMessage,
 	bool fullHierarchy)
 {
-	sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode;
+	sdl::V1_0::prolife::CLicenseTreeNode rootNode;
 	QSet<QByteArray> visitedLicenses;
 
 	if (fullHierarchy){
@@ -631,7 +634,7 @@ sdl::prolife::Licenses::CLicenseTreeNode::V1_0 BuildLicenseTreeFromActions(
 			BuildTreeRecursive(parentId, licenseCollection, userActionManager, rootNode, visitedLicenses, false, 0);
 			
 			// Now build only the requested license with its children
-			sdl::prolife::Licenses::CLicenseTreeNode::V1_0 requestedLicenseNode;
+			sdl::V1_0::prolife::CLicenseTreeNode requestedLicenseNode;
 			BuildTreeRecursive(licenseId, licenseCollection, userActionManager, requestedLicenseNode, visitedLicenses, false, 1);
 			
 			// Add requested license as the only child of parent

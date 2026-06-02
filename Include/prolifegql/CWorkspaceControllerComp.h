@@ -11,17 +11,17 @@
 #include <imtserverapp/CTimeFilterParamRepresentationController.h>
 
 // ProLife includes
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Workspace.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Workspace_fwd.h>
 
 
 namespace prolifegql
 {
 
 
-class CWorkspaceControllerComp: public sdl::prolife::Workspace::CGraphQlHandlerCompBase
+class CWorkspaceControllerComp: public sdl::V1_0::prolife::CWorkspaceGqlHandlerCompBase
 {
 public:
-	typedef sdl::prolife::Workspace::CGraphQlHandlerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CWorkspaceGqlHandlerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CWorkspaceControllerComp)
 		I_ASSIGN(m_softwareCollectionCompPtr, "SoftwareCollection", "Software collection", true, "SoftwareCollection");
@@ -37,97 +37,97 @@ protected:
 		TFT_BY_LICENSE_CREATION,
 	};
 
-	virtual sdl::prolife::Workspace::CLineChartData OnGetLicenseCreationInfo(
-				const sdl::prolife::Workspace::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
+	virtual sdl::V1_0::prolife::CLineChartData OnGetLicenseCreationInfo(
+				const sdl::V1_0::prolife::CGetLicenseCreationInfoGqlRequest& getLicenseCreationInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CBarChartData OnGetSoftwareUsedBarChart(
-				const sdl::prolife::Workspace::CGetSoftwareUsedBarChartGqlRequest& getSoftwareUsedBarChartRequest,
+	virtual sdl::V1_0::prolife::CBarChartData OnGetSoftwareUsedBarChart(
+				const sdl::V1_0::prolife::CGetSoftwareUsedBarChartGqlRequest& getSoftwareUsedBarChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetSoftwareUsedPieChart(
-				const sdl::prolife::Workspace::CGetSoftwareUsedPieChartGqlRequest& getSoftwareUsedPieChartRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetSoftwareUsedPieChart(
+				const sdl::V1_0::prolife::CGetSoftwareUsedPieChartGqlRequest& getSoftwareUsedPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CBarChartData OnGetHardwareUsedBarChart(
-				const sdl::prolife::Workspace::CGetHardwareUsedBarChartGqlRequest& getHardwareUsedBarChartRequest,
+	virtual sdl::V1_0::prolife::CBarChartData OnGetHardwareUsedBarChart(
+				const sdl::V1_0::prolife::CGetHardwareUsedBarChartGqlRequest& getHardwareUsedBarChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareUsedPieChart(
-				const sdl::prolife::Workspace::CGetHardwareUsedPieChartGqlRequest& getHardwareUsedPieChartRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetHardwareUsedPieChart(
+				const sdl::V1_0::prolife::CGetHardwareUsedPieChartGqlRequest& getHardwareUsedPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareStatusInfo(
-				const sdl::prolife::Workspace::CGetHardwareStatusInfoGqlRequest& getHardwareStatusInfoRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetHardwareStatusInfo(
+				const sdl::V1_0::prolife::CGetHardwareStatusInfoGqlRequest& getHardwareStatusInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CTotalSummaryInfo OnGetTotalSummaryInfo(
-				const sdl::prolife::Workspace::CGetTotalSummaryInfoGqlRequest& getTotalSummaryInfoRequest,
+	virtual sdl::V1_0::prolife::CTotalSummaryInfo OnGetTotalSummaryInfo(
+				const sdl::V1_0::prolife::CGetTotalSummaryInfoGqlRequest& getTotalSummaryInfoRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareCustomerPieChart(
-				const sdl::prolife::Workspace::CGetHardwareCustomerPieChartGqlRequest& getHardwareCustomerPieChartRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetHardwareCustomerPieChart(
+				const sdl::V1_0::prolife::CGetHardwareCustomerPieChartGqlRequest& getHardwareCustomerPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetSoftwareCustomerPieChart(
-				const sdl::prolife::Workspace::CGetSoftwareCustomerPieChartGqlRequest& getSoftwareCustomerPieChartRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetSoftwareCustomerPieChart(
+				const sdl::V1_0::prolife::CGetSoftwareCustomerPieChartGqlRequest& getSoftwareCustomerPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CPieChartData OnGetHardwareConfigurationPieChart(
-				const sdl::prolife::Workspace::CGetHardwareConfigurationPieChartGqlRequest& getHardwareConfigurationPieChartRequest,
+	virtual sdl::V1_0::prolife::CPieChartData OnGetHardwareConfigurationPieChart(
+				const sdl::V1_0::prolife::CGetHardwareConfigurationPieChartGqlRequest& getHardwareConfigurationPieChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CBarChartData OnGetSoftwareCreationBarChart(
-				const sdl::prolife::Workspace::CGetSoftwareCreationBarChartGqlRequest& getSoftwareCreationBarChartRequest,
+	virtual sdl::V1_0::prolife::CBarChartData OnGetSoftwareCreationBarChart(
+				const sdl::V1_0::prolife::CGetSoftwareCreationBarChartGqlRequest& getSoftwareCreationBarChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CBarChartData OnGetHardwareCreationBarChart(
-				const sdl::prolife::Workspace::CGetHardwareCreationBarChartGqlRequest& getHardwareCreationBarChartRequest,
+	virtual sdl::V1_0::prolife::CBarChartData OnGetHardwareCreationBarChart(
+				const sdl::V1_0::prolife::CGetHardwareCreationBarChartGqlRequest& getHardwareCreationBarChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Workspace::CLineChartData OnGetOrderCreationLineChart(
-				const sdl::prolife::Workspace::CGetOrderCreationLineChartGqlRequest& getOrderCreationLineChartRequest,
+	virtual sdl::V1_0::prolife::CLineChartData OnGetOrderCreationLineChart(
+				const sdl::V1_0::prolife::CGetOrderCreationLineChartGqlRequest& getOrderCreationLineChartRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
 private:
-	sdl::prolife::Workspace::CBarChartData GetItemsCreationBarChart(
+	sdl::V1_0::prolife::CBarChartData GetItemsCreationBarChart(
 				const ::imtgql::CGqlRequest& gqlRequest,
 				const imtbase::IObjectCollection& collection,
-				const sdl::prolife::Workspace::CChartInput& chartInput,
+				const sdl::V1_0::prolife::CChartInput& chartInput,
 				int nameMetaInfoType,
 				QString& errorMessage) const;
 	bool BuildPieChart(
 				const QMap<QPair<QByteArray, QString>, int>& map,
-				sdl::prolife::Workspace::CPieChartData::V1_0& pieChartData) const;
+				sdl::V1_0::prolife::CPieChartData& pieChartData) const;
 	bool BuildBarChart(const QMap<QDate, QMap<QString, int>>& map,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const QString& yLabel,
-				sdl::prolife::Workspace::CBarChartData::V1_0& barChartData) const;
+				sdl::V1_0::prolife::CBarChartData& barChartData) const;
 	bool BuildLineChart(
 				const QMap<QDate, int>& map,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const QString& yLabel,
-				sdl::prolife::Workspace::CLineChartData::V1_0& lineChartData) const;
+				sdl::V1_0::prolife::CLineChartData& lineChartData) const;
 	bool JoinGroupFilter(const imtgql::IGqlRequest& gqlRequest, iprm::CParamsSet& filterParam) const;
 	uint FNV1A(const QByteArray& data) const;
 	QString GenerateColorFromString(const QString& text) const;
 	void AddFieldFilter(iprm::CParamsSet& paramsSet, const imtbase::IComplexCollectionFilter::FieldFilter& fieldFilter) const;
-	sdl::prolife::Workspace::CChartSegment::V1_0 CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
-	sdl::prolife::Workspace::CBarChartData BuildProductUsageBarChart(
+	sdl::V1_0::prolife::CChartSegment CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
+	sdl::V1_0::prolife::CBarChartData BuildProductUsageBarChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
-	sdl::prolife::Workspace::CPieChartData BuildProductUsagePieChart(
+	sdl::V1_0::prolife::CPieChartData BuildProductUsagePieChart(
 				const imtbase::IObjectCollection& collection,
 				int productNameMetaInfoType,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
-	sdl::prolife::Workspace::CPieChartData BuildProductByCustomerPieChart(
+	sdl::V1_0::prolife::CPieChartData BuildProductByCustomerPieChart(
 				const imtbase::IObjectCollection& collection,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
 	void AggregateByTime(
@@ -136,13 +136,13 @@ private:
 				const std::function<void(const QDate& start, const QDate& end)>& fn) const;
 	void PrepareFilters(
 				iprm::CParamsSet& paramsSet,
-				const sdl::prolife::Workspace::CChartInput& input,
+				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				bool joinGroupFilter,
 				std::optional<bool> internalUse,
 				std::optional<bool> inUse,
 				const TimeFilterType& timeFilterType) const;
-	void ExtractTimeUnitFromInput(const sdl::prolife::Workspace::CChartInput& input, imtbase::ITimeFilterParam::TimeUnit& unit, imtbase::ITimeFilterParam::InterpretationMode& timeMode) const;
+	void ExtractTimeUnitFromInput(const sdl::V1_0::prolife::CChartInput& input, imtbase::ITimeFilterParam::TimeUnit& unit, imtbase::ITimeFilterParam::InterpretationMode& timeMode) const;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);

@@ -4,10 +4,10 @@
 // ImtCore includes
 #include <imtdoc/IDocumentService.h>
 #include <imtdoc/IDocumentServiceEventHandler.h>
-#include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentService.h>
+#include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentService_fwd.h>
 
 // ControlsGallery includes
-#include <prolifesdl/SDL/1.0/CPP/DeviceCollectionDocumentService.h>
+#include <prolifesdl/SDL/1.0/CPP/DeviceCollectionDocumentService_fwd.h>
 
 
 namespace prolifegql
@@ -15,10 +15,10 @@ namespace prolifegql
 
 
 class CDeviceCollectionDocumentServiceComp: 
-			public sdl::prolife::DeviceCollectionDocumentService::CGraphQlHandlerCompBase
+			public sdl::V1_0::prolife::CDeviceCollectionDocumentServiceGqlHandlerCompBase
 {
 public:
-	typedef sdl::prolife::DeviceCollectionDocumentService::CGraphQlHandlerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CDeviceCollectionDocumentServiceGqlHandlerCompBase BaseClass;
 
 	I_BEGIN_COMPONENT(CDeviceCollectionDocumentServiceComp)
 		I_ASSIGN(m_documentServiceCompPtr, "CollectionDocumentService", "Collection document manager", false, "CollectionDocumentService");
@@ -28,27 +28,27 @@ public:
 	I_END_COMPONENT
 
 protected:
-	// reimplemented (sdl::prolife::DeviceCollectionDocumentService::CGraphQlHandlerCompBase)
-	virtual sdl::prolife::Sensors::CDeviceData OnGetDeviceRepresentation(
-				const sdl::prolife::DeviceCollectionDocumentService::CGetDeviceRepresentationGqlRequest& getDeviceRepresentationRequest,
+	// reimplemented (sdl::V1_0::prolife::CDeviceCollectionDocumentServiceGqlHandlerCompBase)
+	virtual sdl::V1_0::prolife::CDeviceData OnGetDeviceRepresentation(
+				const sdl::V1_0::prolife::CGetDeviceRepresentationGqlRequest& getDeviceRepresentationRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus OnUpdateDeviceFromRepresentation(
-				const sdl::prolife::DeviceCollectionDocumentService::CUpdateDeviceFromRepresentationGqlRequest& updateDeviceFromRepresentationRequest,
+	virtual sdl::V1_0::imtbase::CDocumentOperationStatus OnUpdateDeviceFromRepresentation(
+				const sdl::V1_0::prolife::CUpdateDeviceFromRepresentationGqlRequest& updateDeviceFromRepresentationRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CIotDeviceData OnGetIotDeviceRepresentation(
-				const sdl::prolife::DeviceCollectionDocumentService::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
+	virtual sdl::V1_0::prolife::CIotDeviceData OnGetIotDeviceRepresentation(
+				const sdl::V1_0::prolife::CGetIotDeviceRepresentationGqlRequest& getIotDeviceRepresentationRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::imtbase::CollectionDocumentService::CDocumentOperationStatus OnUpdateIotDeviceFromRepresentation(
-				const sdl::prolife::DeviceCollectionDocumentService::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
+	virtual sdl::V1_0::imtbase::CDocumentOperationStatus OnUpdateIotDeviceFromRepresentation(
+				const sdl::V1_0::prolife::CUpdateIotDeviceFromRepresentationGqlRequest& updateIotDeviceFromRepresentationRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
 private:
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
-	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::prolife::Sensors::CSoftwareBindingInfo::V1_0& softwareInfo) const;
+	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const;
 
 private:
 	I_REF(imtdoc::IDocumentService, m_documentServiceCompPtr);

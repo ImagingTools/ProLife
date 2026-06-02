@@ -1,4 +1,5 @@
 #include <prolifegql/CSoftwareProductCollectionControllerComp.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses.h>
 
 
 // ACF includes
@@ -25,27 +26,20 @@ namespace prolifegql
 
 // protected methods
 
-sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerComp::OnGetObjectVisualStatus(
-	const sdl::imtbase::ImtCollection::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+sdl::V1_0::imtbase::CVisualStatus CSoftwareProductCollectionControllerComp::OnGetObjectVisualStatus(
+	const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
 	if (!m_objectCollectionCompPtr.IsValid()){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CSoftwareProductCollectionControllerComp");
-		return sdl::imtbase::ImtCollection::CVisualStatus();
+		return sdl::V1_0::imtbase::CVisualStatus();
 	}
 	
-	sdl::imtbase::ImtCollection::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	sdl::V1_0::imtbase::CVisualStatus response = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
 	if (!errorMessage.isEmpty()){
-		return sdl::imtbase::ImtCollection::CVisualStatus();
+		return sdl::V1_0::imtbase::CVisualStatus();
 	}
-	
-	if (!retVal.Version_1_0){
-		I_CRITICAL();
-		
-		return retVal;
-	}
-	sdl::imtbase::ImtCollection::CVisualStatus::V1_0& response = *retVal.Version_1_0;
 	
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(*response.objectId, dataPtr)){
@@ -74,7 +68,7 @@ sdl::imtbase::ImtCollection::CVisualStatus CSoftwareProductCollectionControllerC
 		}
 	}
 	
-	return retVal;
+	return response;
 }
 
 
@@ -171,15 +165,15 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 }
 
 
-// reimplemented (sdl::prolife::Licenses::CSoftwareProductCollectionControllerCompBase)
+// reimplemented (sdl::V1_0::prolife::CSoftwareProductCollectionControllerCompBase)
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const imtbase::IObjectCollectionIterator& objectCollectionIterator,
-	const sdl::prolife::Licenses::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
-	sdl::prolife::Licenses::CSoftwareProductItem::V1_0& representationObject,
+	const sdl::V1_0::prolife::CSoftwareProductsListGqlRequest& softwareProductsListRequest,
+	sdl::V1_0::prolife::CSoftwareProductItem& representationObject,
 	QString& errorMessage) const
 {
-	sdl::prolife::Licenses::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
+	sdl::V1_0::prolife::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
 	
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
 	
@@ -231,12 +225,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 	QString scheme = "applink";
 	if (requestInfo.items.isDeliveryIdLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString().toUtf8();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Orders/Order");
 		if (!(*objectLink.id).isEmpty()){
@@ -248,12 +242,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 	
 	if (requestInfo.items.isPurchaseIdLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_ORDER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Order");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PURCHASE_ID).toString().toUtf8();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Orders/Order");
 		if (!(*objectLink.id).isEmpty()){
@@ -267,12 +261,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	if (requestInfo.items.isHardwareLinkRequested){
 		QJsonArray hardwareIds = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_ID).toJsonArray();
 		if (hardwareIds.size() == 1){
-			sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+			sdl::V1_0::imtbase::CObjectLink objectLink;
 			objectLink.id = hardwareIds.at(0).toString().toUtf8();
 			objectLink.typeId = QByteArrayLiteral("Device");
 			objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_HARDWARE_MAC_ADDRESS).toString();
 	
-			sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+			sdl::V1_0::imtbase::CUrlParam urlParam;
 			urlParam.scheme = scheme;
 			urlParam.path = QStringLiteral("Devices/Device");
 			if (!(*objectLink.id).isEmpty()){
@@ -321,12 +315,12 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::imtbase::ImtBaseTypes::CObjectLink::V1_0 objectLink;
+		sdl::V1_0::imtbase::CObjectLink objectLink;
 		objectLink.id = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
 		objectLink.typeId = QByteArrayLiteral("Account");
 		objectLink.name = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_CUSTOMER_NAME).toString();
 
-		sdl::imtbase::ImtBaseTypes::CUrlParam::V1_0 urlParam;
+		sdl::V1_0::imtbase::CUrlParam urlParam;
 		urlParam.scheme = scheme;
 		urlParam.path = QStringLiteral("Accounts/Account");
 		if (!(*objectLink.id).isEmpty()){
@@ -398,7 +392,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 
 istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjectFromRepresentation(
-	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareProductDataRepresentation,
+	const sdl::V1_0::prolife::CSoftwareProductData& softwareProductDataRepresentation,
 	QByteArray& newObjectId,
 	QString& errorMessage) const
 {
@@ -458,7 +452,7 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 }
 
 
-void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::prolife::Licenses::CLicenseTreeNode::V1_0& node) const
+void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::V1_0::prolife::CLicenseTreeNode& node) const
 {
 	if (!node.id.HasValue()){
 		return;
@@ -485,7 +479,7 @@ void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::pro
 	node.boundCount = boundCount;
 
 	if (node.children.HasValue()){
-		QList<sdl::prolife::Licenses::CLicenseTreeNode::V1_0> childList = node.children.GetValue().ToList();
+		QList<sdl::V1_0::prolife::CLicenseTreeNode> childList = node.children.GetValue().ToList();
 		for (int i = 0; i < childList.size(); ++i){
 			PopulateBoundCountInTree(childList[i]);
 		}
@@ -497,8 +491,8 @@ void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::pro
 
 bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
-	const sdl::prolife::Licenses::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
-	sdl::prolife::Licenses::CSoftwareProductData::V1_0& representationPayload,
+	const sdl::V1_0::prolife::CSoftwareProductItemGqlRequest& softwareProductItemRequest,
+	sdl::V1_0::prolife::CSoftwareProductData& representationPayload,
 	QString& errorMessage) const
 {
 	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&data);
@@ -509,16 +503,16 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		return false;
 	}
 	
-	sdl::prolife::Licenses::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
-	if (!arguments.input.Version_1_0){
+	sdl::V1_0::prolife::SoftwareProductItemRequestArguments arguments = softwareProductItemRequest.GetRequestedArguments();
+	if (!arguments.input){
 		I_CRITICAL();
 		
 		return false;
 	}
 	
 	QByteArray id;
-	if (arguments.input.Version_1_0->id){
-		id = *arguments.input.Version_1_0->id;
+	if (arguments.input->id){
+		id = *arguments.input->id;
 	}
 	
 	representationPayload.id = (id);
@@ -585,7 +579,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	// Build hierarchical license tree from UserActions
 	if (m_userActionManagerCompPtr.IsValid()){
 		QString treeError;
-		sdl::prolife::Licenses::CLicenseTreeNode::V1_0 rootNode = prolifedata::BuildLicenseTreeFromActions(
+		sdl::V1_0::prolife::CLicenseTreeNode rootNode = prolifedata::BuildLicenseTreeFromActions(
 			id,
 			*m_objectCollectionCompPtr.GetPtr(),
 			*m_userActionManagerCompPtr.GetPtr(),
@@ -607,7 +601,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 // private methods
 
 bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
-	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& representation,
+	const sdl::V1_0::prolife::CSoftwareProductData& representation,
 	istd::IChangeable& object,
 	QByteArray& objectId,
 	QString& errorMessage) const
@@ -961,7 +955,7 @@ void CSoftwareProductCollectionControllerComp::OnComponentCreated()
 
 bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	const imtgql::CGqlRequest& /*rawGqlRequest*/,
-	const sdl::prolife::Licenses::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
+	const sdl::V1_0::prolife::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
 {
@@ -970,22 +964,22 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		return false;
 	}
 	
-	sdl::prolife::Licenses::SoftwareProductUpdateRequestArguments requestArguments = softwareProductUpdateRequest.GetRequestedArguments();
-	if (!requestArguments.input.Version_1_0){
+	sdl::V1_0::prolife::SoftwareProductUpdateRequestArguments requestArguments = softwareProductUpdateRequest.GetRequestedArguments();
+	if (!requestArguments.input){
 		I_CRITICAL();
 		return false;
 	}
 	
-	if (!requestArguments.input.Version_1_0->item){
+	if (!requestArguments.input->item){
 		I_CRITICAL();
 		return false;
 	}
 	
-	const sdl::prolife::Licenses::CSoftwareProductData::V1_0& softwareData = *requestArguments.input.Version_1_0->item;
+	const sdl::V1_0::prolife::CSoftwareProductData& softwareData = *requestArguments.input->item;
 	
 	QByteArray objectId;
-	if (requestArguments.input.Version_1_0->id){
-		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input.Version_1_0->id;
+	if (requestArguments.input->id){
+		objectId = *softwareProductUpdateRequest.GetRequestedArguments().input->id;
 	}
 	
 	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&object);

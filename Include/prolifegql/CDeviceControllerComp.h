@@ -13,7 +13,7 @@
 
 // ProLife includes
 #include <prolifedata/IHardwareProductBinding.h>
-#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors.h>
+#include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Sensors_fwd.h>
 
 
 namespace prolifegql
@@ -21,10 +21,10 @@ namespace prolifegql
 
 
 class CDeviceControllerCompBase:
-			public sdl::prolife::Sensors::CGraphQlHandlerCompBase
+			public sdl::V1_0::prolife::CSensorsGqlHandlerCompBase
 {
 public:
-	typedef sdl::prolife::Sensors::CGraphQlHandlerCompBase BaseClass;
+	typedef sdl::V1_0::prolife::CSensorsGqlHandlerCompBase BaseClass;
 	
 	I_BEGIN_BASE_COMPONENT(CDeviceControllerCompBase)
 		I_ASSIGN(m_vectorKeyCompPtr, "VectorKey", "Additional key for AES encryption", false, "VectorKey");
@@ -67,20 +67,20 @@ public:
 	I_END_COMPONENT
 
 protected:
-	virtual sdl::prolife::Sensors::CDeviceBindingData OnGetDeviceBinding(const sdl::prolife::Sensors::CGetDeviceBindingGqlRequest& getDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::imtbase::ImtCollection::CUpdatedNotificationPayload OnUpdateDeviceBinding(const sdl::prolife::Sensors::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CTransferLicensesPayload OnTransferLicenses(const sdl::prolife::Sensors::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CCreateLicenseFilePayload OnCreateLicenseFile(const sdl::prolife::Sensors::CCreateLicenseFileGqlRequest& createLicenseFileRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CDecryptLicenseFilePayload OnDecryptLicenseFile(
-				const sdl::prolife::Sensors::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
+	virtual sdl::V1_0::prolife::CDeviceBindingData OnGetDeviceBinding(const sdl::V1_0::prolife::CGetDeviceBindingGqlRequest& getDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual sdl::V1_0::imtbase::CUpdatedNotificationPayload OnUpdateDeviceBinding(const sdl::V1_0::prolife::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual sdl::V1_0::prolife::CTransferLicensesPayload OnTransferLicenses(const sdl::V1_0::prolife::CTransferLicensesGqlRequest& transferLicensesRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual sdl::V1_0::prolife::CCreateLicenseFilePayload OnCreateLicenseFile(const sdl::V1_0::prolife::CCreateLicenseFileGqlRequest& createLicenseFileRequest, const ::imtgql::CGqlRequest& gqlRequest, QString& errorMessage) const override;
+	virtual sdl::V1_0::prolife::CDecryptLicenseFilePayload OnDecryptLicenseFile(
+				const sdl::V1_0::prolife::CDecryptLicenseFileGqlRequest& decryptLicenseFileRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CRequestTransferLicensesPayload OnRequestTransferLicenses(
-				const sdl::prolife::Sensors::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
+	virtual sdl::V1_0::prolife::CRequestTransferLicensesPayload OnRequestTransferLicenses(
+				const sdl::V1_0::prolife::CRequestTransferLicensesGqlRequest& requestTransferLicensesRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
-	virtual sdl::prolife::Sensors::CResetTransferCounterPayload OnResetTransferCounter(
-				const sdl::prolife::Sensors::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
+	virtual sdl::V1_0::prolife::CResetTransferCounterPayload OnResetTransferCounter(
+				const sdl::V1_0::prolife::CResetTransferCounterGqlRequest& resetTransferCounterRequest,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const override;
 
