@@ -44,7 +44,7 @@ bool COrderCollectionControllerComp::CheckProducts(
 		return false;
 	}
 
-	for (const istd::TSharedNullable<sdl::V1_0::prolife::COrderedProduct>& product : products){
+	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : products){
 		QByteArray objectUuid;
 		if (product->id){
 			objectUuid = *product->id;
@@ -379,7 +379,7 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 		products = *orderDataRepresentation.orderProducts;
 	}
 
-	for (const istd::TSharedNullable<sdl::V1_0::prolife::COrderedProduct>& product : products){
+	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : products){
 		QByteArray categoryId;
 		if (product->categoryId){
 			categoryId = *product->categoryId;
@@ -715,7 +715,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	if (orderData.orderProducts){
-		for (const istd::TSharedNullable<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
+		for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
 			bool isNew = false;
 			if (product->isNew){
 				isNew = *product->isNew;
@@ -870,7 +870,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 			// Clear existing roles first (they may have been set by SetCustomerId)
 			rolesCollectionPtr->ResetData();
 
-			for (const istd::TSharedNullable<sdl::V1_0::prolife::COrderCustomerRole>& roleRepresentation : *orderDataRepresentation.customerRoles){
+			for (const istd::TNullableValue<sdl::V1_0::prolife::COrderCustomerRole>& roleRepresentation : *orderDataRepresentation.customerRoles){
 				if (!roleRepresentation){
 					continue;
 				}
@@ -948,7 +948,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 
-	for (const istd::TSharedNullable<sdl::V1_0::prolife::COrderedProduct>& product : products){
+	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : products){
 		istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
 		objectLinkPtr.SetPtr(new imtbase::CObjectLink());
 
