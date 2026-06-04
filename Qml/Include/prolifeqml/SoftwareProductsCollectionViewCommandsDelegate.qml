@@ -18,20 +18,13 @@ DocumentCollectionViewDelegate {
 		
 		let createLicenseFileIsEnabled = isEnabled;
 		if (createLicenseFileIsEnabled){
-			let deviceId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_hardwareId, selection[0]);
+			// TODO: deviceId invalid!!
+			let deviceId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_hardwareLink, selection[0]);
 			let licenseNumber = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, selection[0]);
 			
 			createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
 		}
-		
-		let openOrderEnabled = isEnabled;
-		if (openOrderEnabled){
-			let orderUuid = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, selection[0]);
-			if (orderUuid == "undefined" || orderUuid == ""){
-				openOrderEnabled = false;
-			}
-		}
-		
+
 		let splitEnabled = isEnabled;
 		if (splitEnabled){
 			let isMultiple = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_isMultiple, selection[0]);
@@ -46,7 +39,6 @@ DocumentCollectionViewDelegate {
 		let revokeEnabled = isEnabled;
 		
 		if(commandsController){
-			commandsController.setCommandIsEnabled("OpenOrder", openOrderEnabled);
 			commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
 			commandsController.setCommandIsEnabled("Split", splitEnabled);
 			commandsController.setCommandIsEnabled("Revoke", revokeEnabled);
@@ -82,15 +74,7 @@ DocumentCollectionViewDelegate {
 	}
 	
 	onCommandActivated: {
-		if (commandId === "OpenOrder"){
-			let indexes = container.collectionView.table.getSelectedIndexes();
-			let elementsModel = container.collectionView.table.elements;
-			let orderUuid = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_orderUuid, indexes[0]);
-			if (orderUuid !== ""){
-				MainDocumentService.openDocument("Orders", orderUuid, "Order")
-			}
-		}
-		else if (commandId === "Split"){
+		if (commandId === "Split"){
 			let indexes = container.collectionView.table.getSelectedIndexes();
 			if (indexes.length === 0){
 				return;

@@ -79,7 +79,7 @@ RemoteCollectionView {
 		paths: ["<hardware-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			let documentManager = MainDocumentService.getDocumentManager(container.collectionId)
+			let documentManager = MainDocumentService.getDocumentService(container.collectionId)
 			if (documentManager){
 				let docManagerView = documentManager.getDocumentManagerActiveView()
 				if (docManagerView){

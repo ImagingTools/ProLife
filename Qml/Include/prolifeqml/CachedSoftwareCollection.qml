@@ -19,10 +19,7 @@ CollectionDataProvider {
 		SoftwareProductItemTypeMetaInfo.s_licenseId,
 		SoftwareProductItemTypeMetaInfo.s_licenseName,
 		SoftwareProductItemTypeMetaInfo.s_serialNumber,
-		SoftwareProductItemTypeMetaInfo.s_customerName,
-		SoftwareProductItemTypeMetaInfo.s_customerId,
 		SoftwareProductItemTypeMetaInfo.s_productUuid,
-		SoftwareProductItemTypeMetaInfo.s_orderUuid,
 		SoftwareProductItemTypeMetaInfo.s_expiration
 	];
 }
