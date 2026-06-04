@@ -16,11 +16,8 @@ RemoteCollectionView {
 
 	documentCollectionFilter: null
 	additionalFieldIds: [
-		SoftwareProductItemTypeMetaInfo.s_orderUuid,
-		SoftwareProductItemTypeMetaInfo.s_macAddress,
 		SoftwareProductItemTypeMetaInfo.s_inUse,
-		SoftwareProductItemTypeMetaInfo.s_productUuid,
-		SoftwareProductItemTypeMetaInfo.s_customerId
+		SoftwareProductItemTypeMetaInfo.s_productUuid
 	]
 	
 	commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
@@ -187,7 +184,7 @@ RemoteCollectionView {
 		paths: ["<software-filter>"]
 		parentSegment: container.collectionId
 		onActivated: {
-			let documentManager = MainDocumentService.getDocumentManager(container.collectionId)
+			let documentManager = MainDocumentService.getDocumentService(container.collectionId)
 			if (documentManager){
 				let docManagerView = documentManager.getActiveView()
 				if (docManagerView){

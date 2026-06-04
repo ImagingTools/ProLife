@@ -257,7 +257,7 @@ DocCollectionViewDelegate {
 							return
 						}
 						
-						let documentManager = MainDocumentService.getDocumentManager(container.collectionId);
+						let documentManager = MainDocumentService.getDocumentService(container.collectionId);
 						if (!documentManager){
 							ModalDialogManager.showErrorDialog(qsTr("Unable to handle command. Document manager is invalid"))
 							return;
