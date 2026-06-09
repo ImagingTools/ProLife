@@ -59,7 +59,7 @@ type LicenseTreeNode {
 	productCount: Integer
 	accountId: ID
 	accountName: String
-	children: [LicenseTreeNode]
+	childrenNodes: [LicenseTreeNode]
 	operationType: String
 	transferredCount: Integer
 	initialCount: Integer

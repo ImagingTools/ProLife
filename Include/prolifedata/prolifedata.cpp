@@ -541,7 +541,7 @@ static void BuildTreeRecursive(
 
 	// Add children to node
 	if (!children.isEmpty()){
-		node.children.Emplace().FromList(children);
+		node.childrenNodes.Emplace().FromList(children);
 	}
 	
 	// Add revoke edges to node
@@ -674,11 +674,11 @@ sdl::V1_0::prolife::CLicenseTreeNode BuildLicenseTreeFromActions(
 					}
 				}
 
-				if (!rootNode.children.HasValue()){
-					rootNode.children.Emplace();
+				if (!rootNode.childrenNodes.HasValue()){
+					rootNode.childrenNodes.Emplace();
 				}
 
-				rootNode.children->append(requestedLicenseNode);
+				rootNode.childrenNodes->append(requestedLicenseNode);
 			}
 		}
 		else{
