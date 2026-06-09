@@ -55,12 +55,12 @@ Item {
 			return true;
 		}
 
-		if (node.m_children && node.m_children.count > 1) {
+		if (node.m_childrenNodes && node.m_childrenNodes.count > 1) {
 			return false;
 		}
 
-		if (node.m_children && node.m_children.count === 1) {
-			return isSingleColumnTree(node.m_children.get(0).item);
+		if (node.m_childrenNodes && node.m_childrenNodes.count === 1) {
+			return isSingleColumnTree(node.m_childrenNodes.get(0).item);
 		}
 
 		return true;
@@ -203,9 +203,9 @@ Item {
 			};
 			
 			// Calculate children layouts
-			if (node.m_children && node.m_children.count > 0) {
-				for (let i = 0; i < node.m_children.count; i++) {
-					let childItem = node.m_children.get(i).item
+			if (node.m_childrenNodes && node.m_childrenNodes.count > 0) {
+				for (let i = 0; i < node.m_childrenNodes.count; i++) {
+					let childItem = node.m_childrenNodes.get(i).item
 					let childLayout = calculateLayout(childItem, level + 1);
 					if (childLayout) {
 						nodeInfo.children.push(childLayout);

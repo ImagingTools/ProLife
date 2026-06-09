@@ -478,13 +478,13 @@ void CSoftwareProductCollectionControllerComp::PopulateBoundCountInTree(sdl::V1_
 
 	node.boundCount = boundCount;
 
-	if (node.children.HasValue()){
-		QList<sdl::V1_0::prolife::CLicenseTreeNode> childList = node.children.GetValue().ToList();
+	if (node.childrenNodes.HasValue()){
+		QList<sdl::V1_0::prolife::CLicenseTreeNode> childList = node.childrenNodes.GetValue().ToList();
 		for (int i = 0; i < childList.size(); ++i){
 			PopulateBoundCountInTree(childList[i]);
 		}
 
-		node.children.Emplace().FromList(childList);
+		node.childrenNodes.Emplace().FromList(childList);
 	}
 }
 
