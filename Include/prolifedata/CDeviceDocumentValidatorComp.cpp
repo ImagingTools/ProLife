@@ -15,7 +15,11 @@ namespace prolifedata
 
 // reimplemented (imtdoc::IDocumentValidator)
 
-bool CDeviceDocumentValidatorComp::ValidateDocumentData(const QByteArray& objectId, const istd::IChangeable& document, QString& errorMessage) const
+bool CDeviceDocumentValidatorComp::ValidateDocumentData(
+			const QByteArray& objectId,
+			const istd::IChangeable& document,
+			QString& errorMessage,
+			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr =
 		dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&document);
