@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6390" Description="ACF"/>
-            <Version Id="1" Number="2306" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6418" Description="ACF"/>
+            <Version Id="1" Number="2408" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -308,7 +308,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="TenantsPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
+        <Element Id="TenantsPage" PackageId="ImtGraphQlVoce" ComponentId="SingleDocumentGqlCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
