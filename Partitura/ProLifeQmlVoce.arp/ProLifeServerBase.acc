@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6397" Description="ACF"/>
-            <Version Id="1" Number="2394" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6435" Description="ACF"/>
+            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -14,7 +14,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -54,11 +54,8 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GqlSubscriberControllers" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
@@ -74,9 +71,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="MigrationController" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="Migrations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife"/>
@@ -126,6 +120,42 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DbType" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="QPSQL"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MigrationController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Migrations"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Password" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PgHostName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PgPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DocumentService" PackageId="" ComponentId="DocumentService">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -167,7 +197,7 @@
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LisaServerConnectionInterface" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/LisaConnectionInterface"/>
@@ -203,7 +233,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -227,7 +257,7 @@
                         <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsDatabaseDelegate"/>
@@ -406,7 +436,7 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
@@ -443,7 +473,7 @@
                         <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/LicenseRepository"/>
@@ -507,8 +537,8 @@
                     <AttributeInfo Id="Timeout" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="1000"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
                     <AttributeInfo Id="UserParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/SmtpUsernameParam"/>
@@ -1402,7 +1432,7 @@
     </ExportedInterfaces>
     <ExportedComponents>
         <Component ExportedId="ConnectionSubscriber" ComponentId="AuthorizableServerFramework/ConnectionSubscriber"/>
-        <Component ExportedId="DatabaseEngine" ComponentId="AuthorizableServerFramework/DatabaseEngine"/>
+        <Component ExportedId="DatabaseEngine" ComponentId="DatabaseEngine"/>
         <Component ExportedId="GroupsModelUpdateBridge" ComponentId="GroupsModelUpdateBridge"/>
         <Component ExportedId="HttpServerFramework" ComponentId="AuthorizableServerFramework/HttpServerFramework"/>
         <Component ExportedId="LisaDatabaseConnector" ComponentId="LisaGQLEngine/LisaDatabaseConnector"/>
