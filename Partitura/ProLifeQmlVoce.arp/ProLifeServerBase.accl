@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6397" Description="ACF"/>
-            <Version Id="1" Number="2394" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6435" Description="ACF"/>
+            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -11,6 +11,7 @@
         <Element ComponentName="AdministrationRepositories" X="725" Y="750" Note=""/>
         <Element ComponentName="AuthorizableServerFramework" X="600" Y="175" Note=""/>
         <Element ComponentName="ContextTypeProviders" X="600" Y="300" Note=""/>
+        <Element ComponentName="DatabaseEngine" X="400" Y="375" Note=""/>
         <Element ComponentName="DocumentService" X="125" Y="450" Note=""/>
         <Element ComponentName="GroupsModelUpdateBridge" X="225" Y="800" Note=""/>
         <Element ComponentName="LisaGQLEngine" X="775" Y="550" Note=""/>
@@ -31,16 +32,6 @@
         <Element ComponentName="UsersModelUpdateBridge" X="300" Y="650" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="ContextTypeProviders">
-            <PositionMap>
-                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
-                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
-                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
-                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
-                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -57,17 +48,23 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Migrations">
+        <EmbededRegistry Id="Subscriptions">
             <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="575" Y="100" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
-                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
-                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
-                <Element ComponentName="MigrationController17_19" X="1050" Y="625" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ContextTypeProviders">
+            <PositionMap>
+                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
+                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
+                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
+                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
+                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
@@ -84,13 +81,17 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Subscriptions">
+        <EmbededRegistry Id="Migrations">
             <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
+                <Element ComponentName="CompositeMigrationController" X="575" Y="100" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
+                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
+                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
+                <Element ComponentName="MigrationController17_19" X="1050" Y="625" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
