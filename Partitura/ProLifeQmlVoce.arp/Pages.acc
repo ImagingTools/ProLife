@@ -23,7 +23,7 @@
                         <Data IsEnabled="true" Value="Icons/Customer"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="false"/>
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
