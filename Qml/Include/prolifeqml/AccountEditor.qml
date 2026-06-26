@@ -17,7 +17,7 @@ ViewBase {
 	
 	property int textInputHeight: 30;
 	
-	property AccountData accountData: model ? model : null;
+	property AccountData accountData: model
 	
 	Component.onCompleted: {
 		groupCollectionDataProvider.updateModel();
@@ -41,11 +41,14 @@ ViewBase {
 	}
 	
 	function updateGui(){
+		if (!accountData){
+			return
+		}
+
 		accountNameInput.text = accountData.m_name;
 		accountDescriptionInput.text = accountData.m_description;
 		emailInput.text = accountData.m_email;
 		customerIdInput.text = accountData.m_customerId;
-		
 		countryInput.text = accountData.m_country;
 		postalCodeInput.text = accountData.m_postalCode;
 		cityInput.text = accountData.m_city;
@@ -68,6 +71,10 @@ ViewBase {
 	}
 	
 	function updateModel(){
+		if (!accountData){
+			return
+		}
+
 		accountData.m_name = accountNameInput.text;
 		accountData.m_description = accountDescriptionInput.text;
 		accountData.m_email = emailInput.text;

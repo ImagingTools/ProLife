@@ -20,7 +20,7 @@ ViewBase {
 	property TreeItemModel softwaresModel: CachedSoftwareCollection.collectionModel;
 	property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
 	
-	property OrderData orderData: model ? model : null;
+	property OrderData orderData: model
 	property bool isNew: false
 
 	Component.onCompleted: {
@@ -95,6 +95,10 @@ ViewBase {
 	}
 	
 	function updateGui(){
+		if (!orderData){
+			return
+		}
+
 		instanceIdInput.text = orderData.m_orderId;
 		purchaseIdInput.text = orderData.m_purchaseId;
 		descriptionInput.text = orderData.m_description;
@@ -145,6 +149,10 @@ ViewBase {
 	}
 	
 	function updateModel(){
+		if (!orderData){
+			return
+		}
+
 		orderData.m_orderId = instanceIdInput.text ;
 		orderData.m_purchaseId = purchaseIdInput.text;
 		orderData.m_description = descriptionInput.text;
@@ -176,23 +184,35 @@ ViewBase {
 		if (customerRoles){
 			customerRoles.clear();
 
-			// Ordering party role (mandatory)
-			if (selectedAccountId !== ""){
-				customerRoles.insert(0, {
-					"roleType": "OrderingParty",
-					"customerId": selectedAccountId
-				});
+			let appendCustomerRole = function(roleType, customerId){
+				if (customerId === ""){
+					return;
+				}
+
+				let roleComp = orderData.createElement("m_customerRoles");
+				if (!roleComp){
+					console.error("Unable to create customer role component for OrderData")
+					return;
+				}
+
+				let roleItem = roleComp.createObject(orderEditorContainer);
+				if (!roleItem){
+					console.error("Unable to create customer role item for OrderData")
+					return;
+				}
+
+				roleItem.m_roleType = roleType;
+				roleItem.m_customerId = customerId;
+				customerRoles.appendElement(roleItem);
 			}
+
+			// Ordering party role (mandatory)
+			appendCustomerRole("OrderingParty", selectedAccountId)
 
 			// Additional roles
 			for (let i = 0; i < additionalRolesModel.getItemsCount(); i++){
 				let roleCustomerId = additionalRolesModel.getData("customerId", i);
-				if (roleCustomerId !== ""){
-					customerRoles.insert(customerRoles.count, {
-						"roleType": additionalRolesModel.getData("roleType", i),
-						"customerId": roleCustomerId
-					});
-				}
+				appendCustomerRole(additionalRolesModel.getData("roleType", i), roleCustomerId)
 			}
 		}
 	}

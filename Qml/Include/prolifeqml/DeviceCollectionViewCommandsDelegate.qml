@@ -226,6 +226,12 @@ DocCollectionViewDelegate {
 		
 		DeviceEditor {
 			id: deviceEditor;
+
+			onRepresentationControllerChanged: {
+				if (representationController){
+					representationController.updateRepresentationFromDocument()
+				}
+			}
 			
 			commandsControllerComp:
 				Component { GqlBasedCommandsController {

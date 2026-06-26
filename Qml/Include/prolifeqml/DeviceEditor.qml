@@ -14,7 +14,7 @@ import prolifeOrdersSdl 1.0
 import imtlicProductsSdl 1.0
 import imtlicLicensesSdl 1.0
 
-ViewBase {
+DocumentViewBase {
 	id: deviceEditorContainer;
 	
 	anchors.fill: parent;
