@@ -376,18 +376,21 @@ DocumentViewBase {
 			GroupHeaderView {
 				width: parent.width;
 				
+				objectName: "DeviceInformationHeader";
 				title: qsTr("Device Information");
 				groupView: deviceInformationGroup;
 			}
 			
 			GroupElementView {
 				id: deviceInformationGroup;
+				objectName: "DeviceInformationGroup";
 				
 				width: parent.width;
 				
 				ComboBoxElementView {
 					id: productCB;
-					
+					objectName: "DeviceTypeCombo";
+
 					name: qsTr("Device Type");
 					
 					model: CachedProductCollection.hardwareProductsModel;
@@ -426,6 +429,7 @@ DocumentViewBase {
 				
 				ComboBoxElementView {
 					id: configurationCB;
+					objectName: "HardwareConfigurationCombo";
 					name: qsTr("Hardware Configuration");
 					nameId: LicenseItemTypeMetaInfo.s_licenseName
 					KeyNavigation.tab: articleText;
@@ -452,6 +456,7 @@ DocumentViewBase {
 				
 				TextInputElementView {
 					id: articleText
+					objectName: "ArticleInput"
 					name: qsTr("Article")
 					readOnly: true
 					KeyNavigation.tab: descriptionInput
@@ -460,7 +465,8 @@ DocumentViewBase {
 				
 				TextInputElementView {
 					id: descriptionInput;
-					
+					objectName: "DescriptionInput";
+
 					name: qsTr("Description");
 					placeHolderText: qsTr("Enter description");
 					
@@ -474,7 +480,8 @@ DocumentViewBase {
 				
 				TextInputElementView {
 					id: serialNumberInput;
-					
+					objectName: "SerialNumberInput";
+
 					name: qsTr("Serial Number");
 					
 					placeHolderText: qsTr("Enter serial number");
@@ -498,7 +505,8 @@ DocumentViewBase {
 				
 				MacAddressElementView {
 					id: macAddressInput;
-					
+					objectName: "MacAddressInput";
+
 					onEditingFinished: {
 						if (!deviceEditorContainer.deviceData){
 							return
@@ -519,6 +527,7 @@ DocumentViewBase {
 			
 			GroupHeaderView {
 				id: additionalHeaderView;
+				objectName: "AdditionalInformationHeader";
 				
 				width: parent.width;
 				
@@ -528,12 +537,14 @@ DocumentViewBase {
 			
 			GroupElementView {
 				id: additionalInformationGroup;
+				objectName: "AdditionalInformationGroup";
 				
 				width: parent.width;
 				
 				FilterableComboBoxElementView {
 					id: orderCB;
-					
+					objectName: "OrderCombo";
+
 					name: qsTr("Order-ID");
 					
 					nameId: OrderItemTypeMetaInfo.s_orderId;
@@ -565,7 +576,8 @@ DocumentViewBase {
 				
 				ClearableComboBoxElementView {
 					id: statusCB;
-					
+					objectName: "ProductionStatusCombo";
+
 					name: qsTr("Production Status");
 					model: productionStatus.m_statusModel;
 					nameId: "m_name";
@@ -588,7 +600,8 @@ DocumentViewBase {
 				
 				TextInputElementView {
 					id: projectInput;
-					
+					objectName: "ProjectInput";
+
 					name: qsTr("Project");
 					placeHolderText: qsTr("Enter the project");
 					
@@ -604,6 +617,7 @@ DocumentViewBase {
 				
 				SwitchElementView {
 					id: internalUseSwitchElementView
+					objectName: "InternalUseSwitch"
 					name: qsTr("Internal Use");
 					description: qsTr("Activate if the sensor is for internal use");
 					readOnly: deviceEditorContainer.readOnly
@@ -616,6 +630,7 @@ DocumentViewBase {
 			GroupHeaderView {
 				width: parent.width;
 				
+				objectName: "LicenseInformationHeader";
 				groupView: licenseInformationGroup;
 				title: qsTr("License Information");
 				visible: licenseInformationGroup.visible
@@ -623,10 +638,12 @@ DocumentViewBase {
 			
 			GroupElementView {
 				id: licenseInformationGroup
+				objectName: "LicenseInformationGroup"
 				width: parent.width
 				
 				TableElementView {
 					id: licenseInformationTable
+					objectName: "LicenseInformationTable"
 					
 					TreeItemModel {
 						id: headersModel

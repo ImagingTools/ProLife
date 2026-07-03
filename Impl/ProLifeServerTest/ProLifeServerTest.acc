@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="6435" Description="ACF"/>
+            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description></Description>
+    <Keywords></Keywords>
+    <ElementsList>
+        <Element Id="Application" PackageId="ImtCoreVoce" ComponentId="ConsoleApplicationSqlLogFramework">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ApplicationName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ApplicationType" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Server"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CompanyName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ImagingTools"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>ProLifeServerBase/ConnectionSubscriber</Value>
+                                <Value>ProLifeServerBase/LisaLoginStatusSubscriberController</Value>
+                                <Value>ProLifeServerBase/HttpServerFramework</Value>
+                                <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
+                                <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
+                                <Value>ProLifeServerBase/DatabaseEngine</Value>
+                                <Value>ProLifeServerBase/UsersModelUpdateBridge</Value>
+                                <Value>ProLifeServerBase/RolesModelUpdateBridge</Value>
+                                <Value>ProLifeServerBase/GroupsModelUpdateBridge</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogLocationType" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="104"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogPath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerTestLog.txt"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="MainVersionId" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="2022"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ProductName" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SqlLogFilePath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerTestLog.sqlite"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProLifeServerBase" PackageId="ProLifeQmlVoce" ComponentId="ProLifeServerBase">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife_test"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HttpPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="17778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaHttpPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="17776"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="17776"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/Log"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LogPath" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/LogFilePath"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaHttpPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="17788"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaWebSocketPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="18788"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SettingsFilePath" Type="String" ExportId="">
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerTestSettings.xml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="VersionInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketPort" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="18778"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SingletonDocApplication" PackageId="QtGuiPck" ComponentId="SingletonDocApplication">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Application" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/ApplicationInfo"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="VersionInfo" PackageId="ProLifeVoce" ComponentId="VersionInfo">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="VersionIdDesc" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="User Version"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="ibase::IApplication" ComponentId="SingletonDocApplication"/>
+        <Interface InterfaceId="imtlic::IProductInfo" ComponentId="ProLifeServerBase"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="SingletonDocApplication"/>
+    </ExportedInterfaces>
+    <ExportedComponents/>
+</Acf>

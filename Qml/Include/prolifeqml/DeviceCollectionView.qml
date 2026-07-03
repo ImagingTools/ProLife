@@ -81,7 +81,7 @@ RemoteCollectionView {
 		onActivated: {
 			let documentManager = MainDocumentService.getDocumentService(container.collectionId)
 			if (documentManager){
-				let docManagerView = documentManager.getDocumentManagerActiveView()
+				let docManagerView = documentManager.getDocumentServiceActiveView()
 				if (docManagerView){
 					docManagerView.setCurrentTabIndex(0)
 				}
