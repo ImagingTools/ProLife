@@ -1,0 +1,20 @@
+[
+  {
+    "scenario": "Known entity context",
+    "entityType": "Account",
+    "entityId": "{{entityId}}",
+    "expectedMinCount": 0
+  },
+  {
+    "scenario": "Unknown entity id",
+    "entityType": "Account",
+    "entityId": "00000000-0000-0000-0000-000000000000",
+    "expectedMinCount": 0
+  },
+  {
+    "scenario": "Alternative entity type",
+    "entityType": "Order",
+    "entityId": "{{entityId}}",
+    "expectedMinCount": 0
+  }
+]

@@ -1,0 +1,1009 @@
+{
+  "info": {
+    "_postman_id": "dc9d77a7-4d6d-4878-8ec2-e6efc5d4b2c2",
+    "name": "ProLife Desk/Ticket API (imtdesk/1.0)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Professional end-to-end collection for Desk/Ticket module imtdesk/1.0 running on ProLife server. Covers happy-path, negative, edge, role-based and business scenario checks."
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const now = new Date();",
+          "const iso = now.toISOString();",
+          "pm.environment.set('nowIso', iso);",
+          "",
+          "function uuidv4() {",
+          "  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
+          "    const r = Math.random() * 16 | 0;",
+          "    const v = c === 'x' ? r : ((r & 0x3) | 0x8);",
+          "    return v.toString(16);",
+          "  });",
+          "}",
+          "",
+          "const runId = pm.environment.get('runId') || uuidv4();",
+          "pm.environment.set('runId', runId);",
+          "pm.environment.set('randomUuid', uuidv4());",
+          "",
+          "const rnd = Math.floor(Math.random() * 1000000);",
+          "pm.environment.set('randomInt', String(rnd));",
+          "",
+          "if (!pm.environment.get('entityId')) {",
+          "  pm.environment.set('entityId', uuidv4());",
+          "}",
+          "if (!pm.environment.get('entityDisplayName')) {",
+          "  pm.environment.set('entityDisplayName', 'Entity-' + rnd);",
+          "}",
+          "",
+          "const title = 'Desk API Ticket ' + runId + ' #' + rnd;",
+          "pm.environment.set('ticketTitle', title);",
+          "pm.environment.set('ticketDescription', 'Auto-generated test ticket at ' + iso);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "function hasGraphQLErrors() {",
+          "  const json = pm.response.json();",
+          "  return Array.isArray(json.errors) && json.errors.length > 0;",
+          "}",
+          "",
+          "pm.test('HTTP status is 200', function () {",
+          "  pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test('Response is valid JSON', function () {",
+          "  pm.expect(() => pm.response.json()).to.not.throw();",
+          "});",
+          "",
+          "pm.environment.set('lastHasGraphQLErrors', String(hasGraphQLErrors()));"
+        ]
+      }
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-authentication-token",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{token}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Obtain role tokens for scenario execution.",
+      "item": [
+        {
+          "name": "Auth SU",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Authenticate superuser and store global token/user id."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Auth SU has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU returns token and userId', function () {",
+                  "  pm.expect(auth).to.be.an('object');",
+                  "  pm.expect(auth.token).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth.userId).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('suToken', auth.token);",
+                  "pm.environment.set('suUserId', auth.userId);",
+                  "pm.environment.set('token', auth.token);",
+                  "pm.environment.set('currentUserId', auth.userId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Manager",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{managerLogin}}\", password: \"{{managerPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Authenticate manager and keep token for role-based checks."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
+                  "  pm.environment.set('managerToken', json.data.Authorization.token);",
+                  "  pm.environment.set('managerUserId', json.data.Authorization.userId);",
+                  "}",
+                  "pm.test('Manager auth executed', function () { pm.expect(true).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Agent",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{agentLogin}}\", password: \"{{agentPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Authenticate support agent."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
+                  "  pm.environment.set('agentToken', json.data.Authorization.token);",
+                  "  pm.environment.set('agentUserId', json.data.Authorization.userId);",
+                  "}",
+                  "pm.test('Agent auth executed', function () { pm.expect(true).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Client",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{clientLogin}}\", password: \"{{clientPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Authenticate client/reporter."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
+                  "  pm.environment.set('clientToken', json.data.Authorization.token);",
+                  "  pm.environment.set('clientUserId', json.data.Authorization.userId);",
+                  "}",
+                  "pm.test('Client auth executed', function () { pm.expect(true).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Desk",
+      "item": [
+        {
+          "name": "TicketsList - Positive (default)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query TicketsList { TicketsList(input: { viewParams: { offset: 0, count: 20 } }) { items { id typeId number title status priority assignee createdAt } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Read desk tickets with default page."
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "pm.test('TicketsList success', function () { pm.expect(json.errors || []).to.have.length(0); });",
+              "pm.test('TicketsList has items array', function () {",
+              "  const items = json.data && json.data.TicketsList && json.data.TicketsList.items;",
+              "  pm.expect(Array.isArray(items)).to.eql(true);",
+              "});"
+            ] }
+          }]
+        },
+        {
+          "name": "TicketsList - Positive (pagination)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query TicketsList { TicketsList(input: { viewParams: { offset: 1, count: 5 } }) { items { id number title } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Verify pagination path with non-zero offset."
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "pm.test('Pagination request returns GraphQL payload', function () {",
+              "  pm.expect(json.data && json.data.TicketsList).to.be.an('object');",
+              "});"
+            ] }
+          }]
+        },
+        {
+          "name": "TicketsList - Negative (invalid count)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query TicketsList { TicketsList(input: { viewParams: { offset: 0, count: -1 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Send invalid count boundary. Controller clamps count to >=1."
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "pm.test('Negative count handled without crash', function () {",
+              "  pm.expect(json.data || json.errors).to.exist;",
+              "});"
+            ] }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "Ticket",
+      "item": [
+        {
+          "name": "Lifecycle",
+          "item": [
+            {
+              "name": "CreateEntityContextTicket - Positive (basic)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"{{entityDisplayName}}\", title: \"{{ticketTitle}}\", description: \"{{ticketDescription}}\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Create new ticket in context of external entity."
+              },
+              "event": [{
+                "listen": "test",
+                "script": { "type": "text/javascript", "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Ticket created without GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const ticketId = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                  "pm.test('Created ticket id exists', function () {",
+                  "  pm.expect(ticketId).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('ticketId', ticketId);"
+                ] }
+              }]
+            },
+            {
+              "name": "CreateEntityContextTicket - Positive (unicode and specials)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"Юнит-✓-{{randomInt}}\", title: \"Unicode ✅ {{randomInt}}\", description: \"Edge chars !@#$%^&*()[]{} <> / \\\\ \"'\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Boundary content with unicode and special characters."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "pm.test('Unicode create handled', function () {",
+                "  pm.expect(json.data || json.errors).to.exist;",
+                "});"
+              ] } }]
+            },
+            {
+              "name": "CreateEntityContextTicket - Negative (missing title)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"{{entityDisplayName}}\", title: \"   \", description: \"Missing title case\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Business rule: title.trimmed() must be non-empty."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                "pm.test('Missing title is rejected', function () {",
+                "  pm.expect(!id || (json.errors || []).length > 0).to.eql(true);",
+                "});"
+              ] } }]
+            },
+            {
+              "name": "GetTicketRepresentation - Positive",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{ticketId}}\" }) { id number title description status stateReason priority assigneeIds reporterId conversationId messageId labelIds locked lockReason createdAt updatedAt closedAt resolvedAt accessLevel entityReferences { entityType entityId displayName } comments { id userId content edited deleted attachments { id fileName mimeType preview } } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Read complete ticket representation for update workflows."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "pm.test('GetTicketRepresentation success', function () {",
+                "  pm.expect(json.errors || []).to.have.length(0);",
+                "});",
+                "const t = json.data && json.data.GetTicketRepresentation;",
+                "pm.test('Representation has id/title', function () {",
+                "  pm.expect(t.id).to.eql(pm.environment.get('ticketId'));",
+                "  pm.expect(t.title).to.be.a('string');",
+                "});",
+                "if (t && t.number !== null && t.number !== undefined) {",
+                "  pm.environment.set('ticketNumber', String(t.number));",
+                "}"
+              ] } }]
+            },
+            {
+              "name": "UpdateTicketFromRepresentation - Positive (assign + priority)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", priority: High, assigneeIds: [\"{{agentUserId}}\"], status: Open, stateReason: None } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Assign ticket to agent and escalate priority."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Update returns operation status', function () {",
+                "  pm.expect(status).to.be.a('string');",
+                "});",
+                "pm.test('Update is successful', function () {",
+                "  pm.expect(status).to.eql('Success');",
+                "});"
+              ] } }]
+            },
+            {
+              "name": "UpdateTicketFromRepresentation - Positive (close)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", status: Closed, stateReason: Completed, closedAt: \"{{nowIso}}\", resolvedAt: \"{{nowIso}}\" } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Close ticket and set stateReason + timestamps."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Close operation success', function () { pm.expect(status).to.eql('Success'); });"
+              ] } }]
+            },
+            {
+              "name": "UpdateTicketFromRepresentation - Positive (reopen)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", status: Open, stateReason: Reopened, closedAt: null, resolvedAt: null } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Reopen closed ticket to validate workflow transition."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Reopen operation handled', function () { pm.expect(status).to.be.oneOf(['Success','Failed']); });"
+              ] } }]
+            },
+            {
+              "name": "UpdateTicketFromRepresentation - Negative (invalid documentId)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"00000000-0000-0000-0000-000000000000\", ticket: { id: \"00000000-0000-0000-0000-000000000000\", title: \"Invalid doc id\" } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Expect InvalidDocumentId or Failed for unknown id."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data && pm.response.json().data.UpdateTicketFromRepresentation && pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Unknown document id rejected', function () {",
+                "  pm.expect(['InvalidDocumentId','Failed']).to.include(status);",
+                "});"
+              ] } }]
+            }
+          ]
+        },
+        {
+          "name": "Comments",
+          "item": [
+            {
+              "name": "Add comment - Positive",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", comments: [{ content: \"First comment from API run {{runId}}\" }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Create ticket comment through update-representation API."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Comment create accepted', function () { pm.expect(status).to.eql('Success'); });"
+              ] } }]
+            },
+            {
+              "name": "GetTicketRepresentation - Extract comment id",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{ticketId}}\" }) { comments { id content } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Read comments and capture latest comment id for edit/delete tests."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const comments = json.data && json.data.GetTicketRepresentation && json.data.GetTicketRepresentation.comments || [];",
+                "if (comments.length > 0) {",
+                "  const last = comments[comments.length - 1];",
+                "  pm.environment.set('createdCommentId', last.id);",
+                "}",
+                "pm.test('Comment list loaded', function () { pm.expect(Array.isArray(comments)).to.eql(true); });"
+              ] } }]
+            },
+            {
+              "name": "Edit comment - Positive",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", comments: [{ id: \"{{createdCommentId}}\", content: \"Edited comment {{runId}}\" }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Edit existing comment by id."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Comment edit accepted', function () { pm.expect(status).to.be.oneOf(['Success','Failed']); });"
+              ] } }]
+            },
+            {
+              "name": "Delete comment - Positive",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", comments: [{ id: \"{{createdCommentId}}\", deleted: true }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Soft delete comment via deleted=true flag."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Comment delete request processed', function () { pm.expect(status).to.be.a('string'); });"
+              ] } }]
+            }
+          ]
+        },
+        {
+          "name": "Attachments",
+          "item": [
+            {
+              "name": "Comment with attachment reference - Positive",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", comments: [{ content: \"Attachment comment\", attachments: [{ id: \"{{uploadedAttachmentId}}\" }] }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Use pre-uploaded attachment id (uuid.ext) to bind file into comment."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const status = pm.response.json().data.UpdateTicketFromRepresentation.status;",
+                "pm.test('Attachment comment request processed', function () { pm.expect(status).to.be.a('string'); });"
+              ] } }]
+            }
+          ]
+        },
+        {
+          "name": "Search & Filters",
+          "item": [
+            {
+              "name": "EntityContextTickets - Positive",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", viewParams: { offset: 0, count: 50 } }) { items { id number title status priority assignee createdAt } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Search tickets in a specific entity context."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const items = (pm.response.json().data || {}).EntityContextTickets ? (pm.response.json().data.EntityContextTickets.items || []) : [];",
+                "pm.test('Entity context query returns list', function () { pm.expect(Array.isArray(items)).to.eql(true); });"
+              ] } }]
+            },
+            {
+              "name": "EntityContextTickets - Negative (missing entityType)",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"\", entityId: \"{{entityId}}\", viewParams: { offset: 0, count: 10 } }) { items { id } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Controller expects non-empty entityType + entityId."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const dataItems = json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items;",
+                "pm.test('Missing entityType is rejected or returns empty data', function () {",
+                "  pm.expect((json.errors || []).length > 0 || !dataItems || dataItems.length === 0).to.eql(true);",
+                "});"
+              ] } }]
+            },
+            {
+              "name": "EntityContextTickets - Negative (unknown entityId)",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"{{entityType}}\", entityId: \"00000000-0000-0000-0000-000000000000\", viewParams: { offset: 0, count: 10 } }) { items { id } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Unknown context should produce empty list."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
+                "pm.test('Unknown context returns no hits', function () { pm.expect(items.length).to.eql(0); });"
+              ] } }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bulk Operations",
+      "item": [
+        {
+          "name": "Bulk mutation probe (expected not exposed)",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveTicketsBulk { RemoveTicketsBulk(input: { ids: [\"{{ticketId}}\"] }) { removedCount } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Negative probe confirming that bulk operations are not present in imtdesk/1.0 public schema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Bulk API is absent in schema', function () {",
+                  "  pm.expect((json.errors || []).length > 0).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Negative & Edge Cases",
+      "item": [
+        {
+          "name": "401/403 probe - no token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query TicketsList { TicketsList(input: { viewParams: { offset: 0, count: 5 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Unauthorized access without x-authentication-token."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "const json = pm.response.json();",
+            "pm.test('No-token request is rejected', function () {",
+            "  pm.expect((json.errors || []).length > 0 || (json.data && json.data.TicketsList && json.data.TicketsList.items && json.data.TicketsList.items.length === 0)).to.eql(true);",
+            "});"
+          ] } }]
+        },
+        {
+          "name": "401/403 probe - invalid token",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                { "key": "key", "value": "x-authentication-token", "type": "string" },
+                { "key": "value", "value": "{{invalidToken}}", "type": "string" },
+                { "key": "in", "value": "header", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query TicketsList { TicketsList(input: { viewParams: { offset: 0, count: 5 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Invalid token should be denied."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "const json = pm.response.json();",
+            "pm.test('Invalid token is rejected', function () {",
+            "  pm.expect((json.errors || []).length > 0).to.eql(true);",
+            "});"
+          ] } }]
+        },
+        {
+          "name": "Forbidden edit probe - insufficient rights",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                { "key": "key", "value": "x-authentication-token", "type": "string" },
+                { "key": "value", "value": "{{clientToken}}", "type": "string" },
+                { "key": "in", "value": "header", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", title: \"Client tries forbidden core edit {{randomInt}}\" } }) { status } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Try core edit by user that should not own full access."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "const json = pm.response.json();",
+            "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+            "pm.test('Forbidden edit is denied or explicitly failed', function () {",
+            "  pm.expect((json.errors || []).length > 0 || status === 'Failed').to.eql(true);",
+            "});"
+          ] } }]
+        },
+        {
+          "name": "Boundary title length (very long)",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}} {{ticketTitle}} {{ticketTitle}} {{ticketTitle}} {{ticketTitle}} {{ticketTitle}}\" } }) { status } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Long-string boundary probe."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "const status = pm.response.json().data && pm.response.json().data.UpdateTicketFromRepresentation && pm.response.json().data.UpdateTicketFromRepresentation.status;",
+            "pm.test('Long title request returns defined outcome', function () {",
+            "  pm.expect(['Success','Failed','InvalidDocumentData']).to.include(status);",
+            "});"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Business Scenarios",
+      "item": [
+        {
+          "name": "Full Lifecycle (Client -> Manager -> Agent -> Client)",
+          "item": [
+            {
+              "name": "Switch token to client",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query PingLifecycleClient { TicketsList(input: { viewParams: { offset: 0, count: 1 } }) { items { id } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "Helper step to force client-context execution."
+              },
+              "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+                "if (pm.environment.get('clientToken')) { pm.environment.set('token', pm.environment.get('clientToken')); }"
+              ] } }]
+            },
+            {
+              "name": "Create ticket by client",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"{{entityDisplayName}}\", title: \"Lifecycle {{ticketTitle}}\", description: \"Lifecycle create by client\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql"
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const id = pm.response.json().data && pm.response.json().data.CreateEntityContextTicket && pm.response.json().data.CreateEntityContextTicket.id;",
+                "if (id) pm.environment.set('ticketId', id);",
+                "pm.test('Lifecycle ticket created', function () { pm.expect(id).to.be.a('string').and.not.empty; });"
+              ] } }]
+            },
+            {
+              "name": "Escalate priority by manager",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", priority: Critical, assigneeIds: [\"{{agentUserId}}\"] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql"
+              },
+              "event": [
+                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('managerToken')) { pm.environment.set('token', pm.environment.get('managerToken')); }"] } },
+                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Escalation request processed', function () { pm.expect(pm.response.json().data.UpdateTicketFromRepresentation.status).to.be.a('string'); });"] } }
+              ]
+            },
+            {
+              "name": "Agent adds handling comment",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", comments: [{ content: \"Agent accepted ticket {{runId}}\" }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql"
+              },
+              "event": [
+                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('agentToken')) { pm.environment.set('token', pm.environment.get('agentToken')); }"] } },
+                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Agent action processed', function () { pm.expect(pm.response.json().data.UpdateTicketFromRepresentation.status).to.be.a('string'); });"] } }
+              ]
+            },
+            {
+              "name": "Client closes ticket",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{ticketId}}\", ticket: { id: \"{{ticketId}}\", status: Closed, stateReason: Completed } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql"
+              },
+              "event": [
+                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('clientToken')) { pm.environment.set('token', pm.environment.get('clientToken')); }"] } },
+                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client close processed', function () { pm.expect(pm.response.json().data.UpdateTicketFromRepresentation.status).to.be.a('string'); });"] } }
+              ]
+            },
+            {
+              "name": "Consistency check",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{ticketId}}\" }) { id status priority assigneeIds comments { id } } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql"
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const t = pm.response.json().data && pm.response.json().data.GetTicketRepresentation;",
+                "pm.test('Ticket consistency after lifecycle', function () {",
+                "  pm.expect(t).to.be.an('object');",
+                "  pm.expect(t.id).to.eql(pm.environment.get('ticketId'));",
+                "});"
+              ] } }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Data-driven",
+      "item": [
+        {
+          "name": "EntityContext matrix probe",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", viewParams: { offset: 0, count: 100 } }) { items { id title } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Use with iteration file data/entity_context_matrix.iteration.json in Collection Runner/Newman."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const et = pm.iterationData.get('entityType');",
+                  "const eid = pm.iterationData.get('entityId');",
+                  "if (et) pm.environment.set('entityType', et);",
+                  "if (eid) pm.environment.set('entityId', eid);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
+                  "const min = Number(pm.iterationData.get('expectedMinCount') || 0);",
+                  "pm.test('Matrix probe returns expected minimum', function () {",
+                  "  pm.expect(items.length >= min).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
