@@ -24,6 +24,7 @@
         <FilePath>../Impl/ProLifeConverter/ProLifeConverter.acc</FilePath>
         <FilePath>../Impl/ProLifeLoc/ProLifeLoc.acc</FilePath>
         <FilePath>../Impl/ProLifeServer/ProLifeServer.acc</FilePath>
+        <FilePath>../Impl/ProLifeServerTest/ProLifeServerTest.acc</FilePath>
         <FilePath>../Impl/ProLifeServerConfigurator/ProLifeServerConfigurator.acc</FilePath>
     </RegistryFiles>
 </Acf>

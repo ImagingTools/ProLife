@@ -420,14 +420,38 @@
                     <AttributeInfo Id="ApplicationInfo" Type="Reference" ExportId="ApplicationInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="DbName">
+                        <Data IsEnabled="true" Value="prolife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HttpPort" Type="Integer" ExportId="HttpPort">
+                        <Data IsEnabled="true" Value="7778"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaHttpPort" Type="Integer" ExportId="LisaHttpPort">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="LisaWebSocketPort">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaHttpPort" Type="Integer" ExportId="PumaHttpPort">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PumaWebSocketPort" Type="Integer" ExportId="PumaWebSocketPort">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="RuntimeStatus">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="SettingsFilePath" Type="String" ExportId="SettingsFilePath">
+                        <Data IsEnabled="true" Value="ProLife/ProLife Server/ProLifeServerSettings.xml"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="WebSocketPort" Type="Integer" ExportId="WebSocketPort">
+                        <Data IsEnabled="true" Value="8778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

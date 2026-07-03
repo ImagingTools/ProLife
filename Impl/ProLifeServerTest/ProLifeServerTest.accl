@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="6435" Description="ACF"/>
+            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="Application" X="600" Y="175" Note=""/>
+        <Element ComponentName="ProLifeServerBase" X="200" Y="400" Note=""/>
+        <Element ComponentName="SingletonDocApplication" X="600" Y="50" Note=""/>
+        <Element ComponentName="VersionInfo" X="1000" Y="400" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>
