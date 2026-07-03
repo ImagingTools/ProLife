@@ -1,0 +1,3002 @@
+{
+  "info": {
+    "_postman_id": "8f2b1e10-3a4c-4b8e-9c1a-prolife-api-full",
+    "name": "ProLife Api",
+    "description": "GraphQL API test suite for ProLife's own domain surface (Accounts, Orders, Sensors/Devices+IotDevices, Licenses/SoftwareProducts, Workspace dashboards, DeviceCollectionDocumentService). One request/test per GraphQL field (47 fields total), built by analogy with Puma's TenantApiPostman and ProLife's own DeskTicketApiPostman. Shared imtauth fields (Authorization, CreateSuperuser) are used only as bootstrap infrastructure, not separately tested here.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "x-authentication-token", "type": "string" },
+      { "key": "value", "value": "{{token}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "function uuidv4() {",
+          "  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
+          "    const r = Math.random() * 16 | 0;",
+          "    const v = c === 'x' ? r : ((r & 0x3) | 0x8);",
+          "    return v.toString(16);",
+          "  });",
+          "}",
+          "",
+          "const runId = pm.environment.get('runId') || uuidv4();",
+          "pm.environment.set('runId', runId);",
+          "pm.environment.set('randomUuid', uuidv4());",
+          "",
+          "const rnd = Math.floor(Math.random() * 1000000);",
+          "pm.environment.set('randomInt', String(rnd));"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('HTTP status is 200', function () {",
+          "  pm.response.to.have.status(200);",
+          "});",
+          "",
+          "let __globalJson = null;",
+          "pm.test('Response is valid JSON object', function () {",
+          "  try { __globalJson = pm.response.json(); } catch (e) { __globalJson = null; }",
+          "  pm.expect(__globalJson !== null && typeof __globalJson === 'object' && !Array.isArray(__globalJson), 'Response is not a JSON object').to.eql(true);",
+          "});",
+          "",
+          "pm.test('Global: GraphQL envelope structure is valid', function () {",
+          "  const hasDataKey = !!(__globalJson && Object.prototype.hasOwnProperty.call(__globalJson, 'data'));",
+          "  const hasErrorsKey = !!(__globalJson && Object.prototype.hasOwnProperty.call(__globalJson, 'errors'));",
+          "  pm.expect(hasDataKey || hasErrorsKey, 'Response must include a data or errors key').to.eql(true);",
+          "  if (hasErrorsKey) {",
+          "    pm.expect(Array.isArray(__globalJson.errors), 'errors must be an array').to.eql(true);",
+          "  }",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Bootstrap",
+      "item": [
+        {
+          "name": "Ensure superuser exists (su)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateSuperuser { CreateSuperuser(input: { password: \"{{suPassword}}\", mail: \"su@prolifeapi.test\", name: \"Super User\" }) { success message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only (shared imtauth). Idempotent: server is expected to report success=false/'already exists' style message on subsequent runs, which is fine."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('CreateSuperuser responded with data', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.CreateSuperuser).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth SU",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only (shared imtauth). Authenticates the superuser and stores the token used by every other request via collection-level auth."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Auth SU has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU returns token and userId', function () {",
+                  "  pm.expect(auth).to.be.an('object');",
+                  "  pm.expect(auth.token).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth.userId).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);",
+                  "pm.environment.set('suToken', auth.token);",
+                  "pm.environment.set('suUserId', auth.userId);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 Accounts",
+      "item": [
+        {
+          "name": "AccountAdd",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Account {{randomInt}}\", customerId: \"CUST-{{randomInt}}\", description: \"Created by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers AccountAdd (prolife/1.0 Accounts.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountAdd has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.AccountAdd && json.data.AccountAdd.addedNotification && json.data.AccountAdd.addedNotification.id;",
+                  "pm.test('AccountAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('accountId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "AccountUpdate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{accountId}}\", item: { id: \"{{accountId}}\", name: \"ProLifeApi Account {{randomInt}} Updated\", customerId: \"CUST-{{randomInt}}\", description: \"Updated by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"11111\", street: \"Updated street 2\", groups: \"\" } }) { updatedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers AccountUpdate (prolife/1.0 Accounts.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountUpdate has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.AccountUpdate && json.data.AccountUpdate.updatedNotification && json.data.AccountUpdate.updatedNotification.id;",
+                  "pm.test('AccountUpdate returns the same id', function () {",
+                  "  pm.expect(id).to.eql(pm.environment.get('accountId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "AccountsList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 20, offset: 0 } }) { items { id name customerId email description } notification { pagesCount totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers AccountsList (prolife/1.0 Accounts.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountsList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('AccountsList returns an items array', function () {",
+                  "  pm.expect(json.data.AccountsList.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "AccountItem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{accountId}}\" }) { item { id name customerId description email companyName country city postalCode street groups } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers AccountItem (prolife/1.0 Accounts.sdl). Like all collectionSchema get/update/insert operations, the real wire schema requires typeId in the input and wraps the payload in an item {} field - confirmed against Tests/backend/postman_collection.json's AccountItem/DeviceItem/RoleItem/GroupItem examples, which differs from the raw pre-codegen .sdl source."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('AccountItem returns the requested account', function () {",
+                  "  pm.expect(json.data.AccountItem.item.id).to.eql(pm.environment.get('accountId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 Orders",
+      "item": [
+        {
+          "name": "OrderAdd",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderAdd { OrderAdd(input: { typeId: \"Order\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PO-{{randomInt}}\", description: \"Created by ProLifeApiPostman\", orderId: \"PO-{{randomInt}}\", purchaseId: \"PO-{{randomInt}}\", customerId: \"{{accountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers OrderAdd (prolife/1.0 Orders.sdl). Depends on 01 Accounts' accountId."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderAdd has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.OrderAdd && json.data.OrderAdd.addedNotification && json.data.OrderAdd.addedNotification.id;",
+                  "pm.test('OrderAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('orderId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrderUpdate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{orderId}}\", item: { id: \"{{orderId}}\", name: \"PO-{{randomInt}} Updated\", description: \"Updated by ProLifeApiPostman\", orderId: \"PO-{{randomInt}}\", purchaseId: \"PO-{{randomInt}}\", customerId: \"{{accountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { updatedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers OrderUpdate (prolife/1.0 Orders.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderUpdate has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.OrderUpdate && json.data.OrderUpdate.updatedNotification && json.data.OrderUpdate.updatedNotification.id;",
+                  "pm.test('OrderUpdate returns the same id', function () {",
+                  "  pm.expect(id).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrdersList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrdersList { OrdersList(input: { viewParams: { count: 20, offset: 0 } }) { items { id name customerName status orderId purchaseId description added timeStamp } notification { pagesCount totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers OrdersList (prolife/1.0 Orders.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrdersList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('OrdersList returns an items array', function () {",
+                  "  pm.expect(json.data.OrdersList.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrderItem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrderItem { OrderItem(input: { typeId: \"Order\", id: \"{{orderId}}\" }) { item { id name description orderId purchaseId customerId orderStatus orderProducts { id } customerRoles { customerId customerName roleType } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers OrderItem (prolife/1.0 Orders.sdl). Requires typeId + item {} wrapping, confirmed against Tests/backend/postman_collection.json."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('OrderItem returns the requested order', function () {",
+                  "  pm.expect(json.data.OrderItem.item.id).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 Devices",
+      "item": [
+        {
+          "name": "DeviceAdd",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Device {{randomInt}}\", description: \"Created by ProLifeApiPostman\", macAddress: \"AA:BB:CC:DD:EE:{{randomInt}}\", serialNumber: \"SN-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"\", project: \"\", productionStatus: \"Finished\" } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers DeviceAdd (prolife/1.0 Sensors.sdl). deviceType references pre-existing reference data - adjust env var deviceTypeId if it does not exist in the target DB."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceAdd has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.DeviceAdd && json.data.DeviceAdd.addedNotification && json.data.DeviceAdd.addedNotification.id;",
+                  "pm.test('DeviceAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('deviceId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceUpdate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceUpdate { DeviceUpdate(input: { typeId: \"Device\", id: \"{{deviceId}}\", item: { id: \"{{deviceId}}\", name: \"ProLifeApi Device {{randomInt}} Updated\", description: \"Updated by ProLifeApiPostman\", macAddress: \"AA:BB:CC:DD:EE:{{randomInt}}\", serialNumber: \"SN-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"\", project: \"\", productionStatus: \"Finished\" } }) { updatedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers DeviceUpdate (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceUpdate has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.DeviceUpdate && json.data.DeviceUpdate.updatedNotification && json.data.DeviceUpdate.updatedNotification.id;",
+                  "pm.test('DeviceUpdate returns the same id', function () {",
+                  "  pm.expect(id).to.eql(pm.environment.get('deviceId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DevicesList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 20, offset: 0 } }) { items { id name status deviceType licenseName macAddress serialNumber project added timeStamp } notification { pagesCount totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers DevicesList (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DevicesList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('DevicesList returns an items array', function () {",
+                  "  pm.expect(json.data.DevicesList.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceItem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{deviceId}}\" }) { item { id name description macAddress serialNumber deviceType orderId licenseName project productionStatus internalUse } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers DeviceItem (prolife/1.0 Sensors.sdl). Requires typeId + item {} wrapping, confirmed against Tests/backend/postman_collection.json."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('DeviceItem returns the requested device', function () {",
+                  "  pm.expect(json.data.DeviceItem.item.id).to.eql(pm.environment.get('deviceId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetDeviceBinding",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetDeviceBinding { GetDeviceBinding(input: { id: \"{{deviceId}}\" }) { id productUuid project softwareIds } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetDeviceBinding (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetDeviceBinding has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetDeviceBinding returns an object', function () {",
+                  "  pm.expect(json.data.GetDeviceBinding).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UpdateDeviceBinding",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceBinding { UpdateDeviceBinding(input: { deviceId: \"{{deviceId}}\", item: { id: \"{{deviceId}}\", productUuid: \"\", project: \"\", softwareIds: [] }, project: \"\" }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers UpdateDeviceBinding (prolife/1.0 Sensors.sdl). Not part of the collectionSchema get/update/insert triad, so the raw UpdatedNotificationPayload{id} shape is used (unwrapped), unlike DeviceAdd/DeviceUpdate."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('UpdateDeviceBinding has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('UpdateDeviceBinding returns an id', function () {",
+                  "  pm.expect(json.data.UpdateDeviceBinding.id).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceAdd (secondary, for transfer setup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Device {{randomInt}} (transfer target)\", description: \"Created by ProLifeApiPostman\", macAddress: \"AA:BB:CC:EE:FF:{{randomInt}}\", serialNumber: \"SN2-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"\", project: \"\", productionStatus: \"Finished\" } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only - reuses the already-covered DeviceAdd field to create a second device so TransferLicenses/RequestTransferLicenses have a real target."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.DeviceAdd && json.data.DeviceAdd.addedNotification && json.data.DeviceAdd.addedNotification.id;",
+                  "pm.test('secondary DeviceAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('deviceId2', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TransferLicenses",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation TransferLicenses { TransferLicenses(input: { fromDeviceId: \"{{deviceId}}\", toDeviceId: \"{{deviceId2}}\" }) { ok limit supportEmail } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers TransferLicenses (prolife/1.0 Sensors.sdl). Best-effort: asserts a well-formed payload rather than ok=true, since success depends on license state that isn't fully controllable from a clean bootstrap."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('TransferLicenses responded without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.TransferLicenses).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RequestTransferLicenses",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RequestTransferLicenses { RequestTransferLicenses(input: { fromDeviceId: \"{{deviceId}}\", toDeviceId: \"{{deviceId2}}\" }) { result } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers RequestTransferLicenses (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RequestTransferLicenses responded without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.RequestTransferLicenses).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CreateLicenseFile",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateLicenseFile { CreateLicenseFile(input: { deviceId: \"{{deviceId}}\", encrypt: false }) { name data } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers CreateLicenseFile (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('CreateLicenseFile has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const payload = json.data && json.data.CreateLicenseFile;",
+                  "pm.test('CreateLicenseFile returns name and data', function () {",
+                  "  pm.expect(payload.name).to.be.a('string').and.not.empty;",
+                  "  pm.expect(payload.data).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (payload) {",
+                  "  pm.environment.set('licenseFileData', payload.data);",
+                  "  pm.environment.set('licenseFileName', payload.name);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DecryptLicenseFile",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DecryptLicenseFile { DecryptLicenseFile(input: { key: \"{{decryptLicenseFileKey}}\", fileData: \"{{licenseFileData}}\" }) { fileName decryptedData } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers DecryptLicenseFile (prolife/1.0 Sensors.sdl). Known limitation: there is no GraphQL-exposed way to obtain a real decryption key, so decryptLicenseFileKey is left blank by default. This test only asserts the endpoint responds with a well-formed payload or a graceful GraphQL error, not a successful round-trip. Fill decryptLicenseFileKey with a real key to exercise the happy path."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DecryptLicenseFile responds with data or a graceful error', function () {",
+                  "  const hasData = !!(json.data && json.data.DecryptLicenseFile !== undefined);",
+                  "  const hasErrors = !!(json.errors && json.errors.length);",
+                  "  pm.expect(hasData || hasErrors).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ResetTransferCounter",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation ResetTransferCounter { ResetTransferCounter(input: { hardwareId: \"{{deviceId}}\" }) { result message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers ResetTransferCounter (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('ResetTransferCounter responded without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.ResetTransferCounter).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 IoT Devices",
+      "item": [
+        {
+          "name": "IotDeviceAdd",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation IotDeviceAdd { IotDeviceAdd(input: { typeId: \"IotDevice\", id: \"{{randomUuid}}\", item: { serialNumber: \"IOT-{{randomInt}}\", manufacturer: \"ProLifeApi Manufacturer\", modelId: \"MODEL-{{randomInt}}\", modelName: \"Model {{randomInt}}\" } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers IotDeviceAdd (prolife/1.0 Sensors.sdl). Not exercised in any prior ProLife test suite - new coverage, may reveal gaps if the IotDevice collection isn't fully wired server-side."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('IotDeviceAdd has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.IotDeviceAdd && json.data.IotDeviceAdd.addedNotification && json.data.IotDeviceAdd.addedNotification.id;",
+                  "pm.test('IotDeviceAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('iotDeviceId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "IotDeviceUpdate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation IotDeviceUpdate { IotDeviceUpdate(input: { typeId: \"IotDevice\", id: \"{{iotDeviceId}}\", item: { serialNumber: \"IOT-{{randomInt}}-upd\", manufacturer: \"ProLifeApi Manufacturer Updated\", modelId: \"MODEL-{{randomInt}}\", modelName: \"Model {{randomInt}} Updated\" } }) { updatedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers IotDeviceUpdate (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('IotDeviceUpdate has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.IotDeviceUpdate && json.data.IotDeviceUpdate.updatedNotification && json.data.IotDeviceUpdate.updatedNotification.id;",
+                  "pm.test('IotDeviceUpdate returns the same id', function () {",
+                  "  pm.expect(id).to.eql(pm.environment.get('iotDeviceId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "IotDevicesList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query IotDevicesList { IotDevicesList(input: { viewParams: { count: 20, offset: 0 } }) { items { id name factoryNumber manufacturer brandModel added timeStamp } notification { pagesCount totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers IotDevicesList (prolife/1.0 Sensors.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('IotDevicesList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('IotDevicesList returns an items array', function () {",
+                  "  pm.expect(json.data.IotDevicesList.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "IotDeviceItem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query IotDeviceItem { IotDeviceItem(input: { typeId: \"IotDevice\", id: \"{{iotDeviceId}}\" }) { item { serialNumber manufacturer modelId modelName } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers IotDeviceItem (prolife/1.0 Sensors.sdl). Requires typeId + item {} wrapping, by analogy with the confirmed DeviceItem/RoleItem/GroupItem pattern (Tests/backend/postman_collection.json)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('IotDeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('IotDeviceItem returns an object', function () {",
+                  "  pm.expect(json.data.IotDeviceItem.item).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 Software Products - Licenses",
+      "item": [
+        {
+          "name": "SoftwareProductAdd",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductAdd { SoftwareProductAdd(input: { typeId: \"SoftwareProduct\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"SW-{{randomInt}}\", project: \"Test\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SoftwareProductAdd (prolife/1.0 Licenses.sdl). productId/licenseUuid reference pre-existing catalog data - adjust softwareCatalogProductId/licenseDefinitionId if they don't exist in the target DB."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductAdd has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.SoftwareProductAdd && json.data.SoftwareProductAdd.addedNotification && json.data.SoftwareProductAdd.addedNotification.id;",
+                  "pm.test('SoftwareProductAdd returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('softwareProductId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductUpdate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductUpdate { SoftwareProductUpdate(input: { typeId: \"SoftwareProduct\", id: \"{{softwareProductId}}\", item: { id: \"{{softwareProductId}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"SW-{{randomInt}}-upd\", project: \"Test\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { updatedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SoftwareProductUpdate (prolife/1.0 Licenses.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductUpdate has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const id = json.data && json.data.SoftwareProductUpdate && json.data.SoftwareProductUpdate.updatedNotification && json.data.SoftwareProductUpdate.updatedNotification.id;",
+                  "pm.test('SoftwareProductUpdate returns the same id', function () {",
+                  "  pm.expect(id).to.eql(pm.environment.get('softwareProductId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductsList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductsList { SoftwareProductsList(input: { viewParams: { count: 20, offset: 0 } }) { items { id name status productName licenseName serialNumber project added timeStamp inUse } notification { pagesCount totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SoftwareProductsList (prolife/1.0 Licenses.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductsList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('SoftwareProductsList returns an items array', function () {",
+                  "  pm.expect(json.data.SoftwareProductsList.items).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductItem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{softwareProductId}}\" }) { item { id productId categoryId serialNumber project inUse orderUuid licenseUuid expiration hasChildren hasParent } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SoftwareProductItem (prolife/1.0 Licenses.sdl). Requires typeId + item {} wrapping, confirmed against Tests/backend/postman_collection.json."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('SoftwareProductItem returns the requested product', function () {",
+                  "  pm.expect(json.data.SoftwareProductItem.item.id).to.eql(pm.environment.get('softwareProductId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ChildLicensesList",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ChildLicensesList { ChildLicensesList(input: { parentLicenseId: \"{{softwareProductId}}\" }) { items { id accountId accountName productCount softwareId availableCount boundCount } ok message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers ChildLicensesList (prolife/1.0 Licenses.sdl). New coverage - not exercised in any prior ProLife test suite."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('ChildLicensesList responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.ChildLicensesList).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SplitLicense",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SplitLicense { SplitLicense(input: { licenseId: \"{{softwareProductId}}\", licenseCount: 1, accountId: \"{{accountId}}\" }) { ok message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SplitLicense (prolife/1.0 Licenses.sdl). Best-effort: asserts a well-formed payload rather than ok=true, since success depends on license-tree state that isn't fully controllable from a clean bootstrap. New coverage."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SplitLicense responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.SplitLicense).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RevokeLicense",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RevokeLicense { RevokeLicense(input: { childLicenseId: \"{{softwareProductId}}\", revokeCount: 1 }) { ok message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers RevokeLicense (prolife/1.0 Licenses.sdl). Best-effort, same rationale as SplitLicense. New coverage."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RevokeLicense responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.RevokeLicense).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 Device Document Service",
+      "item": [
+        {
+          "name": "CreateNewDocument (Device)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateNewDocument { CreateNewDocument(input: { collectionId: \"Devices\", typeId: \"Device\", proposedSourceDocumentId: \"{{deviceId}}\" }) { documentId documentName objectId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only (shared imtbase CollectionDocumentService). Opens a document handle for the device created in 03 Devices, needed by GetDeviceRepresentation/UpdateDeviceFromRepresentation."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('CreateNewDocument (Device) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const documentId = json.data && json.data.CreateNewDocument && json.data.CreateNewDocument.documentId;",
+                  "pm.test('CreateNewDocument (Device) returns a documentId', function () {",
+                  "  pm.expect(documentId).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('deviceDocumentId', documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetDeviceRepresentation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetDeviceRepresentation { GetDeviceRepresentation(input: { id: \"{{deviceDocumentId}}\" }) { id name description macAddress serialNumber deviceType orderId licenseName project productionStatus internalUse } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetDeviceRepresentation (prolife/1.0 DeviceCollectionDocumentService.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetDeviceRepresentation has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetDeviceRepresentation returns an object', function () {",
+                  "  pm.expect(json.data.GetDeviceRepresentation).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UpdateDeviceFromRepresentation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{deviceDocumentId}}\", deviceData: { description: \"Updated via document service by ProLifeApiPostman\" } }) { status message documentName } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers UpdateDeviceFromRepresentation (prolife/1.0 DeviceCollectionDocumentService.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('UpdateDeviceFromRepresentation has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('UpdateDeviceFromRepresentation reports Success', function () {",
+                  "  pm.expect(json.data.UpdateDeviceFromRepresentation.status).to.eql('Success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CreateNewDocument (IotDevice)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateNewDocument { CreateNewDocument(input: { collectionId: \"IotDevices\", typeId: \"IotDevice\", proposedSourceDocumentId: \"{{iotDeviceId}}\" }) { documentId documentName objectId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only (shared imtbase CollectionDocumentService). collectionId 'IotDevices' is inferred by analogy with Devices - adjust if the real collection id differs."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const documentId = json.data && json.data.CreateNewDocument && json.data.CreateNewDocument.documentId;",
+                  "pm.test('CreateNewDocument (IotDevice) returns a documentId', function () {",
+                  "  pm.expect(documentId).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('iotDeviceDocumentId', documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetIotDeviceRepresentation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetIotDeviceRepresentation { GetIotDeviceRepresentation(input: { id: \"{{iotDeviceDocumentId}}\" }) { serialNumber manufacturer modelId modelName } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetIotDeviceRepresentation (prolife/1.0 DeviceCollectionDocumentService.sdl). New coverage."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetIotDeviceRepresentation responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.GetIotDeviceRepresentation).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UpdateIotDeviceFromRepresentation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateIotDeviceFromRepresentation { UpdateIotDeviceFromRepresentation(input: { documentId: \"{{iotDeviceDocumentId}}\", iotDeviceData: { manufacturer: \"Updated via document service\" } }) { status message documentName } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers UpdateIotDeviceFromRepresentation (prolife/1.0 DeviceCollectionDocumentService.sdl). New coverage."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('UpdateIotDeviceFromRepresentation responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.UpdateIotDeviceFromRepresentation).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07 Workspace Dashboards",
+      "item": [
+        {
+          "name": "GetLicenseCreationInfo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetLicenseCreationInfo { GetLicenseCreationInfo(input: { customerId: \"\" }) { axes { xLabel yLabel } labels points { x y } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetLicenseCreationInfo (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetLicenseCreationInfo has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetLicenseCreationInfo returns axes', function () {",
+                  "  pm.expect(json.data.GetLicenseCreationInfo.axes).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetSoftwareUsedBarChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSoftwareUsedBarChart { GetSoftwareUsedBarChart(input: { customerId: \"\" }) { axes { xLabel yLabel } bars { label total segments { id label value color } } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetSoftwareUsedBarChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetSoftwareUsedBarChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetSoftwareUsedBarChart returns bars', function () {",
+                  "  pm.expect(json.data.GetSoftwareUsedBarChart.bars).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetSoftwareUsedPieChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSoftwareUsedPieChart { GetSoftwareUsedPieChart(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetSoftwareUsedPieChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetSoftwareUsedPieChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetSoftwareUsedPieChart returns segments', function () {",
+                  "  pm.expect(json.data.GetSoftwareUsedPieChart.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareUsedBarChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareUsedBarChart { GetHardwareUsedBarChart(input: { customerId: \"\" }) { axes { xLabel yLabel } bars { label total segments { id label value color } } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareUsedBarChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareUsedBarChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareUsedBarChart returns bars', function () {",
+                  "  pm.expect(json.data.GetHardwareUsedBarChart.bars).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareUsedPieChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareUsedPieChart { GetHardwareUsedPieChart(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareUsedPieChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareUsedPieChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareUsedPieChart returns segments', function () {",
+                  "  pm.expect(json.data.GetHardwareUsedPieChart.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareStatusInfo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareStatusInfo { GetHardwareStatusInfo(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareStatusInfo (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareStatusInfo has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareStatusInfo returns segments', function () {",
+                  "  pm.expect(json.data.GetHardwareStatusInfo.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetTotalSummaryInfo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTotalSummaryInfo { GetTotalSummaryInfo(input: { customerId: \"\" }) { summaryInfos { total notInUseCount inUseCount internalUseCount collectionId title icon objectTypeId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetTotalSummaryInfo (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetTotalSummaryInfo has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetTotalSummaryInfo returns summaryInfos', function () {",
+                  "  pm.expect(json.data.GetTotalSummaryInfo.summaryInfos).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareCustomerPieChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareCustomerPieChart { GetHardwareCustomerPieChart(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareCustomerPieChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareCustomerPieChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareCustomerPieChart returns segments', function () {",
+                  "  pm.expect(json.data.GetHardwareCustomerPieChart.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetSoftwareCustomerPieChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSoftwareCustomerPieChart { GetSoftwareCustomerPieChart(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetSoftwareCustomerPieChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetSoftwareCustomerPieChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetSoftwareCustomerPieChart returns segments', function () {",
+                  "  pm.expect(json.data.GetSoftwareCustomerPieChart.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareConfigurationPieChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareConfigurationPieChart { GetHardwareConfigurationPieChart(input: { customerId: \"\" }) { segments { id label value color } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareConfigurationPieChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareConfigurationPieChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareConfigurationPieChart returns segments', function () {",
+                  "  pm.expect(json.data.GetHardwareConfigurationPieChart.segments).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetSoftwareCreationBarChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSoftwareCreationBarChart { GetSoftwareCreationBarChart(input: { customerId: \"\" }) { axes { xLabel yLabel } bars { label total segments { id label value color } } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetSoftwareCreationBarChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetSoftwareCreationBarChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetSoftwareCreationBarChart returns bars', function () {",
+                  "  pm.expect(json.data.GetSoftwareCreationBarChart.bars).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetHardwareCreationBarChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetHardwareCreationBarChart { GetHardwareCreationBarChart(input: { customerId: \"\" }) { axes { xLabel yLabel } bars { label total segments { id label value color } } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetHardwareCreationBarChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetHardwareCreationBarChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetHardwareCreationBarChart returns bars', function () {",
+                  "  pm.expect(json.data.GetHardwareCreationBarChart.bars).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetOrderCreationLineChart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetOrderCreationLineChart { GetOrderCreationLineChart(input: { customerId: \"\" }) { axes { xLabel yLabel } labels points { x y } summary { total maxItem { id label value color } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetOrderCreationLineChart (prolife/1.0 Workspace.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetOrderCreationLineChart has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetOrderCreationLineChart returns axes', function () {",
+                  "  pm.expect(json.data.GetOrderCreationLineChart.axes).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "08 Multi-role Scenario - Pages, Commands, Profile",
+      "item": [
+        {
+          "name": "Setup: RoleAdd (Full Access actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewWorkspace;ViewAccounts;ViewSensors;ViewOrders;ViewLicenses;ViewUsers;ViewRoles;ViewGroups\", isDefault: false, isGuest: false } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, not domain field coverage (per user instruction, Roles/Users/Groups fields themselves are not being tested here). Creates a role with a broad permission set (ViewWorkspace/ViewAccounts/ViewSensors/ViewOrders/ViewLicenses/ViewUsers/ViewRoles/ViewGroups - the exact FeatureId codes declared in ProLifeFeatures.xml and referenced by each page's PagePermissions list in Partitura/ProLifeQmlVoce.arp/Pages.acc and ImtCore's PagesController.acc) purely so the PagesData/GetCommands/GetProfile checks below have a real high-privilege actor to compare against. permissions is a ';'-delimited string, confirmed against Tests/backend/postman_collection.json's RoleUpdate example."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.RoleAdd && json.data.RoleAdd.addedNotification && json.data.RoleAdd.addedNotification.id;",
+                  "pm.test('Setup RoleAdd (Full Access) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('roleFullAccessId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: RoleAdd (Accounts Viewer actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewAccounts\", isDefault: false, isGuest: false } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Grants exactly one permission (ViewAccounts) so the visibility checks below can prove page/command visibility is permission-scoped, not all-or-nothing."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.RoleAdd && json.data.RoleAdd.addedNotification && json.data.RoleAdd.addedNotification.id;",
+                  "pm.test('Setup RoleAdd (Accounts Viewer) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('roleAccountsViewerId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: RoleAdd (No Access actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi No Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - zero permission scenario role\", roleId: \"ProLifeApiNoAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"\", isDefault: false, isGuest: false } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Grants zero permissions - the baseline for proving only the universally-visible Search page (PagePermissions: ['*']) shows up with no permissions at all."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.RoleAdd && json.data.RoleAdd.addedNotification && json.data.RoleAdd.addedNotification.id;",
+                  "pm.test('Setup RoleAdd (No Access) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('roleNoAccessId', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (Full Access actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Full Access Actor\", username: \"prolifeapi_full_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"full{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleFullAccessId}}\"], permissions: \"\", systemInfos: [] } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Creates a user pre-assigned to the Full Access role created above (roles is an array of role ids on UserData, confirmed against Tests/backend/postman_collection.json's UserUpdate example)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.addedNotification && json.data.UserAdd.addedNotification.id;",
+                  "pm.test('Setup UserAdd (Full Access) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('fullAccessUserId', id);",
+                  "pm.environment.set('fullAccessLogin', 'prolifeapi_full_' + pm.environment.get('randomInt'));",
+                  "pm.environment.set('fullAccessPassword', 'ProLifeApi_2026!');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (Accounts Viewer actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Accounts Viewer Actor\", username: \"prolifeapi_accviewer_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"accviewer{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleAccountsViewerId}}\"], permissions: \"\", systemInfos: [] } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Creates a user pre-assigned to the Accounts Viewer role (ViewAccounts only)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.addedNotification && json.data.UserAdd.addedNotification.id;",
+                  "pm.test('Setup UserAdd (Accounts Viewer) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('accountsViewerUserId', id);",
+                  "pm.environment.set('accountsViewerLogin', 'prolifeapi_accviewer_' + pm.environment.get('randomInt'));",
+                  "pm.environment.set('accountsViewerPassword', 'ProLifeApi_2026!');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (No Access actor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi No Access Actor\", username: \"prolifeapi_noaccess_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"noaccess{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleNoAccessId}}\"], permissions: \"\", systemInfos: [] } }) { addedNotification { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Creates a user pre-assigned to the zero-permission role."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.addedNotification && json.data.UserAdd.addedNotification.id;",
+                  "pm.test('Setup UserAdd (No Access) returns new id', function () {",
+                  "  pm.expect(id).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('noAccessUserId', id);",
+                  "pm.environment.set('noAccessLogin', 'prolifeapi_noaccess_' + pm.environment.get('randomInt'));",
+                  "pm.environment.set('noAccessPassword', 'ProLifeApi_2026!');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Full Access actor",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{fullAccessLogin}}\", password: \"{{fullAccessPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Logs in as the Full Access actor and switches the active token used by every following request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Full Access actor returns token', function () {",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PagesData - Full Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query PagesData { PagesData { items { pageId name icon source startItem } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Page visibility test. PagesData has no SDL file (hand-wired via ImtCore's Partitura/ImtGraphQlVoce.arp/PagesController.acc, see ImtCore/Qml/imtgui/Application/PagesProvider.qml for the client-side query shape); each page is only returned if the caller holds at least one of that page's PagePermissions (Partitura/ProLifeQmlVoce.arp/Pages.acc for ProLife's own pages, PagesController.acc for Workspace/Search/Administration). A real captured response for an admin-permissioned user (Tests/backend/postman_collection.json 'PagesData (TestAdmin) 2') confirmed pageId values Devices/SoftwareProducts/Orders/Accounts/Search/Administration are genuinely returned by ProLife."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('PagesData (Full Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('PagesData (Full Access) returns a well-formed items array', function () {",
+                  "  pm.expect(json.data.PagesData, 'PagesData must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.PagesData.items, 'PagesData.items must be an array').to.be.an('array');",
+                  "});",
+                  "const pageIds = json.data.PagesData.items.map(function (i) { return i.pageId; });",
+                  "pm.environment.set('fullAccessPageIds', JSON.stringify(pageIds));",
+                  "pm.test('Full Access actor sees Accounts/Devices/Orders/SoftwareProducts pages', function () {",
+                  "  pm.expect(pageIds).to.include('Accounts');",
+                  "  pm.expect(pageIds).to.include('Devices');",
+                  "  pm.expect(pageIds).to.include('Orders');",
+                  "  pm.expect(pageIds).to.include('SoftwareProducts');",
+                  "});",
+                  "pm.test('Full Access actor sees the Administration page (granted via ViewUsers/ViewRoles/ViewGroups)', function () {",
+                  "  pm.expect(pageIds).to.include('Administration');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetCommands (Devices) - Full Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetCommands { GetCommands(input: { typeId: \"Devices\" }) { elements { elementId elementName elementDescription enabled visible toggled toggleable priority alignment } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Commands visibility test (imtbase/1.0 Commands.sdl). typeId values follow the same singular/plural convention as GetCommands examples mined from Tests/API and Tests/backend (e.g. 'Devices' for list-context commands)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetCommands (Devices, Full Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetCommands (Devices, Full Access) returns a well-formed GuiElementContainer', function () {",
+                  "  pm.expect(json.data.GetCommands, 'GetCommands must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetCommands.elements, 'GetCommands.elements must be an array').to.be.an('array');",
+                  "});",
+                  "const elements = json.data.GetCommands.elements;",
+                  "pm.environment.set('fullAccessDevicesCmdCount', String(elements.length));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetProfile - Full Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProfile { GetProfile(input: { id: \"{{fullAccessUserId}}\", productId: \"{{productId}}\" }) { id username name email roles { id name description } groups { id name description } permissions { id name description } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetProfile (imtauth/1.0 Profile.sdl) as a second, independent view into the same permission model PagesData/GetCommands are gated by."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetProfile (Full Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetProfile (Full Access) returns a well-formed permissions array', function () {",
+                  "  pm.expect(json.data.GetProfile, 'GetProfile must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetProfile.permissions, 'GetProfile.permissions must be an array').to.be.an('array');",
+                  "});",
+                  "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
+                  "pm.test('Full Access actor profile includes ViewAccounts and ViewSensors permissions', function () {",
+                  "  pm.expect(permIds).to.include('ViewAccounts');",
+                  "  pm.expect(permIds).to.include('ViewSensors');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Accounts Viewer actor",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{accountsViewerLogin}}\", password: \"{{accountsViewerPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Switches the active token to the Accounts Viewer actor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Accounts Viewer actor returns token', function () {",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PagesData - Accounts Viewer actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query PagesData { PagesData { items { pageId name icon source startItem } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Page visibility test: an actor granted only ViewAccounts should see the Accounts page and the universal Search page, but none of the other business pages or Administration."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('PagesData (Accounts Viewer) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('PagesData (Accounts Viewer) returns a well-formed items array', function () {",
+                  "  pm.expect(json.data.PagesData, 'PagesData must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.PagesData.items, 'PagesData.items must be an array').to.be.an('array');",
+                  "});",
+                  "const pageIds = json.data.PagesData.items.map(function (i) { return i.pageId; });",
+                  "pm.test('Accounts Viewer actor sees Accounts and Search pages', function () {",
+                  "  pm.expect(pageIds).to.include('Accounts');",
+                  "  pm.expect(pageIds).to.include('Search');",
+                  "});",
+                  "pm.test('Accounts Viewer actor does not see Devices/Orders/SoftwareProducts/Administration pages', function () {",
+                  "  pm.expect(pageIds).to.not.include('Devices');",
+                  "  pm.expect(pageIds).to.not.include('Orders');",
+                  "  pm.expect(pageIds).to.not.include('SoftwareProducts');",
+                  "  pm.expect(pageIds).to.not.include('Administration');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetCommands (Devices) - Accounts Viewer actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetCommands { GetCommands(input: { typeId: \"Devices\" }) { elements { elementId elementName elementDescription enabled visible toggled toggleable priority alignment } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Commands visibility test: an actor without ViewSensors should see fewer (or no) Devices-scoped commands than the Full Access actor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetCommands (Devices, Accounts Viewer) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetCommands (Devices, Accounts Viewer) returns a well-formed GuiElementContainer', function () {",
+                  "  pm.expect(json.data.GetCommands, 'GetCommands must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetCommands.elements, 'GetCommands.elements must be an array').to.be.an('array');",
+                  "});",
+                  "const accountsViewerCount = json.data.GetCommands.elements.length;",
+                  "const fullCount = parseInt(pm.environment.get('fullAccessDevicesCmdCount') || '0', 10);",
+                  "pm.test('Full Access actor sees at least as many Devices commands as Accounts Viewer actor', function () {",
+                  "  pm.expect(fullCount).to.be.at.least(accountsViewerCount);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetProfile - Accounts Viewer actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProfile { GetProfile(input: { id: \"{{accountsViewerUserId}}\", productId: \"{{productId}}\" }) { id username name email roles { id name description } groups { id name description } permissions { id name description } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Cross-checks GetProfile's permissions list against the PagesData/GetCommands visibility results for the same actor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetProfile (Accounts Viewer) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetProfile (Accounts Viewer) returns a well-formed permissions array', function () {",
+                  "  pm.expect(json.data.GetProfile, 'GetProfile must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetProfile.permissions, 'GetProfile.permissions must be an array').to.be.an('array');",
+                  "});",
+                  "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
+                  "pm.test('Accounts Viewer profile includes ViewAccounts but not ViewSensors', function () {",
+                  "  pm.expect(permIds).to.include('ViewAccounts');",
+                  "  pm.expect(permIds).to.not.include('ViewSensors');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth No Access actor",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{noAccessLogin}}\", password: \"{{noAccessPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Switches the active token to the zero-permission actor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth No Access actor returns token', function () {",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PagesData - No Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query PagesData { PagesData { items { pageId name icon source startItem } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Page visibility test: an actor with zero granted permissions should only see the universally-visible Search page (PagePermissions: ['*'])."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('PagesData (No Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('PagesData (No Access) returns a well-formed items array', function () {",
+                  "  pm.expect(json.data.PagesData, 'PagesData must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.PagesData.items, 'PagesData.items must be an array').to.be.an('array');",
+                  "});",
+                  "const pageIds = json.data.PagesData.items.map(function (i) { return i.pageId; });",
+                  "pm.test('No Access actor sees the Search page', function () {",
+                  "  pm.expect(pageIds).to.include('Search');",
+                  "});",
+                  "pm.test('No Access actor does not see any business or Administration pages', function () {",
+                  "  pm.expect(pageIds).to.not.include('Accounts');",
+                  "  pm.expect(pageIds).to.not.include('Devices');",
+                  "  pm.expect(pageIds).to.not.include('Orders');",
+                  "  pm.expect(pageIds).to.not.include('SoftwareProducts');",
+                  "  pm.expect(pageIds).to.not.include('Administration');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetCommands (Devices) - No Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetCommands { GetCommands(input: { typeId: \"Devices\" }) { elements { elementId elementName elementDescription enabled visible toggled toggleable priority alignment } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Commands visibility test: the zero-permission actor should see no more Devices-scoped commands than either of the other two actors."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetCommands (Devices, No Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetCommands (Devices, No Access) returns a well-formed GuiElementContainer', function () {",
+                  "  pm.expect(json.data.GetCommands, 'GetCommands must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetCommands.elements, 'GetCommands.elements must be an array').to.be.an('array');",
+                  "});",
+                  "const noAccessCount = json.data.GetCommands.elements.length;",
+                  "const fullCount = parseInt(pm.environment.get('fullAccessDevicesCmdCount') || '0', 10);",
+                  "pm.test('Full Access actor sees at least as many Devices commands as No Access actor', function () {",
+                  "  pm.expect(fullCount).to.be.at.least(noAccessCount);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetProfile - No Access actor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProfile { GetProfile(input: { id: \"{{noAccessUserId}}\", productId: \"{{productId}}\" }) { id username name email roles { id name description } groups { id name description } permissions { id name description } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Cross-checks GetProfile's permissions list for the zero-permission actor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetProfile (No Access) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetProfile (No Access) returns a well-formed permissions array', function () {",
+                  "  pm.expect(json.data.GetProfile, 'GetProfile must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.GetProfile.permissions, 'GetProfile.permissions must be an array').to.be.an('array');",
+                  "});",
+                  "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
+                  "pm.test('No Access actor profile does not include ViewAccounts or ViewSensors', function () {",
+                  "  pm.expect(permIds).to.not.include('ViewAccounts');",
+                  "  pm.expect(permIds).to.not.include('ViewSensors');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Re-auth as SU",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId username permissions systemId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Switches the active token back to su for the remaining app-infrastructure checks and the 99 Cleanup folder."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Re-auth as SU returns token', function () {",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetSettings",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSettings { GetSettings(input: { userId: \"{{suUserId}}\" }) { parameters { id typeId name description enabled data } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetSettings (imtbase/1.0 Settings.sdl). Returns a ParamsSet, hence the parameters { ... } selection (raw SDL return type, not affected by the collectionSchema typeId/item-wrapping quirk since Settings.sdl has no collectionSchema block)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetSettings has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetSettings returns a parameters array', function () {",
+                  "  pm.expect(json.data.GetSettings.parameters).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SetSettings",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SetSettings { SetSettings(input: { userId: \"{{suUserId}}\", settings: \"{\\\"parameters\\\":[]}\" }) { ok } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers SetSettings (imtbase/1.0 Settings.sdl). The exact serialization format of the settings string isn't confirmed from any mined example, so this only asserts a well-formed response rather than ok:true."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SetSettings responds without transport errors', function () {",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "  pm.expect(json.data.SetSettings).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetStyleData",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetStyleData { GetStyleData(input: { schemeId: \"Light\" }) { data } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetStyleData (imtbase/1.0 Settings.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetStyleData has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetStyleData returns data', function () {",
+                  "  pm.expect(json.data.GetStyleData.data).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetWebSocketUrl",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetWebSocketUrl { GetWebSocketUrl { scheme host port path } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetWebSocketUrl (imtbase/1.0 Settings.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetWebSocketUrl has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetWebSocketUrl returns an object', function () {",
+                  "  pm.expect(json.data.GetWebSocketUrl).to.be.an('object');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Search { Search(input: { text: \"ProLifeApi\" }) { searchResults { id name totalCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers Search (imtbase/1.0 Search.sdl) - discovery call (no searchResultId), so items are expected to be empty/minimal per the SDL's own doc-comment; only totalCount per group is asserted."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Search has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('Search returns a searchResults array', function () {",
+                  "  pm.expect(json.data.Search.searchResults).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetUserMode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserMode { GetUserMode(input: { productId: \"{{productId}}\" }) { userMode } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetUserMode (imtauth/1.0 AuthorizationOptions.sdl)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetUserMode has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetUserMode returns a userMode', function () {",
+                  "  pm.expect(json.data.GetUserMode.userMode).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ProductPermissions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ProductPermissions { ProductPermissions(input: { productId: \"{{productId}}\" }) { groups { groupId groupName entries { permissionId displayName description } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetProductPermissions (imtauth/1.0 Permissions.sdl). Confirmed via Partitura/ProLifeVoce.arp/RootDataController.acc's PermissionsController (GqlCommandIds: ProductPermissions, PathToPermissionsFile: :/Features/ProLifeFeatures) that the field is exposed under the alias 'ProductPermissions' on ProLife's wire schema, not the raw SDL name 'GetProductPermissions' - confirmed against Tests/backend/postman_collection.json's 'ProductPermissions' request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('ProductPermissions has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('ProductPermissions returns a well-formed groups array', function () {",
+                  "  pm.expect(json.data.ProductPermissions, 'ProductPermissions must be present in the response').to.be.an('object');",
+                  "  pm.expect(json.data.ProductPermissions.groups, 'ProductPermissions.groups must be an array').to.be.an('array').with.length.greaterThan(0);",
+                  "});",
+                  "const groups = json.data.ProductPermissions.groups;",
+                  "groups.forEach(function (g, idx) {",
+                  "  pm.expect(g.entries, 'group at index ' + idx + ' must have an entries array').to.be.an('array');",
+                  "});",
+                  "const allEntryIds = groups.reduce(function (acc, g) { return acc.concat(g.entries.map(function (e) { return e.permissionId; })); }, []);",
+                  "pm.test('ProductPermissions includes the ViewAccounts permission used by the scenario roles above', function () {",
+                  "  pm.expect(allEntryIds).to.include('ViewAccounts');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "99 Cleanup",
+      "item": [
+        {
+          "name": "RemoveElements (Devices cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Devices\", elementIds: [\"{{deviceId}}\", \"{{deviceId2}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only (shared imtbase). Best-effort hygiene - CI mainly relies on the full DB reset in Run-CiTests.ps1 instead. Not part of the 47-field domain coverage."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (Devices) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (IotDevices cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"IotDevices\", elementIds: [\"{{iotDeviceId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (IotDevices) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (SoftwareProducts cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"SoftwareProducts\", elementIds: [\"{{softwareProductId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (SoftwareProducts) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (Orders cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Orders\", elementIds: [\"{{orderId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (Orders) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (Users cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Users\", elementIds: [\"{{fullAccessUserId}}\", \"{{accountsViewerUserId}}\", \"{{noAccessUserId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene for the actors created in 08 Multi-role Scenario. Runs before Roles cleanup since users reference roles."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (Users) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (Roles cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Roles\", elementIds: [\"{{roleFullAccessId}}\", \"{{roleAccountsViewerId}}\", \"{{roleNoAccessId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene for the roles created in 08 Multi-role Scenario."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (Roles) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RemoveElements (Accounts cleanup)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{accountId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only, best-effort hygiene. Runs last since Orders/Devices/SoftwareProducts may reference this account."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RemoveElements (Accounts) returns a well-formed response (success or graceful error)', function () {",
+                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
+                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
+                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
