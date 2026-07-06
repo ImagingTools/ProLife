@@ -82,17 +82,20 @@ test.describe('Hardware / collection', () => {
       await gui.checkScreenshot(page, 'devices-filter-cleared');
     });
 
-    // --- sorting (columns are addressable by header id) ----------------------------------------
+    // --- sorting -------------------------------------------------------------------------------
+    // Table.sortBy() addresses columns by their objectName, which is the HeaderIds entry (the field
+    // key), NOT the visible HeaderNames caption - the two lists are independently ordered in
+    // DevicesPage.acc. "Status" (caption) -> "status" (id); "Name" (caption) -> "licenseName" (id).
     test('sort by status column', async ({ page, gui }) => {
       const devices = new DeviceCollectionPage(page);
-      await devices.table.sortBy('Status');
+      await devices.table.sortBy('status');
       await gui.checkScreenshot(page, 'devices-sort-status-1');
-      await devices.table.sortBy('Status');
+      await devices.table.sortBy('status');
       await gui.checkScreenshot(page, 'devices-sort-status-2');
     });
 
     test('sort by name column', async ({ page, gui }) => {
-      await new DeviceCollectionPage(page).table.sortBy('name');
+      await new DeviceCollectionPage(page).table.sortBy('licenseName');
       await gui.checkScreenshot(page, 'devices-sort-name');
     });
 

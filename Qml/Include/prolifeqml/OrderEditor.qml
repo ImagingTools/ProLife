@@ -324,6 +324,7 @@ ViewBase {
 			spacing: Style.marginXL;
 			
 			GroupHeaderView {
+				objectName: "OrderInformationHeader";
 				title: qsTr("Order Information");
 				width: content.width;
 				groupView: group;
@@ -331,6 +332,7 @@ ViewBase {
 			
 			GroupElementView {
 				id: group;
+				objectName: "OrderInformationGroup";
 				
 				width: content.width;
 				
@@ -350,6 +352,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: instanceIdInput;
+					objectName: "DeliveryIdInput";
 					
 					name: qsTr("Delivery-ID");
 					placeHolderText: qsTr("Enter the delivery-ID");
@@ -395,6 +398,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: purchaseIdInput;
+					objectName: "PurchaseOrderIdInput";
 					
 					name: qsTr("Purchase Order-ID");
 					placeHolderText: qsTr("Enter the Purchase-ID");
@@ -411,6 +415,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: descriptionInput;
+					objectName: "DescriptionInput";
 					
 					name: qsTr("Description");
 					placeHolderText: qsTr("Enter the comment");
@@ -427,6 +432,7 @@ ViewBase {
 				
 				ComboBoxElementView {
 					id: customerCB;
+					objectName: "CustomerCombo";
 					
 					name: qsTr("Customer");
 					
@@ -449,6 +455,7 @@ ViewBase {
 				
 				ComboBoxElementView {
 					id: orderStatusCB;
+					objectName: "OrderStatusCombo";
 					
 					name: qsTr("Order Status");
 					

@@ -58,12 +58,16 @@ test.describe('Orders / collection', () => {
       await gui.checkScreenshot(page, 'orders-filter-cleared');
     });
 
-    test('sort by name column', async ({ page, gui }) => {
+    // Table.sortBy() addresses columns by their objectName, which is the HeaderIds entry (the field
+    // key), NOT the visible HeaderNames caption. Orders has no "name"/"Name" column at all
+    // (OrdersPage.acc's HeaderIds: status/orderId/purchaseId/description/customerLink/added/
+    // timeStamp) - "orderId" is the id behind the "Delivery-ID" caption and is sortable.
+    test('sort by delivery-id column', async ({ page, gui }) => {
       const orders = new OrderCollectionPage(page);
-      await orders.table.sortBy('name');
-      await gui.checkScreenshot(page, 'orders-sort-name-1');
-      await orders.table.sortBy('name');
-      await gui.checkScreenshot(page, 'orders-sort-name-2');
+      await orders.table.sortBy('orderId');
+      await gui.checkScreenshot(page, 'orders-sort-delivery-id-1');
+      await orders.table.sortBy('orderId');
+      await gui.checkScreenshot(page, 'orders-sort-delivery-id-2');
     });
 
     test('pagination - page size and navigation', async ({ page, gui }) => {

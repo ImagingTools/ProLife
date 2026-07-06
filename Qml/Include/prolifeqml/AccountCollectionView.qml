@@ -13,7 +13,7 @@ RemoteCollectionView {
 	id: container;
 	
 	collectionId: "Accounts";
-	
+
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
 			collectionView: container;
 			

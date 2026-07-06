@@ -14,12 +14,40 @@
 const { can } = require('../fixtures/users');
 
 // pageId -> permission codes that make its MenuPanel button appear.
+//
+// These lists are transcribed VERBATIM from each page's PagePermissions in
+//   Partitura/ProLifeQmlVoce.arp/Pages.acc            (Accounts/Devices/Orders/SoftwareProducts/Tenants)
+//   Partitura/ImtGraphQlVoce.arp/PagesController.acc  (Workspace/Administration/Search)
+// A page is shown if the user holds AT LEAST ONE of its codes. Keeping the FULL list matters once
+// users hold granular Change* permissions (e.g. a user with only ChangeMacAddress must still be
+// expected to see Hardware) - an incomplete list would make the structural "menu reflects
+// permissions" assertions wrong for such users.
+//
+// The pageId keys double as the MenuPanel button ids: MenuPanel.qml names each button
+// `model["id"] + "Button"`, and the pages' model ids are exactly these keys (Accounts/Devices/
+// Orders/SoftwareProducts come from CollectionId, the rest from PageId).
 const PAGE_PERMISSIONS = {
   Workspace: ['ViewWorkspace'],
-  Accounts: ['ViewAccounts', 'AddAccount', 'RemoveAccount'],
-  Devices: ['ViewSensors', 'AddSensor', 'RemoveSensor'],
-  Orders: ['ViewOrders', 'AddOrder', 'RemoveOrder'],
+  Accounts: [
+    'ViewAccounts', 'AddAccount', 'RemoveAccount',
+    'ChangeCustomerId', 'ChangeAccountDescription', 'ChangeAccountName',
+    'ChangeAccountEmail', 'ChangeCompanyAddress', 'ChangeAccountGroups',
+  ],
+  Devices: [
+    // NOTE: DevicesPage.acc lists a bare "Remove" here too (an app-config quirk, not a real
+    // FeatureId); it is harmless because no role ever holds it, and is omitted rather than mirrored.
+    'ViewSensors', 'AddSensor', 'RemoveSensor',
+    'ChangeProjectForSensor', 'ChangeMacAddress', 'ChangeSerialNumberForSensor',
+    'ChangeDescriptionForSensor', 'ChangeDeviceType', 'ChangeHardwareConfiguration',
+    'ChangeProductionStatus', 'ChangeOrderForSensor',
+  ],
+  Orders: [
+    'ViewOrders', 'AddOrder', 'RemoveOrder',
+    'ChangeDeliveryId', 'ChangePurchaseOrderId', 'ChangeDescriptionForOrder',
+    'ChangeCustomer', 'ChangeOrderStatus', 'ChangeOrderProducts',
+  ],
   SoftwareProducts: ['ViewLicenses'],
+  Tenants: ['ViewOrganizations'], // "Organizations" page (TenantsPage, IsVisible=true in ProLife)
   Administration: ['ViewUsers', 'ViewRoles', 'ViewGroups', 'ChangeUser', 'ChangeRole', 'ChangeGroups'],
   Search: ['*'], // universal
 };

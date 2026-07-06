@@ -122,7 +122,14 @@ class Table {
   selectRow(index) {
     return gui.click(this.page, [`TableRow_${index}`], { what: `table row ${index}` });
   }
-  /** Sort by a column, addressed by its header field id (e.g. 'Status', 'MacAddress', 'name'). */
+  /**
+   * Sort by a column, addressed by its header field id - this is the page's HeaderIds entry, NOT the
+   * visible HeaderNames caption (the two lists are independently ordered per *Page.acc, e.g. Devices/
+   * SoftwareProducts's "Name" caption maps to id "licenseName", not "name"). Confirm the real id in
+   * the collection's *Page.acc before using a new one here.
+   * @example sortBy('status') // Devices/Orders/SoftwareProducts "Status" column
+   * @example sortBy('macAddress') // Devices "MAC Address" column
+   */
   sortBy(headerId) {
     return gui.click(this.page, ['TableHeaders', headerId], { what: `column "${headerId}"` });
   }

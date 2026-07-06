@@ -102,7 +102,10 @@ test.describe('Accounts / editor', () => {
     });
 
     test('edit fields and save', async ({ page, gui, user }) => {
-      test.skip(!user.can('ChangeAccountName') && !user.can('AddAccount'), 'cannot change any account field');
+      // Editing an EXISTING account's name needs ChangeAccountName. AddAccount only unlocks fields on
+      // a NEW document, so it must NOT gate this edit-save path (a user with AddAccount but not
+      // ChangeAccountName would otherwise reach a read-only field and fail on the fill verify).
+      test.skip(!user.can('ChangeAccountName'), 'cannot change the account name field');
       const editor = await openEditEditor(page);
       await editor.setAccountName('Edited by ProLifeGui');
       await gui.checkScreenshot(page, 'accounts-editor-edit-changed');

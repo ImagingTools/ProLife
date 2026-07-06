@@ -310,17 +310,20 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
+				objectName: "SoftwareInformationHeader";
 				title: qsTr("Software Information");
 				groupView: group;
 			}
 			
 			GroupElementView {
 				id: group;
+				objectName: "SoftwareInformationGroup";
 				
 				width: parent.width;
 				
 				TextInputElementView {
 					id: projectInput;
+					objectName: "ProjectInput";
 					
 					name: qsTr("Project");
 					placeHolderText: qsTr("Enter the project");
@@ -337,6 +340,7 @@ ViewBase {
 				
 				FilterableComboBoxElementView {
 					id: ordersCB;
+					objectName: "OrderCombo";
 					
 					nameId: "orderId";
 					name: qsTr("Order");
@@ -371,12 +375,14 @@ ViewBase {
 			GroupHeaderView {
 				width: parent.width;
 				
+				objectName: "LicenseInformationHeader";
 				title: qsTr("License Information");
 				groupView: group2;
 			}
 			
 			GroupElementView {
 				id: group2;
+				objectName: "LicenseInformationGroup";
 				
 				width: parent.width;
 				
@@ -436,6 +442,7 @@ ViewBase {
 				
 				ComboBoxElementView {
 					id: productCB;
+					objectName: "ProductCombo";
 					
 					name: qsTr("Product");
 					nameId: "productName";
@@ -475,6 +482,7 @@ ViewBase {
 				
 				ComboBoxElementView {
 					id: licenseCB;
+					objectName: "LicenseCombo";
 					
 					nameId: SoftwareProductItemTypeMetaInfo.s_licenseName;
 					name: qsTr("Licenses");
@@ -508,6 +516,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: articleText
+					objectName: "ArticleInput"
 					name: qsTr("Article")
 					readOnly: true
 					KeyNavigation.tab: serialNumberInput
@@ -516,6 +525,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: serialNumberInput;
+					objectName: "SerialNumberInput";
 					
 					placeHolderText: qsTr("Enter the software-ID");
 					name: qsTr("Software-ID");
@@ -538,6 +548,7 @@ ViewBase {
 
 				SwitchElementView {
 					id: internalUseSwitchElementView
+					objectName: "InternalUseSwitch";
 					name: qsTr("Internal Use");
 					description: qsTr("Activate if the license is for internal use");
 					readOnly: root.readOnly
@@ -548,6 +559,7 @@ ViewBase {
 
 				SwitchElementView {
 					id: multipleElementView
+					objectName: "IsMultipleSwitch";
 					name: qsTr("Is Multiple");
 					readOnly: root.readOnly
 					onCheckedChanged: {
@@ -557,6 +569,7 @@ ViewBase {
 
 				SpinBoxElementView {
 					id: productCountElementView
+					objectName: "ProductCountSpinBox";
 					name: qsTr("Product Count");
 					readOnly: root.readOnly
 					visible: multipleElementView.checked
@@ -569,17 +582,20 @@ ViewBase {
 			GroupHeaderView {
 				width: parent.width;
 				
+				objectName: "ExpirationInformationHeader";
 				title: qsTr("Expiration Information");
 				groupView: expirationGroup;
 			}
 			
 			GroupElementView {
 				id: expirationGroup;
+				objectName: "ExpirationInformationGroup";
 				
 				width: parent.width;
 				
 				SwitchElementView {
 					id: unlimitedSwitch;
+					objectName: "UnlimitedSwitch";
 					
 					name: qsTr("Unlimited");
 					description: unlimitedSwitch.checked ? qsTr("Deactivate it if you want to set the expiration date manually") : qsTr("Activate it if you want to set an unlimited expiration date");
@@ -602,6 +618,7 @@ ViewBase {
 				
 				DateTimePickerElementView {
 					id: expirationEditor;
+					objectName: "ExpirationDatePicker";
 					
 					name: qsTr("Expiration");
 					visible: !unlimitedSwitch.checked;

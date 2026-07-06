@@ -174,6 +174,7 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
+				objectName: "CustomerInformationHeader";
 				
 				title: qsTr("Customer Information");
 				groupView: customerInformationGroup;
@@ -181,11 +182,13 @@ ViewBase {
 			
 			GroupElementView {
 				id: customerInformationGroup;
+				objectName: "CustomerInformationGroup";
 				
 				width: parent.width;
 				
 				TextInputElementView {
 					id: customerIdInput;
+					objectName: "CustomerIdInput";
 					
 					name: qsTr("Customer-ID");
 					placeHolderText: qsTr("Enter the customer-ID");
@@ -207,6 +210,7 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
+				objectName: "AccountInformationHeader";
 				
 				title: qsTr("Account Information");
 				groupView: accountInformationGroup;
@@ -214,11 +218,13 @@ ViewBase {
 			
 			GroupElementView {
 				id: accountInformationGroup;
+				objectName: "AccountInformationGroup";
 				
 				width: parent.width;
 				
 				TextInputElementView {
 					id: accountNameInput;
+					objectName: "AccountNameInput";
 					
 					name: qsTr("Account Name");
 					placeHolderText: qsTr("Enter the account name");
@@ -247,6 +253,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: accountDescriptionInput;
+					objectName: "AccountDescriptionInput";
 					
 					name: qsTr("Account Description");
 					placeHolderText: qsTr("Enter the account description");
@@ -267,6 +274,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: emailInput;
+					objectName: "EmailInput";
 					
 					width: parent.width;
 					
@@ -298,6 +306,7 @@ ViewBase {
 			
 			GroupHeaderView {
 				width: parent.width;
+				objectName: "CompanyAddressHeader";
 				
 				title: qsTr("Company Address");
 				groupView: companyAddressGroup;
@@ -305,11 +314,13 @@ ViewBase {
 			
 			GroupElementView {
 				id: companyAddressGroup;
+				objectName: "CompanyAddressGroup";
 				
 				width: parent.width;
 				
 				TextInputElementView {
 					id: countryInput;
+					objectName: "CountryInput";
 					
 					name: qsTr("Country");
 					placeHolderText: qsTr("Enter the country");
@@ -330,6 +341,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: cityInput;
+					objectName: "CityInput";
 					
 					name: qsTr("City");
 					placeHolderText: qsTr("Enter the city");
@@ -350,6 +362,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: postalCodeInput;
+					objectName: "PostalCodeInput";
 					
 					name: qsTr("Postal Code");
 					placeHolderText: qsTr("Enter the postal code");
@@ -370,6 +383,7 @@ ViewBase {
 				
 				TextInputElementView {
 					id: streetInput;
+					objectName: "StreetInput";
 					
 					name: qsTr("Street");
 					placeHolderText: qsTr("Enter the street");
@@ -420,6 +434,7 @@ ViewBase {
 			
 			TableElementView {
 				id: groupsElement;
+				objectName: "GroupsTable";
 				
 				width: parent.width;
 				
