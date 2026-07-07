@@ -340,10 +340,17 @@ ALTER SERVER "PumaServer" OPTIONS (SET host '$DbHost', SET dbname '$PumaDbName')
     }
 }
 
-function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process, [int]$port) {
+function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process, [int]$port, [string]$stdoutFile = "", [string]$stderrFile = "") {
     $deadline = (Get-Date).AddSeconds($StartupTimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         if ($process.HasExited) {
+            Write-Host "`n--- $serverLabel stdout ---" -ForegroundColor Yellow
+            if ($stdoutFile -and (Test-Path $stdoutFile)) { Get-Content $stdoutFile | Write-Host }
+            else { Write-Host "(no stdout captured)" }
+            Write-Host "`n--- $serverLabel stderr ---" -ForegroundColor Yellow
+            if ($stderrFile -and (Test-Path $stderrFile)) { Get-Content $stderrFile | Write-Host }
+            else { Write-Host "(no stderr captured)" }
+            Write-Host "---" -ForegroundColor Yellow
             throw "$serverLabel exited prematurely (exit code $($process.ExitCode))"
         }
         $probe = Test-NetConnection -ComputerName "localhost" -Port $port -WarningAction SilentlyContinue -InformationLevel Quiet
@@ -359,9 +366,11 @@ function Start-PumaTestServer {
         throw "Server executable not found: $PumaServerExePath"
     }
     $workDir = Split-Path -Parent $PumaServerExePath
-    $script:pumaProcess = Start-Process -FilePath $PumaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden
+    $script:pumaStdout = Join-Path $env:TEMP "puma_stdout_$PID.log"
+    $script:pumaStderr = Join-Path $env:TEMP "puma_stderr_$PID.log"
+    $script:pumaProcess = Start-Process -FilePath $PumaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:pumaStdout -RedirectStandardError $script:pumaStderr
     Write-Host "Started PID $($script:pumaProcess.Id)"
-    Wait-ForPort "PumaServerPgTest.exe" $script:pumaProcess $PumaHttpPort
+    Wait-ForPort "PumaServerPgTest.exe" $script:pumaProcess $PumaHttpPort $script:pumaStdout $script:pumaStderr
     Write-Host "Puma test server is accepting connections on port $PumaHttpPort"
 }
 
@@ -371,9 +380,11 @@ function Start-LisaTestServer {
         throw "Server executable not found: $LisaServerExePath"
     }
     $workDir = Split-Path -Parent $LisaServerExePath
-    $script:lisaProcess = Start-Process -FilePath $LisaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden
+    $script:lisaStdout = Join-Path $env:TEMP "lisa_stdout_$PID.log"
+    $script:lisaStderr = Join-Path $env:TEMP "lisa_stderr_$PID.log"
+    $script:lisaProcess = Start-Process -FilePath $LisaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:lisaStdout -RedirectStandardError $script:lisaStderr
     Write-Host "Started PID $($script:lisaProcess.Id)"
-    Wait-ForPort "LisaServerTest.exe" $script:lisaProcess $LisaHttpPort
+    Wait-ForPort "LisaServerTest.exe" $script:lisaProcess $LisaHttpPort $script:lisaStdout $script:lisaStderr
     Write-Host "Lisa test server is accepting connections on port $LisaHttpPort"
 }
 
@@ -383,9 +394,11 @@ function Start-TestServer {
         throw "Server executable not found: $ServerExePath"
     }
     $workDir = Split-Path -Parent $ServerExePath
-    $script:serverProcess = Start-Process -FilePath $ServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden
+    $script:serverStdout = Join-Path $env:TEMP "prolife_stdout_$PID.log"
+    $script:serverStderr = Join-Path $env:TEMP "prolife_stderr_$PID.log"
+    $script:serverProcess = Start-Process -FilePath $ServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:serverStdout -RedirectStandardError $script:serverStderr
     Write-Host "Started PID $($script:serverProcess.Id)"
-    Wait-ForPort "ProLifeServerTest.exe" $script:serverProcess $HttpPort
+    Wait-ForPort "ProLifeServerTest.exe" $script:serverProcess $HttpPort $script:serverStdout $script:serverStderr
     Write-Host "Server is accepting connections on port $HttpPort"
 }
 

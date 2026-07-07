@@ -30,6 +30,29 @@ async function saveStateForUser(browser, user) {
   await page.goto(BASE_URL);
   await waitForStable(page, { timeout: 20000, quietMs: 600 });
   await login(page, user.login, user.password);
+
+  // login() only waits for the DOM to go quiet for a bit after clicking "Sign in" - that can resolve
+  // *before* the app has actually finished writing the authenticated session (accessToken etc.) to
+  // localStorage, if there's a brief lull in DOM mutations while the login GraphQL call is still in
+  // flight. Capturing storageState() at that point silently produces an empty/unauthenticated snapshot
+  // (only the pre-login placeholder keys), which every test using it then runs against as if logged
+  // out - confirmed empirically: this is what was producing "DevicesButton not found" etc. across the
+  // whole suite, not a server or concurrency issue. Wait for the real signal (a non-empty accessToken)
+  // before snapshotting.
+  await page.waitForFunction(
+    () => {
+      try {
+        const raw = localStorage.getItem('AuthorizationController/accessToken');
+        return !!raw && JSON.parse(raw).length > 0;
+      }
+      catch {
+        return false;
+      }
+    },
+    undefined,
+    { timeout: 30000 }
+  );
+
   const dest = path.resolve(__dirname, authFile(user.key));
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   await context.storageState({ path: dest });
