@@ -86,6 +86,18 @@ const DEVICE_COMMAND_PERMISSIONS = {
 };
 
 function canRunDeviceCommand(user, commandId) {
+  // "su" is the bootstrapped superuser (CUserControllerComp::OnCreateSuperuser in ImtCore) - it is
+  // never assigned a role, so its real server-side permission set is EMPTY, not "everything". That's
+  // invisible for most Devices commands only because Bind/CreateLicenseFile/TransferLicenses have no
+  // registered command-permission entry at all in Partitura/ProLifeVoce.arp/DevicePermissions.acc's
+  // PermissionsJoiner (so they're ungated for ANY logged-in user - a separate finding, not a su quirk).
+  // ResetTransferCounter is the one Devices command that IS actually permission-checked
+  // (CCommandsControllerComp::GetRepresentationFromGuiElementContainer), and su genuinely fails that
+  // check server-side. Model that one real exception here instead of treating su's '*' as a true
+  // bypass; use a role-based user (e.g. "fullAccess", which holds ResetTransferCounter via
+  // SENSOR_FULL in fixtures/users.js) to exercise this command end-to-end.
+  if (user.key === 'su' && commandId === 'ResetTransferCounter') return false;
+
   const perms = DEVICE_COMMAND_PERMISSIONS[commandId] || [];
   if (perms.includes('*')) return true;
   return perms.some((p) => can(user, p));

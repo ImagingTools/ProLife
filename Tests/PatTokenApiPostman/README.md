@@ -9,7 +9,7 @@ Built by analogy with `Tests\ProLifeApiPostman` and `Tests\DeskTicketApiPostman`
 ## Contents
 
 - `PatTokenApi.postman_collection.json` - main collection (Postman v2.1), 92 requests across 12 folders
-- `PatTokenApi-Dev.postman_environment.json` - environment template, defaults to `http://localhost:7778/ProLife`
+- `PatTokenApi-Dev.postman_environment.json` - environment template, defaults to `http://localhost:17778/ProLife`
 - `Run-CiTests.ps1` - CI entry point: resets `prolife_test`, starts `ProLifeServerTest.exe` on port 17778, runs newman against the default (non-opt-in) folders, tears the server down. Same isolated test server/DB as `ProLifeApiPostman`'s own CI script - run this as its own sequential CI step, not concurrently with it.
 - `package.json` - pins the `newman` devDependency
 
@@ -22,7 +22,7 @@ Built by analogy with `Tests\ProLifeApiPostman` and `Tests\DeskTicketApiPostman`
 
 ## Required Environment Variables
 
-- `baseUrl` (default `http://localhost:7778/ProLife`) / `productId` (`ProLife`)
+- `baseUrl` (default `http://localhost:17778/ProLife`) / `productId` (`ProLife`)
 - `suLogin` / `suPassword` - superuser credentials (default `su` / `1`)
 - `cacheStalenessLongWaitEnabled` (default `false`) - see folder `91` below
 

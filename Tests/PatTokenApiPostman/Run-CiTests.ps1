@@ -209,7 +209,8 @@ function Invoke-NewmanSuite {
     $newmanCmd = Install-NewmanIfNeeded
 
     Write-Step "Running newman suite"
-    $baseUrl = "http://localhost:$HttpPort/ProLife/graphql"
+    # NOT .../ProLife/graphql — the collection templates every URL as "{{baseUrl}}/graphql"
+    $baseUrl = "http://localhost:$HttpPort/ProLife"
 
     # Folders 90/91 are deliberately excluded by default - see README
     # ("Known Limitations / Opt-in folders"): 90 demonstrates omitted required input arg error,

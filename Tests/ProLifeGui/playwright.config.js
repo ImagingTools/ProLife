@@ -24,6 +24,15 @@ module.exports = defineConfig({
   timeout: 0,
   expect: { timeout: 15_000 },
   forbidOnly: !!process.env.CI,
+  // workers: 1 is REQUIRED here, and the reason is structural, not just CPU capacity. Every project is
+  // one fixture USER, and ProLife keeps that user's open document tabs / view state in server-side
+  // workspace state (MultiDocumentCollectionView.qml). Two tests running as the same user concurrently
+  // therefore share - and corrupt - one workspace: worker A opens a "New" editor tab while worker B's
+  // navigation closes it, so the editor/collection command bars flicker between present and absent and
+  // tests fail nondeterministically (empirically: at 2 workers the editor specs fail, at 1 they pass).
+  // Serializing per user removes that shared-state contention. (It also keeps the Debug backend from
+  // being hammered by parallel WASM asset + GraphQL load, but the workspace-sharing is the hard reason.)
+  workers: 1,
   reporter: process.env.CI ? [['list'], ['junit', { outputFile: 'junit-report.xml' }]] : 'list',
   globalSetup: require.resolve('./global-setup.js'),
 
