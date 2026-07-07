@@ -274,6 +274,7 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 
 	// CustomerRoles: new section (prolifeVersion >= 6000)
 	iser::CArchiveTag customerRolesTag("CustomerRoles", "Customer roles for the order", iser::CArchiveTag::TT_GROUP);
+	bool customerRolesReadOk = false;
 	if (prolifeVersion > 12698){
 		if (archive.IsStoring()){
 			// Ensure at least one RT_ORDERING_PARTY role exists when storing
@@ -301,29 +302,45 @@ bool COrderInfo::Serialize(iser::IArchive& archive)
 					newRolePtr.GetPtr(),
 					QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8());
 			}
+
+			retVal = retVal && archive.BeginTag(customerRolesTag);
+			retVal = retVal && m_customerRoles.Serialize(archive);
+			retVal = retVal && archive.EndTag(customerRolesTag);
 		}
+		else{
+			// Reading: some real historical documents were written with a prolifeVersion above this
+			// threshold but still lack a "CustomerRoles" section entirely (the write-side condition and
+			// this threshold have drifted apart at some point in the past - the section was likely
+			// introduced later than version 12698, not at it). Previously this made BeginTag() fail and,
+			// because retVal was ANDed with it, failed Serialize() for the whole document - one such
+			// legacy Order was then enough to break every list/aggregate query that touched it. Read
+			// defensively instead: treat a missing/unreadable section as "no roles recorded yet" and
+			// fall through to the legacy single-customer synthesis below, exactly like a pre-12698
+			// document would.
+			customerRolesReadOk = archive.BeginTag(customerRolesTag)
+				&& m_customerRoles.Serialize(archive)
+				&& archive.EndTag(customerRolesTag);
 
-		retVal = retVal && archive.BeginTag(customerRolesTag);
-		retVal = retVal && m_customerRoles.Serialize(archive);
-		retVal = retVal && archive.EndTag(customerRolesTag);
-
-		if (!archive.IsStoring()){
-			// Sync m_customerId from the RT_ORDERING_PARTY role after loading
-			imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
-			for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
-				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_customerRoles.GetObjectData(roleId, dataPtr)){
-					const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(dataPtr.GetPtr());
-					if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
-						m_customerId = rolePtr->GetCustomerId();
-						break;
+			if (customerRolesReadOk){
+				// Sync m_customerId from the RT_ORDERING_PARTY role after loading
+				imtbase::ICollectionInfo::Ids roleIds = m_customerRoles.GetElementIds();
+				for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+					imtbase::IObjectCollection::DataPtr dataPtr;
+					if (m_customerRoles.GetObjectData(roleId, dataPtr)){
+						const COrderCustomerRole* rolePtr = dynamic_cast<const COrderCustomerRole*>(dataPtr.GetPtr());
+						if (rolePtr != nullptr && rolePtr->GetRoleType() == IOrderCustomerRole::RT_ORDERING_PARTY){
+							m_customerId = rolePtr->GetCustomerId();
+							break;
+						}
 					}
 				}
 			}
 		}
 	}
-	else if (!archive.IsStoring()){
-		// Old format: create a single RT_ORDERING_PARTY role from the legacy m_customerId
+
+	if (!archive.IsStoring() && !customerRolesReadOk){
+		// Old format (prolifeVersion <= 12698), or a newer document whose CustomerRoles section could
+		// not be read (see above): create a single RT_ORDERING_PARTY role from the legacy m_customerId.
 		if (!m_customerId.isEmpty()){
 			COrderCustomerRole* newRole = new COrderCustomerRole();
 			newRole->SetCustomerId(m_customerId);

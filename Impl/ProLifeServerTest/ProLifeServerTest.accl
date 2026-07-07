@@ -10,7 +10,6 @@
     <PositionMap>
         <Element ComponentName="Application" X="600" Y="175" Note=""/>
         <Element ComponentName="ProLifeServerBase" X="200" Y="400" Note=""/>
-        <Element ComponentName="SingletonDocApplication" X="600" Y="50" Note=""/>
         <Element ComponentName="VersionInfo" X="1000" Y="400" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
