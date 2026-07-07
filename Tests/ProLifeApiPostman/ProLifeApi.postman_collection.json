@@ -445,6 +445,363 @@
               }
             }
           ]
+        },
+        {
+          "name": "OrderUpdate (Add new software product)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{orderId}}\", item: { id: \"{{orderId}}\", name: \"PO Product Lifecycle\", description: \"Product lifecycle scenario\", orderId: \"PO-{{randomInt}}\", purchaseId: \"PO-{{randomInt}}\", customerId: \"{{accountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{randomUuid}}\", productUuid: \"{{softwareCatalogProductId}}\", licenseUuid: \"{{licenseDefinitionId}}\", categoryId: \"Software\", licenseId: \"SW-{{randomInt}}\", productName: \"ProLifeApi Order Software\", licenseName: \"ProLifeApi Order Software License\", serialNumber: \"ORD-SW-{{randomInt}}\", inUse: false, isNew: true, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Adds a brand-new (isNew:true) Software orderProducts line. Server-side (COrderCollectionControllerComp::CreateNewSoftware) this must auto-create a real SoftwareProduct entity with orderUuid set to this order - verified by the next request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderUpdate (add software) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('orderNewSoftwareProductId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductItem (Check new software linked to order)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{orderNewSoftwareProductId}}\" }) { id orderUuid } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms adding a product to an Order really creates a SoftwareProduct row (not just an in-memory line item), with orderUuid pointing back at the order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('New software product was auto-created by OrderUpdate and linked to the order', function () {",
+                  "  pm.expect(json.data.SoftwareProductItem.id).to.eql(pm.environment.get('orderNewSoftwareProductId'));",
+                  "  pm.expect(json.data.SoftwareProductItem.orderUuid).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrderUpdate (Replace with new hardware product)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{orderId}}\", item: { id: \"{{orderId}}\", name: \"PO Product Lifecycle\", description: \"Product lifecycle scenario\", orderId: \"PO-{{randomInt}}\", purchaseId: \"PO-{{randomInt}}\", customerId: \"{{accountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{randomUuid}}\", productUuid: \"{{deviceTypeId}}\", licenseUuid: \"{{deviceConfigurationId}}\", categoryId: \"Hardware\", licenseId: \"HW-{{randomInt}}\", productName: \"ProLifeApi Order Hardware\", licenseName: \"ProLifeApi Order Hardware License\", serialNumber: \"ORD-HW-{{randomInt}}\", macAddress: \"AA:BB:CC:DD:EE:{{randomInt}}\", inUse: false, isNew: true, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Replaces orderProducts wholesale with a brand-new (isNew:true) Hardware line, dropping the software line added above. Server-side this must both auto-create a new Device (with a non-empty macAddress+serialNumber, which CDeviceControllerComp/COrderCollectionControllerComp::CreateNewHardware auto-marks as productionStatus Finished) and clear orderUuid on the now-removed software product - both verified below."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderUpdate (replace with hardware) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('orderNewDeviceId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceItem (Check new device linked to order)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{orderNewDeviceId}}\" }) { id orderId productionStatus macAddress serialNumber } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms adding a Hardware product to an Order creates a real Device row linked via orderId, and that supplying both macAddress and serialNumber makes the server auto-set productionStatus to Finished (CreateNewHardware)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('New device was auto-created by OrderUpdate and linked to the order', function () {",
+                  "  pm.expect(json.data.DeviceItem.id).to.eql(pm.environment.get('orderNewDeviceId'));",
+                  "  pm.expect(json.data.DeviceItem.orderId).to.eql(pm.environment.get('orderId'));",
+                  "});",
+                  "pm.test('New device with MAC address + serial number is auto-set to Finished', function () {",
+                  "  pm.expect(json.data.DeviceItem.productionStatus).to.eql('Finished');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductItem (Check Order-ID cleared after replacement)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{orderNewSoftwareProductId}}\" }) { id orderUuid } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "The software product added earlier is no longer part of orderProducts (replaced by the hardware line). GenerateDifferences must detect it as removed and UpdateOrderForSoftware(id, \"\") must clear its orderUuid back to empty."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('Software product removed from the order has its orderUuid cleared', function () {",
+                  "  pm.expect(json.data.SoftwareProductItem.orderUuid).to.eql('');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: DeviceAdd (pre-existing device for order re-link test)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Order-Link Device\", description: \"Pre-existing device for order-link scenario\", macAddress: \"11:22:33:44:55:{{randomInt}}\", serialNumber: \"ORD-LINK-HW-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "A standalone device created outside of any order, used to verify that OrderUpdate can also link a pre-existing (isNew:false) entity to an order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceAdd (order-link) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('orderExistingDeviceId', json.data && json.data.DeviceAdd && json.data.DeviceAdd.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: SoftwareProductAdd (pre-existing software for order re-link test)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductAdd { SoftwareProductAdd(input: { typeId: \"SoftwareProduct\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"ORD-LINK-SW-{{randomInt}}\", project: \"Test\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "A standalone software product created outside of any order, used to verify that OrderUpdate can also link a pre-existing (isNew:false) entity to an order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductAdd (order-link) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('orderExistingSoftwareId', json.data && json.data.SoftwareProductAdd && json.data.SoftwareProductAdd.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrderUpdate (Link pre-existing products)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{orderId}}\", item: { id: \"{{orderId}}\", name: \"PO Product Lifecycle\", description: \"Product lifecycle scenario\", orderId: \"PO-{{randomInt}}\", purchaseId: \"PO-{{randomInt}}\", customerId: \"{{accountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{orderExistingDeviceId}}\", productUuid: \"{{deviceTypeId}}\", licenseUuid: \"{{deviceConfigurationId}}\", categoryId: \"Hardware\", licenseId: \"HW-{{randomInt}}\", productName: \"ProLifeApi Order-Link Device\", licenseName: \"ProLifeApi Order-Link Device License\", serialNumber: \"ORD-LINK-HW-{{randomInt}}\", macAddress: \"11:22:33:44:55:{{randomInt}}\", inUse: false, isNew: false, expiration: \"\" }, { id: \"{{orderExistingSoftwareId}}\", productUuid: \"{{softwareCatalogProductId}}\", licenseUuid: \"{{licenseDefinitionId}}\", categoryId: \"Software\", licenseId: \"SW-{{randomInt}}\", productName: \"ProLifeApi Order-Link Software\", licenseName: \"ProLifeApi Order-Link Software License\", serialNumber: \"ORD-LINK-SW-{{randomInt}}\", inUse: false, isNew: false, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Replaces orderProducts again, this time with two already-existing (isNew:false) entities by id, dropping the hardware line created in the earlier step. Server-side this must link the two pre-existing entities to this order (UpdateOrderForHardware/Software) and clear orderId on the now-dropped device - both verified below."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderUpdate (link pre-existing) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceItem (Check pre-existing device now linked)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{orderExistingDeviceId}}\" }) { id orderId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms linking a pre-existing (isNew:false) product by id to an Order sets its orderId, without needing to re-create the entity."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('Pre-existing device is now linked to the order', function () {",
+                  "  pm.expect(json.data.DeviceItem.orderId).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductItem (Check pre-existing software now linked)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{orderExistingSoftwareId}}\" }) { id orderUuid } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms linking a pre-existing (isNew:false) software product by id to an Order sets its orderUuid, without needing to re-create the entity."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('Pre-existing software product is now linked to the order', function () {",
+                  "  pm.expect(json.data.SoftwareProductItem.orderUuid).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceItem (Check previously-added device now cleared)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{orderNewDeviceId}}\" }) { id orderId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "The device auto-created in an earlier step is no longer part of orderProducts (replaced by the pre-existing product pair). Confirms the same clear-on-removal behaviour holds for auto-created (not just pre-existing) devices."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('Device removed from the order has its orderId cleared', function () {",
+                  "  pm.expect(json.data.DeviceItem.orderId).to.eql('');",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -2607,6 +2964,523 @@
       ]
     },
     {
+      "name": "08 Meta Info Propagation - Account & Order Field Sync",
+      "item": [
+        {
+          "name": "Setup: AccountAdd (Meta Info scenario)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"MetaScenario Account {{randomInt}}\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Standalone Account created specifically for the meta-info propagation scenario below - kept separate from {{accountId}} used elsewhere to avoid cross-test interference."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountAdd (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaAccountId', json.data && json.data.AccountAdd && json.data.AccountAdd.id);",
+                  "pm.environment.set('metaAccountName1', 'MetaScenario Account ' + pm.environment.get('randomInt'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: OrderAdd (Meta Info scenario)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderAdd { OrderAdd(input: { typeId: \"Order\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"\", description: \"Meta info propagation scenario\", orderId: \"META-{{randomInt}}\", purchaseId: \"META-{{randomInt}}\", customerId: \"{{metaAccountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Standalone Order created specifically for the meta-info propagation scenario. Note: both orderId and purchaseId are templated from the same {{randomInt}} so they share one value per Postman's single prerequest-per-request evaluation - captured once into metaOrderDeliveryId1/metaOrderPurchaseId1 for later assertions."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderAdd (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaOrderId', json.data && json.data.OrderAdd && json.data.OrderAdd.id);",
+                  "pm.environment.set('metaOrderDeliveryId1', 'META-' + pm.environment.get('randomInt'));",
+                  "pm.environment.set('metaOrderPurchaseId1', 'META-' + pm.environment.get('randomInt'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: DeviceAdd (Meta Info scenario)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Meta Device\", description: \"Meta info propagation scenario\", macAddress: \"AA:BB:CC:DD:FF:{{randomInt}}\", serialNumber: \"META-SN-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"{{metaOrderId}}\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Device linked directly to the scenario order via its own orderId field (DeviceData.orderId is directly settable - no need to go through OrderUpdate's orderProducts mechanism for this scenario, since only the meta-info read path is under test here)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceAdd (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaDeviceId', json.data && json.data.DeviceAdd && json.data.DeviceAdd.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: SoftwareProductAdd (Meta Info scenario)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductAdd { SoftwareProductAdd(input: { typeId: \"SoftwareProduct\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"META-SW-{{randomInt}}\", project: \"Test\", inUse: false, orderUuid: \"{{metaOrderId}}\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "SoftwareProduct linked directly to the scenario order via its own orderUuid field, same rationale as the device above."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductAdd (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaSoftwareId', json.data && json.data.SoftwareProductAdd && json.data.SoftwareProductAdd.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DevicesList (Check initial meta info)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Baseline: a device linked to an order must show that order's current delivery/purchase id and its customer's current name (CDeviceMetaInfoCreatorComp resolves these live from the linked Order/Account, not from a value copied at link time)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DevicesList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.DevicesList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaDeviceId'); });",
+                  "pm.test('DevicesList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerLink.name reflects the account name', function () {",
+                  "  pm.expect(item.customerLink.name).to.eql(pm.environment.get('metaAccountName1'));",
+                  "});",
+                  "pm.test('deliveryIdLink.name reflects the order delivery id', function () {",
+                  "  pm.expect(item.deliveryIdLink.name).to.eql(pm.environment.get('metaOrderDeliveryId1'));",
+                  "});",
+                  "pm.test('purchaseIdLink.name reflects the order purchase id', function () {",
+                  "  pm.expect(item.purchaseIdLink.name).to.eql(pm.environment.get('metaOrderPurchaseId1'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductsList (Check initial meta info)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductsList { SoftwareProductsList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Baseline: same as the DevicesList check above, but for a SoftwareProduct (CSoftwareMetaInfoCreatorComp mirrors the same live-resolution logic)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductsList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.SoftwareProductsList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaSoftwareId'); });",
+                  "pm.test('SoftwareProductsList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerLink.name reflects the account name', function () {",
+                  "  pm.expect(item.customerLink.name).to.eql(pm.environment.get('metaAccountName1'));",
+                  "});",
+                  "pm.test('deliveryIdLink.name reflects the order delivery id', function () {",
+                  "  pm.expect(item.deliveryIdLink.name).to.eql(pm.environment.get('metaOrderDeliveryId1'));",
+                  "});",
+                  "pm.test('purchaseIdLink.name reflects the order purchase id', function () {",
+                  "  pm.expect(item.purchaseIdLink.name).to.eql(pm.environment.get('metaOrderPurchaseId1'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrdersList (Check initial meta info)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrdersList { OrdersList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Baseline: an order's own customerName (COrderMetaInfoCreatorComp) is likewise resolved live from its linked Account, not copied at order-creation time."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrdersList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.OrdersList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaOrderId'); });",
+                  "pm.test('OrdersList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerName reflects the account name', function () {",
+                  "  pm.expect(item.customerName).to.eql(pm.environment.get('metaAccountName1'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "AccountUpdate (Meta Info scenario - change name)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{metaAccountId}}\", item: { id: \"{{metaAccountId}}\", name: \"MetaScenario Account {{randomInt}} Renamed\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Renames the scenario Account. Devices/SoftwareProducts/Orders linked to it must reflect the new name on their next list query - verified below."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AccountUpdate (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaAccountName2', 'MetaScenario Account ' + pm.environment.get('randomInt') + ' Renamed');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DevicesList (Check Account name propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms renaming the Account is immediately reflected in DevicesList's customerLink for every device linked to an order placed by that account."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DevicesList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.DevicesList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaDeviceId'); });",
+                  "pm.test('DevicesList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerLink.name reflects the renamed account', function () {",
+                  "  pm.expect(item.customerLink.name).to.eql(pm.environment.get('metaAccountName2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductsList (Check Account name propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductsList { SoftwareProductsList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms renaming the Account is immediately reflected in SoftwareProductsList's customerLink for every software product linked to an order placed by that account."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductsList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.SoftwareProductsList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaSoftwareId'); });",
+                  "pm.test('SoftwareProductsList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerLink.name reflects the renamed account', function () {",
+                  "  pm.expect(item.customerLink.name).to.eql(pm.environment.get('metaAccountName2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrdersList (Check Account name propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrdersList { OrdersList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms renaming the Account is immediately reflected in OrdersList's customerName for that account's own order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrdersList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.OrdersList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaOrderId'); });",
+                  "pm.test('OrdersList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('customerName reflects the renamed account', function () {",
+                  "  pm.expect(item.customerName).to.eql(pm.environment.get('metaAccountName2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "OrderUpdate (Meta Info scenario - change delivery/purchase id)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{metaOrderId}}\", item: { id: \"{{metaOrderId}}\", name: \"\", description: \"Meta info propagation scenario\", orderId: \"META-{{randomInt}}-Updated\", purchaseId: \"META-{{randomInt}}-Updated\", customerId: \"{{metaAccountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{metaDeviceId}}\", productUuid: \"{{deviceTypeId}}\", licenseUuid: \"{{deviceConfigurationId}}\", categoryId: \"Hardware\", isNew: false, expiration: \"\" }, { id: \"{{metaSoftwareId}}\", productUuid: \"{{softwareCatalogProductId}}\", licenseUuid: \"{{licenseDefinitionId}}\", categoryId: \"Software\", isNew: false, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Changes the scenario order's own delivery id (orderId) and purchase id. Must explicitly re-list the two products already linked to this order (isNew:false) - COrderCollectionControllerComp::GenerateDifferences diffs against the order's live current-products collection (which includes these two, linked directly via their own orderId/orderUuid fields), not just against what a previous OrderUpdate call happened to pass; omitting them here would wrongly clear their order link as an unintended side effect (confirmed empirically: an earlier draft of this request that passed orderProducts: [] did exactly that)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderUpdate (meta scenario) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('metaOrderDeliveryId2', 'META-' + pm.environment.get('randomInt') + '-Updated');",
+                  "pm.environment.set('metaOrderPurchaseId2', 'META-' + pm.environment.get('randomInt') + '-Updated');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DevicesList (Check DeliveryId/PurchaseId propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms changing the order's delivery/purchase id is immediately reflected in DevicesList for every device linked to that order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DevicesList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.DevicesList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaDeviceId'); });",
+                  "pm.test('DevicesList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('deliveryIdLink.name reflects the updated delivery id', function () {",
+                  "  pm.expect(item.deliveryIdLink.name).to.eql(pm.environment.get('metaOrderDeliveryId2'));",
+                  "});",
+                  "pm.test('purchaseIdLink.name reflects the updated purchase id', function () {",
+                  "  pm.expect(item.purchaseIdLink.name).to.eql(pm.environment.get('metaOrderPurchaseId2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductsList (Check DeliveryId/PurchaseId propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductsList { SoftwareProductsList(input: { viewParams: { count: 5, offset: 0, filterModel: { sortingInfo: [ { fieldId: \"timeStamp\", sortingOrder: \"DESC\" } ] } } }) { items { id name customerName customerLink { id name } purchaseIdLink { id name } deliveryIdLink { id name } orderId purchaseId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms changing the order's delivery/purchase id is immediately reflected in SoftwareProductsList for every software product linked to that order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductsList has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const items = json.data.SoftwareProductsList.items;",
+                  "const item = items.find(function (i) { return i.id === pm.environment.get('metaSoftwareId'); });",
+                  "pm.test('SoftwareProductsList includes the meta-info scenario item (sorted by newest first)', function () {",
+                  "  pm.expect(item, 'item not found in the first page sorted by timeStamp DESC').to.be.an('object');",
+                  "});",
+                  "pm.test('deliveryIdLink.name reflects the updated delivery id', function () {",
+                  "  pm.expect(item.deliveryIdLink.name).to.eql(pm.environment.get('metaOrderDeliveryId2'));",
+                  "});",
+                  "pm.test('purchaseIdLink.name reflects the updated purchase id', function () {",
+                  "  pm.expect(item.purchaseIdLink.name).to.eql(pm.environment.get('metaOrderPurchaseId2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "99 Cleanup",
       "item": [
         {
@@ -2617,7 +3491,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Devices\", elementIds: [\"{{deviceId}}\", \"{{deviceId2}}\"] }) { success } }",
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Devices\", elementIds: [ \"{{metaDeviceId}}\", \"{{deviceId}}\", \"{{deviceId2}}\"] }) { success } }",
                 "variables": ""
               }
             },
@@ -2649,7 +3523,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"SoftwareProducts\", elementIds: [\"{{softwareProductId}}\"] }) { success } }",
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"SoftwareProducts\", elementIds: [ \"{{metaSoftwareId}}\", \"{{softwareProductId}}\"] }) { success } }",
                 "variables": ""
               }
             },
@@ -2681,7 +3555,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Orders\", elementIds: [\"{{orderId}}\"] }) { success } }",
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Orders\", elementIds: [ \"{{metaOrderId}}\", \"{{orderId}}\"] }) { success } }",
                 "variables": ""
               }
             },
@@ -2777,7 +3651,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{accountId}}\"] }) { success } }",
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [ \"{{metaAccountId}}\", \"{{accountId}}\"] }) { success } }",
                 "variables": ""
               }
             },
