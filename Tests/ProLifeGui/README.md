@@ -14,7 +14,7 @@ left untouched; they were used only as reference.
 | Mostly `clickAt(page, x, y)` coordinates — brittle | `objectName` paths + page objects — layout-independent |
 | `utils.js` `fillTextInput` silently no-ops on a missing field | Every action **hard-fails** if its target is missing/invisible/ambiguous |
 | `waitForDomStability` diffs full `outerHTML` every 100 ms | `waitForStable` uses an in-page `MutationObserver` |
-| One user (`su`), one `storageState.json` | One project **per user**, one `storageState` each, seeded via GraphQL |
+| One user (`su`), one `storageState.json` | One project **per user**, one `storageState` each, restored from a backup |
 | Raw `objectName` arrays copy-pasted | `controls/` + `pages/` vocabulary |
 | Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer + optional structural matrix assertions |
 
@@ -22,13 +22,19 @@ left untouched; they were used only as reference.
 
 ```
 lib/            gui.js (barrel = the "utils.js replacement") + dom, actions, stability, screenshot
-fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creation) · test.js (fixtures)
+fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creation, used to BAKE fixture
+                users into puma.backup - see Generate-Backups.ps1, not called at test-run time) ·
+                test.js (fixtures)
 controls/       Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Dialog
-pages/          BasePage · CollectionPage · WorkspacePage (worked example) · index
+pages/          BasePage · CollectionPage · Workspace/Device/Software/Order/Account (collection+editor)
+                · Administration/Organizations/Search (navigation + screenshot) · index
 matrix/         permissions.js — UI element → required permission codes (mirrors Pages.acc / ProLifeFeatures.xml)
-tests/          workspace.multiuser.test.js (worked example) ; per-user baselines in tests/__screenshots__/<user>/
-global-setup.js seeds users, then mints one storageState per user
-playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}
+tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
+                organizations · search · login.guest ; per-user baselines in tests/__screenshots__/<user>/
+scripts/        seed-fixture-users.js — one-off seeding script used by Generate-Backups.ps1 (see below)
+global-setup.js logs in as each fixture user (already baked into puma.backup) and mints one storageState
+playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 1
+                (the app is a single shared server instance - see Run-CiTests.ps1)
 ```
 
 ## Multi-user model (the core idea)
@@ -38,10 +44,21 @@ playwright.config.js  one project per user (+ guest); snapshots keyed by {projec
 | key | role / permissions | expected to see |
 |---|---|---|
 | `su` | superuser (`*`) | everything |
-| `fullAccess` | ViewWorkspace/Accounts/Sensors/Orders/Licenses/Users/Roles/Groups (+Add*) | all pages |
-| `accountsViewer` | `ViewAccounts` only | Accounts + Search |
+| `fullAccess` | full View/Add/Edit/Change/Remove for Accounts/Sensors/Orders/Licenses + Workspace + ViewOrganizations + admin views | all pages (edits & saves everywhere) |
+| `hardwareManager` | full Sensor rights (Bind/Transfer/Reset/CreateLicenseFile/Revision/all Change*) + ViewAccounts | Hardware + Accounts + Search |
+| `licenseManager` | full License rights incl. `SplitLicense`/`RevokeLicense` command perms + ViewAccounts | Software + Accounts + Search |
+| `orderManager` | full Order rights + ViewRevisions + ViewAccounts | Orders + Accounts + Search |
+| `adminManager` | ViewUsers/Roles/Groups + Change/Edit/Add/Remove User/Role/Group | Administration + Search |
+| `orgViewer` | `ViewOrganizations` only | Organizations + Search |
+| `accountsViewer` | `ViewAccounts` only (read-only) | Accounts + Search |
 | `noAccess` | (none) | Search only |
 | `guest` | unauthenticated | login page |
+
+The granular managers exist so each domain's **full command bar + editor save path runs for a
+non-superuser** (permission-driven, not `*`), and `orgViewer`/`adminManager` are the users that make
+the Organizations / Administration pages appear. Every seeded user's page set is asserted structurally
+by `workspace.multiuser.test.js` → "menu reflects permissions" against `matrix/permissions.js`
+(`PAGE_PERMISSIONS`, transcribed verbatim from `Pages.acc` / `PagesController.acc`).
 
 `playwright.config.js` turns each into a **Playwright project** with its own `storageState`. A spec is
 therefore run once per user, and `snapshotPathTemplate` writes baselines to
@@ -78,8 +95,10 @@ structural check (see `menu reflects permissions` in the example spec).
 
 ## Running
 
-Requires the ProLife WASM app served at `http://localhost:17778` with Puma (auth) + Lisa up, and an
-empty/known ProLife DB (only `su` needed — the rest is seeded).
+Requires the ProLife WASM app served at `http://localhost:17778` with Puma (auth) + Lisa up, and a
+**real, populated** ProLife/Puma DB - see [CI](#ci-run-citestsps1) below for exactly what that means and
+why. `Run-CiTests.ps1` sets all of this up from scratch; running against a different environment means
+reproducing the same restores yourself.
 
 ```bash
 cd Tests/ProLifeGui
@@ -98,9 +117,60 @@ npx playwright test --project=accountsViewer
 npx playwright test --list
 ```
 
-The reference environment (`../frontend/start.sh` / `reset_db.sh`) restores the DBs from backups,
-boots Puma/Lisa/ProLife, then runs Playwright — point it at this folder to run in CI. Baselines are
-per-platform (`-win32` / `-linux`), so mint them on the same OS the CI uses.
+Baselines are per-platform (`-win32` / `-linux`), so mint them on the same OS the CI uses.
+
+## CI (`Run-CiTests.ps1`)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
+```
+
+TeamCity-ready entry point, mirroring `Tests\ProLifeApiPostman\Run-CiTests.ps1` (same dependency
+startup/teardown; swaps newman for Playwright). Starts, in order:
+
+1. `PumaServerPgTest.exe` (database `puma_test`, HTTP port `17788`) — restored from **`puma.backup`
+   right here in this folder**, not the plain one `ProLifeApiPostman` uses. It's a derived backup: the
+   real ~725-user Puma export plus the 8 `fixtures/users.js` roles/users baked in on top (see
+   `Generate-Backups.ps1` below). This is what lets `global-setup.js` just log in instead of creating
+   anything at run time.
+2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) — restored from the shared
+   `Tests\ProLifeApiPostman\lisa.backup`.
+3. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) — restored from the shared
+   `Tests\ProLifeApiPostman\prolife.backup` (real Devices/Orders/Accounts/SoftwareInstances data, incl.
+   the exact catalog/type records `DeviceCollectionPage`/`SoftwareCollectionPage` tests filter/select
+   against - an empty schema can never exercise those, no GraphQL mutation can create them). Its
+   `PumaServer` FDW foreign-server definition then gets repointed at `puma_test` (`Repair-
+   ProLifeForeignServers` - see the identical, more detailed note in `ProLifeApiPostman`'s README) before
+   the server starts. This is the same executable that serves the WASM app Playwright drives.
+   `New-SuperuserIfNeeded` (`CreateSuperuser`, `-SuPassword`) still runs as a safety net, but is expected
+   to no-op with "Superuser already exists" since `puma.backup` already has one.
+
+`npm install` and `npx playwright install chromium` run automatically if needed, then `npx playwright
+test` runs with `CI=true` (switching `playwright.config.js` to the junit reporter, `junit-report.xml`)
+and `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`. `workers: 1` in
+`playwright.config.js` matters here: this is a *single shared* server instance, and running multiple
+user-projects' sessions against it concurrently produced real `"Authorization server connection error"`
+failures under load - the whole suite runs serially instead. Teardown stops all three servers in reverse
+order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
+to `Puma`/`Lisa` siblings of the ProLife checkout) — pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if
+your agent lays checkouts out differently.
+
+### Regenerating `puma.backup` (`Generate-Backups.ps1`)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Generate-Backups.ps1
+```
+
+Re-run this whenever `fixtures/users.js` changes (new fixture user, renamed permission set, different
+password, ...) to keep `puma.backup` in sync. It restores the plain `puma`/`lisa`/`prolife` backups from
+`Tests\ProLifeApiPostman`, boots all three servers, bootstraps `su`, runs `scripts/seed-fixture-users.js`
+(the exact same `fixtures/seed.js` logic `global-setup.js` used to call directly, before it was baked
+into the backup) against the live server, then `pg_dump`s `puma_test` back out to
+`Tests\ProLifeGui\puma.backup`. Only `puma_test` needs a ProLifeGui-specific derived backup:
+`prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` are `postgres_fdw` foreign tables that read
+live from `puma_test` at query time, so the fixture users are visible from `prolife_test` automatically
+with nothing to re-dump on the ProLife side - `Run-CiTests.ps1` restores `prolife_test`/`lisa_test` from
+the plain, shared backups.
 
 ## Hardware (Devices) — full worked coverage
 
@@ -138,8 +208,23 @@ Filters, command-bar commands and table columns were **already** instrumented up
 (`FilterDelegateBase` → `objectName: filterId`, `CommandsView` → `"<id>Button"`,
 `TableHeaderDelegate` → `objectName: headerId`), so no change was needed there.
 
-## Still to migrate
+## Page coverage & instrumentation boundary
 
-Customers / Orders / Licenses / Administration follow the Hardware pattern: subclass `CollectionPage`
-(+ an editor page object where relevant), reuse the shared controls, add a `*.multiuser.test.js`.
-Any editor whose fields lack `objectName` needs the same small instrumentation as `DeviceEditor`.
+| Page | Coverage today | Depends on |
+|---|---|---|
+| Workspace | tabs, filters, collection cards | already instrumented |
+| Hardware (Devices) | full collection + editor (commands, filters, sort, pagination, every field, dialogs) | `DeviceEditor` objectNames |
+| Software / Orders / Accounts | full collection + editor | editor field objectNames |
+| **Administration** | navigate + `AdministrationView` visible + per-user screenshot | root objectName only |
+| **Organizations (Tenants)** | navigate + per-user screenshot | menu button only |
+| **Search** | navigate + per-user screenshot | menu button only |
+| **Guest / login** | login form shown, invalid login rejected, superuser sign-in reaches the menu | `LoginInput`/`PasswordInput`/`LoginButton` |
+
+Administration / Organizations / Search are covered at the **navigation + screenshot** level because
+`AdministrationView.qml`, `TenantCollectionView.qml` and `SearchPage.qml` are not yet
+`objectName`-instrumented internally. To deepen them (command bars, sub-tabs, fields), add inert
+`objectName`s the same way `DeviceEditor` got them, then extend the specs with command/field gating
+from `matrix/permissions.js` — this is the remaining migration work.
+
+The Support/Tickets page (`DeskPage`, `IsVisible=false`) is intentionally not part of the ProLife menu
+and is not covered here.

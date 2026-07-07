@@ -138,7 +138,10 @@ test.describe('Hardware / editor', () => {
     });
 
     test('edit fields and save', async ({ page, gui, user }) => {
-      test.skip(!user.can('ChangeProjectForSensor') && !user.can('EditSensor'), 'cannot change any sensor field');
+      // Editing an EXISTING sensor's project needs ChangeProjectForSensor specifically. Holding the
+      // parent EditSensor is not enough to make the Project field writable, so gate strictly on
+      // ChangeProjectForSensor (otherwise the fill verify fails on a read-only field).
+      test.skip(!user.can('ChangeProjectForSensor'), 'cannot change the sensor project field');
       const editor = await openEditEditor(page);
       await editor.setProject('Edited by ProLifeGui');
       await gui.checkScreenshot(page, 'device-editor-edit-changed');

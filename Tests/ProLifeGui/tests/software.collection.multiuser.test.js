@@ -82,12 +82,15 @@ test.describe('Software / collection', () => {
       await gui.checkScreenshot(page, 'software-filter-cleared');
     });
 
-    // --- sorting (columns are addressable by header id) ----------------------------------------
+    // --- sorting -------------------------------------------------------------------------------
+    // Table.sortBy() addresses columns by their objectName, which is the HeaderIds entry (the field
+    // key), NOT the visible HeaderNames caption - the two lists are independently ordered in
+    // SoftwareProductsPage.acc. "Name" (caption) -> "licenseName" (id).
     test('sort by name column', async ({ page, gui }) => {
       const software = new SoftwareCollectionPage(page);
-      await software.table.sortBy('name');
+      await software.table.sortBy('licenseName');
       await gui.checkScreenshot(page, 'software-sort-name-1');
-      await software.table.sortBy('name');
+      await software.table.sortBy('licenseName');
       await gui.checkScreenshot(page, 'software-sort-name-2');
     });
 

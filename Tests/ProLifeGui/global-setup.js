@@ -1,19 +1,23 @@
-// Global setup: seed the multi-user permission fixtures, then produce one storageState per user.
+// Global setup: produce one storageState per ACTIVE fixture user by logging in - nothing gets
+// CREATED here.
 //
-// Steps:
-//   1. UI-login as the pre-existing superuser -> .auth/su.json
-//   2. Using a superuser GraphQL token, create the seeded roles + users (fixtures/seed.js)
-//   3. UI-login as each seeded user -> .auth/<key>.json
+// The 8 fixture roles/users (fixtures/users.js) and the "su" superuser are all baked into
+// Tests\ProLifeGui\puma.backup ahead of time (see Generate-Backups.ps1 + scripts/seed-fixture-users.js,
+// which run the exact same fixtures/seed.js logic once against a live server and dump the result), and
+// Run-CiTests.ps1 restores that backup before every run. So global-setup here only needs to UI-login as
+// each user in turn and save its storageState - no GraphQL RoleAdd/UserAdd calls at run time.
 //
-// Everything is self-contained: an empty ProLife DB (only `su` present) is enough; the roles/users
-// are created here rather than assumed to exist in a backup.
+// Only logs in users fixtures/users.js's activeUsers() actually returns (su + fullAccess by default;
+// every user when PROLIFE_GUI_ALL_USERS=1) - skipping the rest here, not just at the project level,
+// is what makes the fast default subset actually fast (each login is a full page reload + UI flow).
+//
+// Regenerate Tests\ProLifeGui\puma.backup (via Generate-Backups.ps1) whenever fixtures/users.js changes.
 
 const fs = require('fs');
 const path = require('path');
-const { chromium, request: pwRequest } = require('@playwright/test');
+const { chromium } = require('@playwright/test');
 
-const { USERS, seededUsers, authFile } = require('./fixtures/users');
-const { seedUsers, authorizeSu } = require('./fixtures/seed');
+const { activeUsers, authFile } = require('./fixtures/users');
 const { login } = require('./lib/actions');
 const { waitForStable } = require('./lib/stability');
 
@@ -34,25 +38,15 @@ async function saveStateForUser(browser, user) {
 }
 
 module.exports = async () => {
-  const su = USERS.find((u) => u.key === 'su');
-  if (!su) throw new Error('global-setup: no "su" user defined in fixtures/users.js');
+  const users = activeUsers();
+  const su = users.find((u) => u.key === 'su');
+  if (!su) throw new Error('global-setup: "su" must be in activeUsers() (check DEFAULT_USER_KEYS / PROLIFE_GUI_ALL_USERS)');
 
   const browser = await chromium.launch();
   try {
-    // 1. Superuser session (used as the login baseline and as the seeding identity).
     await saveStateForUser(browser, su);
-
-    // 2. Seed roles + users via GraphQL, authenticated as su.
-    const api = await pwRequest.newContext();
-    try {
-      const suToken = await authorizeSu(api, BASE_URL, su.login, su.password);
-      await seedUsers(api, BASE_URL, suToken);
-    } finally {
-      await api.dispose();
-    }
-
-    // 3. One storageState per seeded user.
-    for (const user of seededUsers()) {
+    for (const user of users) {
+      if (user.key === 'su' || !user.seed) continue;
       await saveStateForUser(browser, user);
     }
   } finally {

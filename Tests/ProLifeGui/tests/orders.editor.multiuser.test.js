@@ -87,7 +87,10 @@ test.describe('Orders / editor', () => {
     });
 
     test('edit fields and save', async ({ page, gui, user }) => {
-      test.skip(!user.can('ChangeDescriptionForOrder') && !user.can('AddOrder'), 'cannot change any order field');
+      // Editing an EXISTING order's description needs ChangeDescriptionForOrder. AddOrder only unlocks
+      // fields on a NEW document, so it must NOT gate this edit-save path (a user with AddOrder but not
+      // ChangeDescriptionForOrder would otherwise reach a read-only field and fail on the fill verify).
+      test.skip(!user.can('ChangeDescriptionForOrder'), 'cannot change the order description field');
       const editor = await openEditEditor(page);
       await editor.setDescription('Edited by ProLifeGui');
       await gui.checkScreenshot(page, 'orders-editor-edit-changed');

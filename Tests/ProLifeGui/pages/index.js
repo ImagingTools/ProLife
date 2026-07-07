@@ -9,6 +9,9 @@ const { OrderCollectionPage, FILTERS: ORDER_FILTERS } = require('./OrderCollecti
 const { OrderEditorPage } = require('./OrderEditorPage');
 const { AccountCollectionPage, FILTERS: ACCOUNT_FILTERS } = require('./AccountCollectionPage');
 const { AccountEditorPage } = require('./AccountEditorPage');
+const { AdministrationPage } = require('./AdministrationPage');
+const { OrganizationsPage } = require('./OrganizationsPage');
+const { SearchPage } = require('./SearchPage');
 
 module.exports = {
   BasePage,
@@ -26,4 +29,7 @@ module.exports = {
   AccountCollectionPage,
   AccountEditorPage,
   ACCOUNT_FILTERS,
+  AdministrationPage,
+  OrganizationsPage,
+  SearchPage,
 };

@@ -122,7 +122,10 @@ test.describe('Software / editor', () => {
     });
 
     test('edit fields and save', async ({ page, gui, user }) => {
-      test.skip(!user.can('ChangeProjectForLicense') && !user.can('AddLicense'), 'cannot change any license field');
+      // Editing an EXISTING license's project needs ChangeProjectForLicense. AddLicense only unlocks
+      // fields on a NEW document, so it must NOT gate this edit-save path (a user with AddLicense but
+      // not ChangeProjectForLicense would otherwise reach a read-only field and fail on the fill verify).
+      test.skip(!user.can('ChangeProjectForLicense'), 'cannot change the license project field');
       const editor = await openEditEditor(page);
       await editor.setProject('Edited by ProLifeGui');
       await gui.checkScreenshot(page, 'software-editor-edit-changed');

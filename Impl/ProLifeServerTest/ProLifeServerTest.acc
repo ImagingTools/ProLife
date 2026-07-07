@@ -77,7 +77,7 @@
                         <Data IsEnabled="true" Value="17776"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="17776"/>
+                        <Data IsEnabled="true" Value="18776"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/Log"/>
