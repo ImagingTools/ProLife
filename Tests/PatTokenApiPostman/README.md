@@ -10,7 +10,7 @@ Built by analogy with `Tests\ProLifeApiPostman` and `Tests\DeskTicketApiPostman`
 
 - `PatTokenApi.postman_collection.json` - main collection (Postman v2.1), 92 requests across 12 folders
 - `PatTokenApi-Dev.postman_environment.json` - environment template, defaults to `http://localhost:17778/ProLife`
-- `Run-CiTests.ps1` - CI entry point: resets `prolife_test`, starts `ProLifeServerTest.exe` on port 17778, runs newman against the default (non-opt-in) folders, tears the server down. Same isolated test server/DB as `ProLifeApiPostman`'s own CI script - run this as its own sequential CI step, not concurrently with it.
+- `Run-CiTests.ps1` - CI entry point: restores `puma_test` from a backup and starts `PumaServerPgTest.exe` (auth provider - `CreateSuperuser`/`Authorization`/`RoleAdd`/`UserAdd` proxy to it over HTTP), resets `prolife_test`, starts `ProLifeServerTest.exe` on port 17778, runs newman against the default (non-opt-in) folders, tears both servers down. Same isolated test server/DB as `ProLifeApiPostman`'s own CI script - starts and stops its own Puma instance, so it's safe to run standalone or back-to-back with `ProLifeApiPostman`/`DeskTicketApiPostman` in either order.
 - `package.json` - pins the `newman` devDependency
 
 ## Import (manual/Postman GUI use)
@@ -88,7 +88,7 @@ newman run PatTokenApi.postman_collection.json -e PatTokenApi-Dev.postman_enviro
 powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
 ```
 
-Starts a dedicated, isolated `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) - the same test server `ProLifeApiPostman`'s CI script uses, so run these as separate sequential CI steps rather than in parallel.
+Starts a dedicated, isolated `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) plus its own `PumaServerPgTest.exe` (database `puma_test`, HTTP port `17788`, restored from `Tests\ProLifeApiPostman\puma.backup`) - the same test servers `ProLifeApiPostman`'s CI script uses. Both are torn down at the end of the run, so this script no longer depends on (or leaves behind) any externally-managed Puma instance; run these as separate sequential CI steps rather than in parallel (port/DB reuse, not a hidden ordering dependency).
 
 ## Known Limitations
 
