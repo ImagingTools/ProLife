@@ -66,6 +66,10 @@ class ComboBox {
   select(itemText) {
     return gui.select(this.page, this.path, itemText);
   }
+  /** Select the Nth item by position - use when the real catalogue text isn't a stable constant. */
+  selectIndex(index) {
+    return gui.selectIndex(this.page, this.path, index);
+  }
   clear() {
     return gui.clickButton(this.page, [...this.path, 'ClearButton']);
   }
@@ -121,6 +125,26 @@ class Table {
   /** Click a row by zero-based index (selects it). */
   selectRow(index) {
     return gui.click(this.page, [`TableRow_${index}`], { what: `table row ${index}` });
+  }
+  /**
+   * Toggle a row's checkbox by zero-based index - only present when the table is `checkable`
+   * (e.g. TableHeaderParamComp.qml's column-visibility list). This is a SEPARATE control from the
+   * row's own selection click: the checkbox is a distinct "RowCheckBox" overlay
+   * (TableRowDelegateBase.qml), not toggled by selectRow().
+   */
+  toggleRowCheck(index) {
+    return gui.click(this.page, [`TableRow_${index}`, 'RowCheckBox'], { what: `row ${index} checkbox` });
+  }
+  /**
+   * Screenshot masks ({x,y,width,height}) covering every visible row's cell for the given column
+   * ids (matched via TableCellDelegateBase's objectName == headerId) - use for columns whose value
+   * changes across runs/edits (e.g. Added/Last Modified timestamps) so screenshots stay
+   * deterministic. Silently yields no masks for a headerId that isn't currently rendered/visible
+   * (e.g. scrolled out of view) - this is a noise-reducer, not a structural assertion.
+   */
+  async columnMasks(headerIds) {
+    const rects = await gui.dom.columnRects(this.page, Array.isArray(headerIds) ? headerIds : [headerIds]);
+    return rects.map((r) => ({ ...r, padding: 1 }));
   }
   /**
    * Sort by a column, addressed by its header field id - this is the page's HeaderIds entry, NOT the
@@ -197,4 +221,73 @@ class Dialog {
   }
 }
 
-module.exports = { Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Pagination, Switch, Dialog };
+/**
+ * The "Table configuration" dialog (imtcontrols/Views/TableHeaderParamComp.qml), opened by
+ * right-clicking any sortable column header (CollectionViewBase.qml's headerRightClickEnabled).
+ * Lets a user toggle column visibility (checkbox per row) and reorder columns (Up/Down), or reset
+ * to defaults. Its column list is itself a Table, so rows are addressed the same way
+ * ("TableRow_<i>").
+ */
+class TableConfigDialog {
+  constructor(page) {
+    this.page = page;
+    this.columns = new Table(page);
+  }
+  /** Right-click a column header (by its header/field id) to open this dialog. */
+  async openViaHeader(headerId) {
+    const header = gui.dom.byPath(this.page, ['TableHeaders', headerId]);
+    await header.waitFor({ state: 'visible', timeout: gui.DEFAULT_TIMEOUT });
+    const box = await header.boundingBox();
+    if (!box) throw new Error(`GUI table header "${headerId}" has no bounding box`);
+    await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+    await gui.waitForStable(this.page);
+    return this;
+  }
+  /** Toggle a column's visibility checkbox by its zero-based row position in the column list. */
+  toggleColumn(rowIndex) {
+    return this.columns.toggleRowCheck(rowIndex);
+  }
+  /** Select a column's row (needed before moveUp()/moveDown(), which act on the current selection). */
+  selectColumn(rowIndex) {
+    return this.columns.selectRow(rowIndex);
+  }
+  moveUp() {
+    return gui.clickButton(this.page, ['MoveColumnUpButton']);
+  }
+  moveDown() {
+    return gui.clickButton(this.page, ['MoveColumnDownButton']);
+  }
+  /** Opens the "Reset header settings to default?" confirm - use confirmReset()/cancelReset() next. */
+  reset() {
+    return gui.clickButton(this.page, ['ResetColumnsButton']);
+  }
+  confirmReset() {
+    return gui.clickButton(this.page, ['YesButton']);
+  }
+  cancelReset() {
+    return gui.clickButton(this.page, ['NoButton']);
+  }
+  fitToWidth() {
+    return gui.clickButton(this.page, ['FitToWidthButton']);
+  }
+  apply() {
+    return gui.clickButton(this.page, ['ApplyButton']);
+  }
+  cancel() {
+    return gui.clickButton(this.page, ['CancelButton']);
+  }
+}
+
+module.exports = {
+  Button,
+  CommandBar,
+  MenuPanel,
+  ComboBox,
+  TextInput,
+  FilterPanel,
+  Table,
+  Pagination,
+  Switch,
+  Dialog,
+  TableConfigDialog,
+};

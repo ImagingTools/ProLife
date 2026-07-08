@@ -24,34 +24,54 @@ const { waitForStable } = require('./lib/stability');
 const BASE_URL = process.env.PROLIFE_BASE_URL || 'http://localhost:17778';
 const VIEWPORT = { width: 1920, height: 1080 };
 
-async function saveStateForUser(browser, user) {
-  const context = await browser.newContext({ viewport: VIEWPORT });
+// True once the app has written a real, non-empty accessToken to localStorage. login() only waits for
+// the DOM to go quiet after clicking "Sign in", which can resolve *before* the auth round-trip has
+// stored the session - snapshotting storageState then yields an empty/unauthenticated state (only the
+// pre-login placeholder keys), and every test using it then runs as if logged out (this was the
+// "DevicesButton not found" cause, not a server/concurrency issue). Waiting for this signal fixes it.
+const TOKEN_READY = () => {
+  try {
+    const raw = localStorage.getItem('AuthorizationController/accessToken');
+    return !!raw && JSON.parse(raw).length > 0;
+  }
+  catch {
+    return false;
+  }
+};
+
+async function loginAndWaitForToken(context, user) {
   const page = await context.newPage();
   await page.goto(BASE_URL);
   await waitForStable(page, { timeout: 20000, quietMs: 600 });
   await login(page, user.login, user.password);
+  await page.waitForFunction(TOKEN_READY, undefined, { timeout: 20000 });
+  await page.close();
+}
 
-  // login() only waits for the DOM to go quiet for a bit after clicking "Sign in" - that can resolve
-  // *before* the app has actually finished writing the authenticated session (accessToken etc.) to
-  // localStorage, if there's a brief lull in DOM mutations while the login GraphQL call is still in
-  // flight. Capturing storageState() at that point silently produces an empty/unauthenticated snapshot
-  // (only the pre-login placeholder keys), which every test using it then runs against as if logged
-  // out - confirmed empirically: this is what was producing "DevicesButton not found" etc. across the
-  // whole suite, not a server or concurrency issue. Wait for the real signal (a non-empty accessToken)
-  // before snapshotting.
-  await page.waitForFunction(
-    () => {
-      try {
-        const raw = localStorage.getItem('AuthorizationController/accessToken');
-        return !!raw && JSON.parse(raw).length > 0;
-      }
-      catch {
-        return false;
-      }
-    },
-    undefined,
-    { timeout: 30000 }
-  );
+async function saveStateForUser(browser, user) {
+  const context = await browser.newContext({ viewport: VIEWPORT });
+
+  // The QML/WASM login click is occasionally lost (a canvas click that lands mid-repaint never fires),
+  // leaving no accessToken. That is a genuine flaky-input reality of driving a WASM canvas, so retry
+  // the whole login a couple of times rather than failing the entire suite on one dropped click.
+  const MAX_ATTEMPTS = 3;
+  let lastErr;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      await loginAndWaitForToken(context, user);
+      lastErr = null;
+      break;
+    }
+    catch (err) {
+      lastErr = err;
+      // eslint-disable-next-line no-console
+      console.warn(`global-setup: login attempt ${attempt}/${MAX_ATTEMPTS} for "${user.key}" did not produce a session (${err.message}); retrying`);
+    }
+  }
+  if (lastErr) {
+    await context.close();
+    throw lastErr;
+  }
 
   const dest = path.resolve(__dirname, authFile(user.key));
   fs.mkdirSync(path.dirname(dest), { recursive: true });

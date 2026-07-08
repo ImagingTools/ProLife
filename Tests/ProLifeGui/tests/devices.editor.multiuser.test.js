@@ -42,9 +42,11 @@ test.describe('Hardware / editor', () => {
 
     test('fill device information group', async ({ page, gui }) => {
       const editor = await openNewEditor(page);
-      await editor.setDeviceType('RTV'); // picks a device type option (adjust to a real catalogue name)
+      // Both combos are populated from the live product catalogue (seeded/DB data, not a source-level
+      // enum), so there's no stable caption to assert on - pick the first entry by position instead.
+      await editor.setDeviceTypeByIndex(0);
       await gui.checkScreenshot(page, 'device-editor-new-device-type');
-      await editor.setHardwareConfiguration('Standard'); // dependent combo populated by device type
+      await editor.setHardwareConfigurationByIndex(0); // dependent combo populated by device type
       await gui.checkScreenshot(page, 'device-editor-new-configuration');
       await editor.setDescription('ProLifeGui test device');
       await gui.checkScreenshot(page, 'device-editor-new-description');
@@ -68,7 +70,7 @@ test.describe('Hardware / editor', () => {
 
     test('additional information group - order / status / project / internal use', async ({ page, gui }) => {
       const editor = await openNewEditor(page);
-      await editor.setProductionStatus('In Progress');
+      await editor.setProductionStatusByIndex(2); // "In Progress" (DeviceProductionStatus.qml)
       await gui.checkScreenshot(page, 'device-editor-status');
       await editor.setProject('ProLifeGui Project');
       await gui.checkScreenshot(page, 'device-editor-project');
@@ -107,6 +109,16 @@ test.describe('Hardware / editor', () => {
       await editor.setProject('dirty');
       await editor.closeDocument();
       await gui.checkScreenshot(page, 'device-editor-close-dirty');
+    });
+
+    // Support only exists on the EDITOR's command bar (DeviceCollectionViewCommandsDelegate.qml's
+    // deviceEditorComp.commandsDelegateComp), not on the collection list - unlike Bind/CreateLicenseFile/
+    // TransferLicenses it returns before the "please save first" check, so it works on a brand-new,
+    // unsaved document too.
+    test('support (entity ticket) dialog', async ({ page, gui }) => {
+      const editor = await openNewEditor(page);
+      await editor.support();
+      await gui.checkScreenshot(page, 'device-editor-support-dialog');
     });
   });
 

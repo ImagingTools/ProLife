@@ -1,33 +1,24 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later OR GPL-2.0-or-later OR GPL-3.0-or-later OR LicenseRef-ImtCore-Commercial
 <#
 .SYNOPSIS
-    CI entry point for the PatTokenApi Postman suite: restores puma_test
-    from a backup, starts PumaServerPgTest.exe (auth provider - CreateSuperuser/
-    Authorization/RoleAdd/UserAdd all proxy to it over HTTP), resets the
-    prolife_test database, starts ProLifeServerTest.exe, runs newman against
-    it, and tears both servers back down. Intended to be invoked as a single
-    TeamCity build step (PowerShell runner). Mirrors
-    Tests\DeskTicketApiPostman\Run-CiTests.ps1 (same Puma dependency); unlike
-    an earlier version of this script, it no longer assumes some other
-    process already has a Puma server listening on -PumaHttpPort - it starts
-    and tears down its own, so it's safe to run standalone or back-to-back
-    with ProLifeApiPostman/DeskTicketApiPostman in either order.
+    CI entry point for the DeskTicketApi Postman suite: restores
+    puma_test/prolife_test from backups, starts PumaServerPgTest.exe
+    (auth provider) and ProLifeServerTest.exe, runs newman against it,
+    and tears servers back down. Mirrors
+    Tests\ProLifeApiPostman\Run-CiTests.ps1.
 
 .PARAMETER RepoRoot
     Root of the ProLife checkout. Defaults to the PROLIFEDIR environment
     variable; if PROLIFEDIR isn't set, falls back to two levels above this
-    script (Tests\PatTokenApiPostman\..\..).
+    script (Tests\DeskTicketApiPostman\..\..).
 
 .PARAMETER PumaRepoRoot
-    Root of the Puma checkout. Defaults to the PUMADIR environment variable;
-    if unset, falls back to a directory named "Puma" next to RepoRoot
-    (Puma/ProLife are checked out as siblings, e.g. under Git\).
+    Root of the Puma checkout. Defaults to PUMADIR env var; if unset,
+    falls back to "Puma" sibling directory next to RepoRoot.
 
 .PARAMETER BuildConfig
-    Name of the Bin\<BuildConfig> folder to look for ProLifeServerTest.exe
-    in (e.g. "Release_Qt6_VC17_x64"). Ignored if -ServerExePath is passed
-    explicitly. Also used to locate PumaServerPgTest.exe under
-    -PumaRepoRoot unless -PumaServerExePath is passed explicitly.
+    Name of the Bin\<BuildConfig> folder to look for executables.
+    Ignored if explicit exe paths are passed.
 
 .PARAMETER ServerExePath
     Full path to ProLifeServerTest.exe. Overrides -BuildConfig when set.
@@ -36,57 +27,36 @@
     Full path to PumaServerPgTest.exe. Overrides -BuildConfig when set.
 
 .PARAMETER HttpPort
-    Port the test server listens on (must match ProLifeServerTest.acc's
-    HttpPort attribute, currently 17778 - same test server ProLifeApiPostman
-    uses).
+    Port the ProLife test server listens on (17778).
 
 .PARAMETER PumaHttpPort
-    Port the Puma test server listens on (must match PumaServerPgTest.acc's
-    HttpPort attribute, currently 17788 - same value ProLifeServerTest.acc's
-    PumaHttpPort points at).
+    Port the Puma test server listens on (17788).
 
 .PARAMETER DbName / DbHost / DbPort / DbUser / DbPassword
-    Postgres connection used to drop/recreate the test database before
-    each run.
+    Postgres connection parameters.
 
 .PARAMETER PumaDbName
-    Puma test database name (default: puma_test), restored from
-    -PumaBackupPath before every run - see Tests\ProLifeApiPostman\Run-CiTests.ps1's
-    -PumaBackupPath docs for why a populated backup is used instead of an
-    empty schema.
+    Puma test database name (default: puma_test).
 
-.PARAMETER PumaBackupPath
-    Path to the pg_dump custom-format backup used to (re)create puma_test
-    before each run. Defaults to Tests\ProLifeApiPostman\puma.backup (shared
-    with that suite and DeskTicketApiPostman rather than duplicated here).
-
-.PARAMETER PsqlPath
-    Full path to psql.exe. If omitted, resolved from PATH, then from the
-    default PostgreSQL install locations (highest version wins). Also used
-    to resolve pg_restore.exe (same bin folder).
+.PARAMETER PumaBackupPath / ProLifeBackupPath
+    Paths to pg_dump custom-format backups. Default to files from the
+    ProLifeApiPostman suite (shared backups).
 
 .PARAMETER JUnitReportPath
-    Where newman writes the JUnit XML report. Point TeamCity's "XML Report
-    Processing" (JUnit) build feature at this same path.
-
-.PARAMETER IncludeOptInFolders
-    When set, also runs folders "90 Exploratory - Omitted Input" and
-    "91 Auth-Cache Staleness" (see README - the first can crash a Debug
-    build via Q_ASSERT on omitted input, the second needs a real 5-minute
-    wait to be meaningful). Off by default; not intended for a normal CI run.
+    Where newman writes the JUnit XML report.
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 `
-        -BuildConfig "Release_Qt6_VC17_x64" -DbPassword "%db.password%"
+        -BuildConfig "Debug_Qt6_VC17_x64" -DbPassword "%db.password%"
 #>
 
 [CmdletBinding()]
 param(
     [string]$RepoRoot = $(
-        $collectionRelPath = "Tests\PatTokenApiPostman\PatTokenApi.postman_collection.json"
+        $collectionRelPath = "Tests\DeskTicketApiPostman\DeskTicketApi.postman_collection.json"
         if ($env:PROLIFEDIR -and (Test-Path (Join-Path $env:PROLIFEDIR $collectionRelPath))) {
             $env:PROLIFEDIR
         }
@@ -97,6 +67,7 @@ param(
             $sd = if ($PSScriptRoot) { $PSScriptRoot }
                   elseif ($PSCommandPath) { Split-Path -Parent $PSCommandPath }
                   elseif ($MyInvocation.MyCommand.Path) { Split-Path -Parent $MyInvocation.MyCommand.Path }
+                  elseif ($MyInvocation.MyCommand.Definition -and (Test-Path $MyInvocation.MyCommand.Definition)) { Split-Path -Parent $MyInvocation.MyCommand.Definition }
                   else { $null }
             if ($sd) {
                 (Resolve-Path (Join-Path $sd "..\..")).Path
@@ -106,32 +77,33 @@ param(
             }
         }
     ),
-    [string]$ScriptDir = (Join-Path $RepoRoot "Tests\PatTokenApiPostman"),
+    [string]$ScriptDir = (Join-Path $RepoRoot "Tests\DeskTicketApiPostman"),
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
 
-    # Puma/ProLife are checked out as siblings (e.g. D:\...\Git\ProLife,
-    # D:\...\Git\Puma) - same convention PUMADIR/PROLIFEDIR already encode
-    # in Tests\ProLifeApiPostman\Run-CiTests.ps1.
     [string]$PumaRepoRoot = $(if ($env:PUMADIR) { $env:PUMADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Puma" }),
 
     [string]$ServerExePath = "",
     [string]$PumaServerExePath = "",
+
     [int]$HttpPort = 17778,
     [int]$PumaHttpPort = 17788,
+
     [string]$DbName = "prolife_test",
     [string]$PumaDbName = "puma_test",
     [string]$DbHost = "localhost",
     [int]$DbPort = 5432,
     [string]$DbUser = "postgres",
     [string]$DbPassword = "root",
+
     [string]$PumaBackupPath = (Join-Path $RepoRoot "Tests\ProLifeApiPostman\puma.backup"),
+    [string]$ProLifeBackupPath = (Join-Path $RepoRoot "Tests\ProLifeApiPostman\prolife.backup"),
+
     [string]$PsqlPath = "",
-    [string]$CollectionPath = (Join-Path $ScriptDir "PatTokenApi.postman_collection.json"),
-    [string]$EnvironmentPath = (Join-Path $ScriptDir "PatTokenApi-Dev.postman_environment.json"),
+    [string]$CollectionPath = (Join-Path $ScriptDir "DeskTicketApi.postman_collection.json"),
+    [string]$EnvironmentPath = (Join-Path $ScriptDir "DeskTicketApi-Dev.postman_environment.json"),
     [string]$JUnitReportPath = (Join-Path $ScriptDir "junit-report.xml"),
     [string]$JsonReportPath = (Join-Path $ScriptDir "run-report.json"),
-    [int]$StartupTimeoutSeconds = 60,
-    [switch]$IncludeOptInFolders
+    [int]$StartupTimeoutSeconds = 60
 )
 
 $ErrorActionPreference = "Stop"
@@ -176,21 +148,10 @@ function Stop-ServerProcess([string]$processName) {
 }
 
 function Reset-Database([string]$name) {
-    # Only drops the database if present. Callers that need seeded data
-    # (Puma) restore a backup into it afterwards; ProLifeServerTest.exe is
-    # expected to create prolife_test (and run its migrations) on startup
-    # when it doesn't already exist, same as ProLifeApiPostman's own CI
-    # script assumes for that database.
     Write-Step "Resetting database '$name'"
     $psql = Resolve-PsqlPath
     Write-Host "Using psql: $psql"
     $env:PGPASSWORD = $DbPassword
-    # psql writes routine NOTICEs (e.g. "database does not exist, skipping")
-    # to stderr. Under $ErrorActionPreference = "Stop" (set globally in this
-    # script), PowerShell 5.1 turns *any* stderr line from a native command
-    # into a terminating NativeCommandError regardless of the process's own
-    # exit code - so this must run under "Continue" and be judged solely by
-    # $LASTEXITCODE.
     $previousEap = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
@@ -205,14 +166,6 @@ function Reset-Database([string]$name) {
 }
 
 function Restore-DatabaseFromBackup([string]$name, [string]$backupPath) {
-    # PumaServerPgTest.exe would happily create-and-migrate an EMPTY
-    # database from scratch on startup, but CreateSuperuser/RoleAdd/UserAdd
-    # (called by this suite's own "00 Bootstrap" folder) need a Puma
-    # instance backed by a real, populated export to behave the same way
-    # confirmed working against ProLifeApiPostman/DeskTicketApiPostman - see
-    # Tests\ProLifeApiPostman\Run-CiTests.ps1's -ProLifeBackupPath docs for
-    # the full rationale (shared here since -PumaBackupPath defaults to that
-    # suite's puma.backup).
     if (-not (Test-Path $backupPath)) {
         throw "Backup file not found: $backupPath"
     }
@@ -224,10 +177,6 @@ function Restore-DatabaseFromBackup([string]$name, [string]$backupPath) {
     $pgRestore = Join-Path (Split-Path -Parent $psql) "pg_restore.exe"
     if (-not (Test-Path $pgRestore)) { throw "pg_restore not found next to psql: $pgRestore" }
 
-    # Same stderr/NativeCommandError pitfall as Reset-Database above -
-    # pg_restore --verbose writes its progress log to stderr, which
-    # $ErrorActionPreference = "Stop" would otherwise turn into a spurious
-    # terminating error even on a clean, zero-exit-code restore.
     $env:PGPASSWORD = $DbPassword
     $previousEap = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
@@ -242,6 +191,35 @@ function Restore-DatabaseFromBackup([string]$name, [string]$backupPath) {
     finally {
         $ErrorActionPreference = $previousEap
         Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
+    }
+}
+
+function Repair-ProLifeForeignServers {
+    # prolife.backup's Roles/Users/UserGroups/UserSessions tables are FOREIGN
+    # TABLES (postgres_fdw) backed by foreign server "PumaServer" which
+    # carried dbname='puma' from the original export. Must repoint at puma_test.
+    Write-Step "Repointing prolife_test's FDW server at puma_test"
+    $psql = Resolve-PsqlPath
+    $sqlFile = New-TemporaryFile
+    try {
+        @"
+ALTER SERVER "PumaServer" OPTIONS (SET host '$DbHost', SET dbname '$PumaDbName');
+"@ | Set-Content -Path $sqlFile -Encoding ASCII
+
+        $env:PGPASSWORD = $DbPassword
+        $previousEap = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        try {
+            & $psql -h $DbHost -p $DbPort -U $DbUser -d $DbName -v ON_ERROR_STOP=1 -f $sqlFile.FullName 2>&1 | Write-Host
+            if ($LASTEXITCODE -ne 0) { throw "Failed to repoint FDW servers (exit $LASTEXITCODE)" }
+        }
+        finally {
+            $ErrorActionPreference = $previousEap
+            Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
+        }
+    }
+    finally {
+        Remove-Item $sqlFile -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -300,12 +278,15 @@ function Install-NewmanIfNeeded {
     }
 
     Write-Step "Installing newman (npm install in $ScriptDir)"
+    $previousEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     Push-Location $ScriptDir
     try {
-        & npm install --no-audit --no-fund | Out-Host
+        & npm install --no-audit --no-fund 2>&1 | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "npm install failed (exit $LASTEXITCODE)" }
     }
     finally {
+        $ErrorActionPreference = $previousEap
         Pop-Location
     }
 
@@ -319,29 +300,16 @@ function Invoke-NewmanSuite {
     $newmanCmd = Install-NewmanIfNeeded
 
     Write-Step "Running newman suite"
-    # NOT .../ProLife/graphql — the collection templates every URL as "{{baseUrl}}/graphql"
     $baseUrl = "http://localhost:$HttpPort/ProLife"
 
-    # Folders 90/91 are deliberately excluded by default - see README
-    # ("Known Limitations / Opt-in folders"): 90 demonstrates omitted required input arg error,
-    # and 91 only means anything after a real ~5 minute wait between two of its requests.
-    $defaultFolders = @(
-        "00 Bootstrap",
-        "01 CreateToken - Validation and Success",
-        "02 GetToken and GetTokenList",
-        "03 ValidateToken",
-        "04 RevokeToken",
-        "05 DeleteToken",
-        "06 Scope Intersection - User Permissions $([char]0x2229) Token Scopes",
-        "07 Ownership and Cross-User Access (no enforcement, source-confirmed)",
-        "08 Comma-in-Scope Storage Edge Case",
-        "99 Cleanup"
+    $folders = @(
+        "Authentication",
+        "Desk",
+        "Ticket",
+        "Bulk Operations",
+        "Negative & Edge Cases",
+        "Business Scenarios"
     )
-    $optInFolders = @(
-        "90 Exploratory - Omitted Input (informational, opt-in, never in default run)",
-        "91 Auth-Cache Staleness (slow, opt-in, never in default run)"
-    )
-    $folders = if ($IncludeOptInFolders) { $defaultFolders + $optInFolders } else { $defaultFolders }
 
     $newmanArgs = @("run", $CollectionPath, "-e", $EnvironmentPath, "--env-var", "baseUrl=$baseUrl")
     foreach ($f in $folders) { $newmanArgs += @("--folder", $f) }
@@ -366,29 +334,24 @@ Write-Host "ScriptDir:         $ScriptDir"
 Write-Host "ServerExePath:     $ServerExePath"
 Write-Host "PumaServerExePath: $PumaServerExePath"
 Write-Host "PumaBackupPath:    $PumaBackupPath"
+Write-Host "ProLifeBackupPath: $ProLifeBackupPath"
 Write-Host "CollectionPath:    $CollectionPath"
 Write-Host "EnvironmentPath:   $EnvironmentPath"
 
 try {
-    # Stop stale processes from a previous, possibly-crashed run before
-    # touching any database - ProLifeServerTest talks to Puma over HTTP for
-    # CreateSuperuser/Authorization/RoleAdd/UserAdd (this suite's own
-    # bootstrap), so a stale Puma left bound to the port would make the new
-    # instance fail to start rather than the new one being used.
     Stop-ServerProcess "ProLifeServerTest"
     Stop-ServerProcess "PumaServerPgTest"
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
 
-    Reset-Database $DbName
+    Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
+    Repair-ProLifeForeignServers
     Start-TestServer
 
     $exitCode = Invoke-NewmanSuite
 }
 finally {
-    # Tear down in reverse start order: ProLife depends on Puma being up,
-    # not the other way round, so it's safe (and cleanest) to stop it first.
     if ($serverProcess -and -not $serverProcess.HasExited) {
         Write-Step "Stopping ProLifeServerTest.exe (PID $($serverProcess.Id))"
         Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue

@@ -67,12 +67,15 @@ class DeviceEditorPage extends BasePage {
 
   // --- field helpers ----------------------------------------------------------------------------
 
-  async setDeviceType(text) {
-    await this.deviceType.select(text);
+  // DeviceTypeCombo/HardwareConfigurationCombo are populated from the live product catalogue
+  // (DeviceEditor.qml: model: CachedProductCollection.hardwareProductsModel) - seeded/DB-driven, not a
+  // source-level enum, so there is no stable caption to hardcode here. Select by position instead.
+  async setDeviceTypeByIndex(index = 0) {
+    await this.deviceType.selectIndex(index);
     return this;
   }
-  async setHardwareConfiguration(text) {
-    await this.hardwareConfiguration.select(text);
+  async setHardwareConfigurationByIndex(index = 0) {
+    await this.hardwareConfiguration.selectIndex(index);
     return this;
   }
   async setDescription(text) {
@@ -92,8 +95,10 @@ class DeviceEditorPage extends BasePage {
     await this.project.fill(text);
     return this;
   }
-  async setProductionStatus(text) {
-    await this.productionStatus.select(text);
+  // ProductionStatusCombo is a static enum (DeviceProductionStatus.qml): None/Accepted/InProgress(2)/
+  // Canceled/OnHold/Finished(5)/Defected/InRepair/Decommissioned, indices 0-8.
+  async setProductionStatusByIndex(index) {
+    await this.productionStatus.selectIndex(index);
     return this;
   }
   async toggleInternalUse() {

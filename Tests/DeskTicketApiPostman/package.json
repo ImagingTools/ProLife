@@ -1,0 +1,6 @@
+{
+    "name": "desk-ticket-api-postman-tests",
+    "private": true,
+    "description": "Newman dependency pin for the DeskTicketApi Postman CI suite (see Run-CiTests.ps1)",
+    "devDependencies": { "newman": "6.2.2" }
+}
