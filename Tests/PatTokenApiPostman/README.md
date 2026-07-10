@@ -8,7 +8,7 @@ Built by analogy with `Tests\ProLifeApiPostman` and `Tests\DeskTicketApiPostman`
 
 ## Contents
 
-- `PatTokenApi.postman_collection.json` - main collection (Postman v2.1), 92 requests across 12 folders
+- `PatTokenApi.postman_collection.json` - main collection (Postman v2.1), 118 requests across 14 folders
 - `PatTokenApi-Dev.postman_environment.json` - environment template, defaults to `http://localhost:17778/ProLife`
 - `Run-CiTests.ps1` - CI entry point: restores `puma_test` from a backup and starts `PumaServerPgTest.exe` (auth provider - `CreateSuperuser`/`Authorization`/`RoleAdd`/`UserAdd` proxy to it over HTTP), resets `prolife_test`, starts `ProLifeServerTest.exe` on port 17778, runs newman against the default (non-opt-in) folders, tears both servers down. Same isolated test server/DB as `ProLifeApiPostman`'s own CI script - starts and stops its own Puma instance, so it's safe to run standalone or back-to-back with `ProLifeApiPostman`/`DeskTicketApiPostman` in either order.
 - `package.json` - pins the `newman` devDependency
@@ -18,11 +18,11 @@ Built by analogy with `Tests\ProLifeApiPostman` and `Tests\DeskTicketApiPostman`
 1. Import `PatTokenApi.postman_collection.json`.
 2. Import `PatTokenApi-Dev.postman_environment.json`.
 3. Select environment `PatTokenApi-Dev`.
-4. Run folders `00` through `08`, then `99`, in order (each folder depends on ids/tokens created by earlier ones). Skip `90`/`91` in a normal run (see "Opt-in folders" below).
+4. Run folders `00` through `11`, then `99`, in order (each folder depends on ids/tokens created by earlier ones). Skip `91` in a normal run (see "Opt-in folders" below).
 
 ## Required Environment Variables
 
-- `baseUrl` (default `http://localhost:17778/ProLife`) / `productId` (`ProLife`)
+- `baseUrl` (default `http://localhost:17778/ProLife`) / `productId` (`ProLife`) / `secondaryProductId` (default `DeskTicket`) - the second, distinct product tag folders `09` and `11` use to prove cross-product PAT storage and authorization isolation
 - `suLogin` / `suPassword` - superuser credentials (default `su` / `1`)
 - `cacheStalenessLongWaitEnabled` (default `false`) - see folder `91` below
 
@@ -41,7 +41,10 @@ Everything else (`tokenOwnerUserId`, `primaryTokenId`, `intersectionNarrowRawTok
 | `06 Scope ∩ Permissions` | **the centerpiece**: PAT effective permissions = user's real permissions ∩ token scopes, not a union - full match, narrower subset, over-broad scope (extra scope ignored), fully disjoint scope (zero effective permissions), and the `IsAdmin()` bypass (admin's PAT gets the full tree regardless of scope) |
 | `07 Ownership and Cross-User Access` | source-confirmed: none of the six PAT resolvers check the caller's identity - any authenticated user can list/read/revoke/delete **and even create** PATs for any other `userId` |
 | `08 Comma-in-Scope Storage Edge Case` | a scope value containing a literal comma corrupts round-tripping (`["ViewSensors,Extra","ViewOrders"]` reads back as 3 entries, not 2) - scopes are stored as one comma-joined SQL column with no escaping |
-| `90` / `91` | opt-in, see below |
+| `09 ProductId Cross-Product Storage` | PATs now carry a `productId` and all products' tokens share one central store on the auth server (Puma). Creates three tokens for the **same** Token Owner - one tagged `productId={{productId}}` (ProLife), one tagged `productId={{secondaryProductId}}` (a different product), one with `productId` omitted (optional field, stored NULL) - then proves each round-trips its own `productId` via `GetToken`, and that `GetTokenList` (filtered only by `userId`, never by product) returns all three together, i.e. tokens for different products coexist under one user. Also confirms a product-tagged token still `ValidateToken`s independent of its product. Self-cleaning (deletes its three tokens at the end). |
+| `10 Omitted Input - required input argument` | all six PAT operations declare `input` as non-null (`!`) in the SDL, so omitting the entire `input` argument is rejected by the generated dispatcher (`C<Op>GqlRequest::IsValid()` false) with the standard `"Bad request. Unexpected request for command-ID: '<Op>'"` envelope (no `data` key, one `errors[]` entry, `extensions.type: Warning`) **before** the resolver runs. Was folder `90`, opt-in, informational-only because omitted input used to reach the resolver and trip a Debug `Q_ASSERT(false)`; the SDL non-null closes that path, so it is now a deterministic default-run folder. |
+| `11 Cross-Product Authorization Isolation` | source-confirmed, two-part answer to "can PATs from different products interfere with each other": **(a) authorization is not scoped by the token's own `productId` tag** - `CPersonalAccessTokenManagerComp::ValidateToken` never receives or checks `productId`, only the request's `productid` HTTP header feeds `CAuthenticationManagerComp::CreateGqlContext`'s permission computation, so a PAT tagged `productId={{productId}}` at creation still authenticates fine against a `GetUserPermissions` call scoped to `{{secondaryProductId}}` - but crucially the effective permission set for that mismatched product is **empty**, not the token owner's `{{productId}}` permissions leaking across, because `CUserBaseInfo::GetPermissions(productId)` looks up a per-product role/permission map keyed by the *request's* productId, not the token's; **(b) `RevokeToken`/`DeleteToken` never cross the product boundary** - revoking or deleting a `{{productId}}`-tagged token for a user leaves that same user's `{{secondaryProductId}}`-tagged token fully valid and reachable. Self-cleaning. |
+| `91` | opt-in, see below |
 | `99 Cleanup` | best-effort teardown of every token/user/role created |
 
 ### The scope-intersection probe (folder `06`)
@@ -59,9 +62,14 @@ query GetUserPermissions {
 ```
 called **with the PAT itself as the `x-authentication-token` header**. This resolver reads `gqlContext.GetUserInfo().GetPermissions(productId)` - exactly the object `CAuthenticationManagerComp::CreateGqlContext` rewrites with the scope-intersected permission set for a PAT session. (The `Authorization.sdl` `GetPermissions` field was deliberately **not** used as a probe - it re-derives the user from a raw JWT decode and never touches the PAT-aware `gqlContext.GetUserInfo()`, so it can't observe the intersection at all; and no ProLife domain query has any field-level permission gate to probe against either.)
 
+## Omitted-input handling (folder `10`, now a default folder)
+
+The `input` argument is declared non-null (`!`) in `PersonalAccessTokens.sdl` for all six PAT operations. Omitting the entire `input` argument fails typed-argument validation in the generated dispatcher (`C<Op>GqlRequest::IsValid()` returns false because the `"input"` param object is absent) and is rejected with the standard `"Bad request. Unexpected request for command-ID: '<Op>'"` envelope **before** the resolver runs - the same failure layer as omitting a required inner field. Folder `10` asserts this exact envelope (no `data` key, one `errors[]` entry, `path: ['<Op>']`, `extensions.type: 'Warning'`) for each of the six operations.
+
+This used to be opt-in folder `90` (`expectedStatus=any`, log-only): before the SDL non-null, omitting `input` reached the resolver and tripped a `Q_ASSERT(false)` in `CPersonalAccessTokenControllerComp::On<Op>` on a Debug build, so it could not be asserted in CI. Marking the argument non-null closes that path, so folder `10` is now a safe, deterministic default-run folder.
+
 ## Opt-in folders (never in the default Newman run)
 
-- **`90 Exploratory - Omitted Input`**: the `input` argument is now non-null (`!`) in the SDL for all six PAT operations (required per GraphQL semantics and consistent with inner-field non-nulls). Omitting the entire `input` now fails request validation with the standard "Bad request. Unexpected request for command-ID: '...'" error before reaching any resolver (no Q_ASSERT). These 6 requests set `expectedStatus=any` and only log the observed response; they never hard-fail the run. Run manually: `newman run PatTokenApi.postman_collection.json -e PatTokenApi-Dev.postman_environment.json --folder "90 Exploratory - Omitted Input (informational, opt-in, never in default run)"`.
 - **`91 Auth-Cache Staleness`**: `CAuthenticationManagerComp` caches a validated PAT's resolved user/scopes for up to `TokenCacheLifetime` seconds (default 300s), and this cache is **never invalidated** by `RevokeToken`/`DeleteToken`. Concretely: a PAT that was used for authentication (and thus cached) **before** being revoked can continue to authenticate ordinary GraphQL requests for up to 5 minutes after revocation - even though the dedicated `ValidateToken` query (folder `04`) reflects the revocation immediately, because it always calls the manager directly and never consults the cache. This folder's first four requests run fast and document the immediate-reuse case (still authenticates, as expected). Its fifth request is a real wait-gated check: run requests 1-4, wait **at least 300 seconds** wall-clock, then re-run request 5 alone (Postman GUI, or a second scoped `newman run ... --folder "91 ..."` invocation) with environment variable `cacheStalenessLongWaitEnabled=true` to actually assert the cache entry expired (403). This is intentionally excluded from CI - it is not worth a 5-minute stall on every pipeline run.
 
 ## Newman (default folders)
@@ -77,10 +85,13 @@ newman run PatTokenApi.postman_collection.json -e PatTokenApi-Dev.postman_enviro
   --folder "06 Scope Intersection - User Permissions ∩ Token Scopes" `
   --folder "07 Ownership and Cross-User Access (no enforcement, source-confirmed)" `
   --folder "08 Comma-in-Scope Storage Edge Case" `
+  --folder "09 ProductId Cross-Product Storage" `
+  --folder "10 Omitted Input - required input argument (rejected at dispatch)" `
+  --folder "11 Cross-Product Authorization Isolation" `
   --folder "99 Cleanup" `
   --reporters cli,json --reporter-json-export run-report.json
 ```
-(`Run-CiTests.ps1` runs this exact `--folder` list for you; pass `-IncludeOptInFolders` to add `90`/`91` too.)
+(`Run-CiTests.ps1` runs this exact `--folder` list for you; pass `-IncludeOptInFolders` to add `91` too.)
 
 ## CI (`Run-CiTests.ps1`)
 
@@ -93,7 +104,7 @@ Starts a dedicated, isolated `ProLifeServerTest.exe` (database `prolife_test`, H
 ## Known Limitations
 
 - GraphQL error shape: as with the other suites, HTTP status can be 200 even when a GraphQL-level error occurs for most requests. The PAT operations specifically report resolver-level errors (validation failures, not-found) as HTTP 200 with a top-level `errors[]` array and **no `data` key at all** - tests assert on `errors[0].message`/`path`/`extensions.type`, never on `data.<Field>.success` for these cases. Genuine auth/context failures (bad/expired JWT, invalid or revoked-and-uncached PAT) are real HTTP 401/403 with an empty body instead - tests for these assert on status code only, never call `pm.response.json()` unguarded.
-- **Two distinct "invalid input" failure layers exist and are tested separately**: omitting a non-null (`!`) SDL field entirely (e.g. `CreateToken`'s `userId`/`name`, or the `id`/`token`/`userId` field of `GetToken`/`RevokeToken`/`DeleteToken`/`ValidateToken`/`GetTokenList`) fails typed-argument deserialization *before* the resolver ever runs, producing the generic `"Bad request. Unexpected request for command-ID: '<Command>'"` dispatcher message (source: `CGqlHandlerBaseClassGeneratorComp.cpp`-generated dispatch code, e.g. `CCreateTokenGqlRequest::IsValid()`/`ReadFromGraphQlObject` in the generated `PersonalAccessTokens.cpp`) - this is shared, generic behavior for *every* SDL command in the codebase with a required field, and matches real GraphQL non-null-argument semantics, not a bug. Sending the field as an empty string (`""`) instead reaches the resolver's own, friendlier `"Invalid request: X is required"` message. Both variants are tested; do not conflate them if a future SDL change makes a field nullable (would change which message a given "omit" test should expect).
+- **Two distinct "invalid input" failure layers exist and are tested separately**: omitting a non-null (`!`) input *before* the resolver runs produces the generic `"Bad request. Unexpected request for command-ID: '<Command>'"` dispatcher message (source: the generated `C<Op>GqlRequest::IsValid()`/`ReadFromGraphQlObject` in `PersonalAccessTokens.cpp`) - this is shared, generic behavior for *every* SDL command in the codebase with a required field, matches real GraphQL non-null semantics, not a bug. **Two sub-cases both land in this layer:** (a) omitting a required inner field while still passing an `input` object (e.g. `GetToken(input: { })`, tested in folders `02`/`04`/`05`) - fails on `ReadFromGraphQlObject`; and (b) omitting the whole `input` argument (e.g. `GetToken { ... }` with no `(input: ...)`, tested in folder `10`) - the `input` argument itself is now non-null (`!`) in the SDL, so `IsValid()` is false because the `"input"` param object is absent. Sending a field as an empty string (`""`) instead reaches the resolver's own, friendlier `"Invalid request: X is required"` message. All three variants are tested; do not conflate them if a future SDL change makes an argument or field nullable (would change which message a given "omit" test should expect, and case (b) omitting `input` would then reach the resolver again - which is exactly what previously tripped the Debug `Q_ASSERT` folder `10` now guards against).
 - No ownership enforcement is a real, current, source-confirmed property of this API (folder `07`) - not a suite bug. If this is ever tightened (e.g. a `CommandPermissions` gate wired for these commands), folder `07`'s requests are expected to start failing and should be updated to assert the new, stricter behavior instead.
 - The comma-in-scope corruption (folder `08`) is a genuine storage-layer property (comma-join on write, `split(',')` on read, no escaping) - not something this suite works around.
 - Folder `91`'s long-wait check is skipped by default (`pm.test.skip`) unless `cacheStalenessLongWaitEnabled=true` is set and the requisite wait actually happened - it is not meant to run unattended in CI.
