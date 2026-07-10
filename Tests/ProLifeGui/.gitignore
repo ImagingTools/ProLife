@@ -2,5 +2,9 @@ node_modules/
 npm-debug.log*
 .auth/
 test-results/
+test-results-phase1-readonly/
+test-results-phase2-mutating/
 playwright-report/
 junit-report.xml
+junit-report-phase1-readonly.xml
+junit-report-phase2-mutating.xml

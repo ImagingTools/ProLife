@@ -478,135 +478,135 @@ ViewBase {
 			}
 
 			// Additional customer roles section
-			Item {
-				id: additionalRolesHeader;
-				width: content.width;
-				height: addRoleButton.height + Style.marginM;
-				visible: true;
+			// Item {
+			// 	id: additionalRolesHeader;
+			// 	width: content.width;
+			// 	height: addRoleButton.height + Style.marginM;
+			// 	visible: true;
 
-				Text {
-					anchors.verticalCenter: parent.verticalCenter;
-					anchors.left: parent.left;
-					anchors.leftMargin: Style.marginL;
-					text: qsTr("Additional Roles");
-					color: Style.textColor;
-					font.family: Style.fontFamilyBold;
-					font.pixelSize: Style.fontSizeL;
-				}
+			// 	Text {
+			// 		anchors.verticalCenter: parent.verticalCenter;
+			// 		anchors.left: parent.left;
+			// 		anchors.leftMargin: Style.marginL;
+			// 		text: qsTr("Additional Roles");
+			// 		color: Style.textColor;
+			// 		font.family: Style.fontFamilyBold;
+			// 		font.pixelSize: Style.fontSizeL;
+			// 	}
 
-				ToolButton {
-					id: addRoleButton;
-					anchors.verticalCenter: parent.verticalCenter;
-					anchors.right: parent.right;
-					anchors.rightMargin: Style.marginL;
+			// 	ToolButton {
+			// 		id: addRoleButton;
+			// 		anchors.verticalCenter: parent.verticalCenter;
+			// 		anchors.right: parent.right;
+			// 		anchors.rightMargin: Style.marginL;
 
-					width: 22;
-					height: width;
+			// 		width: 22;
+			// 		height: width;
 
-					iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
-					tooltipText: qsTr("Add Role");
+			// 		iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
+			// 		tooltipText: qsTr("Add Role");
 
-					onClicked: {
-						let idx = additionalRolesModel.insertNewItem();
-						additionalRolesModel.setData("roleType", "EndCustomer", idx);
-						additionalRolesModel.setData("customerId", "", idx);
-						orderEditorContainer.doUpdateModel();
-					}
-				}
-			}
+			// 		onClicked: {
+			// 			let idx = additionalRolesModel.insertNewItem();
+			// 			additionalRolesModel.setData("roleType", "EndCustomer", idx);
+			// 			additionalRolesModel.setData("customerId", "", idx);
+			// 			orderEditorContainer.doUpdateModel();
+			// 		}
+			// 	}
+			// }
 
-			// List of additional roles
-			Column {
-				id: additionalRolesView;
-				width: content.width;
-				spacing: Style.marginM;
+			// // List of additional roles
+			// Column {
+			// 	id: additionalRolesView;
+			// 	width: content.width;
+			// 	spacing: Style.marginM;
 
-				property bool readOnly: false;
+			// 	property bool readOnly: false;
 
-				Repeater {
-					model: additionalRolesModel;
+			// 	Repeater {
+			// 		model: additionalRolesModel;
 
-					delegate: Row {
-						width: additionalRolesView.width - 2 * Style.marginL;
-						x: Style.marginL;
-						spacing: Style.marginM;
+			// 		delegate: Row {
+			// 			width: additionalRolesView.width - 2 * Style.marginL;
+			// 			x: Style.marginL;
+			// 			spacing: Style.marginM;
 
-						ComboBox {
-							id: roleTypeCB;
-							width: 160;
+			// 			ComboBox {
+			// 				id: roleTypeCB;
+			// 				width: 160;
 
-							nameId: "name";
-							model: roleTypesModel;
+			// 				nameId: "name";
+			// 				model: roleTypesModel;
 
-							changeable: !additionalRolesView.readOnly;
+			// 				changeable: !additionalRolesView.readOnly;
 
-							Component.onCompleted: {
-								let storedRoleType = additionalRolesModel.getData("roleType", index);
-								for (let i = 0; i < roleTypesModel.getItemsCount(); i++){
-									if (roleTypesModel.getData("id", i) === storedRoleType){
-										currentIndex = i;
-										break;
-									}
-								}
-							}
+			// 				Component.onCompleted: {
+			// 					let storedRoleType = additionalRolesModel.getData("roleType", index);
+			// 					for (let i = 0; i < roleTypesModel.getItemsCount(); i++){
+			// 						if (roleTypesModel.getData("id", i) === storedRoleType){
+			// 							currentIndex = i;
+			// 							break;
+			// 						}
+			// 					}
+			// 				}
 
-							onCurrentIndexChanged: {
-								if (currentIndex >= 0){
-									let selectedRoleId = roleTypesModel.getData("id", currentIndex);
-									additionalRolesModel.setData("roleType", selectedRoleId, index);
-									orderEditorContainer.doUpdateModel();
-								}
-							}
-						}
+			// 				onCurrentIndexChanged: {
+			// 					if (currentIndex >= 0){
+			// 						let selectedRoleId = roleTypesModel.getData("id", currentIndex);
+			// 						additionalRolesModel.setData("roleType", selectedRoleId, index);
+			// 						orderEditorContainer.doUpdateModel();
+			// 					}
+			// 				}
+			// 			}
 
-						ComboBox {
-							id: additionalCustomerCB;
-							width: parent.width - roleTypeCB.width - removeRoleButton.width - 2 * Style.marginM;
+			// 			ComboBox {
+			// 				id: additionalCustomerCB;
+			// 				width: parent.width - roleTypeCB.width - removeRoleButton.width - 2 * Style.marginM;
 
-							nameId: "name";
-							model: orderEditorContainer.accountsModel;
+			// 				nameId: "name";
+			// 				model: orderEditorContainer.accountsModel;
 
-							changeable: !additionalRolesView.readOnly;
+			// 				changeable: !additionalRolesView.readOnly;
 
-							Component.onCompleted: {
-								let storedId = additionalRolesModel.getData("customerId", index);
-								for (let i = 0; i < orderEditorContainer.accountsModel.getItemsCount(); i++){
-									if (orderEditorContainer.accountsModel.getData("id", i) === storedId){
-										currentIndex = i;
-										break;
-									}
-								}
-							}
+			// 				Component.onCompleted: {
+			// 					let storedId = additionalRolesModel.getData("customerId", index);
+			// 					for (let i = 0; i < orderEditorContainer.accountsModel.getItemsCount(); i++){
+			// 						if (orderEditorContainer.accountsModel.getData("id", i) === storedId){
+			// 							currentIndex = i;
+			// 							break;
+			// 						}
+			// 					}
+			// 				}
 
-							onCurrentIndexChanged: {
-								if (currentIndex >= 0 && orderEditorContainer.accountsModel){
-									let selectedId = orderEditorContainer.accountsModel.getData("id", currentIndex);
-									additionalRolesModel.setData("customerId", selectedId, index);
-									orderEditorContainer.doUpdateModel();
-								}
-							}
-						}
+			// 				onCurrentIndexChanged: {
+			// 					if (currentIndex >= 0 && orderEditorContainer.accountsModel){
+			// 						let selectedId = orderEditorContainer.accountsModel.getData("id", currentIndex);
+			// 						additionalRolesModel.setData("customerId", selectedId, index);
+			// 						orderEditorContainer.doUpdateModel();
+			// 					}
+			// 				}
+			// 			}
 
-						ToolButton {
-							id: removeRoleButton;
-							anchors.verticalCenter: parent.verticalCenter;
+			// 			ToolButton {
+			// 				id: removeRoleButton;
+			// 				anchors.verticalCenter: parent.verticalCenter;
 
-							width: 22;
-							height: width;
+			// 				width: 22;
+			// 				height: width;
 
-							iconSource: "../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal);
-							tooltipText: qsTr("Remove Role");
+			// 				iconSource: "../../../" + Style.getIconPath("Icons/Remove", Icon.State.On, Icon.Mode.Normal);
+			// 				tooltipText: qsTr("Remove Role");
 
-							visible: !additionalRolesView.readOnly;
+			// 				visible: !additionalRolesView.readOnly;
 
-							onClicked: {
-								additionalRolesModel.removeItem(index);
-								orderEditorContainer.doUpdateModel();
-							}
-						}
-					}
-				}
-			}
+			// 				onClicked: {
+			// 					additionalRolesModel.removeItem(index);
+			// 					orderEditorContainer.doUpdateModel();
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// }
 			
 			Component {
 				id: productFactory;
@@ -697,34 +697,44 @@ ViewBase {
 					
 					ToolButton {
 						id: expandButton;
-						
+
+						// Test instrumentation: ToolButton derives its objectName from `text`, which this
+						// button never sets (icon-only), so it would otherwise resolve to the generic,
+						// non-unique "Button" shared by every untexted ToolButton on the page. Inert -
+						// no runtime/visual effect.
+						objectName: "ExpandProductsButton";
+
 						anchors.verticalCenter: parent.verticalCenter;
-						
+
 						width: 22;
 						height: width;
-						
+
 						iconSource: !productsView.expanded ? "../../../" + Style.getIconPath("Icons/DetailedView", Icon.State.On, Icon.Mode.Normal)
 														   : "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal);
-						
+
 						tooltipText: !productsView.expanded ? qsTr("Detailed view") : qsTr("Compact view");
-						
+
 						onClicked: {
 							productsView.expanded = !productsView.expanded;
 						}
 					}
-					
+
 					ToolButton {
 						id: addProduct;
-						
+
+						// Test instrumentation: see expandButton's comment above - same generic-"Button"
+						// collision. Inert - no runtime/visual effect.
+						objectName: "AddProductButton";
+
 						anchors.verticalCenter: parent.verticalCenter;
-						
+
 						width: 22;
 						height: width;
-						
+
 						iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal);
-						
+
 						tooltipText: qsTr("Add a new product");
-						
+
 						onClicked: {
 							productsView.activeProductIndex = -1;
 							ModalDialogManager.openDialog(productEditorDialog, {});
@@ -747,7 +757,13 @@ ViewBase {
 
 			ListView {
 				id: productsView;
-				
+
+				// Test instrumentation: scopes row-count / row-lookup queries to just this list (each
+				// row's own objectName is the product's own name, e.g. "WidgetLicenseElementView", which
+				// collides across rows sharing a product name and isn't known ahead of a test picking a
+				// product by combo position). Inert - no runtime/visual effect.
+				objectName: "OrderProductsListView";
+
 				width: content.width;
 				height: contentHeight;
 				

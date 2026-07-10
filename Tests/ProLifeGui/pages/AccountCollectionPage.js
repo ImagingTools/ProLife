@@ -6,8 +6,8 @@
 // Primarily uses built-in search. Limited custom filters.
 // Commands: New, Edit, Remove (SetDescription via context for ChangeAccountDescription).
 
-const { CollectionPage } = require('./CollectionPage');
-const gui = require('../lib/gui');
+const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 const FILTERS = {
   creationDate: 'CreationDateFilter',
@@ -25,7 +25,7 @@ class AccountCollectionPage extends CollectionPage {
   }
 
   async clearAllFilters() {
-    await gui.clickButton(this.page, ['FilterPanel', 'ClearAllFilters']);
+    await this.filters.clearAllFilters();
     return this;
   }
 

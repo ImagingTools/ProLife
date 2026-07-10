@@ -128,17 +128,22 @@ powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
 TeamCity-ready entry point, mirroring `Tests\ProLifeApiPostman\Run-CiTests.ps1` (same dependency
 startup/teardown; swaps newman for Playwright). Starts, in order:
 
+All three backups live right here in this folder (`Tests\ProLifeGui\*.backup`), so this suite doesn't
+depend on `Tests\ProLifeApiPostman`'s copies at runtime - they're just plain copies of the same real
+exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if they go stale.
+
 1. `PumaServerPgTest.exe` (database `puma_test`, HTTP port `17788`) — restored from **`puma.backup`
    right here in this folder**, not the plain one `ProLifeApiPostman` uses. It's a derived backup: the
    real ~725-user Puma export plus the 8 `fixtures/users.js` roles/users baked in on top (see
    `Generate-Backups.ps1` below). This is what lets `global-setup.js` just log in instead of creating
    anything at run time.
-2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) — restored from the shared
-   `Tests\ProLifeApiPostman\lisa.backup`.
-3. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) — restored from the shared
-   `Tests\ProLifeApiPostman\prolife.backup` (real Devices/Orders/Accounts/SoftwareInstances data, incl.
-   the exact catalog/type records `DeviceCollectionPage`/`SoftwareCollectionPage` tests filter/select
-   against - an empty schema can never exercise those, no GraphQL mutation can create them). Its
+2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) — restored from **`lisa.backup`
+   right here in this folder** (a plain copy of `ProLifeApiPostman`'s real export).
+3. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) — restored from
+   **`prolife.backup` right here in this folder** (a plain copy of `ProLifeApiPostman`'s real export,
+   with Devices/Orders/Accounts/SoftwareInstances data, incl. the exact catalog/type records
+   `DeviceCollectionPage`/`SoftwareCollectionPage` tests filter/select against - an empty schema can
+   never exercise those, no GraphQL mutation can create them). Its
    `PumaServer` FDW foreign-server definition then gets repointed at `puma_test` (`Repair-
    ProLifeForeignServers` - see the identical, more detailed note in `ProLifeApiPostman`'s README) before
    the server starts. This is the same executable that serves the WASM app Playwright drives.

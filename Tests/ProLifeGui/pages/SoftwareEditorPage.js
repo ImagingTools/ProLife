@@ -11,9 +11,9 @@
 //
 // Fields objectNames added to ProLife/Qml/Include/prolifeqml/SoftwareEditor.qml
 
-const { BasePage } = require('./BasePage');
-const { ComboBox, TextInput, Switch } = require('../controls');
-const gui = require('../lib/gui');
+const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
+const { ComboBox, TextInput, Switch } = require('imtcore-gui-testkit/controls');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 class SoftwareEditorPage extends BasePage {
   constructor(page) {

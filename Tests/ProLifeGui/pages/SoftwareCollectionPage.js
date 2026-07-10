@@ -19,8 +19,12 @@
 // Split<-SplitLicense, Revoke<-RevokeLicense, CreateLicenseFile<-CreateLicenseFile, ...);
 // see matrix/permissions.js.
 
-const { CollectionPage } = require('./CollectionPage');
-const gui = require('../lib/gui');
+const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
+const gui = require('imtcore-gui-testkit/lib/gui');
+
+// "Added"/"Last Modified" column header ids (SoftwareProductsPage.acc's HeaderIds "added"/"timeStamp")
+// - their values change over time and after edits, so they're masked in screenshots, not asserted on.
+const TIMESTAMP_HEADER_IDS = ['added', 'timeStamp'];
 
 // Filter ids as registered in SoftwareProductCollectionView.qml / FilterPanelDecorator.qml.
 const FILTERS = {
@@ -46,6 +50,11 @@ class SoftwareCollectionPage extends CollectionPage {
   }
   revoke() {
     return this.runCommand('Revoke');
+  }
+
+  /** Screenshot masks for the Added/Last Modified columns - see TIMESTAMP_HEADER_IDS above. */
+  timestampColumnMasks() {
+    return this.columnMasks(TIMESTAMP_HEADER_IDS);
   }
 
   // --- filters ----------------------------------------------------------------------------------
@@ -77,7 +86,7 @@ class SoftwareCollectionPage extends CollectionPage {
 
   /** Clear every active filter. */
   async clearAllFilters() {
-    await gui.clickButton(this.page, ['FilterPanel', 'ClearAllFilters']);
+    await this.filters.clearAllFilters();
     return this;
   }
 

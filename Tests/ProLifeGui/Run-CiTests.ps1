@@ -59,18 +59,21 @@
 
 .PARAMETER ProLifeBackupPath / PumaBackupPath / LisaBackupPath
     Paths to the pg_dump custom-format backups used to (re)create
-    prolife_test / puma_test / lisa_test before each run.
-    -ProLifeBackupPath and -LisaBackupPath default to the plain,
-    real-dev-export backups shared with Tests\ProLifeApiPostman
-    (Tests\ProLifeApiPostman\prolife.backup / lisa.backup) - a real,
-    populated database is required because DeviceCollectionPage/
-    SoftwareCollectionPage/etc. tests need actual rows to select, and no
-    GraphQL mutation in this codebase can create the catalog/type records
-    (device types, software catalog entries) ProLife's own DeviceAdd/
-    SoftwareProductAdd depend on - see the identical, more detailed note in
-    Tests\ProLifeApiPostman\Run-CiTests.ps1.
-    -PumaBackupPath instead defaults to Tests\ProLifeGui\puma.backup - a
-    ProLifeGui-specific derived backup (see Generate-Backups.ps1) that
+    prolife_test / puma_test / lisa_test before each run. All three default
+    to a file living next to this script, in Tests\ProLifeGui itself
+    (prolife.backup / puma.backup / lisa.backup) - self-contained, so this
+    suite doesn't depend on Tests\ProLifeApiPostman's copies at runtime.
+    -ProLifeBackupPath and -LisaBackupPath are plain copies of the
+    real-dev-export backups also used by Tests\ProLifeApiPostman\Run-CiTests.ps1
+    (copy them again from there - or from a fresh export - if they go stale;
+    nothing here regenerates them) - a real, populated database is required
+    because DeviceCollectionPage/SoftwareCollectionPage/etc. tests need
+    actual rows to select, and no GraphQL mutation in this codebase can
+    create the catalog/type records (device types, software catalog
+    entries) ProLife's own DeviceAdd/SoftwareProductAdd depend on - see the
+    identical, more detailed note in Tests\ProLifeApiPostman\Run-CiTests.ps1.
+    -PumaBackupPath is instead a ProLifeGui-specific DERIVED backup (see
+    Generate-Backups.ps1, which writes its output here) that
     layers the 8 fixture roles/users from fixtures/users.js on top of the
     same real Puma export, so global-setup.js only ever needs to log in
     (never create them via GraphQL - see fixtures/seed.js's header comment).
@@ -100,10 +103,14 @@
     non-standard. Also used to resolve pg_restore.exe (same bin folder).
 
 .PARAMETER JUnitReportPath
-    Where Playwright's junit reporter writes its XML report (see
-    playwright.config.js - active whenever the CI env var is set, which
-    this script sets before invoking Playwright). Point TeamCity's "XML
-    Report Processing" (JUnit) build feature at this same path.
+    Base name for Playwright's junit XML reports (see playwright.config.js -
+    active whenever the CI env var is set, which this script sets before
+    invoking Playwright). The suite runs in two phases (see
+    Invoke-PlaywrightSuite), each writing its OWN report so the second phase
+    never overwrites the first's: "<name>-phase1-readonly.xml" and
+    "<name>-phase2-mutating.xml", derived from this path by replacing its
+    ".xml" suffix. Point TeamCity's "XML Report Processing" (JUnit) build
+    feature at a glob covering both, e.g. "junit-report-phase*.xml".
 
 .PARAMETER PlaywrightArgs
     Extra arguments appended verbatim to "npx playwright test" - e.g. a spec
@@ -181,9 +188,9 @@ param(
     [string]$DbUser = "postgres",
     [string]$DbPassword = "root",
 
-    [string]$ProLifeBackupPath = (Join-Path $RepoRoot "Tests\ProLifeApiPostman\prolife.backup"),
+    [string]$ProLifeBackupPath = (Join-Path $ScriptDir "prolife.backup"),
     [string]$PumaBackupPath = (Join-Path $ScriptDir "puma.backup"),
-    [string]$LisaBackupPath = (Join-Path $RepoRoot "Tests\ProLifeApiPostman\lisa.backup"),
+    [string]$LisaBackupPath = (Join-Path $ScriptDir "lisa.backup"),
 
     # Safety net only - Tests\ProLifeGui\puma.backup already has a working
     # "su" account baked in (see -PumaBackupPath above). Login is always
@@ -252,10 +259,11 @@ function Stop-ServerProcess([string]$processName) {
 }
 
 function Reset-Database([string]$name) {
-    # Only drops the database if present. Callers that need seeded data
-    # (Lisa) restore a backup into it afterwards; callers that don't
-    # (Puma, ProLife) rely on their server exe creating it (and running
-    # migrations) on startup when it doesn't already exist.
+    # Only drops the database if present - the caller (Restore-DatabaseFromBackup, below) always
+    # recreates it and restores a real backup afterwards. ALL THREE databases this suite touches
+    # (puma_test, lisa_test, prolife_test) go through that same full drop+recreate+restore path
+    # identically - see the three Restore-DatabaseFromBackup calls near the bottom of this script.
+    # None of them is left to a bare server-exe migration on an empty schema.
     Write-Step "Resetting database '$name'"
     $psql = Resolve-PsqlPath
     Write-Host "Using psql: $psql"
@@ -481,22 +489,55 @@ function Invoke-PlaywrightSuite {
     Write-Step "Running Playwright suite"
     Push-Location $ScriptDir
     try {
-        # playwright.config.js switches its reporter to junit (writing
-        # "junit-report.xml" in $ScriptDir, i.e. $JUnitReportPath with the
-        # default parameter) whenever CI is set, and also turns on
-        # forbidOnly/retries=1 - matching how this suite is meant to run
-        # unattended.
+        # playwright.config.js switches its reporter to junit (writing $env:PLAYWRIGHT_JUNIT_OUTPUT, set
+        # per-phase below) whenever CI is set, and also turns on forbidOnly - matching how this suite is
+        # meant to run unattended.
         $env:CI = "true"
         $env:PROLIFE_BASE_URL = "http://localhost:$HttpPort"
         if ($AllUsers) { $env:PROLIFE_GUI_ALL_USERS = "1" }
         try {
-            & npx playwright test @PlaywrightArgs | Out-Host
-            return $LASTEXITCODE
+            # TWO PHASES against the one running server, to keep workers:10 while eliminating
+            # cross-user data races. Every fixture user is its own Playwright project, and all projects
+            # hit ONE shared prolife_test DB; a test that MUTATES data (create-license-file, bind+save,
+            # reset-transfer-counter, editor edit+save - tagged @mutating) therefore changes rows that
+            # OTHER users' read-only collection views are looking at right then, which surfaces as
+            # "This table has been modified from another computer" banners, command-bar reflow into the
+            # "..." overflow, changing row counts and dropped selections - i.e. nondeterministic
+            # failures that are artifacts of concurrency against shared mutable state, not real bugs.
+            #   Phase 1: everything EXCEPT @mutating, at the config's workers (10) - pure reads run
+            #            fully parallel and never observe a concurrent mutation (nothing mutates).
+            #   Phase 2: ONLY @mutating, --workers=1 - mutations run one at a time with no other test
+            #            (read or write) touching the DB concurrently, so no cross-user interference.
+            # The suite "passes" only if BOTH phases pass. --grep/--grep-invert compose with any
+            # -PlaywrightArgs the caller passed (e.g. --update-snapshots, a spec path, --project=...).
+            #
+            # Each phase gets its OWN output dir + junit file (playwright.config.js reads
+            # PLAYWRIGHT_OUTPUT_DIR / PLAYWRIGHT_JUNIT_OUTPUT). Playwright clears its output dir and
+            # truncates the junit file at the START of every "npx playwright test" invocation, so
+            # without this, phase 2 silently wiped phase 1's screenshots/diffs/traces/junit results
+            # before anyone could look at them - confirmed live: a run with real phase-1 failures ended
+            # with an empty test-results/ and a junit report showing only the all-green phase 2.
+            $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase1-readonly"
+            $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase1-readonly.xml'
+            Write-Step "Playwright phase 1/2: read-only tests (parallel, workers from config)"
+            & npx playwright test @PlaywrightArgs --grep-invert '@mutating' | Out-Host
+            $phase1 = $LASTEXITCODE
+
+            $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase2-mutating"
+            $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase2-mutating.xml'
+            Write-Step "Playwright phase 2/2: @mutating tests (serial, --workers=1)"
+            & npx playwright test @PlaywrightArgs --grep '@mutating' --workers=1 | Out-Host
+            $phase2 = $LASTEXITCODE
+
+            if ($phase1 -ne 0) { return $phase1 }
+            return $phase2
         }
         finally {
             Remove-Item Env:\CI -ErrorAction SilentlyContinue
             Remove-Item Env:\PROLIFE_BASE_URL -ErrorAction SilentlyContinue
             Remove-Item Env:\PROLIFE_GUI_ALL_USERS -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_OUTPUT_DIR -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_JUNIT_OUTPUT -ErrorAction SilentlyContinue
         }
     }
     finally {
@@ -520,7 +561,8 @@ Write-Host "LisaServerExePath: $LisaServerExePath"
 Write-Host "PumaBackupPath:    $PumaBackupPath"
 Write-Host "LisaBackupPath:    $LisaBackupPath"
 Write-Host "ProLifeBackupPath: $ProLifeBackupPath"
-Write-Host "JUnitReportPath:   $JUnitReportPath"
+Write-Host "JUnitReportPath:   $($JUnitReportPath -replace '\.xml$', '-phase1-readonly.xml')"
+Write-Host "                   $($JUnitReportPath -replace '\.xml$', '-phase2-mutating.xml')"
 
 try {
     # Stop stale processes from a previous, possibly-crashed run before
