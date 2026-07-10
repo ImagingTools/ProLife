@@ -8,9 +8,9 @@
 //
 // Actions only; the test owns the screenshots. Every method returns `this` for chaining.
 
-const { BasePage } = require('./BasePage');
-const { ComboBox } = require('../controls');
-const gui = require('../lib/gui');
+const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
+const { ComboBox } = require('imtcore-gui-testkit/controls');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 class WorkspacePage extends BasePage {
   constructor(page) {

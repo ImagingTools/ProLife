@@ -19,9 +19,9 @@
 // Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...);
 // see matrix/permissions.js.
 
-const { CollectionPage } = require('./CollectionPage');
-const { TableConfigDialog } = require('../controls');
-const gui = require('../lib/gui');
+const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
+const { TableConfigDialog } = require('imtcore-gui-testkit/controls');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 // "Added"/"Last Modified" column header ids (DevicesPage.acc's CollectionHeadersProvider /
 // DeviceItemTypeMetaInfo.s_added / s_timeStamp) - their values change over time and after edits, so
@@ -82,6 +82,78 @@ class DeviceCollectionPage extends CollectionPage {
     return gui.clickPopupItemByIndex(this.page, 1);
   }
 
+  // --- Bind dialog (HardwareProductBindingDialog.qml) --------------------------------------------
+  // Opened by bind(). Its own footer is Save/Close ("SaveButton"/"CloseButton", Enums.ok/cancel).
+  // "Bind New Licenses" opens a SECOND Dialog (HardwareProductBindingEditor.qml, "Available
+  // Licenses") on top of it - NOT nested inside it in the DOM (confirmed live: both dialogs' roots
+  // carry objectName "Dialog" as PARALLEL/sibling overlays, each with exactly one "Dialog" ancestor in
+  // its own controls' chain, not two), so a single ['Dialog', ...] scope already reaches whichever
+  // dialog's own control it names - it just needs to not collide with an IDENTICALLY-named control
+  // elsewhere. The nested editor's footer is Bind/Cancel ("BindButton"/"CancelButton"); the command
+  // bar's own "Bind" command is ALSO "BindButton" but has NO Dialog ancestor at all, so scoping to
+  // ['Dialog', 'BindButton'] unambiguously reaches the nested editor's confirm button, never the
+  // command bar's. The outer dialog's own footer (Save/Close) never collides with the nested editor's
+  // (Bind/Cancel), since the two dialogs are only ever open one-at-a-time from each other's own
+  // controls' perspective in the flows below.
+
+  /** Row index in the (outer dialog's) "Used Licenses" table. */
+  selectUsedLicenseRow(index) {
+    return gui.click(this.page, ['Dialog', `TableRow_${index}`], { what: `used license row ${index}` });
+  }
+  unbindLicense() {
+    return gui.clickButton(this.page, ['Dialog', 'UnbindButton']);
+  }
+  /** Opens the nested "Available Licenses" (Bind New Licenses) dialog. */
+  openBindNewLicenses() {
+    return gui.clickButton(this.page, ['Dialog', 'BindNewLicensesButton']);
+  }
+  /** Toggle a license's checkbox by row index in the nested "Available Licenses" dialog's table. */
+  checkAvailableLicense(index) {
+    return gui.click(this.page, ['Dialog', `TableRow_${index}`, 'RowCheckBox'], {
+      what: `available license row ${index} checkbox`,
+    });
+  }
+  /** Confirms the nested dialog (Enums.ok, "Bind") - binds the checked license(s) and closes it. */
+  confirmBindNewLicenses() {
+    return gui.clickButton(this.page, ['Dialog', 'BindButton']);
+  }
+  /** Cancels the nested dialog (Enums.cancel, "Cancel") without binding anything. */
+  cancelBindNewLicenses() {
+    return gui.clickButton(this.page, ['Dialog', 'CancelButton']);
+  }
+  /** Save (Enums.ok) - opens the "Apply changes" project-name prompt (notClosingButtons keeps the
+   * Bind dialog itself open underneath). Only enabled once a product is selected and the binding
+   * model actually changed (HardwareProductBindingDialog.qml's onModelChanged handler). */
+  saveBinding() {
+    return gui.clickButton(this.page, ['Dialog', 'SaveButton']);
+  }
+  /**
+   * Fill + confirm the "Apply changes" / "Please enter the project" InputDialog opened by Save.
+   * Save's `notClosingButtons: Enums.ok` (HardwareProductBindingDialog.qml) keeps the Bind dialog
+   * itself open underneath while this prompt is up, so BOTH share objectName "Dialog" at once - a
+   * path-based ['Dialog', ...] lookup's `.first()` would land on the (earlier-opened) Bind dialog
+   * behind it, not this prompt. It's opened later/on top, so `.last()` reaches the actual prompt.
+   */
+  async confirmProjectPrompt(project) {
+    const prompt = this.page.locator('[objectName="Dialog"][visible]').last();
+    // Not a real <input> (a synthetic QML/WASM text item), so type via mouse-click + keyboard like
+    // actions.js's own fill() does, rather than Playwright's .fill() (which requires a real form field).
+    const input = prompt.locator('[objectName="TextInput"] input, input[objectName="TextInput"], [objectName="TextInput"]').first();
+    await input.waitFor({ state: 'visible', timeout: 5000 });
+    const inputBox = await input.boundingBox();
+    if (!inputBox) throw new Error('GUI fill target TextInput has no bounding box: Apply changes project field');
+    await this.page.mouse.click(inputBox.x + inputBox.width / 2, inputBox.y + inputBox.height / 2);
+    await this.page.keyboard.type(project);
+    await gui.waitForStable(this.page);
+
+    const okMouse = prompt.locator('[objectName="OKButton"] [objectName="MouseArea"][visible]').first();
+    await okMouse.waitFor({ state: 'visible', timeout: 5000 });
+    const box = await okMouse.boundingBox();
+    if (!box) throw new Error('GUI click target has no bounding box: Apply changes OK button');
+    await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    await gui.waitForStable(this.page);
+  }
+
   // --- column configuration (right-click a header) -----------------------------------------------
 
   /** Open the "Table configuration" dialog by right-clicking a column header. */
@@ -93,7 +165,7 @@ class DeviceCollectionPage extends CollectionPage {
 
   /** Screenshot masks for the Added/Last Modified columns - see TIMESTAMP_HEADER_IDS above. */
   timestampColumnMasks() {
-    return this.table.columnMasks(TIMESTAMP_HEADER_IDS);
+    return this.columnMasks(TIMESTAMP_HEADER_IDS);
   }
 
   // --- filters ----------------------------------------------------------------------------------
@@ -131,7 +203,7 @@ class DeviceCollectionPage extends CollectionPage {
 
   /** Clear every active filter. */
   async clearAllFilters() {
-    await gui.clickButton(this.page, ['FilterPanel', 'ClearAllFilters']);
+    await this.filters.clearAllFilters();
     return this;
   }
 
@@ -153,6 +225,15 @@ class DeviceCollectionPage extends CollectionPage {
   async filterSensorsWithLicense() {
     await this.clearAllFilters();
     await this.selectFilterOptionByIndex('license', 1);
+    return this;
+  }
+
+  /** Rows with LicenseStatus "Sensors without a license" (index 0) - s_inUse === false, the first
+   * precondition CreateLicenseFile's validation checks (DeviceCollectionViewCommandsDelegate.qml:423-427)
+   * - guarantees the "No license is linked" error path instead of hoping row 0 happens to lack one. */
+  async filterSensorsWithoutLicense() {
+    await this.clearAllFilters();
+    await this.selectFilterOptionByIndex('license', 0);
     return this;
   }
 

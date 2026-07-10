@@ -1,9 +1,9 @@
 // AccountEditorPage - the editor for Accounts (New/Edit).
 // Fields for customer info, account info, company address, groups table.
 
-const { BasePage } = require('./BasePage');
-const { TextInput } = require('../controls');
-const gui = require('../lib/gui');
+const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
+const { TextInput, Table } = require('imtcore-gui-testkit/controls');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 class AccountEditorPage extends BasePage {
   constructor(page) {
@@ -17,7 +17,10 @@ class AccountEditorPage extends BasePage {
     this.city = new TextInput(page, ['CityInput']);
     this.postalCode = new TextInput(page, ['PostalCodeInput']);
     this.street = new TextInput(page, ['StreetInput']);
-    // Groups table addressed by objectName for visibility
+    // GroupsTable (AccountEditor.qml's "groupsElement") - a checkable Table listing every group this
+    // account can belong to. Checking/unchecking a row applies to the in-memory model immediately
+    // (AccountEditor.qml's onCheckedItemsChanged -> doUpdateModel()), Save still persists it.
+    this.groups = new Table(page, ['GroupsTable']);
   }
 
   save() { return this.runCommand('Save'); }

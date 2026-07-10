@@ -192,6 +192,15 @@ Item {
 			productItem.m_productName = productCB.model.getData(OrderedProductTypeMetaInfo.s_productName, productCB.currentIndex);
 			
 			if (!contentLoader.item) {
+				if (productItem.m_categoryId === productEditor.hardwareCategoryId){
+					contentLoader.sourceComponent = undefined
+					contentLoader.sourceComponent = hardwareProductComponent
+				}
+				else{
+					contentLoader.sourceComponent = undefined
+					contentLoader.sourceComponent = softwareProductComponent
+				}
+
 				productEditor.pendingProductUpdate = true;
 				return;
 			}
@@ -258,6 +267,7 @@ Item {
 			}
 		}
 	}
+
 	
 	CustomScrollbar {
 		id: scrollbar
@@ -283,148 +293,130 @@ Item {
 		anchors.bottomMargin: Style.marginM
 
 		contentWidth: width
-		contentHeight: contentColumn.height
+		contentHeight: headerGroup.height + (contentLoader.visible ? Style.marginM + contentLoader.height : 0)
 
 		boundsBehavior: Flickable.StopAtBounds
 		clip: true
-		
-		Column {
-			id: contentColumn
+
+		GroupElementView {
+			id: headerGroup
 			width: flickable.width
-			spacing: Style.marginM
 
-			GroupElementView {
-				width: contentColumn.width
-
-				ElementView {
-					id: segmentedElementView;
-					width: parent.width;
-					name: qsTr("Product Category");
-					description: qsTr("Please select the product category you want to create");
-					visible: productEditor.index === -1;
+			ElementView {
+				id: segmentedElementView;
+				width: parent.width;
+				name: qsTr("Product Category");
+				description: qsTr("Please select the product category you want to create");
+				visible: productEditor.index === -1;
+				
+				property Button softwareProductButton;
+				property Button hardwareProductButton;
+				
+				property int selectedIndex: 0;
+				
+				bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
+				
+				Component {
+					id: selectedComp;
 					
-					property Button softwareProductButton;
-					property Button hardwareProductButton;
-					
-					property int selectedIndex: 0;
-					
-					bottomComp: segmentedElementView.selectedIndex >= 0 ? selectedComp : undefined;
-					
-					Component {
-						id: selectedComp;
-						
-						BaseText {
-							font.family: Style.fontFamilyBold;
-							text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
-						}
-					}
-					
-					controlComp: Component {
-						SegmentedButton {
-							anchors.centerIn: parent;
-							height: 40;
-							selectedIndex: 0;
-							isExclusive: true;
-							
-							onSelectedIndexChanged: {
-								productEditor.clearProduct();
-								
-								if (selectedIndex == 0){
-									productEditor.setSoftware();
-								}
-								else if (selectedIndex == 1){
-									productEditor.setHardware();
-								}
-								
-								segmentedElementView.selectedIndex = selectedIndex;
-							}
-							
-							Button {
-								id: softwareProductButton;
-								
-								anchors.verticalCenter: parent.verticalCenter;
-								
-								checkable: true
-								checked: true
-								
-								iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
-								text: qsTr("Software");
-								
-								Component.onCompleted: {
-									segmentedElementView.softwareProductButton = softwareProductButton;
-								}
-							}
-							
-							Button {
-								id: hardwareProductButton;
-								
-								anchors.verticalCenter: parent.verticalCenter;
-								
-								checkable: true
-								checked: false;
-								
-								iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
-								
-								text: qsTr("Hardware");
-								
-								Component.onCompleted: {
-									segmentedElementView.hardwareProductButton = hardwareProductButton;
-								}
-							}
-						}
+					BaseText {
+						font.family: Style.fontFamilyBold;
+						text: qsTr("Currently selected: ") + ((segmentedElementView.selectedIndex == 0) ? "Software" : "Hardware");
 					}
 				}
 				
-				ComboBoxElementView {
-					id: productCB;
-					
-					width: parent.width;
-					controlWidth: 500;
-					
-					name: qsTr("Product");
-					nameId: OrderedProductTypeMetaInfo.s_productName;
-					
-					onCurrentIndexChanged: {
-						productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
+				controlComp: Component {
+					SegmentedButton {
+						anchors.centerIn: parent;
+						height: 40;
+						selectedIndex: 0;
+						isExclusive: true;
 						
-						productEditor.updateProductModel();
-					}
-					
-					Component {
-						id: productErrorComp;
-						
-						Text {
-							id: selectProductText;
+						onSelectedIndexChanged: {
+							productEditor.clearProduct();
 							
-							text: qsTr("Please select a product");
-							color: Style.errorTextColor;
-							font.family: Style.fontFamily;
-							font.pixelSize: Style.fontSizeM;
+							if (selectedIndex == 0){
+								productEditor.setSoftware();
+							}
+							else if (selectedIndex == 1){
+								productEditor.setHardware();
+							}
+							
+							segmentedElementView.selectedIndex = selectedIndex;
+						}
+						
+						Button {
+							id: softwareProductButton;
+							objectName: "SoftwareButton";
+							anchors.verticalCenter: parent.verticalCenter;
+							checkable: true
+							checked: true
+							iconSource: "../../../../" + Style.getIconPath("Icons/Key", Icon.State.On, Icon.Mode.Normal);
+							text: qsTr("Software");
+							Component.onCompleted: {
+								segmentedElementView.softwareProductButton = softwareProductButton;
+							}
+						}
+
+						Button {
+							id: hardwareProductButton;
+							objectName: "HardwareButton";
+							anchors.verticalCenter: parent.verticalCenter;
+							checkable: true
+							checked: false;
+							iconSource: "../../../../" + Style.getIconPath("Icons/Sensor", Icon.State.On, Icon.Mode.Normal);
+							text: qsTr("Hardware");
+							Component.onCompleted: {
+								segmentedElementView.hardwareProductButton = hardwareProductButton;
+							}
 						}
 					}
 				}
-			} // GroupElementView
-
-			Loader {
-				id: contentLoader
-				width: contentColumn.width
-				visible: contentLoader.item !== null && productCB.currentIndex >= 0
-				height: item ? item.height : 0
-				onLoaded: {
-					if (productEditor.pendingProductUpdate) {
-						productEditor.pendingProductUpdate = false;
-						productEditor.updateProductModel();
-					}
-					if (productEditor.index >= 0 && contentLoader.item && contentLoader.item.updateGui) {
-						contentLoader.item.updateGui();
+			}
+			
+			ComboBoxElementView {
+				id: productCB;
+				objectName: "ComboBox";
+				width: parent.width;
+				controlWidth: 500;
+				name: qsTr("Product");
+				nameId: OrderedProductTypeMetaInfo.s_productName;
+				
+				onCurrentIndexChanged: {
+					productCB.bottomComp = productCB.currentIndex < 0 ? productErrorComp : undefined;
+					
+					productEditor.updateProductModel();
+				}
+				
+				Component {
+					id: productErrorComp;
+					
+					Text {
+						id: selectProductText;
+						
+						text: qsTr("Please select a product");
+						color: Style.errorTextColor;
+						font.family: Style.fontFamily;
+						font.pixelSize: Style.fontSizeM;
 					}
 				}
-			
-				Connections {
-					target: contentLoader.item
-					function onHeightChanged(){
-						contentLoader.height = target.height
-					}
+			}
+		}
+
+		Loader {
+			id: contentLoader
+			anchors.top: headerGroup.bottom
+			anchors.topMargin: visible ? Style.marginM : 0
+			width: flickable.width
+			visible: item !== null && productCB.currentIndex >= 0
+			height: visible && item && item.height > 0 ? item.height : 0
+			onLoaded: {
+				if (productEditor.pendingProductUpdate) {
+					productEditor.pendingProductUpdate = false;
+					productEditor.updateProductModel();
+				}
+				if (productEditor.index >= 0 && contentLoader.item && contentLoader.item.updateGui) {
+					contentLoader.item.updateGui();
 				}
 			}
 		}
@@ -449,6 +441,7 @@ Item {
 	Component {
 		id: hardwareProductComponent;
 		HardwareProductEditor {
+			width: parent ? parent.width : 0;
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
 			orderProductsModel: productEditor.orderProductsModel;
@@ -461,6 +454,7 @@ Item {
 	Component {
 		id: softwareProductComponent;
 		SoftwareProductEditor {
+			width: parent ? parent.width : 0;
 			productIndex: productEditor.index;
 			model: productEditor.productItem;
 			orderProductsModel: productEditor.orderProductsModel;
@@ -489,8 +483,8 @@ Item {
 			productEditor.setHardware();
 		}
 		else{
-			console.error("Unknown product type:", productItem.m_categoryId);
-			return;
+			console.warn("Unknown product type, fallback to Software:", productItem.m_categoryId);
+			productEditor.setSoftware();
 		}
 		
 		for (let i = 0; i < productCB.model.getItemsCount(); i++){
@@ -501,9 +495,8 @@ Item {
 			}
 		}
 		
-		if (productCB.currentIndex == -1){
+		if (productEditor.index >= 0 && productCB.currentIndex == -1){
 			console.error("Unable to edit product. Error: This product not found!", productItem.m_categoryId);
-			return;
 		}
 		
 		productEditor.blockUpdatingModel = false;

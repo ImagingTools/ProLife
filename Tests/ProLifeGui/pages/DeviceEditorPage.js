@@ -16,9 +16,9 @@
 //
 // All field objectNames below were added to ProLife/Qml/Include/prolifeqml/DeviceEditor.qml.
 
-const { BasePage } = require('./BasePage');
-const { ComboBox, TextInput, Switch } = require('../controls');
-const gui = require('../lib/gui');
+const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
+const { ComboBox, TextInput, Switch } = require('imtcore-gui-testkit/controls');
+const gui = require('imtcore-gui-testkit/lib/gui');
 
 class DeviceEditorPage extends BasePage {
   constructor(page) {

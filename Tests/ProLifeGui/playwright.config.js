@@ -1,40 +1,48 @@
 const { defineConfig } = require('@playwright/test');
+const { buildProjects } = require('imtcore-gui-testkit/playwrightConfig/buildProjects');
 const { GUEST, authFile, activeUsers } = require('./fixtures/users');
 
 const BASE_URL = process.env.PROLIFE_BASE_URL || 'http://localhost:17778';
 
-const userProjects = activeUsers().map((u) => ({
-  name: u.key,
-  testDir: './tests',
-  use: { storageState: authFile(u.key) },
-}));
-
-const guestProject = {
-  name: GUEST.key,
-  testDir: './tests',
-  testMatch: /.*\.guest\.test\.js/, // guest-only specs opt in via the .guest.test.js suffix
-  use: {},
-};
-
-// Authenticated projects run everything that is NOT a guest-only spec.
-userProjects.forEach((p) => (p.testIgnore = /.*\.guest\.test\.js/));
-
 module.exports = defineConfig({
   testDir: './tests',
-  timeout: 0,
+  // A per-test cap, not 0 (unlimited) - with an unlimited timeout, a test whose action is waiting on a
+  // server that has crashed/died mid-run (confirmed live: ProLifeServerTest.exe went down under a
+  // heavier concurrent-workers load) hangs forever instead of failing, stalling the whole run with no
+  // further output. 60s is comfortably above the slowest observed real test (~20s, the Bind dialog's
+  // multi-step flow) while still bounding a dead-server hang to a single minute instead of indefinitely.
+  timeout: 60_000,
   expect: { timeout: 15_000 },
   forbidOnly: !!process.env.CI,
-  // workers: 1 is REQUIRED here, and the reason is structural, not just CPU capacity. Every project is
-  // one fixture USER, and ProLife keeps that user's open document tabs / view state in server-side
-  // workspace state (MultiDocumentCollectionView.qml). Two tests running as the same user concurrently
-  // therefore share - and corrupt - one workspace: worker A opens a "New" editor tab while worker B's
-  // navigation closes it, so the editor/collection command bars flicker between present and absent and
-  // tests fail nondeterministically (empirically: at 2 workers the editor specs fail, at 1 they pass).
-  // Serializing per user removes that shared-state contention. (It also keeps the Debug backend from
-  // being hammered by parallel WASM asset + GraphQL load, but the workspace-sharing is the hard reason.)
+  // NOTE: workers > 1 has a known structural risk - every project is one fixture USER, and ProLife
+  // keeps that user's open document tabs / view state in server-side workspace state
+  // (MultiDocumentCollectionView.qml). Two tests running as the SAME user concurrently share - and can
+  // corrupt - one workspace: worker A opens a "New" editor tab while worker B's navigation closes it,
+  // so the editor/collection command bars flicker between present and absent and tests fail
+  // nondeterministically (empirically: at 2 workers the editor specs fail, at 1 they pass). That risk
+  // is scoped to tests sharing a PROJECT (user) - different projects/users are independent, so most of
+  // the flakiness risk from raising this is confined to same-user test files running concurrently.
+  // Set higher for throughput (e.g. full-suite/all-users runs where occasional reruns are acceptable);
+  // drop back to 1 for a trustworthy single-pass verification run.
   workers: 1,
-  reporter: process.env.CI ? [['list'], ['junit', { outputFile: 'junit-report.xml' }]] : 'list',
+  // Every test runs exactly once, everywhere - no retries, so a flaky/broken test reports red
+  // immediately instead of being masked by a re-run.
+  retries: 0,
+  reporter: process.env.CI
+    ? [['list'], ['junit', { outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT || 'junit-report.xml' }]]
+    : 'list',
   globalSetup: require.resolve('./global-setup.js'),
+
+  // Run-CiTests.ps1 invokes "npx playwright test" TWICE per run (a read-only phase at the configured
+  // `workers`, then a serial @mutating phase - see its Invoke-PlaywrightSuite) against this ONE config.
+  // Playwright clears outputDir (and truncates the junit file above) at the START of every invocation,
+  // so without per-phase paths the second invocation silently wipes the first phase's screenshots/
+  // diffs/traces before anyone can look at them - confirmed live: a run with real phase-1 failures
+  // left test-results/ empty and junit-report.xml showing only the all-green phase 2 once phase 2 had
+  // run. PLAYWRIGHT_OUTPUT_DIR (set per-phase by Run-CiTests.ps1) keeps each phase's artifacts in its
+  // own directory; unset (any other invocation, e.g. a developer's ad-hoc `npx playwright test`) falls
+  // back to Playwright's own default so nothing changes outside the two-phase script.
+  outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR || 'test-results',
 
   // Per-user baselines: __screenshots__/<userKey>/<specPath>/<name>-<platform>.png
   snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}-{platform}{ext}',
@@ -44,8 +52,8 @@ module.exports = defineConfig({
     viewport: { width: 1920, height: 1080 },
     baseURL: BASE_URL,
     screenshot: 'only-on-failure',
-    trace: 'retain-on-failure',
+    trace: 'off',
   },
 
-  projects: [...userProjects, guestProject],
+  projects: buildProjects({ users: activeUsers(), guest: GUEST, authFile }),
 });

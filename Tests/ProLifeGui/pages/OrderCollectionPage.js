@@ -9,8 +9,12 @@
 //
 // Commands: New, Edit, Remove, Revision (standard); SetDescription in context menu.
 
-const { CollectionPage } = require('./CollectionPage');
-const gui = require('../lib/gui');
+const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
+const gui = require('imtcore-gui-testkit/lib/gui');
+
+// "Added"/"Last Modified" column header ids (OrdersPage.acc's HeaderIds "added"/"timeStamp") - their
+// values change over time and after edits, so they're masked in screenshots rather than asserted on.
+const TIMESTAMP_HEADER_IDS = ['added', 'timeStamp'];
 
 const FILTERS = {
   customers: 'CustomersFilter',
@@ -21,6 +25,11 @@ const FILTERS = {
 class OrderCollectionPage extends CollectionPage {
   constructor(page) {
     super(page, 'Orders');
+  }
+
+  /** Screenshot masks for the Added/Last Modified columns - see TIMESTAMP_HEADER_IDS above. */
+  timestampColumnMasks() {
+    return this.columnMasks(TIMESTAMP_HEADER_IDS);
   }
 
   async selectFilterOption(filterKey, optionText) {
@@ -40,7 +49,7 @@ class OrderCollectionPage extends CollectionPage {
   }
 
   async clearAllFilters() {
-    await gui.clickButton(this.page, ['FilterPanel', 'ClearAllFilters']);
+    await this.filters.clearAllFilters();
     return this;
   }
 

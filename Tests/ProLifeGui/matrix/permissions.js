@@ -77,7 +77,13 @@ const DEVICE_COMMAND_PERMISSIONS = {
   New: ['AddSensor'],
   Edit: ['EditSensor', 'ChangeSensor', 'ChangeMacAddress', 'ChangeProductionStatus'],
   Remove: ['RemoveSensor'],
-  Revision: ['ViewSensorHistory'],
+  // The Revision command (BaseCollectionCommands.acc's shared "Revision" command, opening the document
+  // history) is gated by ViewRevisions, NOT the per-entity View*History permission. Verified against
+  // the seeded roles: fullAccess holds ViewSensorHistory/ViewLicenseHistory/ViewOrderHistory but NOT
+  // ViewRevisions, and its command bar correctly shows no Revision button; the specialist roles
+  // (hardwareManager/licenseManager/orderManager) explicitly carry ViewRevisions and do show it. The
+  // View*History permissions gate the history DATA, not the command's visibility.
+  Revision: ['ViewRevisions'],
   Bind: ['BindSensor'],
   CreateLicenseFile: ['CreateLicenseFile'],
   TransferLicenses: ['TransferLicenses'],
@@ -131,7 +137,8 @@ const SOFTWARE_COMMAND_PERMISSIONS = {
   New: ['AddLicense'],
   Edit: ['ViewLicenses', 'ChangeLicense', 'ChangeProjectForLicense', 'ChangeOrderForLicense', 'ChangeProductForLicense', 'ChangeProductLicenses', 'ChangeLicenseNumber', 'ChangeExpiration'],
   Remove: ['RemoveLicense'],
-  Revision: ['ViewLicenseHistory'],
+  // Gated by ViewRevisions, not ViewLicenseHistory - see the DEVICE_COMMAND_PERMISSIONS.Revision note.
+  Revision: ['ViewRevisions'],
   CreateLicenseFile: ['CreateLicenseFile'],
   Split: ['SplitLicense'],
   Revoke: ['RevokeLicense'],
@@ -171,7 +178,10 @@ const ORDER_COMMAND_PERMISSIONS = {
   New: ['AddOrder'],
   Edit: ['ViewOrders', 'ChangeDeliveryId', 'ChangePurchaseOrderId', 'ChangeDescriptionForOrder', 'ChangeCustomer', 'ChangeOrderStatus', 'ChangeOrderProducts'],
   Remove: ['RemoveOrder'],
-  Revision: ['ViewRevisions', 'ViewOrderHistory'],
+  // Gated by ViewRevisions only (ViewOrderHistory gates the history data, not the command's
+  // visibility) - see the DEVICE_COMMAND_PERMISSIONS.Revision note. fullAccess has ViewOrderHistory
+  // but not ViewRevisions and correctly shows no Revision button.
+  Revision: ['ViewRevisions'],
   // SetDescription is context menu, driven by ChangeDescriptionForOrder
 };
 
@@ -227,6 +237,77 @@ function canEditAccountField(user, fieldObjectName, isNew = false) {
   return perms.some((p) => can(user, p));
 }
 
+// --- Administration (Roles/Users/Groups) command gating ----------------------------------------
+// Unlike Devices/Orders/Accounts/Software (separate AddX/ChangeX/RemoveX permissions), the server
+// gates New/Edit/Remove for each of these three entities behind a SINGLE "Change*" permission -
+// confirmed for Roles via ImtAuthVoce.arp/RoleCollectionDocumentService.acc's CommandPermissions
+// (UpdateRoleFromRepresentation -> ChangeRole; GetRoleRepresentation -> ViewRoles). Users/Groups
+// mirror the same one-permission-per-entity shape (PAGE_PERMISSIONS.Administration already lists
+// exactly ChangeUser/ChangeRole/ChangeGroups, no separate Add*/Remove* ids).
+const ROLE_COMMAND_PERMISSIONS = {
+  New: ['ChangeRole'],
+  Edit: ['ChangeRole'],
+  Remove: ['ChangeRole'],
+};
+
+function canRunRoleCommand(user, commandId) {
+  const perms = ROLE_COMMAND_PERMISSIONS[commandId] || [];
+  return perms.some((p) => can(user, p));
+}
+
+const ROLE_FIELD_PERMISSIONS = {
+  RoleNameInput: ['ChangeRole'],
+  RoleDescriptionInput: ['ChangeRole'],
+};
+
+function canEditRoleField(user, fieldObjectName) {
+  const perms = ROLE_FIELD_PERMISSIONS[fieldObjectName] || [];
+  return perms.some((p) => can(user, p));
+}
+
+const USER_COMMAND_PERMISSIONS = {
+  New: ['ChangeUser'],
+  Edit: ['ChangeUser'],
+  Remove: ['ChangeUser'],
+};
+
+function canRunUserCommand(user, commandId) {
+  const perms = USER_COMMAND_PERMISSIONS[commandId] || [];
+  return perms.some((p) => can(user, p));
+}
+
+const USER_FIELD_PERMISSIONS = {
+  UsernameInput: ['ChangeUser'],
+  UserNameInput: ['ChangeUser'],
+  MailInput: ['ChangeUser'],
+};
+
+function canEditUserField(user, fieldObjectName) {
+  const perms = USER_FIELD_PERMISSIONS[fieldObjectName] || [];
+  return perms.some((p) => can(user, p));
+}
+
+const GROUP_COMMAND_PERMISSIONS = {
+  New: ['ChangeGroups'],
+  Edit: ['ChangeGroups'],
+  Remove: ['ChangeGroups'],
+};
+
+function canRunGroupCommand(user, commandId) {
+  const perms = GROUP_COMMAND_PERMISSIONS[commandId] || [];
+  return perms.some((p) => can(user, p));
+}
+
+const GROUP_FIELD_PERMISSIONS = {
+  GroupNameInput: ['ChangeGroups'],
+  GroupDescriptionInput: ['ChangeGroups'],
+};
+
+function canEditGroupField(user, fieldObjectName) {
+  const perms = GROUP_FIELD_PERMISSIONS[fieldObjectName] || [];
+  return perms.some((p) => can(user, p));
+}
+
 module.exports = {
   PAGE_PERMISSIONS,
   canSeePage,
@@ -247,4 +328,16 @@ module.exports = {
   canRunAccountCommand,
   ACCOUNT_FIELD_PERMISSIONS,
   canEditAccountField,
+  ROLE_COMMAND_PERMISSIONS,
+  canRunRoleCommand,
+  ROLE_FIELD_PERMISSIONS,
+  canEditRoleField,
+  USER_COMMAND_PERMISSIONS,
+  canRunUserCommand,
+  USER_FIELD_PERMISSIONS,
+  canEditUserField,
+  GROUP_COMMAND_PERMISSIONS,
+  canRunGroupCommand,
+  GROUP_FIELD_PERMISSIONS,
+  canEditGroupField,
 };
