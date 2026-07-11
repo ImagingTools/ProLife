@@ -70,10 +70,12 @@
     Processing" (JUnit) build feature at this same path.
 
 .PARAMETER IncludeOptInFolders
-    When set, also runs folders "90 Exploratory - Omitted Input" and
-    "91 Auth-Cache Staleness" (see README - the first can crash a Debug
-    build via Q_ASSERT on omitted input, the second needs a real 5-minute
-    wait to be meaningful). Off by default; not intended for a normal CI run.
+    When set, also runs folder "91 Auth-Cache Staleness" (see README - it
+    needs a real 5-minute wait to be meaningful). Off by default; not
+    intended for a normal CI run. (Folder "10 Omitted Input" used to live
+    here too, but is now a safe default folder since the SDL marks the PAT
+    input arguments non-null and rejects omitted input at dispatch instead
+    of tripping a Debug Q_ASSERT.)
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
@@ -322,9 +324,13 @@ function Invoke-NewmanSuite {
     # NOT .../ProLife/graphql — the collection templates every URL as "{{baseUrl}}/graphql"
     $baseUrl = "http://localhost:$HttpPort/ProLife"
 
-    # Folders 90/91 are deliberately excluded by default - see README
-    # ("Known Limitations / Opt-in folders"): 90 demonstrates omitted required input arg error,
-    # and 91 only means anything after a real ~5 minute wait between two of its requests.
+    # Folder 91 is deliberately excluded by default - see README
+    # ("Known Limitations / Opt-in folders"): it only means anything after a
+    # real ~5 minute wait between two of its requests. Folder 10 (omitted
+    # required input) used to be opt-in too, because omitting the whole input
+    # argument reached the resolver and tripped a Q_ASSERT on a Debug build -
+    # marking the SDL input arguments non-null (!) now rejects those at dispatch
+    # with a plain "Bad request" envelope, so folder 10 is a safe default folder.
     $defaultFolders = @(
         "00 Bootstrap",
         "01 CreateToken - Validation and Success",
@@ -335,10 +341,12 @@ function Invoke-NewmanSuite {
         "06 Scope Intersection - User Permissions $([char]0x2229) Token Scopes",
         "07 Ownership and Cross-User Access (no enforcement, source-confirmed)",
         "08 Comma-in-Scope Storage Edge Case",
+        "09 ProductId Cross-Product Storage",
+        "10 Omitted Input - required input argument (rejected at dispatch)",
+        "11 Cross-Product Authorization Isolation",
         "99 Cleanup"
     )
     $optInFolders = @(
-        "90 Exploratory - Omitted Input (informational, opt-in, never in default run)",
         "91 Auth-Cache Staleness (slow, opt-in, never in default run)"
     )
     $folders = if ($IncludeOptInFolders) { $defaultFolders + $optInFolders } else { $defaultFolders }

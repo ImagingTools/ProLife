@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1c3e5f7-9b0d-4e2a-8c6f-pattoken-api-full",
     "name": "PatTokenApi",
-    "description": "GraphQL API test suite dedicated to the Personal Access Token (PAT) feature (Sdl\\imtauth\\1.0\\PersonalAccessTokens.sdl): CreateToken, GetToken, GetTokenList, ValidateToken, RevokeToken, DeleteToken. Covers input validation, error-envelope shape, idempotency, ownership (or lack thereof), and - as the centerpiece - the scope ∩ actual-user-permission intersection enforced by CAuthenticationManagerComp::CreateGqlContext for PAT-authenticated GraphQL requests, probed via GetUserPermissions (Sdl\\imtauth\\1.0\\Permissions.sdl).\n\nBuilt by analogy with ProLife's own ProLifeApiPostman and DeskTicketApiPostman (collection-level apikey auth header x-authentication-token, global pre-request/test scripts, numbered phase folders, bootstrap-creates-its-own-users). Does NOT modify or duplicate Tests\\backend\\postman_collection.json's existing PersonalAccessTokens folder (legacy, happy-path only, git-tracked) - this is a new, standalone, more complete suite.\n\nFolders 90 and 91 are informational/opt-in and are deliberately excluded from the default Newman --folder list (see README) - 90 demonstrates the error for omitted required `input` arg (now enforced by SDL `!`), 91 requires a real 5-minute wait to observe the auth-cache TTL boundary.",
+    "description": "GraphQL API test suite dedicated to the Personal Access Token (PAT) feature (Sdl\\imtauth\\1.0\\PersonalAccessTokens.sdl): CreateToken, GetToken, GetTokenList, ValidateToken, RevokeToken, DeleteToken. Covers input validation, error-envelope shape, idempotency, ownership (or lack thereof), and - as the centerpiece - the scope ∩ actual-user-permission intersection enforced by CAuthenticationManagerComp::CreateGqlContext for PAT-authenticated GraphQL requests, probed via GetUserPermissions (Sdl\\imtauth\\1.0\\Permissions.sdl).\n\nBuilt by analogy with ProLife's own ProLifeApiPostman and DeskTicketApiPostman (collection-level apikey auth header x-authentication-token, global pre-request/test scripts, numbered phase folders, bootstrap-creates-its-own-users). Does NOT modify or duplicate Tests\\backend\\postman_collection.json's existing PersonalAccessTokens folder (legacy, happy-path only, git-tracked) - this is a new, standalone, more complete suite.\n\nFolder 09 covers the productId cross-product storage (same user, multiple products, one central Puma store). Folder 10 asserts that omitting the now-non-null (`!` in SDL) `input` argument is rejected at dispatch with 'Bad request. Unexpected request for command-ID' before the resolver (it used to be opt-in folder 90, informational-only, because omitted input reached the resolver and tripped a Debug Q_ASSERT). Folder 11 proves PATs are safe across products: the token's own productId tag is not an authorization boundary (a token minted for one product still authenticates against a request scoped to a different product, source-confirmed via CAuthenticationManagerComp::CreateGqlContext, which keys permission lookup off the productid HTTP header, never the token's stored productId), but no permissions leak across the mismatch (CUserBaseInfo::GetPermissions(productId) is a per-product map lookup, empty for an unconfigured product), and RevokeToken/DeleteToken for one product's token never affects another product's token for the same user. Folder 91 remains opt-in - it requires a real 5-minute wait to observe the auth-cache TTL boundary and is excluded from the default Newman --folder list (see README).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -868,7 +868,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"PAT Suite - Primary Lifecycle Token\", description: \"Primary lifecycle token created by PatTokenApiPostman\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Primary Lifecycle Token\", description: \"Primary lifecycle token created by PatTokenApiPostman\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -934,7 +934,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetToken { GetToken(input: { id: \"{{primaryTokenId}}\" }) { id userId name description tokenHash scopes createdAt lastUsedAt expiresAt revoked } }",
+                "query": "query GetToken { GetToken(input: { id: \"{{primaryTokenId}}\" }) { id userId productId name description tokenHash scopes createdAt lastUsedAt expiresAt revoked } }",
                 "variables": ""
               }
             }
@@ -955,6 +955,7 @@
                   "const t = json.data.GetToken;",
                   "pm.test('GetToken id matches', function () { pm.expect(t.id).to.eql(pm.environment.get('primaryTokenId')); });",
                   "pm.test('GetToken userId matches Token Owner', function () { pm.expect(t.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });",
+                  "pm.test('GetToken productId matches the productId it was created with', function () { pm.expect(t.productId).to.eql(pm.environment.get('productId')); });",
                   "pm.test('GetToken name matches', function () { pm.expect(t.name).to.eql('PAT Suite - Primary Lifecycle Token'); });",
                   "pm.test('GetToken scopes include both granted scopes', function () {",
                   "  pm.expect(t.scopes).to.include('ViewSensors');",
@@ -1100,7 +1101,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetTokenList { GetTokenList(input: { userId: \"{{tokenOwnerUserId}}\" }) { tokens { id userId name description scopes createdAt lastUsedAt expiresAt revoked } } }",
+                "query": "query GetTokenList { GetTokenList(input: { userId: \"{{tokenOwnerUserId}}\" }) { tokens { id userId productId name description scopes createdAt lastUsedAt expiresAt revoked } } }",
                 "variables": ""
               }
             }
@@ -1121,6 +1122,11 @@
                   "const tokens = json.data.GetTokenList.tokens;",
                   "pm.test('GetTokenList contains the primary token', function () {",
                   "  pm.expect(tokens.some(t => t.id === pm.environment.get('primaryTokenId'))).to.eql(true);",
+                  "});",
+                  "pm.test('GetTokenList primary token carries its productId', function () {",
+                  "  const primary = tokens.find(t => t.id === pm.environment.get('primaryTokenId'));",
+                  "  pm.expect(primary, 'primary token missing from list').to.be.an('object');",
+                  "  pm.expect(primary.productId).to.eql(pm.environment.get('productId'));",
                   "});"
                 ]
               }
@@ -3162,15 +3168,449 @@
       ]
     },
     {
-      "name": "90 Exploratory - Omitted Input (informational, opt-in, never in default run)",
+      "name": "09 ProductId Cross-Product Storage",
       "item": [
         {
-          "name": "CreateToken - omitted input",
+          "name": "CreateToken - product Alpha (ProLife)",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "PAT storage now lives centrally on the auth server (Puma) and every token is tagged with the productId it was minted for. This creates a token for the Token Owner scoped to the primary product ({{productId}}).",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Product Alpha\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('Product Alpha token created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_productAlphaTokenId = payload.id;",
+                  "pm.test('Product Alpha CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_productAlphaTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_productAlphaTokenId === 'string' && __extracted_productAlphaTokenId) {",
+                  "  pm.environment.set('productAlphaTokenId', __extracted_productAlphaTokenId);",
+                  "} else {",
+                  "  console.log('Product Alpha CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_productAlphaRawToken = payload.token;",
+                  "pm.test('Product Alpha CreateToken returns token', function () {",
+                  "  pm.expect(__extracted_productAlphaRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_productAlphaRawToken === 'string' && __extracted_productAlphaRawToken) {",
+                  "  pm.environment.set('productAlphaRawToken', __extracted_productAlphaRawToken);",
+                  "} else {",
+                  "  console.log('Product Alpha CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CreateToken - product Beta (a different productId, same user)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Same Token Owner, a different productId ({{secondaryProductId}}). Because all products' PATs share one central Puma store keyed by productId, this must coexist with the Alpha token rather than replacing it.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"PAT Suite - Product Beta\", scopes: [\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('Product Beta token created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_productBetaTokenId = payload.id;",
+                  "pm.test('Product Beta CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_productBetaTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_productBetaTokenId === 'string' && __extracted_productBetaTokenId) {",
+                  "  pm.environment.set('productBetaTokenId', __extracted_productBetaTokenId);",
+                  "} else {",
+                  "  console.log('Product Beta CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_productBetaRawToken = payload.token;",
+                  "pm.test('Product Beta CreateToken returns token', function () {",
+                  "  pm.expect(__extracted_productBetaRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_productBetaRawToken === 'string' && __extracted_productBetaRawToken) {",
+                  "  pm.environment.set('productBetaRawToken', __extracted_productBetaRawToken);",
+                  "} else {",
+                  "  console.log('Product Beta CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CreateToken - no productId (product-agnostic token)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "productId is an optional (nullable) SDL field - omitting it is still valid and stores the token with no product tag (NULL ProductId column). Proves backward compatibility with callers that predate cross-product support.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"PAT Suite - No Product\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('No-product token created (productId is optional)', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_noProductTokenId = payload.id;",
+                  "pm.test('No-product CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_noProductTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_noProductTokenId === 'string' && __extracted_noProductTokenId) {",
+                  "  pm.environment.set('noProductTokenId', __extracted_noProductTokenId);",
+                  "} else {",
+                  "  console.log('No-product CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_noProductRawToken = payload.token;",
+                  "if (typeof __extracted_noProductRawToken === 'string' && __extracted_noProductRawToken) {",
+                  "  pm.environment.set('noProductRawToken', __extracted_noProductRawToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - product Alpha carries its productId",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{productAlphaTokenId}}\" }) { id userId productId name scopes } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
+                  "});",
+                  "const t = json.data.GetToken;",
+                  "pm.test('Alpha token id matches', function () { pm.expect(t.id).to.eql(pm.environment.get('productAlphaTokenId')); });",
+                  "pm.test('Alpha token productId is the primary product', function () { pm.expect(t.productId).to.eql(pm.environment.get('productId')); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - product Beta carries a different productId",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{productBetaTokenId}}\" }) { id userId productId name scopes } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
+                  "});",
+                  "const t = json.data.GetToken;",
+                  "pm.test('Beta token productId is the secondary product', function () { pm.expect(t.productId).to.eql(pm.environment.get('secondaryProductId')); });",
+                  "pm.test('Beta token productId differs from the primary product', function () { pm.expect(t.productId).to.not.eql(pm.environment.get('productId')); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - no-product token has an empty/absent productId",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "A token minted without a productId reads back with no product tag. Assertion is deliberately tolerant of both null/absent and empty-string encodings of a NULL ProductId column.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{noProductTokenId}}\" }) { id userId productId name scopes } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
+                  "});",
+                  "const t = json.data.GetToken;",
+                  "pm.test('No-product token has a falsy productId', function () {",
+                  "  pm.expect(!t.productId, 'productId should be empty/absent but was: ' + JSON.stringify(t.productId)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetTokenList - tokens for different products coexist under one user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "The centerpiece of this folder: GetTokenList filters only by userId (there is no product filter in the query API - UserIdInput has no productId), so one user's tokens across all products are returned together, each retaining its own productId. This proves the shared cross-product Puma store.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTokenList { GetTokenList(input: { userId: \"{{tokenOwnerUserId}}\" }) { tokens { id productId name } } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetTokenList', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetTokenList').that.is.an('object');",
+                  "  pm.expect(json.data.GetTokenList).to.have.property('tokens').that.is.an('array');",
+                  "});",
+                  "const tokens = json.data.GetTokenList.tokens;",
+                  "const byId = {};",
+                  "tokens.forEach(function (t) { byId[t.id] = t; });",
+                  "const alphaId = pm.environment.get('productAlphaTokenId');",
+                  "const betaId = pm.environment.get('productBetaTokenId');",
+                  "const noneId = pm.environment.get('noProductTokenId');",
+                  "pm.test('List contains the Alpha product token', function () { pm.expect(byId, 'Alpha token missing from list').to.have.property(alphaId); });",
+                  "pm.test('List contains the Beta product token', function () { pm.expect(byId, 'Beta token missing from list').to.have.property(betaId); });",
+                  "pm.test('List contains the no-product token', function () { pm.expect(byId, 'no-product token missing from list').to.have.property(noneId); });",
+                  "pm.test('Alpha token in list retains the primary productId', function () { pm.expect(byId[alphaId].productId).to.eql(pm.environment.get('productId')); });",
+                  "pm.test('Beta token in list retains the secondary productId', function () { pm.expect(byId[betaId].productId).to.eql(pm.environment.get('secondaryProductId')); });",
+                  "pm.test('Tokens with different productIds coexist under one user (GetTokenList is not product-filtered)', function () {",
+                  "  pm.expect(byId[alphaId].productId).to.not.eql(byId[betaId].productId);",
+                  "});",
+                  "pm.test('No-product token in list has a falsy productId', function () {",
+                  "  pm.expect(!byId[noneId].productId, 'productId should be empty/absent but was: ' + JSON.stringify(byId[noneId].productId)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ValidateToken - a product-scoped token validates regardless of product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "ValidateToken takes only the raw token (ValidateTokenInput has no productId) - a token authenticates by its hash, independent of which product it was tagged with. Confirms the Beta-product token resolves back to the same Token Owner.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ValidateToken { ValidateToken(input: { token: \"{{productBetaRawToken}}\" }) { valid userId scopes message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for ValidateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('ValidateToken').that.is.an('object');",
+                  "});",
+                  "const v = json.data.ValidateToken;",
+                  "pm.test('Beta product token is valid', function () { pm.expect(v.valid).to.eql(true); });",
+                  "pm.test('Beta product token resolves to Token Owner', function () { pm.expect(v.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - cleanup product Alpha token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Self-contained cleanup of the tokens minted in this folder.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{productAlphaTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Product Alpha token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - cleanup product Beta token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{productBetaTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Product Beta token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - cleanup no-product token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{noProductTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('No-product token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10 Omitted Input - required input argument (rejected at dispatch)",
+      "item": [
+        {
+          "name": "CreateToken - omitted input rejected before resolver",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CCreateTokenGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnCreateToken ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3181,40 +3621,38 @@
           },
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
-                ]
-              }
-            },
-            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
-                  "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
-                  "}"
+                  "const json = pm.response.json();",
+                  "pm.test('CreateToken omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('CreateToken omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('CreateToken omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'CreateToken'\");",
+                  "});",
+                  "pm.test('CreateToken omit input: error path is [\"CreateToken\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['CreateToken']);",
+                  "});",
+                  "pm.test('CreateToken omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "GetToken - omitted input",
+          "name": "GetToken - omitted input rejected before resolver",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CGetTokenGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnGetToken ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3225,40 +3663,38 @@
           },
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
-                ]
-              }
-            },
-            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
-                  "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
-                  "}"
+                  "const json = pm.response.json();",
+                  "pm.test('GetToken omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('GetToken omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('GetToken omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'GetToken'\");",
+                  "});",
+                  "pm.test('GetToken omit input: error path is [\"GetToken\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['GetToken']);",
+                  "});",
+                  "pm.test('GetToken omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "GetTokenList - omitted input",
+          "name": "GetTokenList - omitted input rejected before resolver",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CGetTokenListGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnGetTokenList ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3269,40 +3705,38 @@
           },
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
-                ]
-              }
-            },
-            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
-                  "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
-                  "}"
+                  "const json = pm.response.json();",
+                  "pm.test('GetTokenList omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('GetTokenList omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('GetTokenList omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'GetTokenList'\");",
+                  "});",
+                  "pm.test('GetTokenList omit input: error path is [\"GetTokenList\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['GetTokenList']);",
+                  "});",
+                  "pm.test('GetTokenList omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "ValidateToken - omitted input",
+          "name": "ValidateToken - omitted input rejected before resolver",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CValidateTokenGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnValidateToken ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3313,40 +3747,38 @@
           },
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
-                ]
-              }
-            },
-            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
-                  "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
-                  "}"
+                  "const json = pm.response.json();",
+                  "pm.test('ValidateToken omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('ValidateToken omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('ValidateToken omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'ValidateToken'\");",
+                  "});",
+                  "pm.test('ValidateToken omit input: error path is [\"ValidateToken\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['ValidateToken']);",
+                  "});",
+                  "pm.test('ValidateToken omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "RevokeToken - omitted input",
+          "name": "RevokeToken - omitted input rejected before resolver",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CRevokeTokenGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnRevokeToken ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3357,40 +3789,38 @@
           },
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
-                ]
-              }
-            },
-            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
-                  "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
-                  "}"
+                  "const json = pm.response.json();",
+                  "pm.test('RevokeToken omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('RevokeToken omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('RevokeToken omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'RevokeToken'\");",
+                  "});",
+                  "pm.test('RevokeToken omit input: error path is [\"RevokeToken\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['RevokeToken']);",
+                  "});",
+                  "pm.test('RevokeToken omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "DeleteToken - omitted input",
+          "name": "DeleteToken - omitted input rejected before resolver",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "The `input` argument is now required (non-null `!` in SDL). Omitting it produces the standard \"Bad request. Unexpected request for command-ID\" error at dispatch time (before resolver). Informational only: logs the observed response, never hard-fails. NOT included in default CI run.",
+            "description": "The `input` argument is required (non-null `!`) in PersonalAccessTokens.sdl. Omitting it entirely fails typed-argument validation in the generated dispatcher (CDeleteTokenGqlRequest::IsValid() is false because the \"input\" param object is absent), so the request is rejected with the standard \"Bad request. Unexpected request for command-ID\" envelope before OnDeleteToken ever runs - same failure layer as omitting a required inner field. This used to reach the resolver and trip a Q_ASSERT(false) on a Debug build; the SDL non-null now closes that path, so this is a safe, deterministic default-run test.",
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3401,11 +3831,177 @@
           },
           "event": [
             {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeleteToken omit input: no data key present', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('DeleteToken omit input: errors array has exactly one entry', function () {",
+                  "  pm.expect(json.errors).to.be.an('array').with.lengthOf(1);",
+                  "});",
+                  "pm.test('DeleteToken omit input: error message is exact', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Bad request. Unexpected request for command-ID: 'DeleteToken'\");",
+                  "});",
+                  "pm.test('DeleteToken omit input: error path is [\"DeleteToken\"]', function () {",
+                  "  pm.expect(json.errors[0].path).to.eql(['DeleteToken']);",
+                  "});",
+                  "pm.test('DeleteToken omit input: error extension type is Warning', function () {",
+                  "  pm.expect(json.errors[0].extensions.type).to.eql('Warning');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "11 Cross-Product Authorization Isolation",
+      "item": [
+        {
+          "name": "CreateToken - cross-product auth probe token (tagged ProLife)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Token Owner already has role permissions ViewSensors;ViewOrders for {{productId}} only (see 00 Bootstrap), and no role at all for {{secondaryProductId}}. This token is tagged productId={{productId}} at creation and carries a scope broad enough to matter in either product context.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Auth Probe\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('Cross-product auth probe token created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_crossProductAuthTokenId = payload.id;",
+                  "pm.test('Cross-product auth probe CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_crossProductAuthTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_crossProductAuthTokenId === 'string' && __extracted_crossProductAuthTokenId) {",
+                  "  pm.environment.set('crossProductAuthTokenId', __extracted_crossProductAuthTokenId);",
+                  "} else {",
+                  "  console.log('Cross-product auth probe CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_crossProductAuthRawToken = payload.token;",
+                  "pm.test('Cross-product auth probe CreateToken returns token', function () {",
+                  "  pm.expect(__extracted_crossProductAuthRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_crossProductAuthRawToken === 'string' && __extracted_crossProductAuthRawToken) {",
+                  "  pm.environment.set('crossProductAuthRawToken', __extracted_crossProductAuthRawToken);",
+                  "} else {",
+                  "  console.log('Cross-product auth probe CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Probe - same-product context (ProLife) yields the real permission set",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Baseline: authenticate with the probe PAT and query GetUserPermissions for {{productId}} - the same product the token was tagged with at creation, and the same product the collection-level productid header defaults to. Expect the real scope ∩ role-permission intersection, exactly as folder 06 already proves for the general mechanism.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { groupId groupName entries { permissionId displayName description } } errorMessage } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function flattenPermissionIds(payload) {",
+                  "  pm.expect(payload).to.be.an('object', 'GetUserPermissions payload missing');",
+                  "  const groups = payload.groups;",
+                  "  const ids = [];",
+                  "  groups.forEach(function (g) {",
+                  "    (g.entries || []).forEach(function (e) { ids.push(e.permissionId); });",
+                  "  });",
+                  "  return ids;",
+                  "}",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetUserPermissions', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetUserPermissions').that.is.an('object');",
+                  "});",
+                  "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
+                  "pm.test('Same-product probe: no error', function () { pm.expect(json.data.GetUserPermissions.errorMessage).to.not.be.ok; });",
+                  "pm.test('Same-product probe: effective set is exactly ViewSensors+ViewOrders', function () {",
+                  "  pm.expect(ids.sort()).to.eql(['ViewOrders','ViewSensors']);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "auth": {
+            "type": "apikey",
+            "apikey": [
+              {
+                "key": "key",
+                "value": "x-authentication-token",
+                "type": "string"
+              },
+              {
+                "key": "value",
+                "value": "{{crossProductAuthRawToken}}",
+                "type": "string"
+              },
+              {
+                "key": "in",
+                "value": "header",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Probe - different-product context (DeskTicket) yields zero permissions, not leaked ProLife ones",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "The centerpiece of this folder: the SAME PAT (still tagged productId={{productId}} from creation) is used with the productid HTTP header and GraphQL input.productId both switched to {{secondaryProductId}}, a product the token's own tag does NOT match and where Token Owner holds no role at all. Source-confirmed: CPersonalAccessTokenManagerComp::ValidateToken never receives or checks productId, so authentication succeeds regardless of the mismatch (see CAuthenticationManagerComp::ResolveUserId) - only the request-time productid header feeds CreateGqlContext's GetPermissions(productId)/SetLocalPermissions(productId, ...) call, never the token's own stored tag. Expect: still no error (the token authenticates fine), but an EMPTY effective permission set - i.e. ProLife's ViewSensors/ViewOrders do not leak into the DeskTicket context just because the token happens to carry them as scopes.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{secondaryProductId}}\" }) { groups { groupId groupName entries { permissionId displayName description } } errorMessage } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
               "listen": "prerequest",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.variables.set('expectedStatus', 'any');"
+                  "pm.request.headers.upsert({ key: 'productid', value: pm.environment.get('secondaryProductId') || 'DeskTicket' });"
                 ]
               }
             },
@@ -3414,15 +4010,442 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "try {",
-                  "  const json = pm.response.json();",
-                  "  console.log('Omitted-input response:', JSON.stringify(json));",
-                  "  pm.test('Informational: response observed without hard test failure (see console log)', function () {",
-                  "    pm.expect(true).to.eql(true);",
+                  "function flattenPermissionIds(payload) {",
+                  "  pm.expect(payload).to.be.an('object', 'GetUserPermissions payload missing');",
+                  "  const groups = payload.groups;",
+                  "  const ids = [];",
+                  "  groups.forEach(function (g) {",
+                  "    (g.entries || []).forEach(function (e) { ids.push(e.permissionId); });",
                   "  });",
-                  "} catch (e) {",
-                  "  console.log('Omitted-input request errored / non-JSON response:', e.message);",
+                  "  return ids;",
+                  "}",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetUserPermissions', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetUserPermissions').that.is.an('object');",
+                  "});",
+                  "pm.test('Cross-product probe: token still authenticates (no error), despite its own productId tag not matching the request', function () {",
+                  "  pm.expect(json.data.GetUserPermissions.errorMessage).to.not.be.ok;",
+                  "});",
+                  "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
+                  "pm.test('Cross-product probe: effective permission set is empty (no leakage of ProLife permissions into DeskTicket context)', function () {",
+                  "  pm.expect(ids, 'Unexpected leaked permissions: ' + JSON.stringify(ids)).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "auth": {
+            "type": "apikey",
+            "apikey": [
+              {
+                "key": "key",
+                "value": "x-authentication-token",
+                "type": "string"
+              },
+              {
+                "key": "value",
+                "value": "{{crossProductAuthRawToken}}",
+                "type": "string"
+              },
+              {
+                "key": "in",
+                "value": "header",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "CreateToken - lifecycle token A (tagged ProLife)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Second half of this folder: prove RevokeToken/DeleteToken never cross product boundaries for the same user. Token A is tagged {{productId}}.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Lifecycle A (ProLife)\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('Lifecycle token A created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_crossProductLifecycleATokenId = payload.id;",
+                  "pm.test('Lifecycle token A CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_crossProductLifecycleATokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_crossProductLifecycleATokenId === 'string' && __extracted_crossProductLifecycleATokenId) {",
+                  "  pm.environment.set('crossProductLifecycleATokenId', __extracted_crossProductLifecycleATokenId);",
+                  "} else {",
+                  "  console.log('Lifecycle token A CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_crossProductLifecycleARawToken = payload.token;",
+                  "if (typeof __extracted_crossProductLifecycleARawToken === 'string' && __extracted_crossProductLifecycleARawToken) {",
+                  "  pm.environment.set('crossProductLifecycleARawToken', __extracted_crossProductLifecycleARawToken);",
                   "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CreateToken - lifecycle token B (tagged DeskTicket)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Same user as token A, different productId tag ({{secondaryProductId}}).",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"Cross-Product Lifecycle B (DeskTicket)\", scopes: [\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for CreateToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
+                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "});",
+                  "const payload = json.data.CreateToken;",
+                  "pm.test('Lifecycle token B created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
+                  "const __extracted_crossProductLifecycleBTokenId = payload.id;",
+                  "pm.test('Lifecycle token B CreateToken returns id', function () {",
+                  "  pm.expect(__extracted_crossProductLifecycleBTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (typeof __extracted_crossProductLifecycleBTokenId === 'string' && __extracted_crossProductLifecycleBTokenId) {",
+                  "  pm.environment.set('crossProductLifecycleBTokenId', __extracted_crossProductLifecycleBTokenId);",
+                  "} else {",
+                  "  console.log('Lifecycle token B CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
+                  "}",
+                  "const __extracted_crossProductLifecycleBRawToken = payload.token;",
+                  "if (typeof __extracted_crossProductLifecycleBRawToken === 'string' && __extracted_crossProductLifecycleBRawToken) {",
+                  "  pm.environment.set('crossProductLifecycleBRawToken', __extracted_crossProductLifecycleBRawToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RevokeToken - revoke lifecycle token A (ProLife)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RevokeToken { RevokeToken(input: { id: \"{{crossProductLifecycleATokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('RevokeToken A succeeds', function () { pm.expect(json.data.RevokeToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - lifecycle token A is now revoked",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleATokenId}}\" }) { id productId revoked } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const t = json.data.GetToken;",
+                  "pm.test('Token A productId is still ProLife', function () { pm.expect(t.productId).to.eql(pm.environment.get('productId')); });",
+                  "pm.test('Token A is revoked', function () { pm.expect(t.revoked).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - lifecycle token B (DeskTicket) unaffected by A's revoke",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { id productId revoked } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const t = json.data.GetToken;",
+                  "pm.test('Token B productId is still DeskTicket', function () { pm.expect(t.productId).to.eql(pm.environment.get('secondaryProductId')); });",
+                  "pm.test(\"Token B is NOT revoked - revoking token A did not cross the product boundary\", function () { pm.expect(t.revoked).to.eql(false); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ValidateToken - lifecycle token A is now invalid (revoked)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ValidateToken { ValidateToken(input: { token: \"{{crossProductLifecycleARawToken}}\" }) { valid message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Token A no longer validates', function () { pm.expect(json.data.ValidateToken.valid).to.eql(false); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ValidateToken - lifecycle token B (DeskTicket) still valid, unaffected by A's revoke",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ValidateToken { ValidateToken(input: { token: \"{{crossProductLifecycleBRawToken}}\" }) { valid userId message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const v = json.data.ValidateToken;",
+                  "pm.test('Token B still validates', function () { pm.expect(v.valid).to.eql(true); });",
+                  "pm.test('Token B still resolves to Token Owner', function () { pm.expect(v.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - delete lifecycle token A (ProLife)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{crossProductLifecycleATokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeleteToken A succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - lifecycle token A no longer found after delete",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleATokenId}}\" }) { id } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Token A not-found has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('Token A not-found message includes its id', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${pm.environment.get('crossProductLifecycleATokenId')}' not found`);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetToken - lifecycle token B (DeskTicket) still found after A's delete",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { id productId revoked } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Response has correct structure for GetToken', function () {",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
+                  "});",
+                  "const t = json.data.GetToken;",
+                  "pm.test(\"Token B still exists - deleting token A did not cross the product boundary\", function () { pm.expect(t.id).to.eql(pm.environment.get('crossProductLifecycleBTokenId')); });",
+                  "pm.test('Token B still not revoked', function () { pm.expect(t.revoked).to.eql(false); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - cleanup lifecycle token B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "Self-contained cleanup of the tokens minted in this folder.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Lifecycle token B cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeleteToken - cleanup cross-product auth probe token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{crossProductAuthTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Cross-product auth probe token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
                 ]
               }
             }
